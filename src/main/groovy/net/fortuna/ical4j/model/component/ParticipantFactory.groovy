@@ -52,9 +52,9 @@ class ParticipantFactory extends AbstractComponentFactory{
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof VLocation) {
-            parent.locations.add child
+            parent.components.add child
         } else if (child instanceof VResource) {
-            parent.resources.add child
+            parent.components.add child
         } else {
             super.setChild(build, parent, child)
         }

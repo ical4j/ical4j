@@ -27,7 +27,6 @@ net.fortuna.ical4j.model.property.LastModified$Factory
 net.fortuna.ical4j.model.property.Locality$Factory
 net.fortuna.ical4j.model.property.Location$Factory
 net.fortuna.ical4j.model.property.Method$Factory
-net.fortuna.ical4j.model.property.Name$Factory
 net.fortuna.ical4j.model.property.Organizer$Factory
 net.fortuna.ical4j.model.property.PercentComplete$Factory
 net.fortuna.ical4j.model.property.Postalcode$Factory

@@ -128,12 +128,6 @@ public abstract class Component implements Serializable {
      */
     public static final String AVAILABLE = "AVAILABLE";
 
-    public static final String VLOCATION = "VLOCATION";
-
-    public static final String VRESOURCE = "VRESOURCE";
-
-    public static final String PARTICIPANT = "PARTICIPANT";
-
     /**
      * Prefix for non-standard components.
      */
