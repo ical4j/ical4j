@@ -43,6 +43,21 @@ class FilterExpressionTest extends Specification {
         filter.toComponentPredicate().test(event)
     }
 
+    def 'test filter expression equals function'() {
+        given: 'a filter expression'
+        def filter = new FilterExpression().lessThanEqual('due', 'now(-P1D)')
+
+        and: 'an event'
+        def event = builder.vevent {
+            organizer(organiser)
+            attendee(attendee)
+            due '20210727T000000'
+        }
+
+        expect: 'filter matches the event'
+        filter.toComponentPredicate().test(event)
+    }
+
     def 'test filter expression equals parameter'() {
         given: 'a filter expression'
         def filter = new FilterExpression().equalTo('role', Role.CHAIR)
