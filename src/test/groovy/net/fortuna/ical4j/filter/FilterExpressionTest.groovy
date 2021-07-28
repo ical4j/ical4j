@@ -9,7 +9,6 @@ import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.util.function.Predicate
 import java.util.stream.Collectors
 
 class FilterExpressionTest extends Specification {
@@ -142,7 +141,7 @@ class FilterExpressionTest extends Specification {
         }
 
         expect: 'filter matches the event'
-        Predicate.not(filter.toComponentPredicate()).test(event)
+        filter.toComponentPredicate().negate().test(event)
     }
 
     def 'test filter expression parsing'() {
