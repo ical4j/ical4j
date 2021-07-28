@@ -10,7 +10,7 @@ import spock.lang.Specification
 /**
  * Created by fortuna on 24/07/2017.
  */
-class HasPropertyRuleTest extends Specification {
+class PropertyEqualToRuleTest extends Specification {
 
     @Shared
     ContentBuilder builder
@@ -38,6 +38,6 @@ class HasPropertyRuleTest extends Specification {
         rule.test(event)
 
         where:
-        rule << [new HasPropertyRule<VEvent>(organiser), new HasPropertyRule<VEvent>(attendee)]
+        rule << [new PropertyEqualToRule<VEvent>(organiser), new PropertyEqualToRule<VEvent>(attendee)]
     }
 }

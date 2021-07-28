@@ -127,7 +127,7 @@ import net.fortuna.ical4j.validate.ValidationException;
  *
  * @author Ben Fortuna
  */
-public class Sequence extends Property implements Comparable<Sequence> {
+public class Sequence extends Property {
 
     private static final long serialVersionUID = -1606972893204822853L;
 
@@ -204,8 +204,11 @@ public class Sequence extends Property implements Comparable<Sequence> {
     }
 
     @Override
-    public int compareTo(Sequence o) {
-        return Integer.compare(getSequenceNo(), o.getSequenceNo());
+    public int compareTo(Property o) {
+        if (o instanceof Sequence) {
+            return Integer.compare(getSequenceNo(), ((Sequence) o).getSequenceNo());
+        }
+        return super.compareTo(o);
     }
 
     @Override

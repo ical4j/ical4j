@@ -1,14 +1,18 @@
-net.fortuna.ical4j.model.component.Available$Factory
 net.fortuna.ical4j.model.component.Daylight$Factory
 net.fortuna.ical4j.model.component.Standard$Factory
 net.fortuna.ical4j.model.component.VAlarm$Factory
-net.fortuna.ical4j.model.component.VAvailability$Factory
 net.fortuna.ical4j.model.component.VEvent$Factory
 net.fortuna.ical4j.model.component.VFreeBusy$Factory
 net.fortuna.ical4j.model.component.VJournal$Factory
 net.fortuna.ical4j.model.component.VTimeZone$Factory
 net.fortuna.ical4j.model.component.VToDo$Factory
 net.fortuna.ical4j.model.component.VVenue$Factory
+
+#RFC7953 Availability
+net.fortuna.ical4j.model.component.Available$Factory
+net.fortuna.ical4j.model.component.VAvailability$Factory
+
+#Eventpub
+net.fortuna.ical4j.model.component.Participant$Factory
 net.fortuna.ical4j.model.component.VLocation$Factory
 net.fortuna.ical4j.model.component.VResource$Factory
-net.fortuna.ical4j.model.component.Participant$Factory

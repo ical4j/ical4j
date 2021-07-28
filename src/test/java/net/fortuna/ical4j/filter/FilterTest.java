@@ -137,11 +137,11 @@ public class FilterTest<T extends Component> extends TestCase {
         
         Calendar calendar = new Calendar(new ComponentList<>(Arrays.asList(e1, e2, e3)));
 
-        Predicate<Component> organiserRuleMatch = new HasPropertyRule<>(organizer);
-        Predicate<Component> attendee1RuleMatch = new HasPropertyRule<>(a1);
+        Predicate<Component> organiserRuleMatch = new PropertyEqualToRule<>(organizer);
+        Predicate<Component> attendee1RuleMatch = new PropertyEqualToRule<>(a1);
 
-        Predicate<Component> organiserRuleNoMatch = new HasPropertyRule<>(new Organizer(new URI("Mailto:X@example.com")));
-        Predicate<Component> attendeeRuleNoMatch = new HasPropertyRule<>(new Attendee(new URI("Mailto:X@example.com")));
+        Predicate<Component> organiserRuleNoMatch = new PropertyEqualToRule<>(new Organizer(new URI("Mailto:X@example.com")));
+        Predicate<Component> attendeeRuleNoMatch = new PropertyEqualToRule<>(new Attendee(new URI("Mailto:X@example.com")));
         
         TestSuite suite = new TestSuite();
         //testFilterMatchAll..

@@ -92,7 +92,7 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('dtend', new PropertyFactoryWrapper(DtEnd, new DtEnd.Factory()))
         registerFactory('dtstamp', new PropertyFactoryWrapper(DtStamp, new DtStamp.Factory()))
         registerFactory('dtstart', new PropertyFactoryWrapper(DtStart, new DtStart.Factory()))
-        registerFactory('due', new DefaultPropertyFactory(klass: Due))
+        registerFactory('due', new PropertyFactoryWrapper(Due, new Due.Factory()))
         registerFactory('duration', new DefaultPropertyFactory(klass: Duration))
         registerFactory('exdate', new DefaultPropertyFactory(klass: ExDate))
         registerFactory('exrule', new DefaultPropertyFactory(klass: ExRule))

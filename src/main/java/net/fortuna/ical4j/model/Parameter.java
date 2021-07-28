@@ -79,6 +79,11 @@ public abstract class Parameter extends Content {
     public static final String DELEGATED_TO = "DELEGATED-TO";
 
     /**
+     * Derived.
+     */
+    public static final String DERIVED = "DERIVED";
+
+    /**
      * Directory entry.
      */
     public static final String DIR = "DIR";
@@ -129,6 +134,11 @@ public abstract class Parameter extends Content {
     public static final String MEMBER = "MEMBER";
 
     /**
+     * Order.
+     */
+    public static final String ORDER = "ORDER";
+
+    /**
      * Participation status.
      */
     public static final String PARTSTAT = "PARTSTAT";
@@ -167,6 +177,11 @@ public abstract class Parameter extends Content {
      * Schedule status.
      */
     public static final String SCHEDULE_STATUS = "SCHEDULE-STATUS";
+
+    /**
+     * Schema for structured data.
+     */
+    public static final String SCHEMA = "SCHEMA";
 
     /**
      * Sent by.
