@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
  *
@@ -29,34 +29,51 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.component
+package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.PropertyList
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.ParticipantType;
+import net.fortuna.ical4j.util.RandomUidGenerator;
+import net.fortuna.ical4j.util.UidGenerator;
 
-class ParticipantFactory extends AbstractComponentFactory{
+import java.net.SocketException;
 
-     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         Participant participant
-         if (FactoryBuilderSupport.checkValueIsType(value, name, Participant)) {
-             participant = (Participant) value
-         }
-         else {
-             participant = (Participant) super.newInstance(builder, name, value, attributes)
-         }
-         return participant
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new Participant(properties)
-     }
+/**
+ * $Id$
+ *
+ * Created on: 2021/01/03
+ *
+ * @author Mike Douglass
+ */
+public class ParticipantTest extends ComponentTest {
 
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof VLocation) {
-            parent.components.add child
-        } else if (child instanceof VResource) {
-            parent.components.add child
-        } else {
-            super.setChild(build, parent, child)
-        }
+    /**
+     * @param component to test
+     */
+    public ParticipantTest(final String testMethod,
+                           final Participant component) {
+        super(testMethod, component);
+    }
+
+    /**
+     * @return
+     * @throws SocketException 
+     */
+    public static TestSuite suite() throws SocketException {
+        final TestSuite suite = new TestSuite();
+
+        Participant p = new Participant();
+        suite.addTest(new ParticipantTest("testIsNotCalendarComponent", p));
+        suite.addTest(new ParticipantTest("testValidationException", p));
+        
+        final UidGenerator g = new RandomUidGenerator();
+        p = new Participant();
+        p.getProperties().add(g.generateUid());
+        p.getProperties().add(ParticipantType.VOTER);
+        p.getProperties().add(new DtStamp());
+        suite.addTest(new ParticipantTest("testValidation", p));
+        return suite;
     }
 }

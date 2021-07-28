@@ -71,6 +71,21 @@ public abstract class Component implements Serializable {
     /**
      * Component token.
      */
+    public static final String PARTICIPANT = "PARTICIPANT";
+
+    /**
+     * Component token.
+     */
+    public static final String VLOCATION = "VLOCATION";
+
+    /**
+     * Component token.
+     */
+    public static final String VRESOURCE = "VRESOURCE";
+
+    /**
+     * Component token.
+     */
     public static final String VEVENT = "VEVENT";
 
     /**
@@ -112,12 +127,6 @@ public abstract class Component implements Serializable {
      * Component token.
      */
     public static final String AVAILABLE = "AVAILABLE";
-
-    public static final String VLOCATION = "VLOCATION";
-
-    public static final String VRESOURCE = "VRESOURCE";
-
-    public static final String PARTICIPANT = "PARTICIPANT";
 
     /**
      * Prefix for non-standard components.

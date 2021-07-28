@@ -1,8 +1,13 @@
 package net.fortuna.ical4j.filter;
 
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.Sequence;
 
+import java.time.Instant;
+import java.time.temporal.Temporal;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.function.Predicate;
 
 /**
@@ -36,6 +41,10 @@ public class PropertyLessThanRule<T extends Component> implements Predicate<T> {
                 return inclusive ? sequence.getSequenceNo() <= Integer.parseInt(value.toString())
                         : sequence.getSequenceNo() < Integer.parseInt(value.toString());
             }
+        } else if (Arrays.asList("due").contains(propertyName)) {
+            DateProperty dateProperty = t.getProperty(propertyName);
+            return inclusive ? dateProperty.getDate().compareTo(Date.from(Instant.from((Temporal) value))) < 0
+                    : dateProperty.getDate().compareTo(Date.from(Instant.from((Temporal) value))) <= 0;
         }
         return false;
     }

@@ -5,10 +5,10 @@ import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.parameter.Role
 import net.fortuna.ical4j.model.property.Attendee
 import net.fortuna.ical4j.model.property.Organizer
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.util.function.Predicate
 import java.util.stream.Collectors
 
 class FilterExpressionTest extends Specification {
@@ -37,6 +37,22 @@ class FilterExpressionTest extends Specification {
         def event = builder.vevent {
             organizer(organiser)
             attendee(attendee)
+        }
+
+        expect: 'filter matches the event'
+        filter.toComponentPredicate().test(event)
+    }
+
+    @Ignore
+    def 'test filter expression equals function'() {
+        given: 'a filter expression'
+        def filter = new FilterExpression().lessThanEqual('due', 'now(-P1D)')
+
+        and: 'an event'
+        def event = builder.vevent {
+            organizer(organiser)
+            attendee(attendee)
+            due '20210727T000000'
         }
 
         expect: 'filter matches the event'
@@ -125,7 +141,7 @@ class FilterExpressionTest extends Specification {
         }
 
         expect: 'filter matches the event'
-        Predicate.not(filter.toComponentPredicate()).test(event)
+        filter.toComponentPredicate().negate().test(event)
     }
 
     def 'test filter expression parsing'() {

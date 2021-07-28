@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2010, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,34 +29,65 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.component
+package net.fortuna.ical4j.model.parameter;
 
-import net.fortuna.ical4j.model.PropertyList
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 
-class ParticipantFactory extends AbstractComponentFactory{
+import java.net.URISyntaxException;
 
-     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         Participant participant
-         if (FactoryBuilderSupport.checkValueIsType(value, name, Participant)) {
-             participant = (Participant) value
-         }
-         else {
-             participant = (Participant) super.newInstance(builder, name, value, attributes)
-         }
-         return participant
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new Participant(properties)
-     }
+/**
+ * $Id: Rsvp.java,v 1.16 2010/03/06 12:57:25 fortuna Exp $ [18-Apr-2004]
+ *
+ * Defines an Order parameter.
+ * @author benfortuna
+ */
+public class Order extends Parameter {
 
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof VLocation) {
-            parent.components.add child
-        } else if (child instanceof VResource) {
-            parent.components.add child
-        } else {
-            super.setChild(build, parent, child)
+    private static final long serialVersionUID = -5381653882942018012L;
+
+    private Integer order;
+
+    /**
+     * @param aValue a string representation
+     */
+    public Order(final String aValue) {
+        this(Integer.valueOf(aValue));
+    }
+
+    /**
+     * @param aValue an Integer value
+     */
+    public Order(final Integer aValue) {
+        super(ORDER, new Factory());
+        this.order = aValue;
+    }
+
+    /**
+     * @return Returns the order.
+     */
+    public final Integer getOrder() {
+        return order;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final String getValue() {
+        return getOrder().toString();
+    }
+
+    public static class Factory extends Content.Factory implements
+            ParameterFactory {
+        private static final long serialVersionUID = 1L;
+    
+        public Factory() {
+          super(ORDER);
+        }
+    
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            return new Order(value);
         }
     }
 }
