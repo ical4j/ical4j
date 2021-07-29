@@ -33,7 +33,7 @@ public class ComponentGroup<C extends Component> {
 
     private final List<C> components;
 
-    private final Predicate<T> componentPredicate;
+    private final Predicate<C> componentPredicate;
 
     public ComponentGroup(List<C> components, Uid uid) {
         this(components, uid, null);
@@ -41,10 +41,8 @@ public class ComponentGroup<C extends Component> {
 
     public ComponentGroup(List<C> components, Uid uid, RecurrenceId recurrenceId) {
         this.components = components;
-
-        Predicate<C> componentPredicate;
         if (recurrenceId != null) {
-            componentPredicate = new PropertyEqualToRule<T>(uid).and(new PropertyEqualToRule<>(recurrenceId));
+            componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
         } else {
             componentPredicate = new PropertyEqualToRule<>(uid);
         }
@@ -97,15 +95,11 @@ public class ComponentGroup<C extends Component> {
 
         List<Period<T>> finalPeriods = new ArrayList<>(periods);
         overrides.forEach(component -> {
-            try {
-                RecurrenceId<?> recurrenceId = component.getProperties().getRequired(Property.RECURRENCE_ID);
-                finalPeriods.removeIf(p -> p.getStart().equals(recurrenceId.getDate()));
-                component.calculateRecurrenceSet(period).stream()
-                        .filter(p -> p.getStart().equals(recurrenceId.getDate()))
-                        .forEach(finalPeriods::add);
-            } catch (ConstraintViolationException cve) {
-                // Should never reach as we previously determined existence of RECURRENCE_ID property..
-            }
+            RecurrenceId<?> recurrenceId = component.getProperties().getRequired(Property.RECURRENCE_ID);
+            finalPeriods.removeIf(p -> p.getStart().equals(recurrenceId.getDate()));
+            component.calculateRecurrenceSet(period).stream()
+                    .filter(p -> p.getStart().equals(recurrenceId.getDate()))
+                    .forEach(finalPeriods::add);
         });
 
         // Natural sort of final list..

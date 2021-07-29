@@ -163,23 +163,9 @@ public abstract class Observance extends Component {
             throw new UnsupportedOperationException("Unable to get timezone observance for date-only temporal.");
         }
 
-        TzOffsetTo offsetTo;
-        try {
-            offsetTo = getProperties().getRequired(TZOFFSETTO);
-        } catch (ConstraintViolationException e) {
-            Logger log = LoggerFactory.getLogger(Observance.class);
-            log.error("Unexpected error calculating latest onset", e);
-            return null;
-        }
+        TzOffsetTo offsetTo = getProperties().getRequired(TZOFFSETTO);
 
-        TzOffsetFrom offsetFrom;
-        try {
-            offsetFrom = getProperties().getRequired(TZOFFSETFROM);
-        } catch (ConstraintViolationException e) {
-            Logger log = LoggerFactory.getLogger(Observance.class);
-            log.error("Unexpected error calculating latest onset", e);
-            return null;
-        }
+        TzOffsetFrom offsetFrom = getProperties().getRequired(TZOFFSETFROM);
 
         OffsetDateTime offsetDate = LocalDateTime.ofInstant(Instant.from(date), ZoneOffset.UTC).atOffset(
                 offsetTo.getOffset());

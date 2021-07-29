@@ -40,7 +40,7 @@ package net.fortuna.ical4j.model;
  * @author Ben
  *
  */
-public class ConstraintViolationException extends Exception {
+public class ConstraintViolationException extends RuntimeException {
 
     private static final long serialVersionUID = 6728653187698888940L;
 

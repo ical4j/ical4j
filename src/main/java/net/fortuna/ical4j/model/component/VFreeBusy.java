@@ -321,12 +321,8 @@ public class VFreeBusy extends CalendarComponent {
         final DtStart<?> start;
         final DtEnd<?> end;
 
-        try {
-            start = request.getProperties().getRequired(DTSTART);
-            end = request.getProperties().getRequired(DTEND);
-        } catch (ConstraintViolationException cve) {
-            throw new ValidationException("Missing required property", cve);
-        }
+        start = request.getProperties().getRequired(DTSTART);
+        end = request.getProperties().getRequired(DTEND);
 
         // ensure the request is valid..
         request.validate();

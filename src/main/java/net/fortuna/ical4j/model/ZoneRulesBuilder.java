@@ -32,13 +32,13 @@ public class ZoneRulesBuilder {
         for (Observance observance : observances) {
             // ignore transitions that have no effect..
             Optional<TzOffsetFrom> offsetFrom = observance.getProperties().getFirst(Property.TZOFFSETFROM);
-            Optional<TzOffsetTo> offsetTo = observance.getProperties().getFirst(Property.TZOFFSETTO);
+            TzOffsetTo offsetTo = observance.getProperties().getRequired(Property.TZOFFSETTO);
 
-            if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.get().getOffset())) {
+            if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.getOffset())) {
                 Optional<DtStart<LocalDateTime>> startDate = observance.getProperties().getFirst(Property.DTSTART);
                 if (startDate.isPresent()) {
                     transitions.add(ZoneOffsetTransition.of(startDate.get().getDate(),
-                            offsetFrom.get().getOffset(), offsetTo.get().getOffset()));
+                            offsetFrom.get().getOffset(), offsetTo.getOffset()));
                 } else {
                     throw new CalendarException("Missing DTSTART property");
                 }

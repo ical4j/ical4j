@@ -103,12 +103,8 @@ public class TimeZone extends java.util.TimeZone {
         OffsetDateTime date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
         final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
-            try {
-                final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
-                return (int) (offset.getOffset().getTotalSeconds() * 1000L);
-            } catch (ConstraintViolationException cve) {
-                LOG.error("Invalid observance", cve);
-            }
+            final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
+            return (int) (offset.getOffset().getTotalSeconds() * 1000L);
         }
         return 0;
     }
@@ -120,15 +116,11 @@ public class TimeZone extends java.util.TimeZone {
     public int getOffset(long date) {
         final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
-            try {
-                final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
-                if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
-                    return getRawOffset();
-                } else {
-                    return (int) (offset.getOffset().getTotalSeconds() * 1000L);
-                }
-            } catch (ConstraintViolationException cve) {
-                LOG.error("Invalid observance", cve);
+            final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
+            if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
+                return getRawOffset();
+            } else {
+                return (int) (offset.getOffset().getTotalSeconds() * 1000L);
             }
         }
         return 0;
