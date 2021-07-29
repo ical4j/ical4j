@@ -34,7 +34,6 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -71,12 +70,6 @@ public class PropertyEqualToRule<T extends Component> implements Predicate<T> {
      */
     @Override
     public final boolean test(final T component) {
-        final List<Property> properties = component.getProperties().get(property.getName());
-        for (final Property p : properties) {
-            if (value.equals(p.getValue())) {
-                return true;
-            }
-        }
-        return false;
+        return component.getProperties().get(propertyName).stream().anyMatch(p -> value.equals(p.getValue()));
     }
 }

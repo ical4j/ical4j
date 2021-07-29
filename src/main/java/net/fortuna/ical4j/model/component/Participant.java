@@ -33,24 +33,16 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Arrays;
+import java.util.Optional;
 
-import static net.fortuna.ical4j.model.Property.CALENDAR_ADDRESS;
-import static net.fortuna.ical4j.model.Property.CREATED;
-import static net.fortuna.ical4j.model.Property.DESCRIPTION;
-import static net.fortuna.ical4j.model.Property.DTSTAMP;
-import static net.fortuna.ical4j.model.Property.GEO;
-import static net.fortuna.ical4j.model.Property.LAST_MODIFIED;
-import static net.fortuna.ical4j.model.Property.PARTICIPANT_TYPE;
-import static net.fortuna.ical4j.model.Property.PRIORITY;
-import static net.fortuna.ical4j.model.Property.SEQUENCE;
-import static net.fortuna.ical4j.model.Property.STATUS;
-import static net.fortuna.ical4j.model.Property.SUMMARY;
-import static net.fortuna.ical4j.model.Property.UID;
-import static net.fortuna.ical4j.model.Property.URL;
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [May 1 2017]
@@ -131,7 +123,14 @@ import static net.fortuna.ical4j.model.Property.URL;
 public class Participant extends Component {
     private static final long serialVersionUID = -8193965477414653802L;
 
-    private final ComponentList<Component> components;
+    private final Validator<Participant> validator = new ComponentValidator<>(
+            new ValidationRule<>(One, PARTICIPANT_TYPE, UID),
+            new ValidationRule<>(OneOrLess, CALENDAR_ADDRESS, CREATED, DESCRIPTION,
+                    DTSTAMP, GEO, LAST_MODIFIED, PRIORITY, SEQUENCE,
+                    STATUS, SUMMARY, URL)
+    );
+
+    private ComponentList<Component> components;
 
     /**
      * Default constructor.
@@ -145,7 +144,7 @@ public class Participant extends Component {
      * Constructor.
      * @param properties a list of properties
      */
-    public Participant(final PropertyList<Property> properties) {
+    public Participant(final PropertyList properties) {
         super(PARTICIPANT, properties);
         components = new ComponentList<>();
     }
@@ -154,7 +153,7 @@ public class Participant extends Component {
      * Constructor.
      * @param properties a list of properties
      */
-    public Participant(final PropertyList<Property> properties,
+    public Participant(final PropertyList properties,
                        final ComponentList<Component> components) {
         super(PARTICIPANT, properties);
         this.components = components;
@@ -164,26 +163,20 @@ public class Participant extends Component {
         return components;
     }
 
+    public void add(VLocation location) {
+        this.components = (ComponentList<Component>) this.components.add(location);
+    }
+
+    public void add(VResource resource) {
+        this.components = (ComponentList<Component>) this.components.add(resource);
+    }
+
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
 
-        /*
-         * ; 'dtstamp', uid and participanttype' are REQUIRED,
-         * ; but MUST NOT occur more than once
-         */
-        Arrays.asList(PARTICIPANT_TYPE, UID).forEach(
-                              property -> PropertyValidator.assertOne(
-                                      property, getProperties()));
-
-        Arrays.asList(CALENDAR_ADDRESS, CREATED, DESCRIPTION,
-                      DTSTAMP, GEO, LAST_MODIFIED, PRIORITY, SEQUENCE,
-                      STATUS, SUMMARY, URL).forEach(
-                              property -> PropertyValidator
-                                      .assertOneOrLess(
-                                              property, getProperties()));
+        validator.validate(this);
 
         if (recurse) {
             validateProperties();
@@ -194,21 +187,21 @@ public class Participant extends Component {
      * Returns the optional calendar address property.
      * @return the CALENDAR_ADDRESS property or null if not specified
      */
-    public final CalendarAddress getCalendarAddress() {
+    public final Optional<CalendarAddress> getCalendarAddress() {
         return getProperty(CALENDAR_ADDRESS);
     }
 
     /**
      * @return the optional creation-time property for an event
      */
-    public final Created getCreated() {
+    public final Optional<Created> getCreated() {
         return getProperty(CREATED);
     }
 
     /**
      * @return the optional date-stamp property
      */
-    public final DtStamp getDateStamp() {
+    public final Optional<DtStamp> getDateStamp() {
         return getProperty(DTSTAMP);
     }
 
@@ -216,14 +209,14 @@ public class Participant extends Component {
      * Returns the optional description property.
      * @return the DESCRIPTION property or null if not specified
      */
-    public final Description getDescription() {
+    public final Optional<Description> getDescription() {
         return getProperty(DESCRIPTION);
     }
 
     /**
      * @return the optional last-modified property for an event
      */
-    public final LastModified getLastModified() {
+    public final Optional<LastModified> getLastModified() {
         return getProperty(LAST_MODIFIED);
     }
 
@@ -231,28 +224,28 @@ public class Participant extends Component {
      * Returns the mandatory PARTICIPANT-TYPE property.
      * @return the PARTICIPANT-TYPE property or null if not specified
      */
-    public ParticipantType getParticipantType() {
+    public Optional<ParticipantType> getParticipantType() {
         return getProperty(PARTICIPANT_TYPE);
     }
 
     /**
      * @return the optional priority property for an event
      */
-    public final Priority getPriority() {
+    public final Optional<Priority> getPriority() {
         return getProperty(PRIORITY);
     }
 
     /**
      * @return the optional sequence number property for an event
      */
-    public final Sequence getSequence() {
+    public final Optional<Sequence> getSequence() {
         return getProperty(SEQUENCE);
     }
 
     /**
      * @return the optional status property for an event
      */
-    public final Status getStatus() {
+    public final Optional<Status> getStatus() {
         return getProperty(STATUS);
     }
 
@@ -260,7 +253,7 @@ public class Participant extends Component {
      * Returns the optional summary property.
      * @return the SUMMARY property or null if not specified
      */
-    public final Summary getSummary() {
+    public final Optional<Summary> getSummary() {
         return getProperty(SUMMARY);
     }
 
@@ -268,15 +261,20 @@ public class Participant extends Component {
      * Returns the UID property of this component if available.
      * @return a Uid instance, or null if no UID property exists
      */
-    public final Uid getUid() {
+    public final Optional<Uid> getUid() {
         return getProperty(UID);
     }
 
     /**
      * @return the optional URL property for an event
      */
-    public final Url getUrl() {
+    public final Optional<Url> getUrl() {
         return getProperty(URL);
+    }
+
+    @Override
+    protected ComponentFactory<Participant> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<Participant> {

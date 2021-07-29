@@ -39,11 +39,8 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.Arrays;
 
 import static net.fortuna.ical4j.model.Parameter.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -64,25 +61,20 @@ public class StyledDescription extends Property implements Encodable {
     private String value;
     private URI uriValue;
 
-    private final Validator<Property> validator = new PropertyValidator(
-            Arrays.asList(
-                    new ValidationRule(OneOrLess, ALTREP,
-                                       FMTTYPE,
-                                       LANGUAGE)));
+    private final Validator<Property> validator = new PropertyValidator<>(
+            new ValidationRule<>(OneOrLess, ALTREP, FMTTYPE, LANGUAGE));
     /**
      * Default constructor.
      */
     public StyledDescription() {
-        super(STYLED_DESCRIPTION, new ParameterList(), 
-                new Factory());
+        super(STYLED_DESCRIPTION, new ParameterList());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public StyledDescription(final String aValue) throws URISyntaxException {
-        super(STYLED_DESCRIPTION, new ParameterList(), 
-                new Factory());
+        super(STYLED_DESCRIPTION, new ParameterList());
         setValue(aValue);
     }
 
@@ -91,8 +83,7 @@ public class StyledDescription extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public StyledDescription(final ParameterList aList, final String aValue) throws URISyntaxException {
-        super(STYLED_DESCRIPTION, aList, 
-                new Factory());
+        super(STYLED_DESCRIPTION, aList);
         setValue(aValue);
     }
 
@@ -123,6 +114,11 @@ public class StyledDescription extends Property implements Encodable {
         validator.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<StyledDescription> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<StyledDescription> {
         private static final long serialVersionUID = 1L;
 
@@ -131,7 +127,7 @@ public class StyledDescription extends Property implements Encodable {
         }
 
         public StyledDescription createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+                throws URISyntaxException {
             return new StyledDescription(parameters, value);
         }
 

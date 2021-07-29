@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.filter;
 
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 
 import java.util.function.Predicate;
@@ -59,12 +57,6 @@ public class ParameterEqualToRule implements Predicate<Property> {
 
     @Override
     public final boolean test(final Property property) {
-        final ParameterList parameters = property.getParameters(parameterName);
-        for (final Parameter p : parameters) {
-            if (value.equals(p.getValue())) {
-                return true;
-            }
-        }
-        return false;
+        return property.getParameters().get(parameterName).stream().anyMatch(p -> value.equals(p.getValue()));
     }
 }

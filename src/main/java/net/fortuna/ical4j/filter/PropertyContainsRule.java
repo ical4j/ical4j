@@ -1,8 +1,6 @@
 package net.fortuna.ical4j.filter;
 
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 
 import java.util.function.Predicate;
 
@@ -24,12 +22,6 @@ public class PropertyContainsRule<T extends Component> implements Predicate<T> {
 
     @Override
     public boolean test(T t) {
-        final PropertyList<Property> properties = t.getProperties(propertyName);
-        for (final Property p : properties) {
-            if (p.getValue().contains(value.toString())) {
-                return true;
-            }
-        }
-        return false;
+        return t.getProperties().get(propertyName).stream().anyMatch(p -> p.getValue().contains(value.toString()));
     }
 }

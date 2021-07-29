@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.Uris;
@@ -45,12 +44,9 @@ import org.apache.commons.codec.DecoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.Arrays;
 
 import static net.fortuna.ical4j.model.Parameter.FMTTYPE;
 import static net.fortuna.ical4j.model.Parameter.SCHEMA;
@@ -73,24 +69,21 @@ public class StructuredData extends Property implements Encodable {
     private URI uri;
     private byte[] binary;
 
-    private final Validator<Property> validator = new PropertyValidator(
-            Arrays.asList(
-                    new ValidationRule(OneOrLess, FMTTYPE, SCHEMA)));
+    private final Validator<Property> validator = new PropertyValidator<>(
+            new ValidationRule<>(OneOrLess, FMTTYPE, SCHEMA));
 
     /**
      * Default constructor.
      */
     public StructuredData() {
-        super(STRUCTURED_DATA, new ParameterList(),
-              new Factory());
+        super(STRUCTURED_DATA, new ParameterList());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public StructuredData(final String aValue) throws URISyntaxException {
-        super(STRUCTURED_DATA, new ParameterList(),
-              new Factory());
+        super(STRUCTURED_DATA, new ParameterList());
         setValue(aValue);
     }
 
@@ -99,8 +92,7 @@ public class StructuredData extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public StructuredData(final ParameterList aList, final String aValue) throws URISyntaxException {
-        super(STRUCTURED_DATA, aList,
-              new Factory());
+        super(STRUCTURED_DATA, aList);
         setValue(aValue);
     }
 
@@ -109,12 +101,11 @@ public class StructuredData extends Property implements Encodable {
      */
     public final void setValue(final String aValue) throws URISyntaxException {
         // value can be either binary or a URI or default to text
-        if (getParameter(Parameter.ENCODING) != null) {
+        if (!getParameters().getFirst(Parameter.ENCODING).isPresent()) {
             // binary = Base64.decode(aValue);
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                        .createBinaryDecoder(getParameters().getRequired(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -123,7 +114,7 @@ public class StructuredData extends Property implements Encodable {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error decoding binary data", de);
             }
-        } else if (Value.URI.equals(getParameter(Parameter.VALUE))) {
+        } else if (Value.URI.equals(getParameters().getRequired(Parameter.VALUE))) {
             uri = Uris.create(aValue);
             value = aValue;
             // assume text..
@@ -144,6 +135,11 @@ public class StructuredData extends Property implements Encodable {
         validator.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<StructuredData> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<StructuredData> {
         private static final long serialVersionUID = 1L;
 
@@ -152,7 +148,7 @@ public class StructuredData extends Property implements Encodable {
         }
 
         public StructuredData createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+                throws URISyntaxException {
             return new StructuredData(parameters, value);
         }
 

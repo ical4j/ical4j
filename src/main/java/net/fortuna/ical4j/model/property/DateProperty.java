@@ -265,7 +265,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @Override
     public int compareTo(Property o) {
         if (o instanceof DateProperty) {
-            return getDate().compareTo(((DateProperty) o).getDate());
+            return new TemporalComparator().compare(getDate(), ((DateProperty) o).getDate());
         }
         return super.compareTo(o);
     }

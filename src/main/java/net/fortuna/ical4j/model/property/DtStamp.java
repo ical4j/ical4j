@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.CalendarDateFormat;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 
 import java.time.Instant;
@@ -85,7 +82,7 @@ import java.time.Instant;
  *
  * @author Ben Fortuna
  */
-public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp> {
+public class DtStamp extends DateProperty<Instant> {
 
     private static final long serialVersionUID = 7581197869433744070L;
 
@@ -130,8 +127,11 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
     }
 
     @Override
-    public int compareTo(DtStamp o) {
-        return getDate().compareTo(o.getDate());
+    public int compareTo(Property o) {
+        if (o instanceof DateProperty) {
+            return new TemporalComparator().compare(getDate(), ((DateProperty) o).getDate());
+        }
+        return super.compareTo(o);
     }
 
     @Override

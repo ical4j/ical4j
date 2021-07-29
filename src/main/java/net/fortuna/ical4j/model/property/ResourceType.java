@@ -34,9 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -88,7 +86,7 @@ public class ResourceType extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public ResourceType(final ParameterList aList, final String aValue) {
-        super(RESOURCE_TYPE, aList, new Factory());
+        super(RESOURCE_TYPE, aList);
         setValue(aValue);
     }
 
@@ -111,8 +109,12 @@ public class ResourceType extends Property implements Encodable {
 
     }
 
-    public static class Factory extends Content.Factory
-            implements PropertyFactory<ResourceType> {
+    @Override
+    protected PropertyFactory<ResourceType> newFactory() {
+        return new Factory();
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<ResourceType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -121,7 +123,7 @@ public class ResourceType extends Property implements Encodable {
 
         public ResourceType createProperty(final ParameterList parameters,
                                            final String value)
-                throws IOException, URISyntaxException, ParseException {
+                throws URISyntaxException {
             return new ResourceType(parameters, value);
         }
 

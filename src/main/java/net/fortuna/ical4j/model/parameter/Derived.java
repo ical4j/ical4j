@@ -74,7 +74,7 @@ public class Derived extends Parameter {
      * @param aValue a boolean value
      */
     public Derived(final Boolean aValue) {
-        super(DERIVED, new Factory());
+        super(DERIVED);
         this.value = aValue;
     }
 

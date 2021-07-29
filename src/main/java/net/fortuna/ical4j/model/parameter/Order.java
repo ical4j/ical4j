@@ -60,7 +60,7 @@ public class Order extends Parameter {
      * @param aValue an Integer value
      */
     public Order(final Integer aValue) {
-        super(ORDER, new Factory());
+        super(ORDER);
         this.order = aValue;
     }
 

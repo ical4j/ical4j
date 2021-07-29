@@ -3,6 +3,7 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.property.Sequence;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -31,10 +32,10 @@ public class PropertyGreaterThanRule<T extends Component> implements Predicate<T
     @Override
     public boolean test(T t) {
         if ("sequence".equalsIgnoreCase(propertyName)) {
-            Sequence sequence = t.getProperty(propertyName);
-            if (sequence != null) {
-                return inclusive ? sequence.getSequenceNo() >= Integer.parseInt(value.toString())
-                        : sequence.getSequenceNo() > Integer.parseInt(value.toString());
+            Optional<Sequence> sequence = t.getProperty(propertyName);
+            if (sequence.isPresent()) {
+                return inclusive ? sequence.get().getSequenceNo() >= Integer.parseInt(value.toString())
+                        : sequence.get().getSequenceNo() > Integer.parseInt(value.toString());
             }
         }
         return false;

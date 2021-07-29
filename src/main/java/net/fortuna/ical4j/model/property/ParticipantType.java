@@ -34,9 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -76,7 +74,7 @@ public class ParticipantType extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public ParticipantType(final ParameterList aList, final String aValue) {
-        super(PARTICIPANT_TYPE, aList, new Factory());
+        super(PARTICIPANT_TYPE, aList);
         setValue(aValue);
     }
 
@@ -99,6 +97,11 @@ public class ParticipantType extends Property implements Encodable {
 
     }
 
+    @Override
+    protected PropertyFactory<ParticipantType> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<ParticipantType> {
         private static final long serialVersionUID = 1L;
 
@@ -107,7 +110,7 @@ public class ParticipantType extends Property implements Encodable {
         }
 
         public ParticipantType createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+                throws URISyntaxException {
             final ParticipantType participantType;
 
             if (ParticipantType.VOTER

@@ -39,10 +39,8 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -63,7 +61,7 @@ public class CalendarAddress extends Property {
      * Default constructor.
      */
     public CalendarAddress() {
-        super(CALENDAR_ADDRESS, new Factory());
+        super(CALENDAR_ADDRESS);
     }
 
     /**
@@ -71,7 +69,7 @@ public class CalendarAddress extends Property {
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public CalendarAddress(final String aValue) throws URISyntaxException {
-        super(CALENDAR_ADDRESS, new Factory());
+        super(CALENDAR_ADDRESS);
         setValue(aValue);
     }
 
@@ -82,7 +80,7 @@ public class CalendarAddress extends Property {
      */
     public CalendarAddress(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(CALENDAR_ADDRESS, aList, new Factory());
+        super(CALENDAR_ADDRESS, aList);
         setValue(aValue);
     }
 
@@ -90,7 +88,7 @@ public class CalendarAddress extends Property {
      * @param aUri a URI
      */
     public CalendarAddress(final URI aUri) {
-        super(CALENDAR_ADDRESS, new Factory());
+        super(CALENDAR_ADDRESS);
         calAddress = aUri;
     }
 
@@ -99,7 +97,7 @@ public class CalendarAddress extends Property {
      * @param aUri  a URI
      */
     public CalendarAddress(final ParameterList aList, final URI aUri) {
-        super(CALENDAR_ADDRESS, aList, new Factory());
+        super(CALENDAR_ADDRESS, aList);
         calAddress = aUri;
     }
 
@@ -141,12 +139,9 @@ public class CalendarAddress extends Property {
         this.calAddress = calAddress;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final Property copy() throws IOException, URISyntaxException, ParseException {
-        // URI are immutable
-        return new CalendarAddress(new ParameterList(getParameters(), false), calAddress);
+    @Override
+    protected PropertyFactory<CalendarAddress> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<CalendarAddress> {
@@ -157,7 +152,7 @@ public class CalendarAddress extends Property {
         }
 
         public CalendarAddress createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+                throws URISyntaxException {
             return new CalendarAddress(parameters, value);
         }
 

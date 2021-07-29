@@ -1,13 +1,13 @@
 package net.fortuna.ical4j.filter;
 
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.TemporalComparator;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.Sequence;
 
-import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -36,15 +36,17 @@ public class PropertyLessThanRule<T extends Component> implements Predicate<T> {
     @Override
     public boolean test(T t) {
         if ("sequence".equalsIgnoreCase(propertyName)) {
-            Sequence sequence = t.getProperty(propertyName);
-            if (sequence != null) {
-                return inclusive ? sequence.getSequenceNo() <= Integer.parseInt(value.toString())
-                        : sequence.getSequenceNo() < Integer.parseInt(value.toString());
+            Optional<Sequence> sequence = t.getProperty(propertyName);
+            if (sequence.isPresent()) {
+                return inclusive ? sequence.get().getSequenceNo() <= Integer.parseInt(value.toString())
+                        : sequence.get().getSequenceNo() < Integer.parseInt(value.toString());
             }
         } else if (Arrays.asList("due").contains(propertyName)) {
-            DateProperty dateProperty = t.getProperty(propertyName);
-            return inclusive ? dateProperty.getDate().compareTo(Date.from(Instant.from((Temporal) value))) < 0
-                    : dateProperty.getDate().compareTo(Date.from(Instant.from((Temporal) value))) <= 0;
+            Optional<DateProperty> dateProperty = t.getProperty(propertyName);
+            if (dateProperty.isPresent()) {
+                return inclusive ? new TemporalComparator().compare(dateProperty.get().getDate(), (Temporal) value) < 0
+                        : new TemporalComparator().compare(dateProperty.get().getDate(), (Temporal) value) <= 0;
+            }
         }
         return false;
     }

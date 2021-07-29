@@ -66,7 +66,7 @@ public class Schema extends Parameter {
      * @param aUri a URI reference to a schema
      */
     public Schema(final URI aUri) {
-        super(SCHEMA, new Factory());
+        super(SCHEMA);
         this.uri = aUri;
     }
 
