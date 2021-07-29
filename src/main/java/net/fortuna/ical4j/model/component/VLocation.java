@@ -31,30 +31,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Geo;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.LocationType;
-import net.fortuna.ical4j.model.property.Name;
-import net.fortuna.ical4j.model.property.StructuredData;
-import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.util.Arrays;
 
-import static net.fortuna.ical4j.model.Property.DESCRIPTION;
-import static net.fortuna.ical4j.model.Property.GEO;
-import static net.fortuna.ical4j.model.Property.LAST_MODIFIED;
-import static net.fortuna.ical4j.model.Property.LOCATION_TYPE;
-import static net.fortuna.ical4j.model.Property.NAME;
-import static net.fortuna.ical4j.model.Property.STRUCTURED_DATA;
-import static net.fortuna.ical4j.model.Property.UID;
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * $Id$ [May 1 2017]
@@ -112,14 +97,11 @@ import static net.fortuna.ical4j.model.Property.UID;
 public class VLocation extends Component {
     private static final long serialVersionUID = -8193965477414653802L;
 
-    private final ComponentList<Component> components;
-
     /**
      * Default constructor.
      */
     public VLocation() {
         super(VLOCATION);
-        components = new ComponentList<>();
     }
 
     /**
@@ -128,7 +110,6 @@ public class VLocation extends Component {
      */
     public VLocation(final PropertyList<Property> properties) {
         super(VLOCATION, properties);
-        components = new ComponentList<>();
     }
 
     /**
@@ -138,11 +119,6 @@ public class VLocation extends Component {
     public VLocation(final PropertyList<Property> properties,
                      final ComponentList<Component> components) {
         super(VLOCATION, properties);
-        this.components = components;
-    }
-
-    public ComponentList<Component> getComponents() {
-        return components;
     }
 
     /**
@@ -227,7 +203,7 @@ public class VLocation extends Component {
 
         @Override
         public VLocation createComponent(
-                final PropertyList properties) {
+                final PropertyList<Property> properties) {
             return new VLocation(properties);
         }
 
@@ -235,7 +211,7 @@ public class VLocation extends Component {
         public VLocation createComponent(
                 final PropertyList properties,
                 final ComponentList subComponents) {
-            return new VLocation(properties, subComponents);
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VLOCATION));
         }
     }
 }
