@@ -27,7 +27,7 @@
 
 [Examples]: #examples
 
-[References]: #reference
+[References]: #references
 [Specifications]: #specifications
 
 [Configuration]: #configuration
