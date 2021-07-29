@@ -8,6 +8,10 @@ class PrioritySpec extends Specification {
 
     Priority.Factory factory = []
 
+    def cleanup() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+    }
+
     def 'test factory use of constants'() {
         when: 'factory is invoked with a constant value'
         def priority = factory.createProperty(new ParameterList(), value)

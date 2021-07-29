@@ -11,6 +11,10 @@ import java.time.temporal.ChronoUnit
 
 class TemporalAmountAdapterTest extends Specification {
 
+    def cleanup() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+    }
+
     def "verify string representation"() {
         setup: 'Set default seed date for test consistency'
         def seed = LocalDateTime.parse("2021-04-01T00:00:00")

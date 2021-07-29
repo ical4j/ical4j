@@ -11,6 +11,11 @@ import java.nio.charset.Charset
  */
 class CalendarBuilderSpec extends Specification {
 
+    def cleanup() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING)
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+    }
+
     def 'test relaxed parsing'() {
         given: 'a calendar object string'
         String cal2 = getClass().getResource('test-relaxed-parsing.ics').text
