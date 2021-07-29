@@ -207,7 +207,7 @@ public class VResource extends Component {
 
         @Override
         public VResource createComponent(
-                final PropertyList<Property> properties) {
+                final PropertyList properties) {
             return new VResource(properties);
         }
 

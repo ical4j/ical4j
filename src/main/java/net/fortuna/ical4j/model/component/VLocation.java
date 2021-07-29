@@ -206,7 +206,7 @@ public class VLocation extends Component {
 
         @Override
         public VLocation createComponent(
-                final PropertyList<Property> properties) {
+                final PropertyList properties) {
             return new VLocation(properties);
         }
 
