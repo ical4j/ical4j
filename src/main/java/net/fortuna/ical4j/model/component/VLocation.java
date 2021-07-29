@@ -107,14 +107,11 @@ public class VLocation extends Component {
             new ValidationRule<>(OneOrLess, DESCRIPTION, GEO, LOCATION_TYPE, NAME)
     );
 
-    private final ComponentList<Component> components;
-
     /**
      * Default constructor.
      */
     public VLocation() {
         super(VLOCATION);
-        components = new ComponentList<>();
     }
 
     /**
@@ -123,7 +120,6 @@ public class VLocation extends Component {
      */
     public VLocation(final PropertyList properties) {
         super(VLOCATION, properties);
-        components = new ComponentList<>();
     }
 
     /**
@@ -133,11 +129,6 @@ public class VLocation extends Component {
     public VLocation(final PropertyList properties,
                      final ComponentList<Component> components) {
         super(VLOCATION, properties);
-        this.components = components;
-    }
-
-    public ComponentList<Component> getComponents() {
-        return components;
     }
 
     /**
@@ -215,7 +206,7 @@ public class VLocation extends Component {
 
         @Override
         public VLocation createComponent(
-                final PropertyList properties) {
+                final PropertyList<Property> properties) {
             return new VLocation(properties);
         }
 
@@ -223,7 +214,7 @@ public class VLocation extends Component {
         public VLocation createComponent(
                 final PropertyList properties,
                 final ComponentList subComponents) {
-            return new VLocation(properties, subComponents);
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VLOCATION));
         }
     }
 }

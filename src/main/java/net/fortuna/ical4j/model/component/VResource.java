@@ -107,14 +107,11 @@ public class VResource extends Component {
             new ValidationRule<>(OneOrLess, DESCRIPTION, GEO, RESOURCE_TYPE, NAME)
     );
 
-    private final ComponentList<Component> components;
-
     /**
      * Default constructor.
      */
     public VResource() {
         super(VRESOURCE);
-        components = new ComponentList<>();
     }
 
     /**
@@ -123,7 +120,6 @@ public class VResource extends Component {
      */
     public VResource(final PropertyList properties) {
         super(VRESOURCE, properties);
-        components = new ComponentList<>();
     }
 
     /**
@@ -133,11 +129,6 @@ public class VResource extends Component {
     public VResource(final PropertyList properties,
                      final ComponentList<Component> components) {
         super(VRESOURCE, properties);
-        this.components = components;
-    }
-
-    public ComponentList<Component> getComponents() {
-        return components;
     }
 
     /**
@@ -216,7 +207,7 @@ public class VResource extends Component {
 
         @Override
         public VResource createComponent(
-                final PropertyList properties) {
+                final PropertyList<Property> properties) {
             return new VResource(properties);
         }
 
@@ -224,7 +215,7 @@ public class VResource extends Component {
         public VResource createComponent(
                 final PropertyList properties,
                 final ComponentList subComponents) {
-            return new VResource(properties, subComponents);
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VRESOURCE));
         }
     }
 }

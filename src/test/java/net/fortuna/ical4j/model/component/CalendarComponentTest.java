@@ -72,6 +72,12 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
         this.component = component;
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+    }
+
     /**
      * Test component iTIP METHOD validation.
      */

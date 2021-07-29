@@ -49,6 +49,7 @@ import java.nio.file.NoSuchFileException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * $Id$
@@ -61,7 +62,7 @@ import java.util.List;
  */
 public class CalendarsTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(CalendarsTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CalendarsTest.class);
 
     private String path;
     
@@ -162,12 +163,12 @@ public class CalendarsTest extends TestCase {
             result = Calendars.merge(result, calendars[i]);
         }
 
-        for (int i = 0; i < calendars.length; i++) {
-            for (Property p : calendars[i].getProperties().getAll()) {
+        for (Calendar value : calendars) {
+            for (Property p : value.getProperties().getAll()) {
                 assertTrue("Property [" + p + "] not found in merged calendar",
                         result.getProperties().getAll().contains(p));
             }
-            for (Component c : calendars[i].getComponents().getAll()) {
+            for (Component c : value.getComponents().getAll()) {
                 assertTrue("Component [" + c + "] not found in merged calendar",
                         result.getComponents().getAll().contains(c));
             }
@@ -221,20 +222,20 @@ public class CalendarsTest extends TestCase {
         suite.addTest(new CalendarsTest("testLoadParserException", "/samples/invalid/google_aus_holidays.ics"));
 
         List<Calendar> calendars = new ArrayList<Calendar>();
-        calendars.add(Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
-        calendars.add(Calendars.load(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics")));
-        suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[calendars.size()])));
+        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))));
+        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics"))));
+        suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[0])));
 
-        Calendar calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"));
+        Calendar calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
         suite.addTest(new CalendarsTest("testSplit", calendar, 10));
 
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
 
-        calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics"));
+        calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics")));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, StandardCharsets.US_ASCII, "text/calendar; method=PUBLISH; charset=US-ASCII"));
         suite.addTest(new CalendarsTest("testShouldSerializeDeserializeCorrectly",
-                Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")), -1));
+                Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))), -1));
         
         return suite;
     }

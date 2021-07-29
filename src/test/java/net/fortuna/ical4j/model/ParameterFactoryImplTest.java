@@ -49,6 +49,13 @@ public class ParameterFactoryImplTest extends TestCase {
 
     private Logger log = LoggerFactory.getLogger(ParameterFactoryImplTest.class);
 
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+    }
+
     /**
      * @throws Exception
      */
@@ -89,7 +96,5 @@ public class ParameterFactoryImplTest extends TestCase {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
 
         new ParameterFactoryImpl().createParameter("VVENUE", "My Place");
-
-        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 }

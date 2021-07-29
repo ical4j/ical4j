@@ -140,6 +140,9 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
     protected void tearDown() throws Exception {
         // relax validation to avoid UID requirement..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         super.tearDown();
     }
 
