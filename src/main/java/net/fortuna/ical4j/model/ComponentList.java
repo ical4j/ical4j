@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar components.
  * @author Ben Fortuna
  */
-public class ComponentList<T extends Component> implements ContentContainer<T> {
+public class ComponentList<T extends Component> implements ContentCollection<T> {
 
     private final List<T> components;
 
@@ -61,21 +61,21 @@ public class ComponentList<T extends Component> implements ContentContainer<T> {
     }
 
     @Override
-    public ContentContainer<T> add(T content) {
+    public ContentCollection<T> add(T content) {
         List<T> copy = new ArrayList<>(components);
         copy.add(content);
         return new ComponentList<>(copy);
     }
 
     @Override
-    public ContentContainer<T> addAll(Collection<T> content) {
+    public ContentCollection<T> addAll(Collection<T> content) {
         List<T> copy = new ArrayList<>(components);
         copy.addAll(content);
         return new ComponentList<>(copy);
     }
 
     @Override
-    public ContentContainer<T> remove(T content) {
+    public ContentCollection<T> remove(T content) {
         List<T> copy = new ArrayList<>(components);
         if (copy.remove(content)) {
             return new ComponentList<>(copy);
@@ -85,7 +85,7 @@ public class ComponentList<T extends Component> implements ContentContainer<T> {
     }
 
     @Override
-    public ContentContainer<T> removeAll(String... name) {
+    public ContentCollection<T> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         List<T> copy = new ArrayList<>(components);
         if (copy.removeIf(c -> names.contains(c.getName()))) {
@@ -96,7 +96,7 @@ public class ComponentList<T extends Component> implements ContentContainer<T> {
     }
 
     @Override
-    public ContentContainer<T> replace(T content) {
+    public ContentCollection<T> replace(T content) {
         List<T> copy = new ArrayList<>(components);
         copy.removeIf(c -> c.getName().equals(content.getName()));
         copy.add(content);

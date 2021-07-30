@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * Accessor implementation for a list of iCalendar parameters.
  * @author Ben Fortuna
  */
-public class ParameterList implements ContentContainer<Parameter> {
+public class ParameterList implements ContentCollection<Parameter> {
 
     private final List<Parameter> parameters;
 
@@ -60,21 +60,21 @@ public class ParameterList implements ContentContainer<Parameter> {
     }
 
     @Override
-    public ContentContainer<Parameter> add(Parameter content) {
+    public ContentCollection<Parameter> add(Parameter content) {
         List<Parameter> copy = new ArrayList<>(parameters);
         copy.add(content);
         return new ParameterList(copy);
     }
 
     @Override
-    public ContentContainer<Parameter> addAll(Collection<Parameter> content) {
+    public ContentCollection<Parameter> addAll(Collection<Parameter> content) {
         List<Parameter> copy = new ArrayList<>(parameters);
         copy.addAll(content);
         return new ParameterList(copy);
     }
 
     @Override
-    public ContentContainer<Parameter> remove(Parameter content) {
+    public ContentCollection<Parameter> remove(Parameter content) {
         List<Parameter> copy = new ArrayList<>(parameters);
         if (copy.remove(content)) {
             return new ParameterList(copy);
@@ -84,7 +84,7 @@ public class ParameterList implements ContentContainer<Parameter> {
     }
 
     @Override
-    public ContentContainer<Parameter> removeAll(String... name) {
+    public ContentCollection<Parameter> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         List<Parameter> copy = new ArrayList<>(parameters);
         if (copy.removeIf(p -> names.contains(p.getName()))) {
@@ -95,7 +95,7 @@ public class ParameterList implements ContentContainer<Parameter> {
     }
 
     @Override
-    public ContentContainer<Parameter> replace(Parameter content) {
+    public ContentCollection<Parameter> replace(Parameter content) {
         List<Parameter> copy = new ArrayList<>(parameters);
         copy.removeIf(p -> p.getName().equals(content.getName()));
         copy.add(content);

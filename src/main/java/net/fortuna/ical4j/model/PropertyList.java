@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * Accessor implementation for a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList implements ContentContainer<Property> {
+public class PropertyList implements ContentCollection<Property> {
 
     private final List<Property> properties;
 
@@ -61,21 +61,21 @@ public class PropertyList implements ContentContainer<Property> {
     }
 
     @Override
-    public ContentContainer<Property> add(Property content) {
+    public ContentCollection<Property> add(Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.add(content);
         return new PropertyList(copy);
     }
 
     @Override
-    public ContentContainer<Property> addAll(Collection<Property> content) {
+    public ContentCollection<Property> addAll(Collection<Property> content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.addAll(content);
         return new PropertyList(copy);
     }
 
     @Override
-    public ContentContainer<Property> remove(Property content) {
+    public ContentCollection<Property> remove(Property content) {
         List<Property> copy = new ArrayList<>(properties);
         if (copy.remove(content)) {
             return new PropertyList(copy);
@@ -85,7 +85,7 @@ public class PropertyList implements ContentContainer<Property> {
     }
 
     @Override
-    public ContentContainer<Property> removeAll(String... name) {
+    public ContentCollection<Property> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         List<Property> copy = new ArrayList<>(properties);
         if (copy.removeIf(p -> names.contains(p.getName()))) {
@@ -96,7 +96,7 @@ public class PropertyList implements ContentContainer<Property> {
     }
 
     @Override
-    public ContentContainer<Property> replace(Property content) {
+    public ContentCollection<Property> replace(Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.removeIf(p -> p.getName().equals(content.getName()));
         copy.add(content);
