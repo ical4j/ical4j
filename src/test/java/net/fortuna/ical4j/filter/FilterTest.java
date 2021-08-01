@@ -34,6 +34,7 @@ package net.fortuna.ical4j.filter;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.filter.predicate.PropertyEqualToRule;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.CalendarComponent;
