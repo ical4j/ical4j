@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable {
+public abstract class Component implements Serializable, PropertyContainer {
 
     private static final long serialVersionUID = 4943193483665822201L;
 

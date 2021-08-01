@@ -115,7 +115,7 @@ import java.text.ParseException;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable {
+public class Calendar implements Serializable, PropertyContainer {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
