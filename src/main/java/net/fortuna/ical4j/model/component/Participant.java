@@ -38,19 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.util.Arrays;
 
-import static net.fortuna.ical4j.model.Property.CALENDAR_ADDRESS;
-import static net.fortuna.ical4j.model.Property.CREATED;
-import static net.fortuna.ical4j.model.Property.DESCRIPTION;
-import static net.fortuna.ical4j.model.Property.DTSTAMP;
-import static net.fortuna.ical4j.model.Property.GEO;
-import static net.fortuna.ical4j.model.Property.LAST_MODIFIED;
-import static net.fortuna.ical4j.model.Property.PARTICIPANT_TYPE;
-import static net.fortuna.ical4j.model.Property.PRIORITY;
-import static net.fortuna.ical4j.model.Property.SEQUENCE;
-import static net.fortuna.ical4j.model.Property.STATUS;
-import static net.fortuna.ical4j.model.Property.SUMMARY;
-import static net.fortuna.ical4j.model.Property.UID;
-import static net.fortuna.ical4j.model.Property.URL;
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * $Id$ [May 1 2017]
@@ -131,14 +119,11 @@ import static net.fortuna.ical4j.model.Property.URL;
 public class Participant extends Component {
     private static final long serialVersionUID = -8193965477414653802L;
 
-    private final ComponentList<Component> components;
-
     /**
      * Default constructor.
      */
     public Participant() {
         super(PARTICIPANT);
-        components = new ComponentList<>();
     }
 
     /**
@@ -147,21 +132,14 @@ public class Participant extends Component {
      */
     public Participant(final PropertyList<Property> properties) {
         super(PARTICIPANT, properties);
-        components = new ComponentList<>();
     }
 
     /**
      * Constructor.
      * @param properties a list of properties
      */
-    public Participant(final PropertyList<Property> properties,
-                       final ComponentList<Component> components) {
-        super(PARTICIPANT, properties);
-        this.components = components;
-    }
-
-    public ComponentList<Component> getComponents() {
-        return components;
+    public Participant(final PropertyList<Property> properties, final ComponentList<Component> components) {
+        super(PARTICIPANT, properties, components);
     }
 
     /**
@@ -291,15 +269,13 @@ public class Participant extends Component {
         }
 
         @Override
-        public Participant createComponent(
-                final PropertyList properties) {
+        public Participant createComponent(PropertyList<Property> properties) {
             return new Participant(properties);
         }
 
         @Override
-        public Participant createComponent(
-                final PropertyList properties,
-                final ComponentList subComponents) {
+        public Participant createComponent(final PropertyList<Property> properties,
+                                           final ComponentList<Component> subComponents) {
             return new Participant(properties, subComponents);
         }
     }

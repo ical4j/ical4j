@@ -203,16 +203,8 @@ public class VResource extends Component {
         }
 
         @Override
-        public VResource createComponent(
-                final PropertyList<Property> properties) {
+        public VResource createComponent(final PropertyList<Property> properties) {
             return new VResource(properties);
-        }
-
-        @Override
-        public VResource createComponent(
-                final PropertyList properties,
-                final ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VRESOURCE));
         }
     }
 }

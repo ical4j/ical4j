@@ -54,13 +54,4 @@ class VToDoFactory extends AbstractComponentFactory{
      protected Object newInstance(PropertyList properties) {
          return new VToDo(properties)
      }
-
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-		if (child instanceof VAlarm) {
-			parent.alarms.add child
-		}
-		else {
-			super.setChild(build, parent, child)
-		}
-    }
 }

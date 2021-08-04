@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable, PropertyContainer {
+public abstract class Component implements Serializable, PropertyContainer, ComponentContainer {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -137,13 +137,19 @@ public abstract class Component implements Serializable, PropertyContainer {
 
     private PropertyList<Property> properties;
 
+    private ComponentList<? extends Component> components;
+
     /**
      * Constructs a new component containing no properties.
      *
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList<Property>());
+        this(s, new PropertyList<>(), new ComponentList<>());
+    }
+
+    protected Component(final String s, final PropertyList<Property> p) {
+        this(s, p, new ComponentList<>());
     }
 
     /**
@@ -152,9 +158,10 @@ public abstract class Component implements Serializable, PropertyContainer {
      * @param s component name
      * @param p a list of properties
      */
-    protected Component(final String s, final PropertyList<Property> p) {
+    protected Component(final String s, final PropertyList<Property> p, ComponentList<? extends Component> c) {
         this.name = s;
         this.properties = p;
+        this.components = c;
     }
 
     /**
@@ -222,6 +229,11 @@ public abstract class Component implements Serializable, PropertyContainer {
         return p;
     }
 
+    @Override
+    public final ComponentList<? extends Component> getComponents() {
+        return components;
+    }
+
     /**
      * Perform validation on a component and its properties.
      *
@@ -281,14 +293,13 @@ public abstract class Component implements Serializable, PropertyContainer {
      * @throws ParseException     where parsing component data fails
      * @throws URISyntaxException where component data contains an invalid URI
      */
-    public Component copy() throws ParseException, IOException,
-            URISyntaxException {
+    public final Component copy() throws ParseException, IOException, URISyntaxException {
 
         // Deep copy properties..
         final PropertyList<Property> newprops = new PropertyList<Property>(getProperties());
+        final ComponentList<Component> newc = new ComponentList<>(getComponents());
 
-        return new ComponentFactoryImpl().createComponent(getName(),
-                newprops);
+        return new ComponentFactoryImpl().createComponent(getName(), newprops, newc);
     }
 
     /**

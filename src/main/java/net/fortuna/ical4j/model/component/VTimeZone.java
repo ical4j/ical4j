@@ -43,9 +43,6 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Objects;
 
 /**
@@ -127,14 +124,11 @@ public class VTimeZone extends CalendarComponent {
 
     private static final Validator itipValidator = new VTimeZoneValidator();
 
-    private ComponentList<Observance> observances;
-
     /**
      * Default constructor.
      */
     public VTimeZone() {
         super(VTIMEZONE);
-        this.observances = new ComponentList<Observance>();
     }
 
     /**
@@ -143,7 +137,6 @@ public class VTimeZone extends CalendarComponent {
      */
     public VTimeZone(final PropertyList properties) {
         super(VTIMEZONE, properties);
-        this.observances = new ComponentList<Observance>();
     }
 
     /**
@@ -152,7 +145,6 @@ public class VTimeZone extends CalendarComponent {
      */
     public VTimeZone(final ComponentList<Observance> observances) {
         super(VTIMEZONE);
-        this.observances = observances;
     }
 
     /**
@@ -161,8 +153,7 @@ public class VTimeZone extends CalendarComponent {
      * @param observances a list of timezone types
      */
     public VTimeZone(final PropertyList properties, final ComponentList<Observance> observances) {
-        super(VTIMEZONE, properties);
-        this.observances = observances;
+        super(VTIMEZONE, properties, observances);
     }
 
     /**
@@ -175,7 +166,7 @@ public class VTimeZone extends CalendarComponent {
                 getName() +
                 Strings.LINE_SEPARATOR +
                 getProperties() +
-                observances +
+                getObservances() +
                 END +
                 ':' +
                 getName() +
@@ -238,7 +229,7 @@ public class VTimeZone extends CalendarComponent {
      * @return Returns the types.
      */
     public final ComponentList<Observance> getObservances() {
-        return observances;
+        return (ComponentList<Observance>) getComponents();
     }
 
     /**
@@ -289,7 +280,7 @@ public class VTimeZone extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VTimeZone) {
             return super.equals(arg0)
-                    && Objects.equals(observances, ((VTimeZone) arg0)
+                    && Objects.equals(getObservances(), ((VTimeZone) arg0)
                             .getObservances());
         }
         return super.equals(arg0);
@@ -302,21 +293,6 @@ public class VTimeZone extends CalendarComponent {
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getObservances()).toHashCode();
-    }
-
-    /**
-     * Overrides default copy method to add support for copying observance sub-components.
-     * @return a copy of the instance
-     * @throws ParseException where an error occurs parsing data
-     * @throws IOException where an error occurs reading data
-     * @throws URISyntaxException where an invalid URI is encountered
-     * @see net.fortuna.ical4j.model.Component#copy()
-     */
-    @Override
-    public Component copy() throws ParseException, IOException, URISyntaxException {
-        final VTimeZone copy = (VTimeZone) super.copy();
-        copy.observances = new ComponentList<Observance>(observances);
-        return copy;
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VTimeZone> {

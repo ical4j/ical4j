@@ -95,11 +95,9 @@ import java.util.Arrays;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class VAvailability extends CalendarComponent {
+public class VAvailability extends CalendarComponent implements ComponentContainer {
 
 	private static final long serialVersionUID = -3001603309266267258L;
-	
-	private ComponentList<Available> available;
 
     /**
      * Default constructor.
@@ -110,7 +108,6 @@ public class VAvailability extends CalendarComponent {
 
     public VAvailability(boolean initialise) {
         super(VAVAILABILITY);
-        this.available = new ComponentList<Available>();
         if (initialise) {
             getProperties().add(new DtStamp());
         }
@@ -122,7 +119,6 @@ public class VAvailability extends CalendarComponent {
      */
     public VAvailability(final PropertyList properties) {
         super(VAVAILABILITY, properties);
-        this.available = new ComponentList<Available>();
     }
 
     /**
@@ -131,8 +127,7 @@ public class VAvailability extends CalendarComponent {
      * @param available a list of available components
      */
     public VAvailability(final PropertyList properties, final ComponentList<Available> available) {
-        super(VAVAILABILITY, properties);
-        this.available = available;
+        super(VAVAILABILITY, properties, available);
     }
 
     /**
@@ -140,7 +135,7 @@ public class VAvailability extends CalendarComponent {
      * @return a component list
      */
     public final ComponentList<Available> getAvailable() {
-        return available;
+        return (ComponentList<Available>) getComponents();
     }
 
     /**

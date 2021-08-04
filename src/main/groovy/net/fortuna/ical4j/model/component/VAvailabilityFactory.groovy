@@ -53,13 +53,4 @@ class VAvailabilityFactory extends AbstractComponentFactory{
      protected Object newInstance(PropertyList properties) {
          return new VAvailability(properties)
      }
-
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof Available) {
-            parent.available.add child
-        }
-        else {
-            super.setChild(build, parent, child)
-        }
-    }
 }
