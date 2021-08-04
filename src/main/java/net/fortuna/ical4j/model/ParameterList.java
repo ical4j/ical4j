@@ -177,6 +177,15 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     }
 
     /**
+     * Returns true if this parameter list includes the specified parameter.
+     * @param parameter a parameter specification
+     * @return true if parameter matching specification is found
+     */
+    public boolean contains(Parameter parameter) {
+        return parameters.contains(parameter);
+    }
+
+    /**
      * @return an iterator
      * @see List#iterator()
      */

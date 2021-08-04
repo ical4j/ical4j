@@ -4,7 +4,11 @@ public interface PropertyContainer {
 
     PropertyList<Property> getProperties();
 
-    <T extends Property> PropertyList<T> getProperties(final String name);
+    default <T extends Property> PropertyList<T> getProperties(final String name) {
+        return getProperties().getProperties(name);
+    }
 
-    <T extends Property> T getProperty(final String name);
+    default <T extends Property> T getProperty(final String name) {
+        return getProperties().getProperty(name);
+    }
 }
