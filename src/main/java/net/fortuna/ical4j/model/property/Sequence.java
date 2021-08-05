@@ -40,6 +40,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Comparator;
 
 /**
  * $Id$
@@ -210,12 +211,14 @@ public class Sequence extends Property {
     @Override
     public int compareTo(Property o) {
         if (o instanceof Sequence) {
-            return Integer.compare(getSequenceNo(), ((Sequence) o).getSequenceNo());
+            return Comparator.comparing(Sequence::getName)
+                    .thenComparing(Sequence::getSequenceNo)
+                    .compare(this, (Sequence) o);
         }
         return super.compareTo(o);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Sequence> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -223,13 +226,13 @@ public class Sequence extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Sequence createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Sequence(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Sequence createProperty() {
             return new Sequence();
         }
     }

@@ -37,6 +37,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.net.URISyntaxException;
+import java.util.Comparator;
 
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
@@ -50,7 +51,7 @@ import java.net.URISyntaxException;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Parameter extends Content {
+public abstract class Parameter extends Content implements Comparable<Parameter> {
 
     private static final long serialVersionUID = -2058497904769713528L;
 
@@ -296,5 +297,15 @@ public abstract class Parameter extends Content {
             throw new UnsupportedOperationException("No factory specified");
         }
         return (T) factory.createParameter(getValue());
+    }
+
+    @Override
+    public int compareTo(Parameter o) {
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Parameter::getName)
+                .thenComparing(Parameter::getValue)
+                .compare(this, o);
     }
 }

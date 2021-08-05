@@ -41,6 +41,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Comparator;
 
 /**
  * $Id$
@@ -295,7 +296,9 @@ public abstract class DateProperty extends Property {
     @Override
     public int compareTo(Property o) {
         if (o instanceof DateProperty) {
-            return getDate().compareTo(((DateProperty) o).getDate());
+            return Comparator.comparing(DateProperty::getName)
+                    .thenComparing(DateProperty::getDate)
+                    .compare(this, (DateProperty) o);
         }
         return super.compareTo(o);
     }
