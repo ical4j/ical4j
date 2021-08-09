@@ -44,7 +44,7 @@ public class ComponentGroup<T extends Component> {
         this.components = components;
 
         if (recurrenceId != null) {
-            componentPredicate = new PropertyEqualToRule<T, String>(uid).and(new PropertyEqualToRule<>(recurrenceId));
+            componentPredicate = new PropertyEqualToRule<T>(uid).and(new PropertyEqualToRule<>(recurrenceId));
         } else {
             componentPredicate = new PropertyEqualToRule<>(uid);
         }

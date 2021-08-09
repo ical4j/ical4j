@@ -133,11 +133,11 @@ public abstract class Component implements Serializable, PropertyContainer, Comp
      */
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
-    private String name;
+    private final String name;
 
-    private PropertyList<Property> properties;
+    private final PropertyList<Property> properties;
 
-    private ComponentList<? extends Component> components;
+    private final ComponentList<? extends Component> components;
 
     /**
      * Constructs a new component containing no properties.
@@ -276,7 +276,7 @@ public abstract class Component implements Serializable, PropertyContainer, Comp
     public final Component copy() throws ParseException, IOException, URISyntaxException {
 
         // Deep copy properties..
-        final PropertyList<Property> newprops = new PropertyList<Property>(getProperties());
+        final PropertyList<Property> newprops = new PropertyList<>(getProperties());
         final ComponentList<Component> newc = new ComponentList<>(getComponents());
 
         return new ComponentFactoryImpl().createComponent(getName(), newprops, newc);
@@ -339,15 +339,15 @@ public abstract class Component implements Serializable, PropertyContainer, Comp
         // add recurrence dates..
         List<RDate> rDates = getProperties(Property.RDATE);
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.PERIOD)
-                .map(p -> p.getPeriods()).flatMap(PeriodList::stream).filter(rdatePeriod -> period.intersects(rdatePeriod))
+                .map(RDate::getPeriods).flatMap(PeriodList::stream).filter(period::intersects)
                 .collect(Collectors.toList()));
 
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME)
-                .map(p -> p.getDates()).flatMap(DateList::stream).filter(date -> period.includes(date))
+                .map(DateListProperty::getDates).flatMap(DateList::stream).filter(period::includes)
                 .map(rdateTime -> new Period((DateTime) rdateTime, rDuration)).collect(Collectors.toList()));
 
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE)
-                .map(p -> p.getDates()).flatMap(DateList::stream).filter(date -> period.includes(date))
+                .map(DateListProperty::getDates).flatMap(DateList::stream).filter(period::includes)
                 .map(rdateDate -> new Period(new DateTime(rdateDate), rDuration)).collect(Collectors.toList()));
 
         // allow for recurrence rules that start prior to the specified period
@@ -386,7 +386,7 @@ public abstract class Component implements Serializable, PropertyContainer, Comp
 
         // subtract exception dates..
         List<ExDate> exDateProps = getProperties(Property.EXDATE);
-        List<Date> exDates = exDateProps.stream().map(e -> e.getDates()).flatMap(DateList::stream)
+        List<Date> exDates = exDateProps.stream().map(DateListProperty::getDates).flatMap(DateList::stream)
                 .collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> {

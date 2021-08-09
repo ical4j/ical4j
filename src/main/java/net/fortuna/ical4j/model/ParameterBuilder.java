@@ -22,7 +22,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
         this(Collections.emptyList());
     }
 
-    public ParameterBuilder(List<ParameterFactory<?>> factories) {
+    public ParameterBuilder(List<ParameterFactory<? extends Parameter>> factories) {
         this.factories = factories;
     }
 
