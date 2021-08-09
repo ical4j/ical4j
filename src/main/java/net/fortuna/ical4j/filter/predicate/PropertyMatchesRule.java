@@ -33,7 +33,6 @@ package net.fortuna.ical4j.filter.predicate;
 
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
-import net.fortuna.ical4j.model.PropertyList;
 
 import java.util.function.Predicate;
 
@@ -44,23 +43,19 @@ import java.util.function.Predicate;
  */
 public class PropertyMatchesRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String propertyName;
+    private final Property specification;
 
-    private final Object value;
+    private final String pattern;
 
-    public PropertyMatchesRule(String propertyName, Object value) {
-        this.propertyName = propertyName;
-        this.value = value;
+    public PropertyMatchesRule(Property specification, String pattern) {
+        this.specification = specification;
+        this.pattern = pattern;
     }
 
     @Override
     public boolean test(T t) {
-        final PropertyList<Property> properties = t.getProperties(propertyName);
-        for (final Property p : properties) {
-            if (p.getValue().matches(value.toString())) {
-                return true;
-            }
-        }
-        return false;
+        // filter all props matching the spec and apply regex pattern matching..
+        return t.getProperties().stream().filter(p -> new PropertyExistsRule.PropertyExists(specification).compareTo(p) == 0)
+                .anyMatch(prop -> prop.getValue().matches(pattern));
     }
 }

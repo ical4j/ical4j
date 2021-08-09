@@ -31,9 +31,12 @@
  */
 package net.fortuna.ical4j.filter.predicate;
 
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
 
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -41,14 +44,33 @@ import java.util.function.Predicate;
  */
 public class PropertyExistsRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String[] specification;
+    private final Property specification;
 
-    public PropertyExistsRule(String... specification) {
+    public PropertyExistsRule(Property specification) {
         this.specification = specification;
     }
 
     @Override
     public boolean test(T t) {
-        return Arrays.stream(specification).noneMatch(p -> t.getProperties(p).isEmpty());
+        return new PropertyEqualToRule<>(new PropertyExists(specification)).test(t);
+    }
+
+    /**
+     * Ignore the property value and just compare on the property name and parameters.
+     */
+    public static class PropertyExists implements Comparable<Property> {
+
+        private Property specification;
+
+        public PropertyExists(Property specification) {
+            this.specification = specification;
+        }
+
+        @Override
+        public int compareTo(Property o) {
+            return Comparator.comparing(Property::getName)
+                    .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                    .compare(specification, o);
+        }
     }
 }

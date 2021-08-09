@@ -69,6 +69,6 @@ class PropertyEqualToRuleTest extends Specification {
         rule.test(event)
 
         where:
-        rule << [new PropertyEqualToRule<VEvent, String>(organiser), new PropertyEqualToRule<VEvent, String>(attendee)]
+        rule << [new PropertyEqualToRule<VEvent>(organiser), new PropertyEqualToRule<VEvent>(attendee)]
     }
 }

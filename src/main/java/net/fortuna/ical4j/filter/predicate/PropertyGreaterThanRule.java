@@ -31,8 +31,8 @@
  */
 package net.fortuna.ical4j.filter.predicate;
 
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
-import net.fortuna.ical4j.model.property.Sequence;
 
 import java.util.function.Predicate;
 
@@ -43,31 +43,25 @@ import java.util.function.Predicate;
  */
 public class PropertyGreaterThanRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String propertyName;
-
-    private final Object value;
+    private final Comparable<Property> comparable;
 
     private final boolean inclusive;
 
-    public PropertyGreaterThanRule(String propertyName, Object value) {
-        this(propertyName, value, false);
+    public PropertyGreaterThanRule(Comparable<Property> comparable) {
+        this(comparable, false);
     }
 
-    public PropertyGreaterThanRule(String propertyName, Object value, boolean inclusive) {
-        this.propertyName = propertyName;
-        this.value = value;
+    public PropertyGreaterThanRule(Comparable<Property> comparable, boolean inclusive) {
+        this.comparable = comparable;
         this.inclusive = inclusive;
     }
 
     @Override
     public boolean test(T t) {
-        if ("sequence".equalsIgnoreCase(propertyName)) {
-            Sequence sequence = t.getProperty(propertyName);
-            if (sequence != null) {
-                return inclusive ? sequence.getSequenceNo() >= Integer.parseInt(value.toString())
-                        : sequence.getSequenceNo() > Integer.parseInt(value.toString());
-            }
+        if (inclusive) {
+            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) < 0);
+        } else {
+            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) <= 0);
         }
-        return false;
     }
 }

@@ -31,9 +31,10 @@
  */
 package net.fortuna.ical4j.filter.predicate;
 
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 /**
@@ -41,14 +42,31 @@ import java.util.function.Predicate;
  */
 public class ParameterExistsRule implements Predicate<Property> {
 
-    private final String[] specification;
+    private final Parameter specification;
 
-    public ParameterExistsRule(String... specification) {
+    public ParameterExistsRule(Parameter specification) {
         this.specification = specification;
     }
 
     @Override
     public boolean test(Property t) {
-        return Arrays.stream(specification).noneMatch(p -> t.getParameters(p).isEmpty());
+        return new ParameterEqualToRule(new ParameterExists(specification)).test(t);
+    }
+
+    /**
+     * Ignore the parameter value and just compare on the parameter name.
+     */
+    public static class ParameterExists implements Comparable<Parameter> {
+
+        private Parameter specification;
+
+        public ParameterExists(Parameter specification) {
+            this.specification = specification;
+        }
+
+        @Override
+        public int compareTo(Parameter o) {
+            return Comparator.comparing(Parameter::getName).compare(specification, o);
+        }
     }
 }

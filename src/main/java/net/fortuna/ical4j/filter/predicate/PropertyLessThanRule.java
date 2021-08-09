@@ -31,14 +31,9 @@
  */
 package net.fortuna.ical4j.filter.predicate;
 
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
-import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.Sequence;
 
-import java.time.Instant;
-import java.time.temporal.Temporal;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.function.Predicate;
 
 /**
@@ -48,35 +43,25 @@ import java.util.function.Predicate;
  */
 public class PropertyLessThanRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String propertyName;
-
-    private final Object value;
+    private final Comparable<Property> comparable;
 
     private final boolean inclusive;
 
-    public PropertyLessThanRule(String propertyName, Object value) {
-        this(propertyName, value, false);
+    public PropertyLessThanRule(Comparable<Property> comparable) {
+        this(comparable, false);
     }
 
-    public PropertyLessThanRule(String propertyName, Object value, boolean inclusive) {
-        this.propertyName = propertyName;
-        this.value = value;
+    public PropertyLessThanRule(Comparable<Property> comparable, boolean inclusive) {
+        this.comparable = comparable;
         this.inclusive = inclusive;
     }
 
     @Override
     public boolean test(T t) {
-        if ("sequence".equalsIgnoreCase(propertyName)) {
-            Sequence sequence = t.getProperty(propertyName);
-            if (sequence != null) {
-                return inclusive ? sequence.getSequenceNo() <= Integer.parseInt(value.toString())
-                        : sequence.getSequenceNo() < Integer.parseInt(value.toString());
-            }
-        } else if (Arrays.asList("due").contains(propertyName)) {
-            DateProperty dateProperty = t.getProperty(propertyName);
-            return inclusive ? dateProperty.getDate().compareTo(Date.from(Instant.from((Temporal) value))) < 0
-                    : dateProperty.getDate().compareTo(Date.from(Instant.from((Temporal) value))) <= 0;
+        if (inclusive) {
+            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) > 0);
+        } else {
+            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) <= 0);
         }
-        return false;
     }
 }

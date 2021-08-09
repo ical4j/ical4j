@@ -33,7 +33,6 @@ package net.fortuna.ical4j.filter.predicate;
 
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
-import net.fortuna.ical4j.model.PropertyList;
 
 import java.util.function.Predicate;
 
@@ -46,24 +45,12 @@ import java.util.function.Predicate;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class PropertyEqualToRule<T extends PropertyContainer, V> implements Predicate<T> {
+public class PropertyEqualToRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String propertyName;
+    private final Comparable<Property> comparable;
 
-    private final V value;
-
-    /**
-     * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
-     * property.
-     * @param property a property instance to check for
-     */
-    public PropertyEqualToRule(final Property property) {
-        this(property.getName(), (V) property);
-    }
-
-    public PropertyEqualToRule(String propertyName, V value) {
-        this.propertyName = propertyName;
-        this.value = value;
+    public PropertyEqualToRule(Comparable<Property> comparable) {
+        this.comparable = comparable;
     }
 
     /**
@@ -71,12 +58,6 @@ public class PropertyEqualToRule<T extends PropertyContainer, V> implements Pred
      */
     @Override
     public final boolean test(final T component) {
-        final PropertyList<Property> properties = component.getProperties(propertyName);
-        for (final Property p : properties) {
-            if (value.equals(p)) {
-                return true;
-            }
-        }
-        return false;
+        return component.getProperties().stream().anyMatch(p -> comparable.compareTo(p) == 0);
     }
 }

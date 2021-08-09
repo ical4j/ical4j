@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.filter.predicate;
 
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
 
 import java.util.Collection;
@@ -43,17 +44,14 @@ import java.util.function.Predicate;
  */
 public class PropertyInRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String propertyName;
+    private final Collection<Comparable<Property>> value;
 
-    private final Collection<?> value;
-
-    public PropertyInRule(String propertyName, Collection<?> value) {
-        this.propertyName = propertyName;
+    public PropertyInRule(Collection<Comparable<Property>> value) {
         this.value = value;
     }
 
     @Override
     public boolean test(T t) {
-        return value.stream().anyMatch(value -> new PropertyEqualToRule<>(propertyName, value).test(t));
+        return value.stream().anyMatch(p -> new PropertyEqualToRule<>(p).test(t));
     }
 }
