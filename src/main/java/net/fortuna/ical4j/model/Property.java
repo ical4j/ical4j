@@ -42,6 +42,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -358,6 +360,8 @@ public abstract class Property extends Content implements Comparable<Property> {
      */
     public static final String ACKNOWLEDGED = "ACKNOWLEDGED";
 
+    public static final String PROXIMITY = "PROXIMITY";
+
     /* Event publication properties */
 
     /**
@@ -513,8 +517,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @throws URISyntaxException possibly thrown by setting the value of certain properties
      * @throws ParseException     possibly thrown by setting the value of certain properties
      */
-    public abstract void setValue(String aValue) throws IOException,
-            URISyntaxException, ParseException;
+    public abstract void setValue(String aValue) throws IOException, URISyntaxException, ParseException;
 
     /**
      * Perform validation on a property.
@@ -565,6 +568,12 @@ public abstract class Property extends Content implements Comparable<Property> {
 
     @Override
     public int compareTo(Property o) {
-        return getValue().compareTo(o.getValue());
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Property::getName)
+                .thenComparing(Property::getValue)
+                .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                .compare(this, o);
     }
 }
