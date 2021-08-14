@@ -29,48 +29,39 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.filter.predicate;
+package net.fortuna.ical4j.filter;
 
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.filter.expression.BinaryExpression;
+import net.fortuna.ical4j.filter.expression.UnaryExpression;
+import net.fortuna.ical4j.filter.predicate.ParameterEqualToRule;
+import net.fortuna.ical4j.filter.predicate.ParameterExistsRule;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyContainer;
 
-import java.util.Comparator;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-/**
- * Test for a property matching the supplied specification.
- */
-public class PropertyExistsRule<T extends PropertyContainer> implements Predicate<T> {
+public class PropertyFilter extends AbstractFilter<Property> {
 
-    private final Property specification;
-
-    public PropertyExistsRule(Property specification) {
-        this.specification = specification;
+    public Predicate<Property> predicate(UnaryExpression expression) {
+        switch (expression.operator) {
+            case not:
+                return predicate(expression.operand).negate();
+            case notExists:
+                return new ParameterExistsRule(parameter(expression)).negate();
+            case exists:
+                return new ParameterExistsRule(parameter(expression));
+        }
+        throw new IllegalArgumentException("Not a valid filter");
     }
 
-    @Override
-    public boolean test(T t) {
-        return new PropertyEqualToRule<>(new PropertyExists(specification)).test(t);
-    }
-
-    /**
-     * Ignore the property value and just compare on the property name and parameters.
-     */
-    public static class PropertyExists implements Comparable<Property> {
-
-        private final Property specification;
-
-        public PropertyExists(Property specification) {
-            this.specification = specification;
+    public Predicate<Property> predicate(BinaryExpression expression) {
+        switch (expression.operator) {
+            case equalTo:
+                return new ParameterEqualToRule<>(parameter(expression));
+            case and:
+                return predicate(expression.left).and(predicate(expression.right));
+            case or:
+                return predicate(expression.left).or(predicate(expression.right));
         }
-
-        @Override
-        public int compareTo(Property o) {
-            return Comparator.comparing(Property::getName)
-                    .thenComparing((Function<Property, ParameterList>) Property::getParameters)
-                    .compare(specification, o);
-        }
+        throw new IllegalArgumentException("Not a valid filter");
     }
 }
