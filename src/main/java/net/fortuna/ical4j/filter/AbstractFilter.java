@@ -190,9 +190,10 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
         return literal.stream().map(l -> parameter(specification.getName(), l)).collect(Collectors.toList());
     }
 
-    protected Parameter parameter(String name) {
+    protected Parameter parameter(FilterSpec.Attribute a) {
         try {
-            return new ParameterBuilder(new DefaultParameterFactorySupplier().get()).name(name).build();
+            return new ParameterBuilder(new DefaultParameterFactorySupplier().get())
+                    .name(a.getName()).value(a.getValue()).build();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }

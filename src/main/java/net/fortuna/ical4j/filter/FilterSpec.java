@@ -35,6 +35,7 @@ package net.fortuna.ical4j.filter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class FilterSpec {
@@ -43,14 +44,14 @@ public class FilterSpec {
 
     private final Optional<String> value;
 
-    private final List<String> attributes;
+    private final List<Attribute> attributes;
 
     public FilterSpec(String spec) {
         this(spec, Collections.emptyList());
     }
 
-    public FilterSpec(String spec, List<String> attributes) {
-        this.name = spec.split(":")[0];
+    public FilterSpec(String spec, List<Attribute> attributes) {
+        this.name = spec.split(":")[0].replace("_", "-");
         this.value = Optional.ofNullable(spec.split(":").length > 1 ? spec.split(":")[1] : null);
         this.attributes = attributes;
     }
@@ -63,7 +64,46 @@ public class FilterSpec {
         return value;
     }
 
-    public List<String> getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FilterSpec that = (FilterSpec) o;
+        return name.equals(that.name) && Objects.equals(value, that.value) && Objects.equals(attributes, that.attributes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, value, attributes);
+    }
+
+    public static class Attribute {
+
+        private String name;
+
+        private String value;
+
+        public Attribute(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Attribute parse(String string) {
+            String name = string.split(":")[0];
+            String value = string.contains(":") ? string.split(":")[1] : null;
+            return new Attribute(name, value);
+        }
     }
 }

@@ -1,6 +1,12 @@
 package net.fortuna.ical4j.filter;
 
+import net.fortuna.ical4j.filter.FilterExpression.Op;
+import net.fortuna.ical4j.filter.expression.BinaryExpression;
+import net.fortuna.ical4j.filter.expression.NumberExpression;
+import net.fortuna.ical4j.filter.expression.SpecificationExpression;
+import net.fortuna.ical4j.filter.expression.StringExpression;
 import net.fortuna.ical4j.model.TemporalAmountAdapter;
+import org.jparsec.*;
 
 import java.time.*;
 import java.time.temporal.Temporal;
@@ -18,6 +24,65 @@ import java.util.function.Function;
  */
 public class FilterExpressionParser {
 
+    private static final String[] OPERATORS = {
+        ">", "<", "=", ">=", "<=", "<>", ".", "(", ")", "[", "]", ":", ","
+    };
+
+    private static final String[] KEYWORDS = {
+        "by", "order", "asc", "desc",
+        "and", "or", "not", "in", "exists", "between", "is", "null", "like",
+        "contains", "matches"
+    };
+
+    private static final String[] FUNCTION_NAMES = {
+        "now", "startOfDay", "endOfDay", "startOfWeek", "endOfWeek", "startOfMonth", "endOfMonth",
+        "startOfYear", "endOfYear", "startOfWeek", "endOfWeek", "startOfMonth", "endOfMonth",
+    };
+
+    private static final Terminals TERMS = Terminals.operators(OPERATORS)
+            .words(Scanners.IDENTIFIER).caseInsensitiveKeywords(Arrays.asList(KEYWORDS))
+            .keywords(FUNCTION_NAMES).build();
+
+    private static final Parser<?> TOKENIZER = Parsers.or(
+            Terminals.IntegerLiteral.TOKENIZER, Terminals.StringLiteral.SINGLE_QUOTE_TOKENIZER,
+            TERMS.tokenizer());
+
+    static final Parser<String> ATTRIBUTE_PARSER = Parsers.sequence(Terminals.Identifier.PARSER,
+            term(":"), Terminals.Identifier.PARSER);
+
+    static final Parser<List<String>> ATTRIBUTE_LIST_PARSER = ATTRIBUTE_PARSER
+            .between(term("["), term("]")).sepBy(term(","));
+
+    static final Parser<NumberExpression> NUMBER = Terminals.IntegerLiteral.PARSER.map(NumberExpression::new);
+
+    static final Parser<StringExpression> STRING = Terminals.StringLiteral.PARSER.map(StringExpression::new);
+
+    static final Parser<SpecificationExpression> NAME = Parsers.sequence(
+                    Terminals.Identifier.PARSER, ATTRIBUTE_LIST_PARSER, (name, attr) -> new SpecificationExpression(name))
+            .or(Terminals.Identifier.PARSER.map(SpecificationExpression::new));
+//    static final Parser<SpecificationExpression> NAME = Terminals.Identifier.PARSER
+//            .map(SpecificationExpression::new);
+
+    static final Parser<Void> IGNORED = Parsers.or(
+            Scanners.JAVA_LINE_COMMENT,
+            Scanners.JAVA_BLOCK_COMMENT,
+            Scanners.WHITESPACES).skipMany();
+
+    static final Parser<List<String>> COLLECTION_PARSER = Terminals.StringLiteral.PARSER
+            .between(term("("), term(")")).sepBy(term(",")).from(TOKENIZER, IGNORED);
+
+//    static final Parser<StringExpression> STRING = Terminals.StringLiteral.SINGLE_QUOTE_TOKENIZER.map(StringExpression::new);
+
+//    static final Parser<TemporalExpression> TEMPORAL = Terminals.StringLiteral.PARSER.map(TemporalExpression::new);
+
+    static Parser<?> term(String... names) {
+        return TERMS.token(names);
+    }
+
+    static <T> Parser<T> op(String name, T value) {
+        return term(name).retn(value);
+    }
+    
     private static final Map<String, Function<String, ?>> FUNCTIONS = new HashMap<>();
     static {
         FUNCTIONS.put("now", (Function<String, Temporal>) s -> {
@@ -88,51 +153,65 @@ public class FilterExpressionParser {
     }
 
     public FilterExpression parse(String filterExpression) {
-        FilterExpression expression = new FilterExpression();
-        Arrays.stream(filterExpression.split("\\s*and\\s*")).forEach(part -> {
+        FilterExpression expression = null;
+        for (String part : filterExpression.split("\\s*and\\s*")) {
             if (part.matches("[\\w-]+\\s*>=\\s*\\w+")) {
                 String[] greaterThanEqual = part.split("\\s*>=\\s*");
-                expression.greaterThanEqual(greaterThanEqual[0], resolveValue(greaterThanEqual[1]));
+                expression = FilterExpression.greaterThanEqual(greaterThanEqual[0], resolveValue(greaterThanEqual[1]));
             } else if (part.matches("[\\w-]+\\s*<=\\s*\\w+")) {
                 String[] lessThanEqual = part.split("\\s*<=\\s*");
-                expression.lessThanEqual(lessThanEqual[0], resolveValue(lessThanEqual[1]));
+                expression = FilterExpression.lessThanEqual(lessThanEqual[0], resolveValue(lessThanEqual[1]));
             } else if (part.matches("[\\w-]+\\s*=\\s*[^<>=]+")) {
                 String[] equalTo = part.split("\\s*=\\s*");
-                expression.equalTo(equalTo[0], resolveValue(equalTo[1]));
+                expression = FilterExpression.equalTo(equalTo[0], (String) resolveValue(equalTo[1]));
             } else if (part.matches("[\\w-]+\\s*>\\s*\\w+")) {
                 String[] greaterThan = part.split("\\s*>\\s*");
-                expression.greaterThan(greaterThan[0], resolveValue(greaterThan[1]));
+                expression = FilterExpression.greaterThan(greaterThan[0], (Integer) resolveValue(greaterThan[1]));
             } else if (part.matches("[\\w-]+\\s*<\\s*\\w+")) {
                 String[] lessThan = part.split("\\s*<\\s*");
-                expression.lessThan(lessThan[0], resolveValue(lessThan[1]));
+                expression = FilterExpression.lessThan(lessThan[0], resolveValue(lessThan[1]));
             } else if (part.matches("[\\w-]+\\s+in\\s+\\[[^<>=]+]")) {
                 String[] in = part.split("\\s*in\\s*");
                 List<String> items = Arrays.asList(in[1].replaceAll("[\\[\\]]", "")
                         .split("\\[?\\s*,\\s*]?"));
-                expression.in(in[0], items);
+                expression = FilterExpression.in(in[0], items);
             } else if (part.matches("[\\w-]+\\s+contains\\s+\".+\"")) {
                 String[] contains = part.split("\\s*contains\\s*");
-                expression.contains(contains[0], contains[1].replaceAll("^\"?|\"?$", ""));
+                expression = FilterExpression.contains(contains[0], contains[1].replaceAll("^\"?|\"?$", ""));
             } else if (part.matches("[\\w-]+\\s+exists")) {
                 String[] exists = part.split("\\s*exists");
-                expression.exists(exists[0]);
+                expression = FilterExpression.exists(exists[0]);
             } else if (part.matches("[\\w-]+\\s+not exists")) {
                 String[] notExists = part.split("\\s*not exists");
-                expression.notExists(notExists[0]);
+                expression = FilterExpression.notExists(notExists[0]);
             } else {
                 throw new IllegalArgumentException("Invalid filter expression: " + filterExpression);
             }
-        });
+        }
         return expression;
     }
 
-    private Object resolveValue(String valueString) {
+    private <T> T resolveValue(String valueString) {
         if (valueString.matches("\\w+\\(.*\\)")
                 && FUNCTIONS.containsKey(valueString.replaceAll("\\(.*\\)", ""))) {
-            return FUNCTIONS.get(valueString.replaceAll("\\(.*\\)", ""))
+            return (T) FUNCTIONS.get(valueString.replaceAll("\\(.*\\)", ""))
                     .apply(valueString.split("\\(|\\)")[1]);
+        } else if (valueString.matches("\\d+")) {
+            return (T) Integer.valueOf(valueString);
         } else {
-            return valueString;
+            return (T) valueString;
         }
+    }
+
+    public static Parser<FilterExpression> newInstance() {
+        Parser.Reference<FilterExpression> ref = Parser.newReference();
+        Parser<FilterExpression> unit = ref.lazy().between(term("("), term(")"))
+                .or(NUMBER).or(NAME).or(STRING); //.or(TEMPORAL);
+        Parser<FilterExpression> parser = new OperatorTable<FilterExpression>()
+                .infixl(op("=", (l, r) -> new BinaryExpression(l, Op.equalTo, r)), 10)
+                .infixl(op("<>", (l, r) -> new BinaryExpression(l, Op.notEqualTo, r)), 10)
+                .build(unit);
+        ref.set(parser);
+        return parser.from(TOKENIZER, IGNORED);
     }
 }
