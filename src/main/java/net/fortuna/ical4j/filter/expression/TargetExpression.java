@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2004-2021, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -30,80 +30,40 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+package net.fortuna.ical4j.filter.expression;
 
-package net.fortuna.ical4j.filter;
+import net.fortuna.ical4j.filter.FilterExpression;
+import net.fortuna.ical4j.filter.FilterTarget;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-public class FilterSpec {
+public class TargetExpression implements FilterExpression {
 
-    private final String name;
+    public final FilterTarget value;
 
-    private final Optional<String> value;
-
-    private final List<Attribute> attributes;
-
-    public FilterSpec(String spec) {
-        this(spec, Collections.emptyList());
+    public TargetExpression(String value) {
+        this.value = new FilterTarget(value);
     }
 
-    public FilterSpec(String spec, List<Attribute> attributes) {
-        this.name = spec.split(":")[0].replace("_", "-");
-        this.value = Optional.ofNullable(spec.split(":").length > 1 ? spec.split(":")[1] : null);
-        this.attributes = attributes;
+    public TargetExpression(String value, List<FilterTarget.Attribute> attributes) {
+        this.value = new FilterTarget(value, attributes);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Optional<String> getValue() {
+    public FilterTarget getValue() {
         return value;
-    }
-
-    public List<Attribute> getAttributes() {
-        return attributes;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FilterSpec that = (FilterSpec) o;
-        return name.equals(that.name) && Objects.equals(value, that.value) && Objects.equals(attributes, that.attributes);
+        TargetExpression that = (TargetExpression) o;
+        return value.equals(that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, attributes);
-    }
-
-    public static class Attribute {
-
-        private String name;
-
-        private String value;
-
-        public Attribute(String name, String value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public static Attribute parse(String string) {
-            String name = string.split(":")[0];
-            String value = string.contains(":") ? string.split(":")[1] : null;
-            return new Attribute(name, value);
-        }
+        return Objects.hash(value);
     }
 }

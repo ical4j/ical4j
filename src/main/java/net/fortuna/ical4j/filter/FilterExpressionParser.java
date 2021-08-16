@@ -3,8 +3,8 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.filter.FilterExpression.Op;
 import net.fortuna.ical4j.filter.expression.BinaryExpression;
 import net.fortuna.ical4j.filter.expression.NumberExpression;
-import net.fortuna.ical4j.filter.expression.SpecificationExpression;
 import net.fortuna.ical4j.filter.expression.StringExpression;
+import net.fortuna.ical4j.filter.expression.TargetExpression;
 import net.fortuna.ical4j.model.TemporalAmountAdapter;
 import org.jparsec.*;
 
@@ -47,19 +47,20 @@ public class FilterExpressionParser {
             Terminals.IntegerLiteral.TOKENIZER, Terminals.StringLiteral.SINGLE_QUOTE_TOKENIZER,
             TERMS.tokenizer());
 
-    static final Parser<String> ATTRIBUTE_PARSER = Parsers.sequence(Terminals.Identifier.PARSER,
-            term(":"), Terminals.Identifier.PARSER);
+    static final Parser<FilterTarget.Attribute> ATTRIBUTE_PARSER = Parsers.sequence(Terminals.Identifier.PARSER,
+            term(":"), Terminals.Identifier.PARSER, (name, x, value) -> new FilterTarget.Attribute(name, value))
+            .or(Terminals.Identifier.PARSER.map(FilterTarget.Attribute::new));
 
-    static final Parser<List<String>> ATTRIBUTE_LIST_PARSER = ATTRIBUTE_PARSER
+    static final Parser<List<FilterTarget.Attribute>> ATTRIBUTE_LIST_PARSER = ATTRIBUTE_PARSER
             .between(term("["), term("]")).sepBy(term(","));
 
     static final Parser<NumberExpression> NUMBER = Terminals.IntegerLiteral.PARSER.map(NumberExpression::new);
 
     static final Parser<StringExpression> STRING = Terminals.StringLiteral.PARSER.map(StringExpression::new);
 
-    static final Parser<SpecificationExpression> NAME = Parsers.sequence(
-                    Terminals.Identifier.PARSER, ATTRIBUTE_LIST_PARSER, (name, attr) -> new SpecificationExpression(name))
-            .or(Terminals.Identifier.PARSER.map(SpecificationExpression::new));
+    static final Parser<TargetExpression> NAME = Parsers.sequence(
+                    Terminals.Identifier.PARSER, ATTRIBUTE_LIST_PARSER, TargetExpression::new)
+            .or(Terminals.Identifier.PARSER.map(TargetExpression::new));
 //    static final Parser<SpecificationExpression> NAME = Terminals.Identifier.PARSER
 //            .map(SpecificationExpression::new);
 

@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.filter
 
 import net.fortuna.ical4j.filter.expression.NumberExpression
-import net.fortuna.ical4j.filter.expression.SpecificationExpression
+import net.fortuna.ical4j.filter.expression.TargetExpression
 import org.jparsec.Parser
 import spock.lang.Specification
 
@@ -48,10 +48,10 @@ class FilterExpressionParserTest extends Specification {
         where:
         expression                                          | expectedResult
         '1'                                                 | new NumberExpression('1')
-        'due'                                               | new SpecificationExpression('due')
+        'due'                                               | new TargetExpression('due')
         "due = 12"                                          | FilterExpression.equalTo('due', 12)
         "related_to = '1234-1234-1234'"                     | FilterExpression.equalTo("related_to", '1234-1234-1234')
-        "related_to[rel_type:SIBLING] = '1234-1234-1234'"   | FilterExpression.equalTo("related_to", '1234-1234-1234')
-        "attendee[role:CHAIR] = '1234-1234-1234'"           | FilterExpression.equalTo("attendee", '1234-1234-1234')
+        "related_to[rel_type:SIBLING] = '1234-1234-1234'"   | FilterExpression.equalTo("related_to", Collections.singletonList(new FilterTarget.Attribute("rel_type", "SIBLING")), '1234-1234-1234')
+        "attendee[role:CHAIR] = '1234-1234-1234'"           | FilterExpression.equalTo("attendee", Collections.singletonList(new FilterTarget.Attribute("role", "CHAIR")), '1234-1234-1234')
     }
 }

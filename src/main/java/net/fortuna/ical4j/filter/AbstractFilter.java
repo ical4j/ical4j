@@ -37,7 +37,7 @@ import net.fortuna.ical4j.data.DefaultParameterFactorySupplier;
 import net.fortuna.ical4j.data.DefaultPropertyFactorySupplier;
 import net.fortuna.ical4j.filter.expression.BinaryExpression;
 import net.fortuna.ical4j.filter.expression.LiteralExpression;
-import net.fortuna.ical4j.filter.expression.SpecificationExpression;
+import net.fortuna.ical4j.filter.expression.TargetExpression;
 import net.fortuna.ical4j.filter.expression.UnaryExpression;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterBuilder;
@@ -59,13 +59,13 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
         throw new IllegalArgumentException("Not a valid filter");
     }
 
-    protected FilterSpec specification(FilterExpression expression) {
+    protected FilterTarget target(FilterExpression expression) {
         if (expression instanceof UnaryExpression
-                && ((UnaryExpression) expression).operand instanceof SpecificationExpression) {
-            return ((SpecificationExpression) ((UnaryExpression) expression).operand).getValue();
+                && ((UnaryExpression) expression).operand instanceof TargetExpression) {
+            return ((TargetExpression) ((UnaryExpression) expression).operand).getValue();
         } else if (expression instanceof BinaryExpression
-                && ((BinaryExpression) expression).left instanceof SpecificationExpression) {
-            return ((SpecificationExpression) ((BinaryExpression) expression).left).getValue();
+                && ((BinaryExpression) expression).left instanceof TargetExpression) {
+            return ((TargetExpression) ((BinaryExpression) expression).left).getValue();
         }
         throw new IllegalArgumentException("Not a valid filter");
     }
@@ -90,7 +90,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Property property(UnaryExpression expression) {
-        return property(specification(expression));
+        return property(target(expression));
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      */
     protected Property property(BinaryExpression expression) {
         // todo: support for function, integer, etc. on right side (currently only supports string)
-        return property(specification(expression), literal(expression));
+        return property(target(expression), literal(expression));
     }
 
     /**
@@ -109,7 +109,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected List<Comparable<Property>> properties(BinaryExpression expression) {
-        FilterSpec operand = specification(expression);
+        FilterTarget operand = target(expression);
         List<String> literal = literal(expression);
         return literal.stream().map(l -> property(operand, l)).collect(Collectors.toList());
     }
@@ -119,7 +119,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @param operand
      * @return
      */
-    protected Property property(FilterSpec operand) {
+    protected Property property(FilterTarget operand) {
         PropertyBuilder spec = new PropertyBuilder(new DefaultPropertyFactorySupplier().get()).name(operand.getName());
         if (operand.getValue().isPresent()) {
             spec.value(operand.getValue().get());
@@ -140,7 +140,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @param value
      * @return
      */
-    protected Property property(FilterSpec operand, String value) {
+    protected Property property(FilterTarget operand, String value) {
         PropertyBuilder spec = new PropertyBuilder(new DefaultPropertyFactorySupplier().get()).name(operand.getName());
         if (value != null) {
             spec.value(value);
@@ -161,11 +161,11 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Parameter parameter(UnaryExpression expression) {
-        FilterSpec specification = specification(expression);
+        FilterTarget specification = target(expression);
         if (specification.getValue().isPresent()) {
             return parameter(specification.getName(), specification.getValue().get());
         } else {
-            return parameter(specification(expression).getName(), null);
+            return parameter(target(expression).getName(), null);
         }
     }
 
@@ -175,7 +175,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Parameter parameter(BinaryExpression expression) {
-        return parameter(specification(expression).getName(), literal(expression));
+        return parameter(target(expression).getName(), literal(expression));
     }
 
     /**
@@ -185,12 +185,12 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      */
     protected List<Comparable<Parameter>> parameters(BinaryExpression expression) {
         // only applicable for operand expressions..
-        FilterSpec specification = specification(expression);
+        FilterTarget specification = target(expression);
         List<String> literal = literal(expression);
         return literal.stream().map(l -> parameter(specification.getName(), l)).collect(Collectors.toList());
     }
 
-    protected Parameter parameter(FilterSpec.Attribute a) {
+    protected Parameter parameter(FilterTarget.Attribute a) {
         try {
             return new ParameterBuilder(new DefaultParameterFactorySupplier().get())
                     .name(a.getName()).value(a.getValue()).build();
