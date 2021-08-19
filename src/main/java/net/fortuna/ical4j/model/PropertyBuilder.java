@@ -32,7 +32,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
         this(Collections.emptyList());
     }
 
-    public PropertyBuilder(List<PropertyFactory<?>> factories) {
+    public PropertyBuilder(List<PropertyFactory<? extends Property>> factories) {
         this.factories = factories;
     }
 

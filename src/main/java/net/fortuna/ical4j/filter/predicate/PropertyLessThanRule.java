@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2004-2021, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,47 +29,39 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.filter;
+package net.fortuna.ical4j.filter.predicate;
 
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 
 import java.util.function.Predicate;
 
 /**
- * $Id$
+ * Test for a property that is by comparison less than the provided value.
  *
- * Created on 5/02/2006
- *
- * A rule that matches any component containing the specified property. Note that this rule ignores any parameters
- * matching only on the value of the property.
- * @author Ben Fortuna
+ * @param <T>
  */
-public class PropertyEqualToRule<T extends Component> implements Predicate<T> {
+public class PropertyLessThanRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String propertyName;
+    private final Comparable<Property> comparable;
 
-    private final Object value;
+    private final boolean inclusive;
 
-    /**
-     * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
-     * property.
-     * @param property a property instance to check for
-     */
-    public PropertyEqualToRule(final Property property) {
-        this(property.getName(), property.getValue());
+    public PropertyLessThanRule(Comparable<Property> comparable) {
+        this(comparable, false);
     }
 
-    public PropertyEqualToRule(String propertyName, Object value) {
-        this.propertyName = propertyName;
-        this.value = value;
+    public PropertyLessThanRule(Comparable<Property> comparable, boolean inclusive) {
+        this.comparable = comparable;
+        this.inclusive = inclusive;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public final boolean test(final T component) {
-        return component.getProperties().get(propertyName).stream().anyMatch(p -> value.equals(p.getValue()));
+    public boolean test(T t) {
+        if (inclusive) {
+            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) > 0);
+        } else {
+            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) <= 0);
+        }
     }
 }

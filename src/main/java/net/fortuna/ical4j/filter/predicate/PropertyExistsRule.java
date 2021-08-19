@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2004-2021, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,65 +29,48 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.filter;
+package net.fortuna.ical4j.filter.predicate;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 
-import java.time.temporal.Temporal;
-import java.util.Set;
+import java.util.Comparator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * $Id$
- *
- * Created on 2/02/2006
- *
- * A rule that matches any component that occurs in the specified time period.
- * @author Ben Fortuna
+ * Test for a property matching the supplied specification.
  */
-public class PeriodRule<C extends Component, T extends Temporal> implements Predicate<C> {
+public class PropertyExistsRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final Period<T> period;
+    private final Property specification;
 
-    /**
-     * Constructs a new instance using the specified period.
-     * @param period a period instance to match on
-     */
-    public PeriodRule(final Period<T> period) {
-        this.period = period;
+    public PropertyExistsRule(Property specification) {
+        this.specification = specification;
+    }
+
+    @Override
+    public boolean test(T t) {
+        return new PropertyEqualToRule<>(new PropertyExists(specification)).test(t);
     }
 
     /**
-     * {@inheritDoc}
+     * Ignore the property value and just compare on the property name and parameters.
      */
-    @Override
-    public final boolean test(final Component component) {
+    public static class PropertyExists implements Comparable<Property> {
 
-        /*
-        DtStart start = (DtStart) component.getProperty(Property.DTSTART);
-        DtEnd end = (DtEnd) component.getProperty(Property.DTEND);
-        Duration duration = (Duration) component.getProperty(Property.DURATION);
-        
-        if (start == null) {
-            return false;
+        private final Property specification;
+
+        public PropertyExists(Property specification) {
+            this.specification = specification;
         }
-        
-        // detect events that consume no time..
-        if (end == null && duration == null) {
-            if (period.includes(start.getDate(), Period.INCLUSIVE_START)) {
-                return true;
-            }
+
+        @Override
+        public int compareTo(Property o) {
+            return Comparator.comparing(Property::getName)
+                    .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                    .compare(specification, o);
         }
-        */
-        
-//        try {
-        final Set<Period<T>> recurrenceSet = component.calculateRecurrenceSet(period);
-        return (!recurrenceSet.isEmpty());
-//        }
-//        catch (ValidationException ve) {
-//            log.error("Invalid component data", ve);
-//            return false;
-//        }
     }
 }

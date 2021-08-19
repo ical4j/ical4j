@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2004-2021, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,40 +29,33 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.filter;
+package net.fortuna.ical4j.filter.predicate;
 
-import net.fortuna.ical4j.model.DateRange;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 
-import java.util.Date;
 import java.util.function.Predicate;
 
 /**
- * @author fortuna
+ * Test for a property that "matches" the provided regular expression.
  *
- * @deprecated
+ * @param <T>
  */
-@Deprecated
-public class DateInRangeRule implements Predicate<Date> {
+public class PropertyMatchesRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final DateRange range;
-    
-    private final int inclusiveMask;
-    
-    /**
-     * @param range the range to check
-     * @param inclusiveMask indicates inclusiveness of start and end of the range
-     */
-    public DateInRangeRule(DateRange range, int inclusiveMask) {
-        this.range = range;
-        this.inclusiveMask = inclusiveMask;
+    private final Property specification;
+
+    private final String pattern;
+
+    public PropertyMatchesRule(Property specification, String pattern) {
+        this.specification = specification;
+        this.pattern = pattern;
     }
-    
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public boolean test(Date date) {
-        return range.includes(date, inclusiveMask);
+    public boolean test(T t) {
+        // filter all props matching the spec and apply regex pattern matching..
+        return t.getProperties().stream().filter(p -> new PropertyExistsRule.PropertyExists(specification).compareTo(p) == 0)
+                .anyMatch(prop -> prop.getValue().matches(pattern));
     }
-
 }

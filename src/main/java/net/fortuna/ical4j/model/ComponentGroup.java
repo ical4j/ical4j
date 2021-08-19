@@ -1,6 +1,6 @@
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.filter.PropertyEqualToRule;
+import net.fortuna.ical4j.filter.predicate.PropertyEqualToRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 

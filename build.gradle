@@ -50,6 +50,9 @@ dependencies {
     implementation 'javax.cache:cache-api:1.1.1', optional
 
     // optional groovy DSL for calendar builder..
+    implementation "org.jparsec:jparsec:$jparsecVersion", optional
+
+    // optional groovy DSL for calendar builder..
     implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
 
 //    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional

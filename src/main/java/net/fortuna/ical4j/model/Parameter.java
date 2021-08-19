@@ -36,6 +36,9 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.net.URISyntaxException;
+import java.util.Comparator;
+
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
  * iCalendar parameters.
@@ -44,7 +47,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Parameter extends Content {
+public abstract class Parameter extends Content implements Comparable<Parameter> {
 
     private static final long serialVersionUID = -2058497904769713528L;
 
@@ -273,5 +276,15 @@ public abstract class Parameter extends Content {
         // as parameter name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
                 getValue()).toHashCode();
+    }
+
+    @Override
+    public int compareTo(Parameter o) {
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Parameter::getName)
+                .thenComparing(Parameter::getValue)
+                .compare(this, o);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2004-2021, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,34 +29,33 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.filter;
+package net.fortuna.ical4j.filter.predicate;
 
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 
 import java.util.function.Predicate;
 
 /**
- * $Id$
+ * Test for a property that "contains" the provided value.
  *
- * Created on 5/02/2006
- *
- * A rule that matches any component containing the specified property. Note that this rule ignores any parameters
- * matching only on the value of the property.
- * @author Ben Fortuna
+ * @param <T>
  */
-public class ParameterEqualToRule implements Predicate<Property> {
+public class PropertyContainsRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private final String parameterName;
+    private final Property specification;
 
-    private final Object value;
+    private final String value;
 
-    public ParameterEqualToRule(String parameterName, Object value) {
-        this.parameterName = parameterName;
+    public PropertyContainsRule(Property specification, String value) {
+        this.specification = specification;
         this.value = value;
     }
 
     @Override
-    public final boolean test(final Property property) {
-        return property.getParameters().get(parameterName).stream().anyMatch(p -> value.equals(p.getValue()));
+    public boolean test(T t) {
+        // filter all props matching the spec and check value for substring match..
+        return t.getProperties().stream().filter(p -> new PropertyExistsRule.PropertyExists(specification).compareTo(p) == 0)
+                .anyMatch(prop -> prop.getValue().contains(value));
     }
 }

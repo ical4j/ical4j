@@ -37,6 +37,11 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.util.Comparator;
+
 /**
  * $Id$
  * <p/>
@@ -206,7 +211,9 @@ public class Sequence extends Property {
     @Override
     public int compareTo(Property o) {
         if (o instanceof Sequence) {
-            return Integer.compare(getSequenceNo(), ((Sequence) o).getSequenceNo());
+            return Comparator.comparing(Sequence::getName)
+                    .thenComparing(Sequence::getSequenceNo)
+                    .compare(this, (Sequence) o);
         }
         return super.compareTo(o);
     }

@@ -1,140 +1,95 @@
 package net.fortuna.ical4j.filter;
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.filter.expression.*;
 
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.time.temporal.Temporal;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
-public class FilterExpression {
+public interface FilterExpression {
 
-    private final Map<String, Object> equalToMap = new HashMap<>();
-
-    private final Map<String, List<?>> inMap = new HashMap<>();
-
-    private final Map<String, Object> greaterThanMap = new HashMap<>();
-
-    private final Map<String, Object> greaterThanEqualMap = new HashMap<>();
-
-    private final Map<String, Object> lessThanMap = new HashMap<>();
-
-    private final Map<String, Object> lessThanEqualMap = new HashMap<>();
-
-    private final Map<String, Object> containsMap = new HashMap<>();
-
-    private final Set<String> existsSet = new HashSet<>();
-
-    private final Set<String> notExistsSet = new HashSet<>();
-
-    public FilterExpression equalTo(String name, Object value) {
-        equalToMap.put(name, value);
-        return this;
+    enum Op {
+        // comparison operators..
+        equalTo, notEqualTo, in, notIn,
+        greaterThan, greaterThanEqual, lessThan, lessThanEqual, between,
+        // object matching operators..
+        exists, notExists,
+        // value matching operators..
+        contains, matches,
+        // logical operators..
+        and, or, not
     }
 
-    public FilterExpression in(String name, List<?> value) {
-        inMap.put(name, value);
-        return this;
+    static FilterExpression equalTo(String target, String value) {
+        return new BinaryExpression(new TargetExpression(target), Op.equalTo, new StringExpression(value));
     }
 
-    public FilterExpression greaterThan(String name, Object value) {
-        greaterThanMap.put(name, value);
-        return this;
+    static FilterExpression equalTo(String target, List<FilterTarget.Attribute> attributes, String value) {
+        return new BinaryExpression(new TargetExpression(target, attributes), Op.equalTo, new StringExpression(value));
     }
 
-    public FilterExpression greaterThanEqual(String name, Object value) {
-        greaterThanEqualMap.put(name, value);
-        return this;
+    static FilterExpression equalTo(String target, Date value) {
+        return new BinaryExpression(new TargetExpression(target), Op.equalTo, new DateExpression(value));
     }
 
-    public FilterExpression lessThan(String name, Object value) {
-        lessThanMap.put(name, value);
-        return this;
+    static FilterExpression equalTo(String target, Integer value) {
+        return new BinaryExpression(new TargetExpression(target), Op.equalTo, new NumberExpression(value));
     }
 
-    public FilterExpression lessThanEqual(String name, Object value) {
-        lessThanEqualMap.put(name, value);
-        return this;
+    static FilterExpression in(String target, Collection<?> value) {
+        return new BinaryExpression(new TargetExpression(target), Op.in, new CollectionExpression(value));
     }
 
-    public FilterExpression contains(String name, Object value) {
-        containsMap.put(name, value);
-        return this;
+    static FilterExpression greaterThan(String target, Temporal value) {
+        return new BinaryExpression(new TargetExpression(target), Op.greaterThan, new StringExpression(value.toString()));
     }
 
-    public FilterExpression exists(String name) {
-        existsSet.add(name);
-        return this;
+    static FilterExpression greaterThan(String target, Number value) {
+        return new BinaryExpression(new TargetExpression(target), Op.greaterThan, new StringExpression(value.toString()));
     }
 
-    public FilterExpression notExists(String name) {
-        notExistsSet.add(name);
-        return this;
+    static FilterExpression greaterThanEqual(String target, Temporal value) {
+        return new BinaryExpression(new TargetExpression(target), Op.greaterThanEqual, new TemporalExpression(value));
     }
 
-    public static FilterExpression parse(String filterExpression) {
+    static FilterExpression lessThan(String target, Temporal value) {
+        return new BinaryExpression(new TargetExpression(target), Op.lessThan, new TemporalExpression(value));
+    }
+
+    static FilterExpression lessThanEqual(String target, String value) {
+        return new BinaryExpression(new TargetExpression(target), Op.lessThanEqual, new StringExpression(value));
+    }
+
+    static FilterExpression contains(String target, String value) {
+        return new BinaryExpression(new TargetExpression(target), Op.contains, new StringExpression(value));
+    }
+
+    static FilterExpression matches(String target, String value) {
+        return new BinaryExpression(new TargetExpression(target), Op.matches, new StringExpression(value));
+    }
+
+    default FilterExpression and(FilterExpression expression) {
+        return new BinaryExpression(this, Op.and, expression);
+    }
+
+    default FilterExpression or(FilterExpression expression) {
+        return new BinaryExpression(this, Op.or, expression);
+    }
+
+    static FilterExpression not(FilterExpression expression) {
+        return new UnaryExpression(Op.not, expression);
+    }
+
+    static FilterExpression exists(String target) {
+        return new UnaryExpression(Op.exists, new TargetExpression(target));
+    }
+
+    static FilterExpression notExists(String target) {
+        return new UnaryExpression(Op.notExists, new TargetExpression(target));
+    }
+
+    static FilterExpression parse(String filterExpression) {
         return new FilterExpressionParser().parse(filterExpression);
-    }
-
-    public static <T> Predicate<T> and(List<Predicate> predicates) {
-        // TODO Handle case when argument is null or empty or has only one element
-        return predicates.stream().reduce(t -> true, Predicate::and);
-    }
-
-    public Predicate<Calendar> toCalendarPredicate() {
-        Predicate<Calendar> p = and(equalToMap.entrySet().stream().map(e -> new PropertyEqualToRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList()));
-        p = p.and(and(inMap.entrySet().stream().map(e -> new PropertyInRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(greaterThanMap.entrySet().stream().map(e -> new PropertyGreaterThanRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(lessThanMap.entrySet().stream().map(e -> new PropertyLessThanRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(containsMap.entrySet().stream().map(e -> new PropertyContainsRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(existsSet.stream().map(PropertyExistsRule::new)
-                .collect(Collectors.toList())));
-        p = p.and(and(notExistsSet.stream().map(prop -> new PropertyExistsRule<>(prop).negate())
-                .collect(Collectors.toList())));
-        return p;
-    }
-
-    public <T extends Component> Predicate<T> toComponentPredicate() {
-        Predicate<T> p = and(equalToMap.entrySet().stream()
-                .map(e -> new PropertyEqualToRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList()));
-        p = p.and(and(inMap.entrySet().stream()
-                .map(e -> new PropertyInRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(greaterThanMap.entrySet().stream()
-                .map(e -> new PropertyGreaterThanRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(greaterThanEqualMap.entrySet().stream()
-                .map(e -> new PropertyGreaterThanRule<>(e.getKey(), e.getValue(), true))
-                .collect(Collectors.toList())));
-        p = p.and(and(lessThanMap.entrySet().stream()
-                .map(e -> new PropertyLessThanRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(lessThanEqualMap.entrySet().stream()
-                .map(e -> new PropertyLessThanRule<>(e.getKey(), e.getValue(), true))
-                .collect(Collectors.toList())));
-        p = p.and(and(containsMap.entrySet().stream()
-                .map(e -> new PropertyContainsRule<>(e.getKey(), e.getValue()))
-                .collect(Collectors.toList())));
-        p = p.and(and(existsSet.stream().map(PropertyExistsRule::new)
-                .collect(Collectors.toList())));
-        p = p.and(and(notExistsSet.stream().map(prop -> new PropertyExistsRule<>(prop).negate())
-                .collect(Collectors.toList())));
-
-        return p;
-    }
-
-    public Predicate<Property> toParameterPredicate() {
-        Predicate<Property> p = and(equalToMap.entrySet().stream()
-                .map(e -> new ParameterEqualToRule(e.getKey(), e.getValue()))
-                .collect(Collectors.toList()));
-
-        return p;
     }
 }

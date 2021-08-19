@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component extends Content implements Serializable {
+public abstract class Component extends Content implements Serializable, PropertyContainer, ComponentContainer {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -134,7 +134,9 @@ public abstract class Component extends Content implements Serializable {
 
     private final String name;
 
-    protected PropertyList properties;
+    private final PropertyList<Property> properties;
+
+    private final ComponentList<? extends Component> components;
 
     /**
      * Constructs a new component containing no properties.
@@ -142,7 +144,11 @@ public abstract class Component extends Content implements Serializable {
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList());
+        this(s, new PropertyList<>(), new ComponentList<>());
+    }
+
+    protected Component(final String s, final PropertyList<Property> p) {
+        this(s, p, new ComponentList<>());
     }
 
     /**
@@ -151,9 +157,10 @@ public abstract class Component extends Content implements Serializable {
      * @param s component name
      * @param p a list of properties
      */
-    protected Component(final String s, final PropertyList p) {
+    protected Component(final String s, final PropertyList<Property> p, ComponentList<? extends Component> c) {
         this.name = s;
         this.properties = p;
+        this.components = c;
     }
 
     /**
@@ -277,6 +284,11 @@ public abstract class Component extends Content implements Serializable {
     @Deprecated
     public final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
         return properties.getRequired(name);
+    }
+
+    @Override
+    public final ComponentList<? extends Component> getComponents() {
+        return components;
     }
 
     /**

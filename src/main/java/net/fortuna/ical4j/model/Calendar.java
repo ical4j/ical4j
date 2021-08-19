@@ -115,7 +115,7 @@ import java.util.stream.Collectors;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable {
+public class Calendar implements Serializable, PropertyContainer, ComponentContainer {
 
     private static final long serialVersionUID = -1654118204678581940L;
 

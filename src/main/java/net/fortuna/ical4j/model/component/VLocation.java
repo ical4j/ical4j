@@ -205,16 +205,8 @@ public class VLocation extends Component {
         }
 
         @Override
-        public VLocation createComponent(
-                final PropertyList properties) {
+        public VLocation createComponent(final PropertyList<Property> properties) {
             return new VLocation(properties);
-        }
-
-        @Override
-        public VLocation createComponent(
-                final PropertyList properties,
-                final ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VLOCATION));
         }
     }
 }

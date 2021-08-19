@@ -41,6 +41,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.util.Comparator;
+import java.util.function.Function;
 import java.util.List;
 import java.util.Optional;
 
@@ -359,6 +362,8 @@ public abstract class Property extends Content implements Comparable<Property> {
      */
     public static final String ACKNOWLEDGED = "ACKNOWLEDGED";
 
+    public static final String PROXIMITY = "PROXIMITY";
+
     /* Event publication properties */
 
     /**
@@ -601,6 +606,12 @@ public abstract class Property extends Content implements Comparable<Property> {
 
     @Override
     public int compareTo(Property o) {
-        return getValue().compareTo(o.getValue());
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Property::getName)
+                .thenComparing(Property::getValue)
+                .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                .compare(this, o);
     }
 }

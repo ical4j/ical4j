@@ -140,14 +140,11 @@ public class VTimeZone extends CalendarComponent {
             new ValidationRule<>(OneOrLess, LAST_MODIFIED, TZURL)
     );
 
-    private ComponentList<Observance> observances;
-
     /**
      * Default constructor.
      */
     public VTimeZone() {
         super(VTIMEZONE);
-        this.observances = new ComponentList<>();
     }
 
     /**
@@ -156,7 +153,6 @@ public class VTimeZone extends CalendarComponent {
      */
     public VTimeZone(final PropertyList properties) {
         super(VTIMEZONE, properties);
-        this.observances = new ComponentList<>();
     }
 
     /**
@@ -165,7 +161,6 @@ public class VTimeZone extends CalendarComponent {
      */
     public VTimeZone(final ComponentList<Observance> observances) {
         super(VTIMEZONE);
-        this.observances = observances;
     }
 
     /**
@@ -174,8 +169,7 @@ public class VTimeZone extends CalendarComponent {
      * @param observances a list of timezone types
      */
     public VTimeZone(final PropertyList properties, final ComponentList<Observance> observances) {
-        super(VTIMEZONE, properties);
-        this.observances = observances;
+        super(VTIMEZONE, properties, observances);
     }
 
     /**
@@ -196,7 +190,7 @@ public class VTimeZone extends CalendarComponent {
                 getName() +
                 Strings.LINE_SEPARATOR +
                 getProperties() +
-                observances +
+                getObservances() +
                 END +
                 ':' +
                 getName() +
@@ -250,7 +244,7 @@ public class VTimeZone extends CalendarComponent {
      * @return Returns the types.
      */
     public final ComponentList<Observance> getObservances() {
-        return observances;
+        return (ComponentList<Observance>) getComponents();
     }
 
     /**
@@ -317,7 +311,7 @@ public class VTimeZone extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VTimeZone) {
             return super.equals(arg0)
-                    && Objects.equals(observances, ((VTimeZone) arg0)
+                    && Objects.equals(getObservances(), ((VTimeZone) arg0)
                             .getObservances());
         }
         return super.equals(arg0);
@@ -330,20 +324,6 @@ public class VTimeZone extends CalendarComponent {
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getObservances()).toHashCode();
-    }
-
-    /**
-     * Overrides default copy method to add support for copying observance sub-components.
-     * @return a copy of the instance
-     * @see net.fortuna.ical4j.model.Component#copy()
-     */
-    @Override
-    public VTimeZone copy() {
-        return newFactory().createComponent(
-                new PropertyList(properties.getAll().parallelStream()
-                        .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
-                new ComponentList<>(observances.getAll().parallelStream()
-                        .map(Unchecked.function(Observance::copy)).collect(Collectors.toList())));
     }
 
     @Override

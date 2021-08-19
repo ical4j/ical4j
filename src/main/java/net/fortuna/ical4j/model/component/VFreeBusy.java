@@ -265,7 +265,7 @@ public class VFreeBusy extends CalendarComponent {
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
         add(new DtStart<>(start));
-        
+
         // 4.8.2.2 Date/Time End
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -291,7 +291,7 @@ public class VFreeBusy extends CalendarComponent {
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
         add(new DtStart<>(start));
-        
+
         // 4.8.2.2 Date/Time End
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -317,7 +317,7 @@ public class VFreeBusy extends CalendarComponent {
      */
     public VFreeBusy(final VFreeBusy request, final List<CalendarComponent> components) {
         this();
-        
+
         final DtStart<?> start;
         final DtEnd<?> end;
 
@@ -328,14 +328,14 @@ public class VFreeBusy extends CalendarComponent {
         request.validate();
 
         final Optional<Duration> duration = request.getProperties().getFirst(DURATION);
-        
+
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
         add(new DtStart<>(start.getDate()));
-        
+
         // 4.8.2.2 Date/Time End
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -382,12 +382,12 @@ public class VFreeBusy extends CalendarComponent {
             this.start = start;
             return this;
         }
-        
+
         public BusyTimeBuilder end(Instant end) {
             this.end = end;
             return this;
         }
-        
+
         public BusyTimeBuilder components(List<CalendarComponent> components) {
             this.components = components;
             return this;
@@ -415,16 +415,16 @@ public class VFreeBusy extends CalendarComponent {
         private Instant start;
 
         private Instant end;
-        
+
         private TemporalAmount duration;
-        
+
         private List<CalendarComponent> components;
 
         public FreeTimeBuilder start(Instant start) {
             this.start = start;
             return this;
         }
-        
+
         public FreeTimeBuilder end(Instant end) {
             this.end = end;
             return this;
@@ -434,7 +434,7 @@ public class VFreeBusy extends CalendarComponent {
             this.duration = duration;
             return this;
         }
-        
+
         public FreeTimeBuilder components(List<CalendarComponent> components) {
             this.components = components;
             return this;
@@ -454,14 +454,14 @@ public class VFreeBusy extends CalendarComponent {
                 if (interval.encloses(period.toInterval()) ||
                 		(interval.overlaps(period.toInterval())
                                 && Instant.from(period.getStart()).isAfter(Instant.from(interval.getStart())))) {
-                    
+
                     // calculate duration between this period start and last period end..
                     final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
                     if (new TemporalAmountComparator().compare(freeDuration.getDuration(), duration) >= 0) {
                         freePeriods.add(new Period<>(lastPeriodEnd, freeDuration.getDuration()));
                     }
                 }
-                
+
                 if (Instant.from(period.getEnd()).isAfter(lastPeriodEnd)) {
                     lastPeriodEnd = Instant.from(period.getEnd());
                 }
@@ -511,7 +511,7 @@ public class VFreeBusy extends CalendarComponent {
 
         // DtEnd value must be later in time that DtStart..
         final Optional<DtStart<?>> dtStart = getProperties().getFirst(DTSTART);
-        
+
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -520,9 +520,9 @@ public class VFreeBusy extends CalendarComponent {
         if (dtStart.isPresent() && !dtStart.get().isUtc()) {
             throw new ValidationException("DTSTART must be specified in UTC time");
         }
-        
+
         final Optional<DtEnd<?>> dtEnd = getProperties().getFirst(DTEND);
-        
+
         // 4.8.2.2 Date/Time End
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -532,7 +532,7 @@ public class VFreeBusy extends CalendarComponent {
         if (dtEnd.isPresent() && !dtEnd.get().isUtc()) {
             throw new ValidationException("DTEND must be specified in UTC time");
         }
-        
+
         if (dtStart.isPresent() && dtEnd.isPresent()
                 && !Instant.from(dtStart.get().getDate()).isBefore(Instant.from(dtEnd.get().getDate()))) {
             throw new ValidationException("Property [" + DTEND
@@ -651,11 +651,6 @@ public class VFreeBusy extends CalendarComponent {
         @Override
         public VFreeBusy createComponent(PropertyList properties) {
             return new VFreeBusy(properties);
-        }
-
-        @Override
-        public VFreeBusy createComponent(PropertyList properties, ComponentList<?> subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VFREEBUSY));
         }
     }
 }

@@ -56,6 +56,8 @@ public class RelType extends Parameter implements Encodable {
 
     private static final String VALUE_SIBLING = "SIBLING";
 
+    private static final String VALUE_SNOOZE = "SNOOZE";
+
     /**
      * Parent.
      */
@@ -71,7 +73,12 @@ public class RelType extends Parameter implements Encodable {
      */
     public static final RelType SIBLING = new RelType(VALUE_SIBLING);
 
-    private final String value;
+    /**
+     * VALARM "Snooze".
+     */
+    public static final RelType SNOOZE = new RelType(VALUE_SNOOZE);
+
+    private String value;
 
     /**
      * @param aValue a string representation of a relationship type
@@ -103,12 +110,12 @@ public class RelType extends Parameter implements Encodable {
                 parameter = RelType.PARENT;
             } else if (RelType.CHILD.equals(parameter)) {
                 parameter = RelType.CHILD;
-            }
-            if (RelType.SIBLING.equals(parameter)) {
+            } else if (RelType.SIBLING.equals(parameter)) {
                 parameter = RelType.SIBLING;
+            } else if (RelType.SNOOZE.equals(parameter)) {
+                parameter = RelType.SNOOZE;
             }
             return parameter;
         }
     }
-
 }

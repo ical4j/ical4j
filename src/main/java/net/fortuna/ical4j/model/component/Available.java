@@ -118,7 +118,7 @@ public class Available extends Component {
      *
      * @param properties a list of properties
      */
-    public Available(final PropertyList properties) {
+    public Available(final PropertyList<Property> properties) {
         super(AVAILABLE, properties);
     }
 
@@ -200,11 +200,6 @@ public class Available extends Component {
         @Override
         public Available createComponent(PropertyList properties) {
             return new Available(properties);
-        }
-
-        @Override
-        public Available createComponent(PropertyList properties, ComponentList<?> subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", AVAILABLE));
         }
     }
 }

@@ -351,10 +351,5 @@ public class VJournal extends CalendarComponent {
         public VJournal createComponent(PropertyList properties) {
             return new VJournal(properties);
         }
-
-        @Override
-        public VJournal createComponent(PropertyList properties, ComponentList<?> subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VJOURNAL));
-        }
     }
 }

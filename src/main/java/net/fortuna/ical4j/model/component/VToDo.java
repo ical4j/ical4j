@@ -176,8 +176,6 @@ public class VToDo extends CalendarComponent {
             new ValidationRule<>(None, p->p.getProperties().getFirst(DURATION).isPresent(), DUE)
     );
 
-    private ComponentList<VAlarm> alarms = new ComponentList<>();
-
     /**
      * Default constructor.
      */
@@ -201,8 +199,7 @@ public class VToDo extends CalendarComponent {
     }
 
     public VToDo(PropertyList properties, ComponentList<VAlarm> alarms) {
-        super(VTODO, properties);
-        this.alarms = alarms;
+        super(VTODO, properties, alarms);
     }
 
     /**
@@ -248,7 +245,7 @@ public class VToDo extends CalendarComponent {
      * @return a component list
      */
     public final ComponentList<VAlarm> getAlarms() {
-        return alarms;
+        return (ComponentList<VAlarm>) getComponents();
     }
 
     /**
@@ -515,7 +512,7 @@ public class VToDo extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VToDo) {
             return super.equals(arg0)
-                    && Objects.equals(alarms, ((VToDo) arg0).getAlarms());
+                    && Objects.equals(getAlarms(), ((VToDo) arg0).getAlarms());
         }
         return super.equals(arg0);
     }
@@ -527,20 +524,6 @@ public class VToDo extends CalendarComponent {
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getAlarms()).toHashCode();
-    }
-
-    /**
-     * Overrides default copy method to add support for copying alarm sub-components.
-     * @return a copy of the instance
-     * @see net.fortuna.ical4j.model.Component#copy()
-     */
-    @Override
-    public VToDo copy() {
-        return newFactory().createComponent(
-                new PropertyList(properties.getAll().parallelStream()
-                        .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
-                new ComponentList<>(alarms.getAll().parallelStream()
-                        .map(Unchecked.function(VAlarm::copy)).collect(Collectors.toList())));
     }
 
     @Override
@@ -560,7 +543,7 @@ public class VToDo extends CalendarComponent {
         }
 
         @Override
-        public VToDo createComponent(PropertyList properties) {
+        public VToDo createComponent(PropertyList<Property> properties) {
             return new VToDo(properties);
         }
 

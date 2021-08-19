@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * Accessor implementation for a list of iCalendar parameters.
  * @author Ben Fortuna
  */
-public class ParameterList implements ContentCollection<Parameter> {
+public class ParameterList implements ContentCollection<Parameter>, Comparable<ParameterList> {
 
     private final List<Parameter> parameters;
 
@@ -155,5 +155,22 @@ public class ParameterList implements ContentCollection<Parameter> {
     @Override
     public int hashCode() {
         return Objects.hash(parameters);
+    }
+
+    @Override
+    public int compareTo(ParameterList o) {
+        // test for equality
+        if (parameters.equals(o.parameters)) {
+            return 0;
+        }
+        // then test for size..
+        int retval = parameters.size() - o.parameters.size();
+        if (retval != 0) {
+            return retval;
+        } else {
+            // compare individual params..
+            return parameters.stream().filter(o.parameters::contains)
+                    .mapToInt(p -> p.compareTo(o.parameters.get(o.parameters.indexOf(p)))).sum();
+        }
     }
 }

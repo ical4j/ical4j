@@ -41,8 +41,6 @@ import net.fortuna.ical4j.validate.Validator;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [May 1 2017]
@@ -137,7 +135,6 @@ public class Participant extends Component {
      */
     public Participant() {
         super(PARTICIPANT);
-        components = new ComponentList<>();
     }
 
     /**
@@ -146,21 +143,14 @@ public class Participant extends Component {
      */
     public Participant(final PropertyList properties) {
         super(PARTICIPANT, properties);
-        components = new ComponentList<>();
     }
 
     /**
      * Constructor.
      * @param properties a list of properties
      */
-    public Participant(final PropertyList properties,
-                       final ComponentList<Component> components) {
-        super(PARTICIPANT, properties);
-        this.components = components;
-    }
-
-    public ComponentList<Component> getComponents() {
-        return components;
+    public Participant(final PropertyList<Property> properties, final ComponentList<Component> components) {
+        super(PARTICIPANT, properties, components);
     }
 
     public void add(VLocation location) {
@@ -289,15 +279,13 @@ public class Participant extends Component {
         }
 
         @Override
-        public Participant createComponent(
-                final PropertyList properties) {
+        public Participant createComponent(PropertyList<Property> properties) {
             return new Participant(properties);
         }
 
         @Override
-        public Participant createComponent(
-                final PropertyList properties,
-                final ComponentList subComponents) {
+        public Participant createComponent(final PropertyList<Property> properties,
+                                           final ComponentList<Component> subComponents) {
             return new Participant(properties, subComponents);
         }
     }
