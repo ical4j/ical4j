@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;

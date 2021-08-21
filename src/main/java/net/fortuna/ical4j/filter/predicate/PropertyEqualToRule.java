@@ -58,6 +58,6 @@ public class PropertyEqualToRule<T extends PropertyContainer> implements Predica
      */
     @Override
     public final boolean test(final T component) {
-        return component.getProperties().stream().anyMatch(p -> comparable.compareTo(p) == 0);
+        return component.getProperties().getAll().stream().anyMatch(p -> comparable.compareTo(p) == 0);
     }
 }

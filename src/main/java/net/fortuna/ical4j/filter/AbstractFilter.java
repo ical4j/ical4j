@@ -46,7 +46,6 @@ import net.fortuna.ical4j.model.PropertyBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,7 +128,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
         operand.getAttributes().forEach(a -> spec.parameter(parameter(a)));
         try {
             return spec.build();
-        } catch (ParseException | IOException | URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -150,7 +149,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
         operand.getAttributes().forEach(a -> spec.parameter(parameter(a)));
         try {
             return spec.build();
-        } catch (ParseException | IOException | URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
     }

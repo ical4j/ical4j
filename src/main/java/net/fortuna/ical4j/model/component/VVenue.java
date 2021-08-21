@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.util.Strings;
@@ -94,7 +93,10 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author Ben Fortuna
  * @author Mike Douglass
+ *
+ * @deprecated see {@link VLocation} as a replacement.
  */
+@Deprecated
 public class VVenue extends CalendarComponent {
 
 	private static final long serialVersionUID = 4502423035501438515L;
@@ -186,11 +188,6 @@ public class VVenue extends CalendarComponent {
         @Override
         public VVenue createComponent(PropertyList properties) {
             return new VVenue(properties);
-        }
-
-        @Override
-        public VVenue createComponent(PropertyList properties, ComponentList<?> subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VVENUE));
         }
     }
 }

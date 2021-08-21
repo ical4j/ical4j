@@ -118,7 +118,7 @@ public class Available extends Component {
      *
      * @param properties a list of properties
      */
-    public Available(final PropertyList<Property> properties) {
+    public Available(final PropertyList properties) {
         super(AVAILABLE, properties);
     }
 

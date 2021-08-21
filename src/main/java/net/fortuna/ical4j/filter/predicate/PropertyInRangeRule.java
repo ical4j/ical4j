@@ -63,10 +63,10 @@ public class PropertyInRangeRule<T extends PropertyContainer> implements Predica
     @Override
     public boolean test(T t) {
         if (inclusive) {
-            return t.getProperties().stream()
+            return t.getProperties().getAll().stream()
                     .anyMatch(p -> lowerBound.compareTo(p) < 0 && upperBound.compareTo(p) > 0);
         } else {
-            return t.getProperties().stream()
+            return t.getProperties().getAll().stream()
                     .anyMatch(p -> lowerBound.compareTo(p) <= 0 && upperBound.compareTo(p) >= 0);
         }
     }

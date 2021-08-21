@@ -42,7 +42,6 @@ import net.fortuna.ical4j.validate.Validator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 public class Proximity extends Property {
 
@@ -58,12 +57,12 @@ public class Proximity extends Property {
 
     private String value;
 
-    public Proximity(PropertyFactory factory) {
-        super(PROXIMITY, factory);
+    public Proximity() {
+        super(PROXIMITY);
     }
 
-    public Proximity(ParameterList aList, PropertyFactory factory) {
-        super(PROXIMITY, aList, factory);
+    public Proximity(ParameterList aList) {
+        super(PROXIMITY, aList);
     }
 
     @Override
@@ -72,12 +71,17 @@ public class Proximity extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws IOException, URISyntaxException, ParseException {
+    public void setValue(String aValue) throws IOException, URISyntaxException {
         this.value = aValue;
     }
 
     @Override
     public void validate() throws ValidationException {
         validator.validate(this);
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return null;
     }
 }

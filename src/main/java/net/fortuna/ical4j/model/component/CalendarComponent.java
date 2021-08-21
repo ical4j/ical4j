@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.EmptyValidator;
@@ -75,7 +74,7 @@ public abstract class CalendarComponent extends Component {
         super(name, properties);
     }
 
-    public CalendarComponent(String s, PropertyList<Property> p, ComponentList<? extends Component> c) {
+    public CalendarComponent(String s, PropertyList p, ComponentList<? extends Component> c) {
         super(s, p, c);
     }
 

@@ -59,9 +59,9 @@ public class PropertyLessThanRule<T extends PropertyContainer> implements Predic
     @Override
     public boolean test(T t) {
         if (inclusive) {
-            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) > 0);
+            return t.getProperties().getAll().stream().anyMatch(p -> comparable.compareTo(p) > 0);
         } else {
-            return t.getProperties().stream().anyMatch(p -> comparable.compareTo(p) <= 0);
+            return t.getProperties().getAll().stream().anyMatch(p -> comparable.compareTo(p) <= 0);
         }
     }
 }

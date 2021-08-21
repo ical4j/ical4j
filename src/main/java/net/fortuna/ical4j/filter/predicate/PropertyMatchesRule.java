@@ -55,7 +55,8 @@ public class PropertyMatchesRule<T extends PropertyContainer> implements Predica
     @Override
     public boolean test(T t) {
         // filter all props matching the spec and apply regex pattern matching..
-        return t.getProperties().stream().filter(p -> new PropertyExistsRule.PropertyExists(specification).compareTo(p) == 0)
+        return t.getProperties().getAll().stream()
+                .filter(p -> new PropertyExistsRule.PropertyExists(specification).compareTo(p) == 0)
                 .anyMatch(prop -> prop.getValue().matches(pattern));
     }
 }
