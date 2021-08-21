@@ -40,7 +40,6 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jooq.lambda.Unchecked;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
@@ -48,7 +47,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -120,7 +118,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent {
+public class VToDo extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = -269658210065896668L;
 
@@ -243,9 +241,21 @@ public class VToDo extends CalendarComponent {
     /**
      * Returns the list of alarms for this todo.
      * @return a component list
+     * @deprecated use {@link VToDo#getComponents()} to avoid potential {@link ClassCastException}
      */
+    @Deprecated
     public final ComponentList<VAlarm> getAlarms() {
-        return (ComponentList<VAlarm>) getComponents();
+        return (ComponentList<VAlarm>) components;
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponents(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**
@@ -543,7 +553,7 @@ public class VToDo extends CalendarComponent {
         }
 
         @Override
-        public VToDo createComponent(PropertyList<Property> properties) {
+        public VToDo createComponent(PropertyList properties) {
             return new VToDo(properties);
         }
 

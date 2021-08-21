@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -108,7 +105,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VJournal extends CalendarComponent {
+public class VJournal extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
@@ -210,6 +207,16 @@ public class VJournal extends CalendarComponent {
         else {
             super.validate(method);
         }
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponents(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**

@@ -58,7 +58,8 @@ public class ObservanceTest extends TestCase {
      */
     @Override
     protected void setUp() throws Exception {
-        observance = new Standard().add(new DtStart("16010101T030000"))
+        observance = new Standard();
+        observance.add(new DtStart("16010101T030000"))
                 .add(new TzOffsetFrom("+0200"))
                 .add(new TzOffsetTo("+0100"))
                 .add(new RRule("FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU"));

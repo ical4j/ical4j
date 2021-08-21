@@ -76,7 +76,8 @@ public class AvailableTest extends ComponentTest {
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
         UidGenerator g = new RandomUidGenerator();
 
-        available = new Available().add(g.generateUid())
+        available = new Available();
+        available.add(g.generateUid())
                 .add(new DtStart<>(tzParams, ZonedDateTime.now()))
                 .add(new DtStamp())
                 .add(new Duration(java.time.Period.ofWeeks(1)));

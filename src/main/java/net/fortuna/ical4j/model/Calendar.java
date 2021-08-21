@@ -115,7 +115,7 @@ import java.util.stream.Collectors;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable, PropertyContainer, ComponentContainer {
+public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent> {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -189,147 +189,38 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     @Override
     public final String toString() {
-        return BEGIN +
-                ':' +
-                VCALENDAR +
+        return BEGIN + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR +
                 getProperties() +
                 getComponents() +
-                END +
-                ':' +
-                VCALENDAR +
+                END + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR;
     }
 
     /**
      * @return Returns the components.
      */
+    @Override
     public final ComponentList<CalendarComponent> getComponents() {
         return components;
     }
 
-    protected void setComponents(ComponentList<CalendarComponent> components) {
+    @Override
+    public void setComponents(ComponentList<CalendarComponent> components) {
         this.components = components;
-    }
-
-    /**
-     * Add a component to the calendar's component list.
-     * @param component the component to add
-     * @return a reference to the calendar to support method chaining
-     */
-    public Calendar add(CalendarComponent component) {
-        setComponents((ComponentList<CalendarComponent>) components.add(component));
-        return this;
-    }
-
-    /**
-     * Remove a component from the calendar's component list.
-     * @param component the component to remove
-     * @return a reference to the calendar to support method chaining
-     */
-    public Calendar remove(CalendarComponent component) {
-        setComponents((ComponentList<CalendarComponent>) components.remove(component));
-        return this;
-    }
-
-    /**
-     * Add a component to the calendar's component list whilst removing all other components with the same component name.
-     * @param component the component to add
-     * @return a reference to the calendar to support method chaining
-     */
-    public Calendar replace(CalendarComponent component) {
-        setComponents((ComponentList<CalendarComponent>) components.replace(component));
-        return this;
-    }
-
-    /**
-     * Convenience method for retrieving a list of named components.
-     * @param name name of components to retrieve
-     * @return a component list containing only components with the specified name
-     *
-     * @deprecated use {@link ComponentList#get(String)}
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public final <C extends CalendarComponent> List<C> getComponents(final String name) {
-        return (List<C>) components.get(name);
-    }
-
-    /**
-     * Convenience method for retrieving a named component.
-     * @param name name of the component to retrieve
-     * @return the first matching component in the component list with the specified name
-     *
-     * @deprecated use {@link ComponentList#getFirst(String)}
-     */
-    @Deprecated
-    public final <T extends CalendarComponent> Optional<T> getComponent(final String name) {
-        return components.getFirst(name);
     }
 
     /**
      * @return Returns the properties.
      */
+    @Override
     public final PropertyList getProperties() {
         return properties;
     }
 
-    protected void setProperties(PropertyList properties) {
+    @Override
+    public void setProperties(PropertyList properties) {
         this.properties = properties;
-    }
-
-    /**
-     * Add a property to the calendar's property list.
-     * @param property the property to add
-     * @return a reference to the calendar to support method chaining
-     */
-    public Calendar add(Property property) {
-        setProperties((PropertyList) properties.add(property));
-        return this;
-    }
-
-    /**
-     * Remove a property from the calendar's property list.
-     * @param property the property to remove
-     * @return a reference to the calendar to support method chaining
-     */
-    public Calendar remove(Property property) {
-        setProperties((PropertyList) properties.remove(property));
-        return this;
-    }
-
-    /**
-     * Add a property to the calendar's property list whilst removing all other properties with the same property name.
-     * @param property the property to add
-     * @return a reference to the calendar to support method chaining
-     */
-    public Calendar replace(Property property) {
-        setProperties((PropertyList) properties.replace(property));
-        return this;
-    }
-
-    /**
-     * Convenience method for retrieving a list of named properties.
-     * @param name name of properties to retrieve
-     * @return a property list containing only properties with the specified name
-     *
-     * @deprecated use {@link PropertyList#get(String)}
-     */
-    @Deprecated
-    public final List<Property> getProperties(final String name) {
-        return properties.get(name);
-    }
-
-    /**
-     * Convenience method for retrieving a named property.
-     * @param name name of the property to retrieve
-     * @return the first matching property in the property list with the specified name
-     *
-     * @deprecated use {@link PropertyList#getFirst(String)}
-     */
-    @Deprecated
-    public final <T extends Property> Optional<T> getProperty(final String name) {
-        return properties.getFirst(name);
     }
 
     /**

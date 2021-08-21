@@ -41,6 +41,8 @@ import net.fortuna.ical4j.validate.Validator;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [May 1 2017]
@@ -118,7 +120,7 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Mike Douglass
  */
-public class Participant extends Component {
+public class Participant extends Component implements ComponentContainer<Component> {
     private static final long serialVersionUID = -8193965477414653802L;
 
     private final Validator<Participant> validator = new ComponentValidator<>(
@@ -127,8 +129,6 @@ public class Participant extends Component {
                     DTSTAMP, GEO, LAST_MODIFIED, PRIORITY, SEQUENCE,
                     STATUS, SUMMARY, URL)
     );
-
-    private ComponentList<Component> components;
 
     /**
      * Default constructor.
@@ -149,16 +149,8 @@ public class Participant extends Component {
      * Constructor.
      * @param properties a list of properties
      */
-    public Participant(final PropertyList<Property> properties, final ComponentList<Component> components) {
+    public Participant(final PropertyList properties, final ComponentList<? extends Component> components) {
         super(PARTICIPANT, properties, components);
-    }
-
-    public void add(VLocation location) {
-        this.components = (ComponentList<Component>) this.components.add(location);
-    }
-
-    public void add(VResource resource) {
-        this.components = (ComponentList<Component>) this.components.add(resource);
     }
 
     /**
@@ -171,6 +163,16 @@ public class Participant extends Component {
         if (recurse) {
             validateProperties();
         }
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponents(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**
@@ -279,13 +281,12 @@ public class Participant extends Component {
         }
 
         @Override
-        public Participant createComponent(PropertyList<Property> properties) {
+        public Participant createComponent(PropertyList properties) {
             return new Participant(properties);
         }
 
         @Override
-        public Participant createComponent(final PropertyList<Property> properties,
-                                           final ComponentList<Component> subComponents) {
+        public Participant createComponent(final PropertyList properties, final ComponentList<?> subComponents) {
             return new Participant(properties, subComponents);
         }
     }

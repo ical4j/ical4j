@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component extends Content implements Serializable, PropertyContainer, ComponentContainer {
+public abstract class Component extends Content implements Serializable, PropertyContainer {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -134,9 +134,9 @@ public abstract class Component extends Content implements Serializable, Propert
 
     private final String name;
 
-    private final PropertyList<Property> properties;
+    protected PropertyList properties;
 
-    private final ComponentList<? extends Component> components;
+    protected ComponentList<? extends Component> components;
 
     /**
      * Constructs a new component containing no properties.
@@ -144,10 +144,10 @@ public abstract class Component extends Content implements Serializable, Propert
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList<>(), new ComponentList<>());
+        this(s, new PropertyList(), new ComponentList<>());
     }
 
-    protected Component(final String s, final PropertyList<Property> p) {
+    protected Component(final String s, final PropertyList p) {
         this(s, p, new ComponentList<>());
     }
 
@@ -157,7 +157,7 @@ public abstract class Component extends Content implements Serializable, Propert
      * @param s component name
      * @param p a list of properties
      */
-    protected Component(final String s, final PropertyList<Property> p, ComponentList<? extends Component> c) {
+    protected Component(final String s, final PropertyList p, ComponentList<? extends Component> c) {
         this.name = s;
         this.properties = p;
         this.components = c;
@@ -168,20 +168,17 @@ public abstract class Component extends Content implements Serializable, Propert
      */
     @Override
 	public String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
+        return BEGIN + ':' + getName() +
                 Strings.LINE_SEPARATOR +
                 getProperties() +
-                END +
-                ':' +
-                getName() +
+                END + ':' + getName() +
                 Strings.LINE_SEPARATOR;
     }
 
     /**
      * @return Returns the name.
      */
+    @Override
     public final String getName() {
         return name;
     }
@@ -194,82 +191,14 @@ public abstract class Component extends Content implements Serializable, Propert
     /**
      * @return Returns the properties.
      */
+    @Override
     public final PropertyList getProperties() {
         return properties;
     }
 
-    /**
-     * Add a property to the component's property list.
-     * @param property the property to add
-     * @return a reference to the component to support method chaining
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T add(Property property) {
-        setProperties((PropertyList) properties.add(property));
-        return (T) this;
-    }
-
-    /**
-     * Remove a property from the component's property list.
-     * @param property the property to remove
-     * @return a reference to the component to support method chaining
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T remove(Property property) {
-        setProperties((PropertyList) properties.remove(property));
-        return (T) this;
-    }
-
-    /**
-     * Remove all properties from the component's property list with the matching property name.
-     * @param propertyName name of the properties to remove
-     * @return a reference to the component to support method chaining
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T removeAll(String... propertyName) {
-        setProperties((PropertyList) properties.removeAll(propertyName));
-        return (T) this;
-    }
-
-    /**
-     * Add a property to the component's property list whilst removing all other properties with the same property name.
-     * @param property the property to add
-     * @return a reference to the component to support method chaining
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T replace(Property property) {
-        setProperties((PropertyList) properties.replace(property));
-        return (T) this;
-    }
-
-    /**
-     * Convenience method for retrieving a list of named properties.
-     *
-     * @param name name of properties to retrieve
-     * @return a property list containing only properties with the specified name
-     *
-     * @deprecated use {@link PropertyList#get(String)}
-     */
-    @Deprecated
-    public final List<Property> getProperties(final String name) {
-        return properties.get(name);
-    }
-
-    protected void setProperties(PropertyList properties) {
+    @Override
+    public void setProperties(PropertyList properties) {
         this.properties = properties;
-    }
-
-    /**
-     * Convenience method for retrieving a named property.
-     *
-     * @param name name of the property to retrieve
-     * @return the first matching property in the property list with the specified name
-     *
-     * @deprecated use {@link PropertyList#getFirst(String)}
-     */
-    @Deprecated
-    public <T extends Property> Optional<T> getProperty(final String name) {
-        return properties.getFirst(name);
     }
 
     /**
@@ -284,11 +213,6 @@ public abstract class Component extends Content implements Serializable, Propert
     @Deprecated
     public final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
         return properties.getRequired(name);
-    }
-
-    @Override
-    public final ComponentList<? extends Component> getComponents() {
-        return components;
     }
 
     /**
@@ -345,14 +269,14 @@ public abstract class Component extends Content implements Serializable, Propert
      * Returns a new component factory used to create deep copies.
      * @return a component factory instance
      */
-    protected abstract ComponentFactory<?> newFactory();
+    protected abstract ComponentFactory<? extends Component> newFactory();
 
     /**
      * Create a (deep) copy of this component.
      * @return the component copy
      */
-    public Component copy() {
-        return newFactory().createComponent(new PropertyList(properties.getAll().parallelStream()
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(properties.getAll().parallelStream()
                 .map(Unchecked.function(Property::copy)).collect(Collectors.toList())));
     }
 

@@ -43,14 +43,12 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jooq.lambda.Unchecked;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
@@ -129,7 +127,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent {
+public class VTimeZone extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
@@ -170,14 +168,6 @@ public class VTimeZone extends CalendarComponent {
      */
     public VTimeZone(final PropertyList properties, final ComponentList<Observance> observances) {
         super(VTIMEZONE, properties, observances);
-    }
-
-    /**
-     * Add an observance definition to the timezone.
-     * @param observance the definition to add
-     */
-    public void add(Observance observance) {
-        this.observances = (ComponentList<Observance>) observances.add(observance);
     }
 
     /**
@@ -244,7 +234,17 @@ public class VTimeZone extends CalendarComponent {
      * @return Returns the types.
      */
     public final ComponentList<Observance> getObservances() {
-        return (ComponentList<Observance>) getComponents();
+        return (ComponentList<Observance>) components;
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponents(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**

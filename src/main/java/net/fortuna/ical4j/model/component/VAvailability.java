@@ -41,12 +41,10 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
-import org.jooq.lambda.Unchecked;
 
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -102,7 +100,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class VAvailability extends CalendarComponent implements ComponentContainer {
+public class VAvailability extends CalendarComponent implements ComponentContainer<Available> {
 
 	private static final long serialVersionUID = -3001603309266267258L;
 
@@ -152,15 +150,17 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      * @return a component list
      */
     public final ComponentList<Available> getAvailable() {
-        return (ComponentList<Available>) getComponents();
+        return getComponents();
     }
 
-    /**
-     * Add a new available definition to the availability specification.
-     * @param available the available definition to add
-     */
-    public void add(Available available) {
-        this.available = (ComponentList<Available>) this.available.add(available);
+    @Override
+    public ComponentList<Available> getComponents() {
+        return (ComponentList<Available>) components;
+    }
+
+    @Override
+    public void setComponents(ComponentList<Available> components) {
+        this.components = components;
     }
 
     /**
@@ -250,14 +250,6 @@ public class VAvailability extends CalendarComponent implements ComponentContain
         if (recurse) {
             validateProperties();
         }
-    }
-
-    public VAvailability copy() {
-        return newFactory().createComponent(
-                new PropertyList(properties.getAll().stream()
-                        .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
-                new ComponentList<>(available.getAll().stream()
-                        .map(Unchecked.function(Available::copy)).collect(Collectors.toList())));
     }
 
     @Override

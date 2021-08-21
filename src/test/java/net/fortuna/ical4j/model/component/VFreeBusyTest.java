@@ -168,10 +168,12 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         ZonedDateTime endDate = ZonedDateTime.now();
 
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(startDate.getZone().getId())));
-        VEvent event = new VEvent().add(new DtStart<>(tzParams, startDate))
+        VEvent event = new VEvent();
+        event.add(new DtStart<>(tzParams, startDate))
                 .add(new Duration(java.time.Duration.ofHours(1)));
 
-        VEvent event2 = new VEvent().add(new DtStart<>(tzParams, startDate))
+        VEvent event2 = new VEvent();
+        event2.add(new DtStart<>(tzParams, startDate))
                 .add(new DtEnd<>(endDate));
 
         VFreeBusy request = new VFreeBusy(startDate.toInstant(), endDate.toInstant());
@@ -250,10 +252,12 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         Instant startDate = Instant.now();
         Instant endDate = ZonedDateTime.now().plusDays(3).toInstant();
 
-        VEvent event = new VEvent().add(new DtStart<>(startDate))
+        VEvent event = new VEvent();
+        event.add(new DtStart<>(startDate))
                 .add(new Duration(java.time.Duration.ofHours(1)));
 
-        VEvent event2 = new VEvent().add(new DtStart<>(startDate))
+        VEvent event2 = new VEvent();
+        event2.add(new DtStart<>(startDate))
                 .add(new DtEnd<>(endDate));
 
         VFreeBusy request = new VFreeBusy(startDate, endDate,
@@ -360,7 +364,8 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 
         // iTIP PUBLISH validation
         suite.addTest(new VFreeBusyTest("testPublishValidationException", new VFreeBusy()));
-        VFreeBusy publishFb = new VFreeBusy().add(new DtStart<Instant>("20091212T000000Z"))
+        VFreeBusy publishFb = new VFreeBusy();
+        publishFb.add(new DtStart<Instant>("20091212T000000Z"))
                 .add(new DtEnd<Instant>("20091212T235959Z"))
                 .add(new FreeBusy("20091212T140000Z/PT3H"))
                 .add(new Organizer("mailto:joe@example.com"))
@@ -369,16 +374,18 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 
         // iTIP REPLY validation
         suite.addTest(new VFreeBusyTest("testReplyValidationException", new VFreeBusy()));
-        VFreeBusy replyFb = new VFreeBusy().add(new DtStart<Instant>("20091212T000000Z"))
+        VFreeBusy replyFb = new VFreeBusy();
+        replyFb.add(new DtStart<Instant>("20091212T000000Z"))
                 .add(new DtEnd<Instant>("20091212T235959Z"))
                 .add(new Organizer("mailto:joe@example.com"))
                 .add(new Attendee("mailto:joe@example.com"))
                 .add(new Uid("12"));
         suite.addTest(new VFreeBusyTest("testReplyValidation", replyFb));
-        VFreeBusy invalDurFb = replyFb.copy()
-                .add(new Duration(java.time.Duration.parse("PT1H")));
+        VFreeBusy invalDurFb = replyFb.copy();
+        invalDurFb.add(new Duration(java.time.Duration.parse("PT1H")));
         suite.addTest(new VFreeBusyTest("testReplyValidationException", invalDurFb));
-        VFreeBusy invalSeqFb = replyFb.copy().add(new Sequence("12"));
+        VFreeBusy invalSeqFb = replyFb.copy();
+        invalSeqFb.add(new Sequence("12"));
         suite.addTest(new VFreeBusyTest("testReplyValidationException", invalSeqFb));
 
 
@@ -454,7 +461,8 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         Parameter tzP = new TzId(zoneId.getId());
         ParameterList pl = new ParameterList(Collections.singletonList(tzP));
         DtStart<Temporal> dts = new DtStart<>(pl, TemporalAdapter.parse("20130124T020000").getTemporal());
-        VEvent e = new VEvent().add(dts).add(new Duration(java.time.Duration.parse("PT1H")))
+        VEvent e = new VEvent();
+        e.add(dts).add(new Duration(java.time.Duration.parse("PT1H")))
                 .add(new RRule<>("FREQ=DAILY"));
         components = new ComponentList<>(Collections.singletonList(e));
         Period<Instant> periodInstant = new Period<>((Instant) TemporalAdapter.parse("20130124T110000Z").getTemporal(),

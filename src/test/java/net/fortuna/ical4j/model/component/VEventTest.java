@@ -176,7 +176,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent().add(start).add(summary);
+        VEvent christmas = new VEvent();
+        christmas.add(start).add(summary);
 
         log.info(christmas.toString());
     }
@@ -557,7 +558,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId("Australia/Melbourne")));
 
-        VEvent weekdayNineToFiveEvents = new VEvent().add(rruleWeekly).add(summary);
+        VEvent weekdayNineToFiveEvents = new VEvent();
+        weekdayNineToFiveEvents.add(rruleWeekly).add(summary);
         DtStart<ZonedDateTime> dtStart = new DtStart<>(tzParams, weekday9AM);
 //        dtStart.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.add(dtStart);
@@ -569,7 +571,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
 
-        VEvent dailyWeekdayEvents = new VEvent().add(rruleDaily).add(summary);
+        VEvent dailyWeekdayEvents = new VEvent();
+        dailyWeekdayEvents.add(rruleDaily).add(summary);
         DtStart<ZonedDateTime> dtStart2 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.add(dtStart2);
@@ -581,7 +584,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
 
-        VEvent monthlyWeekdayEvents = new VEvent().add(rruleMonthly).add(summary);
+        VEvent monthlyWeekdayEvents = new VEvent();
+        monthlyWeekdayEvents.add(rruleMonthly).add(summary);
         DtStart<ZonedDateTime> dtStart3 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.add(dtStart3);
@@ -622,7 +626,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         ParameterList endParams = new ParameterList(Collections.singletonList(Value.DATE));
         DtEnd<LocalDate> end = new DtEnd<>(endParams, LocalDate.now());
-        VEvent event = new VEvent().add(uid).add(start).add(end);
+        VEvent event = new VEvent();
+        event.add(uid).add(start).add(end);
         suite.addTest(new VEventTest<>("testValidation", event));
 
         event = event.copy();

@@ -69,7 +69,8 @@ public class CalendarTest {
             Version.VERSION_2_0,
             CalScale.GREGORIAN));
 
-        VEvent vEvent = new VEvent().add(new Uid("1"));
+        VEvent vEvent = new VEvent();
+        vEvent.add(new Uid("1"));
         calendar = new Calendar(props, new ComponentList<>(Collections.singletonList(vEvent)));
     }
 
@@ -158,7 +159,8 @@ public class CalendarTest {
                 .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();
         week3UserC.add(new RRule<>(week3UserCRecur)).add(new Uid("000003@modularity.net.au"));
 
-        copyCalendar.add(week1UserA).add(week2UserB).add(week3UserC).validate();
+        copyCalendar.add(week1UserA).add(week2UserB).add(week3UserC);
+        copyCalendar.validate();
 
     }
 }

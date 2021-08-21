@@ -73,29 +73,35 @@ public class VAlarmTest extends ComponentTest {
     public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
         
-        VAlarm alarm = new VAlarm().add(new Trigger(Instant.now()));
+        VAlarm alarm = new VAlarm();
+        alarm.add(new Trigger(Instant.now()));
         
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
 
-        alarm = alarm.copy().add(Action.DISPLAY).add(new Description("Testing display"));
+        alarm = alarm.copy();
+        alarm.add(Action.DISPLAY).add(new Description("Testing display"));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
-        alarm = new VAlarm(java.time.Duration.ofHours(2)).add(Action.DISPLAY)
+        alarm = new VAlarm(java.time.Duration.ofHours(2));
+        alarm.add(Action.DISPLAY)
                 .add(new Description("Testing display"));
         Duration duration = new Duration(java.time.Duration.ofMinutes(2));
         alarm.add(duration);
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
         
-        alarm = alarm.copy().add(new Repeat(2));
+        alarm = alarm.copy();
+        alarm.add(new Repeat(2));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
-        alarm = alarm.copy().remove(duration);
+        alarm = alarm.copy();
+        alarm.remove(duration);
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
         
         //testValidationEmail..
-        alarm = new VAlarm(java.time.Duration.ofDays(-2)).add(Action.EMAIL)
+        alarm = new VAlarm(java.time.Duration.ofDays(-2));
+        alarm.add(Action.EMAIL)
                 .add(new Attendee("mailto:john_doe@example.com"))
                 .add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
                 .add(new Description("A draft agenda needs to be sent out to the attendees "

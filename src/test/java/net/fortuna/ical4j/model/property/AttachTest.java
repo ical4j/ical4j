@@ -94,7 +94,8 @@ public class AttachTest extends TestCase {
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent().add(start)
+        VEvent christmas = new VEvent();
+        christmas.add(start)
                 .add(summary)
                 .add(attach)
                 .add(new Uid("000001@modularity.net.au"));
