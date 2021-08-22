@@ -9,6 +9,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.*;
 
+import static net.fortuna.ical4j.validate.ContentValidator.*;
+
 /**
  * Created by fortuna on 13/09/15.
  */

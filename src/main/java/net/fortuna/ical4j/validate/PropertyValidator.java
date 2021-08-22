@@ -33,6 +33,7 @@ package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.Arrays;
@@ -63,16 +64,77 @@ public final class PropertyValidator<T extends Property> implements Validator<T>
             if (rule.getPredicate().test(target)) {
                 switch (rule.getType()) {
                     case None:
-                        rule.getInstances().forEach(s -> assertNone(s, target.getParameters().getAll(), warnOnly));
+                        rule.getInstances().forEach(s -> ContentValidator.assertNone(s, target.getParameters().getAll(), warnOnly));
                         break;
                     case One:
-                        rule.getInstances().forEach(s -> assertOne(s, target.getParameters().getAll(), warnOnly));
+                        rule.getInstances().forEach(s -> ContentValidator.assertOne(s, target.getParameters().getAll(), warnOnly));
                         break;
                     case OneOrLess:
-                        rule.getInstances().forEach(s -> assertOneOrLess(s, target.getParameters().getAll(), warnOnly));
+                        rule.getInstances().forEach(s -> ContentValidator.assertOneOrLess(s, target.getParameters().getAll(), warnOnly));
                         break;
                 }
             }
         }
+    }
+
+    /**
+     * Ensure a property occurs no more than once.
+     *
+     * @param propertyName
+     *            the property name
+     * @param properties
+     *            a list of properties to query
+     * @throws ValidationException
+     *             when the specified property occurs more than once
+     * @deprecated see {@link ContentValidator#assertOneOrLess(String, List, boolean)}
+     */
+    @Deprecated
+    public static void assertOneOrLess(final String propertyName, final PropertyList properties) throws ValidationException {
+        ContentValidator.assertOneOrLess(propertyName, properties.getAll(), false);
+    }
+
+    /**
+     * Ensure a property occurs at least once.
+     *
+     * @param propertyName
+     *            the property name
+     * @param properties
+     *            a list of properties to query
+     * @throws ValidationException
+     *             when the specified property occurs more than once
+     * @deprecated see {@link ContentValidator#assertOneOrMore(String, List, boolean)}
+     */
+    @Deprecated
+    public static void assertOneOrMore(final String propertyName, final PropertyList properties) throws ValidationException {
+        ContentValidator.assertOneOrMore(propertyName, properties.getAll(), false);
+    }
+
+    /**
+     * Ensure a property occurs once.
+     *
+     * @param propertyName
+     *            the property name
+     * @param properties
+     *            a list of properties to query
+     * @throws ValidationException
+     *             when the specified property does not occur once
+     * @deprecated see {@link ContentValidator#assertOne(String, List, boolean)}
+     */
+    @Deprecated
+    public static void assertOne(final String propertyName, final PropertyList properties) throws ValidationException {
+        ContentValidator.assertOne(propertyName, properties.getAll(), false);
+    }
+
+    /**
+     * Ensure a property doesn't occur in the specified list.
+     * @param propertyName the name of a property
+     * @param properties a list of properties
+     * @throws ValidationException thrown when the specified property
+     * is found in the list of properties
+     * @deprecated see {@link ContentValidator#assertNone(String, List, boolean)}
+     */
+    @Deprecated
+    public static void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
+        ContentValidator.assertNone(propertyName, properties.getAll(), false);
     }
 }

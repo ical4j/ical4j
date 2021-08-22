@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -60,19 +61,41 @@ public class ComponentValidator<T extends Component> implements Validator<T>, Co
             if (rule.getPredicate().test(target)) {
                 switch (rule.getType()) {
                     case None:
-                        rule.getInstances().forEach(s -> assertNone(s, target.getProperties().getAll(), warnOnly));
+                        rule.getInstances().forEach(s -> ContentValidator.assertNone(s, target.getProperties().getAll(), warnOnly));
                         break;
                     case One:
-                        rule.getInstances().forEach(s -> assertOne(s, target.getProperties().getAll(), warnOnly));
+                        rule.getInstances().forEach(s -> ContentValidator.assertOne(s, target.getProperties().getAll(), warnOnly));
                         break;
                     case OneOrLess:
-                        rule.getInstances().forEach(s -> assertOneOrLess(s, target.getProperties().getAll(), warnOnly));
+                        rule.getInstances().forEach(s -> ContentValidator.assertOneOrLess(s, target.getProperties().getAll(), warnOnly));
                         break;
                     case OneOrMore:
-                        rule.getInstances().forEach(s -> assertOneOrMore(s, target.getProperties().getAll(), warnOnly));
+                        rule.getInstances().forEach(s -> ContentValidator.assertOneOrMore(s, target.getProperties().getAll(), warnOnly));
                         break;
                 }
             }
         }
+    }
+
+    /**
+     * @param componentName a component name used in the assertion
+     * @param components a list of components
+     * @throws ValidationException where the assertion fails
+     * @deprecated see {@link ContentValidator#assertNone(String, List, boolean)}
+     */
+    @Deprecated
+    public static void assertNone(String componentName, ComponentList<?> components) throws ValidationException {
+        ContentValidator.assertNone(componentName, components.getAll(), false);
+    }
+
+    /**
+     * @param componentName a component name used in the assertion
+     * @param components a list of components
+     * @throws ValidationException where the assertion fails
+     * @deprecated see {@link ContentValidator#assertOneOrLess(String, List, boolean)}
+     */
+    @Deprecated
+    public static void assertOneOrLess(String componentName, ComponentList<?> components) throws ValidationException {
+        ContentValidator.assertOneOrLess(componentName, components.getAll(), false);
     }
 }
