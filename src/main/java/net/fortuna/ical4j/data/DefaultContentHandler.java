@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DefaultContentHandler implements ContentHandler {
 
@@ -43,6 +44,25 @@ public class DefaultContentHandler implements ContentHandler {
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
         this(consumer, tzRegistry, new ContentHandlerContext());
+    }
+
+    /**
+     *
+     * @param consumer
+     * @param tzRegistry
+     * @param parameterFactorySupplier
+     * @param propertyFactorySupplier
+     * @param componentFactorySupplier
+     * @deprecated use {@link DefaultContentHandler#DefaultContentHandler(Consumer, TimeZoneRegistry, ContentHandlerContext)}
+     */
+    @Deprecated
+    public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry,
+                                 Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
+                                 Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
+                                 Supplier<List<ComponentFactory<?>>> componentFactorySupplier) {
+        this(consumer, tzRegistry, new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
+                .withPropertyFactorySupplier(propertyFactorySupplier)
+                .withComponentFactorySupplier(componentFactorySupplier));
     }
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry,

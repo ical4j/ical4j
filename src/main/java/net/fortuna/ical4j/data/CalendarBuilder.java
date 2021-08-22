@@ -39,7 +39,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Parses and builds an iCalendar model from an input stream. Note that this class is not thread-safe.
@@ -123,6 +125,22 @@ public class CalendarBuilder implements Consumer<Calendar> {
 
         this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactoryRegistry)
                         .withPropertyFactorySupplier(propertyFactoryRegistry), tzRegistry);
+    }
+
+    /**
+     * @param parser                   a custom calendar parser
+     * @param tzRegistry               a custom timezone registry
+     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser, ContentHandlerContext, TimeZoneRegistry)}
+     */
+    @Deprecated
+    public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
+                           Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
+                           Supplier<List<ComponentFactory<?>>> componentFactorySupplier,
+                           TimeZoneRegistry tzRegistry) {
+
+        this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
+                .withPropertyFactorySupplier(propertyFactorySupplier)
+                .withComponentFactorySupplier(componentFactorySupplier), tzRegistry);
     }
 
     /**
