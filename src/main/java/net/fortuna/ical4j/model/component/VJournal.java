@@ -219,11 +219,6 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
         this.components = components;
     }
 
-    @Override
-    public ComponentList<Component> getComponents() {
-        return (ComponentList<Component>) components;
-    }
-
     /**
      * @return the optional access classification property for a journal entry
      * @deprecated use {@link VJournal#getProperty(String)}
