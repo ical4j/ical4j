@@ -569,6 +569,11 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         this.components = components;
     }
 
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
+    }
+
     /**
      * @return the CONTACT property or null if not specified
      * @deprecated use {@link VFreeBusy#getProperty(String)}
