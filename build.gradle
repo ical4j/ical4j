@@ -148,7 +148,7 @@ A Java library for reading and writing iCalendar (*.ics) files
 version = scmVersion.version
 
 revapi {
-    oldVersion = '3.0.28'
+    oldVersion = '3.0.29'
 }
 
 ext {

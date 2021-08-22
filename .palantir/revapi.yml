@@ -261,3 +261,13 @@ acceptedBreaks:
         \ extends net.fortuna.ical4j.model.Component>::getComponent(java.lang.String)\
         \ @ net.fortuna.ical4j.model.Calendar"
       justification: "Refactoring types"
+  "3.0.29":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.ComponentList<net.fortuna.ical4j.model.component.VLocation>\
+        \ net.fortuna.ical4j.model.component.Participant::getLocations()"
+      justification: "Refined implementation"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.ComponentList<net.fortuna.ical4j.model.component.VResource>\
+        \ net.fortuna.ical4j.model.component.Participant::getResources()"
+      justification: "Refined implementation"
