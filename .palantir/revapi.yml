@@ -1,0 +1,263 @@
+acceptedBreaks:
+  "3.0.28":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.model.property.DtStamp"
+      new: "class net.fortuna.ical4j.model.property.DtStamp"
+      justification: "Superclass now implements comparable"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.model.property.Sequence"
+      new: "class net.fortuna.ical4j.model.property.Sequence"
+      justification: "Superclass now implements comparable"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.filter.DateInRangeRule"
+      justification: "Class renamed"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.filter.HasPropertyRule<T extends net.fortuna.ical4j.model.Component>"
+      justification: "Class renamed"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.filter.PeriodRule<T extends net.fortuna.ical4j.model.Component>"
+      justification: "Class renamed"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      justification: "Refactoring types"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VEvent::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "Refactoring types"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VTimeZone::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "Refactoring types"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VToDo::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "Refactoring types"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyList<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.Calendar::getProperties(java.lang.String)"
+      new: "method <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.model.Calendar::getComponent(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::getComponent(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      justification: "Refactoring types"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VEvent::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "Refactoring types"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VTimeZone::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "Refactoring types"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VToDo::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "Refactoring types"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyList<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.Calendar::getProperties(java.lang.String)"
+      new: "method <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.model.Calendar::getComponent(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::getComponent(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.generics.formalTypeParameterChanged"
+      old: "method <C extends net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.ComponentList<C> net.fortuna.ical4j.model.Calendar::getComponents(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> net.fortuna.ical4j.model.ComponentList<C>\
+        \ net.fortuna.ical4j.model.ComponentContainer<T extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.movedToSuperClass"
+      old: "method <C extends net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.ComponentList<C> net.fortuna.ical4j.model.Calendar::getComponents(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> net.fortuna.ical4j.model.ComponentList<C>\
+        \ net.fortuna.ical4j.model.ComponentContainer<T extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VEvent::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "Refactoring types"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VTimeZone::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "Refactoring types"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VToDo::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "Refactoring types"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.PropertyList<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.Calendar::getProperties(java.lang.String)"
+      new: "method <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.model.Calendar::getComponent(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::getComponent(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.noLongerFinal"
+      old: "method <C extends net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.ComponentList<C> net.fortuna.ical4j.model.Calendar::getComponents(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> net.fortuna.ical4j.model.ComponentList<C>\
+        \ net.fortuna.ical4j.model.ComponentContainer<T extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.noLongerFinal"
+      old: "method net.fortuna.ical4j.model.PropertyList<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.Calendar::getProperties(java.lang.String)"
+      new: "method <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.noLongerFinal"
+      old: "method net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.model.Calendar::getComponent(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::getComponent(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.nowFinal"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      justification: "Refactoring types"
+    - code: "java.method.nowFinal"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VEvent::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "Refactoring types"
+    - code: "java.method.nowFinal"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VTimeZone::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "Refactoring types"
+    - code: "java.method.nowFinal"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VToDo::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "Refactoring types"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter int net.fortuna.ical4j.model.property.DtStamp::compareTo(===net.fortuna.ical4j.model.property.DtStamp===)"
+      new: "parameter int net.fortuna.ical4j.model.property.DateProperty::compareTo(===net.fortuna.ical4j.model.Property===)\
+        \ @ net.fortuna.ical4j.model.property.DtStamp"
+      justification: "Refactoring types"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter int net.fortuna.ical4j.model.property.Sequence::compareTo(===net.fortuna.ical4j.model.property.Sequence===)"
+      new: "parameter int net.fortuna.ical4j.model.property.Sequence::compareTo(===net.fortuna.ical4j.model.Property===)"
+      justification: "Refactoring types"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.ComponentBuilder<?> net.fortuna.ical4j.model.ComponentBuilder<T\
+        \ extends net.fortuna.ical4j.model.Component>::factories(java.util.List<net.fortuna.ical4j.model.ComponentFactory<?>>)"
+      justification: "Refactoring types"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.PropertyBuilder net.fortuna.ical4j.model.PropertyBuilder::factories(java.util.List<net.fortuna.ical4j.model.PropertyFactory<?>>)"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Sequence.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Sequence net.fortuna.ical4j.model.property.Sequence.Factory::createProperty()"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Sequence.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Sequence net.fortuna.ical4j.model.property.Sequence.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VEvent::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VTimeZone::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VToDo::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.Component::copy()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyList<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.Calendar::getProperties(java.lang.String)"
+      new: "method <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.model.Calendar::getComponent(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::getComponent(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.Calendar"
+      justification: "Refactoring types"

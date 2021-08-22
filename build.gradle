@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
+        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1', 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
     }
 }
 
@@ -24,6 +24,7 @@ apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
+apply plugin: 'com.palantir.revapi'
 apply from: 'gradle/dist.gradle'
 
 sourceCompatibility = 1.8
@@ -145,6 +146,10 @@ description = '''
 A Java library for reading and writing iCalendar (*.ics) files
 '''
 version = scmVersion.version
+
+revapi {
+    oldVersion = '3.0.28'
+}
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
