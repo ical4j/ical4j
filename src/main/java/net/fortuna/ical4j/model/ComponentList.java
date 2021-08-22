@@ -117,7 +117,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      */
     @SuppressWarnings("unchecked")
 	public final <C extends T> ComponentList<C> getComponents(final String name) {
-        final ComponentList<C> components = new ComponentList<C>();
+        final ComponentList<C> components = new ComponentList<>();
         for (final T c : this) {
             if (c.getName().equals(name)) {
                 components.add((C) c);

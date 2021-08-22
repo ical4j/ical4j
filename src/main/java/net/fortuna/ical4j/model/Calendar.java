@@ -115,7 +115,7 @@ import java.text.ParseException;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable {
+public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent> {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -215,46 +215,10 @@ public class Calendar implements Serializable {
     }
 
     /**
-     * Convenience method for retrieving a list of named components.
-     * @param name name of components to retrieve
-     * @return a component list containing only components with the specified name
-     */
-    public final <C extends CalendarComponent> ComponentList<C> getComponents(final String name) {
-        return getComponents().getComponents(name);
-    }
-
-    /**
-     * Convenience method for retrieving a named component.
-     * @param name name of the component to retrieve
-     * @return the first matching component in the component list with the specified name
-     */
-    public final CalendarComponent getComponent(final String name) {
-        return getComponents().getComponent(name);
-    }
-
-    /**
      * @return Returns the properties.
      */
     public final PropertyList<Property> getProperties() {
         return properties;
-    }
-
-    /**
-     * Convenience method for retrieving a list of named properties.
-     * @param name name of properties to retrieve
-     * @return a property list containing only properties with the specified name
-     */
-    public final PropertyList<Property> getProperties(final String name) {
-        return getProperties().getProperties(name);
-    }
-
-    /**
-     * Convenience method for retrieving a named property.
-     * @param name name of the property to retrieve
-     * @return the first matching property in the property list with the specified name
-     */
-    public final <T extends Property> T getProperty(final String name) {
-        return getProperties().getProperty(name);
     }
 
     /**

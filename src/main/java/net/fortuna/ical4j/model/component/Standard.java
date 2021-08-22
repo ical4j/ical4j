@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
 
@@ -100,11 +99,6 @@ public class Standard extends Observance {
         @Override
         public Standard createComponent(PropertyList properties) {
             return new Standard(properties);
-        }
-
-        @Override
-        public Standard createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", STANDARD));
         }
     }
 }

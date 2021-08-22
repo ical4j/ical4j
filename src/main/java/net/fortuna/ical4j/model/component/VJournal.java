@@ -102,7 +102,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VJournal extends CalendarComponent {
+public class VJournal extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
@@ -209,6 +209,11 @@ public class VJournal extends CalendarComponent {
     @Override
     protected Validator getValidator(Method method) {
         return methodValidators.get(method);
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
     }
 
     /**
@@ -318,11 +323,6 @@ public class VJournal extends CalendarComponent {
         @Override
         public VJournal createComponent(PropertyList properties) {
             return new VJournal(properties);
-        }
-
-        @Override
-        public VJournal createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VJOURNAL));
         }
     }
 }

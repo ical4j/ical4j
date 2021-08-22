@@ -99,6 +99,12 @@ public class DateTimeTest extends TestCase {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+    }
+
     /**
      *
      */
@@ -140,8 +146,6 @@ public class DateTimeTest extends TestCase {
             assertEquals(this.expectedToString, dt.toString());
         } catch (ParseException pe) {
             fail("exception not expected with relaxed parsing is used");
-        } finally {
-            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         }
     }
 

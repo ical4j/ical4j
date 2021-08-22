@@ -12,6 +12,7 @@ import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -129,11 +130,15 @@ public class TemporalAmountAdapter implements Serializable {
 
     public static TemporalAmountAdapter parse(String value) {
         TemporalAmount retVal = null;
-        if ("P".equals(value) && CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+        if (Arrays.asList("P", "PT").contains(value)
+                && CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
             retVal = Period.ZERO;
         }
         else if (value.matches("([+-])?P.*(W|D)")) {
             retVal = java.time.Period.parse(value);
+        } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+                && value.matches("P([+-]?[0-9]*[MHS])+")) {
+            retVal = java.time.Duration.parse("PT" + value.substring(1));
         } else {
             retVal = java.time.Duration.parse(value);
         }

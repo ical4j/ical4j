@@ -54,14 +54,5 @@ class VEventFactory extends AbstractComponentFactory{
      protected Object newInstance(PropertyList properties) {
          return new VEvent(properties)
      }
-    
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-		if (child instanceof VAlarm) {
-			parent.alarms.add child
-		}
-		else {
-			super.setChild(build, parent, child)
-		}
-    }
 }
 

@@ -360,10 +360,5 @@ public class VAlarm extends CalendarComponent {
         public VAlarm createComponent(PropertyList properties) {
             return new VAlarm(properties);
         }
-
-        @Override
-        public VAlarm createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VALARM));
-        }
     }
 }

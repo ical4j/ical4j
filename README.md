@@ -11,7 +11,8 @@
 [RFC7953]: https://datatracker.ietf.org/doc/html/rfc7953
 [RFC7986]: https://datatracker.ietf.org/doc/html/rfc7986
 [RFC7529]: https://datatracker.ietf.org/doc/html/rfc7529
-[Event Publishing Extensions to iCalendar (Draft)]: https://datatracker.ietf.org/doc/html/draft-ietf-calext-eventpub-extensions-19
+[RFC9073]: https://datatracker.ietf.org/doc/html/rfc9073
+[RFC9074]: https://datatracker.ietf.org/doc/html/rfc9074
 
 [Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
 
@@ -27,7 +28,7 @@
 
 [Examples]: #examples
 
-[Reference]: #reference
+[References]: #references
 [Specifications]: #specifications
 
 [Configuration]: #configuration
@@ -133,7 +134,9 @@ is used only to generate version information in the javadoc API documentation.
 * [RFC7953] - Calendar Availability
 * [RFC7986] - New Properties for iCalendar
 * [RFC7529] - Non-Gregorian Recurrence Rules in iCalendar
-* [Event Publishing Extensions to iCalendar (Draft)] - Additional components and properties to support social calendaring
+* [RFC9073] - Event Publishing Extensions to iCalendar
+* [RFC9074] - "VALARM" Extensions for iCalendar
+
 
 ## Configuration
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2004-2021, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,11 +29,10 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.filter;
+package net.fortuna.ical4j.filter.predicate;
 
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyContainer;
 
 import java.util.function.Predicate;
 
@@ -46,47 +45,19 @@ import java.util.function.Predicate;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class HasPropertyRule<T extends Component> implements Predicate<T> {
+public class PropertyEqualToRule<T extends PropertyContainer> implements Predicate<T> {
 
-    private Property property;
+    private final Comparable<Property> comparable;
 
-    private boolean matchEquals;
-
-    /**
-     * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
-     * property.
-     * @param property a property instance to check for
-     */
-    public HasPropertyRule(final Property property) {
-        this(property, false);
-    }
-
-    /**
-     * Constructs a new instance with the specified property.
-     * @param property the property to match
-     * @param matchEquals if true, matches must contain an identical property (as indicated by
-     * <code>Property.equals()</code>
-     */
-    public HasPropertyRule(final Property property, final boolean matchEquals) {
-        this.property = property;
-        this.matchEquals = matchEquals;
+    public PropertyEqualToRule(Comparable<Property> comparable) {
+        this.comparable = comparable;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final boolean test(final Component component) {
-        boolean match = false;
-        final PropertyList<Property> properties = component.getProperties(property.getName());
-        for (final Property p : properties) {
-            if (matchEquals && property.equals(p)) {
-                match = true;
-            }
-            else if (property.getValue().equals(p.getValue())) {
-                match = true;
-            }
-        }
-        return match;
+    public final boolean test(final T component) {
+        return component.getProperties().stream().anyMatch(p -> comparable.compareTo(p) == 0);
     }
 }

@@ -11,6 +11,10 @@ class ParameterBuilderTest extends Specification {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false)
     }
 
+    def cleanupSpec() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+    }
+
     def 'test build parameter'() {
         given: 'a parameter builder instance'
         ParameterBuilder builder = [Arrays.asList(new Value.Factory())]

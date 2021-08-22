@@ -42,6 +42,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -55,7 +57,7 @@ import java.text.ParseException;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content {
+public abstract class Property extends Content implements Comparable<Property> {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -289,6 +291,11 @@ public abstract class Property extends Content {
     public static final String RELATED_TO = "RELATED-TO";
 
     /**
+     * Resource type property name.
+     */
+    public static final String RESOURCE_TYPE = "RESOURCE-TYPE";
+
+    /**
      * Resources property name.
      */
     public static final String RESOURCES = "RESOURCES";
@@ -324,11 +331,6 @@ public abstract class Property extends Content {
     public static final String LOCALITY = "LOCALITY";
 
     /**
-     * VVENUE location type property name.
-     */
-    public static final String LOCATION_TYPE = "LOCATION-TYPE";
-
-    /**
      * VVENUE name property name.
      */
     public static final String NAME = "NAME";
@@ -357,7 +359,36 @@ public abstract class Property extends Content {
      *  Acknowledged Property taken from http://tools.ietf.org/html/draft-daboo-valarm-extensions-04
      */
     public static final String ACKNOWLEDGED = "ACKNOWLEDGED";
-    
+
+    public static final String PROXIMITY = "PROXIMITY";
+
+    /* Event publication properties */
+
+    /**
+     * Participant cua property name.
+     */
+    public static final String CALENDAR_ADDRESS = "CALENDAR-ADDRESS";
+
+    /**
+     * Location type property name.
+     */
+    public static final String LOCATION_TYPE = "LOCATION-TYPE";
+
+    /**
+     * Participant type.
+     */
+    public static final String PARTICIPANT_TYPE = "PARTICIPANT-TYPE";
+
+    /**
+     * Structured data property name.
+     */
+    public static final String STRUCTURED_DATA = "STRUCTURED-DATA";
+
+    /**
+     * Styled description property name.
+     */
+    public static final String STYLED_DESCRIPTION = "STYLED-DESCRIPTION";
+
     private final String name;
 
     private final ParameterList parameters;
@@ -486,8 +517,7 @@ public abstract class Property extends Content {
      * @throws URISyntaxException possibly thrown by setting the value of certain properties
      * @throws ParseException     possibly thrown by setting the value of certain properties
      */
-    public abstract void setValue(String aValue) throws IOException,
-            URISyntaxException, ParseException;
+    public abstract void setValue(String aValue) throws IOException, URISyntaxException, ParseException;
 
     /**
      * Perform validation on a property.
@@ -534,5 +564,16 @@ public abstract class Property extends Content {
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
         return factory.createProperty(params, getValue());
+    }
+
+    @Override
+    public int compareTo(Property o) {
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Property::getName)
+                .thenComparing(Property::getValue)
+                .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                .compare(this, o);
     }
 }

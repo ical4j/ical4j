@@ -201,7 +201,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusy extends CalendarComponent {
+public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
@@ -563,6 +563,11 @@ public class VFreeBusy extends CalendarComponent {
         return methodValidators.get(method);
     }
 
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
+    }
+
     /**
      * @return the CONTACT property or null if not specified
      */
@@ -635,11 +640,5 @@ public class VFreeBusy extends CalendarComponent {
         public VFreeBusy createComponent(PropertyList properties) {
             return new VFreeBusy(properties);
         }
-
-        @Override
-        public VFreeBusy createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VFREEBUSY));
-        }
-
     }
 }

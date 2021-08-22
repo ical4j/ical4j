@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
+import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 
@@ -57,6 +58,8 @@ abstract class AbstractComponentFactory extends AbstractFactory {
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Property) {
             parent.properties.add(child)
+        } else if (child instanceof Component) {
+            parent.components.add(child)
         }
     }
 }

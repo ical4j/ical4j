@@ -6,8 +6,8 @@ net.fortuna.ical4j.model.parameter.CuType$Factory
 net.fortuna.ical4j.model.parameter.DelegatedFrom$Factory
 net.fortuna.ical4j.model.parameter.Dir$Factory
 net.fortuna.ical4j.model.parameter.Encoding$Factory
-net.fortuna.ical4j.model.parameter.FmtType$Factory
 net.fortuna.ical4j.model.parameter.FbType$Factory
+net.fortuna.ical4j.model.parameter.FmtType$Factory
 net.fortuna.ical4j.model.parameter.Language$Factory
 net.fortuna.ical4j.model.parameter.Member$Factory
 net.fortuna.ical4j.model.parameter.PartStat$Factory
@@ -24,8 +24,13 @@ net.fortuna.ical4j.model.parameter.TzId$Factory
 net.fortuna.ical4j.model.parameter.Value$Factory
 net.fortuna.ical4j.model.parameter.Vvenue$Factory
 
-#RFC7986
+#RFC7986 - new properties
 net.fortuna.ical4j.model.parameter.Display$Factory
 net.fortuna.ical4j.model.parameter.Email$Factory
 net.fortuna.ical4j.model.parameter.Feature$Factory
 net.fortuna.ical4j.model.parameter.Label$Factory
+
+#Eventpub
+net.fortuna.ical4j.model.parameter.Derived$Factory
+net.fortuna.ical4j.model.parameter.Order$Factory
+net.fortuna.ical4j.model.parameter.Schema$Factory

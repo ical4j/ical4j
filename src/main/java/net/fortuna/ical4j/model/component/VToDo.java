@@ -42,9 +42,6 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -121,7 +118,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent {
+public class VToDo extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = -269658210065896668L;
 
@@ -167,8 +164,6 @@ public class VToDo extends CalendarComponent {
                 new ValidationRule(None, REQUEST_STATUS)));
     }
 
-    private ComponentList<VAlarm> alarms = new ComponentList<>();
-
     /**
      * Default constructor.
      */
@@ -192,8 +187,7 @@ public class VToDo extends CalendarComponent {
     }
 
     public VToDo(PropertyList properties, ComponentList<VAlarm> alarms) {
-        super(VTODO, properties);
-        this.alarms = alarms;
+        super(VTODO, properties, alarms);
     }
 
     /**
@@ -239,7 +233,12 @@ public class VToDo extends CalendarComponent {
      * @return a component list
      */
     public final ComponentList<VAlarm> getAlarms() {
-        return alarms;
+        return (ComponentList<VAlarm>) components;
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
     }
 
     /**
@@ -486,7 +485,7 @@ public class VToDo extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VToDo) {
             return super.equals(arg0)
-                    && Objects.equals(alarms, ((VToDo) arg0).getAlarms());
+                    && Objects.equals(getAlarms(), ((VToDo) arg0).getAlarms());
         }
         return super.equals(arg0);
     }
@@ -498,21 +497,6 @@ public class VToDo extends CalendarComponent {
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getAlarms()).toHashCode();
-    }
-
-    /**
-     * Overrides default copy method to add support for copying alarm sub-components.
-     * @return a copy of the instance
-     * @throws ParseException where an error occurs parsing data
-     * @throws IOException where an error occurs reading data
-     * @throws URISyntaxException where an invalid URI is encountered
-     * @see net.fortuna.ical4j.model.Component#copy()
-     */
-    @Override
-    public Component copy() throws ParseException, IOException, URISyntaxException {
-        final VToDo copy = (VToDo) super.copy();
-        copy.alarms = new ComponentList<VAlarm>(alarms);
-        return copy;
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VToDo> {
@@ -527,7 +511,7 @@ public class VToDo extends CalendarComponent {
         }
 
         @Override
-        public VToDo createComponent(PropertyList properties) {
+        public VToDo createComponent(PropertyList<Property> properties) {
             return new VToDo(properties);
         }
 

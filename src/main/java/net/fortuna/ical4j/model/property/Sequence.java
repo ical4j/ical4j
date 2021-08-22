@@ -31,12 +31,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Comparator;
 
 /**
  * $Id$
@@ -128,7 +132,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class Sequence extends Property implements Comparable<Sequence> {
+public class Sequence extends Property {
 
     private static final long serialVersionUID = -1606972893204822853L;
 
@@ -205,11 +209,16 @@ public class Sequence extends Property implements Comparable<Sequence> {
     }
 
     @Override
-    public int compareTo(Sequence o) {
-        return Integer.compare(getSequenceNo(), o.getSequenceNo());
+    public int compareTo(Property o) {
+        if (o instanceof Sequence) {
+            return Comparator.comparing(Sequence::getName)
+                    .thenComparing(Sequence::getSequenceNo)
+                    .compare(this, (Sequence) o);
+        }
+        return super.compareTo(o);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Sequence> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -217,13 +226,13 @@ public class Sequence extends Property implements Comparable<Sequence> {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Sequence createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Sequence(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Sequence createProperty() {
             return new Sequence();
         }
     }

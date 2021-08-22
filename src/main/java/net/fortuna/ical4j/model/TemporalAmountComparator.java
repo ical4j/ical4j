@@ -3,6 +3,7 @@ package net.fortuna.ical4j.model;
 import java.time.Duration;
 import java.time.Period;
 import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.Comparator;
 
 public class TemporalAmountComparator implements Comparator<TemporalAmount> {
@@ -11,8 +12,8 @@ public class TemporalAmountComparator implements Comparator<TemporalAmount> {
         int result = 0;
         if (!o1.getClass().equals(o2.getClass())) {
 //            throw new UnsupportedOperationException("Unable to compare different Temporal types");
-            boolean o1datebased = o1.getUnits().stream().anyMatch(u -> u.isDateBased());
-            boolean o2datebased = o2.getUnits().stream().anyMatch(u -> u.isDateBased());
+            boolean o1datebased = o1.getUnits().stream().anyMatch(TemporalUnit::isDateBased);
+            boolean o2datebased = o2.getUnits().stream().anyMatch(TemporalUnit::isDateBased);
             if (o1datebased != o2datebased) {
                 if (o1datebased) {
                     result = Integer.MAX_VALUE;

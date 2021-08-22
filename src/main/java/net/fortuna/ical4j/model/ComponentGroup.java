@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.filter.Filter;
-import net.fortuna.ical4j.filter.HasPropertyRule;
+import net.fortuna.ical4j.filter.predicate.PropertyEqualToRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Support for operations applicable to a group of components. Typically this class is used to manage
@@ -34,7 +34,7 @@ public class ComponentGroup<T extends Component> {
 
     private final ComponentList<T> components;
 
-    private final Filter<T> componentFilter;
+    private final Predicate<T> componentPredicate;
 
     public ComponentGroup(ComponentList<T> components, Uid uid) {
         this(components, uid, null);
@@ -43,13 +43,11 @@ public class ComponentGroup<T extends Component> {
     public ComponentGroup(ComponentList<T> components, Uid uid, RecurrenceId recurrenceId) {
         this.components = components;
 
-        Predicate<T> componentPredicate;
         if (recurrenceId != null) {
-            componentPredicate = new HasPropertyRule<T>(uid).and(new HasPropertyRule<T>(recurrenceId));
+            componentPredicate = new PropertyEqualToRule<T>(uid).and(new PropertyEqualToRule<>(recurrenceId));
         } else {
-            componentPredicate = new HasPropertyRule<T>(uid);
+            componentPredicate = new PropertyEqualToRule<>(uid);
         }
-        componentFilter = new Filter<>(componentPredicate);
     }
 
     /**
@@ -59,7 +57,7 @@ public class ComponentGroup<T extends Component> {
      * @return
      */
     public ComponentList<T> getRevisions() {
-        return (ComponentList<T>) componentFilter.filter(components);
+        return new ComponentList<T>(components.stream().filter(componentPredicate).collect(Collectors.toList()));
     }
 
     /**

@@ -49,14 +49,4 @@ class ParticipantFactory extends AbstractComponentFactory{
      protected Object newInstance(PropertyList properties) {
          return new Participant(properties)
      }
-
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof VLocation) {
-            parent.locations.add child
-        } else if (child instanceof VResource) {
-            parent.resources.add child
-        } else {
-            super.setChild(build, parent, child)
-        }
-    }
 }

@@ -5,12 +5,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
+        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1', 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
     }
 }
 
 plugins {
-    id 'pl.allegro.tech.build.axion-release' version '1.13.1'
+    id 'pl.allegro.tech.build.axion-release' version '1.13.3'
     id "nebula.provided-base" version "3.0.3"
     id "net.ltgt.errorprone" version "1.2.1" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
@@ -24,6 +24,7 @@ apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
+apply plugin: 'com.palantir.revapi'
 apply from: 'gradle/dist.gradle'
 
 sourceCompatibility = 1.8
@@ -50,6 +51,9 @@ dependencies {
 
     // optional support for non-Gregorian chronologies..
     implementation "org.threeten:threeten-extra:$threetenExtraVersion", optional
+
+    // optional groovy DSL for calendar builder..
+    implementation "org.jparsec:jparsec:$jparsecVersion", optional
 
     // optional groovy DSL for calendar builder..
     implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
@@ -142,6 +146,10 @@ description = '''
 A Java library for reading and writing iCalendar (*.ics) files
 '''
 version = scmVersion.version
+
+revapi {
+    oldVersion = '3.0.29'
+}
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")

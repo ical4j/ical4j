@@ -195,7 +195,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent {
+public class VEvent extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -240,8 +240,6 @@ public class VEvent extends CalendarComponent {
                         LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
     }
 
-    private ComponentList<VAlarm> alarms;
-
     /**
      * Default constructor.
      */
@@ -251,7 +249,6 @@ public class VEvent extends CalendarComponent {
 
     public VEvent(boolean initialise) {
         super(VEVENT);
-        this.alarms = new ComponentList<VAlarm>();
         if (initialise) {
             getProperties().add(new DtStamp());
         }
@@ -263,7 +260,6 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final PropertyList properties) {
         super(VEVENT, properties);
-        this.alarms = new ComponentList<VAlarm>();
     }
 
     /**
@@ -272,8 +268,7 @@ public class VEvent extends CalendarComponent {
      * @param alarms a list of alarms
      */
     public VEvent(final PropertyList properties, final ComponentList<VAlarm> alarms) {
-        super(VEVENT, properties);
-        this.alarms = alarms;
+        super(VEVENT, properties, alarms);
     }
 
     /**
@@ -319,7 +314,12 @@ public class VEvent extends CalendarComponent {
      * @return a component list
      */
     public final ComponentList<VAlarm> getAlarms() {
-        return alarms;
+        return (ComponentList<VAlarm>) components;
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
     }
 
     /**
@@ -709,7 +709,7 @@ public class VEvent extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VEvent) {
             return super.equals(arg0)
-                    && Objects.equals(alarms, ((VEvent) arg0).getAlarms());
+                    && Objects.equals(getAlarms(), ((VEvent) arg0).getAlarms());
         }
         return super.equals(arg0);
     }
@@ -721,22 +721,6 @@ public class VEvent extends CalendarComponent {
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getAlarms()).toHashCode();
-    }
-
-    /**
-     * Overrides default copy method to add support for copying alarm sub-components.
-     * @return a copy of the instance
-     * @throws ParseException where values in the instance cannot be parsed
-     * @throws IOException where values in the instance cannot be read
-     * @throws URISyntaxException where an invalid URI value is encountered in the instance
-     * @see net.fortuna.ical4j.model.Component#copy()
-     */
-    @Override
-    public Component copy() throws ParseException, IOException,
-            URISyntaxException {
-        final VEvent copy = (VEvent) super.copy();
-        copy.alarms = new ComponentList<VAlarm>(alarms);
-        return copy;
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {
@@ -751,7 +735,7 @@ public class VEvent extends CalendarComponent {
         }
 
         @Override
-        public VEvent createComponent(PropertyList properties) {
+        public VEvent createComponent(PropertyList<Property> properties) {
             return new VEvent(properties);
         }
 
