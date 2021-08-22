@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable, PropertyContainer, ComponentContainer {
+public abstract class Component implements Serializable, PropertyContainer {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -137,7 +137,7 @@ public abstract class Component implements Serializable, PropertyContainer, Comp
 
     private final PropertyList<Property> properties;
 
-    private final ComponentList<? extends Component> components;
+    protected final ComponentList<? extends Component> components;
 
     /**
      * Constructs a new component containing no properties.
@@ -209,11 +209,6 @@ public abstract class Component implements Serializable, PropertyContainer, Comp
         return p;
     }
 
-    @Override
-    public final ComponentList<? extends Component> getComponents() {
-        return components;
-    }
-
     /**
      * Perform validation on a component and its properties.
      *
@@ -273,11 +268,11 @@ public abstract class Component implements Serializable, PropertyContainer, Comp
      * @throws ParseException     where parsing component data fails
      * @throws URISyntaxException where component data contains an invalid URI
      */
-    public final Component copy() throws ParseException, IOException, URISyntaxException {
+    public final <T extends Component> T copy() throws ParseException, IOException, URISyntaxException {
 
         // Deep copy properties..
-        final PropertyList<Property> newprops = new PropertyList<>(getProperties());
-        final ComponentList<Component> newc = new ComponentList<>(getComponents());
+        final PropertyList<Property> newprops = new PropertyList<>(properties);
+        final ComponentList<Component> newc = new ComponentList<>(components);
 
         return new ComponentFactoryImpl().createComponent(getName(), newprops, newc);
     }

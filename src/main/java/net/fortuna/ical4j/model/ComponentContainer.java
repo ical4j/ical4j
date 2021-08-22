@@ -1,14 +1,14 @@
 package net.fortuna.ical4j.model;
 
-public interface ComponentContainer {
+public interface ComponentContainer<T extends Component> {
 
-    ComponentList<? extends Component> getComponents();
+    ComponentList<T> getComponents();
 
-    default <C extends Component> ComponentList<C> getComponents(final String name) {
-        return (ComponentList<C>) getComponents().getComponents(name);
+    default <C extends T> ComponentList<C> getComponents(final String name) {
+        return getComponents().getComponents(name);
     }
 
-    default <C extends Component> C getComponent(final String name) {
+    default <C extends T> C getComponent(final String name) {
         return (C) getComponents().getComponent(name);
     }
 }

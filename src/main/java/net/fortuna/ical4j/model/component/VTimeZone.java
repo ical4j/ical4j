@@ -118,7 +118,7 @@ import java.util.Objects;
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent {
+public class VTimeZone extends CalendarComponent implements ComponentContainer<Observance> {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
@@ -229,7 +229,12 @@ public class VTimeZone extends CalendarComponent {
      * @return Returns the types.
      */
     public final ComponentList<Observance> getObservances() {
-        return (ComponentList<Observance>) getComponents();
+        return (ComponentList<Observance>) components;
+    }
+
+    @Override
+    public ComponentList<Observance> getComponents() {
+        return (ComponentList<Observance>) components;
     }
 
     /**

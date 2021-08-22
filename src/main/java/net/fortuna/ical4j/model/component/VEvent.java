@@ -195,7 +195,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent {
+public class VEvent extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -314,7 +314,12 @@ public class VEvent extends CalendarComponent {
      * @return a component list
      */
     public final ComponentList<VAlarm> getAlarms() {
-        return (ComponentList<VAlarm>) getComponents();
+        return (ComponentList<VAlarm>) components;
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
     }
 
     /**
