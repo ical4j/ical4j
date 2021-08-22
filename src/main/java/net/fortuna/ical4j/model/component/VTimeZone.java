@@ -127,7 +127,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent implements ComponentContainer<Component> {
+public class VTimeZone extends CalendarComponent implements ComponentContainer<Observance> {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
@@ -238,12 +238,12 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<C
     }
 
     @Override
-    public ComponentList<Component> getComponents() {
-        return (ComponentList<Component>) components;
+    public ComponentList<Observance> getComponents() {
+        return (ComponentList<Observance>) components;
     }
 
     @Override
-    public void setComponents(ComponentList<Component> components) {
+    public void setComponents(ComponentList<Observance> components) {
         this.components = components;
     }
 

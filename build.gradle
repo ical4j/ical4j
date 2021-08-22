@@ -1,13 +1,13 @@
 import aQute.bnd.gradle.Bundle
 
-//buildscript {
-//    repositories {
-//        mavenCentral()
-//    }
-//    dependencies {
-//        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
-//    }
-//}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
+    }
+}
 
 plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.13.1'
@@ -24,7 +24,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'nebula.optional-base'
-//apply from: 'gradle/dist.gradle'
+apply plugin: 'com.palantir.revapi'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -149,6 +149,10 @@ description = '''
 A Java library for reading and writing iCalendar (*.ics) files
 '''
 version = scmVersion.version
+
+revapi {
+    oldVersion = '3.0.28'
+}
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
