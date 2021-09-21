@@ -47,6 +47,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -137,9 +138,8 @@ public final class Calendars {
             return new Calendar[] {calendar};
         }
         
-        final ComponentList<VTimeZone> timezoneList = calendar.getComponents(Component.VTIMEZONE);
-		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<VTimeZone>(
-        		timezoneList, Property.TZID);
+        final List<VTimeZone> timezoneList = calendar.getComponents(Component.VTIMEZONE);
+		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<>(timezoneList, Property.TZID);
         
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
         for (final CalendarComponent c : calendar.getComponents()) {

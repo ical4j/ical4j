@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,13 +117,13 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @return a list of components with the matching name
      */
     @SuppressWarnings("unchecked")
-	public final <C extends T> ComponentList<C> getComponents(final String name) {
-        final ComponentList<C> components = new ComponentList<>();
+	public final <C extends T> List<C> getComponents(final String name) {
+        final List<C> components = new ArrayList<>();
         for (final T c : this) {
             if (c.getName().equals(name)) {
                 components.add((C) c);
             }
         }
-        return components;
+        return Collections.unmodifiableList(components);
     }
 }
