@@ -58,6 +58,7 @@ public class IndexedComponentList<T extends Component> {
                 components.add(component);
             }
         }
+        indexedComponents.keySet().forEach(p -> indexedComponents.put(p, Collections.unmodifiableList(indexedComponents.get(p))));
         this.index = Collections.unmodifiableMap(indexedComponents);
     }
     

@@ -271,3 +271,30 @@ acceptedBreaks:
       old: "method net.fortuna.ical4j.model.ComponentList<net.fortuna.ical4j.model.component.VResource>\
         \ net.fortuna.ical4j.model.component.Participant::getResources()"
       justification: "Refined implementation"
+  "3.1.0":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.IndexedComponentList<T extends\
+        \ net.fortuna.ical4j.model.Component>::<init>(===net.fortuna.ical4j.model.ComponentList<T>===,\
+        \ java.lang.String)"
+      new: "parameter void net.fortuna.ical4j.model.IndexedComponentList<T extends\
+        \ net.fortuna.ical4j.model.Component>::<init>(===java.util.List<T>===, java.lang.String)"
+      justification: "Use more generic list type should be safe for most users"
+    - code: "java.method.returnTypeChanged"
+      old: "method <C extends T extends net.fortuna.ical4j.model.Component> net.fortuna.ical4j.model.ComponentList<C>\
+        \ net.fortuna.ical4j.model.ComponentContainer<T extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> java.util.List<C>\
+        \ net.fortuna.ical4j.model.ComponentContainer<T extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)"
+      justification: "Use more generic list type should be safe for most users"
+    - code: "java.method.returnTypeChanged"
+      old: "method <C extends T extends net.fortuna.ical4j.model.Component> net.fortuna.ical4j.model.ComponentList<C>\
+        \ net.fortuna.ical4j.model.ComponentList<T extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)"
+      new: "method <C extends T extends net.fortuna.ical4j.model.Component> java.util.List<C>\
+        \ net.fortuna.ical4j.model.ComponentList<T extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)"
+      justification: "Use more generic list type should be safe for most users"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.IndexedComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)"
+      new: "method java.util.List<T> net.fortuna.ical4j.model.IndexedComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::getComponents(java.lang.String)"
+      justification: "Use more generic list type should be safe for most users"
