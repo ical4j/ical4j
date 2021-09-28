@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.*;
@@ -177,7 +178,11 @@ public abstract class Observance extends Component {
         if (initialOnset == null) {
             try {
                 DtStart<?> dtStart = getProperties().getRequired(DTSTART);
-                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(offsetFrom.getOffset());
+                if (dtStart.getDate().isSupported(ChronoField.HOUR_OF_DAY)) {
+                    initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(offsetFrom.getOffset());
+                } else {
+                    initialOnset = LocalDate.from(dtStart.getDate()).atStartOfDay().atOffset(offsetFrom.getOffset());
+                }
             } catch (ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
                 log.warn("Unexpected error calculating initial onset - applying default", e);
