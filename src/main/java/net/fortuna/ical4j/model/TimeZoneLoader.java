@@ -11,16 +11,12 @@ import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.ResourceLoader;
 import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
+import java.text.ParseException;
 import java.time.Month;
 import java.time.Period;
 import java.time.*;
@@ -33,21 +29,13 @@ import java.util.*;
 
 public class TimeZoneLoader {
 
-    private static final String UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
-    private static final String UPDATE_CONNECT_TIMEOUT = "net.fortuna.ical4j.timezone.update.timeout.connect";
-    private static final String UPDATE_READ_TIMEOUT = "net.fortuna.ical4j.timezone.update.timeout.read";
-    private static final String UPDATE_PROXY_ENABLED = "net.fortuna.ical4j.timezone.update.proxy.enabled";
-    private static final String UPDATE_PROXY_TYPE = "net.fortuna.ical4j.timezone.update.proxy.type";
-    private static final String UPDATE_PROXY_HOST = "net.fortuna.ical4j.timezone.update.proxy.host";
-    private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
-
     private static final String TZ_CACHE_IMPL = "net.fortuna.ical4j.timezone.cache.impl";
 
     private static final String DEFAULT_TZ_CACHE_IMPL = "net.fortuna.ical4j.util.MapTimeZoneCache";
 
     private static final String MESSAGE_MISSING_DEFAULT_TZ_CACHE_IMPL = "Error loading default cache implementation. Please ensure the JCache API dependency is included in the classpath, or override the cache implementation (e.g. via configuration: net.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache)";
 
-    private static Proxy proxy = null;
+    private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<String>();
     private static final String DATE_TIME_TPL = "yyyyMMdd'T'HHmmss";
     private static final String RRULE_TPL = "FREQ=YEARLY;BYMONTH=%d;BYDAY=%d%s";
     private static final Standard NO_TRANSITIONS;
@@ -57,23 +45,12 @@ public class TimeZoneLoader {
         NO_TRANSITIONS.add(new TzOffsetFrom(ZoneOffset.UTC));
         NO_TRANSITIONS.add(new TzOffsetTo(ZoneOffset.UTC));
         NO_TRANSITIONS.add(new DtStart<>(Instant.EPOCH));
-
-        // Proxy configuration..
-        try {
-            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false"))) {
-                final Proxy.Type type = Configurator.getEnumProperty(Proxy.Type.class, UPDATE_PROXY_TYPE).orElse(Proxy.Type.DIRECT);
-                final String proxyHost = Configurator.getProperty(UPDATE_PROXY_HOST).orElse("");
-                final int proxyPort = Configurator.getIntProperty(UPDATE_PROXY_PORT).orElse(-1);
-                proxy = new Proxy(type, new InetSocketAddress(proxyHost, proxyPort));
-            }
-        }
-        catch (Throwable e) {
-            LoggerFactory.getLogger(TimeZoneLoader.class).warn(
-                    "Error loading proxy server configuration: " + e.getMessage());
-        }
     }
 
     private final String resourcePrefix;
+
+    private final TimeZoneUpdater zoneUpdater;
+
     private final TimeZoneCache cache;
 
     public TimeZoneLoader(String resourcePrefix) {
@@ -82,6 +59,7 @@ public class TimeZoneLoader {
 
     public TimeZoneLoader(String resourcePrefix, TimeZoneCache cache) {
         this.resourcePrefix = resourcePrefix;
+        this.zoneUpdater = new TimeZoneUpdater();
         this.cache = cache;
     }
 
@@ -103,12 +81,10 @@ public class TimeZoneLoader {
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(in);
                     final Optional<VTimeZone> vTimeZone = calendar.getComponents().getFirst(Component.VTIMEZONE);
-                    // load any available updates for the timezone.. can be explicility enabled via configuration
-                    if (vTimeZone.isPresent()
-                            && "true".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"))) {
-                        return updateDefinition(vTimeZone.get());
+                    if (vTimeZone.isPresent()) {
+                        // load any available updates for the timezone.. can be explicility disabled via configuration
+                        cache.putIfAbsent(id, zoneUpdater.updateDefinition(vTimeZone.get()));
                     }
-                    vTimeZone.ifPresent(timeZone -> cache.putIfAbsent(id, timeZone));
                 }
             } else {
                 return generateTimezoneForId(id);
@@ -117,41 +93,8 @@ public class TimeZoneLoader {
         return cache.getTimezone(id);
     }
 
-    /**
-     * @param vTimeZone
-     * @return
-     */
-    private VTimeZone updateDefinition(VTimeZone vTimeZone) throws IOException, ParserException {
-        final Optional<TzUrl> tzUrl = vTimeZone.getProperties().getFirst(Property.TZURL);
-        if (tzUrl.isPresent()) {
-            final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(0);
-            final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);
-
-            URLConnection connection;
-            URL url = tzUrl.get().getUri().toURL();
-
-            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
-                connection = url.openConnection(proxy);
-            } else {
-                connection = url.openConnection();
-            }
-
-            connection.setConnectTimeout(connectTimeout);
-            connection.setReadTimeout(readTimeout);
-
-            final CalendarBuilder builder = new CalendarBuilder();
-
-            final Calendar calendar = builder.build(connection.getInputStream());
-            final Optional<VTimeZone> updatedVTimeZone = calendar.getComponents().getFirst(Component.VTIMEZONE);
-            if (updatedVTimeZone.isPresent()) {
-                return updatedVTimeZone.get();
-            }
-        }
-        return vTimeZone;
-    }
-
-    private static VTimeZone generateTimezoneForId(String timezoneId) {
-        if (!ZoneId.getAvailableZoneIds().contains(timezoneId)) {
+    private static VTimeZone generateTimezoneForId(String timezoneId) throws ParseException {
+        if (!TIMEZONE_DEFINITIONS.contains(timezoneId)) {
             return null;
         }
         TimeZone javaTz = TimeZone.getTimeZone(timezoneId);
