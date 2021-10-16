@@ -15,8 +15,8 @@ import org.apache.commons.lang3.Validate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.ParseException;
 import java.time.Month;
 import java.time.Period;
 import java.time.*;
@@ -81,10 +81,8 @@ public class TimeZoneLoader {
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(in);
                     final Optional<VTimeZone> vTimeZone = calendar.getComponents().getFirst(Component.VTIMEZONE);
-                    if (vTimeZone.isPresent()) {
-                        // load any available updates for the timezone.. can be explicility disabled via configuration
-                        cache.putIfAbsent(id, zoneUpdater.updateDefinition(vTimeZone.get()));
-                    }
+                    // load any available updates for the timezone.. can be explicility disabled via configuration
+                    vTimeZone.ifPresent(timeZone -> cache.putIfAbsent(id, zoneUpdater.updateDefinition(timeZone)));
                 }
             } else {
                 return generateTimezoneForId(id);
@@ -93,7 +91,7 @@ public class TimeZoneLoader {
         return cache.getTimezone(id);
     }
 
-    private static VTimeZone generateTimezoneForId(String timezoneId) throws ParseException {
+    private static VTimeZone generateTimezoneForId(String timezoneId) {
         if (!TIMEZONE_DEFINITIONS.contains(timezoneId)) {
             return null;
         }

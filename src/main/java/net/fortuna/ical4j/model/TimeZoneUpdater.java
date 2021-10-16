@@ -45,6 +45,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Optional;
 
 /**
  * Support for updating timezone definitions.
@@ -102,16 +103,16 @@ public class TimeZoneUpdater {
      */
     public VTimeZone updateDefinition(VTimeZone vTimeZone) {
         if (isEnabled() && vTimeZone != null) {
-            final TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
-            if (tzUrl != null) {
+            final Optional<TzUrl> tzUrl = vTimeZone.getTimeZoneUrl();
+            if (tzUrl.isPresent()) {
                 try {
-                    URLConnection connection = openConnection(tzUrl.getUri().toURL());
+                    URLConnection connection = openConnection(tzUrl.get().getUri().toURL());
 
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(connection.getInputStream());
-                    final VTimeZone updatedVTimeZone = calendar.getComponent(Component.VTIMEZONE);
-                    if (updatedVTimeZone != null) {
-                        return updatedVTimeZone;
+                    final Optional<VTimeZone> updatedVTimeZone = calendar.getComponent(Component.VTIMEZONE);
+                    if (updatedVTimeZone.isPresent()) {
+                        return updatedVTimeZone.get();
                     }
                 } catch (IOException | ParserException e) {
                     LoggerFactory.getLogger(TimeZoneLoader.class).warn("Error updating timezone definition", e);
