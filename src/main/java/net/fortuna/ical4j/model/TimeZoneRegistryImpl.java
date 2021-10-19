@@ -101,11 +101,13 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private final Map<String, String> zoneIds;
 
+    private final boolean lenientTzResolution;
+
     /**
      * Default constructor.
      */
     public TimeZoneRegistryImpl() {
-        this(DEFAULT_RESOURCE_PREFIX);
+        this(DEFAULT_RESOURCE_PREFIX, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     /**
@@ -113,11 +115,12 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      *
      * @param resourcePrefix a prefix prepended to classpath resource lookups for default timezones
      */
-    public TimeZoneRegistryImpl(final String resourcePrefix) {
+    public TimeZoneRegistryImpl(final String resourcePrefix, boolean lenientTzResolution) {
         this.timeZoneLoader = new TimeZoneLoader(resourcePrefix);
         timezones = new ConcurrentHashMap<>();
         zoneRules = new ConcurrentHashMap<>();
         zoneIds = new HashMap<>();
+        this.lenientTzResolution = lenientTzResolution;
     }
 
     /**
@@ -190,7 +193,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                                     // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
                                     timezone = new TimeZone(vTimeZone);
                                     DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
-                                } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                                } else if (lenientTzResolution) {
                                     // strip global part of id and match on default tz..
                                     Matcher matcher = TZ_ID_SUFFIX.matcher(id);
                                     if (matcher.find()) {

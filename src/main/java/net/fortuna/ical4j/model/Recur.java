@@ -327,6 +327,15 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param aValue a string representation of a recurrence.
      */
     public Recur(final String aValue) {
+        this(aValue, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    /**
+     * Constructs a new recurrence from the specified string value.
+     * @param aValue a string representation of a recurrence.
+     * @param experimentalTokensAllowed allow unrecognised tokens in the recurrence
+     */
+    public Recur(final String aValue, boolean experimentalTokensAllowed) {
         Chronology chronology = Chronology.ofLocale(Locale.getDefault());
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
         while (tokens.hasNext()) {
@@ -366,7 +375,7 @@ public class Recur<T extends Temporal> implements Serializable {
             } else if (WKST.equals(token)) {
                 weekStartDay = WeekDay.getWeekDay(WeekDay.Day.valueOf(nextToken(tokens, token)));
             } else {
-                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                if (experimentalTokensAllowed) {
                     // assume experimental value..
                     experimentalValues.put(token, nextToken(tokens, token));
                 } else {

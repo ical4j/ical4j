@@ -58,7 +58,7 @@ public class AddressList implements Serializable {
     /**
      * Default constructor.
      */
-    public AddressList() {
+    public AddressList(boolean allowInvalidAddress) {
         addresses = Collections.emptyList();
     }
 
@@ -68,13 +68,17 @@ public class AddressList implements Serializable {
      * @throws URISyntaxException where the specified string is not a valid representation
      */
     public AddressList(final String aValue) throws URISyntaxException {
+        this(aValue, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    public AddressList(final String aValue, boolean allowInvalidAddress) throws URISyntaxException {
         List<URI> values = new ArrayList<>();
         for (String a : aValue.split(",")) {
             try {
                 values.add(new URI(Uris.encode(Strings.unquote(a))));
             } catch (URISyntaxException use) {
                 // ignore invalid addresses if relaxed parsing is enabled..
-                if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                if (!allowInvalidAddress) {
                     throw use;
                 }
             }
@@ -85,7 +89,7 @@ public class AddressList implements Serializable {
     public AddressList(List<URI> addresses) {
         this.addresses = Collections.unmodifiableList(addresses);
     }
-    
+
     public List<URI> getAddresses() {
         return addresses;
     }
