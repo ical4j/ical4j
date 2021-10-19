@@ -58,7 +58,7 @@ public class AddressList implements Serializable {
     /**
      * Default constructor.
      */
-    public AddressList(boolean allowInvalidAddress) {
+    public AddressList() {
         addresses = Collections.emptyList();
     }
 
