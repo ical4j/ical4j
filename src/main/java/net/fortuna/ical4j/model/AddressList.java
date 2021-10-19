@@ -59,7 +59,7 @@ public class AddressList implements Serializable, Iterable<URI> {
     /**
      * Default constructor.
      */
-    public AddressList(boolean allowInvalidAddress) {
+    public AddressList() {
         addresses = new CopyOnWriteArrayList<>();
     }
 
