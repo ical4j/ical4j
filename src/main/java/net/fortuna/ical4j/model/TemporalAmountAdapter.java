@@ -129,15 +129,17 @@ public class TemporalAmountAdapter implements Serializable {
     }
 
     public static TemporalAmountAdapter parse(String value) {
+        return parse(value, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    public static TemporalAmountAdapter parse(String value, boolean lenient) {
         TemporalAmount retVal = null;
-        if (Arrays.asList("P", "PT").contains(value)
-                && CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+        if (Arrays.asList("P", "PT").contains(value) && lenient) {
             retVal = Period.ZERO;
         }
         else if (value.matches("([+-])?P.*(W|D)")) {
             retVal = java.time.Period.parse(value);
-        } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
-                && value.matches("P([+-]?[0-9]*[MHS])+")) {
+        } else if (lenient && value.matches("P([+-]?[0-9]*[MHS])+")) {
             retVal = java.time.Duration.parse("PT" + value.substring(1));
         } else {
             retVal = java.time.Duration.parse(value);

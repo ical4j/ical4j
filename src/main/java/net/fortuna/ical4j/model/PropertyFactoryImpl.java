@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -56,7 +57,8 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory<
      * Constructor made private to prevent instantiation.
      */
     protected PropertyFactoryImpl() {
-        super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
+        super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()),
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     @Override

@@ -60,8 +60,6 @@ public class CalendarBuilderTest extends TestCase {
 
     private FileInputStream fin;
 
-    private CalendarBuilder builder;
-
     /**
      * Constructor.
      *
@@ -73,7 +71,6 @@ public class CalendarBuilderTest extends TestCase {
         super(testMethod);
         this.filename = file;
         this.fin = new FileInputStream(filename);
-        builder = new CalendarBuilder();
     }
 
     /* (non-Javadoc)
@@ -109,7 +106,7 @@ public class CalendarBuilderTest extends TestCase {
      * @throws ValidationException
      */
     public void testBuildValid() throws IOException, ParserException, ValidationException {
-        Calendar calendar = builder.build(fin);
+        Calendar calendar = new CalendarBuilder().build(fin);
         calendar.validate();
     }
 
@@ -119,7 +116,7 @@ public class CalendarBuilderTest extends TestCase {
      */
     public void testBuildInvalid() throws IOException {
         try {
-            Calendar calendar = builder.build(fin);
+            Calendar calendar = new CalendarBuilder().build(fin);
             calendar.validate();
             fail("Should throw ParserException or ValidationException");
         } catch (ValidationException | ParserException e) {

@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.codec.DecoderException;
 
 import java.net.URISyntaxException;
@@ -23,6 +24,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
     }
 
     public ParameterBuilder(List<ParameterFactory<? extends Parameter>> factories) {
+        super(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
         this.factories = factories;
     }
 

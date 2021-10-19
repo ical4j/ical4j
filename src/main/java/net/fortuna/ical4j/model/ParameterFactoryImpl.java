@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -53,7 +54,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
     private static final long serialVersionUID = -4034423507432249165L;
 
     protected ParameterFactoryImpl() {
-        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
+        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()),
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     @Override

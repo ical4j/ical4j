@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.lang3.Validate;
 
 import java.io.Serializable;
@@ -54,12 +53,15 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
 
     protected transient ServiceLoader factoryLoader;
 
+    private final boolean allowIllegalNames;
+
     /**
      * Default constructor.
      */
-    public AbstractContentFactory(ServiceLoader factoryLoader) {
+    public AbstractContentFactory(ServiceLoader factoryLoader, boolean allowIllegalNames) {
         extendedFactories = new HashMap<>();
         this.factoryLoader = factoryLoader;
+        this.allowIllegalNames = allowIllegalNames;
     }
 
     /**
@@ -98,7 +100,7 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
      * @return true if non-standard names are allowed, otherwise false
      */
     protected boolean allowIllegalNames() {
-        return CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        return allowIllegalNames;
     }
 
     @Override
