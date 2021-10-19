@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -53,7 +54,8 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      * Constructor made private to prevent instantiation.
      */
     public ComponentFactoryImpl() {
-        super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
+        super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()),
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     @Override

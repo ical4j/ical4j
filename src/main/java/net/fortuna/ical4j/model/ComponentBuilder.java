@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +22,7 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
     }
 
     public ComponentBuilder(List<ComponentFactory<?>> factories) {
+        super(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
         this.factories = factories;
     }
 

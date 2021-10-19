@@ -79,6 +79,16 @@ public class CalendarParserImpl implements CalendarParser {
 
     private final ParameterParser paramParser = new ParameterParser();
 
+    private final boolean absorbWhitespaceEnabled;
+
+    public CalendarParserImpl() {
+        this(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    public CalendarParserImpl(boolean absorbWhitespaceEnabled) {
+        this.absorbWhitespaceEnabled = absorbWhitespaceEnabled;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -207,10 +217,11 @@ public class CalendarParserImpl implements CalendarParser {
                     componentParser.parse(tokeniser, in, handler);
                 } else if (tokeniser.sval != null) {
                     propertyParser.parse(tokeniser, in, handler);
-                } else if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                } else if (absorbWhitespaceEnabled) {
+                    absorbWhitespace(tokeniser, in);
+                } else {
                     throw new ParserException("Invalid property name", getLineNumber(tokeniser, in));
                 }
-                absorbWhitespace(tokeniser, in);
                 nextToken(tokeniser, in, false);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
