@@ -4,6 +4,17 @@ public abstract class AbstractContentBuilder {
 
     private final boolean allowIllegalNames;
 
+    /**
+     * Default constructor.
+     */
+    public AbstractContentBuilder() {
+        this(true);
+    }
+
+    /**
+     *
+     * @param allowIllegalNames store unrecognised names as experimental content
+     */
     public AbstractContentBuilder(boolean allowIllegalNames) {
         this.allowIllegalNames = allowIllegalNames;
     }
