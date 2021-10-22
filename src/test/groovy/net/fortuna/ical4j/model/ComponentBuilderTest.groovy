@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VEvent
+import net.fortuna.ical4j.model.component.XComponent
 import spock.lang.Specification
 
 class ComponentBuilderTest extends Specification {
@@ -19,7 +20,7 @@ class ComponentBuilderTest extends Specification {
         c == new ContentBuilder().vevent()
     }
 
-    def 'test build invalid component'() {
+    def 'test build unrecognised component'() {
         given: 'a component builder instance'
         ComponentBuilder builder = [Arrays.asList(new VEvent.Factory())]
 
@@ -29,7 +30,7 @@ class ComponentBuilderTest extends Specification {
         when: 'build method called'
         Component c = builder.build()
 
-        then: 'an exception is thrown'
-        thrown(IllegalArgumentException)
+        then: 'component vtodo is unrecognised'
+        c instanceof XComponent
     }
 }

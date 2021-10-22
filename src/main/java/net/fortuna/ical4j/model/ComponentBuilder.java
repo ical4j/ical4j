@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
-import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,12 +15,16 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private ComponentList<Component> subComponents = new ComponentList<>();
 
-    public ComponentBuilder() {
-        this(Collections.emptyList());
+    public ComponentBuilder(boolean allowIllegalNames) {
+        this(Collections.emptyList(), allowIllegalNames);
     }
 
     public ComponentBuilder(List<ComponentFactory<?>> factories) {
-        super(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+        this(factories, true);
+    }
+
+    public ComponentBuilder(List<ComponentFactory<?>> factories, boolean allowIllegalNames) {
+        super(allowIllegalNames);
         this.factories = factories;
     }
 

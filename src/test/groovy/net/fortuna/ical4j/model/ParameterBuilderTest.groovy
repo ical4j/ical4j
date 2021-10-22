@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model
 
 
 import net.fortuna.ical4j.model.parameter.Value
+import net.fortuna.ical4j.model.parameter.XParameter
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
@@ -29,7 +30,7 @@ class ParameterBuilderTest extends Specification {
         p == new ContentBuilder().value('test')
     }
 
-    def 'test build invalid parameter'() {
+    def 'test build unrecognised parameter'() {
         given: 'a parameter builder instance'
         ParameterBuilder builder = [Arrays.asList(new Value.Factory())]
 
@@ -39,7 +40,7 @@ class ParameterBuilderTest extends Specification {
         when: 'build method called'
         Parameter p = builder.build()
 
-        then: 'an exception is thrown'
-        thrown(IllegalArgumentException)
+        then: 'type param is unrecognised'
+        p instanceof XParameter
     }
 }

@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.XProperty;
-import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.codec.DecoderException;
 
 import java.io.IOException;
@@ -30,7 +29,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public PropertyBuilder(List<PropertyFactory<? extends Property>> factories) {
-        super(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
         this.factories = factories;
     }
 
