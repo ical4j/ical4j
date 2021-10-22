@@ -273,6 +273,22 @@ acceptedBreaks:
       justification: "Refined implementation"
   "3.1.0":
     org.mnode.ical4j:ical4j:
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.AbstractContentFactory<T extends java.lang.Object>"
+      new: "class net.fortuna.ical4j.model.AbstractContentFactory<T extends java.lang.Object>"
+      justification: "Project doesn't currently guarantee serialization compatibility\
+        \ across versions"
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.TemporalAmountAdapter"
+      new: "class net.fortuna.ical4j.model.TemporalAmountAdapter"
+      justification: "Project doesn't currently guarantee serialization compatibility\
+        \ across versions"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.AbstractContentFactory<T>::<init>(java.util.ServiceLoader)"
+      new: "method void net.fortuna.ical4j.model.AbstractContentFactory<T>::<init>(java.util.ServiceLoader,\
+        \ boolean)"
+      justification: "Project doesn't currently guarantee serialization compatibility\
+        \ across versions"
     - code: "java.method.parameterTypeChanged"
       old: "parameter void net.fortuna.ical4j.model.IndexedComponentList<T extends\
         \ net.fortuna.ical4j.model.Component>::<init>(===net.fortuna.ical4j.model.ComponentList<T>===,\
