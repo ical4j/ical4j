@@ -15,6 +15,10 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private ComponentList<Component> subComponents = new ComponentList<>();
 
+    public ComponentBuilder() {
+        this(true);
+    }
+
     public ComponentBuilder(boolean allowIllegalNames) {
         this(Collections.emptyList(), allowIllegalNames);
     }
