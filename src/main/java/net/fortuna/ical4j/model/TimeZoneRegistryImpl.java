@@ -123,6 +123,10 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      *
      * @param resourcePrefix a prefix prepended to classpath resource lookups for default timezones
      */
+    public TimeZoneRegistryImpl(final String resourcePrefix) {
+        this(resourcePrefix, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
     public TimeZoneRegistryImpl(final String resourcePrefix, boolean lenientTzResolution) {
         this.timeZoneLoader = new TimeZoneLoader(resourcePrefix);
         timezones = new ConcurrentHashMap<>();
