@@ -38,8 +38,10 @@ import java.text.MessageFormat;
 import java.util.function.Predicate;
 
 /**
- * @author fortuna
+ * Implementors apply validation rules to iCalendar content to determine a level of compliance with the published
+ * specifications.
  *
+ * @author fortuna
  */
 public interface Validator<T> extends Serializable {
 
@@ -56,8 +58,9 @@ public interface Validator<T> extends Serializable {
     }
 
     /**
-     * Validates the associated model against an applicable standard.
-     * @throws ValidationException where the model does not confirm to the applicable standard
+     * Validates the target content by applying validation rules. When content fails validation the validator
+     * may throw an exception depending on the implementation.
+     * @throws ValidationException indicates validation failure (implementation-specific)
      */
     void validate(T target) throws ValidationException;
 }

@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Provides a template for validating presence (or absence) of properties, parameters or components in a list.
+ * Defines a rule for validating iCalendar content. A rule consists of a validation type (e.g. presence/absence of
+ * specific content), and one or more identifiers (names) of iCalendar content.
+ *
+ * For example, a rule might define a test for one or less DTEND properties using the "OneOrLess" validation type
+ * and "DTEND" identifier.
  */
 public class ValidationRule<T> implements Serializable {
 
