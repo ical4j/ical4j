@@ -124,6 +124,6 @@ public final class CompatibilityHints {
         if (HINTS.get(key) != null) {
             return HINTS.get(key);
         }
-        return "true".equals(Configurator.getProperty(key));
+        return "true".equals(Configurator.getProperty(key).orElse("false"));
     }
 }

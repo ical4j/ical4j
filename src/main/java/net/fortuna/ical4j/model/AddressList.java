@@ -69,19 +69,18 @@ public class AddressList implements Serializable, Iterable<URI> {
      * @throws URISyntaxException where the specified string is not a valid representation
      */
     public AddressList(final String aValue) throws URISyntaxException {
+        this(aValue, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    public AddressList(final String aValue, boolean allowInvalidAddress) throws URISyntaxException {
         addresses = new CopyOnWriteArrayList<>();
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
-
             try {
-                addresses.add(new URI(Uris.encode(Strings
-                        .unquote(t.nextToken()))));
-            }
-            catch (URISyntaxException use) {
+                addresses.add(new URI(Uris.encode(Strings.unquote(t.nextToken()))));
+            } catch (URISyntaxException use) {
                 // ignore invalid addresses if relaxed parsing is enabled..
-                if (!CompatibilityHints.isHintEnabled(
-                        CompatibilityHints.KEY_RELAXED_PARSING)) {
-
+                if (!allowInvalidAddress) {
                     throw use;
                 }
             }

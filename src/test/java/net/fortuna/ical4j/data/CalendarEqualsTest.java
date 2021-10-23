@@ -102,10 +102,7 @@ public class CalendarEqualsTest extends TestCase {
 
         try {
             calendar = builder.build(fin);
-        } catch (IOException e) {
-            exception = e;
-            errorOccurred = true;
-        } catch (ParserException e) {
+        } catch (IOException | ParserException e) {
             exception = e;
             errorOccurred = true;
         }
@@ -140,10 +137,7 @@ public class CalendarEqualsTest extends TestCase {
 
             try {
                 reparsedCalendar = builder.build(fin);
-            } catch (IOException e) {
-                exception = e;
-                errorOccurred = true;
-            } catch (ParserException e) {
+            } catch (IOException | ParserException e) {
                 exception = e;
                 errorOccurred = true;
             }
@@ -171,8 +165,8 @@ public class CalendarEqualsTest extends TestCase {
         TestSuite suite = new TestSuite();
         
         File[] testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
-        for (int i = 0; i < testFiles.length; i++) {
-            suite.addTest(new CalendarEqualsTest((File) testFiles[i], true));
+        for (File testFile : testFiles) {
+            suite.addTest(new CalendarEqualsTest((File) testFile, true));
         }
         return suite;
     }

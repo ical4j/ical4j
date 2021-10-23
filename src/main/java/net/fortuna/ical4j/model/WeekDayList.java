@@ -73,15 +73,20 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * @param aString a string representation of a day list
      */
     public WeekDayList(final String aString) {
-        final boolean outlookCompatibility =
-            CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
-        
+        this(aString, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY));
+    }
+
+    /**
+     * Parse a weekday list from a string.
+     * @param aString a string representation of a day list
+     * @param stripWhitespace remove any whitespace from the string tokens before parsing
+     */
+    public WeekDayList(final String aString, boolean stripWhitespace) {
         final StringTokenizer t = new StringTokenizer(aString, ",");
         while (t.hasMoreTokens()) {
-            if (outlookCompatibility) {
+            if (stripWhitespace) {
                 add(new WeekDay(t.nextToken().replaceAll(" ", "")));
-            }
-            else {
+            } else {
                 add(new WeekDay(t.nextToken()));
             }
         }

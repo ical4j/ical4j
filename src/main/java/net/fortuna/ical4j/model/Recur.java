@@ -247,6 +247,16 @@ public class Recur implements Serializable {
      * @throws IllegalArgumentException where the recurrence string contains an unrecognised token
      */
     public Recur(final String aValue) throws ParseException {
+        this(aValue, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    /**
+     * Constructs a new recurrence from the specified string value.
+     * @param aValue a string representation of a recurrence.
+     * @param experimentalTokensAllowed allow unrecognised tokens in the recurrence
+     * @throws ParseException
+     */
+    public Recur(final String aValue, boolean experimentalTokensAllowed) throws ParseException {
         // default week start is Monday per RFC5545
         calendarWeekStartDay = Calendar.MONDAY;
 
@@ -296,7 +306,7 @@ public class Recur implements Serializable {
                 weekStartDay = WeekDay.Day.valueOf(nextToken(tokens, token));
                 calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay));
             } else {
-                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                if (experimentalTokensAllowed) {
                     // assume experimental value..
                     experimentalValues.put(token, nextToken(tokens, token));
                 } else {
