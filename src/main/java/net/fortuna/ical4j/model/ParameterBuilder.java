@@ -26,11 +26,6 @@ public class ParameterBuilder extends AbstractContentBuilder {
         this.factories = factories;
     }
 
-    public ParameterBuilder factories(List<ParameterFactory<?>> factories) {
-        this.factories.addAll(factories);
-        return this;
-    }
-
     public ParameterBuilder name(String name) {
         // parameter names are case-insensitive, but convert to upper case to simplify further processing
         this.name = name.toUpperCase();
