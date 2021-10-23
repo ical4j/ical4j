@@ -92,8 +92,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
         // try to build with a regular builder
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
-        assertTrue(cal.getComponent(Component.VEVENT).getProperty(Property.ATTENDEE)
-                .getParameter(SCHEDULE_STATUS) instanceof XParameter);
+        assertTrue(cal.getComponents().getRequired(Component.VEVENT).getProperties().getRequired(Property.ATTENDEE)
+                .getParameters().getRequired(SCHEDULE_STATUS) instanceof XParameter);
 
         // try to build with a custom parameter factory
         final ParameterFactoryRegistry paramFactory = new ParameterFactoryRegistry();
