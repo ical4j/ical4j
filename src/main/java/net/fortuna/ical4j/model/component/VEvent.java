@@ -37,10 +37,7 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -48,7 +45,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -344,7 +340,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-
+        ValidationResult result = new ValidationResult();
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
 //        while (iterator.hasNext()) {
@@ -358,51 +354,14 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 //            ((VAlarm) component).validate(recurse);
 //        }
 
-        if (!CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
-         * geo / last-mod / location / organizer / priority / dtstamp / seq / status / summary / transp / uid / url /
-         * recurid /
-         */
-        Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
-                Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
-                Property.PRIORITY, Property.DTSTAMP, Property.SEQUENCE, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
+        ComponentValidator.VEVENT.validate(this);
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property ["
+            result.getErrors().add("Status property ["
                     + status.toString() + "] is not applicable for VEVENT");
-        }
-
-        /*
-         * ; either 'dtend' or 'duration' may appear in ; a 'eventprop', but 'dtend' and 'duration' ; MUST NOT occur in
-         * the same 'eventprop' dtend / duration /
-         */
-        try {
-            PropertyValidator.assertNone(Property.DTEND,
-                    getProperties());
-        }
-        catch (ValidationException ve) {
-            PropertyValidator.assertNone(Property.DURATION,
-                    getProperties());
         }
 
         if (getProperty(Property.DTEND) != null) {
@@ -437,20 +396,18 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                     startEndValueMismatch = true;
                 }
                 if (startEndValueMismatch) {
-                    throw new ValidationException("Property [" + Property.DTEND
+                    result.getErrors().add("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
                             + "] as [" + Property.DTSTART + "]");
                 }
             }
         }
 
-        /*
-         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
-         * contact / exdate / exrule / rstatus / related / resources / rdate / rrule / x-prop
-         */
-
         if (recurse) {
             validateProperties();
+        }
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
         }
     }
 

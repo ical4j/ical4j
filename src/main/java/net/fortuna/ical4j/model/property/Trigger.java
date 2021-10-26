@@ -33,8 +33,8 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.property.TriggerValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -221,33 +221,7 @@ public class Trigger extends UtcProperty {
      */
     @Override
     public final void validate() throws ValidationException {
-        super.validate();
-
-        final Parameter relParam = getParameter(Parameter.RELATED);
-        final Parameter valueParam = getParameter(Parameter.VALUE);
-
-        if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
-
-            ParameterValidator.assertOneOrLess(Parameter.RELATED,
-                    getParameters());
-
-            ParameterValidator.assertNullOrEqual(Value.DURATION,
-                    getParameters());
-
-            if (getDuration() == null) {
-                throw new ValidationException("Duration value not specified");
-            }
-        } else {
-            ParameterValidator.assertOne(Parameter.VALUE,
-                    getParameters());
-
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME,
-                    getParameters());
-
-            if (getDateTime() == null) {
-                throw new ValidationException("DATE-TIME value not specified");
-            }
-        }
+        new TriggerValidator().validate(this);
     }
 
     /**

@@ -32,13 +32,8 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Arrays;
+import net.fortuna.ical4j.validate.component.AvailableValidator;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -110,61 +105,8 @@ public class Available extends Component {
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        /*
-         * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
-         */
-        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(property -> PropertyValidator.assertOne(property, getProperties()));
-
-        /*       If specified, the "DTSTART" and "DTEND" properties in
-         *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
-         *      "DATE-TIME" values specified as either date with UTC time or date
-         *      with local time and a time zone reference.
-         */
-        final DtStart start = getProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
-            throw new ValidationException("Property [" + Property.DTSTART
-                    + "] must be a " + Value.DATE_TIME);
-        }
-
-        /*
-         *                ; the following are optional,
-         *                ; but MUST NOT occur more than once
-         *
-         *               created / last-mod / recurid / rrule /
-         *               summary /
-         */
-        Arrays.asList(Property.CREATED, Property.LAST_MODIFIED, Property.RECURRENCE_ID,
-                Property.RRULE, Property.SUMMARY).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
-
-        /*
-         ; either a 'dtend' or a 'duration' is required
-         ; in a 'availableprop', but 'dtend' and
-         ; 'duration' MUST NOT occur in the same
-         ; 'availableprop', and each MUST NOT occur more
-         ; than once
-         */
-        if (getProperty(Property.DTEND) != null) {
-            PropertyValidator.assertOne(Property.DTEND,
-                    getProperties());
-            /* Must be DATE_TIME */
-            final DtEnd end = getProperty(Property.DTEND);
-            if (Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
-                throw new ValidationException("Property [" + Property.DTEND
-                        + "] must be a " + Value.DATE_TIME);
-            }
-        } else {
-            PropertyValidator.assertOne(Property.DURATION,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once
-         *               categories / comment / contact / exdate /
-         *               rdate / x-prop
-         */
+    public final void validate(final boolean recurse) throws ValidationException {
+        new AvailableValidator().validate(this);
 
         if (recurse) {
             validateProperties();

@@ -33,14 +33,11 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.*;
+import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 
 import java.time.temporal.TemporalAmount;
-import java.util.HashMap;
-import java.util.Map;
-
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -195,16 +192,6 @@ public class VAlarm extends CalendarComponent {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
-    private static final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
-    static {
-        actionValidators.put(Action.AUDIO, new ComponentValidator<VAlarm>(new ValidationRule(OneOrLess, ATTACH)));
-        actionValidators.put(Action.DISPLAY, new ComponentValidator<VAlarm>(new ValidationRule(One, DESCRIPTION)));
-        actionValidators.put(Action.EMAIL, new ComponentValidator<VAlarm>(new ValidationRule(One, DESCRIPTION, SUMMARY),
-                new ValidationRule(OneOrMore, ATTENDEE)));
-        actionValidators.put(Action.PROCEDURE, new ComponentValidator<VAlarm>(new ValidationRule(One, ATTACH),
-                new ValidationRule(OneOrLess, DESCRIPTION)));
-    }
-
     /**
      * Default constructor.
      */
@@ -242,38 +229,22 @@ public class VAlarm extends CalendarComponent {
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
 
-        /*
-         * ; 'action' and 'trigger' are both REQUIRED, ; but MUST NOT occur more than once action / trigger /
-         */
-        PropertyValidator.assertOne(Property.ACTION, getProperties());
-        PropertyValidator.assertOne(Property.TRIGGER, getProperties());
-
-        /*
-         * ; 'duration' and 'repeat' are both optional, ; and MUST NOT occur more than once each, ; but if one occurs,
-         * so MUST the other duration / repeat /
-         */
-        PropertyValidator.assertOneOrLess(Property.DURATION, getProperties());
-        PropertyValidator.assertOneOrLess(Property.REPEAT, getProperties());
-
-        try {
-            PropertyValidator.assertNone(Property.DURATION, getProperties());
-            PropertyValidator.assertNone(Property.REPEAT, getProperties());
-        }
-        catch (ValidationException ve) {
-            PropertyValidator.assertOne(Property.DURATION, getProperties());
-            PropertyValidator.assertOne(Property.REPEAT, getProperties());
-        }
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once x-prop
-         */
-
-        final Validator actionValidator = actionValidators.get(getAction());
-        if (actionValidator != null) {
-            actionValidator.validate(this);
+        if (getAction() != null) {
+            switch (getAction().getValue()) {
+                case "AUDIO":
+                    ComponentValidator.VALARM_AUDIO.validate(this);
+                    break;
+                case "DISPLAY":
+                    ComponentValidator.VALARM_DISPLAY.validate(this);
+                    break;
+                case "EMAIL":
+                    ComponentValidator.VALARM_EMAIL.validate(this);
+                    break;
+            }
+        } else {
+            ComponentValidator.VALARM_ITIP.validate(this);
         }
 
         if (recurse) {

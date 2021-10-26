@@ -34,10 +34,8 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.LocationType;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Arrays;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -124,21 +122,8 @@ public class VLocation extends Component {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        /*
-         * ; 'dtstamp', uid and participanttype' are REQUIRED,
-         * ; but MUST NOT occur more than once
-         */
-        Arrays.asList(UID).forEach(
-                              property -> PropertyValidator.assertOne(
-                                      property, getProperties()));
-
-        Arrays.asList(DESCRIPTION, GEO, LOCATION_TYPE, NAME).forEach(
-                              property -> PropertyValidator
-                                      .assertOneOrLess(
-                                              property, getProperties()));
+    public final void validate(final boolean recurse) throws ValidationException {
+        ComponentValidator.VLOCATION.validate(this);
 
         if (recurse) {
             validateProperties();

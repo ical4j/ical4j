@@ -37,7 +37,6 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
@@ -177,41 +176,8 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        /*
-         * ; 'tzid' is required, but MUST NOT occur more ; than once tzid /
-         */
-        PropertyValidator.assertOne(Property.TZID,
-                getProperties());
-
-        /*
-         * ; 'last-mod' and 'tzurl' are optional, but MUST NOT occur more than once last-mod / tzurl /
-         */
-        PropertyValidator.assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
-        PropertyValidator.assertOneOrLess(Property.TZURL,
-                getProperties());
-
-        /*
-         * ; one of 'standardc' or 'daylightc' MUST occur ..; and each MAY occur more than once. standardc / daylightc /
-         */
-        if (getObservances().getComponent(Observance.STANDARD) == null
-                && getObservances().getComponent(Observance.DAYLIGHT) == null) {
-            throw new ValidationException("Sub-components ["
-                    + Observance.STANDARD + "," + Observance.DAYLIGHT
-                    + "] must be specified at least once");
-        }
-
-        for (final Observance observance : getObservances()) {
-            observance.validate(recurse);
-        }
-        
-        /*
-         * ; the following is optional, ; and MAY occur more than once x-prop
-         */
-
+    public final void validate(final boolean recurse) throws ValidationException {
+        new VTimeZoneValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

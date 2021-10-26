@@ -37,17 +37,11 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.StringTokenizer;
-
-import static java.util.Collections.singletonList;
-import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -87,9 +81,6 @@ public class RequestStatus extends Property {
     private String description;
 
     private String exData;
-
-    private static final Validator<Property> validator = new PropertyValidator(singletonList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
 
     /**
      * Default constructor.
@@ -222,7 +213,7 @@ public class RequestStatus extends Property {
 
     @Override
     public void validate() throws ValidationException {
-        validator.validate(this);
+        PropertyValidator.REQUEST_STATUS.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

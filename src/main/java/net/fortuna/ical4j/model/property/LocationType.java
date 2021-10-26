@@ -34,16 +34,10 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-
-import static java.util.Collections.singletonList;
-import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * <pre>
@@ -88,8 +82,6 @@ public class LocationType extends Property {
 
     private LocationTypeList locationTypes;
 
-    private static final Validator<Property> validator = new PropertyValidator(singletonList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
     /**
      * Default constructor.
      */
@@ -167,7 +159,7 @@ public class LocationType extends Property {
 
     @Override
     public void validate() throws ValidationException {
-        validator.validate(this);
+        PropertyValidator.LOCATION_TYPE.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

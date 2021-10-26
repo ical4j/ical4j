@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -208,18 +208,7 @@ public class RecurrenceId extends DateProperty {
     @Override
     public final void validate() throws ValidationException {
         super.validate();
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE)) /
-         * (";" tzidparam) / (";" rangeparam) /
-         */
-
-        ParameterValidator.assertOneOrLess(Parameter.RANGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+        PropertyValidator.RECURRENCE_ID.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

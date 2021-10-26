@@ -33,10 +33,8 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Arrays;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -145,23 +143,8 @@ public class Participant extends Component implements ComponentContainer<Compone
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        /*
-         * ; 'dtstamp', uid and participanttype' are REQUIRED,
-         * ; but MUST NOT occur more than once
-         */
-        Arrays.asList(PARTICIPANT_TYPE, UID).forEach(
-                              property -> PropertyValidator.assertOne(
-                                      property, getProperties()));
-
-        Arrays.asList(CALENDAR_ADDRESS, CREATED, DESCRIPTION,
-                      DTSTAMP, GEO, LAST_MODIFIED, PRIORITY, SEQUENCE,
-                      STATUS, SUMMARY, URL).forEach(
-                              property -> PropertyValidator
-                                      .assertOneOrLess(
-                                              property, getProperties()));
+    public final void validate(final boolean recurse) throws ValidationException {
+        ComponentValidator.PARTICIPANT.validate(this);
 
         if (recurse) {
             validateProperties();
