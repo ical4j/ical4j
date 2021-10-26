@@ -38,8 +38,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Optional;
-
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -157,8 +155,7 @@ public class Participant extends Component implements ComponentContainer<Compone
      * {@inheritDoc}
      */
     public final void validate(final boolean recurse) throws ValidationException {
-
-        validator.validate(this);
+        ComponentValidator.PARTICIPANT.validate(this);
 
         if (recurse) {
             validateProperties();

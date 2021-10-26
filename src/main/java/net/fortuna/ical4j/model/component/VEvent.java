@@ -37,18 +37,16 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -365,8 +363,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-        validator.validate(this);
-
+        ValidationResult result = new ValidationResult();
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
 //        while (iterator.hasNext()) {
@@ -380,27 +377,17 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 //            ((VAlarm) component).validate(recurse);
 //        }
 
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
-         * geo / last-mod / location / organizer / priority / dtstamp / seq / status / summary / transp / uid / url /
-         * recurid /
-         */
+        ComponentValidator.VEVENT.validate(this);
 
-        final Optional<Status> status = getProperties().getFirst(STATUS);
-        if (status.isPresent() && !Status.VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
-                && !Status.VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
-                && !Status.VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
-            throw new ValidationException("Status property ["
+        final Status status = getProperty(Property.STATUS);
+        if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
+                && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
+                && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
+            result.getErrors().add("Status property ["
                     + status.toString() + "] is not applicable for VEVENT");
         }
 
-        /*
-         * ; either 'dtend' or 'duration' may appear in ; a 'eventprop', but 'dtend' and 'duration' ; MUST NOT occur in
-         * the same 'eventprop' dtend / duration /
-         */
-
-        final Optional<DtEnd<?>> end = getProperties().getFirst(DTEND);
-        if (end.isPresent()) {
+        if (getProperty(Property.DTEND) != null) {
 
             /*
              * The "VEVENT" is also the calendar component used to specify an anniversary or daily reminder within a
@@ -415,21 +402,34 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 final Optional<Parameter> startValue = start.get().getParameters().getFirst(Parameter.VALUE);
                 final Optional<Parameter> endValue = end.get().getParameters().getFirst(Parameter.VALUE);
 
-                if (!startValue.equals(endValue)) {
-                    throw new ValidationException("Property [" + DTEND
+                boolean startEndValueMismatch = false;
+                if (endValue != null) {
+                    if (startValue != null && !endValue.equals(startValue)) {
+                        // invalid..
+                        startEndValueMismatch = true;
+                    }
+                    else if (startValue == null && !Value.DATE_TIME.equals(endValue)) {
+                        // invalid..
+                        startEndValueMismatch = true;
+                    }
+                }
+                else if (startValue != null && !Value.DATE_TIME.equals(startValue)) {
+                    //invalid..
+                    startEndValueMismatch = true;
+                }
+                if (startEndValueMismatch) {
+                    result.getErrors().add("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
                             + "] as [" + DTSTART + "]");
                 }
             }
         }
 
-        /*
-         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
-         * contact / exdate / exrule / rstatus / related / resources / rdate / rrule / x-prop
-         */
-
         if (recurse) {
             validateProperties();
+        }
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
         }
     }
 

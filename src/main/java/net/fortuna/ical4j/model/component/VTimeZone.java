@@ -37,7 +37,6 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
@@ -192,34 +191,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-        validator.validate(this);
-
-        /*
-         * ; 'tzid' is required, but MUST NOT occur more ; than once tzid /
-         */
-
-        /*
-         * ; 'last-mod' and 'tzurl' are optional, but MUST NOT occur more than once last-mod / tzurl /
-         */
-
-        /*
-         * ; one of 'standardc' or 'daylightc' MUST occur ..; and each MAY occur more than once. standardc / daylightc /
-         */
-        if (!getObservances().getFirst(Observance.STANDARD).isPresent()
-                && !getObservances().getFirst(Observance.DAYLIGHT).isPresent()) {
-            throw new ValidationException("Sub-components ["
-                    + Observance.STANDARD + "," + Observance.DAYLIGHT
-                    + "] must be specified at least once");
-        }
-
-        for (final Observance observance : getObservances().getAll()) {
-            observance.validate(recurse);
-        }
-        
-        /*
-         * ; the following is optional, ; and MAY occur more than once x-prop
-         */
-
+        new VTimeZoneValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

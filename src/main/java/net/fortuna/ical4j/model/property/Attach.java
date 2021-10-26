@@ -38,8 +38,8 @@ import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.EncoderFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.property.AttachValidator;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
@@ -173,28 +173,7 @@ public class Attach extends Property {
      */
     @Override
     public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" fmttypeparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.FMTTYPE, getParameters().getAll());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
-
-        /*
-         * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
-         * value ";ENCODING=BASE64".
-         */
-        if (getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.BINARY))) {
-            ParameterValidator.assertOne(Parameter.ENCODING, getParameters().getAll());
-            if (!getParameters().getFirst(Parameter.ENCODING).equals(Optional.of(Encoding.BASE64))) {
-                throw new ValidationException("If the value type parameter is [BINARY], the inline"
-                                + "encoding parameter MUST be specified with the value [BASE64]"
-                );
-            }
-        }
+        new AttachValidator().validate(this);
     }
 
     /**

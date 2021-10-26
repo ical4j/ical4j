@@ -32,19 +32,8 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
-
-import java.io.Serializable;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
+import net.fortuna.ical4j.validate.component.AvailableValidator;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -127,54 +116,7 @@ public class Available extends Component {
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-
-        validator.validate(this);
-        /*
-         * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
-         */
-
-        /*       If specified, the "DTSTART" and "DTEND" properties in
-         *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
-         *      "DATE-TIME" values specified as either date with UTC time or date
-         *      with local time and a time zone reference.
-         */
-        try {
-            if (getProperties().getRequired(DTSTART).getParameters().getFirst(Parameter.VALUE)
-                    .equals(Optional.of(Value.DATE))) {
-                throw new ValidationException("Property [" + DTSTART + "] must be a " + Value.DATE_TIME);
-            }
-        } catch (ConstraintViolationException cve) {
-            throw new ValidationException("Missing required property", cve);
-        }
-
-        /*
-         *                ; the following are optional,
-         *                ; but MUST NOT occur more than once
-         *
-         *               created / last-mod / recurid / rrule /
-         *               summary /
-         */
-
-        /*
-         ; either a 'dtend' or a 'duration' is required
-         ; in a 'availableprop', but 'dtend' and
-         ; 'duration' MUST NOT occur in the same
-         ; 'availableprop', and each MUST NOT occur more
-         ; than once
-         */
-        final Optional<DtEnd<?>> end = getProperties().getFirst(DTEND);
-        if (end.isPresent()) {
-            /* Must be DATE_TIME */
-            if (Optional.of(Value.DATE).equals(end.get().getParameters().getFirst(Parameter.VALUE))) {
-                throw new ValidationException("Property [" + DTEND + "] must be a " + Value.DATE_TIME);
-            }
-        }
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once
-         *               categories / comment / contact / exdate /
-         *               rdate / x-prop
-         */
+        new AvailableValidator().validate(this);
 
         if (recurse) {
             validateProperties();

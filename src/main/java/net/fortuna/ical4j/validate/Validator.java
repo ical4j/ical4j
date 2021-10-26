@@ -31,11 +31,17 @@
  */
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.ComponentContainer;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Implementors apply validation rules to iCalendar content to determine a level of compliance with the published
@@ -45,10 +51,10 @@ import java.util.function.Predicate;
  */
 public interface Validator<T> extends Serializable {
 
-    static <T> void assertFalse(Predicate<T> predicate, String message, boolean warn, T components,
+    static <T> void assertFalse(Predicate<T> predicate, String message, boolean warn, T target,
                                 Object...messageParams) {
 
-        if (predicate.test(components)) {
+        if (predicate.test(target)) {
             if (warn) {
                 LoggerFactory.getLogger(Validator.class).warn(MessageFormat.format(message, messageParams));
             } else {
@@ -63,4 +69,121 @@ public interface Validator<T> extends Serializable {
      * @throws ValidationException indicates validation failure (implementation-specific)
      */
     void validate(T target) throws ValidationException;
+
+    default List<String> apply(ValidationRule rule, ComponentContainer target) {
+        int total = rule.getInstances().stream().mapToInt(s -> target.getComponents(s).size()).sum();
+        switch (rule.getType()) {
+            case None:
+                return rule.getInstances().stream().filter(s -> target.getComponent(s) != null)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case One:
+                return rule.getInstances().stream().filter(s -> target.getComponents(s).size() != 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneOrLess:
+                return rule.getInstances().stream().filter(s -> target.getComponents(s).size() > 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneOrMore:
+                return rule.getInstances().stream().filter(s -> target.getComponents(s).size() < 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneExclusive:
+                for (String instance : rule.getInstances()) {
+                    int count = target.getComponents(instance).size();
+                    if (count > 0 && count != total) {
+                        return Collections.singletonList(
+                                String.format("%s %s", rule.getType().getDescription(),
+                                        String.join(",", rule.getInstances())));
+                    }
+                }
+            case AllOrNone:
+                if (total > 0 && total != rule.getInstances().size()) {
+                    return Collections.singletonList(
+                            String.format("%s %s", rule.getType().getDescription(),
+                                    String.join(",", rule.getInstances())));
+                }
+        }
+        return Collections.emptyList();
+    }
+
+    default List<String> apply(ValidationRule rule, PropertyContainer target) {
+        int total = rule.getInstances().stream().mapToInt(s -> target.getProperties(s).size()).sum();
+        switch (rule.getType()) {
+            case None:
+                return rule.getInstances().stream().filter(s -> target.getProperty(s) != null)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case One:
+                return rule.getInstances().stream().filter(s -> target.getProperties(s).size() != 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneOrLess:
+                return rule.getInstances().stream().filter(s -> target.getProperties(s).size() > 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneOrMore:
+                return rule.getInstances().stream().filter(s -> target.getProperties(s).size() < 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneExclusive:
+                for (String instance : rule.getInstances()) {
+                    int count = target.getProperties(instance).size();
+                    if (count > 0 && count != total) {
+                        return Collections.singletonList(
+                                String.format("%s %s", rule.getType().getDescription(),
+                                        String.join(",", rule.getInstances())));
+                    }
+                }
+                break;
+            case AllOrNone:
+                if (total > 0 && total != rule.getInstances().size()) {
+                    return Collections.singletonList(
+                            String.format("%s %s", rule.getType().getDescription(),
+                                    String.join(",", rule.getInstances())));
+                }
+                break;
+        }
+        return Collections.emptyList();
+    }
+
+    default List<String> apply(ValidationRule rule, Property target) {
+        int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
+        switch (rule.getType()) {
+            case None:
+                return rule.getInstances().stream().filter(s -> target.getParameter(s) != null)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case One:
+                return rule.getInstances().stream().filter(s -> target.getParameters(s).size() != 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneOrLess:
+                return rule.getInstances().stream().filter(s -> target.getParameters(s).size() > 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneOrMore:
+                return rule.getInstances().stream().filter(s -> target.getParameters(s).size() < 1)
+                        .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
+                        .collect(Collectors.toList());
+            case OneExclusive:
+                for (String instance : rule.getInstances()) {
+                    int count = target.getParameters(instance).size();
+                    if (count > 0 && count != total) {
+                        return Collections.singletonList(
+                                String.format("%s %s", rule.getType().getDescription(),
+                                        String.join(",", rule.getInstances())));
+                    }
+                }
+            case AllOrNone:
+                if (total > 0 && total != rule.getInstances().size()) {
+                    return Collections.singletonList(
+                            String.format("%s %s", rule.getType().getDescription(),
+                                    String.join(",", rule.getInstances())));
+                }
+        }
+        return Collections.emptyList();
+    }
+
 }

@@ -35,6 +35,8 @@ import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id$
@@ -70,17 +72,19 @@ public class XComponent extends CalendarComponent {
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-        
+        ValidationResult result = new ValidationResult();
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                 && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
-            
-            throw new ValidationException(
-                    "Experimental components must have the following prefix: "
+
+            result.getErrors().add("Experimental components must have the following prefix: "
                             + EXPERIMENTAL_PREFIX);
         }
         
         if (recurse) {
             validateProperties();
+        }
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
         }
     }
 

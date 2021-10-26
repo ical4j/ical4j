@@ -31,11 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.Temporal;
@@ -180,17 +177,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
     @Override
     public final void validate() throws ValidationException {
         super.validate();
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE)) /
-         * (";" tzidparam) / (";" rangeparam) /
-         */
-
-        ParameterValidator.assertOneOrLess(Parameter.RANGE, getParameters().getAll());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+        PropertyValidator.RECURRENCE_ID.validate(this);
     }
 
     @Override

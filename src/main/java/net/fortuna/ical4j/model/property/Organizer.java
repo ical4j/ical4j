@@ -31,15 +31,18 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -184,22 +187,7 @@ public class Organizer extends Property {
      */
     @Override
     public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" cnparam) / (";" dirparam) / (";"
-         * sentbyparam) / (";" languageparam) /
-         */
-        Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
-                Parameter.LANGUAGE).forEach(parameter ->
-                ParameterValidator.assertOneOrLess(parameter, getParameters().getAll()));
-
-        /* schedulestatus added for CalDAV scheduling
-         */
-        ParameterValidator.assertOneOrLess(Parameter.SCHEDULE_STATUS, getParameters().getAll());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+        PropertyValidator.ORGANIZER.validate(this);
     }
 
     /**

@@ -32,17 +32,15 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
-
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id $ [Apr 5, 2004]
@@ -143,27 +141,7 @@ public class VVenue extends CalendarComponent {
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-
-        validator.validate(this);
-
-        /*
-         * ; 'uiid' is required, but MUST NOT occur more ; than once uiid /
-         */
-
-        /*
-         *                ; the following are optional,
-         *                ; but MUST NOT occur more than once
-         *
-         *                name / description / street-address / extended-address /
-         *                locality / region / country / postal-code / tzid / geo /
-         *                location-type / categories /
-         *                dtstamp / created / last-modified
-         */
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once tel / url / x-prop
-         */
-
+        ComponentValidator.VVENUE.validate(this);
         if (recurse) {
             validateProperties();
         }

@@ -38,12 +38,13 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
-import org.threeten.extra.Interval;
+import net.fortuna.ical4j.validate.component.VFreeBusyValidator;
 
 import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -492,53 +493,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-        validator.validate(this);
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once contact / dtstart / dtend / duration /
-         * dtstamp / organizer / uid / url /
-         */
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attendee / comment / freebusy / rstatus / x-prop
-         */
-
-        /*
-         * The recurrence properties ("RRULE", "EXRULE", "RDATE", "EXDATE") are not permitted within a "VFREEBUSY"
-         * calendar component. Any recurring events are resolved into their individual busy time periods using the
-         * "FREEBUSY" property.
-         */
-
-        // DtEnd value must be later in time that DtStart..
-        final Optional<DtStart<?>> dtStart = getProperties().getFirst(DTSTART);
-
-        // 4.8.2.4 Date/Time Start:
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    start date and time for the free or busy time information. The time
-        //    MUST be specified in UTC time.
-        if (dtStart.isPresent() && !dtStart.get().isUtc()) {
-            throw new ValidationException("DTSTART must be specified in UTC time");
-        }
-
-        final Optional<DtEnd<?>> dtEnd = getProperties().getFirst(DTEND);
-
-        // 4.8.2.2 Date/Time End
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    end date and time for the free or busy time information. The time
-        //    MUST be specified in the UTC time format. The value MUST be later in
-        //    time than the value of the "DTSTART" property.
-        if (dtEnd.isPresent() && !dtEnd.get().isUtc()) {
-            throw new ValidationException("DTEND must be specified in UTC time");
-        }
-
-        if (dtStart.isPresent() && dtEnd.isPresent()
-                && !Instant.from(dtStart.get().getDate()).isBefore(Instant.from(dtEnd.get().getDate()))) {
-            throw new ValidationException("Property [" + DTEND
-                    + "] must be later in time than [" + DTSTART + "]");
-        }
-
+        new VFreeBusyValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.Instant;
@@ -157,15 +157,11 @@ public class FreeBusy extends Property {
      */
     @Override
     public final void validate() throws ValidationException {
+        PropertyValidator.FREEBUSY.validate(this);
 
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" fbtypeparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.FBTYPE, getParameters().getAll());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+        if (!periods.isUtc()) {
+            throw new ValidationException("Periods must be in UTC format");
+        }
     }
 
     /**

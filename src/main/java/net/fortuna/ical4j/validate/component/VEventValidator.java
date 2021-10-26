@@ -1,22 +1,12 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.component.VAlarm;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
-
-import static net.fortuna.ical4j.model.Component.VALARM;
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 public class VEventValidator extends ComponentValidator<VEvent> {
-
-    private static final Validator<VAlarm> itipValidator = new ComponentValidator<>(
-            new ValidationRule<>(One, ACTION, TRIGGER),
-            new ValidationRule<>(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
 
     private final boolean alarmsAllowed;
 
@@ -36,10 +26,9 @@ public class VEventValidator extends ComponentValidator<VEvent> {
         super.validate(target);
 
         if (alarmsAllowed) {
-            target.getAlarms().getAll().forEach(itipValidator::validate);
+            target.getAlarms().forEach(ComponentValidator.VALARM_ITIP::validate);
         } else {
-            Validator.assertFalse(input -> input.parallelStream().anyMatch(c -> c.getName().equals(VALARM)),
-                    ASSERT_NONE_MESSAGE, false, target.getAlarms().getAll(), VALARM);
+            ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
         }
     }
 }

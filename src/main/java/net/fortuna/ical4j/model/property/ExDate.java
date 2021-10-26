@@ -33,7 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.Temporal;
@@ -86,13 +86,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      */
     @Override
     public final void validate() throws ValidationException {
-        super.validate();
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.VALUE, getParameters().getAll());
+        PropertyValidator.EXDATE.validate(this);
 
         final Optional<Parameter> valueParam = getParameters().getFirst(Parameter.VALUE);
 
@@ -101,12 +95,6 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
             throw new ValidationException("Parameter [" + Parameter.VALUE
                     + "] is invalid");
         }
-
-        ParameterValidator.assertOneOrLess(Parameter.TZID, getParameters().getAll());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     @Override

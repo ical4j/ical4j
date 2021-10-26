@@ -280,37 +280,20 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-        validator.validate(this);
-
+        ComponentValidator.VTODO.validate(this);
         // validate that getAlarms() only contains VAlarm components
         for (VAlarm component : getAlarms().getAll()) {
             component.validate(recurse);
         }
 
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once class / completed / created / description /
-         * dtstamp / dtstart / geo / last-mod / location / organizer / percent / priority / recurid / seq / status /
-         * summary / uid / url /
-         */
-
-        final Optional<Status> status = getProperties().getFirst(STATUS);
-        if (status.isPresent() && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.get().getValue())
-                && !Status.VTODO_COMPLETED.getValue().equals(status.get().getValue())
-                && !Status.VTODO_IN_PROCESS.getValue().equals(status.get().getValue())
-                && !Status.VTODO_CANCELLED.getValue().equals(status.get().getValue())) {
+        final Status status = getProperty(Property.STATUS);
+        if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
+                && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
+                && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
+                && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
             throw new ValidationException("Status property ["
                     + status.toString() + "] may not occur in VTODO");
         }
-
-        /*
-         * ; either 'due' or 'duration' may appear in ; a 'todoprop', but 'due' and 'duration' ; MUST NOT occur in the
-         * same 'todoprop' due / duration /
-         */
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
-         * contact / exdate / exrule / rstatus / related / resources / rdate / rrule / x-prop
-         */
 
         if (recurse) {
             validateProperties();

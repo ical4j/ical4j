@@ -37,8 +37,8 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.component.VJournalValidator;
 
-import java.time.temporal.Temporal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -168,26 +168,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-        validator.validate(this);
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
-         * dtstamp / last-mod / organizer / recurid / seq / status / summary / uid / url /
-         */
-
-        final Optional<Status> status = getProperties().getFirst(STATUS);
-        if (status.isPresent() && !Status.VJOURNAL_DRAFT.getValue().equals(status.get().getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.get().getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.get().getValue())) {
-            throw new ValidationException("Status property ["
-                    + status.toString() + "] may not occur in VJOURNAL");
-        }
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
-         * contact / exdate / exrule / related / rdate / rrule / rstatus / x-prop
-         */
-
+        new VJournalValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

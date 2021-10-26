@@ -33,11 +33,8 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
-import org.slf4j.LoggerFactory;
+import net.fortuna.ical4j.validate.property.TriggerValidator;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -252,9 +249,7 @@ public class Trigger extends DateProperty<Instant> {
      */
     @Override
     public final void validate() throws ValidationException {
-        super.validate();
-
-        validator.validate(this);
+        new TriggerValidator().validate(this);
     }
 
     /**

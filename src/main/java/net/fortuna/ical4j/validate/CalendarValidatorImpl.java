@@ -3,6 +3,7 @@ package net.fortuna.ical4j.validate;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -31,39 +32,29 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
 
     @Override
     public void validate(Calendar target) throws ValidationException {
-        for (ValidationRule<Calendar> rule : rules) {
+        ValidationResult result = new ValidationResult();
+
+        for (ValidationRule rule : rules) {
             boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                     && rule.isRelaxedModeSupported();
 
-            if (rule.getPredicate().test(target)) {
-                switch (rule.getType()) {
-                    case None:
-                        rule.getInstances().forEach(s -> assertNone(s, target.getProperties().getAll(), warnOnly));
-                        break;
-                    case One:
-                        rule.getInstances().forEach(s -> assertOne(s, target.getProperties().getAll(), warnOnly));
-                        break;
-                    case OneOrLess:
-                        rule.getInstances().forEach(s -> assertOneOrLess(s, target.getProperties().getAll(), warnOnly));
-                        break;
-                    case OneOrMore:
-                        rule.getInstances().forEach(s -> assertOneOrMore(s, target.getProperties().getAll(), warnOnly));
-                        break;
-                }
+            if (warnOnly) {
+                result.getWarnings().addAll(apply(rule, (PropertyContainer) target));
+            } else {
+                result.getErrors().addAll(apply(rule, (PropertyContainer) target));
             }
         }
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
-            Optional<Version> version = target.getProperties().getFirst(Property.VERSION);
-            if (version.isPresent() && !Version.VERSION_2_0.equals(version.get())) {
-                throw new ValidationException("Unsupported Version: " + version.get().getValue());
+            if (!Version.VERSION_2_0.equals(target.getProperty(Property.VERSION))) {
+                result.getErrors().add("Unsupported Version: " + target.getProperty(Property.VERSION).getValue());
             }
         }
 
         // must contain at least one component
-        if (target.getComponents().getAll().isEmpty()) {
-            throw new ValidationException("Calendar must contain at least one component");
+        if (target.getComponents().isEmpty()) {
+            result.getErrors().add("Calendar must contain at least one component");
         }
 
         // validate properties..
@@ -71,7 +62,7 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
             boolean isCalendarProperty = calendarProperties.parallelStream().anyMatch(calProp -> calProp.isInstance(property));
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
-                throw new ValidationException("Invalid property: " + property.getName());
+                result.getErrors().add("Invalid property: " + property.getName());
             }
         }
 
@@ -101,6 +92,10 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
             for (CalendarComponent component : target.getComponents().getAll()) {
                 component.validate(method.get());
             }
+        }
+
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
         }
     }
 

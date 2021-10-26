@@ -34,11 +34,10 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
 
-import static net.fortuna.ical4j.model.Parameter.RELTYPE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -54,8 +53,6 @@ public class RelatedTo extends Property implements Encodable {
     private static final long serialVersionUID = -109375299147319752L;
 
     private String value;
-
-    private static final Validator<RelatedTo> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, RELTYPE));
 
     /**
      * Default constructor.
@@ -99,7 +96,7 @@ public class RelatedTo extends Property implements Encodable {
 
     @Override
     public void validate() throws ValidationException {
-        validator.validate(this);
+        PropertyValidator.RELATED_TO.validate(this);
     }
 
     @Override

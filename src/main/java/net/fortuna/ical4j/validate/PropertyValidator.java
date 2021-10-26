@@ -34,10 +34,16 @@ package net.fortuna.ical4j.validate;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static net.fortuna.ical4j.model.Parameter.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
+import static net.fortuna.ical4j.validate.Validator.assertFalse;
 
 /**
  * $Id$ [15-May-2004]
@@ -46,34 +52,117 @@ import java.util.List;
  *
  * @author Ben Fortuna
  */
-public final class PropertyValidator<T extends Property> implements Validator<T>, ContentValidator<Parameter> {
+public final class PropertyValidator<T extends Property> implements Validator<T> {
+
+    public static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
+
+    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
+
+    public static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
 
     private final List<ValidationRule<T>> rules;
 
-    @SafeVarargs
-    public PropertyValidator(ValidationRule<T>... rules) {
-        this.rules = Arrays.asList(rules);
+    public static final Validator<Attach> ATTACH = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, FMTTYPE));
+
+    public static final Validator<Attendee> ATTENDEE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, CUTYPE, MEMBER, ROLE, PARTSTAT,
+                    RSVP, DELEGATED_TO, DELEGATED_FROM, SENT_BY, CN, DIR, LANGUAGE, SCHEDULE_AGENT, SCHEDULE_STATUS));
+
+    public static final Validator<Categories> CATEGORIES = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
+
+    public static final Validator<Comment> COMMENT = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<Contact> CONTACT = new PropertyValidator<>(
+            new ValidationRule(ValidationRule.ValidationType.OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<Country> COUNTRY = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ABBREV));
+
+    public static final Validator<Description> DESCRIPTION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<ExDate> EXDATE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, VALUE, TZID));
+
+    public static final Validator<FreeBusy> FREEBUSY = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, FBTYPE));
+
+    public static final Validator<Location> LOCATION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE, VVENUE));
+
+    public static final Validator<LocationType> LOCATION_TYPE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
+
+    public static final Validator<Organizer> ORGANIZER = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, CN, DIR, SENT_BY, LANGUAGE, SCHEDULE_STATUS));
+
+    public static final Validator<RDate> RDATE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, VALUE, TZID));
+
+    public static final Validator<RecurrenceId> RECURRENCE_ID = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, RANGE));
+
+    public static final Validator<Region> REGION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ABBREV));
+
+    public static final Validator<RelatedTo> RELATED_TO = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, RELTYPE));
+
+    public static final Validator<RequestStatus> REQUEST_STATUS = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
+
+    public static final Validator<Resources> RESOURCES = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<RRule> RRULE = new PropertyValidator<>(
+            new ValidationRule(None, TZID));
+
+    public static final Validator<StructuredData> STRUCTURED_DATA = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, FMTTYPE, SCHEMA));
+
+    public static final Validator<StyledDescription> STYLED_DESCRIPTION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, FMTTYPE, LANGUAGE));
+
+    public static final Validator<Summary> SUMMARY = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<Tel> TEL = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, TYPE));
+
+    public static final Validator<Trigger> TRIGGER = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, RELATED));
+
+    public static final Validator<TzName> TZ_NAME = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
+
+    private final List<ValidationRule> rules;
+
+    public PropertyValidator(ValidationRule... rules) {
+        this(Arrays.asList(rules));
+    }
+
+    public PropertyValidator(List<ValidationRule> rules) {
+        this.rules = rules;
     }
 
     @Override
-    public void validate(T target) throws ValidationException {
-        for (ValidationRule<T> rule : rules) {
+    public void validate(Property target) throws ValidationException {
+        ValidationResult result = new ValidationResult();
+        for (ValidationRule rule : rules) {
             boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                     && rule.isRelaxedModeSupported();
 
-            if (rule.getPredicate().test(target)) {
-                switch (rule.getType()) {
-                    case None:
-                        rule.getInstances().forEach(s -> ContentValidator.assertNone(s, target.getParameters().getAll(), warnOnly));
-                        break;
-                    case One:
-                        rule.getInstances().forEach(s -> ContentValidator.assertOne(s, target.getParameters().getAll(), warnOnly));
-                        break;
-                    case OneOrLess:
-                        rule.getInstances().forEach(s -> ContentValidator.assertOneOrLess(s, target.getParameters().getAll(), warnOnly));
-                        break;
-                }
+            if (warnOnly) {
+                result.getWarnings().addAll(apply(rule, target));
+            } else {
+                result.getErrors().addAll(apply(rule, target));
             }
+        }
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
         }
     }
 

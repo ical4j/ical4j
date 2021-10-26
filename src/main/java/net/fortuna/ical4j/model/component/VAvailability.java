@@ -32,22 +32,13 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
-
-import java.io.Serializable;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
+import net.fortuna.ical4j.validate.component.VAvailabilityValidator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -185,68 +176,7 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-
-        validator.validate(this);
-
-        // validate that getAvailable() only contains Available components
-//        final Iterator<Available> iterator = getAvailable().iterator();
-//        while (iterator.hasNext()) {
-//            final Component component = (Component) iterator.next();
-//
-//            if (!(component instanceof Available)) {
-//                throw new ValidationException("Component ["
-//                        + component.getName() + "] may not occur in VAVAILABILITY");
-//            }
-//        }
-
-        /*
-         * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
-         */
-
-        /*       If specified, the "DTSTART" and "DTEND" properties in
-         *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
-         *      "DATE-TIME" values specified as either date with UTC time or date
-         *      with local time and a time zone reference.
-         */
-        try {
-            final DtStart<?> start = getProperties().getRequired(DTSTART);
-            if (start.getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
-                throw new ValidationException("Property [" + DTSTART + "] must be a " + Value.DATE_TIME);
-            }
-        } catch (ConstraintViolationException cve) {
-            throw new ValidationException("Missing required property", cve);
-        }
-
-        /*
-         * ; either 'dtend' or 'duration' may appear in ; a 'eventprop', but 'dtend' and 'duration' ; MUST NOT occur in
-         * the same 'eventprop' dtend / duration /
-         */
-        Optional<DtEnd<?>> end = getProperties().getFirst(DTEND);
-        if (end.isPresent()) {
-            /* Must be DATE_TIME */
-            if (end.get().getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
-                throw new ValidationException("Property [" + DTEND + "] must be a " + Value.DATE_TIME);
-            }
-
-            if (getProperties().getFirst(DURATION).isPresent()) {
-                throw new ValidationException("Only one of Property [" + DTEND + "] or [" + DURATION +
-                        " must appear a VAVAILABILITY");
-            }
-        }
-
-        /*
-         *                ; the following are optional,
-         *                ; but MUST NOT occur more than once
-         *
-         *                  busytype / created / last-mod /
-         *                  organizer / seq / summary / url /
-         */
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once
-         *                 categories / comment / contact / x-prop
-         */
-
+        new VAvailabilityValidator().validate(this);
         if (recurse) {
             validateProperties();
         }
