@@ -4,7 +4,7 @@ import net.fortuna.ical4j.model.parameter.XParameter;
 import org.apache.commons.codec.DecoderException;
 
 import java.net.URISyntaxException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +19,24 @@ public class ParameterBuilder extends AbstractContentBuilder {
     private String value;
 
     public ParameterBuilder() {
-        this(Collections.emptyList());
+        this(new ArrayList<>());
     }
 
     public ParameterBuilder(List<ParameterFactory<? extends Parameter>> factories) {
         this.factories = factories;
+    }
+
+    /**
+     * Set the list of parameter factories supporting this builder instance.
+     * @param factories a list of parameter factories
+     * @return the builder instance
+     * @deprecated preference the constructor option for specifying factories
+     */
+    @Deprecated
+    public ParameterBuilder factories(List<ParameterFactory<?>> factories) {
+        this.factories.clear();
+        this.factories.addAll(factories);
+        return this;
     }
 
     public ParameterBuilder name(String name) {
