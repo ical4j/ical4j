@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;
@@ -43,7 +42,6 @@ import java.util.List;
 import static net.fortuna.ical4j.model.Parameter.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
-import static net.fortuna.ical4j.validate.Validator.assertFalse;
 
 /**
  * $Id$ [15-May-2004]
@@ -52,15 +50,13 @@ import static net.fortuna.ical4j.validate.Validator.assertFalse;
  *
  * @author Ben Fortuna
  */
-public final class PropertyValidator<T extends Property> implements Validator<T> {
+public class PropertyValidator<T extends Property> implements Validator<T> {
 
     public static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
 
     public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
 
     public static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
-
-    private final List<ValidationRule<T>> rules;
 
     public static final Validator<Attach> ATTACH = new PropertyValidator<>(
             new ValidationRule(OneOrLess, FMTTYPE));
@@ -138,13 +134,13 @@ public final class PropertyValidator<T extends Property> implements Validator<T>
     public static final Validator<TzName> TZ_NAME = new PropertyValidator<>(
             new ValidationRule(OneOrLess, LANGUAGE));
 
-    private final List<ValidationRule> rules;
+    private final List<ValidationRule<T>> rules;
 
-    public PropertyValidator(ValidationRule... rules) {
+    public PropertyValidator(ValidationRule<T>... rules) {
         this(Arrays.asList(rules));
     }
 
-    public PropertyValidator(List<ValidationRule> rules) {
+    public PropertyValidator(List<ValidationRule<T>> rules) {
         this.rules = rules;
     }
 

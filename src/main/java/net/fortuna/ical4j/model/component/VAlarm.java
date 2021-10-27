@@ -37,11 +37,12 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
+import java.util.Optional;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -235,8 +236,8 @@ public class VAlarm extends CalendarComponent {
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
 
-        if (getAction() != null) {
-            switch (getAction().getValue()) {
+        if (getAction().isPresent()) {
+            switch (getAction().get().getValue()) {
                 case "AUDIO":
                     ComponentValidator.VALARM_AUDIO.validate(this);
                     break;

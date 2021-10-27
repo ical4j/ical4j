@@ -42,6 +42,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.time.Instant;
+import java.util.Optional;
+
 public class VFreeBusyValidator implements Validator<VFreeBusy> {
 
     @Override
@@ -50,18 +53,18 @@ public class VFreeBusyValidator implements Validator<VFreeBusy> {
         ValidationResult result = new ValidationResult();
 
         // DtEnd value must be later in time that DtStart..
-        final DtStart dtStart = target.getProperty(Property.DTSTART);
+        final Optional<DtStart<?>> dtStart = target.getProperty(Property.DTSTART);
 
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
-        if (dtStart != null && !dtStart.isUtc()) {
+        if (dtStart.isPresent() && !dtStart.get().isUtc()) {
             result.getErrors().add("DTSTART must be specified in UTC time");
         }
 
-        final DtEnd dtEnd = target.getProperty(Property.DTEND);
+        final Optional<DtEnd<?>> dtEnd = target.getProperty(Property.DTEND);
 
         // 4.8.2.2 Date/Time End
         //
@@ -69,12 +72,12 @@ public class VFreeBusyValidator implements Validator<VFreeBusy> {
         //    end date and time for the free or busy time information. The time
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
-        if (dtEnd != null && !dtEnd.isUtc()) {
+        if (dtEnd.isPresent() && !dtEnd.get().isUtc()) {
             result.getErrors().add("DTEND must be specified in UTC time");
         }
 
-        if (dtStart != null && dtEnd != null
-                && !dtStart.getDate().before(dtEnd.getDate())) {
+        if (dtStart.isPresent() && dtEnd.isPresent()
+                && !Instant.from(dtStart.get().getDate()).isBefore(Instant.from(dtEnd.get().getDate()))) {
             result.getErrors().add("Property [" + Property.DTEND
                     + "] must be later in time than [" + Property.DTSTART + "]");
         }

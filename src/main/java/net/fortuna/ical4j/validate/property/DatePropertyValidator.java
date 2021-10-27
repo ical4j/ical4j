@@ -33,73 +33,26 @@
 
 package net.fortuna.ical4j.validate.property;
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.validate.ParameterValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationRule;
 
-public class DatePropertyValidator<T extends DateProperty> implements Validator<T> {
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.temporal.Temporal;
+import java.util.function.Predicate;
 
-    @Override
-    public void validate(T target) throws ValidationException {
-        ValidationResult result = new ValidationResult();
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
+import static net.fortuna.ical4j.model.Parameter.TZID;
+import static net.fortuna.ical4j.model.Parameter.VALUE;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+public class DatePropertyValidator<T extends Temporal> extends PropertyValidator<DateProperty<T>> {
 
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                target.getParameters());
-
-        if (target.isUtc()) {
-            ParameterValidator.assertNone(Parameter.TZID,
-                    target.getParameters());
-        } else {
-            ParameterValidator.assertOneOrLess(Parameter.TZID,
-                    target.getParameters());
-        }
-
-        final Value value = target.getParameter(Parameter.VALUE);
-
-        if (target.getDate() instanceof DateTime) {
-
-            if (value != null && !Value.DATE_TIME.equals(value)) {
-                result.getErrors().add("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance");
-            }
-
-            final DateTime dateTime = (DateTime) target.getDate();
-
-            // ensure tzid matches date-time timezone..
-            final Parameter tzId = target.getParameter(Parameter.TZID);
-            if (dateTime.getTimeZone() != null
-                    && (tzId == null || !tzId.getValue().equals(
-                    dateTime.getTimeZone().getID()))) {
-
-                result.getErrors().add("TZID parameter [" + tzId
-                        + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]");
-            }
-        } else if (target.getDate() != null) {
-
-            if (value == null) {
-                result.getErrors().add("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance");
-            } else if (!Value.DATE.equals(value)) {
-                result.getErrors().add("VALUE parameter [" + value
-                        + "] is invalid for DATE instance");
-            }
-        }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
+    public DatePropertyValidator() {
+        super(new ValidationRule<>(OneOrLess, VALUE),
+                new ValidationRule<>(One, (Predicate<DateProperty<T>> & Serializable) p ->
+                        p.getDate() instanceof LocalDate, VALUE),
+                new ValidationRule<>(None, (Predicate<DateProperty<T>> & Serializable) DateProperty::isUtc, TZID),
+                new ValidationRule<>(OneOrLess, (Predicate<DateProperty<T>> & Serializable) p -> !p.isUtc(), TZID));
     }
 }

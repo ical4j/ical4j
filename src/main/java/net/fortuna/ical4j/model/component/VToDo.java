@@ -280,21 +280,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-        ComponentValidator.VTODO.validate(this);
-        // validate that getAlarms() only contains VAlarm components
-        for (VAlarm component : getAlarms().getAll()) {
-            component.validate(recurse);
-        }
-
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
-                && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
-                && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
-                && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property ["
-                    + status.toString() + "] may not occur in VTODO");
-        }
-
+        new VToDoValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

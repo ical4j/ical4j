@@ -40,16 +40,18 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.Optional;
+
 public class VJournalValidator implements Validator<VJournal> {
 
     @Override
     public void validate(VJournal target) throws ValidationException {
         ComponentValidator.VJOURNAL.validate(target);
 
-        final Status status = target.getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
+        final Optional<Status> status = target.getProperty(Property.STATUS);
+        if (status.isPresent() && !Status.VJOURNAL_DRAFT.getValue().equals(status.get().getValue())
+                && !Status.VJOURNAL_FINAL.getValue().equals(status.get().getValue())
+                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.get().getValue())) {
             throw new ValidationException("Status property [" + status + "] may not occur in VJOURNAL");
         }
     }

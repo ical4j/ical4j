@@ -158,10 +158,6 @@ public class FreeBusy extends Property {
     @Override
     public final void validate() throws ValidationException {
         PropertyValidator.FREEBUSY.validate(this);
-
-        if (!periods.isUtc()) {
-            throw new ValidationException("Periods must be in UTC format");
-        }
     }
 
     /**

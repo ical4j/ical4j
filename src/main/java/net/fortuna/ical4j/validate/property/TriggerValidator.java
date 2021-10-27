@@ -39,26 +39,28 @@ import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 
-public class TriggerValidator extends UtcPropertyValidator<Trigger> {
+import java.util.Optional;
+
+public class TriggerValidator implements Validator<Trigger> {
 
     @Override
     public void validate(Trigger target) throws ValidationException {
-        super.validate(target);
         PropertyValidator.TRIGGER.validate(target);
 
-        final Parameter relParam = target.getParameter(Parameter.RELATED);
-        final Parameter valueParam = target.getParameter(Parameter.VALUE);
+        final Optional<Parameter> relParam = target.getParameters().getFirst(Parameter.RELATED);
+        final Optional<Parameter> valueParam = target.getParameters().getFirst(Parameter.VALUE);
 
-        if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
-            ParameterValidator.assertNullOrEqual(Value.DURATION, target.getParameters());
+        if (relParam.isPresent() || !Optional.of(Value.DATE_TIME).equals(valueParam)) {
+            ParameterValidator.assertNullOrEqual(Value.DURATION, target.getParameters().getAll());
             if (target.getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
             }
         } else {
-            ParameterValidator.assertOne(Parameter.VALUE, target.getParameters());
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, target.getParameters());
-            if (target.getDateTime() == null) {
+            ParameterValidator.assertOne(Parameter.VALUE, target.getParameters().getAll());
+            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, target.getParameters().getAll());
+            if (target.getDate() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
             }
         }

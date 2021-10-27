@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.Recur.Frequency;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
@@ -122,6 +122,11 @@ public class RRule<T extends Temporal> extends Property {
     @Override
     public void validate() throws ValidationException {
         PropertyValidator.RRULE.validate(this);
+    }
+
+    @Override
+    protected PropertyFactory<RRule<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RRule<T>> {

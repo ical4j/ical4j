@@ -44,6 +44,8 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.Optional;
+
 public class AvailableValidator implements Validator<Available> {
 
     @Override
@@ -57,8 +59,8 @@ public class AvailableValidator implements Validator<Available> {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        final DtStart start = target.getProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
+        final DtStart<?> start = target.getProperties().getRequired(Property.DTSTART);
+        if (Value.DATE.equals(start.getParameters().getRequired(Parameter.VALUE))) {
             result.getErrors().add("Property [" + Property.DTSTART + "] must be a " + Value.DATE_TIME);
         }
 
@@ -69,9 +71,9 @@ public class AvailableValidator implements Validator<Available> {
          ; 'availableprop', and each MUST NOT occur more
          ; than once
          */
-        final DtEnd end = target.getProperty(Property.DTEND);
+        final Optional<DtEnd<?>> end = target.getProperty(Property.DTEND);
         /* Must be DATE_TIME */
-        if (end != null && Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
+        if (end.isPresent() && Value.DATE.equals(end.get().getParameters().getRequired(Parameter.VALUE))) {
             result.getErrors().add("Property [" + Property.DTEND + "] must be a " + Value.DATE_TIME);
         }
 

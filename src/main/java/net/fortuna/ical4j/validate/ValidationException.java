@@ -82,8 +82,4 @@ public class ValidationException extends RuntimeException {
     public ValidationResult getResult() {
         return result;
     }
-
-    public ValidationException(final String message, Throwable cause) {
-        super(message, cause);
-    }
 }

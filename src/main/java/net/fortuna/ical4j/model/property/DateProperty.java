@@ -38,17 +38,15 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
+import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import static net.fortuna.ical4j.model.Parameter.VALUE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$
@@ -82,13 +80,6 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     private TemporalAdapter<T> date;
 
     private transient TimeZoneRegistry timeZoneRegistry;
-
-    private final Validator<DateProperty<T>> validator = new PropertyValidator<>(
-            new ValidationRule<>(OneOrLess, VALUE),
-            new ValidationRule<>(One, (Predicate<DateProperty<T>> & Serializable) p -> p.getDate() instanceof LocalDate, VALUE),
-            new ValidationRule<>(None, (Predicate<DateProperty<T>> & Serializable) DateProperty::isUtc, TZID),
-            new ValidationRule<>(OneOrLess, (Predicate<DateProperty<T>> & Serializable) p -> !p.isUtc(), TZID)
-    );
 
     /**
      * @param name       the property name
@@ -235,6 +226,19 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @Override
     public void validate() throws ValidationException {
         new DatePropertyValidator<>().validate(this);
+        final Value value = (Value) getParameters().getFirst(VALUE).orElse(defaultValueParam);
+
+        if (date != null) {
+            if (date.getTemporal() instanceof LocalDate) {
+                if (!Value.DATE.equals(value)) {
+                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE instance");
+                }
+            } else {
+                if (!Value.DATE_TIME.equals(value)) {
+                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE-TIME instance");
+                }
+            }
+        }
     }
 
     @Override

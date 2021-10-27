@@ -33,6 +33,7 @@ package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -41,15 +42,12 @@ import java.util.List;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
-import static net.fortuna.ical4j.validate.Validator.assertFalse;
 
 /**
  * @author Ben
  *
  */
 public class ComponentValidator<T extends Component> implements Validator<T>, ContentValidator<Property> {
-
-    private final List<ValidationRule<T>> rules;
 
     public static final ComponentValidator<Available> AVAILABLE = new ComponentValidator<>(
             new ValidationRule(One, DTSTART, DTSTAMP, UID),
@@ -134,9 +132,10 @@ public class ComponentValidator<T extends Component> implements Validator<T>, Co
             new ValidationRule(One, ACTION, TRIGGER),
             new ValidationRule(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
 
-    private final List<ValidationRule> rules;
+    private final List<ValidationRule<T>> rules;
 
-    public ComponentValidator(ValidationRule... rules) {
+    @SafeVarargs
+    public ComponentValidator(ValidationRule<T>... rules) {
         this.rules = Arrays.asList(rules);
     }
 
@@ -144,7 +143,7 @@ public class ComponentValidator<T extends Component> implements Validator<T>, Co
     public void validate(T target) throws ValidationException {
         ValidationResult result = new ValidationResult();
 
-        for (ValidationRule rule : rules) {
+        for (ValidationRule<T> rule : rules) {
             boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                     && rule.isRelaxedModeSupported();
 

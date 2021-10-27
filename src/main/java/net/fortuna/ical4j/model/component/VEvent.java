@@ -44,9 +44,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Predicate;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -379,15 +378,15 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 
         ComponentValidator.VEVENT.validate(this);
 
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
-                && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
-                && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
+        final Optional<Status> status = getProperties().getFirst(Property.STATUS);
+        if (status.isPresent() && !Status.VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
+                && !Status.VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
+                && !Status.VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
             result.getErrors().add("Status property ["
                     + status.toString() + "] is not applicable for VEVENT");
         }
 
-        if (getProperty(Property.DTEND) != null) {
+        if (getProperty(Property.DTEND).isPresent()) {
 
             /*
              * The "VEVENT" is also the calendar component used to specify an anniversary or daily reminder within a
@@ -397,23 +396,23 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
              * calendar date after the "DTSTART" property value).
              */
             final Optional<DtStart<Temporal>> start = getProperties().getFirst(DTSTART);
+            final Optional<DtEnd<Temporal>> end = getProperties().getFirst(DTEND);
 
             if (start.isPresent()) {
                 final Optional<Parameter> startValue = start.get().getParameters().getFirst(Parameter.VALUE);
                 final Optional<Parameter> endValue = end.get().getParameters().getFirst(Parameter.VALUE);
 
                 boolean startEndValueMismatch = false;
-                if (endValue != null) {
-                    if (startValue != null && !endValue.equals(startValue)) {
+                if (endValue.isPresent()) {
+                    if (startValue.isPresent() && !endValue.equals(startValue)) {
                         // invalid..
                         startEndValueMismatch = true;
-                    }
-                    else if (startValue == null && !Value.DATE_TIME.equals(endValue)) {
+                    } else if (!startValue.isPresent() && !Value.DATE_TIME.equals(endValue.get())) {
                         // invalid..
                         startEndValueMismatch = true;
                     }
                 }
-                else if (startValue != null && !Value.DATE_TIME.equals(startValue)) {
+                else if (startValue.isPresent() && !Value.DATE_TIME.equals(startValue.get())) {
                     //invalid..
                     startEndValueMismatch = true;
                 }

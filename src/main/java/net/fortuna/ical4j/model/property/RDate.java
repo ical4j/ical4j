@@ -201,10 +201,10 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     public final void validate() throws ValidationException {
         PropertyValidator.RDATE.validate(this);
 
-        final Parameter valueParam = getParameter(Parameter.VALUE);
-        if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
-                && !Value.DATE.equals(valueParam)
-                && !Value.PERIOD.equals(valueParam)) {
+        final Optional<Parameter> valueParam = getParameters().getFirst(Parameter.VALUE);
+        if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
+                && !Value.DATE.equals(valueParam.get())
+                && !Value.PERIOD.equals(valueParam.get())) {
             throw new ValidationException("Parameter [" + Parameter.VALUE
                     + "] is invalid");
         }

@@ -12,7 +12,7 @@ import java.util.function.Predicate;
  * For example, a rule might define a test for one or less DTEND properties using the "OneOrLess" validation type
  * and "DTEND" identifier.
  */
-public final class ValidationRule implements Serializable {
+public final class ValidationRule<T> implements Serializable {
 
     public enum ValidationType {
         None("The following MUST NOT be present."),

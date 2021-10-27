@@ -10,7 +10,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.*;
 
-import static net.fortuna.ical4j.validate.ContentValidator.*;
+import static net.fortuna.ical4j.validate.ContentValidator.assertNone;
+import static net.fortuna.ical4j.validate.ContentValidator.assertOneOrLess;
 
 /**
  * Created by fortuna on 13/09/15.
@@ -19,10 +20,10 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
 
     protected final List<Class<? extends Property>> calendarProperties = new ArrayList<>();
 
-    private final List<ValidationRule<Calendar>> rules;
+    private final List<ValidationRule<PropertyContainer>> rules;
 
     @SafeVarargs
-    public CalendarValidatorImpl(ValidationRule<Calendar>... rules) {
+    public CalendarValidatorImpl(ValidationRule<PropertyContainer>... rules) {
         this.rules = Arrays.asList(rules);
 
         Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class,
@@ -34,26 +35,27 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
     public void validate(Calendar target) throws ValidationException {
         ValidationResult result = new ValidationResult();
 
-        for (ValidationRule rule : rules) {
+        for (ValidationRule<PropertyContainer> rule : rules) {
             boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                     && rule.isRelaxedModeSupported();
 
             if (warnOnly) {
-                result.getWarnings().addAll(apply(rule, (PropertyContainer) target));
+                result.getWarnings().addAll(apply(rule, target));
             } else {
-                result.getErrors().addAll(apply(rule, (PropertyContainer) target));
+                result.getErrors().addAll(apply(rule, target));
             }
         }
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
-            if (!Version.VERSION_2_0.equals(target.getProperty(Property.VERSION))) {
-                result.getErrors().add("Unsupported Version: " + target.getProperty(Property.VERSION).getValue());
+            Optional<Version> version = target.getProperty(Property.VERSION);
+            if (version.isPresent() && !Version.VERSION_2_0.equals(version.get())) {
+                result.getErrors().add("Unsupported Version: " + target.getProperty(Property.VERSION).get().getValue());
             }
         }
 
         // must contain at least one component
-        if (target.getComponents().isEmpty()) {
+        if (target.getComponents().getAll().isEmpty()) {
             result.getErrors().add("Calendar must contain at least one component");
         }
 
