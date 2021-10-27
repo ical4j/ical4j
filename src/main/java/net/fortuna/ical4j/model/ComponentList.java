@@ -136,7 +136,6 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
      * @deprecated use {@link ComponentList#get(String)}
      */
     @Deprecated
-    @SuppressWarnings("unchecked")
 	public final <C extends T> List<C> getComponents(final String name) {
         return get(name);
     }

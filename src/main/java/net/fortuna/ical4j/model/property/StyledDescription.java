@@ -86,9 +86,9 @@ public class StyledDescription extends Property implements Encodable {
      */
     public final void setValue(final String aValue) throws URISyntaxException {
         // value can be either text or a URI - no default
-        if (Optional.of(Value.TEXT).equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.TEXT).equals(getParameters().getFirst(Parameter.VALUE))) {
             this.value = aValue;
-        } else if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
+        } else if (Optional.of(Value.URI).equals(getParameters().getFirst(Parameter.VALUE))) {
             uriValue = Uris.create(aValue);
             this.value = aValue;
         } else {

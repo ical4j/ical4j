@@ -54,9 +54,9 @@ public class AttachValidator implements Validator<Attach> {
          * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
          * value ";ENCODING=BASE64".
          */
-        if (Optional.of(Value.BINARY).equals(target.getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.BINARY).equals(target.getParameters().getFirst(Parameter.VALUE))) {
             ParameterValidator.assertOne(Parameter.ENCODING, target.getParameters().getAll());
-            if (!Optional.of(Encoding.BASE64).equals(target.getParameter(Parameter.ENCODING))) {
+            if (!Optional.of(Encoding.BASE64).equals(target.getParameters().getFirst(Parameter.ENCODING))) {
                 throw new ValidationException(
                         "If the value type parameter is [BINARY], the inline"
                                 + "encoding parameter MUST be specified with the value [BASE64]"
