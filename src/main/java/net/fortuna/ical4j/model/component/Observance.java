@@ -36,7 +36,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,29 +120,7 @@ public abstract class Observance extends Component {
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-
-        // From "4.8.3.3 Time Zone Offset From":
-        // Conformance: This property MUST be specified in a "VTIMEZONE"
-        // calendar component.
-        PropertyValidator.assertOne(Property.TZOFFSETFROM,
-                getProperties());
-
-        // From "4.8.3.4 Time Zone Offset To":
-        // Conformance: This property MUST be specified in a "VTIMEZONE"
-        // calendar component.
-        PropertyValidator.assertOne(Property.TZOFFSETTO,
-                getProperties());
-
-        /*
-         * ; the following are each REQUIRED, ; but MUST NOT occur more than once dtstart / tzoffsetto / tzoffsetfrom /
-         */
-        PropertyValidator.assertOne(Property.DTSTART,
-                getProperties());
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once comment / rdate / rrule / tzname / x-prop
-         */
-
+        ComponentValidator.OBSERVANCE_ITIP.validate(this);
         if (recurse) {
             validateProperties();
         }

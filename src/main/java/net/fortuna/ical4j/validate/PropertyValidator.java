@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -42,7 +41,6 @@ import java.util.List;
 import static net.fortuna.ical4j.model.Parameter.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
-import static net.fortuna.ical4j.validate.Validator.assertFalse;
 
 /**
  * $Id$ [15-May-2004]
@@ -52,14 +50,6 @@ import static net.fortuna.ical4j.validate.Validator.assertFalse;
  * @author Ben Fortuna
  */
 public final class PropertyValidator<T extends Property> implements Validator<T> {
-
-    public static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
-
-    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
-
-    public static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
-
-    public static final String ASSERT_ONE_OR_MORE_MESSAGE = "Property [{0}] must be specified at least once";
 
     public static final Validator<Attach> ATTACH = new PropertyValidator<>(
             new ValidationRule(OneOrLess, FMTTYPE));
@@ -163,62 +153,5 @@ public final class PropertyValidator<T extends Property> implements Validator<T>
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
-    }
-
-    /**
-     * Ensure a property occurs no more than once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property occurs more than once
-     */
-    public static void assertOneOrLess(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
-                properties, propertyName);
-    }
-
-    /**
-     * Ensure a property occurs at least once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property occurs more than once
-     */
-    public static void assertOneOrMore(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() < 1, ASSERT_ONE_OR_MORE_MESSAGE, false,
-                properties, propertyName);
-    }
-
-    /**
-     * Ensure a property occurs once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property does not occur once
-     */
-    public static void assertOne(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() != 1, ASSERT_ONE_MESSAGE, false,
-                properties, propertyName);
-    }
-    
-    /**
-     * Ensure a property doesn't occur in the specified list.
-     * @param propertyName the name of a property
-     * @param properties a list of properties
-     * @throws ValidationException thrown when the specified property
-     * is found in the list of properties
-     */
-    public static void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperty(propertyName) != null, ASSERT_NONE_MESSAGE, false,
-                properties, propertyName);
     }
 }
