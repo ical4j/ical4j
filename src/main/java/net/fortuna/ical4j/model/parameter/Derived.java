@@ -61,7 +61,7 @@ public class Derived extends Parameter {
      */
     public static final Derived FALSE = new Derived(VALUE_FALSE);
 
-    private Boolean value;
+    private final Boolean value;
 
     /**
      * @param aValue a string representation

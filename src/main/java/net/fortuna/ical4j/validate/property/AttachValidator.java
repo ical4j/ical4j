@@ -42,6 +42,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.Optional;
+
 public class AttachValidator implements Validator<Attach> {
 
     @Override
@@ -52,9 +54,9 @@ public class AttachValidator implements Validator<Attach> {
          * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
          * value ";ENCODING=BASE64".
          */
-        if (Value.BINARY.equals(target.getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.BINARY).equals(target.getParameter(Parameter.VALUE))) {
             ParameterValidator.assertOne(Parameter.ENCODING, target.getParameters().getAll());
-            if (!Encoding.BASE64.equals(target.getParameter(Parameter.ENCODING))) {
+            if (!Optional.of(Encoding.BASE64).equals(target.getParameter(Parameter.ENCODING))) {
                 throw new ValidationException(
                         "If the value type parameter is [BINARY], the inline"
                                 + "encoding parameter MUST be specified with the value [BASE64]"

@@ -383,7 +383,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
             result.getErrors().add("Status property ["
-                    + status.toString() + "] is not applicable for VEVENT");
+                    + status + "] is not applicable for VEVENT");
         }
 
         if (getProperty(Property.DTEND).isPresent()) {

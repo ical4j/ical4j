@@ -208,7 +208,7 @@ public class Recur<T extends Temporal> implements Serializable {
     }
 
     public enum Skip {
-        OMIT, BACKWARD, FORWARD;
+        OMIT, BACKWARD, FORWARD
     }
 
     /**
@@ -296,7 +296,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private List<Integer> hourList = new NumberList(ChronoField.HOUR_OF_DAY.range(), false);
 
-    private List<WeekDay> dayList = new WeekDayList();
+    private final List<WeekDay> dayList = new WeekDayList();
 
     private List<Integer> monthDayList = new NumberList(ChronoField.DAY_OF_MONTH.range(), true);
 

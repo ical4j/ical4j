@@ -39,7 +39,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -86,9 +86,9 @@ public class StyledDescription extends Property implements Encodable {
      */
     public final void setValue(final String aValue) throws URISyntaxException {
         // value can be either text or a URI - no default
-        if (Value.TEXT.equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.TEXT).equals(getParameter(Parameter.VALUE))) {
             this.value = aValue;
-        } else if (Value.URI.equals(getParameter(Parameter.VALUE))) {
+        } else if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
             uriValue = Uris.create(aValue);
             this.value = aValue;
         } else {

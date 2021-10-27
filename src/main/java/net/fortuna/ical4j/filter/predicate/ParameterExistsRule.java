@@ -58,7 +58,7 @@ public class ParameterExistsRule implements Predicate<Property> {
      */
     public static class ParameterExists implements Comparable<Parameter> {
 
-        private Parameter specification;
+        private final Parameter specification;
 
         public ParameterExists(Parameter specification) {
             this.specification = specification;

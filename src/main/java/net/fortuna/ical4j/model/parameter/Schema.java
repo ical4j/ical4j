@@ -52,7 +52,7 @@ public class Schema extends Parameter {
 
     private static final long serialVersionUID = -8581904779721020689L;
 
-    private URI uri;
+    private final URI uri;
 
     /**
      * @param aValue a string representation of a schema uri

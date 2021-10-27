@@ -156,7 +156,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         // use latest timezone definition to build zone rules..
         ZoneRules newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
                 .build();
-        String globalId = "ical4j~" + UUID.randomUUID().toString();
+        String globalId = "ical4j~" + UUID.randomUUID();
         zoneIds.put(globalId, timezone.getID());
         zoneRules.put(globalId, newZoneRules);
     }

@@ -138,7 +138,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     @Deprecated
     @SuppressWarnings("unchecked")
 	public final <C extends T> List<C> getComponents(final String name) {
-        return (List<C>) get(name);
+        return get(name);
     }
 
     @Override

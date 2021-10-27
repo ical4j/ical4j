@@ -47,7 +47,7 @@ public class Order extends Parameter {
 
     private static final long serialVersionUID = -5381653882942018012L;
 
-    private Integer order;
+    private final Integer order;
 
     /**
      * @param aValue a string representation

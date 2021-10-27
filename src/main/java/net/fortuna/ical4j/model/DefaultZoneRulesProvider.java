@@ -35,7 +35,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
     public DefaultZoneRulesProvider(TimeZoneLoader timeZoneLoader, Map<String, String> zoneIdMap) {
         this.zoneLoader = timeZoneLoader;
         for (String id : zoneLoader.getAvailableIDs()) {
-            zoneIdMap.put("ical4j~" + UUID.randomUUID().toString(), id);
+            zoneIdMap.put("ical4j~" + UUID.randomUUID(), id);
         }
         this.zoneRulesMap = new ConcurrentHashMap<>();
     }
