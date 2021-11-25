@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -51,12 +50,6 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * @author Ben Fortuna
  */
 public class PropertyValidator<T extends Property> implements Validator<T> {
-
-    public static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
-
-    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
-
-    public static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
 
     public static final Validator<Attach> ATTACH = new PropertyValidator<>(
             new ValidationRule(OneOrLess, FMTTYPE));

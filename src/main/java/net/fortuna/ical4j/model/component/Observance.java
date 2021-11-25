@@ -128,25 +128,7 @@ public abstract class Observance extends Component {
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-
-        validator.validate(this);
-
-        // From "4.8.3.3 Time Zone Offset From":
-        // Conformance: This property MUST be specified in a "VTIMEZONE"
-        // calendar component.
-
-        // From "4.8.3.4 Time Zone Offset To":
-        // Conformance: This property MUST be specified in a "VTIMEZONE"
-        // calendar component.
-
-        /*
-         * ; the following are each REQUIRED, ; but MUST NOT occur more than once dtstart / tzoffsetto / tzoffsetfrom /
-         */
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once comment / rdate / rrule / tzname / x-prop
-         */
-
+        ComponentValidator.OBSERVANCE_ITIP.validate(this);
         if (recurse) {
             validateProperties();
         }
