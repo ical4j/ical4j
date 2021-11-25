@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
