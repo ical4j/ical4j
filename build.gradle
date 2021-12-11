@@ -63,6 +63,7 @@ dependencies {
 
     testCompile "org.codehaus.groovy:groovy:$groovyVersion",
             "org.slf4j:slf4j-log4j12:$slf4jVersion",
+            "org.apache.logging.log4j:log4j:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
             "org.cache2k:cache2k-jcache:$jcacheVersion",
             "org.codehaus.groovy:groovy-xml:$groovyVersion"
