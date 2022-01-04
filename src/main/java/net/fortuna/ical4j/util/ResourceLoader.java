@@ -76,7 +76,9 @@ public class ResourceLoader {
     public static InputStream getResourceAsStream(String name) {
         InputStream stream = null;
         try {
-            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+            if (Thread.currentThread().getContextClassLoader() != null) {
+                stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+            }
         } catch (SecurityException e) {
             LOG.info("Unable to access context classloader, using default. " + e.getMessage());
         }
