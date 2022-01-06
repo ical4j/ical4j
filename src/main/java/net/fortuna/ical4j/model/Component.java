@@ -217,8 +217,7 @@ public abstract class Component implements Serializable, PropertyContainer {
      * @param recurse indicates whether to validate the component's properties
      * @throws ValidationException where the component is not in a valid state
      */
-    public abstract void validate(final boolean recurse)
-            throws ValidationException;
+    public abstract void validate(final boolean recurse) throws ValidationException;
 
     /**
      * Invoke validation on the component properties in its current state.
