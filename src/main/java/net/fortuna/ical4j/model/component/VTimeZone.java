@@ -189,8 +189,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * @return Returns the types.
      */
     public final List<Observance> getObservances() {
-        return (List<Observance>) components.get(Observance.STANDARD,
-                Observance.DAYLIGHT);
+        return getComponents();
     }
 
     /**

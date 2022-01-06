@@ -41,6 +41,7 @@ import net.fortuna.ical4j.validate.component.VJournalValidator;
 
 import java.time.temporal.Temporal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -189,6 +190,18 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
         else {
             super.validate(method);
         }
+    }
+
+    public final List<Participant> getParticipants() {
+        return getComponents(Component.PARTICIPANT);
+    }
+
+    public final List<VLocation> getLocations() {
+        return getComponents(Component.VLOCATION);
+    }
+
+    public final List<VResource> getResources() {
+        return getComponents(Component.VRESOURCE);
     }
 
     /**

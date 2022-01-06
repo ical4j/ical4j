@@ -326,6 +326,18 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         return getComponents();
     }
 
+    public final List<Participant> getParticipants() {
+        return getComponents(Component.PARTICIPANT);
+    }
+
+    public final List<VLocation> getLocations() {
+        return getComponents(Component.VLOCATION);
+    }
+
+    public final List<VResource> getResources() {
+        return getComponents(Component.VRESOURCE);
+    }
+
     /**
      *
      * @return Returns the underlying component list.

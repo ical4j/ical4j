@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.List;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
@@ -162,6 +163,10 @@ public class Participant extends Component implements ComponentContainer<Compone
         if (recurse) {
             validateProperties();
         }
+    }
+
+    public <C extends Component> List<C> getComponents() {
+        return ComponentContainer.super.getComponents();
     }
 
     /**

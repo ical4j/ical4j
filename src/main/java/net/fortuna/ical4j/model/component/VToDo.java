@@ -42,10 +42,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -240,11 +237,21 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     /**
      * Returns the list of alarms for this todo.
      * @return a component list
-     * @deprecated use {@link VToDo#getComponents()} to avoid potential {@link ClassCastException}
      */
-    @Deprecated
-    public final ComponentList<VAlarm> getAlarms() {
-        return (ComponentList<VAlarm>) components;
+    public final List<VAlarm> getAlarms() {
+        return getComponents(Component.VALARM);
+    }
+
+    public final List<Participant> getParticipants() {
+        return getComponents(Component.PARTICIPANT);
+    }
+
+    public final List<VLocation> getLocations() {
+        return getComponents(Component.VLOCATION);
+    }
+
+    public final List<VResource> getResources() {
+        return getComponents(Component.VRESOURCE);
     }
 
     /**

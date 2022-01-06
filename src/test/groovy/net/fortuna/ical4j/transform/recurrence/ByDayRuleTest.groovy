@@ -97,7 +97,7 @@ class ByDayRuleTest extends Specification {
         TemporalAdapter<Instant> to = TemporalAdapter.parse("20210107T070000Z")
 
         Period period = new Period(from.temporal, to.temporal);
-        for (Component c : calendar.getComponents("VEVENT")) {
+        for (Component c : calendar.getComponents(Component.VEVENT)) {
             PeriodList list = c.calculateRecurrenceSet(period);
             for (Object po : list) {
                 System.out.println((Period) po);
