@@ -1,7 +1,11 @@
 SHELL:=/bin/bash
 include .env
 
-.PHONY: all gradlew clean build zoneinfo changelog currentVersion markNextVersion listApiChanges approveApiChanges release publish
+NEXT_VERSION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+CHANGE_JUSTIFICATION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
+.PHONY: all gradlew clean build zoneinfo changelog currentVersion markNextVersion listApiChanges approveApiChanges \
+	verify release publish
 
 all: test
 
@@ -30,17 +34,18 @@ currentVersion:
 	./gradlew -q currentVersion
 
 markNextVersion:
-	NEXT_VERSION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 	./gradlew markNextVersion -Prelease.version=$(NEXT_VERSION)
 
 listApiChanges:
 	./gradlew revapi
 
 approveApiChanges:
-	CHANGE_JUSTIFICATION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 	./gradlew :revapiAcceptAllBreaks --justification $(CHANGE_JUSTIFICATION)
 
-release: build
+verify:
+	./gradlew verify
+
+release: verify
 	./gradlew release
 
 publish:
