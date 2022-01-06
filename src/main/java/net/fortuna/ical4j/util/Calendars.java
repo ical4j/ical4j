@@ -142,7 +142,7 @@ public final class Calendars {
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
         if (calendar.getComponents().getAll().size() <= 1
-                || calendar.getComponents().get(Component.VTIMEZONE).size() == calendar.getComponents().getAll().size()) {
+                || calendar.getComponents(Component.VTIMEZONE).size() == calendar.getComponents().getAll().size()) {
             return new Calendar[] {calendar};
         }
         
@@ -192,7 +192,7 @@ public final class Calendars {
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
         for (final Component c : calendar.getComponents().getAll()) {
-            for (final Property foundUid : c.getProperties().get(Property.UID)) {
+            for (final Property foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }

@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * $Id$
@@ -72,9 +73,9 @@ public class LocationTest extends PropertyTest {
      */
     public void testQuotedText() throws IOException, ParserException, ConstraintViolationException {
         Calendar calendar = Calendars.load(getClass().getResource("/samples/valid/mansour.ics"));
-        VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
+        List<VEvent> event = calendar.getComponents(Component.VEVENT);
         assertEquals("At \"The Terrace\" Complex > Melbourne \"\\,",
-				event.getProperties().getRequired(Property.LOCATION).getValue());
+				event.get(0).getRequiredProperty(Property.LOCATION).getValue());
     }
     
     /**
@@ -86,8 +87,8 @@ public class LocationTest extends PropertyTest {
     	TestSuite suite = new TestSuite();
     	//testQuotedText..
         Calendar calendar = Calendars.load(LocationTest.class.getResource("/samples/valid/mansour.ics"));
-		VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
-        Location location = event.getProperties().getRequired(Property.LOCATION);
+		List<VEvent> event = calendar.getComponents(Component.VEVENT);
+        Location location = event.get(0).getRequiredProperty(Property.LOCATION);
         suite.addTest(new LocationTest(location, "At \"The Terrace\" Complex > Melbourne \"\\,"));
     	return suite;
     }

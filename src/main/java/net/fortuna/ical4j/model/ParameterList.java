@@ -136,7 +136,7 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
      * @param name name of parameters to return
      * @return a parameter list
      *
-     * @deprecated use {@link ParameterList#get(String)}
+     * @deprecated use {@link ParameterList#get(String...)}
      */
     @Deprecated
     public final ParameterList getParameters(final String name) {

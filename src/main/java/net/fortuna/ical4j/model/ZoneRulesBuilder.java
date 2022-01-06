@@ -32,7 +32,7 @@ public class ZoneRulesBuilder {
         for (Observance observance : observances) {
             // ignore transitions that have no effect..
             Optional<TzOffsetFrom> offsetFrom = observance.getProperties().getFirst(Property.TZOFFSETFROM);
-            TzOffsetTo offsetTo = observance.getProperties().getRequired(Property.TZOFFSETTO);
+            TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
 
             if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.getOffset())) {
                 Optional<DtStart<LocalDateTime>> startDate = observance.getProperties().getFirst(Property.DTSTART);
@@ -51,9 +51,9 @@ public class ZoneRulesBuilder {
         Set<ZoneOffsetTransitionRule> transitionRules = new HashSet<>();
         for (Observance observance : observances) {
             Optional<RRule<?>> rrule = observance.getProperties().getFirst(Property.RRULE);
-            TzOffsetFrom offsetFrom = observance.getProperties().getRequired(Property.TZOFFSETFROM);
-            TzOffsetTo offsetTo = observance.getProperties().getRequired(Property.TZOFFSETTO);
-            DtStart<LocalDateTime> startDate = observance.getProperties().getRequired(Property.DTSTART);
+            TzOffsetFrom offsetFrom = observance.getRequiredProperty(Property.TZOFFSETFROM);
+            TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
+            DtStart<LocalDateTime> startDate = observance.getRequiredProperty(Property.DTSTART);
 
             // ignore invalid rules
             if (rrule.isPresent() && !rrule.get().getRecur().getMonthList().isEmpty()) {
@@ -75,24 +75,24 @@ public class ZoneRulesBuilder {
 
     public ZoneRules build() throws ConstraintViolationException {
         Observance current = VTimeZone.getApplicableObservance(Instant.now(),
-                vTimeZone.getObservances().get(Observance.STANDARD));
+                vTimeZone.getComponents(Observance.STANDARD));
 
         // if no standard time use daylight time..
         if (current == null) {
             current = VTimeZone.getApplicableObservance(Instant.now(),
-                    vTimeZone.getObservances().get(Observance.DAYLIGHT));
+                    vTimeZone.getComponents(Observance.DAYLIGHT));
         }
 
-        TzOffsetFrom offsetFrom = current.getProperties().getRequired(Property.TZOFFSETFROM);
-        TzOffsetTo offsetTo = current.getProperties().getRequired(Property.TZOFFSETTO);
+        TzOffsetFrom offsetFrom = current.getRequiredProperty(Property.TZOFFSETFROM);
+        TzOffsetTo offsetTo = current.getRequiredProperty(Property.TZOFFSETTO);
 
         ZoneOffset standardOffset = offsetTo.getOffset();
         ZoneOffset wallOffset = offsetFrom.getOffset();
         List<ZoneOffsetTransition> standardOffsetTransitions = buildTransitions(
-                vTimeZone.getObservances().get(Observance.STANDARD));
+                vTimeZone.getComponents(Observance.STANDARD));
         Collections.sort(standardOffsetTransitions);
         List<ZoneOffsetTransition> offsetTransitions = buildTransitions(
-                vTimeZone.getObservances().get(Observance.DAYLIGHT));
+                vTimeZone.getComponents(Observance.DAYLIGHT));
         Collections.sort(offsetTransitions);
         Set<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(
                 vTimeZone.getObservances().getAll(), standardOffset);

@@ -40,6 +40,7 @@ import net.fortuna.ical4j.util.Strings;
 
 import java.io.StringReader;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * $Id: CalendarBuilderCustomRegistryTest.java [Nov 16, 2009]
@@ -92,8 +93,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
         // try to build with a regular builder
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
-        assertTrue(cal.getComponents().getRequired(Component.VEVENT).getProperties().getRequired(Property.ATTENDEE)
-                .getParameters().getRequired(SCHEDULE_STATUS) instanceof XParameter);
+        assertTrue(cal.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.ATTENDEE)
+                .getRequiredParameter(SCHEDULE_STATUS) instanceof XParameter);
 
         // try to build with a custom parameter factory
         final ParameterFactoryRegistry paramFactory = new ParameterFactoryRegistry();
@@ -119,8 +120,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
 
-        VEvent event = cal.getComponents().getRequired(Component.VEVENT);
-        VEvent eventBis = event.copy();
+        List<VEvent> event = cal.getComponents(Component.VEVENT);
+        VEvent eventBis = event.get(0).copy();
         assertEquals(eventBis, event);
     }
 }

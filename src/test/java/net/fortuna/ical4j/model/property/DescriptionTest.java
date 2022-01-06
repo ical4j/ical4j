@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created on 21/08/2007
@@ -63,8 +64,8 @@ public class DescriptionTest extends PropertyTest {
         TestSuite suite = new TestSuite();
         // Test correct parsing of text with tabs.
         Calendar calendar = Calendars.load(DescriptionTest.class.getResource("/samples/valid/mansour.ics"));
-        VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
-        Description description = event.getProperties().getRequired(Property.DESCRIPTION);
+        List<VEvent> event = calendar.getComponents(Component.VEVENT);
+        Description description = event.get(0).getRequiredProperty(Property.DESCRIPTION);
         suite.addTest(new DescriptionTest(description, "Test\t\ttabs"));
         return suite;
     }

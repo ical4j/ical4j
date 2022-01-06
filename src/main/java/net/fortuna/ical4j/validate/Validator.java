@@ -154,27 +154,27 @@ public interface Validator<T> extends Serializable {
 
     default List<String> apply(ValidationRule<Property> rule, Property target) {
         if (rule.getPredicate().test(target)) {
-            int total = rule.getInstances().stream().mapToInt(s -> target.getParameters().get(s).size()).sum();
+            int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
             switch (rule.getType()) {
                 case None:
                     return rule.getInstances().stream().filter(s -> target.getParameters().getFirst(s).isPresent())
                             .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
                             .collect(Collectors.toList());
                 case One:
-                    return rule.getInstances().stream().filter(s -> target.getParameters().get(s).size() != 1)
+                    return rule.getInstances().stream().filter(s -> target.getParameters(s).size() != 1)
                             .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
                             .collect(Collectors.toList());
                 case OneOrLess:
-                    return rule.getInstances().stream().filter(s -> target.getParameters().get(s).size() > 1)
+                    return rule.getInstances().stream().filter(s -> target.getParameters(s).size() > 1)
                             .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
                             .collect(Collectors.toList());
                 case OneOrMore:
-                    return rule.getInstances().stream().filter(s -> target.getParameters().get(s).size() < 1)
+                    return rule.getInstances().stream().filter(s -> target.getParameters(s).size() < 1)
                             .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
                             .collect(Collectors.toList());
                 case OneExclusive:
                     for (String instance : rule.getInstances()) {
-                        int count = target.getParameters().get(instance).size();
+                        int count = target.getParameters(instance).size();
                         if (count > 0 && count != total) {
                             return Collections.singletonList(
                                     String.format("%s %s", rule.getType().getDescription(),

@@ -35,6 +35,6 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components.all[0].properties.all[0].parameters.getRequired('EMAIL').value == 'cyrus@example.com'
+        calendar?.components.all[0].properties.all[0].getRequiredParameter('EMAIL').value == 'cyrus@example.com'
     }
 }

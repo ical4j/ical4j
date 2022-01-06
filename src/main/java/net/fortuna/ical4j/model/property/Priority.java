@@ -177,7 +177,7 @@ public class Priority extends Property {
         }
 
         @Override
-        public ImmutablePriority removeAll(String parameterName) {
+        public ImmutablePriority removeAll(String... parameterName) {
             throwException();
             return null;
         }

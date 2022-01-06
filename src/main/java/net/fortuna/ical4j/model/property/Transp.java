@@ -133,7 +133,7 @@ public class Transp extends Property {
         }
 
         @Override
-        public ImmutableTransp removeAll(String parameterName) {
+        public ImmutableTransp removeAll(String... parameterName) {
             throwException();
             return null;
         }

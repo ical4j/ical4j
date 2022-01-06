@@ -41,11 +41,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Comparator;
-import java.util.function.Function;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -470,7 +469,14 @@ public abstract class Property extends Content implements Comparable<Property> {
 
     /**
      * @return Returns the parameters.
+     * @deprecated to avoid confusion with how to mutate a {@link ParameterList} from v4.x onwards this method is temporarily
+     * deprecated.
+     * @see Property#add(Parameter)
+     * @see Property#remove(Parameter)
+     * @see Property#removeAll(String...)
+     * @see Property#replace(Parameter)
      */
+    @Deprecated
     public final ParameterList getParameters() {
         return parameters;
     }
@@ -507,7 +513,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @return a reference to the property to support method chaining
      */
     @SuppressWarnings("unchecked")
-    public <T extends Property> T removeAll(String parameterName) {
+    public <T extends Property> T removeAll(String... parameterName) {
         setParameters((ParameterList) parameters.removeAll(parameterName));
         return (T) this;
     }
@@ -528,11 +534,8 @@ public abstract class Property extends Content implements Comparable<Property> {
      *
      * @param name name of parameters to retrieve
      * @return a parameter list containing only parameters with the specified name
-     *
-     * @deprecated use {@link ParameterList#get(String)}
      */
-    @Deprecated
-    public final List<Parameter> getParameters(final String name) {
+    public final List<Parameter> getParameters(final String... name) {
         return getParameters().get(name);
     }
 
@@ -541,12 +544,19 @@ public abstract class Property extends Content implements Comparable<Property> {
      *
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
-     *
-     * @deprecated use {@link ParameterList#getFirst(String)}
      */
-    @Deprecated
     public final <P extends Parameter> Optional<P> getParameter(final String name) {
         return getParameters().getFirst(name);
+    }
+
+    /**
+     * Retrieve a single required parameter.
+     * @param name
+     * @param <P>
+     * @return
+     */
+    public final <P extends Parameter> P getRequiredParameter(final String name) {
+        return getParameters().getRequired(name);
     }
 
     /**

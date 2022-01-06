@@ -158,7 +158,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * @param observances a list of type components
      */
     public VTimeZone(final ComponentList<Observance> observances) {
-        super(VTIMEZONE);
+        this(new PropertyList(), observances);
     }
 
     /**
@@ -210,6 +210,16 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
         return (ComponentList<Observance>) components;
     }
 
+    /**
+     *
+     * @return
+     * @deprecated to avoid confusion with how to mutate a ComponentList from v4.x onwards this method is temporarily
+     * deprecated.
+     * @see ComponentContainer#add(Component)
+     * @see ComponentContainer#remove(Component)
+     * @see ComponentContainer#replace(Component)
+     */
+    @Deprecated
     @Override
     public ComponentList<Observance> getComponents() {
         return (ComponentList<Observance>) components;

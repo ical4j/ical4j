@@ -146,9 +146,9 @@ public abstract class Observance extends Component {
             throw new UnsupportedOperationException("Unable to get timezone observance for date-only temporal.");
         }
 
-        TzOffsetTo offsetTo = getProperties().getRequired(TZOFFSETTO);
+        TzOffsetTo offsetTo = getRequiredProperty(TZOFFSETTO);
 
-        TzOffsetFrom offsetFrom = getProperties().getRequired(TZOFFSETFROM);
+        TzOffsetFrom offsetFrom = getRequiredProperty(TZOFFSETFROM);
 
         OffsetDateTime offsetDate = LocalDateTime.ofInstant(Instant.from(date), ZoneOffset.UTC).atOffset(
                 offsetTo.getOffset());
@@ -159,7 +159,7 @@ public abstract class Observance extends Component {
 
         if (initialOnset == null) {
             try {
-                DtStart<?> dtStart = getProperties().getRequired(DTSTART);
+                DtStart<?> dtStart = getRequiredProperty(DTSTART);
                 if (dtStart.getDate().isSupported(ChronoField.HOUR_OF_DAY)) {
                     initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(offsetFrom.getOffset());
                 } else {
@@ -191,7 +191,7 @@ public abstract class Observance extends Component {
         cacheableOnsets.add(initialOnset);
 
         // check rdates for latest applicable onset..
-        final List<RDate<LocalDateTime>> rdates = getProperties().get(RDATE);
+        final List<RDate<LocalDateTime>> rdates = getProperties(RDATE);
         for (RDate<LocalDateTime> rdate : rdates) {
             List<LocalDateTime> rdateDates = rdate.getDates();
             for (final LocalDateTime rdateDate : rdateDates) {
@@ -208,7 +208,7 @@ public abstract class Observance extends Component {
         }
 
         // check recurrence rules for latest applicable onset..
-        final List<RRule<OffsetDateTime>> rrules = getProperties().get(RRULE);
+        final List<RRule<OffsetDateTime>> rrules = getProperties(RRULE);
         for (RRule<OffsetDateTime> rrule : rrules) {
             // include future onsets to determine onset period..
             onsetLimit = offsetDate.plus(10, ChronoUnit.YEARS);

@@ -190,7 +190,14 @@ public abstract class Component extends Content implements Serializable, Propert
 
     /**
      * @return Returns the properties.
+     * @deprecated to avoid confusion with how to mutate a PropertyList from v4.x onwards this method is temporarily
+     * deprecated.
+     * @see PropertyContainer#add(Property)
+     * @see PropertyContainer#remove(Property)
+     * @see PropertyContainer#removeAll(String...)
+     * @see PropertyContainer#replace(Property)
      */
+    @Deprecated
     @Override
     public final PropertyList getProperties() {
         return properties;
@@ -199,20 +206,6 @@ public abstract class Component extends Content implements Serializable, Propert
     @Override
     public void setProperties(PropertyList properties) {
         this.properties = properties;
-    }
-
-    /**
-     * Convenience method for retrieving a required named property.
-     *
-     * @param name name of the property to retrieve
-     * @return the first matching property in the property list with the specified name
-     * @throws ConstraintViolationException when a property is not found
-     *
-     * @deprecated use {@link PropertyList#getRequired(String)}
-     */
-    @Deprecated
-    public final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
-        return properties.getRequired(name);
     }
 
     /**

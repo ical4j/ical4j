@@ -110,7 +110,7 @@ public class Action extends Property {
         }
 
         @Override
-        public ImmutableAction removeAll(String parameterName) {
+        public ImmutableAction removeAll(String... parameterName) {
             throwException();
             return null;
         }

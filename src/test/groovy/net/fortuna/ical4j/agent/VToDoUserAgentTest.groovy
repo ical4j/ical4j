@@ -43,7 +43,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.publish(vtodo, vtodo2)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.PUBLISH
+        calendar.getRequiredProperty(Property.METHOD) == Method.PUBLISH
 
         and: 'the sequence property is present on all components'
         calendar.components.all.each { it.getProperties().getFirst(Property.SEQUENCE).isPresent() }
@@ -79,7 +79,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.request(vtodo, vtodo2)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.REQUEST
+        calendar.getRequiredProperty(Property.METHOD) == Method.REQUEST
 
         and: 'the sequence property is present on all components'
         calendar.components.all.each { it.getProperties().getFirst(Property.SEQUENCE).isPresent() }
@@ -108,7 +108,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.delegate(request)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.REQUEST
+        calendar.getRequiredProperty(Property.METHOD) == Method.REQUEST
     }
 
     def "Reply"() {
@@ -132,7 +132,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.REPLY
+        calendar.getRequiredProperty(Property.METHOD) == Method.REPLY
     }
 
     def "Add"() {
@@ -151,7 +151,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.add(vtodo)
 
         then: 'the calendar object contains method = ADD'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.ADD
+        calendar.getRequiredProperty(Property.METHOD) == Method.ADD
     }
 
     def "Cancel"() {
@@ -168,7 +168,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.cancel(vtodo)
 
         then: 'the calendar object contains method = CANCEL'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.CANCEL
+        calendar.getRequiredProperty(Property.METHOD) == Method.CANCEL
     }
 
     def "Refresh"() {
@@ -183,7 +183,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.refresh(vtodo)
 
         then: 'the calendar object contains method = REFRESH'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.REFRESH
+        calendar.getRequiredProperty(Property.METHOD) == Method.REFRESH
     }
 
     def "Counter"() {
@@ -209,7 +209,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.counter(request)
 
         then: 'the calendar object contains method = COUNTER'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.COUNTER
+        calendar.getRequiredProperty(Property.METHOD) == Method.COUNTER
     }
 
     def "DeclineCounter"() {
@@ -233,6 +233,6 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.declineCounter(counter)
 
         then: 'the calendar object contains method = DECLINECOUNTER'
-        calendar.getProperties().getRequired(Property.METHOD) == Method.DECLINE_COUNTER
+        calendar.getRequiredProperty(Property.METHOD) == Method.DECLINE_COUNTER
     }
 }

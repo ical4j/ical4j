@@ -9,7 +9,7 @@ public interface ComponentContainer<T extends Component> {
 
     void setComponents(ComponentList<T> components);
 
-    default <C extends T> List<C> getComponents(final String name) {
+    default <C extends T> List<C> getComponents(final String... name) {
         return getComponents().get(name);
     }
 

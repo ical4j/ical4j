@@ -124,7 +124,7 @@ public class Method extends Property {
         }
 
         @Override
-        public ImmutableMethod removeAll(String parameterName) {
+        public ImmutableMethod removeAll(String... parameterName) {
             throwException();
             return null;
         }

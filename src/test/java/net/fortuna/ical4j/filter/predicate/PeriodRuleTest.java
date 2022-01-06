@@ -187,28 +187,28 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         period = new Period<>(day, java.time.Duration.ofDays(1));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents().get(Component.VEVENT)));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         // saturday..
         day = day.plusDays(1);
         period = new Period<>(day, java.time.Duration.ofDays(1));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents().get(Component.VEVENT)));
+        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         // friday..
         day = day.plusDays(6);
         period = new Period<>(day, java.time.Duration.ofDays(1));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents().get(Component.VEVENT)));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         // saturday..
         day = day.plusDays(1);
         period = new Period<>(day, java.time.Duration.ofDays(1));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents().get(Component.VEVENT)));
+        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         return suite;
     }

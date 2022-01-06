@@ -226,7 +226,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         // VEvent event = new VEvent(startDate, cal.getTime(), "Progress
         // Meeting");
         // add timezone information..
-        event.getProperties().getRequired(Property.DTSTART).add(tzParam);
+        event.getRequiredProperty(Property.DTSTART).add(tzParam);
 
         // add recurrence..
         Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.YEARLY).count(20)

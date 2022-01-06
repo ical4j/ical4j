@@ -205,7 +205,7 @@ public class Status extends Property {
         }
 
         @Override
-        public ImmutableStatus removeAll(String parameterName) {
+        public ImmutableStatus removeAll(String... parameterName) {
             throwException();
             return null;
         }

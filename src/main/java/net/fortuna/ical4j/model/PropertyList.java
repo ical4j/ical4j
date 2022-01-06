@@ -133,7 +133,7 @@ public class PropertyList implements ContentCollection<Property> {
      * @param name name of properties to return
      * @return a property list
      *
-     * @deprecated use {@link PropertyList#get(String)}
+     * @deprecated use {@link PropertyList#get(String...)}
      */
     @Deprecated
     public final List<Property> getProperties(final String name) {

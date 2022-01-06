@@ -97,7 +97,7 @@ public class Version extends Property {
         }
 
         @Override
-        public ImmutableVersion removeAll(String parameterName) {
+        public ImmutableVersion removeAll(String... parameterName) {
             throwException();
             return null;
         }

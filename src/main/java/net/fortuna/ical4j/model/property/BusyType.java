@@ -111,7 +111,7 @@ public class BusyType extends Property {
         }
 
         @Override
-        public ImmutableBusyType removeAll(String parameterName) {
+        public ImmutableBusyType removeAll(String... parameterName) {
             throwException();
             return null;
         }

@@ -44,9 +44,8 @@ import java.io.StringReader;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * $Id$
@@ -180,8 +179,8 @@ public class TimeZoneTest extends TestCase {
                         String expectedLocalDateTimeStr) throws Exception {
         super(testMethod);
         net.fortuna.ical4j.model.Calendar cal = new CalendarBuilder().build(new StringReader(vtimezoneDef));
-        VTimeZone vtz = cal.getComponents().getRequired(VTimeZone.VTIMEZONE);
-        this.timezone = new TimeZone(vtz);
+        List<VTimeZone> vtz = cal.getComponents(VTimeZone.VTIMEZONE);
+        this.timezone = new TimeZone(vtz.get(0));
         this.zuluDateTimeStr = zuluDateTimeStr;
         this.expectedLocalDateTimeStr = expectedLocalDateTimeStr;
     }

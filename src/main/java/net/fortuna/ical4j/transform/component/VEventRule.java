@@ -55,7 +55,7 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
             }
         }
         
-        List<?> dtStamps = element.getProperties().get(Property.DTSTAMP);
+        List<?> dtStamps = element.getProperties(Property.DTSTAMP);
         if (dtStamps.isEmpty()) {
             element.add(new DtStamp());
         }     

@@ -89,7 +89,7 @@ public class CalScale extends Property {
         }
 
         @Override
-        public ImmutableCalScale removeAll(String parameterName) {
+        public ImmutableCalScale removeAll(String... parameterName) {
             throwException();
             return null;
         }

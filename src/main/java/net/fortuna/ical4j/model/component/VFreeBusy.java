@@ -322,8 +322,8 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         final DtStart<?> start;
         final DtEnd<?> end;
 
-        start = request.getProperties().getRequired(DTSTART);
-        end = request.getProperties().getRequired(DTEND);
+        start = request.getRequiredProperty(DTSTART);
+        end = request.getRequiredProperty(DTEND);
 
         // ensure the request is valid..
         request.validate();
@@ -514,6 +514,16 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         }
     }
 
+    /**
+     *
+     * @return
+     * @deprecated to avoid confusion with how to mutate a ComponentList from v4.x onwards this method is temporarily
+     * deprecated.
+     * @see ComponentContainer#add(Component)
+     * @see ComponentContainer#remove(Component)
+     * @see ComponentContainer#replace(Component)
+     */
+    @Deprecated
     @Override
     public ComponentList<Component> getComponents() {
         return (ComponentList<Component>) components;

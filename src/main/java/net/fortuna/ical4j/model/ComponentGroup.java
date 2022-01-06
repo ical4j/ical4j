@@ -95,7 +95,7 @@ public class ComponentGroup<C extends Component> {
 
         List<Period<T>> finalPeriods = new ArrayList<>(periods);
         overrides.forEach(component -> {
-            RecurrenceId<?> recurrenceId = component.getProperties().getRequired(Property.RECURRENCE_ID);
+            RecurrenceId<?> recurrenceId = component.getRequiredProperty(Property.RECURRENCE_ID);
             finalPeriods.removeIf(p -> p.getStart().equals(recurrenceId.getDate()));
             component.calculateRecurrenceSet(period).stream()
                     .filter(p -> p.getStart().equals(recurrenceId.getDate()))

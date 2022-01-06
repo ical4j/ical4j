@@ -52,7 +52,7 @@ public class IndexedPropertyList {
      */
     public IndexedPropertyList(final List<Property> list, final String parameterName) {
         final Map<String, List<Property>> indexedProperties = new HashMap<>();
-        list.forEach(property -> property.getParameters().get(parameterName).forEach(parameter -> {
+        list.forEach(property -> property.getParameters(parameterName).forEach(parameter -> {
             List<Property> properties = indexedProperties.computeIfAbsent(parameter.getValue(), k -> new ArrayList<>());
             properties.add(property);
         }));

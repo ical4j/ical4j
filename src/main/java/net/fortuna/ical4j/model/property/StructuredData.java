@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -97,7 +96,7 @@ public class StructuredData extends Property implements Encodable {
             // binary = Base64.decode(aValue);
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(getParameters().getRequired(Parameter.ENCODING));
+                        .createBinaryDecoder(getRequiredParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -106,7 +105,7 @@ public class StructuredData extends Property implements Encodable {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error decoding binary data", de);
             }
-        } else if (Value.URI.equals(getParameters().getRequired(Parameter.VALUE))) {
+        } else if (Value.URI.equals(getRequiredParameter(Parameter.VALUE))) {
             uri = Uris.create(aValue);
             value = aValue;
             // assume text..

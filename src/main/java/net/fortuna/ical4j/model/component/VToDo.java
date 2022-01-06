@@ -248,6 +248,16 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
         return (ComponentList<VAlarm>) components;
     }
 
+    /**
+     *
+     * @return
+     * @deprecated to avoid confusion with how to mutate a ComponentList from v4.x onwards this method is temporarily
+     * deprecated.
+     * @see ComponentContainer#add(Component)
+     * @see ComponentContainer#remove(Component)
+     * @see ComponentContainer#replace(Component)
+     */
+    @Deprecated
     @Override
     public ComponentList<Component> getComponents() {
         return (ComponentList<Component>) components;

@@ -33,7 +33,7 @@ class UnfoldingReaderSpec extends Specification {
         Calendar parsed = new CalendarBuilder().build(new StringReader(calendarString as String))
 
         then: 'the encoded binary is decoded correctly'
-        def attach = parsed.components.all[0].getProperties().getRequired(Property.ATTACH)
+        def attach = parsed.components.all[0].getRequiredProperty(Property.ATTACH)
         def md5 = MessageDigest.getInstance("MD5")
         md5.digest(attach.binary) == md5.digest(new File('gradle/wrapper/gradle-wrapper.jar').bytes)
     }

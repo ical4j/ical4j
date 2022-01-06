@@ -59,8 +59,8 @@ public class AvailableValidator implements Validator<Available> {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        final DtStart<?> start = target.getProperties().getRequired(Property.DTSTART);
-        if (Value.DATE.equals(start.getParameters().getRequired(Parameter.VALUE))) {
+        final DtStart<?> start = target.getRequiredProperty(Property.DTSTART);
+        if (Value.DATE.equals(start.getRequiredParameter(Parameter.VALUE))) {
             result.getErrors().add("Property [" + Property.DTSTART + "] must be a " + Value.DATE_TIME);
         }
 
@@ -73,7 +73,7 @@ public class AvailableValidator implements Validator<Available> {
          */
         final Optional<DtEnd<?>> end = target.getProperty(Property.DTEND);
         /* Must be DATE_TIME */
-        if (end.isPresent() && Value.DATE.equals(end.get().getParameters().getRequired(Parameter.VALUE))) {
+        if (end.isPresent() && Value.DATE.equals(end.get().getRequiredParameter(Parameter.VALUE))) {
             result.getErrors().add("Property [" + Property.DTEND + "] must be a " + Value.DATE_TIME);
         }
 

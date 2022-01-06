@@ -103,7 +103,7 @@ public class TimeZone extends java.util.TimeZone {
         OffsetDateTime date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
         final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
-            final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
+            final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
             return (int) (offset.getOffset().getTotalSeconds() * 1000L);
         }
         return 0;
@@ -116,7 +116,7 @@ public class TimeZone extends java.util.TimeZone {
     public int getOffset(long date) {
         final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
-            final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
+            final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
             if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
                 return getRawOffset();
             } else {
@@ -162,7 +162,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     @Override
     public final boolean useDaylightTime() {
-        final List<Observance> daylights = vTimeZone.getObservances().get(Observance.DAYLIGHT);
+        final List<Observance> daylights = vTimeZone.getComponents(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
 
@@ -175,10 +175,10 @@ public class TimeZone extends java.util.TimeZone {
 
     private static int getRawOffset(VTimeZone vt) {
 
-        List<Observance> seasonalTimes = vt.getObservances().get(Observance.STANDARD);
+        List<Observance> seasonalTimes = vt.getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
         if (seasonalTimes.isEmpty()) {
-            seasonalTimes = vt.getObservances().get(Observance.DAYLIGHT);
+            seasonalTimes = vt.getComponents(Observance.DAYLIGHT);
             if (seasonalTimes.isEmpty()) {
                 return 0;
             }

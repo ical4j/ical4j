@@ -65,7 +65,7 @@ public class HCalendarParserTest extends TestCase {
     public void testParseReaderContentHandler() throws IOException, ParserException, ConstraintViolationException {
         Calendar icsCalendar = Calendars.load(getClass().getResource("/samples/hcalendar/example1.ics"));
         // remove prod-id which seems to be not handled by hcalendar..
-        icsCalendar.getProperties().remove(icsCalendar.getProperties().getRequired(Property.PRODID));
+        icsCalendar.getProperties().remove(icsCalendar.getRequiredProperty(Property.PRODID));
         
         CalendarBuilder builder = new CalendarBuilder(new HCalendarParser());
         Calendar hcalCalendar = builder.build(getClass().getResourceAsStream("/samples/hcalendar/example1.html"));

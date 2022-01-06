@@ -83,8 +83,8 @@ public class ExDateTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
 
-        VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
-        List<Property> exdates = event.getProperties().get(Property.EXDATE);
+        List<VEvent> event = calendar.getComponents(Component.VEVENT);
+        List<Property> exdates = event.get(0).getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
             assertTrue("This EXDATE should have a timezone", exDate.getParameters().getFirst(Parameter.TZID).isPresent());
         }
@@ -94,15 +94,15 @@ public class ExDateTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
 
         Calendar ical = builder.build(getClass().getResourceAsStream("/samples/valid/dst-only-vtimezone.ics"));
-        VTimeZone vTZ = ical.getComponents().getRequired(VTimeZone.VTIMEZONE);
+        List<VTimeZone> vTZ = ical.getComponents(VTimeZone.VTIMEZONE);
 
-        String id = vTZ.getProperties().getRequired(Property.TZID).getValue();
+        String id = vTZ.get(0).getRequiredProperty(Property.TZID).getValue();
         assertEquals("Europe/Berlin", id);
-        assertEquals(vTZ.getObservances().getAll().get(0),
-                vTZ.getApplicableObservance(TemporalAdapter.parse("20180403T000000Z").getTemporal()));
+        assertEquals(vTZ.get(0).getObservances().getAll().get(0),
+                vTZ.get(0).getApplicableObservance(TemporalAdapter.parse("20180403T000000Z").getTemporal()));
 
-        VEvent vEvent = ical.getComponents().getRequired(VEvent.VEVENT);
-        DtStart<ZonedDateTime> start = vEvent.getProperties().getRequired("DTSTART");
+        List<VEvent> vEvent = ical.getComponents(VEvent.VEVENT);
+        DtStart<ZonedDateTime> start = vEvent.get(0).getRequiredProperty("DTSTART");
         assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
     }
 
@@ -110,8 +110,8 @@ public class ExDateTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
 
-        VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
-        List<Property> exdates = event.getProperties().get(Property.EXDATE);
+        List<VEvent> event = calendar.getComponents(Component.VEVENT);
+        List<Property> exdates = event.get(0).getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
             for (Instant dateEx : ((ExDate<Instant>) exDate).getDates()) {
                 assertNotNull(dateEx);

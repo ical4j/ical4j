@@ -144,7 +144,7 @@ public class Clazz extends Property {
         }
 
         @Override
-        public ImmutableClazz removeAll(String parameterName) {
+        public ImmutableClazz removeAll(String... parameterName) {
             throwException();
             return null;
         }

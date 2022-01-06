@@ -199,7 +199,13 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
 
     /**
      * @return Returns the components.
+     * @deprecated to avoid confusion with how to mutate a ComponentList from v4.x onwards this method is temporarily
+     * deprecated.
+     * @see ComponentContainer#add(Component)
+     * @see ComponentContainer#remove(Component)
+     * @see ComponentContainer#replace(Component)
      */
+    @Deprecated
     @Override
     public final ComponentList<CalendarComponent> getComponents() {
         return components;
@@ -212,7 +218,14 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
 
     /**
      * @return Returns the properties.
+     * @deprecated to avoid confusion with how to mutate a PropertyList from v4.x onwards this method is temporarily
+     * deprecated.
+     * @see PropertyContainer#add(Property)
+     * @see PropertyContainer#remove(Property)
+     * @see PropertyContainer#removeAll(String...)
+     * @see PropertyContainer#replace(Property)
      */
+    @Deprecated
     @Override
     public final PropertyList getProperties() {
         return properties;
@@ -313,7 +326,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
         if (getComponents().getAll().size() <= 1
-                || getComponents().get(Component.VTIMEZONE).size() == getComponents().getAll().size()) {
+                || getComponents(Component.VTIMEZONE).size() == getComponents().getAll().size()) {
             return new Calendar[] {this};
         }
 
@@ -361,7 +374,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public Uid getUid() throws ConstraintViolationException {
         Uid uid = null;
         for (final Component c : getComponents().getAll()) {
-            for (final Property foundUid : c.getProperties().get(Property.UID)) {
+            for (final Property foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }
