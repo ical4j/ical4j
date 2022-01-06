@@ -36,7 +36,6 @@ import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
-import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
@@ -153,23 +152,6 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      */
     public VTimeZone(final PropertyList properties, final ComponentList<Observance> observances) {
         super(VTIMEZONE, properties, observances);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getObservances() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
     }
 
     /**

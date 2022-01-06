@@ -169,15 +169,8 @@ public abstract class Component implements Serializable, PropertyContainer {
      */
     @Override
 	public String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
+        return BEGIN + ':' + name + Strings.LINE_SEPARATOR + properties + components + END + ':' + name
+                + Strings.LINE_SEPARATOR;
     }
 
     /**
