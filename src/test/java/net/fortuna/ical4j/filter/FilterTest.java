@@ -147,23 +147,23 @@ public class FilterTest<T extends Component> extends TestCase {
         TestSuite suite = new TestSuite();
         //testFilterMatchAll..
         Filter<CalendarComponent> filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 2));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 2));
 
         filter = new Filter<>(new Predicate[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents().getAll()));
+        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents()));
 
         filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents().getAll()));
+        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents()));
         
         //testFilterMatchAny..
         filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 3));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 3));
 
         filter = new Filter<>(new Predicate[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 2));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 2));
 
         filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 3));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 3));
         return suite;
     }
 }

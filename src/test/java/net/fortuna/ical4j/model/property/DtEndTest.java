@@ -93,12 +93,12 @@ public class DtEndTest extends PropertyTest {
         suite.addTest(new DtEndTest("testValidation", dtEndLocalDate));
 
         //
-        dtEnd = new DtEnd<>(dtEnd.getParameters(), dtEnd.getDate());
+        dtEnd = new DtEnd<>(dtEnd.getParameterList(), dtEnd.getDate());
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 
         //
-        newParams = (ParameterList) dtEnd.getParameters().replace(Value.DATE);
+        newParams = (ParameterList) dtEnd.getParameterList().replace(Value.DATE);
         dtEndLocalDate = new DtEnd<>(newParams, dtEnd.getDate().toLocalDate());
         log.info(dtEndLocalDate.toString());
         suite.addTest(new DtEndTest("testValidation", dtEndLocalDate));

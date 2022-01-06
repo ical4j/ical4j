@@ -21,6 +21,6 @@ public class VTimeZoneValidator implements Validator<VTimeZone> {
                     + Observance.STANDARD + "," + Observance.DAYLIGHT
                     + "] must be specified at least once");
         }
-        target.getObservances().getAll().forEach(ComponentValidator.OBSERVANCE_ITIP::validate);
+        target.getObservances().forEach(ComponentValidator.OBSERVANCE_ITIP::validate);
     }
 }

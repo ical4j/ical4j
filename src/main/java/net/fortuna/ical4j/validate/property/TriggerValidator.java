@@ -53,13 +53,13 @@ public class TriggerValidator implements Validator<Trigger> {
         final Optional<Parameter> valueParam = target.getParameter(Parameter.VALUE);
 
         if (relParam.isPresent() || !Optional.of(Value.DATE_TIME).equals(valueParam)) {
-            ParameterValidator.assertNullOrEqual(Value.DURATION, target.getParameters().getAll());
+            ParameterValidator.assertNullOrEqual(Value.DURATION, target.getParameters());
             if (target.getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
             }
         } else {
-            ParameterValidator.assertOne(Parameter.VALUE, target.getParameters().getAll());
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, target.getParameters().getAll());
+            ParameterValidator.assertOne(Parameter.VALUE, target.getParameters());
+            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, target.getParameters());
             if (target.getDate() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
             }

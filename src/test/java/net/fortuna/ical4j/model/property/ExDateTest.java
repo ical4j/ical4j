@@ -98,7 +98,7 @@ public class ExDateTest extends TestCase {
 
         String id = vTZ.get(0).getRequiredProperty(Property.TZID).getValue();
         assertEquals("Europe/Berlin", id);
-        assertEquals(vTZ.get(0).getObservances().getAll().get(0),
+        assertEquals(vTZ.get(0).getObservances().get(0),
                 vTZ.get(0).getApplicableObservance(TemporalAdapter.parse("20180403T000000Z").getTemporal()));
 
         List<VEvent> vEvent = ical.getComponents(VEvent.VEVENT);

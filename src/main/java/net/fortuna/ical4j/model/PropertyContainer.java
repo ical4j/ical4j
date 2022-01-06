@@ -5,16 +5,16 @@ import java.util.Optional;
 
 public interface PropertyContainer {
 
-    PropertyList getProperties();
+    PropertyList getPropertyList();
 
     void setProperties(PropertyList properties);
 
     default <T extends Property> List<T> getProperties(final String... name) {
-        return getProperties().get(name);
+        return getPropertyList().get(name);
     }
 
     default <T extends Property> Optional<T> getProperty(final String name) {
-        return getProperties().getFirst(name);
+        return getPropertyList().getFirst(name);
     }
 
     /**
@@ -25,7 +25,7 @@ public interface PropertyContainer {
      * @throws ConstraintViolationException when a property is not found
      */
     default <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
-        return getProperties().getRequired(name);
+        return getPropertyList().getRequired(name);
     }
 
     /**
@@ -34,7 +34,7 @@ public interface PropertyContainer {
      * @return a reference to the container to support method chaining
      */
     default PropertyContainer add(Property property) {
-        setProperties((PropertyList) getProperties().add(property));
+        setProperties((PropertyList) getPropertyList().add(property));
         return this;
     }
 
@@ -44,7 +44,7 @@ public interface PropertyContainer {
      * @return a reference to the container to support method chaining
      */
     default PropertyContainer remove(Property property) {
-        setProperties((PropertyList) getProperties().remove(property));
+        setProperties((PropertyList) getPropertyList().remove(property));
         return this;
     }
 
@@ -54,7 +54,7 @@ public interface PropertyContainer {
      * @return a reference to the container to support method chaining
      */
     default PropertyContainer removeAll(String... name) {
-        setProperties((PropertyList) getProperties().removeAll(name));
+        setProperties((PropertyList) getPropertyList().removeAll(name));
         return this;
     }
 
@@ -64,7 +64,7 @@ public interface PropertyContainer {
      * @return a reference to the container to support method chaining
      */
     default PropertyContainer replace(Property property) {
-        setProperties((PropertyList) getProperties().replace(property));
+        setProperties((PropertyList) getPropertyList().replace(property));
         return this;
     }
 }

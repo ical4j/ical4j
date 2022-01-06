@@ -55,7 +55,7 @@ public class PropertyContainsRule<T extends PropertyContainer> implements Predic
     @Override
     public boolean test(T t) {
         // filter all props matching the spec and check value for substring match..
-        return t.getProperties().getAll().stream()
+        return t.getProperties().stream()
                 .filter(p -> new PropertyExistsRule.PropertyExists(specification).compareTo(p) == 0)
                 .anyMatch(prop -> prop.getValue().contains(value));
     }

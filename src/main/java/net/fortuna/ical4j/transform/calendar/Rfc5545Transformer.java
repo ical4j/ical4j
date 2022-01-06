@@ -15,16 +15,16 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
     @Override
     public Calendar transform(Calendar object) {
 
-        conformPropertiesToRfc5545(object.getProperties().getAll());
+        conformPropertiesToRfc5545(object.getProperties());
 
-        for(Component component : object.getComponents().getAll()){
+        for(Component component : object.getComponents()){
             CountableProperties.removeExceededPropertiesForComponent(component);
 
             //each component
             conformComponentToRfc5545(component);
 
             //each component property
-            conformPropertiesToRfc5545(component.getProperties().getAll());
+            conformPropertiesToRfc5545(component.getProperties());
 
             for(java.lang.reflect.Method m : component.getClass().getDeclaredMethods()){
                 if(ComponentList.class.isAssignableFrom(m.getReturnType()) &&
@@ -37,7 +37,7 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
                             conformComponentToRfc5545(c);
 
                             //each inner component properties
-                            conformPropertiesToRfc5545(c.getProperties().getAll());
+                            conformPropertiesToRfc5545(c.getProperties());
                         }
                     } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException(e);

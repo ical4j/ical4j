@@ -44,7 +44,6 @@ import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -477,7 +476,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @see Property#replace(Parameter)
      */
     @Deprecated
-    public final ParameterList getParameters() {
+    public final ParameterList getParameterList() {
         return parameters;
     }
 
@@ -536,7 +535,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @return a parameter list containing only parameters with the specified name
      */
     public final List<Parameter> getParameters(final String... name) {
-        return getParameters().get(name);
+        return getParameterList().get(name);
     }
 
     /**
@@ -546,7 +545,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @return the first parameter from the parameter list with the specified name
      */
     public final <P extends Parameter> Optional<P> getParameter(final String name) {
-        return getParameters().getFirst(name);
+        return getParameterList().getFirst(name);
     }
 
     /**
@@ -556,7 +555,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @return
      */
     public final <P extends Parameter> P getRequiredParameter(final String name) {
-        return getParameters().getRequired(name);
+        return getParameterList().getRequired(name);
     }
 
     /**
@@ -583,8 +582,8 @@ public abstract class Property extends Content implements Comparable<Property> {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
             return getName().equals(p.getName())
-                    && new EqualsBuilder().append(getValue(), p.getValue()).append(getParameters(),
-                    p.getParameters()).isEquals();
+                    && new EqualsBuilder().append(getValue(), p.getValue()).append(getParameterList(),
+                    p.getParameterList()).isEquals();
         }
         return super.equals(arg0);
     }
@@ -596,7 +595,7 @@ public abstract class Property extends Content implements Comparable<Property> {
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
-                getValue()).append(getParameters()).toHashCode();
+                getValue()).append(getParameterList()).toHashCode();
     }
 
     /**
@@ -621,7 +620,7 @@ public abstract class Property extends Content implements Comparable<Property> {
         }
         return Comparator.comparing(Property::getName)
                 .thenComparing(Property::getValue)
-                .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                .thenComparing(Property::getParameterList)
                 .compare(this, o);
     }
 }

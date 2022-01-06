@@ -35,6 +35,6 @@ END:VCALENDAR\r
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components.all[0].properties.all[0].getRequiredParameter('DISPLAY').value == 'BADGE,THUMBNAIL'
+        calendar?.getComponents()[0].getProperties()[0].getRequiredParameter('DISPLAY').value == 'BADGE,THUMBNAIL'
     }
 }

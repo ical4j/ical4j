@@ -71,8 +71,8 @@ public class HCalendarParserTest extends TestCase {
         Calendar hcalCalendar = builder.build(getClass().getResourceAsStream("/samples/hcalendar/example1.html"));
         
 //        assertEquals(icsCalendar, hcalCalendar);
-        assertEquals(icsCalendar.getProperties().getAll().size(), hcalCalendar.getProperties().getAll().size());
-        assertEquals(icsCalendar.getComponents().getAll().size(), hcalCalendar.getComponents().getAll().size());
+        assertEquals(icsCalendar.getProperties().size(), hcalCalendar.getProperties().size());
+        assertEquals(icsCalendar.getComponents().size(), hcalCalendar.getComponents().size());
     }
 
 }

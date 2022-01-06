@@ -78,7 +78,7 @@ public class IndexedPropertyListTest extends TestCase {
     public void testIndexing() {
         // a VEvent for more interesting data.. 
         Component component = calendar.getComponents(Component.VEVENT).iterator().next();
-        IndexedPropertyList list = new IndexedPropertyList(component.getProperties().getAll(), Parameter.CUTYPE);
+        IndexedPropertyList list = new IndexedPropertyList(component.getProperties(), Parameter.CUTYPE);
 
         LOG.info(list.getProperties(CuType.INDIVIDUAL.getValue()).size() + " individual attendees.");
     }

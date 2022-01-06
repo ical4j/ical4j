@@ -318,15 +318,12 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         add(new Summary(summary));
     }
 
-
     /**
      * Returns the list of alarms for this event.
      * @return a component list
-     * @deprecated use {@link VEvent#getComponents()} to avoid potential {@link ClassCastException}
      */
-    @Deprecated
-    public final ComponentList<VAlarm> getAlarms() {
-        return (ComponentList<VAlarm>) components;
+    public final List<VAlarm> getAlarms() {
+        return getComponents();
     }
 
     /**
@@ -340,12 +337,12 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      */
     @Deprecated
     @Override
-    public ComponentList<Component> getComponents() {
+    public ComponentList<Component> getComponentList() {
         return (ComponentList<Component>) components;
     }
 
     @Override
-    public void setComponents(ComponentList<Component> components) {
+    public void setComponentList(ComponentList<Component> components) {
         this.components = components;
     }
 

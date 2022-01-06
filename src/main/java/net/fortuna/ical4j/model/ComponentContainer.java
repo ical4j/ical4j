@@ -5,16 +5,16 @@ import java.util.Optional;
 
 public interface ComponentContainer<T extends Component> {
 
-    ComponentList<T> getComponents();
+    ComponentList<T> getComponentList();
 
-    void setComponents(ComponentList<T> components);
+    void setComponentList(ComponentList<T> components);
 
     default <C extends T> List<C> getComponents(final String... name) {
-        return getComponents().get(name);
+        return getComponentList().get(name);
     }
 
     default <C extends T> Optional<C> getComponent(final String name) {
-        return getComponents().getFirst(name);
+        return getComponentList().getFirst(name);
     }
 
     /**
@@ -23,7 +23,7 @@ public interface ComponentContainer<T extends Component> {
      * @return a reference to this component to support method chaining
      */
     default ComponentContainer<T> add(T component) {
-        setComponents((ComponentList<T>) getComponents().add(component));
+        setComponentList((ComponentList<T>) getComponentList().add(component));
         return this;
     }
 
@@ -33,7 +33,7 @@ public interface ComponentContainer<T extends Component> {
      * @return a reference to this component to support method chaining
      */
     default ComponentContainer<T> remove(T component) {
-        setComponents((ComponentList<T>)  getComponents().remove(component));
+        setComponentList((ComponentList<T>)  getComponentList().remove(component));
         return this;
     }
 
@@ -43,7 +43,7 @@ public interface ComponentContainer<T extends Component> {
      * @return a reference to the component to support method chaining
      */
     default ComponentContainer<T> replace(T component) {
-        setComponents((ComponentList<T>)  getComponents().replace(component));
+        setComponentList((ComponentList<T>)  getComponentList().replace(component));
         return this;
     }
 }

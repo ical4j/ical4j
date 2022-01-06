@@ -57,7 +57,7 @@ public class PublishTransformer extends AbstractMethodTransformer {
 
     @Override
     public Calendar transform(Calendar object) {
-        for (CalendarComponent component : object.getComponents().getAll()) {
+        for (CalendarComponent component : object.getComponents()) {
             organizerUpdate.transform(component);
         }
         return super.transform(object);

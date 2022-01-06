@@ -61,8 +61,8 @@ public class ContentBuilderTest extends GroovyTestCase {
         }
         calendar.validate()
         
-        assert calendar.properties.all.size() == 2
-        assert calendar.components.all.size() == 1
+        assert calendar.getProperties().size() == 2
+        assert calendar.getComponents().size() == 1
         
         println(calendar)
     }

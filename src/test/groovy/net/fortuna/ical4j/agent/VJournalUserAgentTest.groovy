@@ -44,7 +44,7 @@ class VJournalUserAgentTest extends Specification {
         calendar.getRequiredProperty(Property.METHOD) == Method.PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.all.each { it.getProperty(Property.SEQUENCE).isPresent() }
+        calendar.getComponents().each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {

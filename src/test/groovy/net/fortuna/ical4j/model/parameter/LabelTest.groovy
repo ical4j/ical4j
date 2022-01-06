@@ -34,6 +34,6 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components.all[0].properties.all[0].getRequiredParameter('LABEL').value == 'Web video chat, access code=76543'
+        calendar?.getComponents()[0].getProperties()[0].getRequiredParameter('LABEL').value == 'Web video chat, access code=76543'
     }
 }

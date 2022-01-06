@@ -201,7 +201,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         // request all busy time between 1970 and now..
         VFreeBusy requestBusy = new VFreeBusy(startDate, endDate);
 
-        VFreeBusy fb = new VFreeBusy(requestBusy, calendar.getComponents().getAll());
+        VFreeBusy fb = new VFreeBusy(requestBusy, calendar.getComponents());
 
         if (log.isDebugEnabled()) {
             log.debug("\n==\n" + fb.toString());
@@ -212,7 +212,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         VFreeBusy requestFree = new VFreeBusy(startDate, endDate,
                 java.time.Duration.ofHours(2));
 
-        VFreeBusy fb2 = new VFreeBusy(requestFree, calendar.getComponents().getAll());
+        VFreeBusy fb2 = new VFreeBusy(requestFree, calendar.getComponents());
 
         if (log.isDebugEnabled()) {
             log.debug("\n==\n" + fb2.toString());
@@ -295,15 +295,15 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 
         Calendar FreeBusyTest2 = new Calendar();
 
-        VFreeBusy replyBusy = new VFreeBusy(getBusy, freeBusyTest.getComponents().getAll());
-        VFreeBusy replyFree = new VFreeBusy(requestFree, freeBusyTest.getComponents().getAll());
+        VFreeBusy replyBusy = new VFreeBusy(getBusy, freeBusyTest.getComponents());
+        VFreeBusy replyFree = new VFreeBusy(requestFree, freeBusyTest.getComponents());
 
         log.debug("REPLY BUSY: \n" + replyBusy.toString());
         log.debug("REPLY FREE: \n" + replyFree.toString());
 
         FreeBusyTest2.add(replyBusy);
-        VFreeBusy replyBusy2 = new VFreeBusy(getBusy, FreeBusyTest2.getComponents().getAll());
-        VFreeBusy replyFree2 = new VFreeBusy(requestFree, FreeBusyTest2.getComponents().getAll());
+        VFreeBusy replyBusy2 = new VFreeBusy(getBusy, FreeBusyTest2.getComponents());
+        VFreeBusy replyFree2 = new VFreeBusy(requestFree, FreeBusyTest2.getComponents());
 
         log.debug("REPLY BUSY2: \n" + replyBusy2.toString());
         log.debug("REPLY FREE2: \n" + replyFree2.toString());

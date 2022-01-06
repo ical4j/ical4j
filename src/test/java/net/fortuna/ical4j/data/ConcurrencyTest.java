@@ -62,7 +62,7 @@ public class ConcurrencyTest extends TestCase {
                     try(FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics");) {
                         Calendar calendar = new CalendarBuilder().build(fis);
                         Calendar cal = new Calendar(calendar);
-                        size.addAndGet(cal.getComponents().getAll().size());
+                        size.addAndGet(cal.getComponents().size());
                     } catch (IOException | ParserException e) {
                         e.printStackTrace();
                     }
@@ -90,7 +90,7 @@ public class ConcurrencyTest extends TestCase {
                 @Override
                 public void run() {
                     Calendar cal = new Calendar(calendar);
-                    size.addAndGet(cal.getComponents().getAll().size());
+                    size.addAndGet(cal.getComponents().size());
                 }
             });
         }

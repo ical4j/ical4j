@@ -55,7 +55,7 @@ class VEventSpec extends Specification {
 		}
 
 		expect:
-		calendar.components.all[0].components.all.size() == 1
+		calendar.getComponents()[0].components.size() == 1
 	}
 
 	def 'build event with location and resource'() {
@@ -78,6 +78,6 @@ class VEventSpec extends Specification {
 		}
 
 		expect:
-		calendar.components.all[0].components.all.size() == 2
+		calendar.getComponents()[0].components.size() == 2
 	}
 }

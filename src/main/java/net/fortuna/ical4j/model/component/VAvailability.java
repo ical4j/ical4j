@@ -40,6 +40,7 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VAvailabilityValidator;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static net.fortuna.ical4j.model.Property.*;
@@ -144,10 +145,8 @@ public class VAvailability extends CalendarComponent implements ComponentContain
     /**
      * Returns the list of available times.
      * @return a component list
-     * @deprecated use {@link ComponentContainer#getComponents()}
      */
-    @Deprecated
-    public final ComponentList<Available> getAvailable() {
+    public final List<Available> getAvailable() {
         return getComponents();
     }
 
@@ -162,12 +161,12 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      */
     @Deprecated
     @Override
-    public ComponentList<Available> getComponents() {
+    public ComponentList<Available> getComponentList() {
         return (ComponentList<Available>) components;
     }
 
     @Override
-    public void setComponents(ComponentList<Available> components) {
+    public void setComponentList(ComponentList<Available> components) {
         this.components = components;
     }
 

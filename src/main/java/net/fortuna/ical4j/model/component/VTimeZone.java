@@ -188,8 +188,9 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
     /**
      * @return Returns the types.
      */
-    public final ComponentList<Observance> getObservances() {
-        return (ComponentList<Observance>) components;
+    public final List<Observance> getObservances() {
+        return (List<Observance>) components.get(Observance.STANDARD,
+                Observance.DAYLIGHT);
     }
 
     /**
@@ -203,12 +204,12 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      */
     @Deprecated
     @Override
-    public ComponentList<Observance> getComponents() {
+    public ComponentList<Observance> getComponentList() {
         return (ComponentList<Observance>) components;
     }
 
     @Override
-    public void setComponents(ComponentList<Observance> components) {
+    public void setComponentList(ComponentList<Observance> components) {
         this.components = components;
     }
 
@@ -219,7 +220,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * observances
      */
     public final Observance getApplicableObservance(final Temporal date) {
-        return getApplicableObservance(date, getObservances().getAll());
+        return getApplicableObservance(date, getObservances());
     }
 
     /**

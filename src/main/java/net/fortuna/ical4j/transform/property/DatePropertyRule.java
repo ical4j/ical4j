@@ -16,7 +16,7 @@ public class DatePropertyRule implements Rfc5545PropertyRule<DateProperty> {
         if (!element.isUtc() || !element.getParameter(Parameter.TZID).isPresent()) {
             return;
         }
-        element.getParameters().getAll().removeIf(p -> p.getName().equals(Parameter.TZID));
+        element.getParameters().removeIf(p -> p.getName().equals(Parameter.TZID));
     }
 
     @Override

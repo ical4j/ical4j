@@ -68,7 +68,7 @@ public class DeclineCounterTransformer extends AbstractMethodTransformer {
         if (!method.isPresent() || !Method.COUNTER.equals(method.get())) {
             throw new IllegalArgumentException("Expecting COUNTER method in source");
         }
-        for (CalendarComponent component : object.getComponents().getAll()) {
+        for (CalendarComponent component : object.getComponents()) {
             organizerUpdate.transform(component);
             componentMethodTransformer.transform(component);
         }

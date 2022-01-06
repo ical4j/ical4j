@@ -100,14 +100,14 @@ public final class Calendars {
     public static Calendar merge(final Calendar c1, final Calendar c2) {
         List<Property> mergedProperties = new ArrayList<>();
         List<CalendarComponent> mergedComponents = new ArrayList<>();
-        mergedProperties.addAll(c1.getProperties().getAll());
-        for (final Property p : c2.getProperties().getAll()) {
+        mergedProperties.addAll(c1.getProperties());
+        for (final Property p : c2.getProperties()) {
             if (!mergedProperties.contains(p)) {
                 mergedProperties.add(p);
             }
         }
-        mergedComponents.addAll(c1.getComponents().getAll());
-        for (final CalendarComponent c : c2.getComponents().getAll()) {
+        mergedComponents.addAll(c1.getComponents());
+        for (final CalendarComponent c : c2.getComponents()) {
             if (!mergedComponents.contains(c)) {
                 mergedComponents.add(c);
             }
@@ -141,8 +141,8 @@ public final class Calendars {
     public static Calendar[] split(final Calendar calendar) {
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
-        if (calendar.getComponents().getAll().size() <= 1
-                || calendar.getComponents(Component.VTIMEZONE).size() == calendar.getComponents().getAll().size()) {
+        if (calendar.getComponents().size() <= 1
+                || calendar.getComponents(Component.VTIMEZONE).size() == calendar.getComponents().size()) {
             return new Calendar[] {calendar};
         }
         
@@ -151,7 +151,7 @@ public final class Calendars {
         		timezoneList, Property.TZID);
         
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
-        for (final CalendarComponent c : calendar.getComponents().getAll()) {
+        for (final CalendarComponent c : calendar.getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
             }
@@ -161,16 +161,16 @@ public final class Calendars {
                 Calendar uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
                     // remove METHOD property for split calendars..
-                    PropertyList splitProps = (PropertyList) calendar.getProperties().removeAll(Property.METHOD);
+                    PropertyList splitProps = (PropertyList) calendar.getPropertyList().removeAll(Property.METHOD);
                     uidCal = new Calendar(splitProps, new ComponentList<>());
                     calendars.put(uid.get(), uidCal);
                 }
 
-                for (final Property p : c.getProperties().getAll()) {
+                for (final Property p : c.getProperties()) {
                     final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
-                        if (!uidCal.getComponents().getAll().contains(timezone)) {
+                        if (!uidCal.getComponents().contains(timezone)) {
                             uidCal.add(timezone);
                         }
                     }
@@ -191,7 +191,7 @@ public final class Calendars {
     @Deprecated
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
-        for (final Component c : calendar.getComponents().getAll()) {
+        for (final Component c : calendar.getComponents()) {
             for (final Property foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");

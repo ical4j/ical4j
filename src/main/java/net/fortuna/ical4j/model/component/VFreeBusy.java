@@ -525,12 +525,12 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      */
     @Deprecated
     @Override
-    public ComponentList<Component> getComponents() {
+    public ComponentList<Component> getComponentList() {
         return (ComponentList<Component>) components;
     }
 
     @Override
-    public void setComponents(ComponentList<Component> components) {
+    public void setComponentList(ComponentList<Component> components) {
         this.components = components;
     }
 

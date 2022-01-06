@@ -365,7 +365,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         ZonedDateTime end = start.plusWeeks(4);
 
         //Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
-        calendar.getComponents().getAll().forEach(calendarComponent -> {
+        calendar.getComponents().forEach(calendarComponent -> {
             if (calendarComponent instanceof VEvent) {
                 List<Period<ZonedDateTime>> consumed = ((VEvent) calendarComponent).getConsumedTime(
                         new Period<>(start, end));

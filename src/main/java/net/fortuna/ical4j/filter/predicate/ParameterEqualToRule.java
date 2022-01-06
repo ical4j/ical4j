@@ -49,7 +49,7 @@ public class ParameterEqualToRule<T extends Parameter> implements Predicate<Prop
 
     @Override
     public final boolean test(final Property property) {
-        for (Parameter p : property.getParameters().getAll()) {
+        for (Parameter p : property.getParameters()) {
             if (comparable.compareTo(p) == 0) {
                 return true;
             }

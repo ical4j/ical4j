@@ -135,7 +135,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         Filter<CalendarComponent> filter = new Filter<>(new PeriodRule<>(period));
 //        ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
 //        assertTrue(!filtered.isEmpty());
-        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents().getAll()));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
 
         //testFilteringAllDayEvents..
         LocalDate jan25 = LocalDate.now().withMonth(1).withDayOfMonth(25);
@@ -164,13 +164,13 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
                 .withHour(9).withMinute(0).withSecond(0);
         period = new Period<>(startDt, java.time.Period.ofWeeks(1));
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents().getAll()));
+        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents()));
 
         // Test exclusion of particular date patterns..
         exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/valid/friday13-NOT.ics"));
         period = new Period<>(startDt, java.time.Period.ofWeeks(52));
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents().getAll()));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents()));
 
         // Asia/Singapore test..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);

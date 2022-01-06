@@ -37,7 +37,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
         methodUpdate.transform(object);
 
         Optional<Uid> uid = Optional.empty();
-        for (CalendarComponent component : object.getComponents().getAll()) {
+        for (CalendarComponent component : object.getComponents()) {
             uidUpdate.transform(component);
             if (!uid.isPresent()) {
                 uid = component.getProperty(Property.UID);
@@ -46,7 +46,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
             }
 
             ComponentGroup<CalendarComponent> componentGroup = new ComponentGroup<>(
-                    object.getComponents().getAll(), uid.get());
+                    object.getComponents(), uid.get());
 
             // if a calendar component has already been published previously
             // update the sequence number..

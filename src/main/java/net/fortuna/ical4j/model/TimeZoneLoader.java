@@ -110,7 +110,7 @@ public class TimeZoneLoader {
 
         addTransitionRules(zoneId, rawTimeZoneOffsetInSeconds, timezone);
 
-        if (timezone.getObservances() == null || timezone.getObservances().getAll().isEmpty()) {
+        if (timezone.getObservances() == null || timezone.getObservances().isEmpty()) {
             timezone.add(NO_TRANSITIONS);
         }
 

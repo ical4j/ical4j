@@ -164,13 +164,13 @@ public class CalendarsTest extends TestCase {
         }
 
         for (Calendar value : calendars) {
-            for (Property p : value.getProperties().getAll()) {
+            for (Property p : value.getProperties()) {
                 assertTrue("Property [" + p + "] not found in merged calendar",
-                        result.getProperties().getAll().contains(p));
+                        result.getProperties().contains(p));
             }
-            for (Component c : value.getComponents().getAll()) {
+            for (Component c : value.getComponents()) {
                 assertTrue("Component [" + c + "] not found in merged calendar",
-                        result.getComponents().getAll().contains(c));
+                        result.getComponents().contains(c));
             }
         }
     }

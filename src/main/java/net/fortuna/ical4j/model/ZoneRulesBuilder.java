@@ -95,7 +95,7 @@ public class ZoneRulesBuilder {
                 vTimeZone.getComponents(Observance.DAYLIGHT));
         Collections.sort(offsetTransitions);
         Set<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(
-                vTimeZone.getObservances().getAll(), standardOffset);
+                vTimeZone.getObservances(), standardOffset);
 
         return ZoneRules.of(standardOffset, wallOffset, standardOffsetTransitions, offsetTransitions, new ArrayList<>(transitionRules));
     }

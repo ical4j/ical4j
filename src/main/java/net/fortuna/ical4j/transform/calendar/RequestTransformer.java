@@ -74,7 +74,7 @@ public class RequestTransformer extends AbstractMethodTransformer {
     @Override
     public Calendar transform(Calendar object) {
         if (organizerUpdate != null) {
-            for (CalendarComponent component : object.getComponents().getAll()) {
+            for (CalendarComponent component : object.getComponents()) {
                 organizerUpdate.transform(component);
             }
         }

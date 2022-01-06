@@ -51,7 +51,7 @@ class CalendarSpec extends Specification {
         def merged = calendar.merge(calendar2)
 
         then: 'a combined calendar is the result'
-        merged.components.all.size() == 2
+        merged.getComponents().size() == 2
     }
 
     def 'test calendar split'() {

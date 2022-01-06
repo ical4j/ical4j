@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.ContentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 
@@ -29,7 +30,7 @@ public class VEventValidator extends ComponentValidator<VEvent> {
         if (alarmsAllowed) {
             target.getComponents(Component.VALARM).forEach(a -> ComponentValidator.VALARM_ITIP.validate((VAlarm) a));
         } else {
-            ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
+            ContentValidator.assertNone(Component.VALARM, target.getAlarms(), false);
         }
     }
 }

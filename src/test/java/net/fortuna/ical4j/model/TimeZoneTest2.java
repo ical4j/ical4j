@@ -44,7 +44,7 @@ public class TimeZoneTest2 {
            END:STANDARD
         */
 
-        for (Observance obs : karachi.getVTimeZone().getObservances().getAll()) {
+        for (Observance obs : karachi.getVTimeZone().getObservances()) {
             System.err.print("Found observance: " + obs.toString());
             System.err.println("Latest onset: " + obs.getLatestOnset(dt1));
             System.err.println();

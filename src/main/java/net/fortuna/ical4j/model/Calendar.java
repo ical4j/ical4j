@@ -197,6 +197,10 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 Strings.LINE_SEPARATOR;
     }
 
+    public <C extends CalendarComponent> List<C> getComponents() {
+        return ComponentContainer.super.getComponents();
+    }
+
     /**
      * @return Returns the components.
      * @deprecated to avoid confusion with how to mutate a ComponentList from v4.x onwards this method is temporarily
@@ -207,13 +211,17 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     @Deprecated
     @Override
-    public final ComponentList<CalendarComponent> getComponents() {
+    public final ComponentList<CalendarComponent> getComponentList() {
         return components;
     }
 
     @Override
-    public void setComponents(ComponentList<CalendarComponent> components) {
+    public void setComponentList(ComponentList<CalendarComponent> components) {
         this.components = components;
+    }
+
+    public <T extends Property> List<T> getProperties() {
+        return PropertyContainer.super.getProperties();
     }
 
     /**
@@ -227,7 +235,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     @Deprecated
     @Override
-    public final PropertyList getProperties() {
+    public final PropertyList getPropertyList() {
         return properties;
     }
 
@@ -302,8 +310,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public Calendar merge(final Calendar c2) {
         List<Property> mergedProperties = new ArrayList<>();
         List<CalendarComponent> mergedComponents = new ArrayList<>();
-        mergedProperties.addAll(getProperties().getAll());
-        for (final Property p : c2.getProperties().getAll()) {
+        mergedProperties.addAll(getProperties());
+        for (final Property p : c2.getProperties()) {
             if (!mergedProperties.contains(p)) {
                 mergedProperties.add(p);
             }
@@ -345,12 +353,12 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 Calendar uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
                     // remove METHOD property for split calendars..
-                    PropertyList splitProps = (PropertyList) getProperties().removeAll(Property.METHOD);
+                    PropertyList splitProps = (PropertyList) getPropertyList().removeAll(Property.METHOD);
                     uidCal = new Calendar(splitProps, new ComponentList<>());
                     calendars.put(uid.get(), uidCal);
                 }
 
-                for (final Property p : c.getProperties().getAll()) {
+                for (final Property p : c.getProperties()) {
                     final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());

@@ -185,6 +185,10 @@ public abstract class Component extends Content implements Serializable, Propert
         return properties.toString();
     }
 
+    public <T extends Property> List<T> getProperties() {
+        return PropertyContainer.super.getProperties();
+    }
+
     /**
      * @return Returns the properties.
      * @deprecated to avoid confusion with how to mutate a PropertyList from v4.x onwards this method is temporarily
@@ -196,7 +200,7 @@ public abstract class Component extends Content implements Serializable, Propert
      */
     @Deprecated
     @Override
-    public final PropertyList getProperties() {
+    public final PropertyList getPropertyList() {
         return properties;
     }
 
@@ -228,7 +232,7 @@ public abstract class Component extends Content implements Serializable, Propert
      * @throws ValidationException where any of the component properties is not in a valid state
      */
     protected final void validateProperties() throws ValidationException {
-        for (final Property property : getProperties().getAll()) {
+        for (final Property property : getProperties()) {
             property.validate();
         }
     }

@@ -45,6 +45,6 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components.all[0].properties.all[0].getRequiredParameter('FEATURE').value == 'AUDIO'
+        calendar?.getComponents()[0].getProperties()[0].getRequiredParameter('FEATURE').value == 'AUDIO'
     }
 }

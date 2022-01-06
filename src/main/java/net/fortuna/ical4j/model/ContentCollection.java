@@ -29,10 +29,20 @@ public interface ContentCollection<T extends Content> extends Serializable {
 
     List<T> getAll();
 
+    /**
+     * Return a list of elements filtered by name. If no names are specified return all elements.
+     * @param names a list of zero or more names to match
+     * @param <R> content type
+     * @return a list of elements less than or equal to the elements in this collection
+     */
     @SuppressWarnings("unchecked")
     default <R extends T> List<R> get(String... names) {
-        List<String> filter = Arrays.asList(names);
-        return getAll().stream().filter(c -> filter.contains(c.getName())).map(c -> (R) c).collect(Collectors.toList());
+        if (names.length > 0) {
+            List<String> filter = Arrays.stream(names).map(String::toUpperCase).collect(Collectors.toList());
+            return getAll().stream().filter(c -> filter.contains(c.getName())).map(c -> (R) c).collect(Collectors.toList());
+        } else {
+            return (List<R>) getAll();
+        }
     }
 
     @SuppressWarnings("unchecked")

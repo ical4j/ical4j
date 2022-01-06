@@ -236,7 +236,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     @Override
     public Calendar refresh(VEvent component) {
         Calendar refresh = wrap(Method.REFRESH, component.copy());
-//        componentTransformers.get(Method.REFRESH).transform(refresh.getComponents().getAll());
+//        componentTransformers.get(Method.REFRESH).transform(refresh.getComponents());
         refresh.validate();
         return refresh;
     }
