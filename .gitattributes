@@ -1,0 +1,5 @@
+*.ics text eol=crlf
+
+test-relaxed-parsing.ics text eol=lf
+japan_west.ics text eol=lf
+talios.ics text eol=lf

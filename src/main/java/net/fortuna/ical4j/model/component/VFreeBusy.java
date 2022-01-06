@@ -34,11 +34,13 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.*;
+import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.component.VFreeBusyValidator;
 
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -486,70 +488,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      */
     @Override
     public final void validate(final boolean recurse) throws ValidationException {
-
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once contact / dtstart / dtend / duration /
-         * dtstamp / organizer / uid / url /
-         */
-        Arrays.asList(Property.CONTACT, Property.DTSTART, Property.DTEND, Property.DURATION,
-                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL).forEach(parameter -> PropertyValidator.assertOneOrLess(parameter, getProperties()));
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attendee / comment / freebusy / rstatus / x-prop
-         */
-
-        /*
-         * The recurrence properties ("RRULE", "EXRULE", "RDATE", "EXDATE") are not permitted within a "VFREEBUSY"
-         * calendar component. Any recurring events are resolved into their individual busy time periods using the
-         * "FREEBUSY" property.
-         */
-        Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> PropertyValidator.assertNone(property, getProperties()));
-
-        // DtEnd value must be later in time that DtStart..
-        final DtStart dtStart = getProperty(Property.DTSTART);
-
-        // 4.8.2.4 Date/Time Start:
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    start date and time for the free or busy time information. The time
-        //    MUST be specified in UTC time.
-        if (dtStart != null && !dtStart.isUtc()) {
-            throw new ValidationException("DTSTART must be specified in UTC time");
-        }
-
-        final DtEnd dtEnd = getProperty(Property.DTEND);
-
-        // 4.8.2.2 Date/Time End
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    end date and time for the free or busy time information. The time
-        //    MUST be specified in the UTC time format. The value MUST be later in
-        //    time than the value of the "DTSTART" property.
-        if (dtEnd != null && !dtEnd.isUtc()) {
-            throw new ValidationException("DTEND must be specified in UTC time");
-        }
-
-        if (dtStart != null && dtEnd != null
-                && !dtStart.getDate().before(dtEnd.getDate())) {
-            throw new ValidationException("Property [" + Property.DTEND
-                    + "] must be later in time than [" + Property.DTSTART + "]");
-        }
-
+        new VFreeBusyValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

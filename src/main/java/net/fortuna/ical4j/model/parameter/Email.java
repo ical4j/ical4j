@@ -4,9 +4,12 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
 
 /**
  * From specification:
@@ -56,7 +59,11 @@ public class Email extends Parameter implements Encodable {
 
     public Email(String address) throws AddressException {
         super(PARAMETER_NAME, new Factory());
-        this.address = InternetAddress.parse(address)[0];
+        if (CompatibilityHints.isHintEnabled(KEY_RELAXED_PARSING)) {
+            this.address = InternetAddress.parse(address.replaceFirst("\\.$", ""), false)[0];
+        } else {
+            this.address = InternetAddress.parse(address)[0];
+        }
     }
 
     @Override

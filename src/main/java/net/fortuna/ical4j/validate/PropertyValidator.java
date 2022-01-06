@@ -32,12 +32,15 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static net.fortuna.ical4j.validate.Validator.assertFalse;
+import static net.fortuna.ical4j.model.Parameter.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [15-May-2004]
@@ -46,99 +49,109 @@ import static net.fortuna.ical4j.validate.Validator.assertFalse;
  *
  * @author Ben Fortuna
  */
-public final class PropertyValidator implements Validator<Property> {
+public final class PropertyValidator<T extends Property> implements Validator<T> {
 
-    public static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
+    public static final Validator<Attach> ATTACH = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, FMTTYPE));
 
-    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
+    public static final Validator<Attendee> ATTENDEE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, CUTYPE, MEMBER, ROLE, PARTSTAT,
+                    RSVP, DELEGATED_TO, DELEGATED_FROM, SENT_BY, CN, DIR, LANGUAGE, SCHEDULE_AGENT, SCHEDULE_STATUS));
 
-    public static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
+    public static final Validator<Categories> CATEGORIES = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
 
-    public static final String ASSERT_ONE_OR_MORE_MESSAGE = "Property [{0}] must be specified at least once";
+    public static final Validator<Comment> COMMENT = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<Contact> CONTACT = new PropertyValidator<>(
+            new ValidationRule(ValidationRule.ValidationType.OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<Country> COUNTRY = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ABBREV));
+
+    public static final Validator<Description> DESCRIPTION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<ExDate> EXDATE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, VALUE, TZID));
+
+    public static final Validator<FreeBusy> FREEBUSY = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, FBTYPE));
+
+    public static final Validator<Location> LOCATION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE, VVENUE));
+
+    public static final Validator<LocationType> LOCATION_TYPE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
+
+    public static final Validator<Organizer> ORGANIZER = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, CN, DIR, SENT_BY, LANGUAGE, SCHEDULE_STATUS));
+
+    public static final Validator<RDate> RDATE = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, VALUE, TZID));
+
+    public static final Validator<RecurrenceId> RECURRENCE_ID = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, RANGE));
+
+    public static final Validator<Region> REGION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ABBREV));
+
+    public static final Validator<RelatedTo> RELATED_TO = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, RELTYPE));
+
+    public static final Validator<RequestStatus> REQUEST_STATUS = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
+
+    public static final Validator<Resources> RESOURCES = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<RRule> RRULE = new PropertyValidator<>(
+            new ValidationRule(None, TZID));
+
+    public static final Validator<StructuredData> STRUCTURED_DATA = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, FMTTYPE, SCHEMA));
+
+    public static final Validator<StyledDescription> STYLED_DESCRIPTION = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, FMTTYPE, LANGUAGE));
+
+    public static final Validator<Summary> SUMMARY = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, ALTREP, LANGUAGE));
+
+    public static final Validator<Tel> TEL = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, TYPE));
+
+    public static final Validator<Trigger> TRIGGER = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, RELATED));
+
+    public static final Validator<TzName> TZ_NAME = new PropertyValidator<>(
+            new ValidationRule(OneOrLess, LANGUAGE));
 
     private final List<ValidationRule> rules;
 
+    public PropertyValidator(ValidationRule... rules) {
+        this(Arrays.asList(rules));
+    }
+    
     public PropertyValidator(List<ValidationRule> rules) {
         this.rules = rules;
     }
 
     @Override
     public void validate(Property target) throws ValidationException {
+        ValidationResult result = new ValidationResult();
         for (ValidationRule rule : rules) {
             boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                     && rule.isRelaxedModeSupported();
 
-            switch (rule.getType()) {
-                case None:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameter(s) != null,
-                            ParameterValidator.ASSERT_NONE_MESSAGE, warnOnly, target.getParameters(), s));
-                    break;
-                case One:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameters(s).size() != 1,
-                            ParameterValidator.ASSERT_ONE_MESSAGE, warnOnly, target.getParameters(), s));
-                    break;
-                case OneOrLess:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameters(s).size() > 1,
-                            ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE, warnOnly, target.getParameters(), s));
-                    break;
+            if (warnOnly) {
+                result.getWarnings().addAll(apply(rule, target));
+            } else {
+                result.getErrors().addAll(apply(rule, target));
             }
         }
-    }
-
-    /**
-     * Ensure a property occurs no more than once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property occurs more than once
-     */
-    public static void assertOneOrLess(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
-                properties, propertyName);
-    }
-
-    /**
-     * Ensure a property occurs at least once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property occurs more than once
-     */
-    public static void assertOneOrMore(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() < 1, ASSERT_ONE_OR_MORE_MESSAGE, false,
-                properties, propertyName);
-    }
-
-    /**
-     * Ensure a property occurs once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property does not occur once
-     */
-    public static void assertOne(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() != 1, ASSERT_ONE_MESSAGE, false,
-                properties, propertyName);
-    }
-    
-    /**
-     * Ensure a property doesn't occur in the specified list.
-     * @param propertyName the name of a property
-     * @param properties a list of properties
-     * @throws ValidationException thrown when the specified property
-     * is found in the list of properties
-     */
-    public static void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperty(propertyName) != null, ASSERT_NONE_MESSAGE, false,
-                properties, propertyName);
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
     }
 }

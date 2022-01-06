@@ -36,17 +36,11 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
-
-import static net.fortuna.ical4j.model.Parameter.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -64,11 +58,6 @@ public class StyledDescription extends Property implements Encodable {
     private String value;
     private URI uriValue;
 
-    private final Validator<Property> validator = new PropertyValidator(
-            Arrays.asList(
-                    new ValidationRule(OneOrLess, ALTREP,
-                                       FMTTYPE,
-                                       LANGUAGE)));
     /**
      * Default constructor.
      */
@@ -120,7 +109,7 @@ public class StyledDescription extends Property implements Encodable {
 
     @Override
     public void validate() throws ValidationException {
-        validator.validate(this);
+        PropertyValidator.STYLED_DESCRIPTION.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<StyledDescription> {

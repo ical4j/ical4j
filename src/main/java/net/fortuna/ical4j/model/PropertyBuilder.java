@@ -6,7 +6,7 @@ import org.apache.commons.codec.DecoderException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,11 +25,24 @@ public class PropertyBuilder extends AbstractContentBuilder {
     private ParameterList parameters = new ParameterList();
 
     public PropertyBuilder() {
-        this(Collections.emptyList());
+        this(new ArrayList<>());
     }
 
     public PropertyBuilder(List<PropertyFactory<? extends Property>> factories) {
         this.factories = factories;
+    }
+
+    /**
+     * Set the list of property factories supporting this builder instance.
+     * @param factories a list of property factories
+     * @return the builder instance
+     * @deprecated preference the constructor option for specifying factories
+     */
+    @Deprecated
+    public PropertyBuilder factories(List<PropertyFactory<?>> factories) {
+        this.factories.clear();
+        this.factories.addAll(factories);
+        return this;
     }
 
     public PropertyBuilder name(String name) {

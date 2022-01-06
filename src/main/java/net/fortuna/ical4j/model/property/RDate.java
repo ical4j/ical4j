@@ -34,7 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -200,29 +200,15 @@ public class RDate extends DateListProperty {
      */
     @Override
     public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE" /
-         * "PERIOD")) / (";" tzidparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
+        PropertyValidator.RDATE.validate(this);
 
         final Parameter valueParam = getParameter(Parameter.VALUE);
-
         if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
                 && !Value.DATE.equals(valueParam)
                 && !Value.PERIOD.equals(valueParam)) {
             throw new ValidationException("Parameter [" + Parameter.VALUE
                     + "] is invalid");
         }
-
-        ParameterValidator.assertOneOrLess(Parameter.TZID,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**

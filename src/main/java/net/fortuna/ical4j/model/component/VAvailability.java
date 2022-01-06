@@ -32,17 +32,11 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-
-import java.util.Arrays;
+import net.fortuna.ical4j.validate.component.VAvailabilityValidator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -147,89 +141,8 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      * {@inheritDoc}
      */
     @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getAvailable() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        // validate that getAvailable() only contains Available components
-//        final Iterator<Available> iterator = getAvailable().iterator();
-//        while (iterator.hasNext()) {
-//            final Component component = (Component) iterator.next();
-//
-//            if (!(component instanceof Available)) {
-//                throw new ValidationException("Component ["
-//                        + component.getName() + "] may not occur in VAVAILABILITY");
-//            }
-//        }
-
-        /*
-         * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
-         */
-        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(parameter -> PropertyValidator.assertOne(parameter, getProperties()));
-
-        /*       If specified, the "DTSTART" and "DTEND" properties in
-         *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
-         *      "DATE-TIME" values specified as either date with UTC time or date
-         *      with local time and a time zone reference.
-         */
-        final DtStart start = getProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
-            throw new ValidationException("Property [" + Property.DTSTART
-                    + "] must be a " + Value.DATE_TIME);
-        }
-
-        /*
-         * ; either 'dtend' or 'duration' may appear in ; a 'eventprop', but 'dtend' and 'duration' ; MUST NOT occur in
-         * the same 'eventprop' dtend / duration /
-         */
-        if (getProperty(Property.DTEND) != null) {
-            PropertyValidator.assertOne(Property.DTEND,
-                    getProperties());
-            /* Must be DATE_TIME */
-            final DtEnd end = getProperty(Property.DTEND);
-            if (Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
-                throw new ValidationException("Property [" + Property.DTEND
-                        + "] must be a " + Value.DATE_TIME);
-            }
-
-            if (getProperty(Property.DURATION) != null) {
-                throw new ValidationException("Only one of Property [" + Property.DTEND
-                        + "] or [" + Property.DURATION +
-                        " must appear a VAVAILABILITY");
-            }
-        }
-
-        /*
-         *                ; the following are optional,
-         *                ; but MUST NOT occur more than once
-         *
-         *                  busytype / created / last-mod /
-         *                  organizer / seq / summary / url /
-         */
-        Arrays.asList(Property.BUSYTYPE, Property.CREATED, Property.LAST_MODIFIED,
-                Property.ORGANIZER, Property.SEQUENCE, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once
-         *                 categories / comment / contact / x-prop
-         */
-
+    public final void validate(final boolean recurse) throws ValidationException {
+        new VAvailabilityValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

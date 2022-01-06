@@ -33,10 +33,12 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.*;
+import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.component.VJournalValidator;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -158,46 +160,8 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        if (!CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
-         * dtstamp / last-mod / organizer / recurid / seq / status / summary / uid / url /
-         */
-        Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION, Property.DTSTART,
-                Property.DTSTAMP, Property.LAST_MODIFIED, Property.ORGANIZER, Property.RECURRENCE_ID, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
-
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property ["
-                    + status.toString() + "] may not occur in VJOURNAL");
-        }
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
-         * contact / exdate / exrule / related / rdate / rrule / rstatus / x-prop
-         */
-
+    public final void validate(final boolean recurse) throws ValidationException {
+        new VJournalValidator().validate(this);
         if (recurse) {
             validateProperties();
         }

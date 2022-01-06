@@ -195,15 +195,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     @Override
     public final String toString() {
-        return BEGIN +
-                ':' +
-                VCALENDAR +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getComponents() +
-                END +
-                ':' +
-                VCALENDAR +
+        return BEGIN + ':' + VCALENDAR + Strings.LINE_SEPARATOR + properties + components + END + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR;
     }
 
@@ -302,7 +294,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
         if (arg0 instanceof Calendar) {
             final Calendar calendar = (Calendar) arg0;
             return new EqualsBuilder().append(getProperties(), calendar.getProperties())
-                .append(getComponents(), calendar.getComponents()).isEquals();
+                .append(components, calendar.components).isEquals();
         }
         return super.equals(arg0);
     }
@@ -312,7 +304,6 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder().append(getProperties()).append(
-                getComponents()).toHashCode();
+        return new HashCodeBuilder().append(properties).append(components).toHashCode();
     }
 }

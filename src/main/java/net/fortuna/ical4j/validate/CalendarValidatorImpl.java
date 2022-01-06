@@ -3,6 +3,7 @@ package net.fortuna.ical4j.validate;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -31,43 +32,29 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
     @Override
     public void validate(Calendar target) throws ValidationException {
-        for (ValidationRule rule : rules) {
-            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
-                    && rule.isRelaxedModeSupported()) {
-                continue;
-            }
+        ValidationResult result = new ValidationResult();
 
-            switch (rule.getType()) {
-                case None:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertNone(s,
-                            target.getProperties()));
-                    break;
-                case One:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertOne(s,
-                            target.getProperties()));
-                    break;
-                case OneOrLess:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertOneOrLess(s,
-                            target.getProperties()));
-                    break;
-                case OneOrMore:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertOneOrMore(s,
-                            target.getProperties()));
-                    break;
+        for (ValidationRule rule : rules) {
+            boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                    && rule.isRelaxedModeSupported();
+
+            if (warnOnly) {
+                result.getWarnings().addAll(apply(rule, (PropertyContainer) target));
+            } else {
+                result.getErrors().addAll(apply(rule, (PropertyContainer) target));
             }
         }
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
             if (!Version.VERSION_2_0.equals(target.getProperty(Property.VERSION))) {
-                throw new ValidationException("Unsupported Version: " + target.getProperty(Property.VERSION).getValue());
+                result.getErrors().add("Unsupported Version: " + target.getProperty(Property.VERSION).getValue());
             }
         }
 
         // must contain at least one component
         if (target.getComponents().isEmpty()) {
-            throw new ValidationException(
-                    "Calendar must contain at least one component");
+            result.getErrors().add("Calendar must contain at least one component");
         }
 
         // validate properties..
@@ -75,7 +62,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
             boolean isCalendarProperty = calendarProperties.stream().filter(calProp -> calProp.isInstance(property)) != null;
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
-                throw new ValidationException("Invalid property: " + property.getName());
+                result.getErrors().add("Invalid property: " + property.getName());
             }
         }
 
@@ -113,6 +100,10 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
             for (CalendarComponent component : target.getComponents()) {
                 component.validate(method);
             }
+        }
+
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
         }
     }
 

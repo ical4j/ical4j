@@ -33,9 +33,7 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
@@ -43,7 +41,6 @@ import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -245,56 +242,12 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      * {@inheritDoc}
      */
     @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getAlarms() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
+    public final void validate(final boolean recurse) throws ValidationException {
+        ComponentValidator.VTODO.validate(this);
         // validate that getAlarms() only contains VAlarm components
         for (VAlarm component : getAlarms()) {
             component.validate(recurse);
         }
-
-        if (!CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once class / completed / created / description /
-         * dtstamp / dtstart / geo / last-mod / location / organizer / percent / priority / recurid / seq / status /
-         * summary / uid / url /
-         */
-        Arrays.asList(Property.CLASS, Property.COMPLETED, Property.CREATED, Property.DESCRIPTION,
-                Property.DTSTAMP, Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
-                Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RECURRENCE_ID, Property.SEQUENCE, Property.STATUS,
-                Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
@@ -304,24 +257,6 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
             throw new ValidationException("Status property ["
                     + status.toString() + "] may not occur in VTODO");
         }
-
-        /*
-         * ; either 'due' or 'duration' may appear in ; a 'todoprop', but 'due' and 'duration' ; MUST NOT occur in the
-         * same 'todoprop' due / duration /
-         */
-        try {
-            PropertyValidator.assertNone(Property.DUE,
-                    getProperties());
-        }
-        catch (ValidationException ve) {
-            PropertyValidator.assertNone(Property.DURATION,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
-         * contact / exdate / exrule / rstatus / related / resources / rdate / rrule / x-prop
-         */
 
         if (recurse) {
             validateProperties();

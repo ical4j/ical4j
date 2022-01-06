@@ -34,17 +34,10 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-
-import static java.util.Collections.singletonList;
-import static net.fortuna.ical4j.model.Parameter.ALTREP;
-import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -107,9 +100,6 @@ public class Summary extends Property implements Encodable {
 
     private String value;
 
-    private static final Validator<Property> validator = new PropertyValidator(singletonList(
-            new ValidationRule(OneOrLess, ALTREP, LANGUAGE)));
-
     /**
      * Default constructor.
      */
@@ -152,7 +142,7 @@ public class Summary extends Property implements Encodable {
 
     @Override
     public void validate() throws ValidationException {
-        validator.validate(this);
+        PropertyValidator.SUMMARY.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

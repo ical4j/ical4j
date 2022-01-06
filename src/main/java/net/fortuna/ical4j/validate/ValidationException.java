@@ -44,11 +44,22 @@ public class ValidationException extends RuntimeException {
     
     private static final long serialVersionUID = 309245291364742896L;
 
+    private final ValidationResult result;
+
     /**
      * Default constructor.
      */
     public ValidationException() {
-        super();
+        this(new ValidationResult());
+    }
+
+    /**
+     * Constructor with message.
+     * @param result a validation result
+     */
+    public ValidationException(ValidationResult result) {
+        super(result.toString());
+        this.result = result;
     }
 
     /**
@@ -56,7 +67,7 @@ public class ValidationException extends RuntimeException {
      * @param message a message
      */
     public ValidationException(final String message) {
-        super(message);
+        this(new ValidationResult(message));
     }
 
     /**
@@ -65,6 +76,10 @@ public class ValidationException extends RuntimeException {
      * @param args message arguments
      */
     public ValidationException(final String message, Object[] args) {
-        super(MessageFormat.format(message, args));
+        this(new ValidationResult(MessageFormat.format(message, args)));
+    }
+
+    public ValidationResult getResult() {
+        return result;
     }
 }

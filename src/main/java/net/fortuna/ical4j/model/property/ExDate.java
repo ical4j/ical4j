@@ -33,7 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -91,13 +91,7 @@ public class ExDate extends DateListProperty {
      */
     @Override
     public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
+        PropertyValidator.EXDATE.validate(this);
 
         final Parameter valueParam = getParameter(Parameter.VALUE);
 
@@ -106,13 +100,6 @@ public class ExDate extends DateListProperty {
             throw new ValidationException("Parameter [" + Parameter.VALUE
                     + "] is invalid");
         }
-
-        ParameterValidator.assertOneOrLess(Parameter.TZID,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

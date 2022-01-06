@@ -31,17 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
 
 /**
  * $Id$
@@ -115,25 +117,7 @@ public class Attendee extends Property {
      */
     @Override
     public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" cutypeparam) / (";"memberparam) / (";"
-         * roleparam) / (";" partstatparam) / (";" rsvpparam) / (";" deltoparam) / (";" delfromparam) / (";"
-         * sentbyparam) / (";"cnparam) / (";" dirparam) / (";" languageparam) /
-         */
-        Arrays.asList(Parameter.CUTYPE, Parameter.MEMBER, Parameter.ROLE, Parameter.PARTSTAT,
-                Parameter.RSVP, Parameter.DELEGATED_TO, Parameter.DELEGATED_FROM, Parameter.SENT_BY, Parameter.CN,
-                Parameter.DIR, Parameter.LANGUAGE).forEach(parameter -> ParameterValidator.assertOneOrLess(parameter, getParameters()));
-
-        /* scheduleagent and schedulestatus added for CalDAV scheduling
-         */
-        ParameterValidator.assertOneOrLess(Parameter.SCHEDULE_AGENT,
-                getParameters());
-        ParameterValidator.assertOneOrLess(Parameter.SCHEDULE_STATUS,
-                getParameters());
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+        PropertyValidator.ATTENDEE.validate(this);
     }
 
     /**

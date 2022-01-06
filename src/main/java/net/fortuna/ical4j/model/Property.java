@@ -450,8 +450,8 @@ public abstract class Property extends Content implements Comparable<Property> {
     public final String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
-        if (getParameters() != null) {
-            buffer.append(getParameters());
+        if (parameters != null) {
+            buffer.append(parameters);
         }
         buffer.append(':');
         String value;

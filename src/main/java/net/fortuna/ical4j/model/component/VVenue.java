@@ -31,14 +31,14 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-
-import java.util.Arrays;
 
 /**
  * $Id $ [Apr 5, 2004]
@@ -113,48 +113,8 @@ public class VVenue extends CalendarComponent {
      * {@inheritDoc}
      */
     @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        /*
-         * ; 'uiid' is required, but MUST NOT occur more ; than once uiid /
-         */
-        PropertyValidator.assertOne(Property.UID,
-                getProperties());
-
-        /*
-         *                ; the following are optional,
-         *                ; but MUST NOT occur more than once
-         *
-         *                name / description / street-address / extended-address /
-         *                locality / region / country / postal-code / tzid / geo /
-         *                location-type / categories /
-         *                dtstamp / created / last-modified
-         */
-        Arrays.asList(Property.NAME, Property.DESCRIPTION, Property.STREET_ADDRESS, Property.EXTENDED_ADDRESS,
-                Property.LOCALITY, Property.REGION, Property.COUNTRY, Property.POSTALCODE, Property.TZID, Property.GEO,
-                Property.LOCATION_TYPE, Property.CATEGORIES, Property.DTSTAMP, Property.CREATED, Property.LAST_MODIFIED).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once tel / url / x-prop
-         */
-
+    public final void validate(final boolean recurse) throws ValidationException {
+        ComponentValidator.VVENUE.validate(this);
         if (recurse) {
             validateProperties();
         }

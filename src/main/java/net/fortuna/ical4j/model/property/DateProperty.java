@@ -35,8 +35,8 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -226,58 +226,7 @@ public abstract class DateProperty extends Property {
      */
     @Override
     public void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
-
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
-
-        if (isUtc()) {
-            ParameterValidator.assertNone(Parameter.TZID,
-                    getParameters());
-        } else {
-            ParameterValidator.assertOneOrLess(Parameter.TZID,
-                    getParameters());
-        }
-
-        final Value value = getParameter(Parameter.VALUE);
-
-        if (getDate() instanceof DateTime) {
-
-            if (value != null && !Value.DATE_TIME.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance");
-            }
-
-            final DateTime dateTime = (DateTime) date;
-
-            // ensure tzid matches date-time timezone..
-            final Parameter tzId = getParameter(Parameter.TZID);
-            if (dateTime.getTimeZone() != null
-                    && (tzId == null || !tzId.getValue().equals(
-                    dateTime.getTimeZone().getID()))) {
-
-                throw new ValidationException("TZID parameter [" + tzId
-                        + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]");
-            }
-        } else if (getDate() != null) {
-
-            if (value == null) {
-                throw new ValidationException("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance");
-            } else if (!Value.DATE.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value
-                        + "] is invalid for DATE instance");
-            }
-        }
+        new DatePropertyValidator<>().validate(this);
     }
 
     /**
