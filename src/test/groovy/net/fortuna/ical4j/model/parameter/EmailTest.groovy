@@ -2,11 +2,18 @@ package net.fortuna.ical4j.model.parameter
 
 import net.fortuna.ical4j.AbstractBuilderTest
 import net.fortuna.ical4j.model.Calendar
+import net.fortuna.ical4j.util.CompatibilityHints
+
+import javax.mail.internet.AddressException
 
 /**
  * Created by fortuna on 6/09/15.
  */
 class EmailTest extends AbstractBuilderTest {
+
+    def cleanup() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+    }
 
     def 'assert value stored correctly'() {
         given: 'an email address'
@@ -36,5 +43,36 @@ END:VCALENDAR
 
         then: 'a valid calendar is realised'
         calendar?.getComponents()[0].getProperties()[0].getRequiredParameter('EMAIL').value == 'cyrus@example.com'
+    }
+
+    def 'test parsing valid addresses'() {
+        expect: 'a valid email address is parsed correctly'
+        new Email(address).value == address
+
+        where:
+        address << ['test@example.com']
+    }
+
+    def 'test parsing invalid addresses'() {
+        when: 'an invalid email address is parsed'
+        new Email(address)
+
+        then: 'an exception is thrown'
+        thrown(AddressException)
+
+        where:
+        address << ['test@example.com.']
+    }
+
+    def 'test parsing with relaxed parsing enabled'() {
+        given: 'relaxed parsing is enabled'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+
+        expect: 'email address is parsed correctly'
+        new Email(address).value == expectedValue
+
+        where:
+        address             | expectedValue
+        'test@example.com.' | 'test@example.com'
     }
 }

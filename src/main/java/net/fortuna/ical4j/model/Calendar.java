@@ -189,11 +189,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     @Override
     public final String toString() {
-        return BEGIN + ':' + VCALENDAR +
-                Strings.LINE_SEPARATOR +
-                properties +
-                components +
-                END + ':' + VCALENDAR +
+        return BEGIN + ':' + VCALENDAR + Strings.LINE_SEPARATOR + properties + components + END + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR;
     }
 

@@ -4,11 +4,12 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
 
 /**
  * From specification:
@@ -54,27 +55,23 @@ public class Email extends Parameter implements Encodable {
 
     private static final String PARAMETER_NAME = "EMAIL";
 
-    private final URI address;
+    private final InternetAddress address;
 
-    public Email(String address) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(address)));
-    }
-
-    public Email(URI address) {
-        super(PARAMETER_NAME);
-        this.address = address;
-    }
-
-    public URI getAddress() {
-        return address;
+    public Email(String address) throws AddressException {
+        super(PARAMETER_NAME, new Factory());
+        if (CompatibilityHints.isHintEnabled(KEY_RELAXED_PARSING)) {
+            this.address = InternetAddress.parse(address.replaceFirst("\\.$", ""), false)[0];
+        } else {
+            this.address = InternetAddress.parse(address)[0];
+        }
     }
 
     @Override
     public String getValue() {
-        return Uris.decode(Strings.valueOf(getAddress()));
+        return address.getAddress();
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory<Email> {
+    public static class Factory extends Content.Factory implements ParameterFactory {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -82,10 +79,10 @@ public class Email extends Parameter implements Encodable {
         }
 
         @Override
-        public Email createParameter(final String value) {
+        public Parameter createParameter(final String value) {
             try {
                 return new Email(value);
-            } catch (URISyntaxException e) {
+            } catch (AddressException e) {
                 throw new IllegalArgumentException(e);
             }
         }

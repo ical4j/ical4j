@@ -168,8 +168,8 @@ public abstract class Component extends Content implements Serializable, Propert
      */
     @Override
 	public String toString() {
-        return BEGIN + ':' + name + Strings.LINE_SEPARATOR + properties + components + END + ':' + name +
-                Strings.LINE_SEPARATOR;
+        return BEGIN + ':' + name + Strings.LINE_SEPARATOR + properties + components + END + ':' + name
+                + Strings.LINE_SEPARATOR;
     }
 
     /**
