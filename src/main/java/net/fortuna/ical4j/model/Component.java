@@ -270,7 +270,7 @@ public abstract class Component extends Content implements Serializable, Propert
      * @return the component copy
      */
     public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(properties.getAll().parallelStream()
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                 .map(Unchecked.function(Property::copy)).collect(Collectors.toList())));
     }
 
