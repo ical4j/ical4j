@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
@@ -120,22 +119,6 @@ public class VVenue extends CalendarComponent {
      */
     public VVenue(final PropertyList properties) {
         super(VVENUE, properties);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
     }
 
     /**

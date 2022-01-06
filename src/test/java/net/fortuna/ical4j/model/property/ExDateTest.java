@@ -86,7 +86,7 @@ public class ExDateTest extends TestCase {
         List<VEvent> event = calendar.getComponents(Component.VEVENT);
         List<Property> exdates = event.get(0).getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
-            assertTrue("This EXDATE should have a timezone", exDate.getParameters().getFirst(Parameter.TZID).isPresent());
+            assertTrue("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID).isPresent());
         }
     }
     

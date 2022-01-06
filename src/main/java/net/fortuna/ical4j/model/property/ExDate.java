@@ -88,7 +88,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
     public final void validate() throws ValidationException {
         PropertyValidator.EXDATE.validate(this);
 
-        final Optional<Parameter> valueParam = getParameters().getFirst(Parameter.VALUE);
+        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
 
         if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
                 && !Value.DATE.equals(valueParam.get())) {

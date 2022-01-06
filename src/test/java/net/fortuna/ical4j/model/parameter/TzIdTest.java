@@ -68,7 +68,7 @@ public class TzIdTest extends TestCase {
 
         calendar.getComponents().getAll().forEach(calendarComponent -> {
             calendarComponent.getProperties().getAll().forEach(property -> {
-                Optional<TzId> tzId = property.getParameters().getFirst(Parameter.TZID);
+                Optional<TzId> tzId = property.getParameter(Parameter.TZID);
                 tzId.ifPresent(id -> assertTrue(
                         zoneRulesMap.containsKey(builder.getRegistry().getZoneId(id.getValue()).getId())));
             });

@@ -435,14 +435,14 @@ public abstract class Property extends Content implements Comparable<Property> {
     public final String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
-        if (getParameters() != null) {
+        if (parameters != null) {
             buffer.append(parameters);
         }
         buffer.append(':');
         String value;
 
-        if (this instanceof XProperty && getParameters().getFirst(Parameter.VALUE).isPresent()
-                && !Value.TEXT.equals(getParameters().getFirst(Parameter.VALUE).get())) {
+        if (this instanceof XProperty && getParameter(Parameter.VALUE).isPresent()
+                && !Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
             value = getValue();
         } else if (this instanceof Encodable) {
             try {

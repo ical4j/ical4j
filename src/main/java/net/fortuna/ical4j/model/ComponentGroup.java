@@ -86,7 +86,7 @@ public class ComponentGroup<C extends Component> {
         List<Component> overrides = new ArrayList<>();
 
         for (Component component : getRevisions()) {
-            if (component.getProperties().getFirst(Property.RECURRENCE_ID).isPresent()) {
+            if (component.getProperty(Property.RECURRENCE_ID).isPresent()) {
                 overrides.add(component);
             } else {
                 periods.addAll(component.calculateRecurrenceSet(period));

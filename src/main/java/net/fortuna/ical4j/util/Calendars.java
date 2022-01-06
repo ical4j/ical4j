@@ -156,7 +156,7 @@ public final class Calendars {
                 continue;
             }
             
-            final Optional<Uid> uid = c.getProperties().getFirst(Property.UID);
+            final Optional<Uid> uid = c.getProperty(Property.UID);
             if (uid.isPresent()) {
                 Calendar uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
@@ -167,7 +167,7 @@ public final class Calendars {
                 }
 
                 for (final Property p : c.getProperties().getAll()) {
-                    final Optional<TzId> tzid = p.getParameters().getFirst(Parameter.TZID);
+                    final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
                         if (!uidCal.getComponents().getAll().contains(timezone)) {
@@ -216,7 +216,7 @@ public final class Calendars {
     public static String getContentType(Calendar calendar, Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
         
-        final Optional<Method> method = calendar.getProperties().getFirst(Property.METHOD);
+        final Optional<Method> method = calendar.getProperty(Property.METHOD);
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());

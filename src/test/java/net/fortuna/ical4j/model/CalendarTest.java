@@ -153,7 +153,7 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         week3UserC = new VEvent(start, java.time.Duration.ofHours(8), "Week 3 - User C");
-        week3UserC.getRequiredProperty(Property.DTSTART).getParameters().add(tzParam);
+        week3UserC.getRequiredProperty(Property.DTSTART).add(tzParam);
 
         week3UserCRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
                 .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();

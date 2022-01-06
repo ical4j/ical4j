@@ -49,8 +49,8 @@ public class TriggerValidator implements Validator<Trigger> {
     public void validate(Trigger target) throws ValidationException {
         PropertyValidator.TRIGGER.validate(target);
 
-        final Optional<Parameter> relParam = target.getParameters().getFirst(Parameter.RELATED);
-        final Optional<Parameter> valueParam = target.getParameters().getFirst(Parameter.VALUE);
+        final Optional<Parameter> relParam = target.getParameter(Parameter.RELATED);
+        final Optional<Parameter> valueParam = target.getParameter(Parameter.VALUE);
 
         if (relParam.isPresent() || !Optional.of(Value.DATE_TIME).equals(valueParam)) {
             ParameterValidator.assertNullOrEqual(Value.DURATION, target.getParameters().getAll());

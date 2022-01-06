@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
@@ -106,9 +105,9 @@ public class VAvailability extends CalendarComponent implements ComponentContain
             new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
             // can't have both DTEND and DURATION..
             new ValidationRule<>(None,
-                    (Predicate<VAvailability> & Serializable) p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
+                    (Predicate<VAvailability> & Serializable) p -> !p.getProperties(DTEND).isEmpty(), DURATION),
             new ValidationRule<>(None,
-                    (Predicate<VAvailability> & Serializable) p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
+                    (Predicate<VAvailability> & Serializable) p -> !p.getProperties(DURATION).isEmpty(), DTEND)
     );
 
     /**
@@ -145,7 +144,9 @@ public class VAvailability extends CalendarComponent implements ComponentContain
     /**
      * Returns the list of available times.
      * @return a component list
+     * @deprecated use {@link ComponentContainer#getComponents()}
      */
+    @Deprecated
     public final ComponentList<Available> getAvailable() {
         return getComponents();
     }
@@ -168,23 +169,6 @@ public class VAvailability extends CalendarComponent implements ComponentContain
     @Override
     public void setComponents(ComponentList<Available> components) {
         this.components = components;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getAvailable() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
     }
 
     /**

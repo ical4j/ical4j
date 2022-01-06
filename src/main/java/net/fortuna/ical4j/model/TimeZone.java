@@ -74,7 +74,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     public TimeZone(final VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
-        final Optional<TzId> tzId = vTimeZone.getProperties().getFirst(Property.TZID);
+        final Optional<TzId> tzId = vTimeZone.getProperty(Property.TZID);
         if (tzId.isPresent()) {
             setID(tzId.get().getValue());
         } else {
@@ -202,12 +202,12 @@ public class TimeZone extends java.util.TimeZone {
             latestSeasonalTime = seasonalTimes.get(0);
         }
         if (latestSeasonalTime instanceof Daylight) {
-            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getProperties().getFirst(Property.TZOFFSETFROM);
+            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
             if (offsetFrom.isPresent()) {
                 return (int) (offsetFrom.get().getOffset().getTotalSeconds() * 1000L);
             }
         } else if (latestSeasonalTime instanceof Standard) {
-            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getProperties().getFirst(Property.TZOFFSETTO);
+            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
             if (offsetTo.isPresent()) {
                 return (int) (offsetTo.get().getOffset().getTotalSeconds() * 1000L);
             }

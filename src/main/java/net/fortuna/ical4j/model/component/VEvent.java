@@ -36,7 +36,6 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -246,8 +245,8 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
             new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART, GEO, LAST_MODIFIED, LOCATION,
                     ORGANIZER, PRIORITY, DTSTAMP, SEQUENCE, STATUS, SUMMARY, TRANSP, UID, URL, RECURRENCE_ID),
             // can't have both DTEND and DURATION..
-            new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
-            new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
+            new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->!p.getProperties(DTEND).isEmpty(), DURATION),
+            new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->!p.getProperties(DURATION).isEmpty(), DTEND)
     );
 
     /**
@@ -354,23 +353,6 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * {@inheritDoc}
      */
     @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getAlarms() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final void validate(final boolean recurse) throws ValidationException {
         ValidationResult result = new ValidationResult();
         // validate that getAlarms() only contains VAlarm components
@@ -388,7 +370,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 
         ComponentValidator.VEVENT.validate(this);
 
-        final Optional<Status> status = getProperties().getFirst(Property.STATUS);
+        final Optional<Status> status = getProperty(Property.STATUS);
         if (status.isPresent() && !Status.VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
@@ -405,12 +387,12 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final Optional<DtStart<Temporal>> start = getProperties().getFirst(DTSTART);
-            final Optional<DtEnd<Temporal>> end = getProperties().getFirst(DTEND);
+            final Optional<DtStart<Temporal>> start = getProperty(DTSTART);
+            final Optional<DtEnd<Temporal>> end = getProperty(DTEND);
 
             if (start.isPresent()) {
-                final Optional<Parameter> startValue = start.get().getParameters().getFirst(Parameter.VALUE);
-                final Optional<Parameter> endValue = end.get().getParameters().getFirst(Parameter.VALUE);
+                final Optional<Parameter> startValue = start.get().getParameter(Parameter.VALUE);
+                final Optional<Parameter> endValue = end.get().getParameter(Parameter.VALUE);
 
                 boolean startEndValueMismatch = false;
                 if (endValue.isPresent()) {
@@ -477,7 +459,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range, final boolean normalise) {
         PeriodList<T> periods;
         // if component is transparent return empty list..
-        Optional<Transp> transp = getProperties().getFirst(TRANSP);
+        Optional<Transp> transp = getProperty(TRANSP);
         if (!transp.isPresent() || !Transp.TRANSPARENT.equals(transp.get())) {
 
 //          try {
@@ -680,16 +662,16 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @return The end for this VEVENT.
      */
     public final Optional<DtEnd<?>> getEndDate(final boolean deriveFromDuration) {
-        Optional<DtEnd<?>> dtEnd = getProperties().getFirst(DTEND);
+        Optional<DtEnd<?>> dtEnd = getProperty(DTEND);
         // No DTEND? No problem, we'll use the DURATION.
         if (!dtEnd.isPresent() && deriveFromDuration) {
-            Optional<DtStart<?>> dtStart = getProperties().getFirst(DTSTART);
+            Optional<DtStart<?>> dtStart = getProperty(DTSTART);
             if (dtStart.isPresent()) {
                 final Duration vEventDuration;
-                Optional<Duration> duration = getProperties().getFirst(DURATION);
+                Optional<Duration> duration = getProperty(DURATION);
                 if (duration.isPresent()) {
                     vEventDuration = getDuration().get();
-                } else if (dtStart.get().getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
+                } else if (dtStart.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
                     // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
                     vEventDuration = new Duration(java.time.Duration.ZERO);
                 } else {
@@ -697,7 +679,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                     vEventDuration = new Duration(java.time.Duration.ofDays(1));
                 }
 
-                Optional<TzId> tzId = dtStart.get().getParameters().getFirst(Parameter.TZID);
+                Optional<TzId> tzId = dtStart.get().getParameter(Parameter.TZID);
                 DtEnd<?> newdtEnd;
                 if (tzId.isPresent()) {
                     ParameterList dtendParams = new ParameterList(Collections.singletonList(tzId.get()));

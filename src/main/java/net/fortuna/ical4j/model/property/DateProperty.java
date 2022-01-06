@@ -122,7 +122,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @SuppressWarnings("unchecked")
     public T getDate() {
         if (date != null) {
-            Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+            Optional<TzId> tzId = getParameter(Parameter.TZID);
             if (tzId.isPresent() && shouldApplyTimezone()) {
                 return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
             } else {
@@ -161,7 +161,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
-            Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+            Optional<TzId> tzId = getParameter(Parameter.TZID);
             try {
                 this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
                         .orElseGet(() -> TemporalAdapter.parse(value, parseFormat));
@@ -186,7 +186,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      */
     @Override
     public String getValue() {
-        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent() && shouldApplyTimezone()) {
             return date.toString(tzId.get().toZoneId(timeZoneRegistry));
         } else {
@@ -199,7 +199,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     }
 
     private boolean shouldApplyTimezone() {
-        Optional<Value> value = getParameters().getFirst(VALUE);
+        Optional<Value> value = getParameter(VALUE);
         return !Optional.of(Value.DATE).equals(value);
     }
 
@@ -226,7 +226,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @Override
     public void validate() throws ValidationException {
         new DatePropertyValidator<>().validate(this);
-        final Value value = (Value) getParameters().getFirst(VALUE).orElse(defaultValueParam);
+        final Value value = (Value) getParameter(VALUE).orElse(defaultValueParam);
 
         if (date != null) {
             if (date.getTemporal() instanceof LocalDate) {

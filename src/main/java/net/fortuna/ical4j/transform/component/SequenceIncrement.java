@@ -14,7 +14,7 @@ public class SequenceIncrement implements Transformer<CalendarComponent> {
 
     @Override
     public CalendarComponent transform(CalendarComponent object) {
-        Optional<Sequence> sequence = object.getProperties().getFirst(Property.SEQUENCE);
+        Optional<Sequence> sequence = object.getProperty(Property.SEQUENCE);
         if (sequence.isPresent()) {
             Sequence newSequence = new Sequence(sequence.get().getSequenceNo() + 1);
             object.replace(newSequence);

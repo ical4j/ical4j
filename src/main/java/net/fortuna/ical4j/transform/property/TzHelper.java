@@ -60,7 +60,7 @@ class TzHelper {
     }
 
     static void correctTzParameterFrom(Property property) {
-        if (property.getParameters().getFirst(Parameter.TZID).isPresent()) {
+        if (!property.getParameter(Parameter.TZID).isPresent()) {
             String newTimezoneId = getCorrectedTimezoneFromTzParameter(property);
             correctTzParameter(property, newTimezoneId);
         }
@@ -71,7 +71,7 @@ class TzHelper {
             property.removeAll(Parameter.TZID);
             return;
         }
-        if (property.getParameters().getFirst(Parameter.TZID).isPresent()) {
+        if (property.getParameter(Parameter.TZID).isPresent()) {
             String newTimezone = getCorrectedTimezoneFromTzParameter(property);
             correctTzParameter(property, newTimezone);
         }
@@ -85,7 +85,7 @@ class TzHelper {
     }
 
     private static String getCorrectedTimezoneFromTzParameter(Property property) {
-        Optional<TzId> tzId = property.getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> tzId = property.getParameter(Parameter.TZID);
         String tzIdValue = tzId.get().getValue();
         return getCorrectedTimeZoneIdFrom(tzIdValue);
     }

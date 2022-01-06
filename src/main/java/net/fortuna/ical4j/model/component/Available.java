@@ -102,9 +102,9 @@ public class Available extends Component {
         new ValidationRule<>(OneOrLess, CREATED, LAST_MODIFIED, RECURRENCE_ID, RRULE, SUMMARY),
         // can't have both DTEND and DURATION..
         new ValidationRule<>(None,
-                (Predicate<Available> & Serializable) p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
+                (Predicate<Available> & Serializable) p -> !p.getProperties(DTEND).isEmpty(), DURATION),
         new ValidationRule<>(None,
-                (Predicate<Available> & Serializable) p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
+                (Predicate<Available> & Serializable) p -> !p.getProperties(DURATION).isEmpty(), DTEND)
     );
 
     /**

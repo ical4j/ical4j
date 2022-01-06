@@ -40,8 +40,8 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
         for (CalendarComponent component : object.getComponents().getAll()) {
             uidUpdate.transform(component);
             if (!uid.isPresent()) {
-                uid = component.getProperties().getFirst(Property.UID);
-            } else if (sameUid && !uid.equals(component.getProperties().getFirst(Property.UID))) {
+                uid = component.getProperty(Property.UID);
+            } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {
                 throw new IllegalArgumentException("All components must share the same non-null UID");
             }
 

@@ -92,7 +92,7 @@ public class StructuredData extends Property implements Encodable {
      */
     public final void setValue(final String aValue) throws URISyntaxException {
         // value can be either binary or a URI or default to text
-        if (!getParameters().getFirst(Parameter.ENCODING).isPresent()) {
+        if (getParameters(Parameter.ENCODING).isEmpty()) {
             // binary = Base64.decode(aValue);
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()

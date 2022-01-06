@@ -15,8 +15,8 @@ public class VTimeZoneValidator implements Validator<VTimeZone> {
         /*
          * ; one of 'standardc' or 'daylightc' MUST occur ..; and each MAY occur more than once. standardc / daylightc /
          */
-        if (!target.getObservances().getFirst(Observance.STANDARD).isPresent()
-                && !target.getObservances().getFirst(Observance.DAYLIGHT).isPresent()) {
+        if (!target.getComponent(Observance.STANDARD).isPresent()
+                && !target.getComponent(Observance.DAYLIGHT).isPresent()) {
             throw new ValidationException("Sub-components ["
                     + Observance.STANDARD + "," + Observance.DAYLIGHT
                     + "] must be specified at least once");

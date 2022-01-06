@@ -47,7 +47,7 @@ class VEventUserAgentTest extends Specification {
         calendar.getRequiredProperty(Property.METHOD) == Method.PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.all.each { it.getProperties().getFirst(Property.SEQUENCE).isPresent() }
+        calendar.components.all.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {
@@ -81,7 +81,7 @@ class VEventUserAgentTest extends Specification {
         calendar.getRequiredProperty(Property.METHOD) == Method.REQUEST
 
         and: 'the sequence property is present on all components'
-        calendar.components.all.each { it.getProperties().getFirst(Property.SEQUENCE).isPresent() }
+        calendar.components.all.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Delegate"() {

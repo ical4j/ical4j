@@ -103,7 +103,7 @@ public class TimeZoneUpdater {
      */
     public VTimeZone updateDefinition(VTimeZone vTimeZone) {
         if (isEnabled() && vTimeZone != null) {
-            final Optional<TzUrl> tzUrl = vTimeZone.getProperties().getFirst(Property.TZURL);
+            final Optional<TzUrl> tzUrl = vTimeZone.getProperty(Property.TZURL);
             if (tzUrl.isPresent()) {
                 try {
                     URLConnection connection = openConnection(tzUrl.get().getUri().toURL());

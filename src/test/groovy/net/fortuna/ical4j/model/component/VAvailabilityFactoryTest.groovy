@@ -19,7 +19,7 @@ class VAvailabilityFactoryTest extends Specification {
 
         then: 'result is as expected'
         availability.properties.uid[0].value == '1'
-        availability.available.all.size() == 1
-        availability.available.all[0].properties.uid[0].value == '11'
+        availability.components.all.size() == 1
+        availability.components.all[0].properties.uid[0].value == '11'
     }
 }

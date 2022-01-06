@@ -205,7 +205,7 @@ public class Attach extends Property {
 
         // determine if ATTACH is a URI or an embedded
         // binary..
-        Optional<Encoding> encoding = getParameters().getFirst(Parameter.ENCODING);
+        Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
         if (encoding.isPresent()) {
             // binary = Base64.decode(aValue);
             try {
@@ -236,7 +236,7 @@ public class Attach extends Property {
         } else if (getBinary() != null) {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
-                Optional<Encoding> encoding = getParameters().getFirst(Parameter.ENCODING);
+                Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
                 final BinaryEncoder encoder = EncoderFactory.getInstance()
                         .createBinaryEncoder(encoding.get());
                 return new String(encoder.encode(getBinary()));

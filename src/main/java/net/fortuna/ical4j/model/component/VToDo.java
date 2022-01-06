@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
@@ -170,8 +169,8 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
                     LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, SEQUENCE, STATUS,
                     SUMMARY, UID, URL),
             // can't have both DUE and DURATION..
-            new ValidationRule<>(None, p->p.getProperties().getFirst(DUE).isPresent(), DURATION),
-            new ValidationRule<>(None, p->p.getProperties().getFirst(DURATION).isPresent(), DUE)
+            new ValidationRule<>(None, p->!p.getProperties(DUE).isEmpty(), DURATION),
+            new ValidationRule<>(None, p->!p.getProperties(DURATION).isEmpty(), DUE)
     );
 
     /**
@@ -266,23 +265,6 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     @Override
     public void setComponents(ComponentList<Component> components) {
         this.components = components;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getAlarms() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
     }
 
     /**

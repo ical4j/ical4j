@@ -201,7 +201,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     public final void validate() throws ValidationException {
         PropertyValidator.RDATE.validate(this);
 
-        final Optional<Parameter> valueParam = getParameters().getFirst(Parameter.VALUE);
+        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
         if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
                 && !Value.DATE.equals(valueParam.get())
                 && !Value.PERIOD.equals(valueParam.get())) {
@@ -226,7 +226,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      */
     @Override
     public final void setValue(final String aValue) {
-        if (getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.PERIOD))) {
+        if (getParameter(Parameter.VALUE).equals(Optional.of(Value.PERIOD))) {
             periods = PeriodList.parse(aValue);
         } else {
             super.setValue(aValue);

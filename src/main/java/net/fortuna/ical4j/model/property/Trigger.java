@@ -245,7 +245,7 @@ public class Trigger extends DateProperty<Instant> {
      * @return true if the trigger is absolute
      */
     public boolean isAbsolute() {
-        return Optional.of(Value.DATE_TIME).equals(getParameters().getFirst(VALUE));
+        return Optional.of(Value.DATE_TIME).equals(getParameter(VALUE));
     }
 
     /**
@@ -299,8 +299,7 @@ public class Trigger extends DateProperty<Instant> {
     public void setDate(final Instant dateTime) {
         super.setDate(dateTime);
         duration = null;
-
-        setParameters((ParameterList) getParameters().replace(Value.DATE_TIME));
+        replace(Value.DATE_TIME);
     }
 
     /**
@@ -310,7 +309,7 @@ public class Trigger extends DateProperty<Instant> {
         this.duration = new TemporalAmountAdapter(duration);
         super.setDate(null);
         // duration is the default value type for Trigger..
-        setParameters((ParameterList) getParameters().replace(Value.DURATION));
+        replace(Value.DURATION);
     }
 
     @Override

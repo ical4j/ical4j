@@ -117,7 +117,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      */
     @SuppressWarnings("unchecked")
     public final List<T> getDates() {
-        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
             return dates.getDates().stream().map(date -> (T) TemporalAdapter.toLocalTime(
                     date, tzId.get().toZoneId(timeZoneRegistry))).collect(Collectors.toList());
@@ -131,7 +131,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      */
     @Override
     public void setValue(final String aValue) {
-        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
             dates = (DateList<T>) DateList.parse(aValue, tzId.get(), timeZoneRegistry);
         } else {
@@ -144,7 +144,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      */
     @Override
     public String getValue() {
-        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
             return dates.toString(tzId.get().toZoneId(timeZoneRegistry));
         } else {
@@ -160,7 +160,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     public void validate() throws ValidationException {
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // Ensure date list is consistent with VALUE param..
-            if (Value.DATE.equals(getParameters().getFirst(Parameter.VALUE).orElse(defaultValueParam))) {
+            if (Value.DATE.equals(getParameter(Parameter.VALUE).orElse(defaultValueParam))) {
                 for (T t : dates.getDates()) {
                     if (!(t instanceof LocalDate)) {
                         throw new ValidationException("Mismatch between VALUE param and dates");

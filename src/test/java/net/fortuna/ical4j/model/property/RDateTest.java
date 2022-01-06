@@ -87,7 +87,7 @@ public class RDateTest {
         */
 
         rDate.add(new TzId(timezone.getId()));
-        assertEquals(timezone.getId(), rDate.getParameters().getFirst(Parameter.TZID).get().getValue());
+        assertEquals(timezone.getId(), rDate.getParameter(Parameter.TZID).get().getValue());
     }
 
     @Test

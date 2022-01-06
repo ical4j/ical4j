@@ -168,10 +168,7 @@ public abstract class Component extends Content implements Serializable, Propert
      */
     @Override
 	public String toString() {
-        return BEGIN + ':' + getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                END + ':' + getName() +
+        return BEGIN + ':' + name + Strings.LINE_SEPARATOR + properties + components + END + ':' + name +
                 Strings.LINE_SEPARATOR;
     }
 
@@ -323,7 +320,7 @@ public abstract class Component extends Content implements Serializable, Propert
         // add recurrence dates..
         List<Property> rDates = getProperties(Property.RDATE);
         for (Property p : rDates) {
-            Optional<Value> value = p.getParameters().getFirst(Parameter.VALUE);
+            Optional<Value> value = p.getParameter(Parameter.VALUE);
             if (value.equals(Optional.of(Value.PERIOD))) {
                 recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).parallelStream()
                         .filter(period::intersects).collect(Collectors.toList()));

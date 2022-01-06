@@ -180,14 +180,14 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         VEvent vevent0 = (VEvent) comps.get(0);
 
         DtStart<ZonedDateTime> dtstart0 = vevent0.getRequiredProperty(Property.DTSTART);
-        Optional<TzId> dtstart0TzId = dtstart0.getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> dtstart0TzId = dtstart0.getParameter(Parameter.TZID);
 
         assertEquals("date value not correct", "20200503T173000", dtstart0.getValue());
         assertTrue("timezone not present", dtstart0TzId.isPresent());
         assertEquals("timezone not correct", "Europe/Amsterdam", dtstart0TzId.get().getValue());
 
         DtEnd<ZonedDateTime> dtend0 = vevent0.getRequiredProperty(Property.DTEND);
-        Optional<TzId> dtend0TzId = dtend0.getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> dtend0TzId = dtend0.getParameter(Parameter.TZID);
 
         assertEquals("date value not correct", "20200503T200000", dtend0.getValue());
         assertTrue("timezone not present", dtend0TzId.isPresent());
@@ -195,14 +195,14 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
         VEvent vevent1 = (VEvent) comps.get(1);
         DtStart<ZonedDateTime> dtstart1 = vevent1.getRequiredProperty(Property.DTSTART);
-        Optional<TzId> dtstart1TzId = dtstart1.getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> dtstart1TzId = dtstart1.getParameter(Parameter.TZID);
 
         assertEquals("date value not correct", "20191006T190000", dtstart1.getValue());
         assertTrue("timezone not present", dtstart1TzId.isPresent());
         assertEquals("timezone not correct", "Europe/Amsterdam", dtstart1TzId.get().getValue());
 
         DtEnd<ZonedDateTime> dtend1 = vevent1.getRequiredProperty(Property.DTEND);
-        Optional<TzId> dtend1TzId = dtend1.getParameters().getFirst(Parameter.TZID);
+        Optional<TzId> dtend1TzId = dtend1.getParameter(Parameter.TZID);
 
         assertEquals("date value not correct", "20191006T203000", dtend1.getValue());
         assertTrue("timezone not present", dtend1TzId.isPresent());

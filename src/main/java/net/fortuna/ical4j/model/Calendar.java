@@ -181,7 +181,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @param c the calendar to copy
      */
     public Calendar(Calendar c) {
-        this(c.getProperties(), c.getComponents());
+        this(c.properties, c.components);
     }
 
     /**
@@ -191,8 +191,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public final String toString() {
         return BEGIN + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR +
-                getProperties() +
-                getComponents() +
+                properties +
+                components +
                 END + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR;
     }
@@ -272,7 +272,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @throws ValidationException where any of the calendar components is not in a valid state
      */
     private void validateComponents() throws ValidationException {
-        Optional<Method> method = getProperties().getFirst(Property.METHOD);
+        Optional<Method> method = getProperty(Property.METHOD);
         if (method.isPresent()) {
             components.getAll().forEach(c -> c.validate(method.get()));
         } else {
@@ -308,8 +308,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 mergedProperties.add(p);
             }
         }
-        mergedComponents.addAll(getComponents().getAll());
-        for (final CalendarComponent c : c2.getComponents().getAll()) {
+        mergedComponents.addAll(components.getAll());
+        for (final CalendarComponent c : c2.components.getAll()) {
             if (!mergedComponents.contains(c)) {
                 mergedComponents.add(c);
             }
@@ -325,8 +325,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public Calendar[] split() {
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
-        if (getComponents().getAll().size() <= 1
-                || getComponents(Component.VTIMEZONE).size() == getComponents().getAll().size()) {
+        if (components.getAll().size() <= 1
+                || getComponents(Component.VTIMEZONE).size() == components.getAll().size()) {
             return new Calendar[] {this};
         }
 
@@ -335,12 +335,12 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 timezoneList, Property.TZID);
 
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
-        for (final CalendarComponent c : getComponents().getAll()) {
+        for (final CalendarComponent c : components.getAll()) {
             if (c instanceof VTimeZone) {
                 continue;
             }
 
-            final Optional<Uid> uid = c.getProperties().getFirst(Property.UID);
+            final Optional<Uid> uid = c.getProperty(Property.UID);
             if (uid.isPresent()) {
                 Calendar uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
@@ -351,10 +351,10 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 }
 
                 for (final Property p : c.getProperties().getAll()) {
-                    final Optional<TzId> tzid = p.getParameters().getFirst(Parameter.TZID);
+                    final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
-                        if (!uidCal.getComponents().getAll().contains(timezone)) {
+                        if (!uidCal.components.getAll().contains(timezone)) {
                             uidCal.add(timezone);
                         }
                     }
@@ -373,7 +373,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     public Uid getUid() throws ConstraintViolationException {
         Uid uid = null;
-        for (final Component c : getComponents().getAll()) {
+        for (final Component c : components.getAll()) {
             for (final Property foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
@@ -435,7 +435,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public String getContentType(Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
 
-        final Optional<Method> method = getProperties().getFirst(Property.METHOD);
+        final Optional<Method> method = getProperty(Property.METHOD);
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());
@@ -456,7 +456,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
         if (arg0 instanceof Calendar) {
             final Calendar calendar = (Calendar) arg0;
             return new EqualsBuilder().append(getProperties(), calendar.getProperties())
-                .append(getComponents(), calendar.getComponents()).isEquals();
+                .append(components, calendar.components).isEquals();
         }
         return super.equals(arg0);
     }
@@ -466,7 +466,6 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder().append(getProperties()).append(
-                getComponents()).toHashCode();
+        return new HashCodeBuilder().append(properties).append(components).toHashCode();
     }
 }

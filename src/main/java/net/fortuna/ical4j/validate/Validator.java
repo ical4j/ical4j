@@ -157,7 +157,7 @@ public interface Validator<T> extends Serializable {
             int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
             switch (rule.getType()) {
                 case None:
-                    return rule.getInstances().stream().filter(s -> target.getParameters().getFirst(s).isPresent())
+                    return rule.getInstances().stream().filter(s -> target.getParameter(s).isPresent())
                             .map(s -> String.format("%s %s", rule.getType().getDescription(), s))
                             .collect(Collectors.toList());
                 case One:
