@@ -43,6 +43,7 @@ dependencies {
             "commons-codec:commons-codec:$commonsCodecVersion",
             "org.apache.commons:commons-lang3:$commonsLangVersion",
             "org.apache.commons:commons-collections4:$commonsCollectionsVersion",
+            'com.sun.mail:javax.mail:1.6.2',
             "org.threeten:threeten-extra:$threetenExtraVersion",
             "org.jooq:jool-java-8:$joolVersion"
 
