@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +30,9 @@ public interface ContentCollection<T extends Content> extends Serializable {
     List<T> getAll();
 
     @SuppressWarnings("unchecked")
-    default <R extends T> List<R> get(String name) {
-        return getAll().stream().filter(c -> c.getName().equalsIgnoreCase(name)).map(c -> (R) c).collect(Collectors.toList());
+    default <R extends T> List<R> get(String... names) {
+        List<String> filter = Arrays.asList(names);
+        return getAll().stream().filter(c -> filter.contains(c.getName())).map(c -> (R) c).collect(Collectors.toList());
     }
 
     @SuppressWarnings("unchecked")
