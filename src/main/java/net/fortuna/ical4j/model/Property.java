@@ -467,15 +467,8 @@ public abstract class Property extends Content implements Comparable<Property> {
     }
 
     /**
-     * @return Returns the parameters.
-     * @deprecated to avoid confusion with how to mutate a {@link ParameterList} from v4.x onwards this method is temporarily
-     * deprecated.
-     * @see Property#add(Parameter)
-     * @see Property#remove(Parameter)
-     * @see Property#removeAll(String...)
-     * @see Property#replace(Parameter)
+     * @return Returns the underlying parameter list.
      */
-    @Deprecated
     public final ParameterList getParameterList() {
         return parameters;
     }
@@ -535,7 +528,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @return a parameter list containing only parameters with the specified name
      */
     public final List<Parameter> getParameters(final String... name) {
-        return getParameterList().get(name);
+        return parameters.get(name);
     }
 
     /**
@@ -545,7 +538,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @return the first parameter from the parameter list with the specified name
      */
     public final <P extends Parameter> Optional<P> getParameter(final String name) {
-        return getParameterList().getFirst(name);
+        return parameters.getFirst(name);
     }
 
     /**
@@ -555,7 +548,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      * @return
      */
     public final <P extends Parameter> P getRequiredParameter(final String name) {
-        return getParameterList().getRequired(name);
+        return parameters.getRequired(name);
     }
 
     /**
@@ -582,8 +575,8 @@ public abstract class Property extends Content implements Comparable<Property> {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
             return getName().equals(p.getName())
-                    && new EqualsBuilder().append(getValue(), p.getValue()).append(getParameterList(),
-                    p.getParameterList()).isEquals();
+                    && new EqualsBuilder().append(getValue(), p.getValue()).append(parameters,
+                    p.parameters).isEquals();
         }
         return super.equals(arg0);
     }
@@ -595,7 +588,7 @@ public abstract class Property extends Content implements Comparable<Property> {
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
-                getValue()).append(getParameterList()).toHashCode();
+                getValue()).append(parameters).toHashCode();
     }
 
     /**

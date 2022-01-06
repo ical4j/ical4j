@@ -195,14 +195,8 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
 
     /**
      *
-     * @return
-     * @deprecated to avoid confusion with how to mutate a ComponentList from v4.x onwards this method is temporarily
-     * deprecated.
-     * @see ComponentContainer#add(Component)
-     * @see ComponentContainer#remove(Component)
-     * @see ComponentContainer#replace(Component)
+     * @return Returns the underlying component list.
      */
-    @Deprecated
     @Override
     public ComponentList<Observance> getComponentList() {
         return (ComponentList<Observance>) components;

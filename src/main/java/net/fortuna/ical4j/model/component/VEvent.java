@@ -328,14 +328,8 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 
     /**
      *
-     * @return
-     * @deprecated to avoid confusion with how to mutate a ComponentList from v4.x onwards this method is temporarily
-     * deprecated.
-     * @see ComponentContainer#add(Component)
-     * @see ComponentContainer#remove(Component)
-     * @see ComponentContainer#replace(Component)
+     * @return Returns the underlying component list.
      */
-    @Deprecated
     @Override
     public ComponentList<Component> getComponentList() {
         return (ComponentList<Component>) components;

@@ -190,22 +190,15 @@ public abstract class Component extends Content implements Serializable, Propert
     }
 
     /**
-     * @return Returns the properties.
-     * @deprecated to avoid confusion with how to mutate a PropertyList from v4.x onwards this method is temporarily
-     * deprecated.
-     * @see PropertyContainer#add(Property)
-     * @see PropertyContainer#remove(Property)
-     * @see PropertyContainer#removeAll(String...)
-     * @see PropertyContainer#replace(Property)
+     * @return Returns the underlying property list.
      */
-    @Deprecated
     @Override
     public final PropertyList getPropertyList() {
         return properties;
     }
 
     @Override
-    public void setProperties(PropertyList properties) {
+    public void setPropertyList(PropertyList properties) {
         this.properties = properties;
     }
 
