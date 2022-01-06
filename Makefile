@@ -4,7 +4,8 @@ include .env
 NEXT_VERSION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 CHANGE_JUSTIFICATION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 
-.PHONY: all gradlew clean build zoneinfo changelog currentVersion markNextVersion listApiChanges approveApiChanges release publish
+.PHONY: all gradlew clean build zoneinfo changelog currentVersion markNextVersion listApiChanges approveApiChanges \
+	verify release publish
 
 all: test
 
@@ -40,6 +41,9 @@ listApiChanges:
 
 approveApiChanges:
 	./gradlew :revapiAcceptAllBreaks --justification $(CHANGE_JUSTIFICATION)
+
+verify:
+	./gradlew verify
 
 release: build
 	./gradlew release
