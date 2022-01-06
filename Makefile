@@ -45,7 +45,7 @@ approveApiChanges:
 verify:
 	./gradlew verify
 
-release: build
+release: verify build
 	./gradlew release
 
 publish:
