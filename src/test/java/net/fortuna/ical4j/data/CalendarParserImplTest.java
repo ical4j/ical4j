@@ -118,11 +118,9 @@ public class CalendarParserImplTest extends TestCase {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/google_aus_holidays.ics", 11));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/13-MoonPhase.ics", 215));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/overlaps.ics", 1));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/schedule-unstable.ics", 196));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/zidestoreical4jbomb.ics", 10));
         return suite;
     }
 }

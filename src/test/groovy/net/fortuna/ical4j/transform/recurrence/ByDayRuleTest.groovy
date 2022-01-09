@@ -11,7 +11,7 @@ import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
 import java.time.DayOfWeek
-import java.time.Instant
+import java.time.LocalDateTime
 import java.util.stream.IntStream
 
 import static net.fortuna.ical4j.model.WeekDay.*
@@ -46,61 +46,43 @@ class ByDayRuleTest extends Specification {
     def 'test limit with FREQ=MINUTELY'() {
         given: 'a calendar definition'
         Calendar calendar = new Calendar();
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
+        calendar.add(Version.VERSION_2_0);
+        calendar.add(CalScale.GREGORIAN);
 
-        TemporalAdapter<Instant> dateTime = TemporalAdapter.parse("20210104T130000Z");
+        TemporalAdapter<LocalDateTime> dateTime = TemporalAdapter.parse("20210104T130000");
         VEvent e1 = new VEvent(dateTime.temporal, "even");
         UidGenerator ug = new RandomUidGenerator();
-        e1.getProperties().add(ug.generateUid());
+        e1.add(ug.generateUid());
 
         // recurency
-        final NumberList hourList = new NumberList();
-        hourList.add(13);
-        hourList.add(14);
-        hourList.add(15);
-        hourList.add(16);
-
-        Recur recur = new Recur.Builder()
-                .frequency(Frequency.MINUTELY)
-                .interval(15)
-                .hourList(hourList)
-                .dayList(new WeekDayList(WE))
-                .build();
-        e1.getProperties().add(new RRule(recur));
+        Recur recur = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15).hourList(numberList(13, 17))
+                .dayList(new WeekDayList(WE)).build();
+        e1.add(new RRule(recur));
 
         //exrules
-        final NumberList hourExList = new NumberList();
-        hourExList.add(16);
-        Recur recurEx = new Recur.Builder()
-                .frequency(Frequency.MINUTELY)
-                .interval(15)
-                .hourList(hourExList)
-                .minuteList(numberList(30, 60))
-                .build();
-        Recur recurEx2 = new Recur.Builder()
-                .frequency(Frequency.MINUTELY)
-                .interval(15)
-                .hourList(numberList(13, 14))
-                .minuteList(numberList(0, 30))
-                .build();
+        final NumberList hourExList = new NumberList('16');
+        Recur recurEx = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15).hourList(hourExList)
+                .minuteList(numberList(30, 60)).build();
 
-        e1.getProperties().add(new ExRule(recurEx));
-        e1.getProperties().add(new ExRule(recurEx2));
+        Recur recurEx2 = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15)
+                .hourList(numberList(13, 14)).minuteList(numberList(0, 30)).build();
 
-        calendar.getComponents().add(e1);
+        e1.add(new ExRule(recurEx));
+        e1.add(new ExRule(recurEx2));
+
+        calendar.add(e1);
         System.out.println(calendar);
 
         expect: 'dates are calculated successfully'
         System.out.println("--------------------------------------------------");
-        TemporalAdapter<Instant> from = TemporalAdapter.parse("20200101T070000Z");
-        TemporalAdapter<Instant> to = TemporalAdapter.parse("20210107T070000Z")
+        TemporalAdapter<LocalDateTime> from = TemporalAdapter.parse("20200101T070000");
+        TemporalAdapter<LocalDateTime> to = TemporalAdapter.parse("20210107T070000")
 
         Period period = new Period(from.temporal, to.temporal);
         for (Component c : calendar.getComponents(Component.VEVENT)) {
-            PeriodList list = c.calculateRecurrenceSet(period);
-            for (Object po : list) {
-                System.out.println((Period) po);
+            PeriodList<LocalDateTime> list = c.calculateRecurrenceSet(period);
+            for (Period<LocalDateTime> p : list.periods) {
+                System.out.println(p);
             }
         }
     }

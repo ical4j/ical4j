@@ -796,27 +796,6 @@ public class RecurTest<T extends Temporal> extends TestCase {
         suite.addTest(new RecurTest<>(recur, seed.getTemporal(), periodStart.getTemporal(), periodEnd.getTemporal(),
                 Value.DATE_TIME, 3));
 
-        Recur<Instant> recurInstant = new Recur<>("FREQ=DAILY;COUNT=3;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
-        TemporalAdapter<Instant> seedInstant = TemporalAdapter.parse("20131215T000000Z");
-        TemporalAdapter<Instant> periodStartInstant = TemporalAdapter.parse("20131215T000000Z");
-        TemporalAdapter<Instant> periodEndInstant = TemporalAdapter.parse("20180101T120000Z");
-        suite.addTest(new RecurTest<>(recurInstant, seedInstant.getTemporal(), periodStartInstant.getTemporal(),
-                periodEndInstant.getTemporal(), Value.DATE_TIME, 3));
-        
-        // rrule with bymonth and count. Should return correct number of occurrences near the end of its perioud.
-        recurInstant = new Recur<>("FREQ=MONTHLY;COUNT=3;INTERVAL=1;BYMONTH=1,9,10,12;BYMONTHDAY=12");
-
-        seedInstant = TemporalAdapter.parse("20150917T000000Z");
-        periodStartInstant = TemporalAdapter.parse("20160101T000000Z");
-        periodEndInstant = TemporalAdapter.parse("20160201T000000Z");
-        suite.addTest(new RecurTest<>(recurInstant, seedInstant.getTemporal(), periodStartInstant.getTemporal(),
-                periodEndInstant.getTemporal(), Value.DATE, 1));
-
-        periodStartInstant = TemporalAdapter.parse("20160201T000000Z");
-        periodEndInstant = TemporalAdapter.parse("20160301T000000Z");
-        suite.addTest(new RecurTest<>(recurInstant, seedInstant.getTemporal(), periodStartInstant.getTemporal(),
-                periodEndInstant.getTemporal(), Value.DATE, 0));
-
         // check maxTime
         recur = new Recur("FREQ=WEEKLY;WKST=MO;UNTIL=20160901T230000;INTERVAL=1;BYDAY=TH");
         suite.addTest(new RecurTest(recur, TemporalAdapter.parse("20160414T100000").getTemporal(),
