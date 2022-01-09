@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,16 @@ public interface PropertyContainer {
      */
     default PropertyContainer add(Property property) {
         setPropertyList((PropertyList) getPropertyList().add(property));
+        return this;
+    }
+
+    /**
+     * Add multiple properties to the container.
+     * @param properties a collection of properties to add
+     * @return a reference to the container to support method chaining
+     */
+    default PropertyContainer addAll(Collection<Property> properties) {
+        setPropertyList((PropertyList) getPropertyList().addAll(properties));
         return this;
     }
 
