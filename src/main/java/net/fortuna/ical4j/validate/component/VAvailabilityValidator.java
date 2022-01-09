@@ -71,13 +71,13 @@ public class VAvailabilityValidator implements Validator<VAvailability> {
          *      with local time and a time zone reference.
          */
         final DtStart<?> start = target.getRequiredProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getRequiredParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.DATE).equals(start.getParameter(Parameter.VALUE))) {
             result.getErrors().add("Property [" + Property.DTSTART + "] must be a " + Value.DATE_TIME);
         }
 
         /* Must be DATE_TIME */
         final Optional<DtEnd<?>> end = target.getProperty(Property.DTEND);
-        if (end.isPresent() && Value.DATE.equals(end.get().getRequiredParameter(Parameter.VALUE))) {
+        if (end.isPresent() && Optional.of(Value.DATE).equals(end.get().getParameter(Parameter.VALUE))) {
             result.getErrors().add("Property [" + Property.DTEND + "] must be a " + Value.DATE_TIME);
         }
 
