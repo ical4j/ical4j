@@ -182,10 +182,10 @@ class TimeZoneSpec extends Specification {
 
 		and: 'a timezone constructed from the definition'
 		def iCalFromGoogle = new CalendarBuilder().build(new StringReader(vtzFromGoogle))
-		VTimeZone dublinFromGoogle = iCalFromGoogle.getComponent(Component.VTIMEZONE)
+		Optional<VTimeZone> dublinFromGoogle = iCalFromGoogle.getComponent(Component.VTIMEZONE)
 
 		when: 'a date-time is calculated with the timezone'
-		def dt = new DateTime("20210108T151500", new TimeZone(dublinFromGoogle))
+		def dt = new DateTime("20210108T151500", new TimeZone(dublinFromGoogle.get()))
 
 		then: 'result is as expected'
 		"20210108T151500" == dt.toString()

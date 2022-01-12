@@ -38,9 +38,9 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -136,8 +136,8 @@ public class TimeZone extends java.util.TimeZone {
     }
 
     private boolean isNegativeOffset(Observance observance) {
-        final TzOffsetTo offsetTo = observance.getProperty(Property.TZOFFSETTO);
-        final TzOffsetFrom offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+        final TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
+        final TzOffsetFrom offsetFrom = observance.getRequiredProperty(Property.TZOFFSETFROM);
         return offsetFrom.getOffset().compareTo(offsetTo.getOffset()) < 0;
     }
 
