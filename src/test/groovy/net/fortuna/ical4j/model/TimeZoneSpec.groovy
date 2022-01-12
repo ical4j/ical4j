@@ -32,7 +32,10 @@
 package net.fortuna.ical4j.model
 
 import groovy.util.logging.Slf4j
+import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.model.component.VTimeZone
 import net.fortuna.ical4j.util.Calendars
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -147,4 +150,47 @@ class TimeZoneSpec extends Specification {
 		'America/Cuiaba'		| -14400000         | -14400000					| Date.from(LocalDate.of(2020, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
 		'America/Cuiaba'		| -14400000         | -10800000					| Date.from(LocalDate.of(2018, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
     }
+
+	def testTzDublin_external() {
+		given: 'negative dst support is enabled'
+		CompatibilityHints.setHintEnabled('net.fortuna.ical4j.timezone.offset.negative_dst_supported',
+				true)
+
+		and: 'a negative dst dublin tz definition'
+		def vtzFromGoogle = "BEGIN:VCALENDAR\n" +
+				"CALSCALE:GREGORIAN\n" +
+				"VERSION:2.0\n" +
+				"PRODID:-//Google Inc//Google Calendar 70.9054//EN\n" +
+				"BEGIN:VTIMEZONE\n" +
+				"TZID:Europe/Dublin\n" +
+				"BEGIN:STANDARD\n" +
+				"TZOFFSETFROM:+0000\n" +
+				"TZOFFSETTO:+0100\n" +
+				"TZNAME:IST\n" +
+				"DTSTART:19700329T010000\n" +
+				"RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\n" +
+				"END:STANDARD\n" +
+				"BEGIN:DAYLIGHT\n" +
+				"TZOFFSETFROM:+0100\n" +
+				"TZOFFSETTO:+0000\n" +
+				"TZNAME:GMT\n" +
+				"DTSTART:19701025T020000\n" +
+				"RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\n" +
+				"END:DAYLIGHT\n" +
+				"END:VTIMEZONE\n" +
+				"END:VCALENDAR"
+
+		and: 'a timezone constructed from the definition'
+		def iCalFromGoogle = new CalendarBuilder().build(new StringReader(vtzFromGoogle))
+		VTimeZone dublinFromGoogle = iCalFromGoogle.getComponent(Component.VTIMEZONE)
+
+		when: 'a date-time is calculated with the timezone'
+		def dt = new DateTime("20210108T151500", new TimeZone(dublinFromGoogle))
+
+		then: 'result is as expected'
+		"20210108T151500" == dt.toString()
+
+		cleanup:
+		CompatibilityHints.clearHintEnabled('net.fortuna.ical4j.timezone.offset.negative_dst_supported')
+	}
 }
