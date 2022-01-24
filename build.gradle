@@ -52,7 +52,7 @@ dependencies {
     // optional support for non-Gregorian chronologies..
     implementation "org.threeten:threeten-extra:$threetenExtraVersion", optional
 
-    // optional groovy DSL for calendar builder..
+    // optional parser for filter expressions..
     implementation "org.jparsec:jparsec:$jparsecVersion", optional
 
     // optional groovy DSL for calendar builder..
