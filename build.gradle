@@ -50,7 +50,7 @@ dependencies {
     // optional timezone caching..
     implementation 'javax.cache:cache-api:1.1.1', optional
 
-    // optional groovy DSL for calendar builder..
+    // optional parser for filter expressions..
     implementation "org.jparsec:jparsec:$jparsecVersion", optional
 
     // optional groovy DSL for calendar builder..
