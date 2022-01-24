@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.Uris;
@@ -103,7 +102,7 @@ public class StructuredData extends Property implements Encodable {
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                                getParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);

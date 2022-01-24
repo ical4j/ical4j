@@ -50,7 +50,7 @@ public class Cn extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -8087119055007093293L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a Common Name

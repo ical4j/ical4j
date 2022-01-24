@@ -107,7 +107,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private final TimeZoneLoader timeZoneLoader;
 
-    private Map<String, TimeZone> timezones;
+    private final Map<String, TimeZone> timezones;
 
     private final boolean lenientTzResolution;
 

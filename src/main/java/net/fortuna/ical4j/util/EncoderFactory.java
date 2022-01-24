@@ -55,7 +55,7 @@ public abstract class EncoderFactory {
      */
     public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.factory.encoder";
 
-    private static EncoderFactory instance;
+    private static final EncoderFactory instance;
     static {
         Optional<EncoderFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
         instance = property.orElse(new DefaultEncoderFactory());

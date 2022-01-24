@@ -58,7 +58,7 @@ public class Display extends Parameter implements Encodable {
     private static final String PARAMETER_NAME = "DISPLAY";
 
     public enum Value {
-        BADGE, GRAPHIC, FULLSIZE, THUMBNAIL;
+        BADGE, GRAPHIC, FULLSIZE, THUMBNAIL
     }
 
     private final String[] values;

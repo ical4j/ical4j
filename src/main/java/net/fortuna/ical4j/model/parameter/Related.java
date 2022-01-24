@@ -64,7 +64,7 @@ public class Related extends Parameter implements Encodable {
      */
     public static final Related END = new Related(VALUE_END);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of an alarm trigger relationship

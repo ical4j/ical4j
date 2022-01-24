@@ -220,7 +220,7 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
      */
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
-    private String name;
+    private final String name;
 
     private final ParameterFactory factory;
 

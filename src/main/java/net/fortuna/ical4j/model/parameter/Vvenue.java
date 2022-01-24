@@ -51,7 +51,7 @@ public class Vvenue extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -8381878834513491869L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string abbreviation

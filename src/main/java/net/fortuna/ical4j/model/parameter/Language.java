@@ -50,7 +50,7 @@ public class Language extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 4864176270266226608L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a Language

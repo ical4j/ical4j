@@ -255,7 +255,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
                 && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
                 && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
             throw new ValidationException("Status property ["
-                    + status.toString() + "] may not occur in VTODO");
+                    + status + "] may not occur in VTODO");
         }
 
         if (recurse) {

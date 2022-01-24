@@ -50,7 +50,7 @@ public class DelegatedTo extends Parameter {
 
     private static final long serialVersionUID = 567577003350648021L;
 
-    private AddressList delegatees;
+    private final AddressList delegatees;
 
     /**
      * @param aValue a string representation of Delegatees

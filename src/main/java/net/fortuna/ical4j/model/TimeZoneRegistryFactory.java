@@ -54,7 +54,7 @@ public abstract class TimeZoneRegistryFactory {
      */
     public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.timezone.registry";
 
-    private static TimeZoneRegistryFactory instance;
+    private static final TimeZoneRegistryFactory instance;
     static {
         Optional<TimeZoneRegistryFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
         instance = property.orElse(new DefaultTimeZoneRegistryFactory());

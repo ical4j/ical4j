@@ -78,7 +78,7 @@ public class RelType extends Parameter implements Encodable {
      */
     public static final RelType SNOOZE = new RelType(VALUE_SNOOZE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a relationship type

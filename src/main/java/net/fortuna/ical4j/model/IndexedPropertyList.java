@@ -47,7 +47,7 @@ public class IndexedPropertyList {
 
     private static final PropertyList<Property> EMPTY_LIST = new PropertyList<Property>();
     
-    private Map<String, PropertyList<Property>> index;
+    private final Map<String, PropertyList<Property>> index;
     
     /**
      * Creates a new instance indexed on the parameters with the specified name.

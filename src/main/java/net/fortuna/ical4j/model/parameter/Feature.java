@@ -50,7 +50,7 @@ public class Feature extends Parameter implements Encodable {
     private static final String PARAMETER_NAME = "FEATURE";
 
     public enum Value {
-        AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO;
+        AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO
     }
 
     private final String[] values;

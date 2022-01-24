@@ -99,7 +99,7 @@ public class PartStat extends Parameter implements Encodable {
      */
     public static final PartStat IN_PROCESS = new PartStat(VALUE_IN_PROCESS);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a participation status

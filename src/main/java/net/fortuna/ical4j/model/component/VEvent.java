@@ -343,7 +343,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
             result.getErrors().add("Status property ["
-                    + status.toString() + "] is not applicable for VEVENT");
+                    + status + "] is not applicable for VEVENT");
         }
 
         if (getProperty(Property.DTEND) != null) {
@@ -462,7 +462,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         final PeriodList consumedTime = getConsumedTime(date, date);
         for (final Period p : consumedTime) {
             if (p.getStart().equals(date)) {
-                final VEvent occurrence = (VEvent) this.copy();
+                final VEvent occurrence = this.copy();
                 occurrence.getProperties().add(new RecurrenceId(date));
                 return occurrence;
             }

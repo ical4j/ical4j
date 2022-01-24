@@ -83,7 +83,7 @@ public class FilterTarget {
 
     public static class Attribute {
 
-        private String name;
+        private final String name;
 
         private String value;
 

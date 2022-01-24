@@ -52,7 +52,7 @@ public class AltRep extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -2445932592596993470L;
 
-    private URI uri;
+    private final URI uri;
 
     /**
      * @param aValue a string representation of an alternate text represenation
