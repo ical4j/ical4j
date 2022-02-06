@@ -49,7 +49,7 @@ public class XParameter extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -3372153616695145903L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aName parameter name

@@ -22,7 +22,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private String value;
 
-    private ParameterList parameters = new ParameterList();
+    private final ParameterList parameters = new ParameterList();
 
     public PropertyBuilder() {
         this(new ArrayList<>());

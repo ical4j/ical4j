@@ -50,7 +50,7 @@ public class Type extends Parameter implements Encodable {
 
 	private static final long serialVersionUID = -1153398789161059941L;
 
-	private String value;
+	private final String value;
 
     /**
      * @param aValue a string abbreviation

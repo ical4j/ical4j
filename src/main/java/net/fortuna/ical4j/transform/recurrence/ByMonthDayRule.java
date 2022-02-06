@@ -129,7 +129,7 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
                     }
                 }
                 retVal.add(Dates.getInstance(getTime(date, cal), type));
-            };
+            }
             return retVal;
         }
     }

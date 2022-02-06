@@ -52,7 +52,7 @@ public class TextList implements Serializable, Iterable<String> {
 
 	private static final long serialVersionUID = -417427815871330636L;
 	
-	private List<String> texts;
+	private final List<String> texts;
 
     /**
      * Default constructor.

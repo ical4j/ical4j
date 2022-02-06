@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -227,8 +230,8 @@ public class Geo extends Property {
      */
     @Override
     public final String getValue() {
-        return String.valueOf(getLatitude()) + ";"
-                + String.valueOf(getLongitude());
+        return getLatitude() + ";"
+                + getLongitude();
     }
 
     /**

@@ -60,7 +60,7 @@ public class ScheduleAgent extends Parameter implements Encodable {
 
     public static final ScheduleAgent NONE = new ScheduleAgent(VALUE_NONE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a scheduling agent

@@ -65,7 +65,7 @@ public class Range extends Parameter implements Encodable {
      */
     public static final Range THISANDFUTURE = new Range(VALUE_THISANDFUTURE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a recurrence identifier range

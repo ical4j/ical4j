@@ -47,7 +47,7 @@ import java.util.function.Predicate;
  */
 public class PeriodRule<T extends Component> implements Predicate<T> {
 
-    private Period period;
+    private final Period period;
 
     /**
      * Constructs a new instance using the specified period.

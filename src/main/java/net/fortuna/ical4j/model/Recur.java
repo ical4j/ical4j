@@ -93,7 +93,7 @@ public class Recur implements Serializable {
     private static final String SKIP = "SKIP";
 
     public enum Frequency {
-        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY;
+        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY
     }
 
     public enum RScale {
@@ -121,7 +121,7 @@ public class Recur implements Serializable {
     }
 
     public enum Skip {
-        OMIT, BACKWARD, FORWARD;
+        OMIT, BACKWARD, FORWARD
     }
 
     /**
@@ -181,7 +181,7 @@ public class Recur implements Serializable {
      */
     public static final String KEY_MAX_INCREMENT_COUNT = "net.fortuna.ical4j.recur.maxincrementcount";
 
-    private static int maxIncrementCount;
+    private static final int maxIncrementCount;
 
     static {
         maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
@@ -225,7 +225,7 @@ public class Recur implements Serializable {
 
     private int calendarWeekStartDay;
 
-    private Map<String, String> experimentalValues = new HashMap<String, String>();
+    private final Map<String, String> experimentalValues = new HashMap<String, String>();
 
     // Calendar field we increment based on frequency.
     private int calIncField;

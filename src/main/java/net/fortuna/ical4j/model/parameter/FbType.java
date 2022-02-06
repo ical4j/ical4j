@@ -79,7 +79,7 @@ public class FbType extends Parameter implements Encodable {
      */
     public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a format type

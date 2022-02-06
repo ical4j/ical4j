@@ -46,7 +46,7 @@ class TzHelper {
             while (scanner.hasNext()) {
                 String[] arr = scanner.nextLine().split("=");
                 String standardTzId = arr[1];
-                String displayNameAndMsTzId[] = arr[0].split(";");
+                String[] displayNameAndMsTzId = arr[0].split(";");
                 MS_TIMEZONE_NAMES.put(displayNameAndMsTzId[0], standardTzId);
                 MS_TIMEZONE_IDS.put(displayNameAndMsTzId[1], standardTzId);
             }

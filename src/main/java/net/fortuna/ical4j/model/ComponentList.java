@@ -76,7 +76,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
             IOException, URISyntaxException {
 
         for (T c : components) {
-            add((T) c.copy());
+            add(c.copy());
         }
     }
 

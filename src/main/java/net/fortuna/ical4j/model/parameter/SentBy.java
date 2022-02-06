@@ -52,7 +52,7 @@ public class SentBy extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -1169413145174029391L;
 
-    private URI address;
+    private final URI address;
 
     /**
      * @param aValue a string representation of a sent by

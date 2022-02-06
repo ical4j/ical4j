@@ -147,7 +147,7 @@ public class Value extends Parameter implements Encodable {
      */
     public static final Value UTC_OFFSET = new Value(VALUE_UTC_OFFSET);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a value data type

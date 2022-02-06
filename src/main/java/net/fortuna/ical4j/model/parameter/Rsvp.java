@@ -63,7 +63,7 @@ public class Rsvp extends Parameter implements Encodable {
      */
     public static final Rsvp FALSE = new Rsvp(VALUE_FALSE);
 
-    private Boolean rsvp;
+    private final Boolean rsvp;
 
     /**
      * @param aValue a string representation of an RSVP

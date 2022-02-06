@@ -11,9 +11,9 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private String name;
 
-    private PropertyList<Property> properties = new PropertyList<>();
+    private final PropertyList<Property> properties = new PropertyList<>();
 
-    private ComponentList<Component> subComponents = new ComponentList<>();
+    private final ComponentList<Component> subComponents = new ComponentList<>();
 
     public ComponentBuilder() {
         this(true);

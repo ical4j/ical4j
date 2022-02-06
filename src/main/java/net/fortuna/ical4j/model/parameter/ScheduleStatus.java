@@ -47,7 +47,7 @@ import java.net.URISyntaxException;
 public class ScheduleStatus extends Parameter implements Encodable {
     private static final long serialVersionUID = -96936874776850075L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string scheduling status

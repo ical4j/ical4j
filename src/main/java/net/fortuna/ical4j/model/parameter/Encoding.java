@@ -126,7 +126,7 @@ public class Encoding extends Parameter implements Encodable {
      */
     public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of an Inline Encoding

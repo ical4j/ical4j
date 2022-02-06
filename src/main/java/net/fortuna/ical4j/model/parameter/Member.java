@@ -50,7 +50,7 @@ public class Member extends Parameter {
 
     private static final long serialVersionUID = 287348849443687499L;
 
-    private AddressList groups;
+    private final AddressList groups;
 
     /**
      * @param aValue a string representation of a group or list membership

@@ -54,7 +54,7 @@ public class TzId extends Parameter implements Encodable {
      */
     public static final String PREFIX = "/";
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a time zone identifier

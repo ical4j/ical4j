@@ -85,7 +85,7 @@ public class CuType extends Parameter implements Encodable {
      */
     public static final CuType UNKNOWN = new CuType(VALUE_UNKNOWN);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a Calendar User Type

@@ -43,7 +43,7 @@ import java.util.*;
  */
 public class IndexedComponentList<T extends Component> {
 
-    private Map<String, List<T>> index;
+    private final Map<String, List<T>> index;
     
     /**
      * Creates a new instance indexed on properties with the specified name.

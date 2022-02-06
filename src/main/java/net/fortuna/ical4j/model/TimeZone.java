@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -60,16 +61,24 @@ public class TimeZone extends java.util.TimeZone {
     private final VTimeZone vTimeZone;
     private final int rawOffset;
 
+    private final boolean negativeDstSupported;
+
     /**
      * Constructs a new instance based on the specified VTimeZone.
      *
      * @param vTimeZone a VTIMEZONE object instance
      */
     public TimeZone(final VTimeZone vTimeZone) {
+        this(vTimeZone,
+                CompatibilityHints.isHintEnabled("net.fortuna.ical4j.timezone.offset.negative_dst_supported"));
+    }
+
+    public TimeZone(final VTimeZone vTimeZone, boolean negativeDstSupported) {
         this.vTimeZone = vTimeZone;
         final TzId tzId = vTimeZone.getProperty(Property.TZID);
         setID(tzId.getValue());
         this.rawOffset = getRawOffset(vTimeZone);
+        this.negativeDstSupported = negativeDstSupported;
     }
 
     /**
@@ -112,14 +121,20 @@ public class TimeZone extends java.util.TimeZone {
     public int getOffset(long date) {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
         if (observance != null) {
-            final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
-            if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
+            final TzOffsetTo offsetTo = observance.getProperty(Property.TZOFFSETTO);
+            if ((offsetTo.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
                 return getRawOffset();
             } else {
-                return (int) (offset.getOffset().getTotalSeconds() * 1000L);
+                return (int) (offsetTo.getOffset().getTotalSeconds() * 1000L);
             }
         }
         return 0;
+    }
+
+    private boolean isNegativeOffset(Observance observance) {
+        final TzOffsetTo offsetTo = observance.getProperty(Property.TZOFFSETTO);
+        final TzOffsetFrom offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+        return offsetFrom.getOffset().compareTo(offsetTo.getOffset()) < 0;
     }
 
     /**
@@ -142,7 +157,7 @@ public class TimeZone extends java.util.TimeZone {
     @Override
     public final boolean inDaylightTime(final Date date) {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
-        return (observance instanceof Daylight);
+        return (observance instanceof Daylight && (!negativeDstSupported || !isNegativeOffset(observance)));
     }
 
     /**
