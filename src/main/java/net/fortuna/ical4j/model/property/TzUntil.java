@@ -37,23 +37,23 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
 
-public class TzUntil extends UtcProperty {
+public class TzUntil extends DateProperty<Instant> {
 
     public TzUntil() {
-        super(TZUNTIL, new ParameterList(), new Factory());
+        super(TZUNTIL, new ParameterList());
     }
 
-    public TzUntil(ParameterList parameters, String value) throws ParseException {
-        super(TZUNTIL, parameters, new Factory());
+    public TzUntil(ParameterList parameters, String value) {
+        super(TZUNTIL, parameters);
         setValue(value);
     }
 
-    public TzUntil(ParameterList parameters, PropertyFactory factory) {
-        super(TZUNTIL, parameters, factory);
+    @Override
+    protected PropertyFactory<TzUntil> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TzUntil> {
@@ -65,7 +65,7 @@ public class TzUntil extends UtcProperty {
 
         @Override
         public TzUntil createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+                throws URISyntaxException {
             return new TzUntil(parameters, value);
         }
 

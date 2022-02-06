@@ -41,25 +41,19 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 public class TzIdAliasOf extends Property {
 
     private String value;
 
     public TzIdAliasOf() {
-        super(TZID_ALIAS_OF, new ParameterList(), new Factory());
+        super(TZID_ALIAS_OF, new ParameterList());
     }
 
     public TzIdAliasOf(ParameterList parameters, String value) {
-        super(TZID_ALIAS_OF, parameters, new Factory());
+        super(TZID_ALIAS_OF, parameters);
         this.value = value;
     }
-
-    public TzIdAliasOf(ParameterList aList, PropertyFactory factory) {
-        super(TZID_ALIAS_OF, aList, factory);
-    }
-
 
     @Override
     public String getValue() {
@@ -67,13 +61,18 @@ public class TzIdAliasOf extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws IOException, URISyntaxException, ParseException {
+    public void setValue(String aValue) throws IOException, URISyntaxException {
         this.value = aValue;
     }
 
     @Override
     public void validate() throws ValidationException {
 
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TzIdAliasOf> {
@@ -85,7 +84,7 @@ public class TzIdAliasOf extends Property {
 
         @Override
         public TzIdAliasOf createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+                throws URISyntaxException {
             return new TzIdAliasOf(parameters, value);
         }
 
