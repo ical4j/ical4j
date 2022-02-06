@@ -389,6 +389,10 @@ public abstract class Property extends Content implements Comparable<Property> {
      */
     public static final String STYLED_DESCRIPTION = "STYLED-DESCRIPTION";
 
+    public static final String TZUNTIL = "TZUNTIL";
+
+    public static final String TZID_ALIAS_OF = "TZID-ALIAS-OF";
+
     private final String name;
 
     private ParameterList parameters;
