@@ -99,7 +99,7 @@ public class ExtendedAddress extends Property implements Encodable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExtendedAddress> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -107,13 +107,13 @@ public class ExtendedAddress extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public ExtendedAddress createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ExtendedAddress(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public ExtendedAddress createProperty() {
             return new ExtendedAddress();
         }
     }

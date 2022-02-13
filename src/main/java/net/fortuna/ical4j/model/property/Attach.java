@@ -268,7 +268,7 @@ public class Attach extends Property {
         this.binary = null;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
+    public static class Factory extends Content.Factory implements PropertyFactory<Attach> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -276,13 +276,13 @@ public class Attach extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Attach createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Attach(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Attach createProperty() {
             return new Attach();
         }
     }

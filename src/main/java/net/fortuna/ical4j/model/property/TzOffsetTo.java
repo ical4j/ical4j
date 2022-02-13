@@ -150,7 +150,7 @@ public class TzOffsetTo extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -158,13 +158,13 @@ public class TzOffsetTo extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public TzOffsetTo createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new TzOffsetTo(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public TzOffsetTo createProperty() {
             return new TzOffsetTo();
         }
     }

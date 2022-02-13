@@ -161,7 +161,7 @@ public class Categories extends Property {
         return getCategories().toString();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Categories> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -169,13 +169,13 @@ public class Categories extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Categories createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Categories(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Categories createProperty() {
             return new Categories();
         }
     }

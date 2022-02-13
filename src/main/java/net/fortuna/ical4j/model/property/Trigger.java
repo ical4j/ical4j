@@ -281,7 +281,7 @@ public class Trigger extends UtcProperty {
         }
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Trigger> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -289,13 +289,13 @@ public class Trigger extends UtcProperty {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Trigger createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Trigger(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Trigger createProperty() {
             return new Trigger();
         }
     }

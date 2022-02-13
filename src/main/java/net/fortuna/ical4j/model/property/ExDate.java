@@ -102,7 +102,7 @@ public class ExDate extends DateListProperty {
         }
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExDate> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -110,13 +110,13 @@ public class ExDate extends DateListProperty {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public ExDate createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ExDate(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public ExDate createProperty() {
             return new ExDate();
         }
     }

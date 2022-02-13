@@ -111,7 +111,7 @@ public class Rsvp extends Parameter implements Encodable {
         }
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Rsvp> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -119,7 +119,7 @@ public class Rsvp extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Rsvp createParameter(final String value) throws URISyntaxException {
             Rsvp parameter = new Rsvp(value);
             if (Rsvp.TRUE.equals(parameter)) {
                 parameter = Rsvp.TRUE;

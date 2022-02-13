@@ -162,7 +162,7 @@ public class LocationType extends Property {
         PropertyValidator.LOCATION_TYPE.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<LocationType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -170,13 +170,13 @@ public class LocationType extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public LocationType createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new LocationType(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public LocationType createProperty() {
             return new LocationType();
         }
     }

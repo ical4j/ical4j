@@ -78,15 +78,14 @@ public class Order extends Parameter {
         return getOrder().toString();
     }
 
-    public static class Factory extends Content.Factory implements
-            ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Order> {
         private static final long serialVersionUID = 1L;
     
         public Factory() {
           super(ORDER);
         }
     
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Order createParameter(final String value) throws URISyntaxException {
             return new Order(value);
         }
     }

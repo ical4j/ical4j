@@ -216,7 +216,7 @@ public class RequestStatus extends Property {
         PropertyValidator.REQUEST_STATUS.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RequestStatus> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -224,13 +224,13 @@ public class RequestStatus extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RequestStatus createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RequestStatus(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public RequestStatus createProperty() {
             return new RequestStatus();
         }
     }

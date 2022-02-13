@@ -174,8 +174,7 @@ public class VResource extends Component {
         return getProperties(STRUCTURED_DATA);
     }
 
-    public static class Factory extends Content.Factory
-            implements ComponentFactory<VResource> {
+    public static class Factory extends Content.Factory implements ComponentFactory<VResource> {
 
         public Factory() {
             super(VRESOURCE);

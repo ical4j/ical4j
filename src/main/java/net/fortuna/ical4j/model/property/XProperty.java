@@ -114,7 +114,7 @@ public class XProperty extends Property implements Encodable {
         }
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<XProperty> {
         private static final long serialVersionUID = 1L;
 
         private final String name;
@@ -125,13 +125,13 @@ public class XProperty extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public XProperty createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new XProperty(name, parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public XProperty createProperty() {
             return new XProperty(name);
         }
     }

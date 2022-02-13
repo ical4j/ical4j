@@ -99,7 +99,7 @@ public class RelatedTo extends Property implements Encodable {
         PropertyValidator.RELATED_TO.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RelatedTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -107,13 +107,13 @@ public class RelatedTo extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RelatedTo createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RelatedTo(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public RelatedTo createProperty() {
             return new RelatedTo();
         }
     }

@@ -83,7 +83,7 @@ public class Member extends Parameter {
         return getGroups().toString();
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Member> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -91,7 +91,7 @@ public class Member extends Parameter {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Member createParameter(final String value) throws URISyntaxException {
             return new Member(value);
         }
     }

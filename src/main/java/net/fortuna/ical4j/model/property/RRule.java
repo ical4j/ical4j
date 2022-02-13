@@ -130,7 +130,7 @@ public class RRule extends Property {
         PropertyValidator.RRULE.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RRule> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -138,13 +138,13 @@ public class RRule extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RRule createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RRule(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public RRule createProperty() {
             return new RRule();
         }
     }

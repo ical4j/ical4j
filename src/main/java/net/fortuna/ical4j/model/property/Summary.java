@@ -145,7 +145,7 @@ public class Summary extends Property implements Encodable {
         PropertyValidator.SUMMARY.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Summary> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -153,13 +153,13 @@ public class Summary extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Summary createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Summary(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Summary createProperty() {
             return new Summary();
         }
     }

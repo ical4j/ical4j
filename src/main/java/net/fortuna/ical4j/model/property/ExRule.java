@@ -126,7 +126,7 @@ public class ExRule extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExRule> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -134,13 +134,13 @@ public class ExRule extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public ExRule createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ExRule(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public ExRule createProperty() {
             return new ExRule();
         }
     }

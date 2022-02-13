@@ -84,14 +84,14 @@ public class Schema extends Parameter {
         return Uris.decode(Strings.valueOf(getUri()));
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Schema> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(SCHEMA);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Schema createParameter(final String value) throws URISyntaxException {
             return new Schema(value);
         }
     }

@@ -150,7 +150,7 @@ public class Location extends Property implements Encodable {
         PropertyValidator.LOCATION.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Location> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -158,13 +158,13 @@ public class Location extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Location createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Location(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Location createProperty() {
             return new Location();
         }
     }

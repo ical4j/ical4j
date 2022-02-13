@@ -99,7 +99,7 @@ public class Region extends Property implements Encodable {
         PropertyValidator.REGION.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Region> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -107,13 +107,13 @@ public class Region extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Region createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Region(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Region createProperty() {
             return new Region();
         }
     }

@@ -211,7 +211,7 @@ public class RecurrenceId extends DateProperty {
         PropertyValidator.RECURRENCE_ID.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RecurrenceId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -219,13 +219,13 @@ public class RecurrenceId extends DateProperty {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RecurrenceId createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RecurrenceId(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public RecurrenceId createProperty() {
             return new RecurrenceId();
         }
     }

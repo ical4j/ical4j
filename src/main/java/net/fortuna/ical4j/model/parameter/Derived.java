@@ -92,15 +92,14 @@ public class Derived extends Parameter {
         return getDerived().toString().toUpperCase();
     }
 
-    public static class Factory extends Content.Factory
-            implements ParameterFactory<Parameter> {
+    public static class Factory extends Content.Factory implements ParameterFactory<Derived> {
         private static final long serialVersionUID = 1L;
     
         public Factory() {
           super(DERIVED);
         }
     
-        public Parameter createParameter(final String value)
+        public Derived createParameter(final String value)
                 throws URISyntaxException {
             if (Boolean.TRUE.toString().equals(value)) {
                 return Derived.TRUE;

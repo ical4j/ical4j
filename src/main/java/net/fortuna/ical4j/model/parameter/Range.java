@@ -94,7 +94,7 @@ public class Range extends Parameter implements Encodable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Range> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -102,7 +102,7 @@ public class Range extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Range createParameter(final String value) throws URISyntaxException {
             Range parameter = new Range(value);
             if (Range.THISANDFUTURE.equals(parameter)) {
                 parameter = Range.THISANDFUTURE;

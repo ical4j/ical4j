@@ -111,8 +111,7 @@ public class ResourceType extends Property implements Encodable {
 
     }
 
-    public static class Factory extends Content.Factory
-            implements PropertyFactory<ResourceType> {
+    public static class Factory extends Content.Factory implements PropertyFactory<ResourceType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {

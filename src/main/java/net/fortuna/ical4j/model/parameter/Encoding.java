@@ -144,7 +144,7 @@ public class Encoding extends Parameter implements Encodable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Encoding> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -152,7 +152,7 @@ public class Encoding extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Encoding createParameter(final String value) throws URISyntaxException {
             Encoding parameter = new Encoding(value);
             if (Encoding.EIGHT_BIT.equals(parameter)) {
                 parameter = Encoding.EIGHT_BIT;

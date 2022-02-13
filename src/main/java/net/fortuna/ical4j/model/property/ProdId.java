@@ -98,7 +98,7 @@ public class ProdId extends Property implements Encodable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ProdId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -106,13 +106,13 @@ public class ProdId extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public ProdId createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ProdId(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public ProdId createProperty() {
             return new ProdId();
         }
     }

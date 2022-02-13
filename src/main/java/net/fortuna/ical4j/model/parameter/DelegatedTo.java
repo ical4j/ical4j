@@ -83,7 +83,7 @@ public class DelegatedTo extends Parameter {
         return getDelegatees().toString();
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<DelegatedTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -91,7 +91,7 @@ public class DelegatedTo extends Parameter {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public DelegatedTo createParameter(final String value) throws URISyntaxException {
             return new DelegatedTo(value);
         }
     }

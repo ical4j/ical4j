@@ -100,7 +100,7 @@ public class Tel extends Property implements Encodable {
         PropertyValidator.TEL.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Tel> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -108,13 +108,13 @@ public class Tel extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Tel createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Tel(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Tel createProperty() {
             return new Tel();
         }
     }

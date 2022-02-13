@@ -7,7 +7,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -145,7 +148,7 @@ public class Acknowledged extends UtcProperty{
         setDate(aDate);
     }
     
-    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
+    public static class Factory extends Content.Factory implements PropertyFactory<Acknowledged> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -153,13 +156,13 @@ public class Acknowledged extends UtcProperty{
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Acknowledged createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Acknowledged(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Acknowledged createProperty() {
             return new Acknowledged();
         }
     }

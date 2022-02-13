@@ -165,7 +165,7 @@ public class Value extends Parameter implements Encodable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Value> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -173,7 +173,7 @@ public class Value extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Value createParameter(final String value) throws URISyntaxException {
             Value parameter = new Value(value);
             if (Value.BINARY.equals(parameter)) {
                 parameter = Value.BINARY;

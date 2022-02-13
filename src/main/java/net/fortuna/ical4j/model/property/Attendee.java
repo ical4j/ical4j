@@ -151,7 +151,7 @@ public class Attendee extends Property {
         return new Attendee(new ParameterList(getParameters(), false), calAddress);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Attendee> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -159,13 +159,13 @@ public class Attendee extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Attendee createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Attendee(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Attendee createProperty() {
             return new Attendee();
         }
     }

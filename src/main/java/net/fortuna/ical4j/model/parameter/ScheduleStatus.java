@@ -66,7 +66,7 @@ public class ScheduleStatus extends Parameter implements Encodable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<ScheduleStatus> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -74,7 +74,7 @@ public class ScheduleStatus extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public ScheduleStatus createParameter(final String value) throws URISyntaxException {
             return new ScheduleStatus(value);
         }
     }

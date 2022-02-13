@@ -99,7 +99,7 @@ public class Contact extends Property implements Encodable {
         PropertyValidator.CONTACT.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Contact> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -107,13 +107,13 @@ public class Contact extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Contact createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Contact(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Contact createProperty() {
             return new Contact();
         }
     }

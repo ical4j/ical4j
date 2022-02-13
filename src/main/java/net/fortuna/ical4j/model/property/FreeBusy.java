@@ -196,7 +196,7 @@ public class FreeBusy extends Property {
         return getPeriods().toString();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<FreeBusy> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -204,13 +204,13 @@ public class FreeBusy extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public FreeBusy createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new FreeBusy(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public FreeBusy createProperty() {
             return new FreeBusy();
         }
     }

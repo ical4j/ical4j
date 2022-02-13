@@ -99,7 +99,7 @@ public class Description extends Property implements Encodable {
         PropertyValidator.DESCRIPTION.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Description> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -107,13 +107,13 @@ public class Description extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Description createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Description(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Description createProperty() {
             return new Description();
         }
     }

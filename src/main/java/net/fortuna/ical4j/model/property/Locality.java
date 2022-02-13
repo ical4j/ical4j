@@ -99,7 +99,7 @@ public class Locality extends Property implements Encodable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Locality> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -107,13 +107,13 @@ public class Locality extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Locality createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Locality(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Locality createProperty() {
             return new Locality();
         }
     }
