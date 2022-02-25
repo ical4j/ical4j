@@ -71,7 +71,7 @@ public class Email extends Parameter implements Encodable {
         return address.getAddress();
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Email> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -79,7 +79,7 @@ public class Email extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) {
+        public Email createParameter(final String value) {
             try {
                 return new Email(value);
             } catch (AddressException e) {

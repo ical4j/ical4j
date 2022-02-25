@@ -58,6 +58,9 @@ dependencies {
 
 //    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
 
+    // optional JSON schema validation for structured-data..
+    implementation "com.github.erosb:everit-json-schema:$everitJsonSchemaVersion", optional
+
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
     testCompile "org.codehaus.groovy:groovy:$groovyVersion",
