@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +23,7 @@ public final class ValidationRule implements Serializable {
         OneExclusive("If one is present, ALL others MUST NOT be present."),
         AllOrNone("If one is present, ALL must be present.");
 
-        String description;
+        private final String description;
 
         ValidationType(String description) {
             this.description = description;
@@ -56,7 +58,21 @@ public final class ValidationRule implements Serializable {
         return instances;
     }
 
-    public boolean isRelaxedModeSupported() {
-        return relaxedModeSupported;
+    public String getMessage(String...instances) {
+        List<String> match = getInstances();
+        if (instances.length > 0) {
+            match = Arrays.asList(instances);
+        }
+        return String.format("%s %s", getType().getDescription(), String.join(",", match));
+    }
+
+    public ValidationEntry.Level getLevel() {
+        boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                && relaxedModeSupported;
+        if (warnOnly) {
+            return ValidationEntry.Level.WARNING;
+        } else {
+            return ValidationEntry.Level.ERROR;
+        }
     }
 }
