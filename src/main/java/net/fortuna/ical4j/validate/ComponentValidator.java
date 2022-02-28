@@ -34,7 +34,6 @@ package net.fortuna.ical4j.validate;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.Arrays;
 import java.util.List;
@@ -147,14 +146,7 @@ public class ComponentValidator<T extends Component> implements Validator<T> {
         ValidationResult result = new ValidationResult();
 
         for (ValidationRule rule : rules) {
-            boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
-                    && rule.isRelaxedModeSupported();
-
-            if (warnOnly) {
-                result.getWarnings().addAll(apply(rule, target));
-            } else {
-                result.getErrors().addAll(apply(rule, target));
-            }
+            result.getEntries().addAll(apply(rule, target.getName(), target));
         }
         if (result.hasErrors()) {
             throw new ValidationException(result);

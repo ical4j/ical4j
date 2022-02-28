@@ -321,7 +321,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = new ValidationResult();
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
@@ -342,8 +342,8 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
-            result.getErrors().add("Status property ["
-                    + status + "] is not applicable for VEVENT");
+            result.getEntries().add(new ValidationEntry("Status property ["
+                    + status + "] is not applicable for VEVENT", ValidationEntry.Level.ERROR, getName()));
         }
 
         if (getProperty(Property.DTEND) != null) {
@@ -378,9 +378,9 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                     startEndValueMismatch = true;
                 }
                 if (startEndValueMismatch) {
-                    result.getErrors().add("Property [" + Property.DTEND
+                    result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
-                            + "] as [" + Property.DTSTART + "]");
+                            + "] as [" + Property.DTSTART + "]", ValidationEntry.Level.ERROR, getName()));
                 }
             }
         }
@@ -391,6 +391,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
+        return result;
     }
 
     /**

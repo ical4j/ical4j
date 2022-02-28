@@ -42,34 +42,24 @@ import java.util.List;
  */
 public final class ValidationResult {
 
-    private final List<String> errors = new ArrayList<>();
+    private final List<ValidationEntry> entries = new ArrayList<>();
 
-    private final List<String> warnings = new ArrayList<>();
-
-    public ValidationResult() {
+    public ValidationResult(ValidationEntry...entries) {
+        this.entries.addAll(Arrays.asList(entries));
     }
 
-    public ValidationResult(String...errors) {
-        this.errors.addAll(Arrays.asList(errors));
-    }
-
-    public List<String> getErrors() {
-        return errors;
-    }
-
-    public List<String> getWarnings() {
-        return warnings;
+    public List<ValidationEntry> getEntries() {
+        return entries;
     }
 
     public boolean hasErrors() {
-        return !errors.isEmpty();
+        return entries.stream().anyMatch(e -> e.getLevel() == ValidationEntry.Level.ERROR);
     }
 
     @Override
     public String toString() {
         return "ValidationResult{" +
-                "errors=" + errors +
-                ", warnings=" + warnings +
+                "entries=" + entries +
                 '}';
     }
 }

@@ -39,10 +39,7 @@ import net.fortuna.ical4j.model.component.VAvailability;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 
 public class VAvailabilityValidator implements Validator<VAvailability> {
 
@@ -70,13 +67,15 @@ public class VAvailabilityValidator implements Validator<VAvailability> {
          */
         final DtStart start = target.getProperty(Property.DTSTART);
         if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
-            result.getErrors().add("Property [" + Property.DTSTART + "] must be a " + Value.DATE_TIME);
+            result.getEntries().add(new ValidationEntry("Property [" + Property.DTSTART + "] must be a " + Value.DATE_TIME,
+                    ValidationEntry.Level.ERROR, target.getName()));
         }
 
         /* Must be DATE_TIME */
         final DtEnd end = target.getProperty(Property.DTEND);
         if (end != null && Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
-            result.getErrors().add("Property [" + Property.DTEND + "] must be a " + Value.DATE_TIME);
+            result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND + "] must be a " + Value.DATE_TIME,
+                    ValidationEntry.Level.ERROR, target.getName()));
         }
 
         if (result.hasErrors()) {

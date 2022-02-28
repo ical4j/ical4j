@@ -37,10 +37,7 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 
 public class VFreeBusyValidator implements Validator<VFreeBusy> {
 
@@ -58,7 +55,8 @@ public class VFreeBusyValidator implements Validator<VFreeBusy> {
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
         if (dtStart != null && !dtStart.isUtc()) {
-            result.getErrors().add("DTSTART must be specified in UTC time");
+            result.getEntries().add(new ValidationEntry("DTSTART must be specified in UTC time",
+                    ValidationEntry.Level.ERROR, target.getName()));
         }
 
         final DtEnd dtEnd = target.getProperty(Property.DTEND);
@@ -70,13 +68,15 @@ public class VFreeBusyValidator implements Validator<VFreeBusy> {
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
         if (dtEnd != null && !dtEnd.isUtc()) {
-            result.getErrors().add("DTEND must be specified in UTC time");
+            result.getEntries().add(new ValidationEntry("DTEND must be specified in UTC time",
+                    ValidationEntry.Level.ERROR, target.getName()));
         }
 
         if (dtStart != null && dtEnd != null
                 && !dtStart.getDate().before(dtEnd.getDate())) {
-            result.getErrors().add("Property [" + Property.DTEND
-                    + "] must be later in time than [" + Property.DTSTART + "]");
+            result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
+                    + "] must be later in time than [" + Property.DTSTART + "]", ValidationEntry.Level.ERROR,
+                    target.getName()));
         }
         if (result.hasErrors()) {
             throw new ValidationException(result);

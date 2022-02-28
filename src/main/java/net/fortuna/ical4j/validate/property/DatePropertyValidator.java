@@ -37,10 +37,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.validate.ParameterValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 
 public class DatePropertyValidator<T extends DateProperty> implements Validator<T> {
 
@@ -72,8 +69,9 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
         if (target.getDate() instanceof DateTime) {
 
             if (value != null && !Value.DATE_TIME.equals(value)) {
-                result.getErrors().add("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance");
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
+                        + "] is invalid for DATE-TIME instance", ValidationEntry.Level.ERROR,
+                        target.getName()));
             }
 
             final DateTime dateTime = (DateTime) target.getDate();
@@ -84,18 +82,21 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
                     && (tzId == null || !tzId.getValue().equals(
                     dateTime.getTimeZone().getID()))) {
 
-                result.getErrors().add("TZID parameter [" + tzId
+                result.getEntries().add(new ValidationEntry("TZID parameter [" + tzId
                         + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]");
+                        + dateTime.getTimeZone().getID() + "]", ValidationEntry.Level.ERROR,
+                        target.getName()));
             }
         } else if (target.getDate() != null) {
 
             if (value == null) {
-                result.getErrors().add("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance");
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + Value.DATE
+                        + "] must be specified for DATE instance", ValidationEntry.Level.ERROR,
+                        target.getName()));
             } else if (!Value.DATE.equals(value)) {
-                result.getErrors().add("VALUE parameter [" + value
-                        + "] is invalid for DATE instance");
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
+                        + "] is invalid for DATE instance", ValidationEntry.Level.ERROR,
+                        target.getName()));
             }
         }
         if (result.hasErrors()) {

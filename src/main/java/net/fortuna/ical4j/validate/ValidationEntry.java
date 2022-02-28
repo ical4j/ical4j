@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,34 +31,50 @@
  *
  */
 
-package net.fortuna.ical4j.validate.property;
+package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.property.UtcProperty;
-import net.fortuna.ical4j.validate.ValidationEntry;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
+public class ValidationEntry {
 
-public class UtcPropertyValidator<T extends UtcProperty> extends DatePropertyValidator<T> {
+    public enum Level {
+        ERROR, WARNING, INFO
+    }
+
+    private final String message;
+
+    private final Level level;
+
+    private final String context;
+
+    public ValidationEntry(String message, Level level, String context) {
+        this.message = message;
+        this.level = level;
+        this.context = context;
+    }
+
+    public ValidationEntry(ValidationRule rule, String context, String...instances) {
+        this.message = rule.getMessage(instances);
+        this.level = rule.getLevel();
+        this.context = context;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public String getContext() {
+        return context;
+    }
 
     @Override
-    public void validate(T target) throws ValidationException {
-        super.validate(target);
-        ValidationResult result = new ValidationResult();
-        if (target.getDate() != null && !(target.getDate() instanceof DateTime)) {
-            result.getEntries().add(new ValidationEntry("Property must have a DATE-TIME value",
-                    ValidationEntry.Level.ERROR, target.getName()));
-        }
-
-        final DateTime dateTime = (DateTime) target.getDate();
-
-        if (dateTime != null && !dateTime.isUtc()) {
-            result.getEntries().add(new ValidationEntry(target.getName() +
-                    ": DATE-TIME value must be specified in UTC time", ValidationEntry.Level.ERROR,
-                    target.getName()));
-        }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
+    public String toString() {
+        return "ValidationEntry{" +
+                "message='" + message + '\'' +
+                ", level=" + level +
+                ", context='" + context + '\'' +
+                '}';
     }
 }

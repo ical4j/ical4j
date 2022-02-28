@@ -35,26 +35,21 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         ValidationResult result = new ValidationResult();
 
         for (ValidationRule rule : rules) {
-            boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
-                    && rule.isRelaxedModeSupported();
-
-            if (warnOnly) {
-                result.getWarnings().addAll(apply(rule, (PropertyContainer) target));
-            } else {
-                result.getErrors().addAll(apply(rule, (PropertyContainer) target));
-            }
+            result.getEntries().addAll(apply(rule, Calendar.VCALENDAR, (PropertyContainer) target));
         }
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
             if (!Version.VERSION_2_0.equals(target.getProperty(Property.VERSION))) {
-                result.getErrors().add("Unsupported Version: " + target.getProperty(Property.VERSION).getValue());
+                result.getEntries().add(new ValidationEntry("Unsupported Version: " + target.getProperty(Property.VERSION).getValue(),
+                        ValidationEntry.Level.ERROR, Calendar.VCALENDAR));
             }
         }
 
         // must contain at least one component
         if (target.getComponents().isEmpty()) {
-            result.getErrors().add("Calendar must contain at least one component");
+            result.getEntries().add(new ValidationEntry("Calendar must contain at least one component",
+                    ValidationEntry.Level.ERROR, Calendar.VCALENDAR));
         }
 
         // validate properties..
@@ -62,7 +57,8 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
             boolean isCalendarProperty = calendarProperties.stream().filter(calProp -> calProp.isInstance(property)) != null;
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
-                result.getErrors().add("Invalid property: " + property.getName());
+                result.getEntries().add(new ValidationEntry("Invalid property: " + property.getName(),
+                        ValidationEntry.Level.ERROR, Calendar.VCALENDAR));
             }
         }
 

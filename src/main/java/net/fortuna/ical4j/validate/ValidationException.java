@@ -67,7 +67,7 @@ public class ValidationException extends RuntimeException {
      * @param message a message
      */
     public ValidationException(final String message) {
-        this(new ValidationResult(message));
+        this(new ValidationResult(new ValidationEntry(message, ValidationEntry.Level.ERROR, null)));
     }
 
     /**
@@ -76,7 +76,8 @@ public class ValidationException extends RuntimeException {
      * @param args message arguments
      */
     public ValidationException(final String message, Object[] args) {
-        this(new ValidationResult(MessageFormat.format(message, args)));
+        this(new ValidationResult(new ValidationEntry(MessageFormat.format(message, args),
+                ValidationEntry.Level.ERROR, null)));
     }
 
     public ValidationResult getResult() {
