@@ -33,63 +33,26 @@
 
 package net.fortuna.ical4j.validate;
 
-import java.util.Objects;
+import java.util.function.Predicate;
 
-public class ValidationEntry {
+public class PredicateRule<T> extends ValidationRule {
 
-    public enum Severity {
-        ERROR, WARNING, INFO
-    }
+    private final Predicate<T> predicate;
 
     private final String message;
 
-    private final Severity severity;
-
-    private final String context;
-
-    public ValidationEntry(String message, Severity severity, String context) {
+    public PredicateRule(Predicate<T> predicate, String message, String... instances) {
+        super(null, instances);
+        this.predicate = predicate;
         this.message = message;
-        this.severity = severity;
-        this.context = context;
     }
 
-    public ValidationEntry(ValidationRule rule, String context, String...instances) {
-        this.message = rule.getMessage(instances);
-        this.severity = rule.getSeverity();
-        this.context = context;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    public String getContext() {
-        return context;
+    public Predicate<T> getPredicate() {
+        return predicate;
     }
 
     @Override
-    public String toString() {
-        return "ValidationEntry{" +
-                "message='" + message + '\'' +
-                ", level=" + severity +
-                ", context='" + context + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ValidationEntry that = (ValidationEntry) o;
-        return Objects.equals(message, that.message) && severity == that.severity && Objects.equals(context, that.context);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(message, severity, context);
+    public String getMessage(String... instances) {
+        return String.format(message, (Object[]) instances);
     }
 }

@@ -36,7 +36,7 @@ import java.text.MessageFormat;
 /**
  * $Id$ [23-Apr-2004]
  *
- * An exception thrown during validation.
+ * An exception thrown to indicate a validation failure.
  * 
  * @author Ben Fortuna
  */
@@ -45,13 +45,6 @@ public class ValidationException extends RuntimeException {
     private static final long serialVersionUID = 309245291364742896L;
 
     private final ValidationResult result;
-
-    /**
-     * Default constructor.
-     */
-    public ValidationException() {
-        this(new ValidationResult());
-    }
 
     /**
      * Constructor with message.
@@ -67,7 +60,7 @@ public class ValidationException extends RuntimeException {
      * @param message a message
      */
     public ValidationException(final String message) {
-        this(new ValidationResult(new ValidationEntry(message, ValidationEntry.Level.ERROR, null)));
+        this(new ValidationResult(new ValidationEntry(message, ValidationEntry.Severity.ERROR, null)));
     }
 
     /**
@@ -77,7 +70,7 @@ public class ValidationException extends RuntimeException {
      */
     public ValidationException(final String message, Object[] args) {
         this(new ValidationResult(new ValidationEntry(MessageFormat.format(message, args),
-                ValidationEntry.Level.ERROR, null)));
+                ValidationEntry.Severity.ERROR, null)));
     }
 
     public ValidationResult getResult() {

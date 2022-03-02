@@ -33,63 +33,33 @@
 
 package net.fortuna.ical4j.validate;
 
-import java.util.Objects;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-public class ValidationEntry {
+/**
+ * Encapsulates a set of validation rules and context for the application of these rules.
+ *
+ * @param <T> target type for rule application
+ */
+public abstract class AbstractValidationRuleSet<T> implements Serializable {
 
-    public enum Severity {
-        ERROR, WARNING, INFO
-    }
+    protected final Set<ValidationRule> rules = new HashSet<>();
 
-    private final String message;
+    protected final String context;
 
-    private final Severity severity;
-
-    private final String context;
-
-    public ValidationEntry(String message, Severity severity, String context) {
-        this.message = message;
-        this.severity = severity;
+    public AbstractValidationRuleSet(String context, ValidationRule...rules) {
         this.context = context;
+        this.rules.addAll(Arrays.asList(rules));
     }
 
-    public ValidationEntry(ValidationRule rule, String context, String...instances) {
-        this.message = rule.getMessage(instances);
-        this.severity = rule.getSeverity();
-        this.context = context;
-    }
+    public abstract List<ValidationEntry> apply(T target);
 
-    public String getMessage() {
-        return message;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    public String getContext() {
-        return context;
-    }
-
-    @Override
-    public String toString() {
-        return "ValidationEntry{" +
-                "message='" + message + '\'' +
-                ", level=" + severity +
-                ", context='" + context + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ValidationEntry that = (ValidationEntry) o;
-        return Objects.equals(message, that.message) && severity == that.severity && Objects.equals(context, that.context);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(message, severity, context);
+    protected List<String> matches(List<String> instances, Predicate<String> matchPredicate) {
+        return instances.stream().filter(matchPredicate).collect(Collectors.toList());
     }
 }

@@ -33,27 +33,35 @@
 
 package net.fortuna.ical4j.validate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Encapsulates the result of applying validation rules to iCalendar content.
  */
 public final class ValidationResult {
 
-    private final List<ValidationEntry> entries = new ArrayList<>();
+    public static final ValidationResult EMPTY = new ValidationResult(Collections.emptySet());
+
+    private final Set<ValidationEntry> entries;
 
     public ValidationResult(ValidationEntry...entries) {
+        this(new HashSet<>());
         this.entries.addAll(Arrays.asList(entries));
     }
 
-    public List<ValidationEntry> getEntries() {
+    private ValidationResult(Set<ValidationEntry> entries) {
+        this.entries = entries;
+    }
+
+    public Set<ValidationEntry> getEntries() {
         return entries;
     }
 
     public boolean hasErrors() {
-        return entries.stream().anyMatch(e -> e.getLevel() == ValidationEntry.Level.ERROR);
+        return entries.stream().anyMatch(e -> e.getSeverity() == ValidationEntry.Severity.ERROR);
     }
 
     @Override

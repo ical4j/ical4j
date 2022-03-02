@@ -66,11 +66,24 @@ public interface Validator<T> extends Serializable {
     /**
      * Validates the target content by applying validation rules. When content fails validation the validator
      * may throw an exception depending on the implementation.
+     *
+     * @param target the target of validation
+     * @return the result of validation applied to the specified target
      * @throws ValidationException indicates validation failure (implementation-specific)
      */
-    void validate(T target) throws ValidationException;
+    ValidationResult validate(T target) throws ValidationException;
 
+    /**
+     *
+     * @param rule
+     * @param context
+     * @param target
+     * @return
+     * @deprecated use {@link ComponentContainerRuleSet#apply(ComponentContainer)}
+     */
+    @Deprecated
     default List<ValidationEntry> apply(ValidationRule rule, String context, ComponentContainer<?> target) {
+        // only consider the specified instances in the total count..
         int total = rule.getInstances().stream().mapToInt(s -> target.getComponents(s).size()).sum();
         switch (rule.getType()) {
             case None:
@@ -92,6 +105,7 @@ public interface Validator<T> extends Serializable {
             case OneExclusive:
                 for (String instance : rule.getInstances()) {
                     int count = target.getComponents(instance).size();
+                    // if one instance is present, ensure none of other instances is present..
                     if (count > 0 && count != total) {
                         return Collections.singletonList(new ValidationEntry(rule, context));
                     }
@@ -104,6 +118,15 @@ public interface Validator<T> extends Serializable {
         return Collections.emptyList();
     }
 
+    /**
+     *
+     * @param rule
+     * @param context
+     * @param target
+     * @return
+     * @deprecated use {@link PropertyContainerRuleSet#apply(PropertyContainer)}
+     */
+    @Deprecated
     default List<ValidationEntry> apply(ValidationRule rule, String context, PropertyContainer target) {
         int total = rule.getInstances().stream().mapToInt(s -> target.getProperties(s).size()).sum();
         switch (rule.getType()) {
@@ -140,6 +163,15 @@ public interface Validator<T> extends Serializable {
         return Collections.emptyList();
     }
 
+    /**
+     *
+     * @param rule
+     * @param context
+     * @param target
+     * @return
+     * @deprecated use {@link PropertyRuleSet#apply(Property)}
+     */
+    @Deprecated
     default List<ValidationEntry> apply(ValidationRule rule, String context, Property target) {
         int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
         switch (rule.getType()) {
@@ -173,5 +205,4 @@ public interface Validator<T> extends Serializable {
         }
         return Collections.emptyList();
     }
-
 }

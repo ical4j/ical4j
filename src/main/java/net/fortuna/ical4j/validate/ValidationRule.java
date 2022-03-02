@@ -13,7 +13,7 @@ import java.util.List;
  * For example, a rule might define a test for one or less DTEND properties using the "OneOrLess" validation type
  * and "DTEND" identifier.
  */
-public final class ValidationRule implements Serializable {
+public class ValidationRule implements Serializable {
 
     public enum ValidationType {
         None("The following MUST NOT be present."),
@@ -66,13 +66,13 @@ public final class ValidationRule implements Serializable {
         return String.format("%s %s", getType().getDescription(), String.join(",", match));
     }
 
-    public ValidationEntry.Level getLevel() {
+    public ValidationEntry.Severity getSeverity() {
         boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                 && relaxedModeSupported;
         if (warnOnly) {
-            return ValidationEntry.Level.WARNING;
+            return ValidationEntry.Severity.WARNING;
         } else {
-            return ValidationEntry.Level.ERROR;
+            return ValidationEntry.Severity.ERROR;
         }
     }
 }
