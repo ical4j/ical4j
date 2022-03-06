@@ -39,16 +39,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PropertyRuleSet extends AbstractValidationRuleSet<Property> {
+public class PropertyRuleSet<T extends Property> extends AbstractValidationRuleSet<T> {
 
-    public PropertyRuleSet(String context, ValidationRule... rules) {
-        super(context, rules);
+    public PropertyRuleSet(ValidationRule... rules) {
+        super(rules);
     }
 
     @Override
-    public List<ValidationEntry> apply(Property target) {
+    public List<ValidationEntry> apply(String context, Property target) {
         List<ValidationEntry> results = new ArrayList<>();
         for (ValidationRule rule: rules) {
+            // predicate rule hack..
+            if (rule.getType() == null) {
+                continue;
+            }
             List<String> matches = Collections.emptyList();
             int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
             switch (rule.getType()) {
@@ -72,12 +76,15 @@ public class PropertyRuleSet extends AbstractValidationRuleSet<Property> {
                     break;
                 case AllOrNone:
                     if (total > 0 && total != rule.getInstances().size()) {
-                        results.add(new ValidationEntry(rule, context));
+                        results.add(new ValidationEntry(rule, target.getName()));
                     }
+                    break;
+                case ValueMatch:
+                    matches = matches(rule.getInstances(), s -> !target.getValue().matches(s));
                     break;
             }
             if (!matches.isEmpty()) {
-                results.add(new ValidationEntry(rule, context, matches.toArray(new String[0])));
+                results.add(new ValidationEntry(rule, target.getName(), matches.toArray(new String[0])));
             }
         }
         return results;

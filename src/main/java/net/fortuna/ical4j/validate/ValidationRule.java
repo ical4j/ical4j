@@ -21,7 +21,8 @@ public class ValidationRule implements Serializable {
         OneOrLess("The following are OPTIONAL, but MUST NOT occur more than once."),
         OneOrMore("The following are OPTIONAL, and MAY occur more than once."),
         OneExclusive("If one is present, ALL others MUST NOT be present."),
-        AllOrNone("If one is present, ALL must be present.");
+        AllOrNone("If one is present, ALL must be present."),
+        ValueMatch("Value MUST match expression.");
 
         private final String description;
 
