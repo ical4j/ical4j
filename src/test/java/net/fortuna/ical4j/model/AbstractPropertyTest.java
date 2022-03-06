@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,13 +67,13 @@ public abstract class AbstractPropertyTest extends TestCase {
     /**
      * @param property
      */
-    protected void assertValidationException(final Property property) {
+    protected void assertValidationError(final Property property) {
         try {
-            property.validate();
+            ValidationResult result = property.validate();
+            assertTrue(result.hasErrors());
         } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
             return;
         }
-        fail("ValidationException should be thrown!");
     }
 }

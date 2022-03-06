@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,10 +108,11 @@ public class TriggerTest extends PropertyTest {
         assertNull(trigger.getDuration());
         assertNotNull(trigger.getDate());
         assertNotNull(trigger.getDateTime());
-        trigger.validate();
+        ValidationResult result = trigger.validate();
+        assertFalse(result.hasErrors());
 
         trigger.getParameters().add(Value.DURATION);
-        assertValidationException(trigger);
+        assertValidationError(trigger);
     }
     
     /**

@@ -82,10 +82,7 @@ public class XComponent extends CalendarComponent {
         }
         
         if (recurse) {
-            validateProperties();
-        }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
+            result.getEntries().addAll(validateProperties().getEntries());
         }
         return result;
     }

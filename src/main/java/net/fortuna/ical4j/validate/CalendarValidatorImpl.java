@@ -65,10 +65,6 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
                 component.validate(method);
             }
         }
-
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
         return result;
     }
 }

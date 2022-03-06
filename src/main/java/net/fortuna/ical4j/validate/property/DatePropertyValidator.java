@@ -100,9 +100,6 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
                         target.getName()));
             }
         }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
         return result;
     }
 }

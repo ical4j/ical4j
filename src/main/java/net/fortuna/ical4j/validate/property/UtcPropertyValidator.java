@@ -57,9 +57,6 @@ public class UtcPropertyValidator<T extends UtcProperty> extends DatePropertyVal
                     ": DATE-TIME value must be specified in UTC time", ValidationEntry.Severity.ERROR,
                     target.getName()));
         }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
         return result;
     }
 }
