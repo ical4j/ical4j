@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,26 +31,28 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VJournal;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
 
-public class VJournalValidator implements Validator<VJournal> {
+import static net.fortuna.ical4j.model.Component.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
+
+public class ITIPValidator implements Validator<Calendar> {
+
+    private static final PropertyContainerRuleSet<Calendar> PROPS_RULE_SET = new PropertyContainerRuleSet<>(
+            new ValidationRule(One, Property.PRODID, Property.VERSION, Property.METHOD),
+            new ValidationRule(OneOrLess, Property.CALSCALE));
+
+    private static final ComponentContainerRuleSet COMPONENTS_RULE_SET = new ComponentContainerRuleSet(
+            new ValidationRule(OneExclusive, VEVENT, VFREEBUSY, VTODO, VJOURNAL));
 
     @Override
-    public void validate(VJournal target) throws ValidationException {
-        ComponentValidator.VJOURNAL.validate(target);
-
-        final Status status = target.getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property [" + status + "] may not occur in VJOURNAL");
-        }
+    public ValidationResult validate(Calendar target) throws ValidationException {
+        ValidationResult result = new ValidationResult();
+        result.getEntries().addAll(PROPS_RULE_SET.apply(Calendar.VCALENDAR, target));
+        result.getEntries().addAll(COMPONENTS_RULE_SET.apply(Calendar.VCALENDAR, target));
+        return result;
     }
 }
