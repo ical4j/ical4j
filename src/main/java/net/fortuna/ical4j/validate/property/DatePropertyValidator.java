@@ -39,10 +39,18 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.validate.*;
 
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
+
+@Deprecated
 public class DatePropertyValidator<T extends DateProperty> implements Validator<T> {
 
+    private static final ValidationRule OPTIONAL_PARAMS = new ValidationRule(OneOrLess, Parameter.VALUE, Parameter.TZID);
+
+    private static final ValidationRule UTC_PARAMS = new ValidationRule(None, Parameter.TZID);
+
     @Override
-    public void validate(T target) throws ValidationException {
+    public ValidationResult validate(T target) throws ValidationException {
         ValidationResult result = new ValidationResult();
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
@@ -53,24 +61,17 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                target.getParameters());
-
+        result.getEntries().addAll(new PropertyRuleSet(OPTIONAL_PARAMS).apply(target.getName(), target));
         if (target.isUtc()) {
-            ParameterValidator.assertNone(Parameter.TZID,
-                    target.getParameters());
-        } else {
-            ParameterValidator.assertOneOrLess(Parameter.TZID,
-                    target.getParameters());
+            result.getEntries().addAll(new PropertyRuleSet(UTC_PARAMS).apply(target.getName(), target));
         }
-
         final Value value = target.getParameter(Parameter.VALUE);
 
         if (target.getDate() instanceof DateTime) {
 
             if (value != null && !Value.DATE_TIME.equals(value)) {
                 result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance", ValidationEntry.Level.ERROR,
+                        + "] is invalid for DATE-TIME instance", ValidationEntry.Severity.ERROR,
                         target.getName()));
             }
 
@@ -84,23 +85,24 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
 
                 result.getEntries().add(new ValidationEntry("TZID parameter [" + tzId
                         + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]", ValidationEntry.Level.ERROR,
+                        + dateTime.getTimeZone().getID() + "]", ValidationEntry.Severity.ERROR,
                         target.getName()));
             }
         } else if (target.getDate() != null) {
 
             if (value == null) {
                 result.getEntries().add(new ValidationEntry("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance", ValidationEntry.Level.ERROR,
+                        + "] must be specified for DATE instance", ValidationEntry.Severity.ERROR,
                         target.getName()));
             } else if (!Value.DATE.equals(value)) {
                 result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
-                        + "] is invalid for DATE instance", ValidationEntry.Level.ERROR,
+                        + "] is invalid for DATE instance", ValidationEntry.Severity.ERROR,
                         target.getName()));
             }
         }
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
+        return result;
     }
 }

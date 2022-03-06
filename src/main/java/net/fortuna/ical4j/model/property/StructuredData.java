@@ -37,6 +37,8 @@ import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.schema.SchemaValidatorFactory;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.DecoderException;
 import org.slf4j.Logger;
@@ -47,6 +49,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+
+import static net.fortuna.ical4j.model.Parameter.SCHEMA;
 
 /**
  * $Id$
@@ -128,8 +132,12 @@ public class StructuredData extends Property implements Encodable {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        PropertyValidator.STRUCTURED_DATA.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        ValidationResult result = PropertyValidator.STRUCTURED_DATA.validate(this);
+
+        result.getEntries().addAll(SchemaValidatorFactory.newInstance(
+                getParameter(SCHEMA)).validate(this).getEntries());
+        return result;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<StructuredData> {

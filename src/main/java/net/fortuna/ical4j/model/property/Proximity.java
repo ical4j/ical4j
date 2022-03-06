@@ -36,9 +36,8 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.EmptyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,8 +52,6 @@ public class Proximity extends Property {
     private static final String VALUE_CONNECT = "CONNECT";
     
     private static final String VALUE_DISCONNECT = "DISCONNECT";
-
-    private static final Validator<Property> validator = new EmptyValidator<>();
 
     private String value;
 
@@ -77,7 +74,7 @@ public class Proximity extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 }

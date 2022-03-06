@@ -33,8 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.property.TriggerValidator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -220,8 +221,14 @@ public class Trigger extends UtcProperty {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        new TriggerValidator().validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        ValidationResult result = super.validate();
+        if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
+            result.getEntries().addAll(PropertyValidator.TRIGGER_ABS.validate(this).getEntries());
+        } else {
+            result.getEntries().addAll(PropertyValidator.TRIGGER_REL.validate(this).getEntries());
+        }
+        return result;
     }
 
     /**

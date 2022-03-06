@@ -39,6 +39,7 @@ import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -144,7 +145,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * Default constructor.
      */
     public Calendar() {
-        this(new PropertyList<Property>(), new ComponentList<CalendarComponent>());
+        this(new PropertyList<>(), new ComponentList<>());
     }
 
     /**
@@ -152,7 +153,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @param components a list of components to add to the calendar
      */
     public Calendar(final ComponentList<CalendarComponent> components) {
-        this(new PropertyList<Property>(), components);
+        this(new PropertyList<>(), components);
     }
 
     /**
@@ -183,11 +184,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @throws ParseException where calendar parsing fails
      * @throws URISyntaxException where an invalid URI string is encountered
      */
-    public Calendar(Calendar c) throws ParseException, IOException,
-            URISyntaxException {
-        
-        this(new PropertyList<Property>(c.getProperties()),
-        		new ComponentList<CalendarComponent>(c.getComponents()));
+    public Calendar(Calendar c) throws ParseException, IOException, URISyntaxException {
+        this(new PropertyList<>(c.getProperties()), new ComponentList<>(c.getComponents()));
     }
 
     /**
@@ -217,8 +215,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * Perform validation on the calendar, its properties and its components in its current state.
      * @throws ValidationException where the calendar is not in a valid state
      */
-    public final void validate() throws ValidationException {
-        validate(true);
+    public final ValidationResult validate() throws ValidationException {
+        return validate(true);
     }
 
     /**
@@ -226,12 +224,13 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @param recurse indicates whether to validate the calendar's properties and components
      * @throws ValidationException where the calendar is not in a valid state
      */
-    public void validate(final boolean recurse) throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = validator.validate(this);
         if (recurse) {
             validateProperties();
             validateComponents();
         }
+        return result;
     }
 
     /**

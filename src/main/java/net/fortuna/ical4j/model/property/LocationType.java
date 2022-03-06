@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -158,8 +159,8 @@ public class LocationType extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        PropertyValidator.LOCATION_TYPE.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.LOCATION_TYPE.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<LocationType> {

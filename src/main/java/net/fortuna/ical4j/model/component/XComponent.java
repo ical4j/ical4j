@@ -78,7 +78,7 @@ public class XComponent extends CalendarComponent {
                 && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
 
             result.getEntries().add(new ValidationEntry("Experimental components must have the following prefix: "
-                            + EXPERIMENTAL_PREFIX, ValidationEntry.Level.ERROR, getName()));
+                            + EXPERIMENTAL_PREFIX, ValidationEntry.Severity.ERROR, getName()));
         }
         
         if (recurse) {

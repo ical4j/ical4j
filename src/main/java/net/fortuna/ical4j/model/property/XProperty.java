@@ -33,7 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -101,17 +103,18 @@ public class XProperty extends Property implements Encodable {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        
+    public final ValidationResult validate() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                 && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
             
-            throw new ValidationException(
+            result.getEntries().add(new ValidationEntry(
                     "Invalid name ["
                             + getName()
                             + "]. Experimental properties must have the following prefix: "
-                            + EXPERIMENTAL_PREFIX);
+                            + EXPERIMENTAL_PREFIX, ValidationEntry.Severity.ERROR, getName()));
         }
+        return result;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<XProperty> {

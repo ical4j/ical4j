@@ -33,53 +33,16 @@
 
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VFreeBusy;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.validate.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.Validator;
 
+@Deprecated
 public class VFreeBusyValidator implements Validator<VFreeBusy> {
 
     @Override
-    public void validate(VFreeBusy target) throws ValidationException {
-        ComponentValidator.VFREEBUSY.validate(target);
-        ValidationResult result = new ValidationResult();
-
-        // DtEnd value must be later in time that DtStart..
-        final DtStart dtStart = target.getProperty(Property.DTSTART);
-
-        // 4.8.2.4 Date/Time Start:
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    start date and time for the free or busy time information. The time
-        //    MUST be specified in UTC time.
-        if (dtStart != null && !dtStart.isUtc()) {
-            result.getEntries().add(new ValidationEntry("DTSTART must be specified in UTC time",
-                    ValidationEntry.Level.ERROR, target.getName()));
-        }
-
-        final DtEnd dtEnd = target.getProperty(Property.DTEND);
-
-        // 4.8.2.2 Date/Time End
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    end date and time for the free or busy time information. The time
-        //    MUST be specified in the UTC time format. The value MUST be later in
-        //    time than the value of the "DTSTART" property.
-        if (dtEnd != null && !dtEnd.isUtc()) {
-            result.getEntries().add(new ValidationEntry("DTEND must be specified in UTC time",
-                    ValidationEntry.Level.ERROR, target.getName()));
-        }
-
-        if (dtStart != null && dtEnd != null
-                && !dtStart.getDate().before(dtEnd.getDate())) {
-            result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
-                    + "] must be later in time than [" + Property.DTSTART + "]", ValidationEntry.Level.ERROR,
-                    target.getName()));
-        }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
+    public ValidationResult validate(VFreeBusy target) throws ValidationException {
+        return target.validate();
     }
 }

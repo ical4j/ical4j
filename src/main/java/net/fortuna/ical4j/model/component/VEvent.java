@@ -322,7 +322,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      */
     @Override
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        ValidationResult result = ComponentValidator.VEVENT.validate(this);
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
 //        while (iterator.hasNext()) {
@@ -336,14 +336,12 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 //            ((VAlarm) component).validate(recurse);
 //        }
 
-        ComponentValidator.VEVENT.validate(this);
-
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
             result.getEntries().add(new ValidationEntry("Status property ["
-                    + status + "] is not applicable for VEVENT", ValidationEntry.Level.ERROR, getName()));
+                    + status + "] is not applicable for VEVENT", ValidationEntry.Severity.ERROR, getName()));
         }
 
         if (getProperty(Property.DTEND) != null) {
@@ -380,7 +378,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 if (startEndValueMismatch) {
                     result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
-                            + "] as [" + Property.DTSTART + "]", ValidationEntry.Level.ERROR, getName()));
+                            + "] as [" + Property.DTSTART + "]", ValidationEntry.Severity.ERROR, getName()));
                 }
             }
         }

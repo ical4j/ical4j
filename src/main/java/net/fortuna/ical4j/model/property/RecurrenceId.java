@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -206,9 +207,10 @@ public class RecurrenceId extends DateProperty {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        super.validate();
-        PropertyValidator.RECURRENCE_ID.validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        ValidationResult result = super.validate();
+        result.getEntries().addAll(PropertyValidator.RECURRENCE_ID.validate(this).getEntries());
+        return result;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<RecurrenceId> {

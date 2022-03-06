@@ -37,7 +37,9 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -160,8 +162,8 @@ public class Url extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.URL.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Url> {

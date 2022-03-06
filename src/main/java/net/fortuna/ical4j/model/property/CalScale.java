@@ -35,8 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -130,16 +131,8 @@ public class CalScale extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            if (!GREGORIAN.getValue().equalsIgnoreCase(value)) {
-                throw new ValidationException("Invalid value [" + value + "]");
-            }
-        } else {
-            if (!GREGORIAN.getValue().equals(value)) {
-                throw new ValidationException("Invalid value [" + value + "]");
-            }
-        }
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.CALSCALE.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<CalScale> {

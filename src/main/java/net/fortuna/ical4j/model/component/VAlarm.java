@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.time.temporal.TemporalAmount;
@@ -229,27 +230,29 @@ public class VAlarm extends CalendarComponent {
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = new ValidationResult();
 
         if (getAction() != null) {
             switch (getAction().getValue()) {
                 case "AUDIO":
-                    ComponentValidator.VALARM_AUDIO.validate(this);
+                    result = ComponentValidator.VALARM_AUDIO.validate(this);
                     break;
                 case "DISPLAY":
-                    ComponentValidator.VALARM_DISPLAY.validate(this);
+                    result = ComponentValidator.VALARM_DISPLAY.validate(this);
                     break;
                 case "EMAIL":
-                    ComponentValidator.VALARM_EMAIL.validate(this);
+                    result = ComponentValidator.VALARM_EMAIL.validate(this);
                     break;
             }
         } else {
-            ComponentValidator.VALARM_ITIP.validate(this);
+            result = ComponentValidator.VALARM_ITIP.validate(this);
         }
 
         if (recurse) {
             validateProperties();
         }
+        return result;
     }
 
     /**
