@@ -41,12 +41,12 @@ import java.util.List;
 
 public class ComponentContainerRuleSet extends AbstractValidationRuleSet<ComponentContainer<?>> {
 
-    public ComponentContainerRuleSet(String context, ValidationRule... rules) {
-        super(context, rules);
+    public ComponentContainerRuleSet(ValidationRule... rules) {
+        super(rules);
     }
 
     @Override
-    public List<ValidationEntry> apply(ComponentContainer<?> target) {
+    public List<ValidationEntry> apply(String context, ComponentContainer<?> target) {
         List<ValidationEntry> results = new ArrayList<>();
         for (ValidationRule rule: rules) {
             List<String> matches = Collections.emptyList();

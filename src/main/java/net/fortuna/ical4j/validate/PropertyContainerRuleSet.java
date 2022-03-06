@@ -41,14 +41,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class PropertyContainerRuleSet extends AbstractValidationRuleSet<PropertyContainer> {
+public class PropertyContainerRuleSet<T extends PropertyContainer> extends AbstractValidationRuleSet<T> {
 
-    public PropertyContainerRuleSet(String context, ValidationRule... rules) {
-        super(context, rules);
+    public PropertyContainerRuleSet(ValidationRule... rules) {
+        super(rules);
     }
 
     @Override
-    public List<ValidationEntry> apply(PropertyContainer target) {
+    public List<ValidationEntry> apply(String context, PropertyContainer target) {
         List<ValidationEntry> results = new ArrayList<>();
         for (ValidationRule rule: rules) {
             List<String> matches = Collections.emptyList();

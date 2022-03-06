@@ -33,31 +33,27 @@
 
 package net.fortuna.ical4j.validate;
 
-import java.io.Serializable;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * Encapsulates a set of validation rules and context for the application of these rules.
- *
- * @param <T> target type for rule application
- */
-public abstract class AbstractValidationRuleSet<T> implements Serializable {
+public abstract class AbstractValidator<T> implements Validator<T> {
 
-    protected final Set<ValidationRule> rules;
+    private final List<AbstractValidationRuleSet<? super T>> ruleSets;
 
-    public AbstractValidationRuleSet(ValidationRule...rules) {
-        this.rules = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(rules)));
+    private final String context;
+
+    @SafeVarargs
+    public AbstractValidator(String context, AbstractValidationRuleSet<? super T>... ruleSets) {
+        this.ruleSets = Arrays.asList(ruleSets);
+        this.context = context;
     }
 
-    public Set<ValidationRule> getRules() {
-        return rules;
-    }
-
-    public abstract List<ValidationEntry> apply(String context, T target);
-
-    protected List<String> matches(List<String> instances, Predicate<String> matchPredicate) {
-        return instances.stream().filter(matchPredicate).collect(Collectors.toList());
+    @Override
+    public ValidationResult validate(T target) throws ValidationException {
+        ValidationResult result = new ValidationResult();
+        for (AbstractValidationRuleSet<? super T> ruleSet : ruleSets) {
+            result.getEntries().addAll(ruleSet.apply(context, target));
+        }
+        return result;
     }
 }
