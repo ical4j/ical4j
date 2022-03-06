@@ -495,7 +495,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
                     getName()));
         }
         if (recurse) {
-            validateProperties();
+            result.getEntries().addAll(validateProperties().getEntries());
         }
         return result;
     }

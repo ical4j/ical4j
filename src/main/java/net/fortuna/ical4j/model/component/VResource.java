@@ -127,7 +127,7 @@ public class VResource extends Component {
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VRESOURCE.validate(this);
         if (recurse) {
-            validateProperties();
+            result.getEntries().addAll(validateProperties().getEntries());
         }
         return result;
     }

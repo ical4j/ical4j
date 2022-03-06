@@ -227,8 +227,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = validator.validate(this);
         if (recurse) {
-            validateProperties();
-            validateComponents();
+            result.getEntries().addAll(validateProperties().getEntries());
+            result.getEntries().addAll(validateComponents().getEntries());
         }
         return result;
     }
@@ -237,20 +237,24 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * Invoke validation on the calendar properties in its current state.
      * @throws ValidationException where any of the calendar properties is not in a valid state
      */
-    private void validateProperties() throws ValidationException {
+    private ValidationResult validateProperties() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
-            property.validate();
+            result.getEntries().addAll(property.validate().getEntries());
         }
+        return result;
     }
 
     /**
      * Invoke validation on the calendar components in its current state.
      * @throws ValidationException where any of the calendar components is not in a valid state
      */
-    private void validateComponents() throws ValidationException {
+    private ValidationResult validateComponents() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         for (Component component : getComponents()) {
-            component.validate();
+            result.getEntries().addAll(component.validate().getEntries());
         }
+        return result;
     }
 
     /**

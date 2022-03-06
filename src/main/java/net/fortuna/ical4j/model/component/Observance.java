@@ -123,7 +123,7 @@ public abstract class Observance extends Component {
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.OBSERVANCE_ITIP.validate(this);
         if (recurse) {
-            validateProperties();
+            result.getEntries().addAll(validateProperties().getEntries());
         }
         return result;
     }

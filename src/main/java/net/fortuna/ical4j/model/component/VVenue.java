@@ -117,7 +117,7 @@ public class VVenue extends CalendarComponent {
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VVENUE.validate(this);
         if (recurse) {
-            validateProperties();
+            result.getEntries().addAll(validateProperties().getEntries());
         }
         return result;
     }

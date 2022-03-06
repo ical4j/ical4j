@@ -256,7 +256,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
         }
 
         if (recurse) {
-            validateProperties();
+            result.getEntries().addAll(validateProperties().getEntries());
         }
         return result;
     }

@@ -109,7 +109,7 @@ public class Available extends Component {
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult results =  ComponentValidator.AVAILABLE.validate(this);
         if (recurse) {
-            validateProperties();
+            results.getEntries().addAll(validateProperties().getEntries());
         }
         return results;
     }
