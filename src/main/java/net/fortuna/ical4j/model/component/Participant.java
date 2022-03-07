@@ -148,7 +148,7 @@ public class Participant extends Component implements ComponentContainer<Compone
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.PARTICIPANT.validate(this);
         if (recurse) {
-            result.getEntries().addAll(validateProperties().getEntries());
+            result = result.merge(validateProperties());
         }
         return result;
     }

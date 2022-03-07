@@ -127,7 +127,7 @@ public class VLocation extends Component {
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VLOCATION.validate(this);
         if (recurse) {
-            result.getEntries().addAll(validateProperties().getEntries());
+            result = result.merge(validateProperties());
         }
         return result;
     }

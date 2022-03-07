@@ -158,7 +158,7 @@ public class Attach extends Property {
     public final ValidationResult validate() throws ValidationException {
         ValidationResult result = PropertyValidator.ATTACH.validate(this);
         if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
-            result.getEntries().addAll(PropertyValidator.ATTACH_BIN.validate(this).getEntries());
+            result = result.merge(PropertyValidator.ATTACH_BIN.validate(this));
         }
         return result;
     }

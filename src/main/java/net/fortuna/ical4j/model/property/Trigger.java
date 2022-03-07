@@ -224,9 +224,9 @@ public class Trigger extends UtcProperty {
     public final ValidationResult validate() throws ValidationException {
         ValidationResult result = super.validate();
         if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
-            result.getEntries().addAll(PropertyValidator.TRIGGER_ABS.validate(this).getEntries());
+            result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));
         } else {
-            result.getEntries().addAll(PropertyValidator.TRIGGER_REL.validate(this).getEntries());
+            result = result.merge(PropertyValidator.TRIGGER_REL.validate(this));
         }
         return result;
     }

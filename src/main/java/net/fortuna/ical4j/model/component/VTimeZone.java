@@ -162,7 +162,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = new VTimeZoneValidator().validate(this);
         if (recurse) {
-            result.getEntries().addAll(validateProperties().getEntries());
+            result = result.merge(validateProperties());
         }
         return result;
     }

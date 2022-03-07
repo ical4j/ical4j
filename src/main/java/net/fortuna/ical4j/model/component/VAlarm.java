@@ -250,7 +250,7 @@ public class VAlarm extends CalendarComponent {
         }
 
         if (recurse) {
-            result.getEntries().addAll(validateProperties().getEntries());
+            result = result.merge(validateProperties());
         }
         return result;
     }

@@ -227,8 +227,8 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = validator.validate(this);
         if (recurse) {
-            result.getEntries().addAll(validateProperties().getEntries());
-            result.getEntries().addAll(validateComponents().getEntries());
+            result = result.merge(validateProperties());
+            result = result.merge(validateComponents());
         }
         return result;
     }
@@ -240,7 +240,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     private ValidationResult validateProperties() throws ValidationException {
         ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
-            result.getEntries().addAll(property.validate().getEntries());
+            result = result.merge(property.validate());
         }
         return result;
     }
@@ -252,7 +252,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     private ValidationResult validateComponents() throws ValidationException {
         ValidationResult result = new ValidationResult();
         for (Component component : getComponents()) {
-            result.getEntries().addAll(component.validate().getEntries());
+            result = result.merge(component.validate());
         }
         return result;
     }

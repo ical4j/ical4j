@@ -49,8 +49,7 @@ public class StructuredDataValidator implements Validator<StructuredData> {
     public ValidationResult validate(StructuredData target) throws ValidationException {
         ValidationResult result = PropertyValidator.STRUCTURED_DATA.validate(target);
 
-        result.getEntries().addAll(SchemaValidatorFactory.newInstance(
-                target.getParameter(SCHEMA)).validate(target).getEntries());
+        result = result.merge(SchemaValidatorFactory.newInstance(target.getParameter(SCHEMA)).validate(target));
         return result;
     }
 }

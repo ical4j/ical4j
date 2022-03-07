@@ -209,7 +209,7 @@ public class RecurrenceId extends DateProperty {
     @Override
     public final ValidationResult validate() throws ValidationException {
         ValidationResult result = super.validate();
-        result.getEntries().addAll(PropertyValidator.RECURRENCE_ID.validate(this).getEntries());
+        result = result.merge(PropertyValidator.RECURRENCE_ID.validate(this));
         return result;
     }
 

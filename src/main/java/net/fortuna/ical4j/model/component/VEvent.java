@@ -384,7 +384,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         }
 
         if (recurse) {
-            result.getEntries().addAll(validateProperties().getEntries());
+            result = result.merge(validateProperties());
         }
         return result;
     }

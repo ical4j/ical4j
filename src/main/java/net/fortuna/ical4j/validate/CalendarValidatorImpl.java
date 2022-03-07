@@ -58,7 +58,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         // validate method..
         final Method method = target.getProperty(Property.METHOD);
         if (method != null) {
-            result.getEntries().addAll(new ITIPValidator().validate(target).getEntries());
+            result = result.merge(new ITIPValidator().validate(target));
 
             // perform ITIP validation on components..
             for (CalendarComponent component : target.getComponents()) {

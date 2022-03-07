@@ -60,6 +60,16 @@ public final class ValidationResult {
         return entries.stream().anyMatch(e -> e.getSeverity() == ValidationEntry.Severity.ERROR);
     }
 
+    public ValidationResult merge(ValidationResult result) {
+        if (!result.getEntries().isEmpty()) {
+            Set<ValidationEntry> merged = new HashSet<>(entries);
+            merged.addAll(result.getEntries());
+            return new ValidationResult(merged);
+        } else {
+            return this;
+        }
+    }
+
     @Override
     public String toString() {
         return "ValidationResult{" +

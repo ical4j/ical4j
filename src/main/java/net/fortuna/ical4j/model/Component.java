@@ -228,7 +228,7 @@ public abstract class Component implements Serializable, PropertyContainer {
     protected final ValidationResult validateProperties() throws ValidationException {
         ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
-            result.getEntries().addAll(property.validate().getEntries());
+            result = result.merge(property.validate());
         }
         return result;
     }
