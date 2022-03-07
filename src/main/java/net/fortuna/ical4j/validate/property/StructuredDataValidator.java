@@ -42,16 +42,14 @@ import net.fortuna.ical4j.validate.schema.SchemaValidatorFactory;
 
 import static net.fortuna.ical4j.model.Parameter.SCHEMA;
 
+@Deprecated
 public class StructuredDataValidator implements Validator<StructuredData> {
 
     @Override
-    public void validate(StructuredData target) throws ValidationException {
-        PropertyValidator.STRUCTURED_DATA.validate(target);
+    public ValidationResult validate(StructuredData target) throws ValidationException {
+        ValidationResult result = PropertyValidator.STRUCTURED_DATA.validate(target);
 
-        try {
-            SchemaValidatorFactory.newInstance(target.getParameter(SCHEMA)).validate(target);
-        } catch (org.everit.json.schema.ValidationException e) {
-            throw new ValidationException(new ValidationResult(e.getErrorMessage()));
-        }
+        result = result.merge(SchemaValidatorFactory.newInstance(target.getParameter(SCHEMA)).validate(target));
+        return result;
     }
 }

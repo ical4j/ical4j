@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2022, Ben Fortuna
+ *  Copyright (c) 2022-2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
  *
  */
 
-package net.fortuna.ical4j.validate.property
+package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.ParameterList
 import net.fortuna.ical4j.model.parameter.Schema
@@ -40,7 +40,7 @@ import net.fortuna.ical4j.validate.ValidationException
 import spock.lang.Ignore
 import spock.lang.Specification
 
-class StructuredDataValidatorTest extends Specification {
+class StructuredDataTest extends Specification {
 
     @Ignore
     def 'test validation of json-ld structured data'() {
@@ -58,8 +58,7 @@ class StructuredDataValidatorTest extends Specification {
 ''')
 
         when: 'validator is applied to target'
-        StructuredDataValidator validator = []
-        validator.validate(structuredData)
+        structuredData.validate()
 
         then: 'validation succeeds'
         notThrown(ValidationException)
@@ -86,8 +85,7 @@ class StructuredDataValidatorTest extends Specification {
 ''')
 
         when: 'validator is applied to target'
-        StructuredDataValidator validator = []
-        validator.validate(structuredData)
+        structuredData.validate()
 
         then: 'validation succeeds'
         notThrown(ValidationException)
@@ -109,10 +107,9 @@ class StructuredDataValidatorTest extends Specification {
 ''')
 
         when: 'validator is applied to target'
-        StructuredDataValidator validator = []
-        validator.validate(structuredData)
+        def result = structuredData.validate()
 
-        then: 'validation succeeds'
-        thrown(ValidationException)
+        then: 'validation fails'
+        result.hasErrors()
     }
 }

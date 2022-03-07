@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -207,8 +208,8 @@ public abstract class Component implements Serializable, PropertyContainer {
      *
      * @throws ValidationException where the component is not in a valid state
      */
-    public final void validate() throws ValidationException {
-        validate(true);
+    public final ValidationResult validate() throws ValidationException {
+        return validate(true);
     }
 
     /**
@@ -217,17 +218,19 @@ public abstract class Component implements Serializable, PropertyContainer {
      * @param recurse indicates whether to validate the component's properties
      * @throws ValidationException where the component is not in a valid state
      */
-    public abstract void validate(final boolean recurse) throws ValidationException;
+    public abstract ValidationResult validate(final boolean recurse) throws ValidationException;
 
     /**
      * Invoke validation on the component properties in its current state.
      *
      * @throws ValidationException where any of the component properties is not in a valid state
      */
-    protected final void validateProperties() throws ValidationException {
+    protected final ValidationResult validateProperties() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
-            property.validate();
+            result = result.merge(property.validate());
         }
+        return result;
     }
 
     /**

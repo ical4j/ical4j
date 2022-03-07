@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -115,6 +116,7 @@ import static net.fortuna.ical4j.model.Property.*;
  * @author Mike Douglass
  */
 public class Participant extends Component implements ComponentContainer<Component> {
+
     private static final long serialVersionUID = -8193965477414653802L;
 
     /**
@@ -143,12 +145,12 @@ public class Participant extends Component implements ComponentContainer<Compone
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse) throws ValidationException {
-        ComponentValidator.PARTICIPANT.validate(this);
-
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.PARTICIPANT.validate(this);
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     @Override

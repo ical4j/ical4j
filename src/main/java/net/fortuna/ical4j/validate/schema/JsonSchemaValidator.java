@@ -34,7 +34,9 @@
 package net.fortuna.ical4j.validate.schema;
 
 import net.fortuna.ical4j.model.property.StructuredData;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -54,13 +56,17 @@ public class JsonSchemaValidator implements Validator<StructuredData> {
     }
 
     @Override
-    public void validate(StructuredData target) throws ValidationException {
+    public ValidationResult validate(StructuredData target) throws ValidationException {
+        ValidationResult result = new ValidationResult();
         try (InputStream in = schemaUrl.openStream()) {
             JSONObject rawSchema = new JSONObject(new JSONTokener(in));
             Schema schema = SchemaLoader.load(rawSchema);
             schema.validate(target.getValue());
         } catch (IOException e) {
             throw new ValidationException("Unable to retrieve schema");
+        } catch (org.everit.json.schema.ValidationException e) {
+            result.getEntries().add(new ValidationEntry(e.getMessage(), ValidationEntry.Severity.ERROR, target.getName()));
         }
+        return result;
     }
 }

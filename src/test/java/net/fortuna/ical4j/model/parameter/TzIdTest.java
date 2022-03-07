@@ -57,7 +57,7 @@ public class TzIdTest extends TestCase {
     public void testTzIdCompatibility() throws IOException, ParserException {
         
         CalendarBuilder builder = new CalendarBuilder();
-        Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/tmeher.ics"));
+        Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/invalid/tmeher.ics"));
         
         // ensure the calendar is loaded properly..
         assertNotNull(calendar);

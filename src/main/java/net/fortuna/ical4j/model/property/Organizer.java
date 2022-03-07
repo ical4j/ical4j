@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -187,8 +188,8 @@ public class Organizer extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        PropertyValidator.ORGANIZER.validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.ORGANIZER.validate(this);
     }
 
     /**

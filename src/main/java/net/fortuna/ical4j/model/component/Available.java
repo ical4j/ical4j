@@ -32,8 +32,9 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.component.AvailableValidator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -105,14 +106,17 @@ public class Available extends Component {
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        new AvailableValidator().validate(this);
-
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult results =  ComponentValidator.AVAILABLE.validate(this);
         if (recurse) {
-            validateProperties();
+            results = results.merge(validateProperties());
         }
+        return results;
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<Available> {
 
         public Factory() {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,26 +31,28 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VJournal;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
+import java.util.function.Predicate;
 
-public class VJournalValidator implements Validator<VJournal> {
+public class PredicateRule<T> extends ValidationRule {
+
+    private final Predicate<T> predicate;
+
+    private final String message;
+
+    public PredicateRule(Predicate<T> predicate, String message, String... instances) {
+        super(null, instances);
+        this.predicate = predicate;
+        this.message = message;
+    }
+
+    public Predicate<T> getPredicate() {
+        return predicate;
+    }
 
     @Override
-    public void validate(VJournal target) throws ValidationException {
-        ComponentValidator.VJOURNAL.validate(target);
-
-        final Status status = target.getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property [" + status + "] may not occur in VJOURNAL");
-        }
+    public String getMessage(String... instances) {
+        return String.format(message, (Object[]) instances);
     }
 }

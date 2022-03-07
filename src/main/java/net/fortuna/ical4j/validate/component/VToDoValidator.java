@@ -4,11 +4,15 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.*;
 
+import java.util.stream.Collectors;
+
+@Deprecated
 public class VToDoValidator extends ComponentValidator<VToDo> {
+
+    private static final PropertyContainerRuleSet<VToDo> NO_ALARMS_RULE_SET = new PropertyContainerRuleSet<>(
+            NO_ALARMS);
 
     private final boolean alarmsAllowed;
 
@@ -17,26 +21,30 @@ public class VToDoValidator extends ComponentValidator<VToDo> {
     }
 
     public VToDoValidator(boolean alarmsAllowed, ValidationRule... rules) {
-        super(rules);
+        super(Component.VTODO, rules);
         this.alarmsAllowed = alarmsAllowed;
     }
 
     @Override
-    public void validate(VToDo target) throws ValidationException {
-        ComponentValidator.VTODO.validate(target);
+    public ValidationResult validate(VToDo target) throws ValidationException {
+        ValidationResult result = ComponentValidator.VTODO.validate(target);
 
         final Status status = target.getProperty(Property.STATUS);
         if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
                 && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
                 && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
                 && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property [" + status + "] may not occur in VTODO");
+
+            result.getEntries().add(new ValidationEntry("Status property [" + status + "] may not occur in VTODO",
+                    ValidationEntry.Severity.ERROR, target.getName()));
         }
 
         if (alarmsAllowed) {
-            target.getAlarms().forEach(ComponentValidator.VALARM_ITIP::validate);
+            result.getEntries().addAll(target.getAlarms().stream().map(ComponentValidator.VALARM_ITIP::validate)
+                    .flatMap(r -> r.getEntries().stream()).collect(Collectors.toList()));
         } else {
-            ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
+            result.getEntries().addAll(NO_ALARMS_RULE_SET.apply(target.getName(), target));
         }
+        return result;
     }
 }

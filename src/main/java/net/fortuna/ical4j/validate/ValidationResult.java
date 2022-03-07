@@ -33,43 +33,47 @@
 
 package net.fortuna.ical4j.validate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Encapsulates the result of applying validation rules to iCalendar content.
  */
 public final class ValidationResult {
 
-    private final List<String> errors = new ArrayList<>();
+    public static final ValidationResult EMPTY = new ValidationResult(Collections.emptySet());
 
-    private final List<String> warnings = new ArrayList<>();
+    private final Set<ValidationEntry> entries;
 
-    public ValidationResult() {
+    public ValidationResult(ValidationEntry...entries) {
+        this(Arrays.asList(entries));
     }
 
-    public ValidationResult(String...errors) {
-        this.errors.addAll(Arrays.asList(errors));
+    public ValidationResult(Collection<ValidationEntry> entries) {
+        this.entries = new HashSet<>(entries);
     }
 
-    public List<String> getErrors() {
-        return errors;
-    }
-
-    public List<String> getWarnings() {
-        return warnings;
+    public Set<ValidationEntry> getEntries() {
+        return entries;
     }
 
     public boolean hasErrors() {
-        return !errors.isEmpty();
+        return entries.stream().anyMatch(e -> e.getSeverity() == ValidationEntry.Severity.ERROR);
+    }
+
+    public ValidationResult merge(ValidationResult result) {
+        if (!result.getEntries().isEmpty()) {
+            Set<ValidationEntry> merged = new HashSet<>(entries);
+            merged.addAll(result.getEntries());
+            return new ValidationResult(merged);
+        } else {
+            return this;
+        }
     }
 
     @Override
     public String toString() {
         return "ValidationResult{" +
-                "errors=" + errors +
-                ", warnings=" + warnings +
+                "entries=" + entries +
                 '}';
     }
 }
