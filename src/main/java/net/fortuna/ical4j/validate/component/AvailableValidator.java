@@ -33,58 +33,16 @@
 
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.Available;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Optional;
-
+@Deprecated
 public class AvailableValidator implements Validator<Available> {
 
     @Override
-    public void validate(Available target) throws ValidationException {
-        ValidationResult result = new ValidationResult();
-
-        ComponentValidator.AVAILABLE.validate(target);
-
-        /*       If specified, the "DTSTART" and "DTEND" properties in
-         *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
-         *      "DATE-TIME" values specified as either date with UTC time or date
-         *      with local time and a time zone reference.
-         */
-        final DtStart<?> start = target.getRequiredProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getRequiredParameter(Parameter.VALUE))) {
-            result.getErrors().add("Property [" + Property.DTSTART + "] must be a " + Value.DATE_TIME);
-        }
-
-        /*
-         ; either a 'dtend' or a 'duration' is required
-         ; in a 'availableprop', but 'dtend' and
-         ; 'duration' MUST NOT occur in the same
-         ; 'availableprop', and each MUST NOT occur more
-         ; than once
-         */
-        final Optional<DtEnd<?>> end = target.getProperty(Property.DTEND);
-        /* Must be DATE_TIME */
-        if (end.isPresent() && Value.DATE.equals(end.get().getRequiredParameter(Parameter.VALUE))) {
-            result.getErrors().add("Property [" + Property.DTEND + "] must be a " + Value.DATE_TIME);
-        }
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once
-         *               categories / comment / contact / exdate /
-         *               rdate / x-prop
-         */
-
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
+    public ValidationResult validate(Available target) throws ValidationException {
+        return target.validate();
     }
 }

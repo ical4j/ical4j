@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,19 +31,29 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.component.VAvailability;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import java.util.Arrays;
+import java.util.List;
 
-@Deprecated
-public class VAvailabilityValidator implements Validator<VAvailability> {
+public abstract class AbstractValidator<T> implements Validator<T> {
+
+    private final List<AbstractValidationRuleSet<? super T>> ruleSets;
+
+    private final String context;
+
+    @SafeVarargs
+    public AbstractValidator(String context, AbstractValidationRuleSet<? super T>... ruleSets) {
+        this.ruleSets = Arrays.asList(ruleSets);
+        this.context = context;
+    }
 
     @Override
-    public ValidationResult validate(VAvailability target) throws ValidationException {
-        return ComponentValidator.VAVAILABILITY.validate(target);
+    public ValidationResult validate(T target) throws ValidationException {
+        ValidationResult result = new ValidationResult();
+        for (AbstractValidationRuleSet<? super T> ruleSet : ruleSets) {
+            result.getEntries().addAll(ruleSet.apply(context, target));
+        }
+        return result;
     }
 }

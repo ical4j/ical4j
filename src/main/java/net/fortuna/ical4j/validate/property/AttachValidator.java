@@ -33,35 +33,16 @@
 
 package net.fortuna.ical4j.validate.property;
 
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.parameter.Encoding;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Attach;
-import net.fortuna.ical4j.validate.ParameterValidator;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Optional;
-
+@Deprecated
 public class AttachValidator implements Validator<Attach> {
 
     @Override
-    public void validate(Attach target) throws ValidationException {
-        PropertyValidator.ATTACH.validate(target);
-
-        /*
-         * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
-         * value ";ENCODING=BASE64".
-         */
-        if (Optional.of(Value.BINARY).equals(target.getParameter(Parameter.VALUE))) {
-            ParameterValidator.assertOne(Parameter.ENCODING, target.getParameters());
-            if (!Optional.of(Encoding.BASE64).equals(target.getParameter(Parameter.ENCODING))) {
-                throw new ValidationException(
-                        "If the value type parameter is [BINARY], the inline"
-                                + "encoding parameter MUST be specified with the value [BASE64]"
-                );
-            }
-        }
+    public ValidationResult validate(Attach target) throws ValidationException {
+        return target.validate();
     }
 }

@@ -31,10 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.time.temporal.Temporal;
 import java.util.Optional;
@@ -85,16 +88,8 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        PropertyValidator.EXDATE.validate(this);
-
-        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
-
-        if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
-                && !Value.DATE.equals(valueParam.get())) {
-            throw new ValidationException("Parameter [" + Parameter.VALUE
-                    + "] is invalid");
-        }
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.EXDATE.validate(this);
     }
 
     @Override

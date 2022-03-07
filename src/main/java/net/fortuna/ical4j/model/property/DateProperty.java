@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.slf4j.LoggerFactory;
 
@@ -226,19 +227,6 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @Override
     public void validate() throws ValidationException {
         new DatePropertyValidator<>().validate(this);
-        final Value value = (Value) getParameter(VALUE).orElse(defaultValueParam);
-
-        if (date != null) {
-            if (date.getTemporal() instanceof LocalDate) {
-                if (!Value.DATE.equals(value)) {
-                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE instance");
-                }
-            } else {
-                if (!Value.DATE_TIME.equals(value)) {
-                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE-TIME instance");
-                }
-            }
-        }
     }
 
     @Override

@@ -34,12 +34,7 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VFreeBusyValidator;
-import org.threeten.extra.Interval;
+import net.fortuna.ical4j.validate.*;
 
 import java.time.Instant;
 import java.time.temporal.Temporal;
@@ -211,14 +206,14 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
 
     private static final Map<Method, Validator<VFreeBusy>> methodValidators = new HashMap<>();
     static {
-        methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(new ValidationRule(OneOrMore, FREEBUSY),
+        methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(VFREEBUSY, new ValidationRule(OneOrMore, FREEBUSY),
                 new ValidationRule(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
                 new ValidationRule(None, ATTENDEE, DURATION, REQUEST_STATUS)));
-        methodValidators.put(Method.REPLY, new ComponentValidator(new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
+        methodValidators.put(Method.REPLY, new ComponentValidator(VFREEBUSY, new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
                 new ValidationRule(None, DURATION, SEQUENCE)));
-        methodValidators.put(Method.REQUEST, new ComponentValidator(new ValidationRule(OneOrMore, ATTENDEE),
+        methodValidators.put(Method.REQUEST, new ComponentValidator(VFREEBUSY, new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule(None, FREEBUSY, DURATION, REQUEST_STATUS, URL)));
     }
@@ -492,11 +487,21 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        new VFreeBusyValidator().validate(this);
-        if (recurse) {
-            validateProperties();
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VFREEBUSY.validate(this);
+
+        final DtStart dtStart = getProperty(Property.DTSTART);
+        final DtEnd dtEnd = getProperty(Property.DTEND);
+        if (dtStart != null && dtEnd != null
+                && !dtStart.getDate().before(dtEnd.getDate())) {
+            result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
+                    + "] must be later in time than [" + Property.DTSTART + "]", ValidationEntry.Severity.ERROR,
+                    getName()));
         }
+        if (recurse) {
+            result = result.merge(validateProperties());
+        }
+        return result;
     }
 
     /**
@@ -618,6 +623,9 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         return new Factory();
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<VFreeBusy> {
 
         public Factory() {

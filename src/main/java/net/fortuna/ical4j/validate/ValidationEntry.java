@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,19 +31,65 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.component.VAvailability;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import java.util.Objects;
 
-@Deprecated
-public class VAvailabilityValidator implements Validator<VAvailability> {
+public class ValidationEntry {
+
+    public enum Severity {
+        ERROR, WARNING, INFO
+    }
+
+    private final String message;
+
+    private final Severity severity;
+
+    private final String context;
+
+    public ValidationEntry(String message, Severity severity, String context) {
+        this.message = message;
+        this.severity = severity;
+        this.context = context;
+    }
+
+    public ValidationEntry(ValidationRule rule, String context, String...instances) {
+        this.message = rule.getMessage(instances);
+        this.severity = rule.getSeverity();
+        this.context = context;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Severity getSeverity() {
+        return severity;
+    }
+
+    public String getContext() {
+        return context;
+    }
 
     @Override
-    public ValidationResult validate(VAvailability target) throws ValidationException {
-        return ComponentValidator.VAVAILABILITY.validate(target);
+    public String toString() {
+        return "ValidationEntry{" +
+                "message='" + message + '\'' +
+                ", level=" + severity +
+                ", context='" + context + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ValidationEntry that = (ValidationEntry) o;
+        return Objects.equals(message, that.message) && severity == that.severity && Objects.equals(context, that.context);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, severity, context);
     }
 }

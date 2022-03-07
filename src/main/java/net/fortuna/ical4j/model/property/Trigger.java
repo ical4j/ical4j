@@ -35,10 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.property.TriggerValidator;
-import org.slf4j.LoggerFactory;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -252,8 +249,14 @@ public class Trigger extends DateProperty<Instant> {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        new TriggerValidator().validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        ValidationResult result = super.validate();
+        if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
+            result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));
+        } else {
+            result = result.merge(PropertyValidator.TRIGGER_REL.validate(this));
+        }
+        return result;
     }
 
     /**

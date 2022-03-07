@@ -33,36 +33,19 @@
 
 package net.fortuna.ical4j.validate.property;
 
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Trigger;
-import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.util.Optional;
-
+/**
+ * @deprecated see {@link PropertyValidator#TRIGGER_ABS}
+ */
+@Deprecated
 public class TriggerValidator implements Validator<Trigger> {
 
     @Override
-    public void validate(Trigger target) throws ValidationException {
-        PropertyValidator.TRIGGER.validate(target);
-
-        final Optional<Parameter> relParam = target.getParameter(Parameter.RELATED);
-        final Optional<Parameter> valueParam = target.getParameter(Parameter.VALUE);
-
-        if (relParam.isPresent() || !Optional.of(Value.DATE_TIME).equals(valueParam)) {
-            ParameterValidator.assertNullOrEqual(Value.DURATION, target.getParameters());
-            if (target.getDuration() == null) {
-                throw new ValidationException("Duration value not specified");
-            }
-        } else {
-            ParameterValidator.assertOne(Parameter.VALUE, target.getParameters());
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, target.getParameters());
-            if (target.getDate() == null) {
-                throw new ValidationException("DATE-TIME value not specified");
-            }
-        }
+    public ValidationResult validate(Trigger target) throws ValidationException {
+        return target.validate();
     }
 }

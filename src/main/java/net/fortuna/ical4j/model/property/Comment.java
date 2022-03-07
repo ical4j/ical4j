@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -95,8 +96,8 @@ public class Comment extends Property implements Encodable {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        PropertyValidator.COMMENT.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.COMMENT.validate(this);
     }
 
     @Override

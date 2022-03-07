@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -114,8 +115,8 @@ public class Attendee extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        PropertyValidator.ATTENDEE.validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.ATTENDEE.validate(this);
     }
 
     /**

@@ -33,10 +33,7 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -272,11 +269,26 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        new VToDoValidator().validate(this);
-        if (recurse) {
-            validateProperties();
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VTODO.validate(this);
+        // validate that getAlarms() only contains VAlarm components
+        for (VAlarm component : getAlarms()) {
+            component.validate(recurse);
         }
+
+        final Status status = getProperty(Property.STATUS);
+        if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
+                && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
+                && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
+                && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
+            throw new ValidationException("Status property ["
+                    + status + "] may not occur in VTODO");
+        }
+
+        if (recurse) {
+            result = result.merge(validateProperties());
+        }
+        return result;
     }
 
     /**

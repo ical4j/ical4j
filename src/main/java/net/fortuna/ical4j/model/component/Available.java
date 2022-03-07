@@ -127,12 +127,12 @@ public class Available extends Component {
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        new AvailableValidator().validate(this);
-
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult results =  ComponentValidator.AVAILABLE.validate(this);
         if (recurse) {
-            validateProperties();
+            results = results.merge(validateProperties());
         }
+        return results;
     }
 
     @Override
@@ -140,6 +140,9 @@ public class Available extends Component {
         return new Factory();
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<Available> {
 
         public Factory() {

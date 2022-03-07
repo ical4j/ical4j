@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,19 +31,33 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.component.VAvailability;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import java.io.Serializable;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-@Deprecated
-public class VAvailabilityValidator implements Validator<VAvailability> {
+/**
+ * Encapsulates a set of validation rules and context for the application of these rules.
+ *
+ * @param <T> target type for rule application
+ */
+public abstract class AbstractValidationRuleSet<T> implements Serializable {
 
-    @Override
-    public ValidationResult validate(VAvailability target) throws ValidationException {
-        return ComponentValidator.VAVAILABILITY.validate(target);
+    protected final Set<ValidationRule> rules;
+
+    public AbstractValidationRuleSet(ValidationRule...rules) {
+        this.rules = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(rules)));
+    }
+
+    public Set<ValidationRule> getRules() {
+        return rules;
+    }
+
+    public abstract List<ValidationEntry> apply(String context, T target);
+
+    protected List<String> matches(List<String> instances, Predicate<String> matchPredicate) {
+        return instances.stream().filter(matchPredicate).collect(Collectors.toList());
     }
 }

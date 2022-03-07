@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -198,16 +199,8 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        PropertyValidator.RDATE.validate(this);
-
-        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
-        if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
-                && !Value.DATE.equals(valueParam.get())
-                && !Value.PERIOD.equals(valueParam.get())) {
-            throw new ValidationException("Parameter [" + Parameter.VALUE
-                    + "] is invalid");
-        }
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.RDATE.validate(this);
     }
 
     /**

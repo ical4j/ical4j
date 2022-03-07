@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,8 +131,9 @@ public class ComponentTest<T extends Temporal> extends TestCase {
      */
     public final void testValidationException() {
         try {
-            component.validate();
-            fail("ValidationException should be thrown!");
+            ValidationResult result = component.validate();
+            assertTrue(result.hasErrors());
+//            fail("ValidationException should be thrown!");
         }
         catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
@@ -153,7 +155,8 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         
         Component component = new Component("test") {
             @Override
-            public void validate(boolean recurse) throws ValidationException {
+            public ValidationResult validate(boolean recurse) throws ValidationException {
+                return null;
             }
 
             @Override
@@ -166,7 +169,8 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         
         component = new Component("test") {
             @Override
-            public void validate(boolean recurse) throws ValidationException {
+            public ValidationResult validate(boolean recurse) throws ValidationException {
+                return null;
             }
 
             @Override
@@ -192,7 +196,8 @@ public class ComponentTest<T extends Temporal> extends TestCase {
 
         component = new Component("test") {
             @Override
-            public void validate(boolean recurse) throws ValidationException {
+            public ValidationResult validate(boolean recurse) throws ValidationException {
+                return null;
             }
 
             @Override

@@ -33,26 +33,73 @@
 
 package net.fortuna.ical4j.validate.property;
 
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.validate.PropertyValidator;
-import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.*;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.temporal.Temporal;
-import java.util.function.Predicate;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
-import static net.fortuna.ical4j.model.Parameter.TZID;
-import static net.fortuna.ical4j.model.Parameter.VALUE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
+@Deprecated
+public class DatePropertyValidator<T extends DateProperty> implements Validator<T> {
 
-public class DatePropertyValidator<T extends Temporal> extends PropertyValidator<DateProperty<T>> {
+    private static final ValidationRule OPTIONAL_PARAMS = new ValidationRule(OneOrLess, Parameter.VALUE, Parameter.TZID);
 
-    public DatePropertyValidator() {
-        super(new ValidationRule<>(OneOrLess, VALUE),
-                new ValidationRule<>(One, (Predicate<DateProperty<T>> & Serializable) p ->
-                        p.getDate() instanceof LocalDate, VALUE),
-                new ValidationRule<>(None, (Predicate<DateProperty<T>> & Serializable) DateProperty::isUtc, TZID),
-                new ValidationRule<>(OneOrLess, (Predicate<DateProperty<T>> & Serializable) p -> !p.isUtc(), TZID));
+    private static final ValidationRule UTC_PARAMS = new ValidationRule(None, Parameter.TZID);
+
+    @Override
+    public ValidationResult validate(T target) throws ValidationException {
+        ValidationResult result = new ValidationResult();
+        /*
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
+         */
+
+        /*
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
+         */
+
+        result.getEntries().addAll(new PropertyRuleSet(OPTIONAL_PARAMS).apply(target.getName(), target));
+        if (target.isUtc()) {
+            result.getEntries().addAll(new PropertyRuleSet(UTC_PARAMS).apply(target.getName(), target));
+        }
+        final Value value = target.getParameter(Parameter.VALUE);
+
+        if (target.getDate() instanceof DateTime) {
+
+            if (value != null && !Value.DATE_TIME.equals(value)) {
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
+                        + "] is invalid for DATE-TIME instance", ValidationEntry.Severity.ERROR,
+                        target.getName()));
+            }
+
+            final DateTime dateTime = (DateTime) target.getDate();
+
+            // ensure tzid matches date-time timezone..
+            final Parameter tzId = target.getParameter(Parameter.TZID);
+            if (dateTime.getTimeZone() != null
+                    && (tzId == null || !tzId.getValue().equals(
+                    dateTime.getTimeZone().getID()))) {
+
+                result.getEntries().add(new ValidationEntry("TZID parameter [" + tzId
+                        + "] does not match the timezone ["
+                        + dateTime.getTimeZone().getID() + "]", ValidationEntry.Severity.ERROR,
+                        target.getName()));
+            }
+        } else if (target.getDate() != null) {
+
+            if (value == null) {
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + Value.DATE
+                        + "] must be specified for DATE instance", ValidationEntry.Severity.ERROR,
+                        target.getName()));
+            } else if (!Value.DATE.equals(value)) {
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
+                        + "] is invalid for DATE instance", ValidationEntry.Severity.ERROR,
+                        target.getName()));
+            }
+        }
+        return result;
     }
 }

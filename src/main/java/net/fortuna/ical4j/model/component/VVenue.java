@@ -37,7 +37,7 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
 import static net.fortuna.ical4j.model.Property.*;
@@ -126,11 +126,12 @@ public class VVenue extends CalendarComponent {
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        ComponentValidator.VVENUE.validate(this);
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VVENUE.validate(this);
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     @Override
@@ -138,6 +139,9 @@ public class VVenue extends CalendarComponent {
         return new Factory();
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<VVenue> {
 
         public Factory() {

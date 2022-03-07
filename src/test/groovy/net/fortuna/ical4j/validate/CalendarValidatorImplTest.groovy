@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,19 +31,43 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate
 
-import net.fortuna.ical4j.model.component.VAvailability;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.model.ContentBuilder
+import net.fortuna.ical4j.model.property.Attach
+import spock.lang.Shared
+import spock.lang.Specification
 
-@Deprecated
-public class VAvailabilityValidator implements Validator<VAvailability> {
+class CalendarValidatorImplTest extends Specification {
 
-    @Override
-    public ValidationResult validate(VAvailability target) throws ValidationException {
-        return ComponentValidator.VAVAILABILITY.validate(target);
+    @Shared
+    ContentBuilder builder
+
+    def setupSpec() {
+        builder = new ContentBuilder()
+    }
+
+    def 'test validation with custom rules'() {
+        given: 'a validator instance'
+        CalendarValidatorImpl validator = []
+
+        and: 'a calendar instance'
+        def calendar = builder.calendar() {
+            prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+            version '2.0'
+            vevent {
+                uid '1'
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach new Attach(new File('gradle/wrapper/gradle-wrapper.jar').bytes)
+            }
+        }
+
+        when: 'validation applied to calendar instance'
+        validator.validate(calendar)
+
+        then: 'result is as expected'
+        notThrown(ValidationException)
     }
 }

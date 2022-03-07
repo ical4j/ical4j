@@ -33,11 +33,7 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VJournalValidator;
+import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.Temporal;
 import java.util.HashMap;
@@ -113,14 +109,14 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
 
     private static final Map<Method, Validator<VJournal>> methodValidators = new HashMap<>();
     static {
-        methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
+        methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(VJOURNAL, new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
                 new ValidationRule(None, ATTENDEE, RECURRENCE_ID)));
-        methodValidators.put(Method.CANCEL, new ComponentValidator(new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
+        methodValidators.put(Method.CANCEL, new ComponentValidator(VJOURNAL, new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, LAST_MODIFIED,
                         RECURRENCE_ID, STATUS, SUMMARY, URL),
                 new ValidationRule(None, REQUEST_STATUS)));
-        methodValidators.put(Method.PUBLISH, new ComponentValidator(new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
+        methodValidators.put(Method.PUBLISH, new ComponentValidator(VJOURNAL, new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, RECURRENCE_ID, SEQUENCE, STATUS,
                         SUMMARY, URL),
                 new ValidationRule(None, ATTENDEE)));
@@ -169,11 +165,12 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        new VJournalValidator().validate(this);
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VJOURNAL.validate(this);
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     /**
@@ -342,6 +339,9 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
         return new Factory();
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {
 
         public Factory() {

@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.function.Predicate;
  * For example, a rule might define a test for one or less DTEND properties using the "OneOrLess" validation type
  * and "DTEND" identifier.
  */
-public final class ValidationRule<T> implements Serializable {
+public class ValidationRule implements Serializable {
 
     public enum ValidationType {
         None("The following MUST NOT be present."),
@@ -20,9 +22,10 @@ public final class ValidationRule<T> implements Serializable {
         OneOrLess("The following are OPTIONAL, but MUST NOT occur more than once."),
         OneOrMore("The following are OPTIONAL, and MAY occur more than once."),
         OneExclusive("If one is present, ALL others MUST NOT be present."),
-        AllOrNone("If one is present, ALL must be present.");
+        AllOrNone("If one is present, ALL must be present."),
+        ValueMatch("Value MUST match expression.");
 
-        String description;
+        private final String description;
 
         ValidationType(String description) {
             this.description = description;
@@ -81,7 +84,21 @@ public final class ValidationRule<T> implements Serializable {
         return instances;
     }
 
-    public boolean isRelaxedModeSupported() {
-        return relaxedModeSupported;
+    public String getMessage(String...instances) {
+        List<String> match = getInstances();
+        if (instances.length > 0) {
+            match = Arrays.asList(instances);
+        }
+        return String.format("%s %s", getType().getDescription(), String.join(",", match));
+    }
+
+    public ValidationEntry.Severity getSeverity() {
+        boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                && relaxedModeSupported;
+        if (warnOnly) {
+            return ValidationEntry.Severity.WARNING;
+        } else {
+            return ValidationEntry.Severity.ERROR;
+        }
     }
 }

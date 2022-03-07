@@ -39,8 +39,7 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.TimeZones;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,11 +126,12 @@ public abstract class Observance extends Component {
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        ComponentValidator.OBSERVANCE_ITIP.validate(this);
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.OBSERVANCE_ITIP.validate(this);
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     /**

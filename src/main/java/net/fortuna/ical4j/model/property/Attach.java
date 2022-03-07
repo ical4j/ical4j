@@ -38,8 +38,9 @@ import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.EncoderFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.property.AttachValidator;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
@@ -82,29 +83,9 @@ import java.util.Optional;
  *          Description: The property can be specified within &quot;VEVENT&quot;, &quot;VTODO&quot;,
  *          &quot;VJOURNAL&quot;, or &quot;VALARM&quot; calendar components. This property can be
  *          specified multiple times within an iCalendar object.
- *
- *          Format Definition: The property is defined by the following notation:
- *
- *            attach     = &quot;ATTACH&quot; attparam &quot;:&quot; uri  CRLF
- *
- *        attach     =/ &quot;ATTACH&quot; attparam &quot;;&quot; &quot;ENCODING&quot; &quot;=&quot; &quot;BASE64&quot;
- *                          &quot;;&quot; &quot;VALUE&quot; &quot;=&quot; &quot;BINARY&quot; &quot;:&quot; binary
- *
- *            attparam   = *(
- *
- *                       ; the following is optional,
- *                       ; but MUST NOT occur more than once
- *
- *                       (&quot;;&quot; fmttypeparam) /
- *
- *                       ; the following is optional,
- *                       ; and MAY occur more than once
- *
- *                       (&quot;;&quot; xparam)
- *
- *                       )
  * </pre>
  *
+ * @see net.fortuna.ical4j.validate.PropertyValidator#ATTACH
  * @author benf
  */
 public class Attach extends Property {
@@ -172,8 +153,12 @@ public class Attach extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        new AttachValidator().validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        ValidationResult result = PropertyValidator.ATTACH.validate(this);
+        if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
+            result = result.merge(PropertyValidator.ATTACH_BIN.validate(this));
+        }
+        return result;
     }
 
     /**

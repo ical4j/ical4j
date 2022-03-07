@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 /**
  * $Id$
@@ -149,8 +151,8 @@ public class TzId extends Property implements Encodable {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.TZID.validate(this);
     }
 
     @Override

@@ -35,7 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 /**
  * $Id$
@@ -119,10 +121,8 @@ public class PercentComplete extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        if (percentage < 0 || percentage > 100) {
-            throw new ValidationException(getName() + " with invalid value: " + percentage);
-        }
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.PERCENT_COMPLETE.validate(this);
     }
 
     @Override

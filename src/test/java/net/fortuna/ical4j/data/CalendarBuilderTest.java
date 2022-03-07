@@ -37,6 +37,7 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,8 +119,8 @@ public class CalendarBuilderTest extends TestCase {
     public void testBuildInvalid() throws IOException {
         try {
             Calendar calendar = new CalendarBuilder().build(fin);
-            calendar.validate();
-            fail("Should throw ParserException or ValidationException");
+            ValidationResult result = calendar.validate();
+            assertTrue(result.hasErrors());
         } catch (DateTimeException | ValidationException | ParserException e) {
             log.trace("Caught exception: [" + filename + "," + e.getMessage() + "]");
         }

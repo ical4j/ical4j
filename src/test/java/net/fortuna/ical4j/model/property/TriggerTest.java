@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,13 +109,12 @@ public class TriggerTest extends PropertyTest {
     public void testTriggerDateTime() {
         assertNull(trigger.getDuration());
         assertNotNull(trigger.getDate());
-        trigger.validate();
-    }
+        assertNotNull(trigger.getDateTime());
+        ValidationResult result = trigger.validate();
+        assertFalse(result.hasErrors());
 
-    public void testTriggerDateTimeInvalid() throws ValidationException {
-        assertNull(trigger.getDuration());
-        assertNotNull(trigger.getDate());
-        assertValidationException(trigger);
+        trigger.getParameters().add(Value.DURATION);
+        assertValidationError(trigger);
     }
 
     /**

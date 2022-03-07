@@ -223,7 +223,7 @@ public class CalendarsTest extends TestCase {
 
         List<Calendar> calendars = new ArrayList<Calendar>();
         calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))));
-        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics"))));
+        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics"))));
         suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[0])));
 
         Calendar calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
@@ -231,7 +231,7 @@ public class CalendarsTest extends TestCase {
 
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
 
-        calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics")));
+        calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics")));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, StandardCharsets.US_ASCII, "text/calendar; method=PUBLISH; charset=US-ASCII"));
         suite.addTest(new CalendarsTest("testShouldSerializeDeserializeCorrectly",

@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
@@ -214,8 +216,8 @@ public class Duration extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.DURATION.validate(this);
     }
 
     @Override

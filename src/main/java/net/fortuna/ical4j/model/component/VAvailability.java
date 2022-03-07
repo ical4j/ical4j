@@ -36,9 +36,8 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VAvailabilityValidator;
 
 import java.io.Serializable;
 import java.util.List;
@@ -169,11 +168,12 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        new VAvailabilityValidator().validate(this);
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VAVAILABILITY.validate(this);
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     @Override
@@ -181,6 +181,9 @@ public class VAvailability extends CalendarComponent implements ComponentContain
         return new Factory();
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<VAvailability> {
 
         public Factory() {
