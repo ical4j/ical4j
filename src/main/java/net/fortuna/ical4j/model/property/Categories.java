@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -161,7 +162,7 @@ public class Categories extends Property {
         return getCategories().toString();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Categories> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -169,19 +170,19 @@ public class Categories extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Categories createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Categories(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Categories createProperty() {
             return new Categories();
         }
     }
 
     @Override
-    public void validate() throws ValidationException {
-        PropertyValidator.CATEGORIES.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.CATEGORIES.validate(this);
     }
 }

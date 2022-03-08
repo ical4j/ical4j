@@ -83,7 +83,7 @@ public class Display extends Parameter implements Encodable {
         return StringUtils.join(values, ",");
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Display> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -91,7 +91,7 @@ public class Display extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) {
+        public Display createParameter(final String value) {
             return new Display(value);
         }
     }

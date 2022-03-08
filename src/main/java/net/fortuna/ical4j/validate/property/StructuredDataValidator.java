@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,26 +31,25 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate.property;
 
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VJournal;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.model.property.StructuredData;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.schema.SchemaValidatorFactory;
 
-public class VJournalValidator implements Validator<VJournal> {
+import static net.fortuna.ical4j.model.Parameter.SCHEMA;
+
+@Deprecated
+public class StructuredDataValidator implements Validator<StructuredData> {
 
     @Override
-    public void validate(VJournal target) throws ValidationException {
-        ComponentValidator.VJOURNAL.validate(target);
+    public ValidationResult validate(StructuredData target) throws ValidationException {
+        ValidationResult result = PropertyValidator.STRUCTURED_DATA.validate(target);
 
-        final Status status = target.getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property [" + status + "] may not occur in VJOURNAL");
-        }
+        result = result.merge(SchemaValidatorFactory.newInstance(target.getParameter(SCHEMA)).validate(target));
+        return result;
     }
 }

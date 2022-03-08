@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -397,7 +398,7 @@ public abstract class Property extends Content implements Comparable<Property> {
 
     private final ParameterList parameters;
 
-    private final PropertyFactory factory;
+    private final PropertyFactory<?> factory;
 
     /**
      * Constructor.
@@ -528,7 +529,7 @@ public abstract class Property extends Content implements Comparable<Property> {
      *
      * @throws ValidationException where the property is not in a valid state
      */
-    public abstract void validate() throws ValidationException;
+    public abstract ValidationResult validate() throws ValidationException;
 
     /**
      * {@inheritDoc}

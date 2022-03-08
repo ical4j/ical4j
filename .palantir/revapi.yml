@@ -380,3 +380,1588 @@ acceptedBreaks:
       old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertOneOrMore(java.lang.String,\
         \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
       justification: "Refactoring"
+  "3.1.3":
+    org.mnode.ical4j:ical4j:
+    - code: "java.annotation.added"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule<T>[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.noLongerFinal"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.AddValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.CancelValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.CounterValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.DeclineCounterValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.PublishValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.RefreshValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.ReplyValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.RequestValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.component.VJournalValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.element.nowDeprecated"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.ComponentContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.ComponentContainer<?>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.element.nowDeprecated"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.element.nowDeprecated"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.PropertyContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.PropertyContainer)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>.TRIGGER"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>.TZ_NAME"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.visibilityReduced"
+      old: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_NONE_MESSAGE"
+      new: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_NONE_MESSAGE"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.visibilityReduced"
+      old: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_MESSAGE"
+      new: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_MESSAGE"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.visibilityReduced"
+      old: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE"
+      new: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.elementNowParameterized"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
+        \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
+        \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.movedToSuperClass"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::validate(net.fortuna.ical4j.model.Property)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.AbstractValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException @ net.fortuna.ical4j.validate.PropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.Property>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.ComponentContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.ComponentContainer<?>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.PropertyContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.PropertyContainer)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.util.List<net.fortuna.ical4j.validate.ValidationRule>)"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ java.util.List<net.fortuna.ical4j.validate.PropertyRuleSet<? super T>>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule<T>[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.ValidationException::<init>()"
+      new: "method void net.fortuna.ical4j.validate.ValidationException::<init>(java.lang.Throwable)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.ValidationException::<init>(net.fortuna.ical4j.validate.ValidationResult)"
+      new: "method void net.fortuna.ical4j.validate.ValidationException::<init>(java.lang.String,\
+        \ java.lang.Throwable)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.ValidationResult::<init>()"
+      new: "method void net.fortuna.ical4j.validate.ValidationResult::<init>(java.util.Collection<net.fortuna.ical4j.validate.ValidationEntry>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(===java.lang.String===)"
+      new: "parameter <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(===java.lang.String[]===)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(===java.lang.String===)"
+      new: "parameter <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(===java.lang.String[]===)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.validate.PropertyValidator<T extends\
+        \ net.fortuna.ical4j.model.Property>::validate(===net.fortuna.ical4j.model.Property===)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "parameter net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.AbstractValidator<T>::validate(===T===)\
+        \ throws net.fortuna.ical4j.validate.ValidationException @ net.fortuna.ical4j.validate.PropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.Property>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.validate.ValidationResult::<init>(===java.lang.String[]===)"
+      new: "parameter void net.fortuna.ical4j.validate.ValidationResult::<init>(===net.fortuna.ical4j.validate.ValidationEntry[]===)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method boolean net.fortuna.ical4j.validate.ValidationRule::isRelaxedModeSupported()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.ValidationResult::getErrors()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.ValidationResult::getWarnings()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.ValidationException::getResult()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Calendar::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Calendar::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Calendar::validate(boolean) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Calendar::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Component::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Component::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Component::validate(boolean) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Component::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Component::validateProperties() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Component::validateProperties()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Property::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Property::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.Available::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.Available::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.CalendarComponent::validate(net.fortuna.ical4j.model.property.Method)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.CalendarComponent::validate(net.fortuna.ical4j.model.property.Method)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.Observance::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.Observance::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.Participant::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.Participant::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VAlarm::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VAlarm::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VAvailability::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VAvailability::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VEvent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VEvent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VFreeBusy::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VFreeBusy::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VJournal::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VJournal::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VLocation::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VLocation::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VResource::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VResource::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VTimeZone::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VTimeZone::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VToDo::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VToDo::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VVenue::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VVenue::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.XComponent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.XComponent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Action::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Action::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Attach::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Attach::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Attendee::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Attendee::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.BusyType::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.BusyType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.CalScale::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.CalScale::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.CalendarAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.CalendarAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Categories::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Categories::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Clazz::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Clazz::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Color::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Color::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Comment::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Comment::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Conference::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Conference::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Contact::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Contact::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Country::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Country::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.DateProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.DateProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Description::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Description::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Duration::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Duration::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ExDate::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ExDate::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ExRule::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ExRule::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ExtendedAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ExtendedAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.FreeBusy::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.FreeBusy::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Geo::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Geo::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Image::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Image::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Locality::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Locality::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Location::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Location::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.LocationType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.LocationType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Method::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Method::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Name::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Name::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Organizer::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Organizer::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ParticipantType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ParticipantType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.PercentComplete::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.PercentComplete::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Postalcode::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Postalcode::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Priority::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Priority::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ProdId::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ProdId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Proximity::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Proximity::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RDate::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RDate::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RRule::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RRule::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RecurrenceId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RecurrenceId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RefreshInterval::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RefreshInterval::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Region::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Region::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RelatedTo::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RelatedTo::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Repeat::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Repeat::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RequestStatus::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RequestStatus::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ResourceType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ResourceType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Resources::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Resources::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Sequence::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Sequence::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Source::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Source::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Status::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Status::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.StreetAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.StreetAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.StructuredData::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.StructuredData::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.StyledDescription::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.StyledDescription::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Summary::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Summary::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Tel::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Tel::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Transp::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Transp::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Trigger::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Trigger::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzId::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzIdAliasOf::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzIdAliasOf::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzName::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzName::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzOffsetFrom::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzOffsetFrom::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzOffsetTo::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzOffsetTo::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzUrl::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzUrl::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Uid::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Uid::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Url::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Url::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.UtcProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.UtcProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Version::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Version::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.XProperty::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.XProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.CalendarValidatorImpl::validate(net.fortuna.ical4j.model.Calendar)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.CalendarValidatorImpl::validate(net.fortuna.ical4j.model.Calendar)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.ComponentValidator<T\
+        \ extends net.fortuna.ical4j.model.Component>::validate(T) throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.EmptyValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.EmptyValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::validate(net.fortuna.ical4j.model.Property)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.AbstractValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException @ net.fortuna.ical4j.validate.PropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.Property>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.Validator<T>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.Validator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.AvailableValidator::validate(net.fortuna.ical4j.model.component.Available)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.AvailableValidator::validate(net.fortuna.ical4j.model.component.Available)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VAvailabilityValidator::validate(net.fortuna.ical4j.model.component.VAvailability)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VAvailabilityValidator::validate(net.fortuna.ical4j.model.component.VAvailability)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VEventValidator::validate(net.fortuna.ical4j.model.component.VEvent)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VEventValidator::validate(net.fortuna.ical4j.model.component.VEvent)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VFreeBusyValidator::validate(net.fortuna.ical4j.model.component.VFreeBusy)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VFreeBusyValidator::validate(net.fortuna.ical4j.model.component.VFreeBusy)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VTimeZoneValidator::validate(net.fortuna.ical4j.model.component.VTimeZone)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VTimeZoneValidator::validate(net.fortuna.ical4j.model.component.VTimeZone)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VToDoValidator::validate(net.fortuna.ical4j.model.component.VToDo)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VToDoValidator::validate(net.fortuna.ical4j.model.component.VToDo)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.AttachValidator::validate(net.fortuna.ical4j.model.property.Attach)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.AttachValidator::validate(net.fortuna.ical4j.model.property.Attach)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.DatePropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.DateProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.DatePropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.DateProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.TriggerValidator::validate(net.fortuna.ical4j.model.property.Trigger)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.TriggerValidator::validate(net.fortuna.ical4j.model.property.Trigger)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.UtcPropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.UtcProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.UtcPropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.UtcProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Abbrev.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Abbrev net.fortuna.ical4j.model.parameter.Abbrev.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.AltRep.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.AltRep net.fortuna.ical4j.model.parameter.AltRep.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Cn.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Cn net.fortuna.ical4j.model.parameter.Cn.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.CuType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.CuType net.fortuna.ical4j.model.parameter.CuType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.DelegatedFrom.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.DelegatedFrom net.fortuna.ical4j.model.parameter.DelegatedFrom.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.DelegatedTo.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.DelegatedTo net.fortuna.ical4j.model.parameter.DelegatedTo.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Derived.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Derived net.fortuna.ical4j.model.parameter.Derived.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Dir.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Dir net.fortuna.ical4j.model.parameter.Dir.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Display.Factory::createParameter(java.lang.String)"
+      new: "method net.fortuna.ical4j.model.parameter.Display net.fortuna.ical4j.model.parameter.Display.Factory::createParameter(java.lang.String)"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Email.Factory::createParameter(java.lang.String)"
+      new: "method net.fortuna.ical4j.model.parameter.Email net.fortuna.ical4j.model.parameter.Email.Factory::createParameter(java.lang.String)"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Encoding.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Encoding net.fortuna.ical4j.model.parameter.Encoding.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.FbType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.FbType net.fortuna.ical4j.model.parameter.FbType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Feature.Factory::createParameter(java.lang.String)"
+      new: "method net.fortuna.ical4j.model.parameter.Feature net.fortuna.ical4j.model.parameter.Feature.Factory::createParameter(java.lang.String)"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.FmtType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.FmtType net.fortuna.ical4j.model.parameter.FmtType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Label.Factory::createParameter(java.lang.String)"
+      new: "method net.fortuna.ical4j.model.parameter.Label net.fortuna.ical4j.model.parameter.Label.Factory::createParameter(java.lang.String)"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Language.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Language net.fortuna.ical4j.model.parameter.Language.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Member.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Member net.fortuna.ical4j.model.parameter.Member.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Order.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Order net.fortuna.ical4j.model.parameter.Order.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.PartStat.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.PartStat net.fortuna.ical4j.model.parameter.PartStat.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Range.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Range net.fortuna.ical4j.model.parameter.Range.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.RelType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.RelType net.fortuna.ical4j.model.parameter.RelType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Related.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Related net.fortuna.ical4j.model.parameter.Related.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Role.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Role net.fortuna.ical4j.model.parameter.Role.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Rsvp.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Rsvp net.fortuna.ical4j.model.parameter.Rsvp.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.ScheduleAgent.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.ScheduleAgent net.fortuna.ical4j.model.parameter.ScheduleAgent.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.ScheduleStatus.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.ScheduleStatus net.fortuna.ical4j.model.parameter.ScheduleStatus.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Schema.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Schema net.fortuna.ical4j.model.parameter.Schema.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.SentBy.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.SentBy net.fortuna.ical4j.model.parameter.SentBy.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Type.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Type net.fortuna.ical4j.model.parameter.Type.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.TzId.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.TzId net.fortuna.ical4j.model.parameter.TzId.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Value.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Value net.fortuna.ical4j.model.parameter.Value.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Vvenue.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Vvenue net.fortuna.ical4j.model.parameter.Vvenue.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.XParameter.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.XParameter net.fortuna.ical4j.model.parameter.XParameter.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Acknowledged.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Acknowledged net.fortuna.ical4j.model.property.Acknowledged.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Acknowledged.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Acknowledged net.fortuna.ical4j.model.property.Acknowledged.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Attach.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Attach net.fortuna.ical4j.model.property.Attach.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Attach.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Attach net.fortuna.ical4j.model.property.Attach.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Attendee.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Attendee net.fortuna.ical4j.model.property.Attendee.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Attendee.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Attendee net.fortuna.ical4j.model.property.Attendee.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Categories.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Categories net.fortuna.ical4j.model.property.Categories.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Categories.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Categories net.fortuna.ical4j.model.property.Categories.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Comment.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Comment net.fortuna.ical4j.model.property.Comment.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Comment.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Comment net.fortuna.ical4j.model.property.Comment.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Completed.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Completed net.fortuna.ical4j.model.property.Completed.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Completed.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Completed net.fortuna.ical4j.model.property.Completed.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Contact.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Contact net.fortuna.ical4j.model.property.Contact.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Contact.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Contact net.fortuna.ical4j.model.property.Contact.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Country.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Country net.fortuna.ical4j.model.property.Country.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Country.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Country net.fortuna.ical4j.model.property.Country.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Created.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Created net.fortuna.ical4j.model.property.Created.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Created.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Created net.fortuna.ical4j.model.property.Created.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Description.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Description net.fortuna.ical4j.model.property.Description.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Description.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Description net.fortuna.ical4j.model.property.Description.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.DtEnd net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.DtEnd net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DtStamp.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.DtStamp net.fortuna.ical4j.model.property.DtStamp.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DtStamp.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.DtStamp net.fortuna.ical4j.model.property.DtStamp.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DtStart.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.DtStart net.fortuna.ical4j.model.property.DtStart.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DtStart.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.DtStart net.fortuna.ical4j.model.property.DtStart.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Due.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Due net.fortuna.ical4j.model.property.Due.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Due.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Due net.fortuna.ical4j.model.property.Due.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Duration.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Duration net.fortuna.ical4j.model.property.Duration.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Duration.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Duration net.fortuna.ical4j.model.property.Duration.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ExDate.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.ExDate net.fortuna.ical4j.model.property.ExDate.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ExDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ExDate net.fortuna.ical4j.model.property.ExDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ExRule.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.ExRule net.fortuna.ical4j.model.property.ExRule.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ExRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ExRule net.fortuna.ical4j.model.property.ExRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ExtendedAddress.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.ExtendedAddress net.fortuna.ical4j.model.property.ExtendedAddress.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ExtendedAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ExtendedAddress net.fortuna.ical4j.model.property.ExtendedAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.FreeBusy.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.FreeBusy net.fortuna.ical4j.model.property.FreeBusy.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.FreeBusy.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.FreeBusy net.fortuna.ical4j.model.property.FreeBusy.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Geo.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Geo net.fortuna.ical4j.model.property.Geo.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Geo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Geo net.fortuna.ical4j.model.property.Geo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.LastModified.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.LastModified net.fortuna.ical4j.model.property.LastModified.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.LastModified.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.LastModified net.fortuna.ical4j.model.property.LastModified.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Locality.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Locality net.fortuna.ical4j.model.property.Locality.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Locality.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Locality net.fortuna.ical4j.model.property.Locality.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Location.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Location net.fortuna.ical4j.model.property.Location.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Location.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Location net.fortuna.ical4j.model.property.Location.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.LocationType.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.LocationType net.fortuna.ical4j.model.property.LocationType.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.LocationType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.LocationType net.fortuna.ical4j.model.property.LocationType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Name.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Name net.fortuna.ical4j.model.property.Name.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Name.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Name net.fortuna.ical4j.model.property.Name.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Organizer.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Organizer net.fortuna.ical4j.model.property.Organizer.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Organizer.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Organizer net.fortuna.ical4j.model.property.Organizer.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.PercentComplete.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.PercentComplete net.fortuna.ical4j.model.property.PercentComplete.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.PercentComplete.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.PercentComplete net.fortuna.ical4j.model.property.PercentComplete.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ProdId.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.ProdId net.fortuna.ical4j.model.property.ProdId.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.ProdId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ProdId net.fortuna.ical4j.model.property.ProdId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RDate.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RDate net.fortuna.ical4j.model.property.RDate.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.RDate net.fortuna.ical4j.model.property.RDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RRule.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RRule net.fortuna.ical4j.model.property.RRule.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.RRule net.fortuna.ical4j.model.property.RRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RecurrenceId net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.RecurrenceId net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Region.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Region net.fortuna.ical4j.model.property.Region.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Region.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Region net.fortuna.ical4j.model.property.Region.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RelatedTo.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RelatedTo net.fortuna.ical4j.model.property.RelatedTo.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RelatedTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.RelatedTo net.fortuna.ical4j.model.property.RelatedTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Repeat.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Repeat net.fortuna.ical4j.model.property.Repeat.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Repeat.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Repeat net.fortuna.ical4j.model.property.Repeat.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RequestStatus.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RequestStatus net.fortuna.ical4j.model.property.RequestStatus.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.RequestStatus.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.RequestStatus net.fortuna.ical4j.model.property.RequestStatus.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Resources.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Resources net.fortuna.ical4j.model.property.Resources.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Resources.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Resources net.fortuna.ical4j.model.property.Resources.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.StreetAddress.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.StreetAddress net.fortuna.ical4j.model.property.StreetAddress.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.StreetAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.StreetAddress net.fortuna.ical4j.model.property.StreetAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Summary.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Summary net.fortuna.ical4j.model.property.Summary.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Summary.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Summary net.fortuna.ical4j.model.property.Summary.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Tel.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Tel net.fortuna.ical4j.model.property.Tel.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Tel.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Tel net.fortuna.ical4j.model.property.Tel.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Trigger.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Trigger net.fortuna.ical4j.model.property.Trigger.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Trigger.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Trigger net.fortuna.ical4j.model.property.Trigger.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzId.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.TzId net.fortuna.ical4j.model.property.TzId.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzId net.fortuna.ical4j.model.property.TzId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzName.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.TzName net.fortuna.ical4j.model.property.TzName.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzName.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzName net.fortuna.ical4j.model.property.TzName.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzOffsetFrom.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.TzOffsetFrom net.fortuna.ical4j.model.property.TzOffsetFrom.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzOffsetFrom.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzOffsetFrom net.fortuna.ical4j.model.property.TzOffsetFrom.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzOffsetTo.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.TzOffsetTo net.fortuna.ical4j.model.property.TzOffsetTo.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzOffsetTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzOffsetTo net.fortuna.ical4j.model.property.TzOffsetTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzUrl.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.TzUrl net.fortuna.ical4j.model.property.TzUrl.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.TzUrl.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzUrl net.fortuna.ical4j.model.property.TzUrl.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Uid.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Uid net.fortuna.ical4j.model.property.Uid.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Uid.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Uid net.fortuna.ical4j.model.property.Uid.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Url.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Url net.fortuna.ical4j.model.property.Url.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.Url.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Url net.fortuna.ical4j.model.property.Url.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.XProperty.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.XProperty net.fortuna.ical4j.model.property.XProperty.Factory::createProperty()"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.XProperty.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.XProperty net.fortuna.ical4j.model.property.XProperty.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      justification: "generics_fixes"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.ComponentContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.ComponentContainer<?>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.PropertyContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.PropertyContainer)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
+        \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.visibilityReduced"
+      old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(java.lang.String,\
+        \ java.util.Set<net.fortuna.ical4j.validate.ValidationRule<T>>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.visibilityReduced"
+      old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(java.lang.String,\
+        \ java.util.Set<net.fortuna.ical4j.validate.ValidationRule>)"
+      justification: "validation_refactor_from_exception_to_result"

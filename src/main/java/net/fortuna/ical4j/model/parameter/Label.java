@@ -51,7 +51,7 @@ public class Label extends Parameter implements Encodable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Label> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -59,7 +59,7 @@ public class Label extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) {
+        public Label createParameter(final String value) {
             return new Label(value);
         }
     }

@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -157,11 +162,11 @@ public class TzUrl extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.TZURL.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<TzUrl> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -169,13 +174,13 @@ public class TzUrl extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public TzUrl createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new TzUrl(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public TzUrl createProperty() {
             return new TzUrl();
         }
     }

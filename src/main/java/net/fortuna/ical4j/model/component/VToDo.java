@@ -33,10 +33,7 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -119,7 +116,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
 
     private static final long serialVersionUID = -269658210065896668L;
 
-    private static final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+    private static final Map<Method, Validator> methodValidators = new HashMap<>();
     static {
         methodValidators.put(Method.ADD, new VToDoValidator(new ValidationRule(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
@@ -242,8 +239,8 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        ComponentValidator.VTODO.validate(this);
+    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VTODO.validate(this);
         // validate that getAlarms() only contains VAlarm components
         for (VAlarm component : getAlarms()) {
             component.validate(recurse);
@@ -259,8 +256,9 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
         }
 
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     /**

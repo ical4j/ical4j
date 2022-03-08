@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -113,11 +114,12 @@ public class CalendarAddress extends Property {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
+    public final ValidationResult validate() throws ValidationException {
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
         // Should validate value is a URI
+        return ValidationResult.EMPTY;
     }
 
     /**

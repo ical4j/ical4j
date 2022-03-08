@@ -35,27 +35,28 @@ package net.fortuna.ical4j.validate.property;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.UtcProperty;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
+@Deprecated
 public class UtcPropertyValidator<T extends UtcProperty> extends DatePropertyValidator<T> {
 
     @Override
-    public void validate(T target) throws ValidationException {
-        super.validate(target);
-        ValidationResult result = new ValidationResult();
+    public ValidationResult validate(T target) throws ValidationException {
+        ValidationResult result = super.validate(target);
         if (target.getDate() != null && !(target.getDate() instanceof DateTime)) {
-            result.getErrors().add("Property must have a DATE-TIME value");
+            result.getEntries().add(new ValidationEntry("Property must have a DATE-TIME value",
+                    ValidationEntry.Severity.ERROR, target.getName()));
         }
 
         final DateTime dateTime = (DateTime) target.getDate();
 
         if (dateTime != null && !dateTime.isUtc()) {
-            result.getErrors().add(target.getName() +
-                    ": DATE-TIME value must be specified in UTC time");
+            result.getEntries().add(new ValidationEntry(target.getName() +
+                    ": DATE-TIME value must be specified in UTC time", ValidationEntry.Severity.ERROR,
+                    target.getName()));
         }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
+        return result;
     }
 }

@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -146,11 +147,11 @@ public class Location extends Property implements Encodable {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        PropertyValidator.LOCATION.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.LOCATION.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Location> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -158,13 +159,13 @@ public class Location extends Property implements Encodable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Location createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Location(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Location createProperty() {
             return new Location();
         }
     }

@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -116,8 +117,8 @@ public class Attendee extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        PropertyValidator.ATTENDEE.validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.ATTENDEE.validate(this);
     }
 
     /**
@@ -151,7 +152,7 @@ public class Attendee extends Property {
         return new Attendee(new ParameterList(getParameters(), false), calAddress);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Attendee> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -159,13 +160,13 @@ public class Attendee extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Attendee createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Attendee(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Attendee createProperty() {
             return new Attendee();
         }
     }

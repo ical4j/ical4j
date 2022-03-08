@@ -75,7 +75,7 @@ public class Feature extends Parameter implements Encodable {
         return StringUtils.join(values, ",");
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Feature> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -83,7 +83,7 @@ public class Feature extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) {
+        public Feature createParameter(final String value) {
             return new Feature(value);
         }
     }

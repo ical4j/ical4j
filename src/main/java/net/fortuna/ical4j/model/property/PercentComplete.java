@@ -31,8 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -120,13 +125,11 @@ public class PercentComplete extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        if (percentage < 0 || percentage > 100) {
-            throw new ValidationException(getName() + " with invalid value: " + percentage);
-        }
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.PERCENT_COMPLETE.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<PercentComplete> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -134,13 +137,13 @@ public class PercentComplete extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public PercentComplete createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new PercentComplete(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public PercentComplete createProperty() {
             return new PercentComplete();
         }
     }

@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -187,8 +188,8 @@ public class Organizer extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        PropertyValidator.ORGANIZER.validate(this);
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.ORGANIZER.validate(this);
     }
 
     /**
@@ -221,7 +222,7 @@ public class Organizer extends Property {
         this.calAddress = calAddress;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Organizer> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -229,13 +230,13 @@ public class Organizer extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Organizer createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Organizer(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Organizer createProperty() {
             return new Organizer();
         }
     }

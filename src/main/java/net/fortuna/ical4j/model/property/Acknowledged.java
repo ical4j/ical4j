@@ -7,7 +7,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -27,14 +30,6 @@ import java.text.ParseException;
 
    Property Parameters:  IANA and non-standard property parameters can
       be specified on this property.
-
-
-
-
-
-Daboo                   Expires December 11, 2012              [Page 10]
- 
-Internet-Draft              VALARM Extensions                  June 2012
 
 
    Conformance:  This property can be specified within "VALARM" calendar
@@ -66,32 +61,6 @@ Internet-Draft              VALARM Extensions                  June 2012
       changes and is greater than or equal to the trigger time of the
       alarm, then clients SHOULD dismiss or cancel any "alert" presented
       to the calendar user.
-
-   Format Definition:  This property is defined by the following
-      notation:
-
-   acknowledged = "ACKNOWLEDGED" acknowledgedparam ":" datetime CRLF
-
-   acknowledgedparam  = *(
-
-                        ; the following is OPTIONAL,
-                        ; and MAY occur more than once
-
-                        (";" other-param)
-
-                        )
-
-
-
-
-
-
-
-
-Daboo                   Expires December 11, 2012              [Page 11]
- 
-Internet-Draft              VALARM Extensions                  June 2012
-
 
    Example:  The following is an example of this property:
 
@@ -145,7 +114,7 @@ public class Acknowledged extends UtcProperty{
         setDate(aDate);
     }
     
-    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
+    public static class Factory extends Content.Factory implements PropertyFactory<Acknowledged> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -153,13 +122,13 @@ public class Acknowledged extends UtcProperty{
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Acknowledged createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Acknowledged(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public Acknowledged createProperty() {
             return new Acknowledged();
         }
     }

@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -212,11 +213,11 @@ public class RequestStatus extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        PropertyValidator.REQUEST_STATUS.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.REQUEST_STATUS.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RequestStatus> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -224,13 +225,13 @@ public class RequestStatus extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RequestStatus createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RequestStatus(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public RequestStatus createProperty() {
             return new RequestStatus();
         }
     }

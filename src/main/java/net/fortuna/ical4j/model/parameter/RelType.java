@@ -96,7 +96,7 @@ public class RelType extends Parameter implements Encodable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<RelType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -104,7 +104,7 @@ public class RelType extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public RelType createParameter(final String value) throws URISyntaxException {
             RelType parameter = new RelType(value);
             if (RelType.PARENT.equals(parameter)) {
                 parameter = RelType.PARENT;

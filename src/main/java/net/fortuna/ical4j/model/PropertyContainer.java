@@ -4,7 +4,7 @@ public interface PropertyContainer {
 
     PropertyList<Property> getProperties();
 
-    default <T extends Property> PropertyList<T> getProperties(final String name) {
+    default <T extends Property> PropertyList<T> getProperties(final String... name) {
         return getProperties().getProperties(name);
     }
 

@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -146,11 +148,11 @@ public class TzOffsetTo extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.TZOFFSETTO.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -158,13 +160,13 @@ public class TzOffsetTo extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public TzOffsetTo createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new TzOffsetTo(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public TzOffsetTo createProperty() {
             return new TzOffsetTo();
         }
     }

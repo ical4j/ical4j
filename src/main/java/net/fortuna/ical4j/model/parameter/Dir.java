@@ -85,7 +85,7 @@ public class Dir extends Parameter implements Encodable {
         return Uris.decode(Strings.valueOf(getUri()));
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Dir> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -93,7 +93,7 @@ public class Dir extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Dir createParameter(final String value) throws URISyntaxException {
             return new Dir(value);
         }
     }

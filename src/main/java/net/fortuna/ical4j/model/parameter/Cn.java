@@ -68,7 +68,7 @@ public class Cn extends Parameter implements Encodable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Cn> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -76,7 +76,7 @@ public class Cn extends Parameter implements Encodable {
         }
 
         @Override
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Cn createParameter(final String value) throws URISyntaxException {
             return new Cn(value);
         }
     }

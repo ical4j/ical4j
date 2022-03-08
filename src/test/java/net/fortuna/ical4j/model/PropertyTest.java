@@ -34,7 +34,9 @@ package net.fortuna.ical4j.model;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -124,7 +126,8 @@ public class PropertyTest extends AbstractPropertyTest {
             }
 
             @Override
-            public void validate() throws ValidationException {
+            public ValidationResult validate() throws ValidationException {
+                return ValidationResult.EMPTY;
             }
         };
 
@@ -166,8 +169,9 @@ public class PropertyTest extends AbstractPropertyTest {
      */
     public final void testValidationException() {
         try {
-            property.validate();
-            fail("Should throw ValidationException");
+            ValidationResult result = property.validate();
+//            fail("Should throw ValidationException");
+            assertTrue(result.hasErrors());
         }
         catch (ValidationException e) {
             e.printStackTrace();
@@ -220,7 +224,8 @@ public class PropertyTest extends AbstractPropertyTest {
             }
 
             @Override
-            public void validate() throws ValidationException {
+            public ValidationResult validate() throws ValidationException {
+                return ValidationResult.EMPTY;
             }
         };
 
@@ -237,8 +242,9 @@ public class PropertyTest extends AbstractPropertyTest {
             }
 
             @Override
-            public void validate() throws ValidationException {
-                throw new ValidationException();
+            public ValidationResult validate() throws ValidationException {
+                return new ValidationResult(new ValidationEntry("Fail",
+                        ValidationEntry.Severity.ERROR, getName()));
             }
         };
         suite.addTest(new PropertyTest("testEquals", property));

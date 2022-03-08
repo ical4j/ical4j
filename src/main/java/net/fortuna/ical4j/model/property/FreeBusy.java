@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -165,12 +166,8 @@ public class FreeBusy extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        PropertyValidator.FREEBUSY.validate(this);
-
-        if (!periods.isUtc()) {
-            throw new ValidationException("Periods must be in UTC format");
-        }
+    public final ValidationResult validate() throws ValidationException {
+        return PropertyValidator.FREEBUSY.validate(this);
     }
 
     /**
@@ -196,7 +193,7 @@ public class FreeBusy extends Property {
         return getPeriods().toString();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<FreeBusy> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -204,13 +201,13 @@ public class FreeBusy extends Property {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public FreeBusy createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new FreeBusy(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public FreeBusy createProperty() {
             return new FreeBusy();
         }
     }
