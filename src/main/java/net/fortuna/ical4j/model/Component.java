@@ -208,7 +208,7 @@ public abstract class Component implements Serializable, PropertyContainer {
      *
      * @throws ValidationException where the component is not in a valid state
      */
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return validate(true);
     }
 
@@ -225,7 +225,7 @@ public abstract class Component implements Serializable, PropertyContainer {
      *
      * @throws ValidationException where any of the component properties is not in a valid state
      */
-    protected final ValidationResult validateProperties() throws ValidationException {
+    protected ValidationResult validateProperties() throws ValidationException {
         ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
             result = result.merge(property.validate());

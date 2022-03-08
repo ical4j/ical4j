@@ -106,7 +106,7 @@ public class Available extends Component {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult results =  ComponentValidator.AVAILABLE.validate(this);
         if (recurse) {
             results = results.merge(validateProperties());

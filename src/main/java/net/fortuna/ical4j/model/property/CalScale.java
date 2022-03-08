@@ -133,7 +133,7 @@ public class CalScale extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return PropertyValidator.CALSCALE.validate(this);
     }
 

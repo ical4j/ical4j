@@ -215,7 +215,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * Perform validation on the calendar, its properties and its components in its current state.
      * @throws ValidationException where the calendar is not in a valid state
      */
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return validate(true);
     }
 

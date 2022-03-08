@@ -200,7 +200,7 @@ public class RDate extends DateListProperty {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return PropertyValidator.RDATE.validate(this);
     }
 
