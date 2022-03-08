@@ -33,18 +33,11 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.function.Predicate;
-
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -100,16 +93,6 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 public class VAvailability extends CalendarComponent implements ComponentContainer<Available> {
 
 	private static final long serialVersionUID = -3001603309266267258L;
-
-    private final Validator<VAvailability> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
-            new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
-            // can't have both DTEND and DURATION..
-            new ValidationRule<>(None,
-                    (Predicate<VAvailability> & Serializable) p -> !p.getProperties(DTEND).isEmpty(), DURATION),
-            new ValidationRule<>(None,
-                    (Predicate<VAvailability> & Serializable) p -> !p.getProperties(DURATION).isEmpty(), DTEND)
-    );
 
     /**
      * Default constructor.

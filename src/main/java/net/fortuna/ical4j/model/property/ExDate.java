@@ -35,12 +35,12 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.time.temporal.Temporal;
-import java.util.Optional;
 
 /**
  * $Id$

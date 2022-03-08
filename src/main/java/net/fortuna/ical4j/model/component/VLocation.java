@@ -38,9 +38,10 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
+import java.util.List;
+import java.util.Optional;
+
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [May 1 2017]
@@ -98,11 +99,6 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
 public class VLocation extends Component {
 
     private static final long serialVersionUID = -8193965477414653802L;
-
-    private final Validator<VLocation> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, UID),
-            new ValidationRule<>(OneOrLess, DESCRIPTION, GEO, LOCATION_TYPE, NAME)
-    );
 
     /**
      * Default constructor.

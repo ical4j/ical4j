@@ -39,6 +39,8 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.validate.*;
 
+import java.util.Optional;
+
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
@@ -65,11 +67,11 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
         if (target.isUtc()) {
             result.getEntries().addAll(new PropertyRuleSet(UTC_PARAMS).apply(target.getName(), target));
         }
-        final Value value = target.getParameter(Parameter.VALUE);
+        final Optional<Value> value = target.getParameter(Parameter.VALUE);
 
         if (target.getDate() instanceof DateTime) {
 
-            if (value != null && !Value.DATE_TIME.equals(value)) {
+            if (value.isPresent() && !Value.DATE_TIME.equals(value.get())) {
                 result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
                         + "] is invalid for DATE-TIME instance", ValidationEntry.Severity.ERROR,
                         target.getName()));
@@ -78,9 +80,9 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
             final DateTime dateTime = (DateTime) target.getDate();
 
             // ensure tzid matches date-time timezone..
-            final Parameter tzId = target.getParameter(Parameter.TZID);
+            final Optional<Parameter> tzId = target.getParameter(Parameter.TZID);
             if (dateTime.getTimeZone() != null
-                    && (tzId == null || !tzId.getValue().equals(
+                    && (!tzId.isPresent() || !tzId.get().getValue().equals(
                     dateTime.getTimeZone().getID()))) {
 
                 result.getEntries().add(new ValidationEntry("TZID parameter [" + tzId

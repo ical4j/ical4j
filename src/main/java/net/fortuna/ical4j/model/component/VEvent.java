@@ -36,16 +36,13 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.Serializable;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
-import java.util.function.Predicate;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -241,15 +238,6 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                         LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
     }
 
-    private final Validator<VEvent> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, true, UID, DTSTAMP),
-            new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART, GEO, LAST_MODIFIED, LOCATION,
-                    ORGANIZER, PRIORITY, DTSTAMP, SEQUENCE, STATUS, SUMMARY, TRANSP, UID, URL, RECURRENCE_ID),
-            // can't have both DTEND and DURATION..
-            new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->!p.getProperties(DTEND).isEmpty(), DURATION),
-            new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->!p.getProperties(DURATION).isEmpty(), DTEND)
-    );
-
     /**
      * Default constructor.
      */
@@ -429,13 +417,13 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
-    public void validate(Method method) throws ValidationException {
+    public ValidationResult validate(Method method) throws ValidationException {
         final Validator<VEvent> validator = methodValidators.get(method);
         if (validator != null) {
-            validator.validate(this);
+            return validator.validate(this);
         }
         else {
-            super.validate(method);
+            return super.validate(method);
         }
     }
 

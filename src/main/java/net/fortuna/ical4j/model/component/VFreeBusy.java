@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.*;
+import org.threeten.extra.Interval;
 
 import java.time.Instant;
 import java.time.temporal.Temporal;
@@ -217,12 +218,6 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
                 new ValidationRule(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule(None, FREEBUSY, DURATION, REQUEST_STATUS, URL)));
     }
-
-    private final Validator<VFreeBusy> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, true, UID, DTSTAMP),
-            new ValidationRule<>(OneOrLess, CONTACT, DTSTART, DTEND, DURATION, DTSTAMP, ORGANIZER, UID, URL),
-            new ValidationRule<>(None, RRULE, EXRULE, RDATE, EXDATE)
-        );
 
     /**
      * Default constructor.
@@ -490,10 +485,10 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
     public final ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VFREEBUSY.validate(this);
 
-        final DtStart dtStart = getProperty(Property.DTSTART);
-        final DtEnd dtEnd = getProperty(Property.DTEND);
-        if (dtStart != null && dtEnd != null
-                && !dtStart.getDate().before(dtEnd.getDate())) {
+        final Optional<DtStart<?>> dtStart = getProperty(Property.DTSTART);
+        final Optional<DtEnd<?>> dtEnd = getProperty(Property.DTEND);
+        if (dtStart.isPresent() && dtEnd.isPresent()
+                && new TemporalComparator().compare(dtStart.get().getDate(), dtEnd.get().getDate()) < 0) {
             result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
                     + "] must be later in time than [" + Property.DTSTART + "]", ValidationEntry.Severity.ERROR,
                     getName()));
@@ -509,13 +504,13 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
-    public void validate(Method method) throws ValidationException {
+    public ValidationResult validate(Method method) throws ValidationException {
         final Validator<VFreeBusy> validator = methodValidators.get(method);
         if (validator != null) {
-            validator.validate(this);
+            return validator.validate(this);
         }
         else {
-            super.validate(method);
+            return super.validate(method);
         }
     }
 

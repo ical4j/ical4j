@@ -36,18 +36,14 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-import static net.fortuna.ical4j.model.Parameter.RELATED;
 import static net.fortuna.ical4j.model.Parameter.VALUE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -156,11 +152,6 @@ public class Trigger extends DateProperty<Instant> {
     private static final long serialVersionUID = 5049421499261722194L;
 
     private TemporalAmountAdapter duration;
-
-    private final Validator<Trigger> validator = new PropertyValidator<>(
-            new ValidationRule<>(OneOrLess, VALUE),
-            new ValidationRule<>(None, (Predicate<Trigger> & Serializable) Trigger::isAbsolute, RELATED)
-    );
 
     /**
      * Default constructor.

@@ -41,7 +41,6 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
@@ -225,8 +224,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * {@inheritDoc}
      */
     @Override
-    public void validate() throws ValidationException {
-        new DatePropertyValidator<>().validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return new DatePropertyValidator<>().validate(this);
     }
 
     @Override

@@ -34,10 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.ValidationException;
 
-import java.time.LocalDate;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Optional;
@@ -154,25 +151,5 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
 
     public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
-    }
-
-    @Override
-    public void validate() throws ValidationException {
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            // Ensure date list is consistent with VALUE param..
-            if (Value.DATE.equals(getParameter(Parameter.VALUE).orElse(defaultValueParam))) {
-                for (T t : dates.getDates()) {
-                    if (!(t instanceof LocalDate)) {
-                        throw new ValidationException("Mismatch between VALUE param and dates");
-                    }
-                }
-            } else {
-                for (T t : dates.getDates()) {
-                    if (t instanceof LocalDate) {
-                        throw new ValidationException("Mismatch between VALUE param and dates");
-                    }
-                }
-            }
-        }
     }
 }

@@ -55,7 +55,7 @@ public class PropertyContainerRuleSet<T extends PropertyContainer> extends Abstr
                 int total = rule.getInstances().stream().mapToInt(s -> target.getProperties(s).size()).sum();
                 switch (rule.getType()) {
                     case None:
-                        matches = matches(rule.getInstances(), s -> target.getProperty(s) != null);
+                        matches = matches(rule.getInstances(), s -> target.getProperty(s).isPresent());
                         break;
                     case One:
                         matches = matches(rule.getInstances(), s -> target.getProperties(s).size() != 1);

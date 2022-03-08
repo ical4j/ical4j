@@ -122,12 +122,6 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
                 new ValidationRule(None, ATTENDEE)));
     }
 
-    private final Validator<VJournal> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, true, UID, DTSTAMP),
-            new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART, DTSTAMP, LAST_MODIFIED, ORGANIZER,
-                    RECURRENCE_ID, SEQUENCE, STATUS, SUMMARY, UID, URL)
-    );
-
     /**
      * Default constructor.
      */
@@ -179,13 +173,13 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      * @throws ValidationException where the component does not comply with RFC2446
      */
     @Override
-    public void validate(Method method) throws ValidationException {
+    public ValidationResult validate(Method method) throws ValidationException {
         final Validator<VJournal> validator = methodValidators.get(method);
         if (validator != null) {
-            validator.validate(this);
+            return validator.validate(this);
         }
         else {
-            super.validate(method);
+            return super.validate(method);
         }
     }
 

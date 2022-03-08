@@ -129,7 +129,7 @@ public class StructuredData extends Property implements Encodable {
     public ValidationResult validate() throws ValidationException {
         ValidationResult result = PropertyValidator.STRUCTURED_DATA.validate(this);
 
-        result = result.merge(SchemaValidatorFactory.newInstance(getParameter(SCHEMA)).validate(this));
+        result = result.merge(SchemaValidatorFactory.newInstance(getRequiredParameter(SCHEMA)).validate(this));
         return result;
     }
 

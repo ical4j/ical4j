@@ -36,7 +36,6 @@ import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
-import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
@@ -50,8 +49,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -132,11 +129,6 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
 
     private static final Validator<VTimeZone> itipValidator = new VTimeZoneValidator();
 
-    private static final Validator<VTimeZone> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, TZID),
-            new ValidationRule<>(OneOrLess, LAST_MODIFIED, TZURL)
-    );
-
     /**
      * Default constructor.
      */
@@ -182,8 +174,8 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
     }
 
     @Override
-    public void validate(Method method) throws ValidationException {
-        itipValidator.validate(this);
+    public ValidationResult validate(Method method) throws ValidationException {
+        return itipValidator.validate(this);
     }
 
     /**

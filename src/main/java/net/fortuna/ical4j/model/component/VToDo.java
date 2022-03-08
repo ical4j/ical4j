@@ -157,16 +157,6 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
                 new ValidationRule(None, REQUEST_STATUS)));
     }
 
-    private static final Validator<VToDo> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, true, UID, DTSTAMP),
-            new ValidationRule<>(OneOrLess, CLASS, COMPLETED, CREATED, DESCRIPTION, DTSTAMP, DTSTART, GEO,
-                    LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, SEQUENCE, STATUS,
-                    SUMMARY, UID, URL),
-            // can't have both DUE and DURATION..
-            new ValidationRule<>(None, p->!p.getProperties(DUE).isEmpty(), DURATION),
-            new ValidationRule<>(None, p->!p.getProperties(DURATION).isEmpty(), DUE)
-    );
-
     /**
      * Default constructor.
      */
@@ -276,11 +266,11 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
             component.validate(recurse);
         }
 
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
-                && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
-                && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
-                && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
+        final Optional<Status> status = getProperty(Property.STATUS);
+        if (status.isPresent() && !Status.VTODO_NEEDS_ACTION.equals(status.get())
+                && !Status.VTODO_COMPLETED.equals(status.get())
+                && !Status.VTODO_IN_PROCESS.equals(status.get())
+                && !Status.VTODO_CANCELLED.equals(status.get())) {
             throw new ValidationException("Status property ["
                     + status + "] may not occur in VTODO");
         }
@@ -297,13 +287,13 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      * @throws ValidationException where the component does not comply with RFC2446
      */
     @Override
-    public void validate(Method method) throws ValidationException {
+    public ValidationResult validate(Method method) throws ValidationException {
         final Validator<VToDo> validator = methodValidators.get(method);
         if (validator != null) {
-            validator.validate(this);
+            return validator.validate(this);
         }
         else {
-            super.validate(method);
+            return super.validate(method);
         }
     }
 

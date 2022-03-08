@@ -9,6 +9,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by fortuna on 13/09/15.
@@ -33,8 +34,9 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
-            if (!Version.VERSION_2_0.equals(target.getProperty(Property.VERSION))) {
-                result.getEntries().add(new ValidationEntry("Unsupported Version: " + target.getProperty(Property.VERSION).getValue(),
+            Optional<Version> version = target.getProperty(Property.VERSION);
+            if (version.isPresent() && !Version.VERSION_2_0.equals(version.get())) {
+                result.getEntries().add(new ValidationEntry("Unsupported Version: " + version.get().getValue(),
                         ValidationEntry.Severity.ERROR, Calendar.VCALENDAR));
             }
         }
@@ -56,13 +58,13 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         }
 
         // validate method..
-        final Method method = target.getProperty(Property.METHOD);
-        if (method != null) {
+        final Optional<Method> method = target.getProperty(Property.METHOD);
+        if (method.isPresent()) {
             result = result.merge(new ITIPValidator().validate(target));
 
             // perform ITIP validation on components..
             for (CalendarComponent component : target.getComponents()) {
-                component.validate(method);
+                component.validate(method.get());
             }
         }
         return result;

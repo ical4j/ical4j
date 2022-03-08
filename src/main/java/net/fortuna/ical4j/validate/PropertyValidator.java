@@ -39,6 +39,7 @@ import net.fortuna.ical4j.model.property.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Parameter.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -65,11 +66,11 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        TZID=America/New_York:19980119T020000
      * </pre>
      */
-    public static final PropertyRuleSet<DateProperty> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
+    public static final PropertyRuleSet<DateProperty<?>> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
-            new ValidationRule<DateProperty>(None, prop -> {
-                Value v = prop.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
+            new ValidationRule<>(None, prop -> {
+                Optional<Value> v = prop.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get()));
             }, "MUST be specified as a DATE or DATE-TIME:", VALUE));
 
     /**
@@ -87,7 +88,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *       properties whose time values are specified in UTC.
      * </pre>
      */
-    public static final PropertyRuleSet<UtcProperty> UTC_PROP_RULE_SET = new PropertyRuleSet<>(
+    public static final PropertyRuleSet<Property> UTC_PROP_RULE_SET = new PropertyRuleSet<>(
             new ValidationRule<>(None, Parameter.TZID),
             new ValidationRule<>(ValueMatch, ".+Z$"));
 
@@ -370,7 +371,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<DtEnd> DTEND = new PropertyValidator<>(Property.DTEND,
+    public static final Validator<DtEnd<?>> DTEND = new PropertyValidator<>(Property.DTEND,
             Collections.singletonList(DATE_PROP_RULE_SET));
 
     /**
@@ -411,7 +412,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<DtStart> DTSTART = new PropertyValidator<>(Property.DTSTART,
+    public static final Validator<DtStart<?>> DTSTART = new PropertyValidator<>(Property.DTSTART,
             Collections.singletonList(DATE_PROP_RULE_SET));
 
     /**
@@ -440,7 +441,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<Due> DUE = new PropertyValidator<>(Property.DUE,
+    public static final Validator<Due<?>> DUE = new PropertyValidator<>(Property.DUE,
             Collections.singletonList(DATE_PROP_RULE_SET));
 
     /**
@@ -483,11 +484,11 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<ExDate> EXDATE = new PropertyValidator<>(Property.EXDATE,
+    public static final Validator<ExDate<?>> EXDATE = new PropertyValidator<>(Property.EXDATE,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
             new ValidationRule<>(None, prop -> {
-                Value v = prop.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
+                Optional<Value> v = prop.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get()));
             }, VALUE));
 
     /**
@@ -687,11 +688,12 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<RDate> RDATE = new PropertyValidator<>(Property.RDATE,
+    public static final Validator<RDate<?>> RDATE = new PropertyValidator<>(Property.RDATE,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
             new ValidationRule<>(None, rdate -> {
-                Value v = rdate.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v) || Value.PERIOD.equals(v));
+                Optional<Value> v = rdate.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get())
+                        || Value.PERIOD.equals(v.get()));
             }, VALUE));
 
     /**
@@ -720,11 +722,11 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<RecurrenceId> RECURRENCE_ID = new PropertyValidator<>(Property.RECURRENCE_ID,
+    public static final Validator<RecurrenceId<?>> RECURRENCE_ID = new PropertyValidator<>(Property.RECURRENCE_ID,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID, RANGE),
             new ValidationRule<>(None, prop -> {
-                Value v = prop.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
+                Optional<Value> v = prop.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get()));
             }, VALUE));
 
     public static final Validator<Region> REGION = new PropertyValidator<>(Property.REGION,
@@ -974,8 +976,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
             new ValidationRule<>(One, Parameter.VALUE),
             new ValidationRule<>(None, Parameter.RELATED),
             new ValidationRule<>(None, trigger -> {
-                Value v = trigger.getParameter(VALUE);
-                return !(v == null || Value.DATE_TIME.equals(v));
+                Optional<Value> v = trigger.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DATE_TIME.equals(v.get()));
             }, "MUST be specified as a UTC-formatted DATE-TIME:", VALUE));
 
     /**
@@ -1004,8 +1006,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     public static final Validator<Trigger> TRIGGER_REL = new PropertyValidator<>(Property.TRIGGER,
             new ValidationRule<>(OneOrLess, Parameter.VALUE, Parameter.RELATED),
             new ValidationRule<>(None, trigger -> {
-                Value v = trigger.getParameter(VALUE);
-                return !(v == null || Value.DURATION.equals(v));
+                Optional<Value> v = trigger.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DURATION.equals(v.get()));
             }, "MUST be specified as a DURATION:", VALUE));
 
     /**

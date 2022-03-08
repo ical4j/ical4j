@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.Validator;
 
 /**
  * @deprecated see {@link PropertyValidator#TRIGGER_ABS}

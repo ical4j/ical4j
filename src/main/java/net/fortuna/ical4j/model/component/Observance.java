@@ -52,7 +52,6 @@ import java.time.temporal.Temporal;
 import java.util.*;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -78,10 +77,6 @@ public abstract class Observance extends Component {
      * Token for daylight observance.
      */
     public static final String DAYLIGHT = "DAYLIGHT";
-
-    private final Validator<Observance> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, TZOFFSETFROM, TZOFFSETTO, DTSTART)
-    );
 
     // TODO: clear cache when observance definition changes (??)
     private long[] onsetsMillisec;

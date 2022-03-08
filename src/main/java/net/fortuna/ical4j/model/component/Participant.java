@@ -33,9 +33,10 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.*;
+
+import java.util.List;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
@@ -121,7 +122,7 @@ public class Participant extends Component implements ComponentContainer<Compone
 
     private static final long serialVersionUID = -8193965477414653802L;
 
-    private final Validator<Participant> validator = new ComponentValidator<>(
+    private final Validator<Participant> validator = new ComponentValidator<>(Component.PARTICIPANT,
             new ValidationRule<>(One, PARTICIPANT_TYPE, UID),
             new ValidationRule<>(OneOrLess, CALENDAR_ADDRESS, CREATED, DESCRIPTION,
                     DTSTAMP, GEO, LAST_MODIFIED, PRIORITY, SEQUENCE,

@@ -270,9 +270,13 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
         ValidationResult result = new ValidationResult();
         Optional<Method> method = getProperty(Property.METHOD);
         if (method.isPresent()) {
-            getComponents().forEach(c -> result = result.merge(c.validate(method.get())));
+            for (CalendarComponent c : getComponents()) {
+                result = result.merge(c.validate(method.get()));
+            }
         } else {
-            getComponents().forEach(c -> result = result.merge(c.validate()));
+            for (CalendarComponent c : getComponents()) {
+                result = result.merge(c.validate());
+            }
         }
         return result;
     }

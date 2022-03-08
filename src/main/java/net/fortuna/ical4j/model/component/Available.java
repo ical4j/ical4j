@@ -37,15 +37,7 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.AvailableValidator;
-
-import java.io.Serializable;
-import java.util.function.Predicate;
-
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -96,16 +88,6 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 public class Available extends Component {
 
     private static final long serialVersionUID = -2494710612002978763L;
-
-    private final Validator<Available> validator = new ComponentValidator<>(
-        new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
-        new ValidationRule<>(OneOrLess, CREATED, LAST_MODIFIED, RECURRENCE_ID, RRULE, SUMMARY),
-        // can't have both DTEND and DURATION..
-        new ValidationRule<>(None,
-                (Predicate<Available> & Serializable) p -> !p.getProperties(DTEND).isEmpty(), DURATION),
-        new ValidationRule<>(None,
-                (Predicate<Available> & Serializable) p -> !p.getProperties(DURATION).isEmpty(), DTEND)
-    );
 
     /**
      * Default constructor.

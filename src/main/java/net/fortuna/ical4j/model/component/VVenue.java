@@ -34,15 +34,9 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
-
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id $ [Apr 5, 2004]
@@ -100,12 +94,6 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
 public class VVenue extends CalendarComponent {
 
 	private static final long serialVersionUID = 4502423035501438515L;
-
-    private final Validator<VVenue> validator = new ComponentValidator<>(
-            new ValidationRule<>(One, UID),
-            new ValidationRule<>(OneOrLess, NAME, DESCRIPTION, STREET_ADDRESS, EXTENDED_ADDRESS, LOCALITY,
-                    REGION, COUNTRY, POSTALCODE, TZID, GEO, LOCATION_TYPE, CATEGORIES, DTSTAMP, CREATED, LAST_MODIFIED)
-    );
 
     /**
      * Default constructor.

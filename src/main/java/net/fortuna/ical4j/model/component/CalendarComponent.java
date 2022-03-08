@@ -84,7 +84,7 @@ public abstract class CalendarComponent extends Component {
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
-    public void validate(Method method) throws ValidationException {
+    public ValidationResult validate(Method method) throws ValidationException {
         throw new ValidationException("Unsupported method: " + method);
     }
 
