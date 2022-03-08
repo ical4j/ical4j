@@ -31,7 +31,7 @@ class PrioritySpec extends Specification {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
 
         and: 'factory is invoked with invalid value'
-        def priority = factory.createProperty(new ParameterList(), value)
+        def priority = new Priority(new ParameterList(), value)
 
         then: 'the returned priority is UNDEFINED'
         priority == Priority.UNDEFINED

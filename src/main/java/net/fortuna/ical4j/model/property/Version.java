@@ -59,10 +59,12 @@ public class Version extends Property {
 
     private static final long serialVersionUID = 8872508067309087704L;
 
+    public static final String VALUE_2_0 = "2.0";
+
     /**
      * iCalendar version 2.0.
      */
-    public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
+    public static final Version VERSION_2_0 = new ImmutableVersion(VALUE_2_0);
 
     /**
      * @author Ben Fortuna An immutable instance of Version.
@@ -216,13 +218,10 @@ public class Version extends Property {
         public Version createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            Version version;
-            if (VERSION_2_0.getValue().equals(value)) {
-                version = VERSION_2_0;
-            } else {
-                version = new Version(parameters, value);
+            if (parameters.isEmpty() && VALUE_2_0.equals(value)) {
+                return VERSION_2_0;
             }
-            return version;
+            return new Version(parameters, value);
         }
 
         @Override

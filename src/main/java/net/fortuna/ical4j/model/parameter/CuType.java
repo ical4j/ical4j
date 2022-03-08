@@ -112,19 +112,14 @@ public class CuType extends Parameter implements Encodable {
 
         @Override
         public CuType createParameter(final String value) throws URISyntaxException {
-            CuType parameter = new CuType(value);
-            if (CuType.INDIVIDUAL.equals(parameter)) {
-                parameter = CuType.INDIVIDUAL;
-            } else if (CuType.GROUP.equals(parameter)) {
-                parameter = CuType.GROUP;
-            } else if (CuType.RESOURCE.equals(parameter)) {
-                parameter = CuType.RESOURCE;
-            } else if (CuType.ROOM.equals(parameter)) {
-                parameter = CuType.ROOM;
-            } else if (CuType.UNKNOWN.equals(parameter)) {
-                parameter = CuType.UNKNOWN;
+            switch (value) {
+                case VALUE_INDIVIDUAL: return INDIVIDUAL;
+                case VALUE_GROUP: return GROUP;
+                case VALUE_RESOURCE: return RESOURCE;
+                case VALUE_ROOM: return ROOM;
+                case VALUE_UNKNOWN: return UNKNOWN;
             }
-            return parameter;
+            return new CuType(value);
         }
     }
 

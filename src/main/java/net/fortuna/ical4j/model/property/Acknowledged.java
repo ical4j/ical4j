@@ -71,7 +71,11 @@ public class Acknowledged extends UtcProperty{
     private static final long serialVersionUID = 596619479148598528L;
 
     public Acknowledged() {
-        super(ACKNOWLEDGED, new Factory());
+        this(new Factory());
+    }
+
+    private Acknowledged(PropertyFactory<Acknowledged> factory) {
+        super(ACKNOWLEDGED, factory);
     }
 
     /**
@@ -87,9 +91,12 @@ public class Acknowledged extends UtcProperty{
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Acknowledged(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(ACKNOWLEDGED, aList, new Factory());
+    public Acknowledged(final ParameterList aList, final String aValue) throws ParseException {
+        this(aList, aValue, new Factory());
+    }
+
+    private Acknowledged(final ParameterList aList, final String aValue, PropertyFactory<Acknowledged> factory) throws ParseException {
+        super(ACKNOWLEDGED, aList, factory);
         setValue(aValue);
     }
 
@@ -124,12 +131,12 @@ public class Acknowledged extends UtcProperty{
         @Override
         public Acknowledged createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Acknowledged(parameters, value);
+            return new Acknowledged(parameters, value, this);
         }
 
         @Override
         public Acknowledged createProperty() {
-            return new Acknowledged();
+            return new Acknowledged(this);
         }
     }
 }
