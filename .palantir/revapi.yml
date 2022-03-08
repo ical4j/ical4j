@@ -6787,6 +6787,19 @@ acceptedBreaks:
       justification: "Refactoring"
   "3.1.3":
     org.mnode.ical4j:ical4j:
+    - code: "java.annotation.added"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule<T>[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.noLongerFinal"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
     - code: "java.class.removed"
       old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.AddValidator"
       justification: "validation_refactor_from_exception_to_result"
@@ -6851,10 +6864,18 @@ acceptedBreaks:
       new: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE"
       justification: "validation_refactor_from_exception_to_result"
     - code: "java.generics.elementNowParameterized"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.elementNowParameterized"
       old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
         \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
       new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
         \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
       justification: "validation_refactor_from_exception_to_result"
     - code: "java.generics.formalTypeParameterAdded"
       old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
@@ -6889,6 +6910,11 @@ acceptedBreaks:
     - code: "java.method.numberOfParametersChanged"
       old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
       new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule<T>[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
         \ net.fortuna.ical4j.validate.ValidationRule[])"
       justification: "validation_refactor_from_exception_to_result"
     - code: "java.method.numberOfParametersChanged"
@@ -6903,6 +6929,18 @@ acceptedBreaks:
     - code: "java.method.numberOfParametersChanged"
       old: "method void net.fortuna.ical4j.validate.ValidationResult::<init>()"
       new: "method void net.fortuna.ical4j.validate.ValidationResult::<init>(java.util.Collection<net.fortuna.ical4j.validate.ValidationEntry>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(===java.lang.String===)"
+      new: "parameter <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(===java.lang.String[]===)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(===java.lang.String===)"
+      new: "parameter <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(===java.lang.String[]===)"
       justification: "validation_refactor_from_exception_to_result"
     - code: "java.method.parameterTypeChanged"
       old: "parameter void net.fortuna.ical4j.validate.PropertyValidator<T extends\
@@ -8321,6 +8359,11 @@ acceptedBreaks:
         \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
       new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
         \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.visibilityReduced"
+      old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(java.lang.String,\
+        \ java.util.Set<net.fortuna.ical4j.validate.ValidationRule<T>>)"
       justification: "validation_refactor_from_exception_to_result"
     - code: "java.method.visibilityReduced"
       old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"

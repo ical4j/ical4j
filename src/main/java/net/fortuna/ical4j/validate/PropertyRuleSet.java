@@ -41,50 +41,49 @@ import java.util.List;
 
 public class PropertyRuleSet<T extends Property> extends AbstractValidationRuleSet<T> {
 
-    public PropertyRuleSet(ValidationRule... rules) {
+    @SafeVarargs
+    public PropertyRuleSet(ValidationRule<T>... rules) {
         super(rules);
     }
 
     @Override
-    public List<ValidationEntry> apply(String context, Property target) {
+    public List<ValidationEntry> apply(String context, T target) {
         List<ValidationEntry> results = new ArrayList<>();
-        for (ValidationRule rule: rules) {
-            // predicate rule hack..
-            if (rule.getType() == null) {
-                continue;
-            }
+        for (ValidationRule<T> rule: rules) {
             List<String> matches = Collections.emptyList();
-            int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
-            switch (rule.getType()) {
-                case None:
-                    matches = matches(rule.getInstances(), s -> target.getParameter(s) != null);
-                    break;
-                case One:
-                    matches = matches(rule.getInstances(), s -> target.getParameters(s).size() != 1);
-                    break;
-                case OneOrLess:
-                    matches = matches(rule.getInstances(), s -> target.getParameters(s).size() > 1);
-                    break;
-                case OneOrMore:
-                    matches = matches(rule.getInstances(), s -> target.getParameters(s).size() < 1);
-                    break;
-                case OneExclusive:
-                    if (rule.getInstances().stream().anyMatch(s -> target.getParameters(s).size() > 0
-                            && target.getParameters(s).size() != total)) {
-                        matches = rule.getInstances();
-                    }
-                    break;
-                case AllOrNone:
-                    if (total > 0 && total != rule.getInstances().size()) {
-                        results.add(new ValidationEntry(rule, target.getName()));
-                    }
-                    break;
-                case ValueMatch:
-                    matches = matches(rule.getInstances(), s -> !target.getValue().matches(s));
-                    break;
-            }
-            if (!matches.isEmpty()) {
-                results.add(new ValidationEntry(rule, target.getName(), matches.toArray(new String[0])));
+            if (rule.getPredicate().test(target)) {
+                int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
+                switch (rule.getType()) {
+                    case None:
+                        matches = matches(rule.getInstances(), s -> target.getParameter(s) != null);
+                        break;
+                    case One:
+                        matches = matches(rule.getInstances(), s -> target.getParameters(s).size() != 1);
+                        break;
+                    case OneOrLess:
+                        matches = matches(rule.getInstances(), s -> target.getParameters(s).size() > 1);
+                        break;
+                    case OneOrMore:
+                        matches = matches(rule.getInstances(), s -> target.getParameters(s).size() < 1);
+                        break;
+                    case OneExclusive:
+                        if (rule.getInstances().stream().anyMatch(s -> target.getParameters(s).size() > 0
+                                && target.getParameters(s).size() != total)) {
+                            matches = rule.getInstances();
+                        }
+                        break;
+                    case AllOrNone:
+                        if (total > 0 && total != rule.getInstances().size()) {
+                            results.add(new ValidationEntry(rule, target.getName()));
+                        }
+                        break;
+                    case ValueMatch:
+                        matches = matches(rule.getInstances(), s -> !target.getValue().matches(s));
+                        break;
+                }
+                if (!matches.isEmpty()) {
+                    results.add(new ValidationEntry(rule, target.getName(), matches.toArray(new String[0])));
+                }
             }
         }
         return results;

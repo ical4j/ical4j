@@ -41,44 +41,47 @@ import java.util.List;
 
 public class ComponentContainerRuleSet extends AbstractValidationRuleSet<ComponentContainer<?>> {
 
-    public ComponentContainerRuleSet(ValidationRule... rules) {
+    @SafeVarargs
+    public ComponentContainerRuleSet(ValidationRule<ComponentContainer<?>>... rules) {
         super(rules);
     }
 
     @Override
     public List<ValidationEntry> apply(String context, ComponentContainer<?> target) {
         List<ValidationEntry> results = new ArrayList<>();
-        for (ValidationRule rule: rules) {
+        for (ValidationRule<ComponentContainer<?>> rule: rules) {
             List<String> matches = Collections.emptyList();
-            // only consider the specified instances in the total count..
-            int total = rule.getInstances().stream().mapToInt(s -> target.getComponents(s).size()).sum();
-            switch (rule.getType()) {
-                case None:
-                    matches = matches(rule.getInstances(), s -> target.getComponents(s) != null);
-                    break;
-                case One:
-                    matches = matches(rule.getInstances(), s -> target.getComponents(s).size() != 1);
-                    break;
-                case OneOrLess:
-                    matches = matches(rule.getInstances(), s -> target.getComponents(s).size() > 1);
-                    break;
-                case OneOrMore:
-                    matches = matches(rule.getInstances(), s -> target.getComponents(s).size() < 1);
-                    break;
-                case OneExclusive:
-                    if (rule.getInstances().stream().anyMatch(s -> target.getComponents(s).size() > 0
-                            && target.getComponents(s).size() != total)) {
-                        matches = rule.getInstances();
-                    }
-                    break;
-                case AllOrNone:
-                    if (total > 0 && total != rule.getInstances().size()) {
-                        results.add(new ValidationEntry(rule, context));
-                    }
-                    break;
-            }
-            if (!matches.isEmpty()) {
-                results.add(new ValidationEntry(rule, context, matches.toArray(new String[0])));
+            if (rule.getPredicate().test(target)) {
+                // only consider the specified instances in the total count..
+                int total = rule.getInstances().stream().mapToInt(s -> target.getComponents(s).size()).sum();
+                switch (rule.getType()) {
+                    case None:
+                        matches = matches(rule.getInstances(), s -> target.getComponents(s) != null);
+                        break;
+                    case One:
+                        matches = matches(rule.getInstances(), s -> target.getComponents(s).size() != 1);
+                        break;
+                    case OneOrLess:
+                        matches = matches(rule.getInstances(), s -> target.getComponents(s).size() > 1);
+                        break;
+                    case OneOrMore:
+                        matches = matches(rule.getInstances(), s -> target.getComponents(s).size() < 1);
+                        break;
+                    case OneExclusive:
+                        if (rule.getInstances().stream().anyMatch(s -> target.getComponents(s).size() > 0
+                                && target.getComponents(s).size() != total)) {
+                            matches = rule.getInstances();
+                        }
+                        break;
+                    case AllOrNone:
+                        if (total > 0 && total != rule.getInstances().size()) {
+                            results.add(new ValidationEntry(rule, context));
+                        }
+                        break;
+                }
+                if (!matches.isEmpty()) {
+                    results.add(new ValidationEntry(rule, context, matches.toArray(new String[0])));
+                }
             }
         }
         return results;

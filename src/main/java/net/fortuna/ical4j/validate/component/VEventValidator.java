@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @Deprecated
 public class VEventValidator extends ComponentValidator<VEvent> {
 
-    private static final PropertyContainerRuleSet<VEvent> NO_ALARMS_RULE_SET = new PropertyContainerRuleSet<>(
+    private static final ComponentContainerRuleSet NO_ALARMS_RULE_SET = new ComponentContainerRuleSet(
             NO_ALARMS);
 
     private final boolean alarmsAllowed;
@@ -19,7 +19,8 @@ public class VEventValidator extends ComponentValidator<VEvent> {
         this(true, rules);
     }
 
-    public VEventValidator(boolean alarmsAllowed, ValidationRule... rules) {
+    @SafeVarargs
+    public VEventValidator(boolean alarmsAllowed, ValidationRule<VEvent>... rules) {
         super(Component.VALARM, rules);
         this.alarmsAllowed = alarmsAllowed;
     }

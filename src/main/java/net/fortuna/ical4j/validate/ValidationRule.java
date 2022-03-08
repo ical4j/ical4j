@@ -14,7 +14,7 @@ import java.util.function.Predicate;
  * For example, a rule might define a test for one or less DTEND properties using the "OneOrLess" validation type
  * and "DTEND" identifier.
  */
-public class ValidationRule implements Serializable {
+public class ValidationRule<T> implements Serializable {
 
     public enum ValidationType {
         None("The following MUST NOT be present."),
@@ -38,6 +38,8 @@ public class ValidationRule implements Serializable {
 
     private final ValidationType type;
 
+    private final String message;
+
     private final Predicate<T> predicate;
 
     private final List<String> instances;
@@ -49,11 +51,11 @@ public class ValidationRule implements Serializable {
      * @param instances list of identifiers to check (parameter, property, component, etc.)
      */
     public ValidationRule(ValidationType type, String...instances) {
-        this(type, (Predicate<T> & Serializable) (T p) -> true, instances);
+        this(type, (Predicate<T> & Serializable) (T p) -> true, null, instances);
     }
 
-    public ValidationRule(ValidationType type, Predicate<T> predicate, String...instances) {
-        this(type, predicate, false, instances);
+    public ValidationRule(ValidationType type, Predicate<T> predicate, String message, String...instances) {
+        this(type, predicate, message, false, instances);
     }
 
     /**
@@ -66,8 +68,13 @@ public class ValidationRule implements Serializable {
     }
 
     public ValidationRule(ValidationType type, Predicate<T> predicate, boolean relaxedModeSupported, String...instances) {
+        this(type, predicate, null, relaxedModeSupported, instances);
+    }
+
+    public ValidationRule(ValidationType type, Predicate<T> predicate, String message, boolean relaxedModeSupported, String...instances) {
         this.type = type;
         this.predicate = predicate;
+        this.message = message;
         this.instances = Arrays.asList(instances);
         this.relaxedModeSupported = relaxedModeSupported;
     }
@@ -89,7 +96,8 @@ public class ValidationRule implements Serializable {
         if (instances.length > 0) {
             match = Arrays.asList(instances);
         }
-        return String.format("%s %s", getType().getDescription(), String.join(",", match));
+        return String.format("%s %s", message != null ? message : getType().getDescription(),
+                String.join(",", match));
     }
 
     public ValidationEntry.Severity getSeverity() {
