@@ -45,13 +45,14 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractValidationRuleSet<T> implements Serializable {
 
-    protected final Set<ValidationRule> rules;
+    protected final Set<ValidationRule<T>> rules;
 
-    public AbstractValidationRuleSet(ValidationRule...rules) {
+    @SafeVarargs
+    public AbstractValidationRuleSet(ValidationRule<T>...rules) {
         this.rules = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(rules)));
     }
 
-    public Set<ValidationRule> getRules() {
+    public Set<ValidationRule<T>> getRules() {
         return rules;
     }
 

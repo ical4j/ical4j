@@ -33,29 +33,25 @@
 
 package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class PropertyContainerRuleSet<T extends PropertyContainer> extends AbstractValidationRuleSet<T> {
 
-    public PropertyContainerRuleSet(ValidationRule... rules) {
+    @SafeVarargs
+    public PropertyContainerRuleSet(ValidationRule<T>... rules) {
         super(rules);
     }
 
     @Override
-    public List<ValidationEntry> apply(String context, PropertyContainer target) {
+    public List<ValidationEntry> apply(String context, T target) {
         List<ValidationEntry> results = new ArrayList<>();
-        for (ValidationRule rule: rules) {
+        for (ValidationRule<T> rule: rules) {
             List<String> matches = Collections.emptyList();
-            if (rule instanceof PredicateRule<?>) {
-                Predicate<Property> predicate = ((PredicateRule<Property>) rule).getPredicate();
-                matches = matches(rule.getInstances(), s -> predicate.test(target.getProperty(s)));
-            } else {
+            if (rule.getPredicate().test(target)) {
                 int total = rule.getInstances().stream().mapToInt(s -> target.getProperties(s).size()).sum();
                 switch (rule.getType()) {
                     case None:

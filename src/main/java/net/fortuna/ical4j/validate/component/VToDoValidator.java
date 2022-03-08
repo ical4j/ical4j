@@ -11,16 +11,18 @@ import java.util.stream.Collectors;
 @Deprecated
 public class VToDoValidator extends ComponentValidator<VToDo> {
 
-    private static final PropertyContainerRuleSet<VToDo> NO_ALARMS_RULE_SET = new PropertyContainerRuleSet<>(
+    private static final ComponentContainerRuleSet NO_ALARMS_RULE_SET = new ComponentContainerRuleSet(
             NO_ALARMS);
 
     private final boolean alarmsAllowed;
 
-    public VToDoValidator(ValidationRule... rules) {
+    @SafeVarargs
+    public VToDoValidator(ValidationRule<VToDo>... rules) {
         this(true, rules);
     }
 
-    public VToDoValidator(boolean alarmsAllowed, ValidationRule... rules) {
+    @SafeVarargs
+    public VToDoValidator(boolean alarmsAllowed, ValidationRule<VToDo>... rules) {
         super(Component.VTODO, rules);
         this.alarmsAllowed = alarmsAllowed;
     }
