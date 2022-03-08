@@ -105,17 +105,13 @@ public class RelType extends Parameter implements Encodable {
 
         @Override
         public RelType createParameter(final String value) throws URISyntaxException {
-            RelType parameter = new RelType(value);
-            if (RelType.PARENT.equals(parameter)) {
-                parameter = RelType.PARENT;
-            } else if (RelType.CHILD.equals(parameter)) {
-                parameter = RelType.CHILD;
-            } else if (RelType.SIBLING.equals(parameter)) {
-                parameter = RelType.SIBLING;
-            } else if (RelType.SNOOZE.equals(parameter)) {
-                parameter = RelType.SNOOZE;
+            switch (value) {
+                case VALUE_CHILD: return CHILD;
+                case VALUE_PARENT: return PARENT;
+                case VALUE_SIBLING: return SIBLING;
+                case VALUE_SNOOZE: return SNOOZE;
             }
-            return parameter;
+            return new RelType(value);
         }
     }
 }

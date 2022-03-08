@@ -114,7 +114,7 @@ public class VVenue extends CalendarComponent {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VVENUE.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());

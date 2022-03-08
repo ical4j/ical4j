@@ -105,17 +105,13 @@ public class Role extends Parameter implements Encodable {
 
         @Override
         public Role createParameter(final String value) throws URISyntaxException {
-            Role parameter = new Role(value);
-            if (Role.CHAIR.equals(parameter)) {
-                parameter = Role.CHAIR;
-            } else if (Role.REQ_PARTICIPANT.equals(parameter)) {
-                parameter = Role.REQ_PARTICIPANT;
-            } else if (Role.OPT_PARTICIPANT.equals(parameter)) {
-                parameter = Role.OPT_PARTICIPANT;
-            } else if (Role.NON_PARTICIPANT.equals(parameter)) {
-                parameter = Role.NON_PARTICIPANT;
+            switch (value) {
+                case VALUE_CHAIR: return CHAIR;
+                case VALUE_NON_PARTICIPANT: return NON_PARTICIPANT;
+                case VALUE_OPT_PARTICIPANT: return OPT_PARTICIPANT;
+                case VALUE_REQ_PARTICIPANT: return REQ_PARTICIPANT;
             }
-            return parameter;
+            return new Role(value);
         }
     }
 

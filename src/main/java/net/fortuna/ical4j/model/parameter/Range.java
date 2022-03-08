@@ -103,13 +103,11 @@ public class Range extends Parameter implements Encodable {
 
         @Override
         public Range createParameter(final String value) throws URISyntaxException {
-            Range parameter = new Range(value);
-            if (Range.THISANDFUTURE.equals(parameter)) {
-                parameter = Range.THISANDFUTURE;
-            } else if (Range.THISANDPRIOR.equals(parameter)) {
-                parameter = Range.THISANDPRIOR;
+            switch (value) {
+                case VALUE_THISANDFUTURE: return THISANDFUTURE;
+                case VALUE_THISANDPRIOR: return THISANDPRIOR;
             }
-            return parameter;
+            return new Range(value);
         }
     }
 

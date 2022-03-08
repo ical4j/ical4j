@@ -91,16 +91,12 @@ public class ScheduleAgent extends Parameter implements Encodable {
 
         @Override
         public ScheduleAgent createParameter(final String value) throws URISyntaxException {
-            final ScheduleAgent parameter = new ScheduleAgent(value);
-            if (ScheduleAgent.SERVER.equals(parameter)) {
-                return ScheduleAgent.SERVER;
-            } else if (ScheduleAgent.CLIENT.equals(parameter)) {
-                return ScheduleAgent.CLIENT;
-            } else if (ScheduleAgent.NONE.equals(parameter)) {
-                return ScheduleAgent.NONE;
+            switch (value) {
+                case VALUE_CLIENT: return CLIENT;
+                case VALUE_NONE: return NONE;
+                case VALUE_SERVER: return SERVER;
             }
-            return parameter;
+            return new ScheduleAgent(value);
         }
     }
-
 }

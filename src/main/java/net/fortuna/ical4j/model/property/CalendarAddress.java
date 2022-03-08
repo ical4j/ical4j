@@ -112,7 +112,7 @@ public class CalendarAddress extends Property {
     /**
      * {@inheritDoc}
      */
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */

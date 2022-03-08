@@ -174,38 +174,23 @@ public class Value extends Parameter implements Encodable {
 
         @Override
         public Value createParameter(final String value) throws URISyntaxException {
-            Value parameter = new Value(value);
-            if (Value.BINARY.equals(parameter)) {
-                parameter = Value.BINARY;
-            } else if (Value.BOOLEAN.equals(parameter)) {
-                parameter = Value.BOOLEAN;
-            } else if (Value.CAL_ADDRESS.equals(parameter)) {
-                parameter = Value.CAL_ADDRESS;
-            } else if (Value.DATE.equals(parameter)) {
-                parameter = Value.DATE;
-            } else if (Value.DATE_TIME.equals(parameter)) {
-                parameter = Value.DATE_TIME;
-            } else if (Value.DURATION.equals(parameter)) {
-                parameter = Value.DURATION;
-            } else if (Value.FLOAT.equals(parameter)) {
-                parameter = Value.FLOAT;
-            } else if (Value.INTEGER.equals(parameter)) {
-                parameter = Value.INTEGER;
-            } else if (Value.PERIOD.equals(parameter)) {
-                parameter = Value.PERIOD;
-            } else if (Value.RECUR.equals(parameter)) {
-                parameter = Value.RECUR;
-            } else if (Value.TEXT.equals(parameter)) {
-                parameter = Value.TEXT;
-            } else if (Value.TIME.equals(parameter)) {
-                parameter = Value.TIME;
-            } else if (Value.URI.equals(parameter)) {
-                parameter = Value.URI;
-            } else if (Value.UTC_OFFSET.equals(parameter)) {
-                parameter = Value.UTC_OFFSET;
+            switch (value) {
+                case VALUE_BINARY: return BINARY;
+                case VALUE_BOOLEAN: return BOOLEAN;
+                case VALUE_DATE: return DATE;
+                case VALUE_CAL_ADDRESS: return CAL_ADDRESS;
+                case VALUE_DATE_TIME: return DATE_TIME;
+                case VALUE_DURATION: return DURATION;
+                case VALUE_FLOAT: return FLOAT;
+                case VALUE_INTEGER: return INTEGER;
+                case VALUE_PERIOD: return PERIOD;
+                case VALUE_RECUR: return RECUR;
+                case VALUE_TEXT: return TEXT;
+                case VALUE_TIME: return TIME;
+                case VALUE_URI: return URI;
+                case VALUE_UTC_OFFSET: return UTC_OFFSET;
             }
-            return parameter;
+            return new Value(value);
         }
     }
-
 }

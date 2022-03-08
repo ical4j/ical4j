@@ -49,12 +49,21 @@ public class Method extends Property {
 
     private static final long serialVersionUID = 7220956532685378719L;
 
+    public static final String VALUE_PUBLISH = "PUBLISH";
+    public static final String VALUE_REQUEST = "REQUEST";
+    public static final String VALUE_REPLY = "REPLY";
+    public static final String VALUE_ADD = "ADD";
+    public static final String VALUE_CANCEL = "CANCEL";
+    public static final String VALUE_REFRESH = "REFRESH";
+    public static final String VALUE_COUNTER = "COUNTER";
+    public static final String VALUE_DECLINECOUNTER = "DECLINECOUNTER";
+
     /**
      * Used to publish a calendar entry to one or more Calendar Users. There is no interactivity between the publisher
      * and any other calendar user. An example might include a baseball team publishing its schedule to the public. [RFC
      * 2446]
      */
-    public static final Method PUBLISH = new ImmutableMethod("PUBLISH");
+    public static final Method PUBLISH = new ImmutableMethod(VALUE_PUBLISH);
 
     /**
      * Used to schedule a calendar entry with other Calendar Users. Requests are interactive in that they require the
@@ -62,40 +71,40 @@ public class Method extends Property {
      * other Calendar Users are all examples. Requests are also used by the "Organizer" to update the status of a
      * calendar entry. [RFC 2446]
      */
-    public static final Method REQUEST = new ImmutableMethod("REQUEST");
+    public static final Method REQUEST = new ImmutableMethod(VALUE_REQUEST);
 
     /**
      * A Reply is used in response to a Request to convey "Attendee" status to the "Organizer". Replies are commonly
      * used to respond to meeting and task requests. [RFC2446]
      */
-    public static final Method REPLY = new ImmutableMethod("REPLY");
+    public static final Method REPLY = new ImmutableMethod(VALUE_REPLY);
 
     /**
      * Add one or more instances to an existing VEVENT, VTODO, or VJOURNAL. [RFC 2446]
      */
-    public static final Method ADD = new ImmutableMethod("ADD");
+    public static final Method ADD = new ImmutableMethod(VALUE_ADD);
 
     /**
      * Cancel one or more instances of an existing VEVENT, VTODO, or VJOURNAL. [RFC 2446]
      */
-    public static final Method CANCEL = new ImmutableMethod("CANCEL");
+    public static final Method CANCEL = new ImmutableMethod(VALUE_CANCEL);
 
     /**
      * The Refresh method is used by an "Attendee" to request the latest version of a calendar entry. [RFC 2446]
      */
-    public static final Method REFRESH = new ImmutableMethod("REFRESH");
+    public static final Method REFRESH = new ImmutableMethod(VALUE_REFRESH);
 
     /**
      * The Counter method is used by an "Attendee" to negotiate a change in the calendar entry. Examples include the
      * request to change a proposed Event time or change the due date for a VTODO. [RFC 2446]
      */
-    public static final Method COUNTER = new ImmutableMethod("COUNTER");
+    public static final Method COUNTER = new ImmutableMethod(VALUE_COUNTER);
 
     /**
      * Used by the "Organizer" to decline the proposed counter-proprosal. [RFC 2446]
      */
     public static final Method DECLINE_COUNTER = new ImmutableMethod(
-            "DECLINECOUNTER");
+            VALUE_DECLINECOUNTER);
 
     /**
      * @author Ben Fortuna An immutable instance of Method.
@@ -200,34 +209,19 @@ public class Method extends Property {
         @Override
         public Method createProperty(final ParameterList parameters, final String value) {
 
-            Method method;
-            if (ADD.getValue().equals(value)) {
-                method = ADD;
+            if (parameters.isEmpty()) {
+                switch (value) {
+                    case VALUE_PUBLISH: return PUBLISH;
+                    case VALUE_REQUEST: return REQUEST;
+                    case VALUE_REPLY: return REPLY;
+                    case VALUE_ADD: return ADD;
+                    case VALUE_CANCEL: return CANCEL;
+                    case VALUE_REFRESH: return REFRESH;
+                    case VALUE_COUNTER: return COUNTER;
+                    case VALUE_DECLINECOUNTER: return DECLINE_COUNTER;
+                }
             }
-            else if (CANCEL.getValue().equals(value)) {
-                method = CANCEL;
-            }
-            else if (COUNTER.getValue().equals(value)) {
-                method = COUNTER;
-            }
-            else if (DECLINE_COUNTER.getValue().equals(value)) {
-                method = DECLINE_COUNTER;
-            }
-            else if (PUBLISH.getValue().equals(value)) {
-                method = PUBLISH;
-            }
-            else if (REFRESH.getValue().equals(value)) {
-                method = REFRESH;
-            }
-            else if (REPLY.getValue().equals(value)) {
-                method = REPLY;
-            }
-            else if (REQUEST.getValue().equals(value)) {
-                method = REQUEST;
-            } else {
-                method = new Method(parameters, value);
-            }
-            return method;
+            return  new Method(parameters, value);
         }
 
         @Override

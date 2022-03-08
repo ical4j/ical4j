@@ -259,7 +259,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VTODO.validate(this);
         // validate that getAlarms() only contains VAlarm components
         for (VAlarm component : getAlarms()) {

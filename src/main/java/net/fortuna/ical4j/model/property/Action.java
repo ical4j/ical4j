@@ -48,6 +48,11 @@ public class Action extends Property {
 
     private static final long serialVersionUID = -2353353838411753712L;
 
+    public static final String VALUE_AUDIO = "AUDIO";
+    public static final String VALUE_DISPLAY = "DISPLAY";
+    public static final String VALUE_EMAIL = "EMAIL";
+    public static final String VALUE_PROCEDURE = "PROCEDURE";
+
     /**
      * Constant actions for playing an audible sound.
      */
@@ -69,10 +74,10 @@ public class Action extends Property {
     public static final Action PROCEDURE;
 
     static {
-        AUDIO = new ImmutableAction("AUDIO");
-        DISPLAY = new ImmutableAction("DISPLAY");
-        EMAIL = new ImmutableAction("EMAIL");
-        PROCEDURE = new ImmutableAction("PROCEDURE");
+        AUDIO = new ImmutableAction(VALUE_AUDIO);
+        DISPLAY = new ImmutableAction(VALUE_DISPLAY);
+        EMAIL = new ImmutableAction(VALUE_EMAIL);
+        PROCEDURE = new ImmutableAction(VALUE_PROCEDURE);
     }
 
     /**
@@ -184,27 +189,20 @@ public class Action extends Property {
 
         @Override
         public Action createProperty(final ParameterList parameters, final String value) {
-            Action action;
-            if (AUDIO.getValue().equals(value)) {
-                action = AUDIO;
+
+            if (parameters.isEmpty()) {
+                switch (value) {
+                    case VALUE_AUDIO: return AUDIO;
+                    case VALUE_DISPLAY: return DISPLAY;
+                    case VALUE_EMAIL: return EMAIL;
+                    case VALUE_PROCEDURE: return PROCEDURE;
+                }
             }
-            else if (DISPLAY.getValue().equals(value)) {
-                action = DISPLAY;
-            }
-            else if (EMAIL.getValue().equals(value)) {
-                action = EMAIL;
-            }
-            else if (PROCEDURE.getValue().equals(value)) {
-                action = PROCEDURE;
-            } else {
-                action = new Action(parameters, value);
-            }
-            return action;
         }
 
         @Override
         public Action createProperty() {
-            return new Action();
+            return new Action(this);
         }
     }
 }

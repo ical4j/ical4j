@@ -176,7 +176,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         ValidationResult result = super.validate();
         result = result.merge(PropertyValidator.RECURRENCE_ID.validate(this));
         return result;

@@ -99,16 +99,11 @@ public class Derived extends Parameter {
           super(DERIVED);
         }
     
-        public Derived createParameter(final String value)
-                throws URISyntaxException {
-            if (Boolean.TRUE.toString().equals(value)) {
-                return Derived.TRUE;
+        public Derived createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_TRUE: return TRUE;
+                case VALUE_FALSE: return FALSE;
             }
-
-            if (Boolean.FALSE.toString().equals(value)) {
-                return Derived.FALSE;
-            }
-
             return new Derived(value);
         }
     }

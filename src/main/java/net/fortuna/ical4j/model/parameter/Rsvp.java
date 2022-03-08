@@ -108,13 +108,11 @@ public class Rsvp extends Parameter implements Encodable {
 
         @Override
         public Rsvp createParameter(final String value) throws URISyntaxException {
-            Rsvp parameter = new Rsvp(value);
-            if (Rsvp.TRUE.equals(parameter)) {
-                parameter = Rsvp.TRUE;
-            } else if (Rsvp.FALSE.equals(parameter)) {
-                parameter = Rsvp.FALSE;
+            switch (value) {
+                case VALUE_FALSE: return FALSE;
+                case VALUE_TRUE: return TRUE;
             }
-            return parameter;
+            return new Rsvp(value);
         }
     }
 

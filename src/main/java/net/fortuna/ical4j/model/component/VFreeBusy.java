@@ -482,7 +482,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VFREEBUSY.validate(this);
 
         final Optional<DtStart<?>> dtStart = getProperty(Property.DTSTART);

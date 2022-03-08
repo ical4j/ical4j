@@ -107,17 +107,13 @@ public class FbType extends Parameter implements Encodable {
 
         @Override
         public FbType createParameter(final String value) throws URISyntaxException {
-            FbType parameter = new FbType(value);
-            if (FbType.FREE.equals(parameter)) {
-                parameter = FbType.FREE;
-            } else if (FbType.BUSY.equals(parameter)) {
-                parameter = FbType.BUSY;
-            } else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
-                parameter = FbType.BUSY_TENTATIVE;
-            } else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
-                parameter = FbType.BUSY_UNAVAILABLE;
+            switch (value) {
+                case VALUE_BUSY: return BUSY;
+                case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;
+                case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;
+                case VALUE_FREE: return FREE;
             }
-            return parameter;
+            return new FbType(value);
         }
     }
 

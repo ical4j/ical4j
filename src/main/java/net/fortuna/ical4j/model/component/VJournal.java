@@ -159,7 +159,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate(final boolean recurse) throws ValidationException {
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VJOURNAL.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());

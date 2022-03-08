@@ -153,7 +153,7 @@ public class Attach extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         ValidationResult result = PropertyValidator.ATTACH.validate(this);
         if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
             result = result.merge(PropertyValidator.ATTACH_BIN.validate(this));

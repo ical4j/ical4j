@@ -126,23 +126,16 @@ public class PartStat extends Parameter implements Encodable {
 
         @Override
         public PartStat createParameter(final String value) throws URISyntaxException {
-            PartStat parameter = new PartStat(value);
-            if (PartStat.NEEDS_ACTION.equals(parameter)) {
-                parameter = PartStat.NEEDS_ACTION;
-            } else if (PartStat.ACCEPTED.equals(parameter)) {
-                parameter = PartStat.ACCEPTED;
-            } else if (PartStat.DECLINED.equals(parameter)) {
-                parameter = PartStat.DECLINED;
-            } else if (PartStat.TENTATIVE.equals(parameter)) {
-                parameter = PartStat.TENTATIVE;
-            } else if (PartStat.DELEGATED.equals(parameter)) {
-                parameter = PartStat.DELEGATED;
-            } else if (PartStat.COMPLETED.equals(parameter)) {
-                parameter = PartStat.COMPLETED;
-            } else if (PartStat.IN_PROCESS.equals(parameter)) {
-                parameter = PartStat.IN_PROCESS;
+            switch (value) {
+                case VALUE_ACCEPTED: return ACCEPTED;
+                case VALUE_COMPLETED: return COMPLETED;
+                case VALUE_DECLINED: return DECLINED;
+                case VALUE_DELEGATED: return DELEGATED;
+                case VALUE_IN_PROCESS: return IN_PROCESS;
+                case VALUE_NEEDS_ACTION: return NEEDS_ACTION;
+                case VALUE_TENTATIVE: return TENTATIVE;
             }
-            return parameter;
+            return new PartStat(value);
         }
     }
 

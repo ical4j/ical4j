@@ -115,7 +115,7 @@ public class Attendee extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return PropertyValidator.ATTENDEE.validate(this);
     }
 

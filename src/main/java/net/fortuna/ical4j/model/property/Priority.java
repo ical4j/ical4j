@@ -125,25 +125,30 @@ public class Priority extends Property {
 
     private static final long serialVersionUID = -5654367843953827397L;
 
+    public static final int VALUE_UNDEFINED = 0;
+    public static final int VALUE_HIGH = 1;
+    public static final int VALUE_MEDIUM = 5;
+    public static final int VALUE_LOW = 9;
+
     /**
      * Undefined priority.
      */
-    public static final Priority UNDEFINED = new ImmutablePriority(0);
+    public static final Priority UNDEFINED = new ImmutablePriority(VALUE_UNDEFINED);
 
     /**
      * High priority.
      */
-    public static final Priority HIGH = new ImmutablePriority(1);
+    public static final Priority HIGH = new ImmutablePriority(VALUE_HIGH);
 
     /**
      * Medium priority.
      */
-    public static final Priority MEDIUM = new ImmutablePriority(5);
+    public static final Priority MEDIUM = new ImmutablePriority(VALUE_MEDIUM);
 
     /**
      * Low priority.
      */
-    public static final Priority LOW = new ImmutablePriority(9);
+    public static final Priority LOW = new ImmutablePriority(VALUE_LOW);
 
     /**
      * @author Ben Fortuna An immutable instance of Priority.
@@ -284,22 +289,17 @@ public class Priority extends Property {
 
         @Override
         public Priority createProperty(final ParameterList parameters, final String value) {
-            Priority priority;
-            if (HIGH.getValue().equals(value)) {
-                priority = HIGH;
+
+            if (parameters.isEmpty()) {
+                int level = Integer.parseInt(value);
+                switch (level) {
+                    case VALUE_UNDEFINED: return UNDEFINED;
+                    case VALUE_HIGH: return HIGH;
+                    case VALUE_MEDIUM: return MEDIUM;
+                    case VALUE_LOW: return LOW;
+                }
             }
-            else if (MEDIUM.getValue().equals(value)) {
-                priority = MEDIUM;
-            }
-            else if (LOW.getValue().equals(value)) {
-                priority = LOW;
-            }
-            else if (UNDEFINED.getValue().equals(value)) {
-                priority = UNDEFINED;
-            } else {
-                priority = new Priority(parameters, value);
-            }
-            return priority;
+            return new Priority(parameters, value);
         }
 
         @Override

@@ -88,7 +88,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return PropertyValidator.EXDATE.validate(this);
     }
 
