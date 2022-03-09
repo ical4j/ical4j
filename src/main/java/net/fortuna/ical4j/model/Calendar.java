@@ -116,7 +116,8 @@ import java.util.stream.Collectors;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent> {
+public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent>,
+    FluentCalendar {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -192,6 +193,11 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public final String toString() {
         return BEGIN + ':' + VCALENDAR + Strings.LINE_SEPARATOR + properties + components + END + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR;
+    }
+
+    @Override
+    public Calendar getFluentTarget() {
+        return this;
     }
 
     public <C extends CalendarComponent> List<C> getComponents() {

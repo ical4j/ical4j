@@ -64,11 +64,8 @@ public class CalendarTest {
 
     @Before
     public void setUp() {
-        PropertyList props = new PropertyList(Arrays.asList(
-            new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"),
-            Version.VERSION_2_0,
-            CalScale.GREGORIAN));
-
+        calendar = new Calendar().withDefaults()
+                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
         VEvent vEvent = new VEvent();
         vEvent.add(new Uid("1"));
         calendar = new Calendar(props, new ComponentList<>(Collections.singletonList(vEvent)));

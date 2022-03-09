@@ -101,12 +101,9 @@ public class AttachTest extends TestCase {
                 .add(attach)
                 .add(new Uid("000001@modularity.net.au"));
 
-        PropertyList props = new PropertyList(Arrays.asList(
-                new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"),
-                Version.VERSION_2_0,
-                CalScale.GREGORIAN
-        ));
-        Calendar calendar = new Calendar(props, new ComponentList<>(Collections.singletonList(christmas)));
+        Calendar calendar = new Calendar().withDefaults()
+                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
+        calendar.getComponents().add(christmas);
 
         StringWriter sw = new StringWriter();
         CalendarOutputter out = new CalendarOutputter();

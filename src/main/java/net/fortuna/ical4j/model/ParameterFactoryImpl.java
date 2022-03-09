@@ -59,7 +59,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
     }
 
     @Override
-    protected boolean factorySupports(ParameterFactory factory, String key) {
+    protected boolean factorySupports(ParameterFactory<?> factory, String key) {
         return factory.supports(key);
     }
 
