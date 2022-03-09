@@ -190,7 +190,7 @@ public class BusyType extends Property {
         @Override
         public BusyType createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value) {
                     case VALUE_BUSY: return BUSY;
                     case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;

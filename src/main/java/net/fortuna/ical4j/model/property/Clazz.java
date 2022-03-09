@@ -219,7 +219,7 @@ public class Clazz extends Property {
         @Override
         public Clazz createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value) {
                     case VALUE_PUBLIC: return PUBLIC;
                     case VALUE_PRIVATE: return PRIVATE;

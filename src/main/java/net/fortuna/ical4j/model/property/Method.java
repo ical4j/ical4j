@@ -209,7 +209,7 @@ public class Method extends Property {
         @Override
         public Method createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value) {
                     case VALUE_PUBLISH: return PUBLISH;
                     case VALUE_REQUEST: return REQUEST;

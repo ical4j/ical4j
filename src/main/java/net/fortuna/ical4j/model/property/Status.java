@@ -283,7 +283,7 @@ public class Status extends Property {
         @Override
         public Status createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value) {
                     case VALUE_TENTATIVE: return VEVENT_TENTATIVE;
                     case VALUE_CONFIRMED: return VEVENT_CONFIRMED;

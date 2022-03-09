@@ -125,7 +125,7 @@ public class Acknowledged extends DateProperty<Instant> {
 
         @Override
         public Acknowledged createProperty() {
-            return new Acknowledged(this);
+            return new Acknowledged();
         }
     }
 }

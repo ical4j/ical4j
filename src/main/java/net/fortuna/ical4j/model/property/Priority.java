@@ -290,7 +290,7 @@ public class Priority extends Property {
         @Override
         public Priority createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 int level = Integer.parseInt(value);
                 switch (level) {
                     case VALUE_UNDEFINED: return UNDEFINED;

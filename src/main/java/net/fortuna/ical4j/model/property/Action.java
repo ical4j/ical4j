@@ -190,7 +190,7 @@ public class Action extends Property {
         @Override
         public Action createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value) {
                     case VALUE_AUDIO: return AUDIO;
                     case VALUE_DISPLAY: return DISPLAY;
@@ -198,11 +198,12 @@ public class Action extends Property {
                     case VALUE_PROCEDURE: return PROCEDURE;
                 }
             }
+            return new Action(parameters, value);
         }
 
         @Override
         public Action createProperty() {
-            return new Action(this);
+            return new Action();
         }
     }
 }

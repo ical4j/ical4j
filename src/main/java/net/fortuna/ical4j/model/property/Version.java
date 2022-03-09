@@ -239,7 +239,7 @@ public class Version extends Property {
         @Override
         public Version createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty() && VALUE_2_0.equals(value)) {
+            if (parameters.getAll().isEmpty() && VALUE_2_0.equals(value)) {
                 return VERSION_2_0;
             }
             return new Version(parameters, value);
