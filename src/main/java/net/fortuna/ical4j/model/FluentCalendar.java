@@ -46,23 +46,23 @@ public interface FluentCalendar {
     Calendar getFluentTarget();
 
     default FluentCalendar withDefaults() {
-        getFluentTarget().getProperties().add(CalScale.GREGORIAN);
-        getFluentTarget().getProperties().add(Version.VERSION_2_0);
+        getFluentTarget().add(CalScale.GREGORIAN);
+        getFluentTarget().add(Version.VERSION_2_0);
         return getFluentTarget();
     }
 
     default FluentCalendar withProdId(String prodId) {
-        getFluentTarget().getProperties().add(new ProdId(prodId));
+        getFluentTarget().add(new ProdId(prodId));
         return getFluentTarget();
     }
 
     default FluentCalendar withProperty(Property property) {
-        getFluentTarget().getProperties().add(property);
+        getFluentTarget().add(property);
         return getFluentTarget();
     }
 
     default FluentCalendar withComponent(CalendarComponent component) {
-        getFluentTarget().getComponents().add(component);
+        getFluentTarget().add(component);
         return getFluentTarget();
     }
 }

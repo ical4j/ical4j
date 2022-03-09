@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,8 +126,8 @@ public class ExDateTest extends TestCase {
     public void testRelaxedValidation() {
         ExDate<Instant> property = new ExDate<>(new ParameterList(), "20080315");
         try {
-            property.validate();
-            fail("Should throw ValidationException");
+            ValidationResult result = property.validate();
+            assertTrue(result.hasErrors());
         } catch (ValidationException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());
         }

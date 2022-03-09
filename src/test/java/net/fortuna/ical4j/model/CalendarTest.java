@@ -34,7 +34,8 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.junit.Before;
@@ -44,8 +45,6 @@ import java.net.URISyntaxException;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
 
@@ -68,7 +67,7 @@ public class CalendarTest {
                 .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
         VEvent vEvent = new VEvent();
         vEvent.add(new Uid("1"));
-        calendar = new Calendar(props, new ComponentList<>(Collections.singletonList(vEvent)));
+        calendar.add(vEvent);
     }
 
     @Test

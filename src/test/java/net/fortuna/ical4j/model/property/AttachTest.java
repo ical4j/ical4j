@@ -103,7 +103,7 @@ public class AttachTest extends TestCase {
 
         Calendar calendar = new Calendar().withDefaults()
                 .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
-        calendar.getComponents().add(christmas);
+        calendar.add(christmas);
 
         StringWriter sw = new StringWriter();
         CalendarOutputter out = new CalendarOutputter();

@@ -122,6 +122,6 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         List<VEvent> event = cal.getComponents(Component.VEVENT);
         VEvent eventBis = event.get(0).copy();
-        assertEquals(eventBis, event);
+        assertEquals(eventBis, event.get(0));
     }
 }
