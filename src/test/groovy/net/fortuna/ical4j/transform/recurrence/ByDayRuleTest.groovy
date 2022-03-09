@@ -3,10 +3,8 @@ package net.fortuna.ical4j.transform.recurrence
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.parameter.Value
-import net.fortuna.ical4j.model.property.CalScale
 import net.fortuna.ical4j.model.property.ExRule
 import net.fortuna.ical4j.model.property.RRule
-import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
@@ -35,9 +33,7 @@ class ByDayRuleTest extends Specification {
 
     def 'test limit with FREQ=MINUTELY'() {
         given: 'a calendar definition'
-        Calendar calendar = new Calendar();
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
+        Calendar calendar = new Calendar().withDefaults().getFluentTarget();
 
         DateTime dateTime = new DateTime("20210104T130000Z");
         VEvent e1 = new VEvent(dateTime, "even");
