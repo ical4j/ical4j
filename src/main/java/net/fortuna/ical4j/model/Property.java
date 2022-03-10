@@ -58,7 +58,7 @@ import java.util.Optional;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content implements Comparable<Property> {
+public abstract class Property extends Content implements Comparable<Property>, FluentProperty {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -461,6 +461,11 @@ public abstract class Property extends Content implements Comparable<Property> {
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
+    }
+
+    @Override
+    public <P extends Property> P getFluentTarget() {
+        return (P) this;
     }
 
     /**

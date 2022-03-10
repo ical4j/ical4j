@@ -53,15 +53,12 @@ import java.util.Collections;
  * @author Ben Fortuna
  */
 public class VAlarmTest extends ComponentTest {
-    
-    private VAlarm alarm;
-    
+
     /**
      * @param component
      */
     public VAlarmTest(String testMethod, VAlarm component) {
         super(testMethod, component);
-        this.alarm = component;
     }
     
     /**
@@ -106,7 +103,7 @@ public class VAlarmTest extends ComponentTest {
                 .add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
                 .add(new Description("A draft agenda needs to be sent out to the attendees "
                     + "to the weekly managers meeting (MGR-LIST). Attached is a " 
-                    + "pointer the document template for the agenda file."));
+                    + "pointer the document template for the agenda file.")).getFluentTarget();
 
         ParameterList attachParams = new ParameterList(Collections.singletonList(
                 new FmtType("application/msword")));

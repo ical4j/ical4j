@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component extends Content implements Serializable, PropertyContainer {
+public abstract class Component extends Content implements Serializable, PropertyContainer, FluentComponent {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -188,6 +188,11 @@ public abstract class Component extends Content implements Serializable, Propert
 
     public <T extends Property> List<T> getProperties() {
         return PropertyContainer.super.getProperties();
+    }
+
+    @Override
+    public <C extends Component> C getFluentTarget() {
+        return (C) this;
     }
 
     /**
