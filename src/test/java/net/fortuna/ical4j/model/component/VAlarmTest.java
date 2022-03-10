@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.parameter.FmtType;
 import net.fortuna.ical4j.model.property.*;
 
@@ -42,7 +41,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.Instant;
-import java.util.Collections;
 
 /**
  * $Id$
@@ -70,8 +68,7 @@ public class VAlarmTest extends ComponentTest {
     public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
         
-        VAlarm alarm = new VAlarm();
-        alarm.add(new Trigger(Instant.now()));
+        VAlarm alarm = new VAlarm().withProperty(new Trigger(Instant.now())).getFluentTarget();
         
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
@@ -81,9 +78,10 @@ public class VAlarmTest extends ComponentTest {
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
-        alarm = new VAlarm(java.time.Duration.ofHours(2));
-        alarm.add(Action.DISPLAY)
-                .add(new Description("Testing display"));
+        alarm = new VAlarm(java.time.Duration.ofHours(2))
+            .withProperty(Action.DISPLAY)
+            .withProperty(new Description("Testing display")).getFluentTarget();
+        
         Duration duration = new Duration(java.time.Duration.ofMinutes(2));
         alarm.add(duration);
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
@@ -97,18 +95,16 @@ public class VAlarmTest extends ComponentTest {
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
         
         //testValidationEmail..
-        alarm = new VAlarm(java.time.Duration.ofDays(-2));
-        alarm.add(Action.EMAIL)
-                .add(new Attendee("mailto:john_doe@example.com"))
-                .add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
-                .add(new Description("A draft agenda needs to be sent out to the attendees "
+        alarm = new VAlarm(java.time.Duration.ofDays(-2))
+                .withProperty(Action.EMAIL)
+                .withProperty(new Attendee("mailto:john_doe@example.com"))
+                .withProperty(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
+                .withProperty(new Description("A draft agenda needs to be sent out to the attendees "
                     + "to the weekly managers meeting (MGR-LIST). Attached is a " 
                     + "pointer the document template for the agenda file.")).getFluentTarget();
 
-        ParameterList attachParams = new ParameterList(Collections.singletonList(
-                new FmtType("application/msword")));
-        Attach attachment = new Attach(attachParams,
-                new URI("http://example.com/templates/agenda.doc"));
+        Attach attachment = new Attach(new URI("http://example.com/templates/agenda.doc"))
+                .withParameter(new FmtType("application/msword")).getFluentTarget();
         alarm.add(attachment);
         suite.addTest(new VAlarmTest("testValidation", alarm));
         

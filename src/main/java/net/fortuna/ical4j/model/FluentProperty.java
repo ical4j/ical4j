@@ -41,7 +41,7 @@ public interface FluentProperty {
     <P extends Property> P getFluentTarget();
 
     default FluentProperty withParameter(Parameter parameter) {
-        getFluentTarget().getParameters().add(parameter);
+        getFluentTarget().add(parameter);
         return getFluentTarget();
     }
 }
