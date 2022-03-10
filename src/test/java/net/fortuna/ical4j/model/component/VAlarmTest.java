@@ -51,15 +51,12 @@ import java.text.ParseException;
  * @author Ben Fortuna
  */
 public class VAlarmTest extends ComponentTest {
-    
-    private VAlarm alarm;
-    
+
     /**
      * @param component
      */
     public VAlarmTest(String testMethod, VAlarm component) {
         super(testMethod, component);
-        this.alarm = component;
     }
     
     /**
@@ -71,44 +68,42 @@ public class VAlarmTest extends ComponentTest {
     public static TestSuite suite() throws ParseException, IOException, URISyntaxException {
         TestSuite suite = new TestSuite();
         
-        VAlarm alarm = new VAlarm();
-        alarm.getProperties().add(new Trigger(new DateTime(System.currentTimeMillis())));
-        
+        VAlarm alarm = new VAlarm().withProperty(new Trigger(new DateTime(System.currentTimeMillis())))
+                .getFluentTarget();
+
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
         suite.addTest(new VAlarmTest("testValidationException", alarm));
 
-        alarm = (VAlarm) alarm.copy();
+        alarm = alarm.copy();
         alarm.getProperties().add(Action.DISPLAY);
         alarm.getProperties().add(new Description("Testing display"));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
-        alarm = new VAlarm(java.time.Duration.ofHours(2));
-        alarm.getProperties().add(Action.DISPLAY);
-        alarm.getProperties().add(new Description("Testing display"));
+        alarm = new VAlarm(java.time.Duration.ofHours(2)).withProperty(Action.DISPLAY)
+                .withProperty(new Description("Testing display")).getFluentTarget();
         Duration duration = new Duration(java.time.Duration.ofMinutes(2));
         alarm.getProperties().add(duration);
         suite.addTest(new VAlarmTest("testValidationException", alarm));
         
-        alarm = (VAlarm) alarm.copy();
+        alarm = alarm.copy();
         alarm.getProperties().add(new Repeat(2));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
-        alarm = (VAlarm) alarm.copy();
+        alarm = alarm.copy();
         alarm.getProperties().remove(duration);
         suite.addTest(new VAlarmTest("testValidationException", alarm));
         
         //testValidationEmail..
-        alarm = new VAlarm(java.time.Duration.ofDays(-2));
-        alarm.getProperties().add(Action.EMAIL);
-        alarm.getProperties().add(new Attendee("mailto:john_doe@example.com"));
-        alarm.getProperties().add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"));
-        alarm.getProperties().add(new Description("A draft agenda needs to be sent out to the attendees " 
+        alarm = new VAlarm(java.time.Duration.ofDays(-2)).withProperty(Action.EMAIL)
+                .withProperty(new Attendee("mailto:john_doe@example.com"))
+                .withProperty(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
+                .withProperty(new Description("A draft agenda needs to be sent out to the attendees "
                     + "to the weekly managers meeting (MGR-LIST). Attached is a " 
-                    + "pointer the document template for the agenda file."));
+                    + "pointer the document template for the agenda file.")).getFluentTarget();
 
-        Attach attachment = new Attach(new URI("http://example.com/templates/agenda.doc"));
-        attachment.getParameters().add(new FmtType("application/msword"));
+        Attach attachment = new Attach(new URI("http://example.com/templates/agenda.doc"))
+                .withParameter(new FmtType("application/msword")).getFluentTarget();
         alarm.getProperties().add(attachment);
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
