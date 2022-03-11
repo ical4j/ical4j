@@ -70,7 +70,7 @@ import static org.junit.Assert.assertNotEquals;
  *
  * @author Ben Fortuna
  */
-public class VEventTest<T extends Temporal> extends CalendarComponentTest {
+public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 
     private static Logger log = LoggerFactory.getLogger(VEventTest.class);
 
@@ -176,8 +176,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent();
-        christmas.add(start).add(summary);
+        VEvent christmas = new VEvent().withProperty(start).withProperty(summary).getFluentTarget();
 
         log.info(christmas.toString());
     }
@@ -404,8 +403,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 //        log.info(recur.getDates(start, end, Value.DATE_TIME));
 
         RRule rrule = new RRule(recur);
-        VEvent event = new VEvent(start, end, "Test recurrence COUNT");
-        event.add(rrule);
+        VEvent event = new VEvent(start, end, "Test recurrence COUNT").withProperty(rrule).getFluentTarget();
         log.info(event.toString());
 
         ZonedDateTime rangeStart = ZonedDateTime.now();
@@ -448,15 +446,11 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
     public void testGetConsumedTimeWithExDate() throws ParseException {
 
         VEvent event1 = new VEvent(TemporalAdapter.parse("20050103T080000").getTemporal(),
-                java.time.Duration.ofMinutes(15), "Event 1");
-
-        Recur<LocalDateTime> rRuleRecur = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
-        RRule<LocalDateTime> rRule = new RRule<>(rRuleRecur);
-        event1.add(rRule);
-
-        ParameterList parameterList = new ParameterList(Collections.singletonList(Value.DATE));
-        ExDate<LocalDateTime> exDate = new ExDate<>(parameterList, "20050106T000000");
-        event1.add(exDate);
+                java.time.Duration.ofMinutes(15), "Event 1")
+                .withProperty(new RRule<>(new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR")))
+                .withProperty(new ExDate<LocalDateTime>("20050106T000000")
+                        .withParameter(Value.DATE).getFluentTarget())
+                .getFluentTarget();
 
         TemporalAdapter<LocalDateTime> start = TemporalAdapter.parse("20050106T000000");
         TemporalAdapter<LocalDateTime> end = TemporalAdapter.parse("20050107T000000");
@@ -554,44 +548,29 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
             .interval(1).weekStartDay(MO).build();
         RRule<ZonedDateTime> rruleMonthly = new RRule<>(recurMonthly);
 
-        Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
-
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId("Australia/Melbourne")));
 
-        VEvent weekdayNineToFiveEvents = new VEvent();
-        weekdayNineToFiveEvents.add(rruleWeekly).add(summary);
-        DtStart<ZonedDateTime> dtStart = new DtStart<>(tzParams, weekday9AM);
-//        dtStart.getParameters().add(Value.DATE);
-        weekdayNineToFiveEvents.add(dtStart);
-        DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(tzParams, weekday5PM);
-//        dtEnd.getParameters().add(Value.DATE);
-        weekdayNineToFiveEvents.add(dtEnd).add(uidGenerator.generateUid());
+        VEvent weekdayNineToFiveEvents = new VEvent().withProperty(rruleWeekly)
+                .withProperty(new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY"))
+                .withProperty(new DtStart<>(tzParams, weekday9AM))
+                .withProperty(new DtEnd<>(tzParams, weekday5PM))
+                .withProperty(uidGenerator.generateUid()).getFluentTarget();
         // ensure event is valid..
         weekdayNineToFiveEvents.validate();
 
-        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
-
-        VEvent dailyWeekdayEvents = new VEvent();
-        dailyWeekdayEvents.add(rruleDaily).add(summary);
-        DtStart<ZonedDateTime> dtStart2 = new DtStart<>(tzParams, weekday9AM);
-//        dtStart2.getParameters().add(Value.DATE);
-        dailyWeekdayEvents.add(dtStart2);
-        DtEnd<ZonedDateTime> dtEnd2 = new DtEnd<>(tzParams, weekday5PM);
-//        dtEnd2.getParameters().add(Value.DATE);
-        dailyWeekdayEvents.add(dtEnd2).add(uidGenerator.generateUid());
+        VEvent dailyWeekdayEvents = new VEvent().withProperty(rruleDaily)
+                .withProperty(new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY"))
+                .withProperty(new DtStart<>(tzParams, weekday9AM))
+                .withProperty(new DtEnd<>(tzParams, weekday5PM))
+                .withProperty(uidGenerator.generateUid()).getFluentTarget();
         // ensure event is valid..
         dailyWeekdayEvents.validate();
 
-        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
-
-        VEvent monthlyWeekdayEvents = new VEvent();
-        monthlyWeekdayEvents.add(rruleMonthly).add(summary);
-        DtStart<ZonedDateTime> dtStart3 = new DtStart<>(tzParams, weekday9AM);
-//        dtStart3.getParameters().add(Value.DATE);
-        monthlyWeekdayEvents.add(dtStart3);
-        DtEnd<ZonedDateTime> dtEnd3 = new DtEnd<>(tzParams, weekday5PM);
-//        dtEnd3.getParameters().add(Value.DATE);
-        monthlyWeekdayEvents.add(dtEnd3).add(uidGenerator.generateUid());
+        VEvent monthlyWeekdayEvents = new VEvent().withProperty(rruleMonthly)
+                .withProperty(new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY"))
+                .withProperty(new DtStart<>(tzParams, weekday9AM))
+                .withProperty(new DtEnd<>(tzParams, weekday5PM))
+                .withProperty(uidGenerator.generateUid()).getFluentTarget();
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
 
@@ -626,8 +605,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         ParameterList endParams = new ParameterList(Collections.singletonList(Value.DATE));
         DtEnd<LocalDate> end = new DtEnd<>(endParams, LocalDate.now());
-        VEvent event = new VEvent();
-        event.add(uid).add(start).add(end);
+        VEvent event = new VEvent().withProperty(uid).withProperty(start).withProperty(end).getFluentTarget();
         suite.addTest(new VEventTest<>("testValidation", event));
 
         event = event.copy();

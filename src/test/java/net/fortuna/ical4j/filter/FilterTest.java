@@ -123,18 +123,11 @@ public class FilterTest<T extends Component> extends TestCase {
         Attendee a1 = new Attendee(new URI("Mailto:A@example.com"));
         Attendee a2 = new Attendee(new URI("Mailto:C@example.com"));
         
-        VEvent e1 = new VEvent();
-        e1.add(organizer);
-        e1.add(a1);
+        VEvent e1 = new VEvent().withProperty(organizer).withProperty(a1).getFluentTarget();
         
-        VEvent e2 = new VEvent();
-        e2.add(organizer);
-        e2.add(a2);
+        VEvent e2 = new VEvent().withProperty(organizer).withProperty(a2).getFluentTarget();
         
-        VEvent e3 = new VEvent();
-        e3.add(organizer);
-        e3.add(a1);
-        e3.add(a2);
+        VEvent e3 = new VEvent().withProperty(organizer).withProperty(a1).withProperty(a2).getFluentTarget();
         
         Calendar calendar = new Calendar(new ComponentList<>(Arrays.asList(e1, e2, e3)));
 

@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
 
 import java.net.URISyntaxException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -45,7 +46,7 @@ import java.net.URISyntaxException;
  *
  * @author fortuna
  */
-public class VToDoTest extends CalendarComponentTest {
+public class VToDoTest<T extends Temporal> extends CalendarComponentTest<T> {
 
     /**
      * @param testMethod
@@ -62,21 +63,19 @@ public class VToDoTest extends CalendarComponentTest {
         TestSuite suite = new TestSuite();
 
         VToDo td = new VToDo();
-        suite.addTest(new VToDoTest("testIsCalendarComponent", td));
+        suite.addTest(new VToDoTest<>("testIsCalendarComponent", td));
 
         // iCalendar validation
-        suite.addTest(new VToDoTest("testValidationException", td));
-        VToDo validTd = new VToDo();
-        validTd.add(new Uid("12"));
-        suite.addTest(new VToDoTest("testValidation", validTd));
+        suite.addTest(new VToDoTest<>("testValidationException", td));
+        VToDo validTd = new VToDo().withProperty(new Uid("12")).getFluentTarget();
+        suite.addTest(new VToDoTest<>("testValidation", validTd));
 
         // iTIP REPLY validation
-        suite.addTest(new VToDoTest("testReplyValidationException", new VToDo()));
-        VToDo replyTd = new VToDo();
-        replyTd.add(new Attendee("mailto:jane@example.com"))
-                .add(new Organizer("mailto:joe@example.com"))
-                .add(new Uid("12"));
-        suite.addTest(new VToDoTest("testReplyValidation", replyTd));
+        suite.addTest(new VToDoTest<>("testReplyValidationException", new VToDo()));
+        VToDo replyTd = new VToDo().withProperty(new Attendee("mailto:jane@example.com"))
+                .withProperty(new Organizer("mailto:joe@example.com"))
+                .withProperty(new Uid("12")).getFluentTarget();
+        suite.addTest(new VToDoTest<>("testReplyValidation", replyTd));
 
         return suite;
     }

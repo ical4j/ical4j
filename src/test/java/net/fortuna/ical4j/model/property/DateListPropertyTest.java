@@ -86,8 +86,7 @@ public class DateListPropertyTest extends PropertyTest {
         exZulu.setValue("20111212T000000Z");
         suite.addTest(new DateListPropertyTest("testCopy", exZulu));
 
-        ExDate exMelbourne = new ExDate();
-        exMelbourne.add(new TzId("Australia/Melbourne"));
+        ExDate exMelbourne = new ExDate().withParameter(new TzId("Australia/Melbourne")).getFluentTarget();
         exMelbourne.setValue("20111212T000000");
 
         suite.addTest(new DateListPropertyTest("testCopy", exMelbourne));

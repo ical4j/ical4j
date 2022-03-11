@@ -61,6 +61,13 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
     }
 
     /**
+     * @param aValue a value string for this component
+     */
+    public ExDate(final String aValue) {
+        this(new ParameterList(), aValue);
+    }
+
+    /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */

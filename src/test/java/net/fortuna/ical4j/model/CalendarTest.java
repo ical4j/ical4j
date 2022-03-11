@@ -64,10 +64,9 @@ public class CalendarTest {
     @Before
     public void setUp() {
         calendar = new Calendar().withDefaults()
-                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
-        VEvent vEvent = new VEvent();
-        vEvent.add(new Uid("1"));
-        calendar.add(vEvent);
+                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN")
+                .withComponent(new VEvent().withProperty(new Uid("1")).getFluentTarget())
+                .getFluentTarget();
     }
 
     @Test
@@ -89,8 +88,7 @@ public class CalendarTest {
         ZonedDateTime end = start.plusYears(1);
 
         VEvent week1UserA = new VEvent(start, java.time.Duration.ofHours(8), "Week 1 - User A");
-        week1UserA.getRequiredProperty(Property.DTSTART).add(tzParam);
-        week1UserA.getRequiredProperty(Property.DTSTART).add(Value.DATE);
+        week1UserA.getRequiredProperty(Property.DTSTART).add(tzParam).add(Value.DATE);
 
         WeekDayList monToFri = new WeekDayList(MO, TU, WE, TH, FR);
         Recur<ZonedDateTime> week1UserARecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
@@ -101,8 +99,7 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         VEvent week2UserB = new VEvent(start, java.time.Duration.ofHours(8), "Week 2 - User B");
-        week2UserB.getRequiredProperty(Property.DTSTART).add(tzParam);
-        week2UserB.getRequiredProperty(Property.DTSTART).add(Value.DATE);
+        week2UserB.getRequiredProperty(Property.DTSTART).add(tzParam).add(Value.DATE);
 
         Recur<ZonedDateTime> week2UserBRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
                 .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();

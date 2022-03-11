@@ -59,7 +59,7 @@ import java.util.Optional;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
+public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> {
 
     private static Logger log = LoggerFactory.getLogger(VFreeBusyTest.class);
 
@@ -168,13 +168,11 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         ZonedDateTime endDate = ZonedDateTime.now();
 
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(startDate.getZone().getId())));
-        VEvent event = new VEvent();
-        event.add(new DtStart<>(tzParams, startDate))
-                .add(new Duration(java.time.Duration.ofHours(1)));
+        VEvent event = new VEvent().withProperty(new DtStart<>(tzParams, startDate))
+                .withProperty(new Duration(java.time.Duration.ofHours(1))).getFluentTarget();
 
-        VEvent event2 = new VEvent();
-        event2.add(new DtStart<>(tzParams, startDate))
-                .add(new DtEnd<>(endDate));
+        VEvent event2 = new VEvent().withProperty(new DtStart<>(tzParams, startDate))
+                .withProperty(new DtEnd<>(endDate)).getFluentTarget();
 
         VFreeBusy request = new VFreeBusy(startDate.toInstant(), endDate.toInstant());
 
@@ -252,16 +250,13 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         Instant startDate = Instant.now();
         Instant endDate = ZonedDateTime.now().plusDays(3).toInstant();
 
-        VEvent event = new VEvent();
-        event.add(new DtStart<>(startDate))
-                .add(new Duration(java.time.Duration.ofHours(1)));
+        VEvent event = new VEvent().withProperty(new DtStart<>(startDate))
+                .withProperty(new Duration(java.time.Duration.ofHours(1))).getFluentTarget();
 
-        VEvent event2 = new VEvent();
-        event2.add(new DtStart<>(startDate))
-                .add(new DtEnd<>(endDate));
+        VEvent event2 = new VEvent().withProperty(new DtStart<>(startDate)).
+                withProperty(new DtEnd<>(endDate)).getFluentTarget();
 
-        VFreeBusy request = new VFreeBusy(startDate, endDate,
-                java.time.Duration.ofHours(1));
+        VFreeBusy request = new VFreeBusy(startDate, endDate, java.time.Duration.ofHours(1));
 
         ComponentList<CalendarComponent> components = new ComponentList<>(Arrays.asList(event, event2));
         VFreeBusy fb = new VFreeBusy(request, components.getAll());
@@ -272,17 +267,12 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
     public final void testAngelites() {
         log.info("angelites test:\n================");
 
-        Calendar freeBusyTest = new Calendar();
-
         // add an event
         ZonedDateTime start = ZonedDateTime.now();
         ZonedDateTime end = start.plusDays(1);
 
-        VEvent dteEnd = new VEvent(start, end, "DATE END INCLUDED");
-
-        VEvent duration = new VEvent(start, java.time.Period.ofDays(1), "DURATION");
-
-        freeBusyTest.add(dteEnd).add(duration);
+        Calendar freeBusyTest = new Calendar().withComponent(new VEvent(start, end, "DATE END INCLUDED"))
+                .withComponent(new VEvent(start, java.time.Period.ofDays(1), "DURATION")).getFluentTarget();
 
         Instant dtstart = Instant.now();
         Instant dtend = ZonedDateTime.now().plusDays(2).toInstant();
@@ -351,42 +341,39 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
     public static TestSuite suite() throws ParseException, URISyntaxException {
         TestSuite suite = new TestSuite();
 
-        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList"));
-        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList2"));
-        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList3"));
-        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList4"));
-        suite.addTest(new VFreeBusyTest("testAngelites"));
+        suite.addTest(new VFreeBusyTest<>("testVFreeBusyComponentList"));
+        suite.addTest(new VFreeBusyTest<>("testVFreeBusyComponentList2"));
+        suite.addTest(new VFreeBusyTest<>("testVFreeBusyComponentList3"));
+        suite.addTest(new VFreeBusyTest<>("testVFreeBusyComponentList4"));
+        suite.addTest(new VFreeBusyTest<>("testAngelites"));
 
         // icalendar validation
         VFreeBusy fb = new VFreeBusy();
-        suite.addTest(new VFreeBusyTest("testIsCalendarComponent", fb));
-        suite.addTest(new VFreeBusyTest("testValidation", fb));
+        suite.addTest(new VFreeBusyTest<>("testIsCalendarComponent", fb));
+        suite.addTest(new VFreeBusyTest<>("testValidation", fb));
 
         // iTIP PUBLISH validation
-        suite.addTest(new VFreeBusyTest("testPublishValidationException", new VFreeBusy()));
-        VFreeBusy publishFb = new VFreeBusy();
-        publishFb.add(new DtStart<Instant>("20091212T000000Z"))
-                .add(new DtEnd<Instant>("20091212T235959Z"))
-                .add(new FreeBusy("20091212T140000Z/PT3H"))
-                .add(new Organizer("mailto:joe@example.com"))
-                .add(new Uid("12"));
-        suite.addTest(new VFreeBusyTest("testPublishValidation", publishFb));
+        suite.addTest(new VFreeBusyTest<>("testPublishValidationException", new VFreeBusy()));
+        VFreeBusy publishFb = new VFreeBusy().withProperty(new DtStart<Instant>("20091212T000000Z"))
+                .withProperty(new DtEnd<Instant>("20091212T235959Z"))
+                .withProperty(new FreeBusy("20091212T140000Z/PT3H"))
+                .withProperty(new Organizer("mailto:joe@example.com"))
+                .withProperty(new Uid("12")).getFluentTarget();
+        suite.addTest(new VFreeBusyTest<>("testPublishValidation", publishFb));
 
         // iTIP REPLY validation
-        suite.addTest(new VFreeBusyTest("testReplyValidationException", new VFreeBusy()));
-        VFreeBusy replyFb = new VFreeBusy();
-        replyFb.add(new DtStart<Instant>("20091212T000000Z"))
-                .add(new DtEnd<Instant>("20091212T235959Z"))
-                .add(new Organizer("mailto:joe@example.com"))
-                .add(new Attendee("mailto:joe@example.com"))
-                .add(new Uid("12"));
-        suite.addTest(new VFreeBusyTest("testReplyValidation", replyFb));
-        VFreeBusy invalDurFb = replyFb.copy();
-        invalDurFb.add(new Duration(java.time.Duration.parse("PT1H")));
-        suite.addTest(new VFreeBusyTest("testReplyValidationException", invalDurFb));
-        VFreeBusy invalSeqFb = replyFb.copy();
-        invalSeqFb.add(new Sequence("12"));
-        suite.addTest(new VFreeBusyTest("testReplyValidationException", invalSeqFb));
+        suite.addTest(new VFreeBusyTest<>("testReplyValidationException", new VFreeBusy()));
+        VFreeBusy replyFb = new VFreeBusy().withProperty(new DtStart<Instant>("20091212T000000Z"))
+                .withProperty(new DtEnd<Instant>("20091212T235959Z"))
+                .withProperty(new Organizer("mailto:joe@example.com"))
+                .withProperty(new Attendee("mailto:joe@example.com"))
+                .withProperty(new Uid("12")).getFluentTarget();
+        suite.addTest(new VFreeBusyTest<>("testReplyValidation", replyFb));
+        VFreeBusy invalDurFb = replyFb.copy().withProperty(new Duration(java.time.Duration.parse("PT1H")))
+                .getFluentTarget();
+        suite.addTest(new VFreeBusyTest<>("testReplyValidationException", invalDurFb));
+        VFreeBusy invalSeqFb = replyFb.copy().withProperty(new Sequence("12")).getFluentTarget();
+        suite.addTest(new VFreeBusyTest<>("testReplyValidationException", invalSeqFb));
 
 
         // A test for a request for free time where the VFreeBusy instance doesn't
@@ -401,22 +388,21 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 
         VFreeBusy requestFree = new VFreeBusy(start, end, java.time.Duration.ofMinutes(5));
         // free/busy type should be FREE..
-        suite.addTest(new VFreeBusyTest("testFbType", requestFree, components, FbType.FREE));
+        suite.addTest(new VFreeBusyTest<>("testFbType", requestFree, components, FbType.FREE));
 
         // should be only one period..
-        suite.addTest(new VFreeBusyTest("testPeriodCount", requestFree, components, 1));
+        suite.addTest(new VFreeBusyTest<>("testPeriodCount", requestFree, components, 1));
 
         // period should be from the start to the end date..
         List<Period<Instant>> periods = Collections.singletonList(new Period<>(start,
                 TemporalAmountAdapter.between(start, end).getDuration()));
-        suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", requestFree, components, periods));
+        suite.addTest(new VFreeBusyTest<>("testFreeBusyPeriods", requestFree, components, periods));
 
         //testBusyTime..
         event1 = new VEvent(TemporalAdapter.parse("20050103T080000", ZoneId.systemDefault()).getTemporal(),
-                java.time.Duration.ofHours(5), "Event 1");
-        Recur<Instant> rRuleRecur = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
-        RRule<Instant> rRule = new RRule<>(rRuleRecur);
-        event1.add(rRule);
+                java.time.Duration.ofHours(5), "Event 1")
+                .withProperty(new RRule<>(new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR")))
+                .getFluentTarget();
         components = new ComponentList<>(Collections.singletonList(event1));
 
         ZonedDateTime startZoned = TemporalAdapter.parse("20050104T110000", ZoneId.systemDefault()).getTemporal();
@@ -424,12 +410,12 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 
         VFreeBusy request = new VFreeBusy(period.getStart().toInstant(), period.getEnd().toInstant());
         // FBTYPE is optional - defaults to BUSY..
-//        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.BUSY));
-        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
+//        suite.addTest(new VFreeBusyTest<>("testFbType", request, components, FbType.BUSY));
+        suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 1));
 
         periods = Collections.singletonList(new Period<>((Instant) TemporalAdapter.parse("20050104T080000Z").getTemporal(),
                 java.time.Duration.parse("PT5H")));
-        suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
+        suite.addTest(new VFreeBusyTest<>("testFreeBusyPeriods", request, components, periods));
 
         // TODO: further work needed to "splice" events based on the amount
         // of time that intersects a free-busy request..
@@ -437,7 +423,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 //        assertEquals("PT30M", busy1.getDuration().toString());
 
         request = new VFreeBusy(period.getStart().toInstant(), period.getEnd().toInstant(), java.time.Period.ZERO);
-        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
+        suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 0));
 
         // anniversary-style events don't consume time..
         event1 = new VEvent(TemporalAdapter.parse("20081225").getTemporal(), "Christmas 2008");
@@ -447,28 +433,27 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         end = (Instant) TemporalAdapter.parse("20081225T113000Z").getTemporal();
 
         request = new VFreeBusy(start, end);
-        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
+        suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 0));
 
         request = new VFreeBusy(start, end, java.time.Duration.ofMinutes(15));
-        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.FREE));
-        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
+        suite.addTest(new VFreeBusyTest<>("testFbType", request, components, FbType.FREE));
+        suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 1));
 
         periods = Collections.singletonList(new Period<>(start, java.time.Duration.ofMinutes(30)));
-        suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
+        suite.addTest(new VFreeBusyTest<>("testFreeBusyPeriods", request, components, periods));
 
         //some components are not in range
         ZoneId zoneId = TimeZoneRegistry.getGlobalZoneId("America/Los_Angeles");
         Parameter tzP = new TzId(zoneId.getId());
         ParameterList pl = new ParameterList(Collections.singletonList(tzP));
         DtStart<Temporal> dts = new DtStart<>(pl, TemporalAdapter.parse("20130124T020000").getTemporal());
-        VEvent e = new VEvent();
-        e.add(dts).add(new Duration(java.time.Duration.parse("PT1H")))
-                .add(new RRule<>("FREQ=DAILY"));
+        VEvent e = new VEvent().withProperty(dts).withProperty(new Duration(java.time.Duration.parse("PT1H")))
+                .withProperty(new RRule<>("FREQ=DAILY")).getFluentTarget();
         components = new ComponentList<>(Collections.singletonList(e));
         Period<Instant> periodInstant = new Period<>((Instant) TemporalAdapter.parse("20130124T110000Z").getTemporal(),
                 (Instant) TemporalAdapter.parse("20130125T110000Z").getTemporal());
         request = new VFreeBusy(periodInstant.getStart(), periodInstant.getEnd());
-        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
+        suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 1));
 
         return suite;
     }

@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * $Id$
  *
@@ -147,8 +149,8 @@ public class PropertyTest extends AbstractPropertyTest {
         assertEquals(property, copy);
 
         copy.add(Value.BOOLEAN);
-        assertFalse(property.equals(copy));
-        assertFalse(copy.equals(property));
+        assertNotEquals(property, copy);
+        assertNotEquals(copy, property);
     }
 
     /**

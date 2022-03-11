@@ -69,10 +69,9 @@ public class ParticipantTest extends ComponentTest {
         suite.addTest(new ParticipantTest("testValidationException", p));
         
         final UidGenerator g = new RandomUidGenerator();
-        p = new Participant();
-        p.add(g.generateUid());
-        p.add(ParticipantType.VOTER);
-        p.add(new DtStamp());
+        p = new Participant().withProperty(g.generateUid())
+                .withProperty(ParticipantType.VOTER)
+                .withProperty(new DtStamp()).getFluentTarget();
         suite.addTest(new ParticipantTest("testValidation", p));
         return suite;
     }

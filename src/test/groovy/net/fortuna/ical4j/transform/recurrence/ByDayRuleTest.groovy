@@ -2,11 +2,9 @@ package net.fortuna.ical4j.transform.recurrence
 
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.component.VEvent
-import net.fortuna.ical4j.model.parameter.Value
 import net.fortuna.ical4j.model.property.ExRule
 import net.fortuna.ical4j.model.property.RRule
 import net.fortuna.ical4j.util.RandomUidGenerator
-import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
 import java.time.DayOfWeek
@@ -44,12 +42,7 @@ class ByDayRuleTest extends Specification {
 
     def 'test limit with FREQ=MINUTELY'() {
         given: 'a calendar definition'
-        Calendar calendar = new Calendar().withDefaults().getFluentTarget();
-
         TemporalAdapter<LocalDateTime> dateTime = TemporalAdapter.parse("20210104T130000");
-        VEvent e1 = new VEvent(dateTime.temporal, "even");
-        UidGenerator ug = new RandomUidGenerator();
-        e1.add(ug.generateUid());
 
         // recurency
         Recur recur = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15).hourList(numberList(13, 17))
@@ -64,10 +57,14 @@ class ByDayRuleTest extends Specification {
         Recur recurEx2 = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15)
                 .hourList(numberList(13, 14)).minuteList(numberList(0, 30)).build();
 
-        e1.add(new ExRule(recurEx));
-        e1.add(new ExRule(recurEx2));
+        Calendar calendar = new Calendar().withDefaults()
+                .withProperty(new ExRule(recurEx))
+                .withProperty(new ExRule(recurEx2))
+                .withComponent(new VEvent(dateTime.temporal, "even")
+                        .withProperty(new RandomUidGenerator().generateUid())
+                        .getFluentTarget())
+                .getFluentTarget();
 
-        calendar.add(e1);
         System.out.println(calendar);
 
         expect: 'dates are calculated successfully'

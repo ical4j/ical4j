@@ -95,15 +95,12 @@ public class AttachTest extends TestCase {
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent();
-        christmas.add(start)
-                .add(summary)
-                .add(attach)
-                .add(new Uid("000001@modularity.net.au"));
+        VEvent christmas = new VEvent().withProperty(start).withProperty(summary).withProperty(attach)
+                .withProperty(new Uid("000001@modularity.net.au")).getFluentTarget();
 
         Calendar calendar = new Calendar().withDefaults()
-                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
-        calendar.add(christmas);
+                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN")
+                .withComponent(christmas).getFluentTarget();
 
         StringWriter sw = new StringWriter();
         CalendarOutputter out = new CalendarOutputter();
