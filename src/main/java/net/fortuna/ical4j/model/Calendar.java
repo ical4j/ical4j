@@ -116,7 +116,8 @@ import java.text.ParseException;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent> {
+public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent>,
+    FluentCalendar {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -197,6 +198,11 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 Strings.LINE_SEPARATOR;
     }
 
+    @Override
+    public Calendar getFluentTarget() {
+        return this;
+    }
+
     /**
      * @return Returns the components.
      */
@@ -215,7 +221,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * Perform validation on the calendar, its properties and its components in its current state.
      * @throws ValidationException where the calendar is not in a valid state
      */
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return validate(true);
     }
 

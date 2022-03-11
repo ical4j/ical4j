@@ -153,13 +153,14 @@ public class Encoding extends Parameter implements Encodable {
 
         @Override
         public Encoding createParameter(final String value) throws URISyntaxException {
-            Encoding parameter = new Encoding(value);
-            if (Encoding.EIGHT_BIT.equals(parameter)) {
-                parameter = Encoding.EIGHT_BIT;
-            } else if (Encoding.BASE64.equals(parameter)) {
-                parameter = Encoding.BASE64;
+            switch (value) {
+                case VALUE_BASE64: return BASE64;
+                case VALUE_BINARY: return BINARY;
+                case VALUE_EIGHT_BIT: return EIGHT_BIT;
+                case VALUE_QUOTED_PRINTABLE: return QUOTED_PRINTABLE;
+                case VALUE_SEVEN_BIT: return SEVEN_BIT;
             }
-            return parameter;
+            return new Encoding(value);
         }
     }
 

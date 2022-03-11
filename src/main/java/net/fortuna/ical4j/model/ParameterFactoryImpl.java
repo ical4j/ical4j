@@ -59,7 +59,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
     }
 
     @Override
-    protected boolean factorySupports(ParameterFactory factory, String key) {
+    protected boolean factorySupports(ParameterFactory<?> factory, String key) {
         return factory.supports(key);
     }
 
@@ -74,7 +74,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
      */
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
-        final ParameterFactory factory = getFactory(name);
+        final ParameterFactory<?> factory = getFactory(name);
         Parameter parameter;
         if (factory != null) {
             parameter = factory.createParameter(value);

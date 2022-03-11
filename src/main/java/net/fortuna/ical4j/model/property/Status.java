@@ -123,66 +123,67 @@ public class Status extends Property {
 
     private static final long serialVersionUID = 7401102230299289898L;
 
+    public static final String VALUE_TENTATIVE = "TENTATIVE";
+    public static final String VALUE_CONFIRMED = "CONFIRMED";
+    public static final String VALUE_CANCELLED = "CANCELLED";
+    public static final String VALUE_NEEDS_ACTION = "NEEDS-ACTION";
+    public static final String VALUE_COMPLETED = "COMPLETED";
+    public static final String VALUE_IN_PROCESS = "IN-PROCESS";
+    public static final String VALUE_DRAFT = "DRAFT";
+    public static final String VALUE_FINAL = "FINAL";
+
     // Status values for a "VEVENT"
     /**
      * Tentative VEVENT status.
      */
-    public static final Status VEVENT_TENTATIVE = new ImmutableStatus(
-            "TENTATIVE");
+    public static final Status VEVENT_TENTATIVE = new ImmutableStatus(VALUE_TENTATIVE);
 
     /**
      * Confirmed VEVENT status.
      */
-    public static final Status VEVENT_CONFIRMED = new ImmutableStatus(
-            "CONFIRMED");
+    public static final Status VEVENT_CONFIRMED = new ImmutableStatus(VALUE_CONFIRMED);
 
     /**
      * Cancelled VEVENT status.
      */
-    public static final Status VEVENT_CANCELLED = new ImmutableStatus(
-            "CANCELLED");
+    public static final Status VEVENT_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
 
     // Status values for "VTODO"
     /**
      * Tentative VTODO status.
      */
-    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(
-            "NEEDS-ACTION");
+    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(VALUE_NEEDS_ACTION);
 
     /**
      * Completed VTODO status.
      */
-    public static final Status VTODO_COMPLETED = new ImmutableStatus(
-            "COMPLETED");
+    public static final Status VTODO_COMPLETED = new ImmutableStatus(VALUE_COMPLETED);
 
     /**
      * In-process VTODO status.
      */
-    public static final Status VTODO_IN_PROCESS = new ImmutableStatus(
-            "IN-PROCESS");
+    public static final Status VTODO_IN_PROCESS = new ImmutableStatus(VALUE_IN_PROCESS);
 
     /**
      * Cancelled VTODO status.
      */
-    public static final Status VTODO_CANCELLED = new ImmutableStatus(
-            "CANCELLED");
+    public static final Status VTODO_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
 
     // Status values for "VJOURNAL"
     /**
      * Draft VJOURNAL status.
      */
-    public static final Status VJOURNAL_DRAFT = new ImmutableStatus("DRAFT");
+    public static final Status VJOURNAL_DRAFT = new ImmutableStatus(VALUE_DRAFT);
 
     /**
      * Final VJOURNAL status.
      */
-    public static final Status VJOURNAL_FINAL = new ImmutableStatus("FINAL");
+    public static final Status VJOURNAL_FINAL = new ImmutableStatus(VALUE_FINAL);
 
     /**
      * Cancelled VJOURNAL status.
      */
-    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(
-            "CANCELLED");
+    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
 
     /**
      * @author Ben Fortuna An immutable instance of Status.
@@ -260,31 +261,19 @@ public class Status extends Property {
         public Status createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            Status status;
-            if (Status.VEVENT_CANCELLED.getValue().equals(value)) {
-                status = Status.VEVENT_CANCELLED;
-            } else if (Status.VEVENT_CONFIRMED.getValue().equals(value)) {
-                status = Status.VEVENT_CONFIRMED;
-            } else if (Status.VEVENT_TENTATIVE.getValue().equals(value)) {
-                status = Status.VEVENT_TENTATIVE;
-            } else if (Status.VJOURNAL_CANCELLED.getValue().equals(value)) {
-                status = Status.VJOURNAL_CANCELLED;
-            } else if (Status.VJOURNAL_DRAFT.getValue().equals(value)) {
-                status = Status.VJOURNAL_DRAFT;
-            } else if (Status.VJOURNAL_FINAL.getValue().equals(value)) {
-                status = Status.VJOURNAL_FINAL;
-            } else if (Status.VTODO_CANCELLED.getValue().equals(value)) {
-                status = Status.VTODO_CANCELLED;
-            } else if (Status.VTODO_COMPLETED.getValue().equals(value)) {
-                status = Status.VTODO_COMPLETED;
-            } else if (Status.VTODO_IN_PROCESS.getValue().equals(value)) {
-                status = Status.VTODO_IN_PROCESS;
-            } else if (Status.VTODO_NEEDS_ACTION.getValue().equals(value)) {
-                status = Status.VTODO_NEEDS_ACTION;
-            } else {
-                status = new Status(parameters, value);
+            if (parameters.isEmpty()) {
+                switch (value) {
+                    case VALUE_TENTATIVE: return VEVENT_TENTATIVE;
+                    case VALUE_CONFIRMED: return VEVENT_CONFIRMED;
+                    case VALUE_CANCELLED: return VEVENT_CANCELLED;
+                    case VALUE_NEEDS_ACTION: return VTODO_NEEDS_ACTION;
+                    case VALUE_COMPLETED: return VTODO_COMPLETED;
+                    case VALUE_IN_PROCESS: return VTODO_IN_PROCESS;
+                    case VALUE_DRAFT: return VJOURNAL_DRAFT;
+                    case VALUE_FINAL: return VJOURNAL_FINAL;
+                }
             }
-            return status;
+            return new Status(parameters, value);
         }
 
         @Override

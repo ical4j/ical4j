@@ -221,7 +221,7 @@ public class Trigger extends UtcProperty {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         ValidationResult result = super.validate();
         if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
             result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));

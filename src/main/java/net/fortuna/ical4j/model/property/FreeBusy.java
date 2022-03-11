@@ -166,7 +166,7 @@ public class FreeBusy extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return PropertyValidator.FREEBUSY.validate(this);
     }
 

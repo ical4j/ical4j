@@ -125,7 +125,7 @@ public class PercentComplete extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return PropertyValidator.PERCENT_COMPLETE.validate(this);
     }
 

@@ -56,10 +56,12 @@ public class CalScale extends Property {
 
     private static final long serialVersionUID = 7446184786984981423L;
 
+    public static final String VALUE_GREGORIAN = "GREGORIAN";
+
     /**
      * Constant for Gregorian calendar representation.
      */
-    public static final CalScale GREGORIAN = new ImmutableCalScale("GREGORIAN");
+    public static final CalScale GREGORIAN = new ImmutableCalScale(VALUE_GREGORIAN);
 
     /**
      * @author Ben Fortuna An immutable instance of CalScale.
@@ -131,7 +133,7 @@ public class CalScale extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return PropertyValidator.CALSCALE.validate(this);
     }
 
@@ -146,13 +148,10 @@ public class CalScale extends Property {
         public CalScale createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            CalScale calScale;
-            if (GREGORIAN.getValue().equals(value)) {
-                calScale = GREGORIAN;
-            } else {
-                calScale = new CalScale(parameters, value);
+            if (parameters.isEmpty() && VALUE_GREGORIAN.equals(value)) {
+                return GREGORIAN;
             }
-            return calScale;
+            return new CalScale(parameters, value);
         }
 
         @Override
@@ -160,5 +159,4 @@ public class CalScale extends Property {
             return new CalScale();
         }
     }
-
 }

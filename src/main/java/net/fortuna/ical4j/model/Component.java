@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable, PropertyContainer {
+public abstract class Component implements Serializable, PropertyContainer, FluentComponent {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -181,6 +181,11 @@ public abstract class Component implements Serializable, PropertyContainer {
         return name;
     }
 
+    @Override
+    public <C extends Component> C getFluentTarget() {
+        return (C) this;
+    }
+
     /**
      * @return Returns the properties.
      */
@@ -208,7 +213,7 @@ public abstract class Component implements Serializable, PropertyContainer {
      *
      * @throws ValidationException where the component is not in a valid state
      */
-    public final ValidationResult validate() throws ValidationException {
+    public ValidationResult validate() throws ValidationException {
         return validate(true);
     }
 
@@ -225,7 +230,7 @@ public abstract class Component implements Serializable, PropertyContainer {
      *
      * @throws ValidationException where any of the component properties is not in a valid state
      */
-    protected final ValidationResult validateProperties() throws ValidationException {
+    protected ValidationResult validateProperties() throws ValidationException {
         ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
             result = result.merge(property.validate());

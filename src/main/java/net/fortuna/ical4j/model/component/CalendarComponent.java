@@ -85,7 +85,7 @@ public abstract class CalendarComponent extends Component {
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
-    public final ValidationResult validate(Method method) throws ValidationException {
+    public ValidationResult validate(Method method) throws ValidationException {
         final Validator<CalendarComponent> validator = getValidator(method);
         if (validator != null) {
             return validator.validate(this);
