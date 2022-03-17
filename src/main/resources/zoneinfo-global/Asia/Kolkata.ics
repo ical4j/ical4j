@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2020b/Asia/Kolkata
-LAST-MODIFIED:20201010T011804Z
+TZID:/tzurl.org/2022a/Asia/Kolkata
+LAST-MODIFIED:20220317T223603Z
 TZURL:http://tzurl.org/zoneinfo-global/Asia/Kolkata
 X-LIC-LOCATION:Asia/Kolkata
 X-PROLEPTIC-TZNAME:LMT
