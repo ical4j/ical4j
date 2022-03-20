@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2020b/Europe/Samara
-LAST-MODIFIED:20201010T011804Z
+TZID:/tzurl.org/2022a/Europe/Samara
+LAST-MODIFIED:20220317T223604Z
 TZURL:http://tzurl.org/zoneinfo-global/Europe/Samara
 X-LIC-LOCATION:Europe/Samara
 X-PROLEPTIC-TZNAME:LMT
