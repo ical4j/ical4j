@@ -33,8 +33,8 @@ class PrioritySpec extends Specification {
         and: 'factory is invoked with invalid value'
         def priority = factory.createProperty(value)
 
-        then: 'the returned priority is UNDEFINED'
-        priority == Priority.UNDEFINED
+        then: 'an illegal argument exception is thrown'
+        thrown(IllegalArgumentException)
 
         where:
         value << ['', 'low', 'blah']
