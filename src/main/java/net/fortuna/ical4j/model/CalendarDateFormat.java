@@ -229,7 +229,7 @@ public class CalendarDateFormat implements Serializable {
 
     private final String pattern;
 
-    private transient DateTimeFormatter formatter;
+    private transient volatile DateTimeFormatter formatter;
 
     private final TemporalQuery<? extends TemporalAccessor>[] parsers;
 
