@@ -34,7 +34,9 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.parameter.Encoding
 import net.fortuna.ical4j.model.parameter.Schema
+import net.fortuna.ical4j.model.parameter.Value
 import net.fortuna.ical4j.model.property.StructuredData
 import net.fortuna.ical4j.validate.ValidationException
 import spock.lang.Ignore
@@ -93,7 +95,8 @@ class StructuredDataTest extends Specification {
 
     def 'test validation of invalid json-ld structured data'() {
         given: 'a structured data property with invalid JSON-LD data'
-        def structuredData = new StructuredData.Factory().createProperty([] as ParameterList, '''{
+        def structuredData = new StructuredData.Factory().createProperty(
+                [Encoding.BINARY, Value.BINARY, new Schema('http://example.com')] as ParameterList, '''{
   "@context": "https://schema.org",
   "@graph": "Invalid data",
   "@type": "SportsEvent",

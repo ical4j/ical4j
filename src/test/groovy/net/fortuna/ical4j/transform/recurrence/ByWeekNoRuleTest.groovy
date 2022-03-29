@@ -36,11 +36,11 @@ class ByWeekNoRuleTest extends Specification {
         ByWeekNoRule rule = [new NumberList(byWeekNoPart), YEARLY]
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expectedResult
+        rule.transform(dates.collect {LocalDate.parse(it, dateFormat)}) == expectedResult.collect { LocalDate.parse(it, dateFormat) }
 
         where:
         byWeekNoPart     | dates                                   | expectedResult
         // due to ISO 8601 definition '2011-01-01' is in the 52nd week of 2010..
-        '2,52,53'       | [LocalDate.parse('20110101', dateFormat)]  | [LocalDate.parse('20100116', dateFormat), LocalDate.parse('20110101', dateFormat)]
+        '2,52,53'       | ['20110101']  | ['20110108', '20111224', '20111231']
     }
 }

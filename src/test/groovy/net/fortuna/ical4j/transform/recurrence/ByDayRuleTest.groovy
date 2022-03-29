@@ -5,6 +5,7 @@ import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.property.ExRule
 import net.fortuna.ical4j.model.property.RRule
 import net.fortuna.ical4j.util.RandomUidGenerator
+import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
 import java.time.DayOfWeek
@@ -43,6 +44,9 @@ class ByDayRuleTest extends Specification {
     def 'test limit with FREQ=MINUTELY'() {
         given: 'a calendar definition'
         TemporalAdapter<LocalDateTime> dateTime = TemporalAdapter.parse("20210104T130000");
+        VEvent e1 = new VEvent(dateTime.temporal, "even");
+        UidGenerator ug = new RandomUidGenerator();
+        e1.add(ug.generateUid());
 
         // recurency
         Recur recur = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15).hourList(numberList(13, 17))
