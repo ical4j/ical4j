@@ -82,7 +82,7 @@ public class TimeZoneLoader {
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(in);
                     final Optional<VTimeZone> vTimeZone = calendar.getComponent(Component.VTIMEZONE);
-                    // load any available updates for the timezone.. can be explicility disabled via configuration
+                    // load any available updates for the timezone.. can be explicitly disabled via configuration
                     vTimeZone.ifPresent(timeZone -> cache.putIfAbsent(id, zoneUpdater.updateDefinition(timeZone)));
                 }
             } else {

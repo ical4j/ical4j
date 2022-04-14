@@ -408,6 +408,9 @@ class RecurSpec extends Specification {
 
         then: 'result is as expected'
         recurDaily as String == "FREQ=DAILY;WKST=MO;UNTIL=20050307;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR"
+
+        and: 'a new builder based on the recur generates the same definition'
+        new Recur.Builder(recurDaily).build() == recurDaily
     }
 
     def 'test Recur.getNextDate() with different recurrence rules'() {

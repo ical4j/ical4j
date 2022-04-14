@@ -59,6 +59,7 @@ public class TimeZoneUpdater {
     private static final String UPDATE_PROXY_TYPE = "net.fortuna.ical4j.timezone.update.proxy.type";
     private static final String UPDATE_PROXY_HOST = "net.fortuna.ical4j.timezone.update.proxy.host";
     private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
+    private static final String SECURE_CONNECTION_ENABLED = "net.fortuna.ical4j.timezone.update.connection.secure";
 
     private Proxy proxy = null;
 
@@ -86,10 +87,19 @@ public class TimeZoneUpdater {
         final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);
 
         URLConnection connection;
-        if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
-            connection = url.openConnection(proxy);
+        if ("true".equals(Configurator.getProperty(SECURE_CONNECTION_ENABLED).orElse("false"))) {
+            URL secureUrl = new URL("https", url.getHost(), url.getFile());
+            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
+                connection = secureUrl.openConnection(proxy);
+            } else {
+                connection = secureUrl.openConnection();
+            }
         } else {
-            connection = url.openConnection();
+            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
+                connection = url.openConnection(proxy);
+            } else {
+                connection = url.openConnection();
+            }
         }
 
         connection.setConnectTimeout(connectTimeout);
@@ -115,7 +125,7 @@ public class TimeZoneUpdater {
                         return updatedVTimeZone.get();
                     }
                 } catch (IOException | ParserException e) {
-                    LoggerFactory.getLogger(TimeZoneLoader.class).warn("Error updating timezone definition", e);
+                    LoggerFactory.getLogger(TimeZoneUpdater.class).warn("Error updating timezone definition", e);
                 }
             }
         }

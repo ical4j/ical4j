@@ -6,6 +6,8 @@ on:
       - 'develop'
       - 'feature/jsr-310-localdate'
 
+permissions: read-all
+
 jobs:
   gradle:
     runs-on: ubuntu-latest

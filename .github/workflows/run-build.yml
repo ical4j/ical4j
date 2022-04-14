@@ -5,6 +5,8 @@ name: Java CI with Gradle
 
 on: [push]
 
+permissions: read-all
+
 jobs:
   build:
 

@@ -1083,6 +1083,26 @@ public class Recur<T extends Temporal> implements Serializable {
         log = LoggerFactory.getLogger(Recur.class);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recur recur = (Recur) o;
+        return frequency == recur.frequency && skip == recur.skip && Objects.equals(until, recur.until) &&
+                rscale == recur.rscale && Objects.equals(count, recur.count) && Objects.equals(interval, recur.interval) &&
+                Objects.equals(secondList, recur.secondList) && Objects.equals(minuteList, recur.minuteList) &&
+                Objects.equals(hourList, recur.hourList) && Objects.equals(dayList, recur.dayList) &&
+                Objects.equals(monthDayList, recur.monthDayList) && Objects.equals(yearDayList, recur.yearDayList) &&
+                Objects.equals(weekNoList, recur.weekNoList) && Objects.equals(monthList, recur.monthList) &&
+                Objects.equals(setPosList, recur.setPosList) && weekStartDay == recur.weekStartDay;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(frequency, skip, until, rscale, count, interval, secondList, minuteList, hourList, dayList,
+                monthDayList, yearDayList, weekNoList, monthList, setPosList, weekStartDay);
+    }
+
     /**
      * Support for building Recur instances.
      */
@@ -1119,6 +1139,28 @@ public class Recur<T extends Temporal> implements Serializable {
         private List<Integer> setPosList;
 
         private WeekDay weekStartDay;
+
+        public Builder() {
+        }
+
+        public Builder(Recur<T> recur) {
+            this.frequency = recur.frequency;
+            this.rscale = recur.rscale;
+            this.skip = recur.skip;
+            this.until = recur.until.getTemporal();
+            this.count = recur.count;
+            this.interval = recur.interval;
+            this.secondList = recur.secondList;
+            this.minuteList = recur.minuteList;
+            this.hourList = recur.hourList;
+            this.dayList = recur.dayList;
+            this.monthDayList = recur.monthDayList;
+            this.yearDayList = recur.yearDayList;
+            this.weekNoList = recur.weekNoList;
+            this.monthList = recur.monthList;
+            this.setPosList = recur.setPosList;
+            this.weekStartDay = recur.weekStartDay;
+        }
 
         public Builder<T> frequency(Frequency frequency) {
             this.frequency = frequency;
