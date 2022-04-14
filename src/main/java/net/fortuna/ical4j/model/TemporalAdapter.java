@@ -308,4 +308,17 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         }
         return Instant.from(date1).isAfter(Instant.from(date2));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TemporalAdapter<?> that = (TemporalAdapter<?>) o;
+        return valueString.equals(that.valueString) && Objects.equals(tzId, that.tzId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(valueString, tzId);
+    }
 }
