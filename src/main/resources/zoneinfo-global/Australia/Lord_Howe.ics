@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2020b/Australia/Lord_Howe
-LAST-MODIFIED:20201010T011804Z
+TZID:/tzurl.org/2022a/Australia/Lord_Howe
+LAST-MODIFIED:20220317T223604Z
 TZURL:http://tzurl.org/zoneinfo-global/Australia/Lord_Howe
 X-LIC-LOCATION:Australia/Lord_Howe
 X-PROLEPTIC-TZNAME:LMT

@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2020b/America/North_Dakota/Center
-LAST-MODIFIED:20201010T011804Z
+TZID:/tzurl.org/2022a/America/North_Dakota/Center
+LAST-MODIFIED:20220317T223604Z
 TZURL:http://tzurl.org/zoneinfo-global/America/North_Dakota/Center
 X-LIC-LOCATION:America/North_Dakota/Center
 X-PROLEPTIC-TZNAME:LMT
