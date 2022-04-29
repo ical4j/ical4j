@@ -101,7 +101,7 @@ class TemporalAmountAdapterTest extends Specification {
 
         where:
         duration	| start				| expectedEnd
-        'P1D' | '20110326T110000Z' | '20110327T110000Z'
+        'P1D' | '20110326T110000' | '20110327T110000'
     }
 
     @Unroll
