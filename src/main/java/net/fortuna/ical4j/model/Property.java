@@ -436,7 +436,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * {@inheritDoc}
      */
     @Override
-    public final String toString() {
+    public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
         if (parameters != null) {
@@ -581,7 +581,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object arg0) {
+    public boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
             return getName().equals(p.getName())
