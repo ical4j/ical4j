@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -33,47 +33,51 @@
 
 package net.fortuna.ical4j.validate;
 
-import java.util.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 /**
- * Encapsulates the result of applying validation rules to iCalendar content.
+ * Generate a report from a {@link ValidationResult}.
  */
-public final class ValidationResult {
+public class ValidationReport {
 
-    public static final ValidationResult EMPTY = new ValidationResult(Collections.emptySet());
-
-    private final Set<ValidationEntry> entries;
-
-    public ValidationResult(ValidationEntry...entries) {
-        this(Arrays.asList(entries));
+    public enum Format {
+        HTML, TEXT
     }
 
-    public ValidationResult(Collection<ValidationEntry> entries) {
-        this.entries = new TreeSet<>(entries);
+    private final Format format;
+
+    public ValidationReport() {
+        this(Format.HTML);
     }
 
-    public Set<ValidationEntry> getEntries() {
-        return entries;
+    public ValidationReport(Format format) {
+        this.format = format;
     }
 
-    public boolean hasErrors() {
-        return entries.stream().anyMatch(e -> e.getSeverity() == ValidationEntry.Severity.ERROR);
+    public void output(ValidationResult result, OutputStream out) throws IOException {
+        output(result, new OutputStreamWriter(out, StandardCharsets.UTF_8));
     }
 
-    public ValidationResult merge(ValidationResult result) {
-        if (!result.getEntries().isEmpty()) {
-            Set<ValidationEntry> merged = new TreeSet<>(entries);
-            merged.addAll(result.getEntries());
-            return new ValidationResult(merged);
-        } else {
-            return this;
+    public void output(ValidationResult result, Writer out) throws IOException {
+        switch (format) {
+            case HTML: outputHtml(result, out); break;
+            case TEXT: outputText(result, out); break;
         }
     }
 
-    @Override
-    public String toString() {
-        return "ValidationResult{" +
-                "entries=" + entries +
-                '}';
+    private void outputHtml(ValidationResult result, Writer out) throws IOException {
+        for (ValidationEntry entry : result.getEntries()) {
+            out.write(String.format("<p>%s: %s - %s</p>\n", entry.getContext(), entry.getSeverity(), entry.getMessage()));
+        }
+    }
+
+    private void outputText(ValidationResult result, Writer out) throws IOException {
+        for (ValidationEntry entry : result.getEntries()) {
+            out.write(String.format("%s: %s - %s\n", entry.getContext(), entry.getSeverity(), entry.getMessage()));
+        }
     }
 }
