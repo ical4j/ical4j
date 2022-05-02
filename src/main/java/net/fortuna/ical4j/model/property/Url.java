@@ -106,8 +106,7 @@ public class Url extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Url(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
+    public Url(final ParameterList aList, final String aValue) {
         super(URL, aList);
         setValue(aValue);
     }
@@ -140,8 +139,12 @@ public class Url extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
-        uri = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            uri = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -177,7 +180,7 @@ public class Url extends Property {
         }
 
         @Override
-        public Url createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
+        public Url createProperty(final ParameterList parameters, final String value) {
             return new Url(parameters, value);
         }
 

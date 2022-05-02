@@ -79,8 +79,7 @@ public class CalendarAddress extends Property {
      * @param aValue a value string for this property
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public CalendarAddress(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
+    public CalendarAddress(final ParameterList aList, final String aValue) {
         super(CALENDAR_ADDRESS, aList);
         setValue(aValue);
     }
@@ -105,8 +104,12 @@ public class CalendarAddress extends Property {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            calAddress = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -153,8 +156,7 @@ public class CalendarAddress extends Property {
             super(CALENDAR_ADDRESS);
         }
 
-        public CalendarAddress createProperty(final ParameterList parameters, final String value)
-                throws URISyntaxException {
+        public CalendarAddress createProperty(final ParameterList parameters, final String value) {
             return new CalendarAddress(parameters, value);
         }
 

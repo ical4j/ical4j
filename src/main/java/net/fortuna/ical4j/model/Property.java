@@ -565,10 +565,9 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * Sets the current value of the property.
      *
      * @param aValue a string representation of the property value
-     * @throws IOException        possibly thrown by setting the value of certain properties
-     * @throws URISyntaxException possibly thrown by setting the value of certain properties
+     * @throws IllegalArgumentException possibly thrown by setting the value of certain properties
      */
-    public abstract void setValue(String aValue) throws IOException, URISyntaxException;
+    public abstract void setValue(String aValue);
 
     /**
      * Perform validation on a property.

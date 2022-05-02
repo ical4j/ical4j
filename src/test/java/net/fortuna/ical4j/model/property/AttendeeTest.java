@@ -83,9 +83,9 @@ public class AttendeeTest extends TestCase {
     public void testAttendeeString() throws URISyntaxException {
         try {
             new Attendee("MAILTO:CET Meeting Room@university.edu");
-            fail("Should throw URISyntaxException");
+            fail("Should throw IllegalArgumentException");
         }
-        catch (URISyntaxException use) {
+        catch (IllegalArgumentException use) {
             LOG.info("Caught exception: " + use.getMessage());
         }
         

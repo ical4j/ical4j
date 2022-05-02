@@ -35,8 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$
  * <p/>
@@ -110,8 +108,7 @@ public class ParticipantType extends Property implements Encodable {
             super(PARTICIPANT_TYPE);
         }
 
-        public ParticipantType createProperty(final ParameterList parameters, final String value)
-                throws URISyntaxException {
+        public ParticipantType createProperty(final ParameterList parameters, final String value) {
             final ParticipantType participantType;
 
             if (ParticipantType.VOTER

@@ -56,10 +56,15 @@ public class SentBy extends Parameter implements Encodable {
 
     /**
      * @param aValue a string representation of a sent by
-     * @throws URISyntaxException when the specified string is not a valid (quoted) uri
+     * @throws IllegalArgumentException when the specified string is not a valid (quoted) uri
      */
-    public SentBy(final String aValue) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(aValue)));
+    public SentBy(final String aValue) {
+        super(SENT_BY);
+        try {
+            this.address = Uris.create(Strings.unquote(aValue));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -93,7 +98,7 @@ public class SentBy extends Parameter implements Encodable {
         }
 
         @Override
-        public SentBy createParameter(final String value) throws URISyntaxException {
+        public SentBy createParameter(final String value) {
             return new SentBy(value);
         }
     }

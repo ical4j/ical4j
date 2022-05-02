@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -106,7 +104,7 @@ public class FbType extends Parameter implements Encodable {
         }
 
         @Override
-        public FbType createParameter(final String value) throws URISyntaxException {
+        public FbType createParameter(final String value) {
             switch (value) {
                 case VALUE_BUSY: return BUSY;
                 case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;

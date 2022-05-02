@@ -66,10 +66,15 @@ public class Schema extends Parameter {
 
     /**
      * @param aValue a string representation of a schema uri
-     * @throws URISyntaxException when the specified string is not a valid (quoted) uri
+     * @throws IllegalArgumentException when the specified string is not a valid (quoted) uri
      */
-    public Schema(final String aValue) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(aValue)));
+    public Schema(final String aValue) {
+        super(SCHEMA);
+        try {
+            this.uri = Uris.create(Strings.unquote(aValue));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -101,7 +106,7 @@ public class Schema extends Parameter {
             super(SCHEMA);
         }
 
-        public Schema createParameter(final String value) throws URISyntaxException {
+        public Schema createParameter(final String value) {
             return new Schema(value);
         }
     }

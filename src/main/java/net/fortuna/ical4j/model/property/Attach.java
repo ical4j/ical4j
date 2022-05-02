@@ -108,7 +108,7 @@ public class Attach extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified string is not a valid uri
      */
-    public Attach(final ParameterList aList, final String aValue) throws URISyntaxException {
+    public Attach(final ParameterList aList, final String aValue) {
         super(ATTACH, aList);
         setValue(aValue);
     }
@@ -185,8 +185,7 @@ public class Attach extends Property {
      * @throws URISyntaxException where the specified value is not a valid URI
      */
     @Override
-    public final void setValue(final String aValue) throws
-            URISyntaxException {
+    public final void setValue(final String aValue) {
 
         // determine if ATTACH is a URI or an embedded
         // binary..
@@ -207,7 +206,11 @@ public class Attach extends Property {
         }
         // assume URI..
         else {
-            uri = Uris.create(aValue);
+            try {
+                uri = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
     }
 
@@ -264,7 +267,7 @@ public class Attach extends Property {
         }
 
         @Override
-        public Attach createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
+        public Attach createProperty(final ParameterList parameters, final String value) {
             return new Attach(parameters, value);
         }
 

@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -77,8 +75,7 @@ public class Vvenue extends Parameter implements Encodable {
         }
 
         @Override
-        public Vvenue createParameter(final String value)
-                throws URISyntaxException {
+        public Vvenue createParameter(final String value) {
             return new Vvenue(value);
         }
     }

@@ -39,9 +39,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public class Proximity extends Property {
 
     private static final String VALUE_ARRIVE = "ARRIVE";
@@ -68,7 +65,7 @@ public class Proximity extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws IOException, URISyntaxException {
+    public void setValue(String aValue) {
         this.value = aValue;
     }
 

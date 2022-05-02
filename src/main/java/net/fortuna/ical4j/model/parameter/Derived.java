@@ -35,8 +35,6 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id: Rsvp.java,v 1.16 2010/03/06 12:57:25 fortuna Exp $ [18-Apr-2004]
  *
@@ -99,7 +97,7 @@ public class Derived extends Parameter {
           super(DERIVED);
         }
     
-        public Derived createParameter(final String value) throws URISyntaxException {
+        public Derived createParameter(final String value) {
             switch (value) {
                 case VALUE_TRUE: return TRUE;
                 case VALUE_FALSE: return FALSE;

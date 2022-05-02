@@ -57,10 +57,15 @@ public class DelegatedTo extends Parameter {
 
     /**
      * @param aValue a string representation of Delegatees
-     * @throws URISyntaxException when the specified string is not a valid list of cal-addresses
+     * @throws IllegalArgumentException when the specified string is not a valid list of cal-addresses
      */
-    public DelegatedTo(final String aValue) throws URISyntaxException {
-        this(new AddressList(Strings.unquote(aValue)).getAddresses());
+    public DelegatedTo(final String aValue) {
+        super(DELEGATED_TO);
+        try {
+            delegatees = new AddressList(Strings.unquote(aValue)).getAddresses();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -94,7 +99,7 @@ public class DelegatedTo extends Parameter {
         }
 
         @Override
-        public DelegatedTo createParameter(final String value) throws URISyntaxException {
+        public DelegatedTo createParameter(final String value) {
             return new DelegatedTo(value);
         }
     }

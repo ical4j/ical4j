@@ -39,7 +39,6 @@ import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Strings;
 
 import java.io.StringReader;
-import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -108,7 +107,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
                 }
 
                 @Override
-                public Parameter createParameter(final String value) throws URISyntaxException {
+                public Parameter createParameter(final String value) {
                     return new ScheduleStatus(value);
                 }
             });

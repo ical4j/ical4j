@@ -77,7 +77,7 @@ public class StyledDescription extends Property implements Encodable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public StyledDescription(final ParameterList aList, final String aValue) throws URISyntaxException {
+    public StyledDescription(final ParameterList aList, final String aValue) {
         super(STYLED_DESCRIPTION, aList);
         setValue(aValue);
     }
@@ -85,12 +85,16 @@ public class StyledDescription extends Property implements Encodable {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws URISyntaxException {
+    public final void setValue(final String aValue) {
         // value can be either text or a URI - no default
         if (Optional.of(Value.TEXT).equals(getParameter(Parameter.VALUE))) {
             this.value = aValue;
         } else if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
-            uriValue = Uris.create(aValue);
+            try {
+                uriValue = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
             this.value = aValue;
         } else {
             throw new IllegalArgumentException("No valid VALUE parameter specified");
@@ -121,8 +125,7 @@ public class StyledDescription extends Property implements Encodable {
             super(STYLED_DESCRIPTION);
         }
 
-        public StyledDescription createProperty(final ParameterList parameters, final String value)
-                throws URISyntaxException {
+        public StyledDescription createProperty(final ParameterList parameters, final String value) {
             return new StyledDescription(parameters, value);
         }
 

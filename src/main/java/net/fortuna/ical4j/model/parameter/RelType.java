@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -104,7 +102,7 @@ public class RelType extends Parameter implements Encodable {
         }
 
         @Override
-        public RelType createParameter(final String value) throws URISyntaxException {
+        public RelType createParameter(final String value) {
             switch (value) {
                 case VALUE_CHILD: return CHILD;
                 case VALUE_PARENT: return PARENT;

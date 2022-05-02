@@ -35,8 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$
  * <p/>
@@ -122,9 +120,7 @@ public class ResourceType extends Property implements Encodable {
             super(RESOURCE_TYPE);
         }
 
-        public ResourceType createProperty(final ParameterList parameters,
-                                           final String value)
-                throws URISyntaxException {
+        public ResourceType createProperty(final ParameterList parameters, final String value) {
             return new ResourceType(parameters, value);
         }
 

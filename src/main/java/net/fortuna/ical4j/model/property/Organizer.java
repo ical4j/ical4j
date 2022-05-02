@@ -43,7 +43,6 @@ import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -160,8 +159,7 @@ public class Organizer extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Organizer(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
+    public Organizer(final ParameterList aList, final String aValue) {
         super(ORGANIZER, aList);
         setValue(aValue);
     }
@@ -202,8 +200,12 @@ public class Organizer extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            calAddress = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -234,7 +236,7 @@ public class Organizer extends Property {
         }
 
         @Override
-        public Organizer createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
+        public Organizer createProperty(final ParameterList parameters, final String value) {
             return new Organizer(parameters, value);
         }
 

@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -125,7 +123,7 @@ public class PartStat extends Parameter implements Encodable {
         }
 
         @Override
-        public PartStat createParameter(final String value) throws URISyntaxException {
+        public PartStat createParameter(final String value) {
             switch (value) {
                 case VALUE_ACCEPTED: return ACCEPTED;
                 case VALUE_COMPLETED: return COMPLETED;

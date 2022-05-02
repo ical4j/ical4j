@@ -37,7 +37,6 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.net.URISyntaxException;
 import java.time.Instant;
 
 public class TzUntil extends DateProperty<Instant> {
@@ -64,8 +63,7 @@ public class TzUntil extends DateProperty<Instant> {
         }
 
         @Override
-        public TzUntil createProperty(final ParameterList parameters, final String value)
-                throws URISyntaxException {
+        public TzUntil createProperty(final ParameterList parameters, final String value) {
             return new TzUntil(parameters, value);
         }
 

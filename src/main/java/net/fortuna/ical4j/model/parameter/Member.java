@@ -57,10 +57,15 @@ public class Member extends Parameter {
 
     /**
      * @param aValue a string representation of a group or list membership
-     * @throws URISyntaxException when the specified string is not a valid list of (quoted) cal-addresses
+     * @throws IllegalArgumentException when the specified string is not a valid list of (quoted) cal-addresses
      */
-    public Member(final String aValue) throws URISyntaxException {
-        this(new AddressList(Strings.unquote(aValue)).getAddresses());
+    public Member(final String aValue) {
+        super(MEMBER);
+        try {
+            groups = new AddressList(Strings.unquote(aValue)).getAddresses();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -94,7 +99,7 @@ public class Member extends Parameter {
         }
 
         @Override
-        public Member createParameter(final String value) throws URISyntaxException {
+        public Member createParameter(final String value) {
             return new Member(value);
         }
     }

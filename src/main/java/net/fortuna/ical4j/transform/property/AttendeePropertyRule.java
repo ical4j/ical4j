@@ -4,7 +4,6 @@ import net.fortuna.ical4j.model.property.Attendee;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class AttendeePropertyRule implements Rfc5545PropertyRule<Attendee> {
 
@@ -33,11 +32,7 @@ public class AttendeePropertyRule implements Rfc5545PropertyRule<Attendee> {
     }
 
     private static void safelySetNewValue(Attendee element, String newPart) {
-        try {
-            element.setValue(MAILTO + ":" + newPart);
-        } catch (URISyntaxException e) {
-
-        }
+        element.setValue(MAILTO + ":" + newPart);
     }
 
     @Override

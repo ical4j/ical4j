@@ -77,9 +77,9 @@ public class OrganizerTest extends TestCase {
 
         try {
             new Organizer(value);
-            fail("Should throw URISyntaxException");
-        } catch (URISyntaxException use) {
-            LOG.info("Caught exception: " + use.getMessage());
+            fail("Should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            LOG.info("Caught exception: " + e.getMessage());
         }
 
         CompatibilityHints.setHintEnabled(

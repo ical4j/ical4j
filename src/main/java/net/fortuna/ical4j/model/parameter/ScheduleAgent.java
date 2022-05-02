@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * Defines the scheduling agent for CalDAV scheduling.
  *
@@ -90,7 +88,7 @@ public class ScheduleAgent extends Parameter implements Encodable {
         }
 
         @Override
-        public ScheduleAgent createParameter(final String value) throws URISyntaxException {
+        public ScheduleAgent createParameter(final String value) {
             switch (value) {
                 case VALUE_CLIENT: return CLIENT;
                 case VALUE_NONE: return NONE;

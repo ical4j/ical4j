@@ -73,9 +73,9 @@ public class AltRepTest extends TestCase {
         try {
             new AltRep("<mailto:../:...invalid...>");
             
-            fail("URISyntaxException not thrown!");
+            fail("IllegalArgumentException not thrown!");
         }
-        catch (URISyntaxException use) {
+        catch (IllegalArgumentException iae) {
             // test success.
         }
 

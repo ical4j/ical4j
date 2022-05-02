@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -104,7 +102,7 @@ public class Role extends Parameter implements Encodable {
         }
 
         @Override
-        public Role createParameter(final String value) throws URISyntaxException {
+        public Role createParameter(final String value) {
             switch (value) {
                 case VALUE_CHAIR: return CHAIR;
                 case VALUE_NON_PARTICIPANT: return NON_PARTICIPANT;

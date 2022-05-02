@@ -43,7 +43,6 @@ import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -81,7 +80,7 @@ public class Attendee extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Attendee(final ParameterList aList, final String aValue) throws URISyntaxException {
+    public Attendee(final ParameterList aList, final String aValue) {
         super(ATTENDEE, aList);
         setValue(aValue);
     }
@@ -107,8 +106,12 @@ public class Attendee extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            calAddress = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -154,7 +157,7 @@ public class Attendee extends Property {
         }
 
         @Override
-        public Attendee createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
+        public Attendee createProperty(final ParameterList parameters, final String value) {
             return new Attendee(parameters, value);
         }
 

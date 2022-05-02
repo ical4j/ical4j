@@ -36,8 +36,6 @@ import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -107,7 +105,7 @@ public class Rsvp extends Parameter implements Encodable {
         }
 
         @Override
-        public Rsvp createParameter(final String value) throws URISyntaxException {
+        public Rsvp createParameter(final String value) {
             switch (value) {
                 case VALUE_FALSE: return FALSE;
                 case VALUE_TRUE: return TRUE;

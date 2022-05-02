@@ -106,7 +106,7 @@ public class TzUrl extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public TzUrl(final ParameterList aList, final String aValue) throws URISyntaxException {
+    public TzUrl(final ParameterList aList, final String aValue) {
         super(TZURL, aList);
         setValue(aValue);
     }
@@ -139,8 +139,12 @@ public class TzUrl extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
-        uri = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            uri = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -176,7 +180,7 @@ public class TzUrl extends Property {
         }
 
         @Override
-        public TzUrl createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
+        public TzUrl createProperty(final ParameterList parameters, final String value) {
             return new TzUrl(parameters, value);
         }
 

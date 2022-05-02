@@ -40,9 +40,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public class TzIdAliasOf extends Property {
 
     private String value;
@@ -62,7 +59,7 @@ public class TzIdAliasOf extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws IOException, URISyntaxException {
+    public void setValue(String aValue) {
         this.value = aValue;
     }
 
@@ -84,8 +81,7 @@ public class TzIdAliasOf extends Property {
         }
 
         @Override
-        public TzIdAliasOf createProperty(final ParameterList parameters, final String value)
-                throws URISyntaxException {
+        public TzIdAliasOf createProperty(final ParameterList parameters, final String value) {
             return new TzIdAliasOf(parameters, value);
         }
 

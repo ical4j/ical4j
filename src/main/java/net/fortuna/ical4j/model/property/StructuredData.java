@@ -86,7 +86,7 @@ public class StructuredData extends Property implements Encodable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public StructuredData(final ParameterList aList, final String aValue) throws URISyntaxException {
+    public StructuredData(final ParameterList aList, final String aValue) {
         super(STRUCTURED_DATA, aList);
         setValue(aValue);
     }
@@ -94,7 +94,7 @@ public class StructuredData extends Property implements Encodable {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws URISyntaxException {
+    public final void setValue(final String aValue) {
         // value can be either binary or a URI or default to text
         if (getParameters(Parameter.ENCODING).isEmpty()) {
             // binary = Base64.decode(aValue);
@@ -110,7 +110,11 @@ public class StructuredData extends Property implements Encodable {
                 log.error("Error decoding binary data", de);
             }
         } else if (Value.URI.equals(getRequiredParameter(Parameter.VALUE))) {
-            uri = Uris.create(aValue);
+            try {
+                uri = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
             value = aValue;
             // assume text..
         } else {
@@ -145,8 +149,7 @@ public class StructuredData extends Property implements Encodable {
             super(STRUCTURED_DATA);
         }
 
-        public StructuredData createProperty(final ParameterList parameters, final String value)
-                throws URISyntaxException {
+        public StructuredData createProperty(final ParameterList parameters, final String value) {
             return new StructuredData(parameters, value);
         }
 
