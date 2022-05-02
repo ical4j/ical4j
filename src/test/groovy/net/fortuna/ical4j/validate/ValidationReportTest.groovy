@@ -95,6 +95,6 @@ class ValidationReportTest extends Specification {
         new ValidationReport(HTML).output(result, writer)
 
         then: 'output matches expected'
-        writer as String == '<p>DTSTART: WARNING - Invalid parameter</p>\n<p>VCALENDAR: ERROR - Missing mandatory properties</p>\n'
+        writer as String == '<ol><li>DTSTART: WARNING - Invalid parameter</li>\n<li>VCALENDAR: ERROR - Missing mandatory properties</li>\n</ol>'
     }
 }

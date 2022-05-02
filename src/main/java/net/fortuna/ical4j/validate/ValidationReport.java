@@ -70,9 +70,11 @@ public class ValidationReport {
     }
 
     private void outputHtml(ValidationResult result, Writer out) throws IOException {
+        out.write("<ol>");
         for (ValidationEntry entry : result.getEntries()) {
-            out.write(String.format("<p>%s: %s - %s</p>\n", entry.getContext(), entry.getSeverity(), entry.getMessage()));
+            out.write(String.format("<li>%s: %s - %s</li>\n", entry.getContext(), entry.getSeverity(), entry.getMessage()));
         }
+        out.write("</ol>");
     }
 
     private void outputText(ValidationResult result, Writer out) throws IOException {
