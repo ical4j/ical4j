@@ -611,7 +611,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      *
      * @return the copy of the property
      */
-    public final Property copy() throws URISyntaxException {
+    public final Property copy() {
         return newFactory().createProperty(parameters, getValue());
     }
 

@@ -68,9 +68,9 @@ public class Attendee extends Property {
 
     /**
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
+     * @throws IllegalArgumentException where the specified value string is not a valid uri
      */
-    public Attendee(final String aValue) throws URISyntaxException {
+    public Attendee(final String aValue) {
         super(ATTENDEE);
         setValue(aValue);
     }

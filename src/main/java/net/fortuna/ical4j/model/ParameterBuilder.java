@@ -3,7 +3,6 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.XParameter;
 import org.apache.commons.codec.DecoderException;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
     /**
      * @return a new parameter instance
      */
-    public Parameter build() throws URISyntaxException {
+    public Parameter build() {
         Parameter parameter = null;
         String decodedValue;
         try {

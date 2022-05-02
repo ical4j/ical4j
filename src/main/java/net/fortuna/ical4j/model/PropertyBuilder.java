@@ -5,9 +5,6 @@ import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.codec.DecoderException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +68,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return this;
     }
 
-    public Property build() throws IOException, URISyntaxException {
+    public Property build() {
         Property property = null;
         String decodedValue;
         try {

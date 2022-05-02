@@ -49,7 +49,6 @@ import javax.xml.xpath.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -284,12 +283,8 @@ public class HCalendarParser implements CalendarParser {
         // no PRODID, as the using application should set that itself
 
         handler.startProperty(Property.VERSION);
-        try {
-            handler.propertyValue(Version.VERSION_2_0.getValue());
-            handler.endProperty(Property.VERSION);
-        } catch (IOException | URISyntaxException e) {
-            LOG.warn("Caught exception", e);
-        }
+        handler.propertyValue(Version.VERSION_2_0.getValue());
+        handler.endProperty(Property.VERSION);
 
         Element method = findElement(XPATH_METHOD, d);
         if (method != null) {
@@ -417,11 +412,7 @@ public class HCalendarParser implements CalendarParser {
                 value = date.toString();
 
                 if (!(date instanceof DateTime))
-                    try {
-                        handler.parameter(Parameter.VALUE, Value.DATE.getValue());
-                    } catch (URISyntaxException e) {
-                        LOG.warn("Caught exception", e);
-                    }
+                    handler.parameter(Parameter.VALUE, Value.DATE.getValue());
             } catch (ParseException e) {
                 throw new ParserException("Malformed date value for element '" + className + "'", -1, e);
             }
@@ -430,24 +421,13 @@ public class HCalendarParser implements CalendarParser {
         if (isTextProperty(propName)) {
             String lang = element.getAttributeNS(XMLConstants.XML_NS_URI, "lang");
             if (!StringUtils.isBlank(lang))
-                try {
-                    handler.parameter(Parameter.LANGUAGE, lang);
-                } catch (URISyntaxException e) {
-                    LOG.warn("Caught exception", e);
-                }
+                handler.parameter(Parameter.LANGUAGE, lang);
         }
 
         // XXX: other parameters?
 
-        try {
-            handler.propertyValue(value);
-
-            handler.endProperty(propName);
-        } catch (URISyntaxException e) {
-            throw new ParserException("Malformed URI value for element '" + className + "'", -1, e);
-        } catch (IOException e) {
-            throw new CalendarException(e);
-        }
+        handler.propertyValue(value);
+        handler.endProperty(propName);
     }
 
     // "The basic format of hCalendar is to use iCalendar object/property

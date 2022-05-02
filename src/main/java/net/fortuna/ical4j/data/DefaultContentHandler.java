@@ -5,8 +5,6 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.Constants;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.zone.ZoneRulesProvider;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -143,7 +141,7 @@ public class DefaultContentHandler implements ContentHandler {
     }
 
     @Override
-    public void endProperty(String name) throws URISyntaxException, IOException {
+    public void endProperty(String name) {
         if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
             assertProperty(propertyBuilder);
             Property property = propertyBuilder.build();
@@ -159,7 +157,7 @@ public class DefaultContentHandler implements ContentHandler {
     }
 
     @Override
-    public void parameter(String name, String value) throws URISyntaxException {
+    public void parameter(String name, String value) {
         if (propertyBuilder != null) {
             Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
                     .name(name).value(value).build();
