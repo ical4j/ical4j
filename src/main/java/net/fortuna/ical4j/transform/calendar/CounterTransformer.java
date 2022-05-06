@@ -38,6 +38,9 @@ import net.fortuna.ical4j.util.UidGenerator;
 
 import java.util.Optional;
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
+
 /**
  * $Id$
  *
@@ -49,13 +52,13 @@ import java.util.Optional;
 public class CounterTransformer extends AbstractMethodTransformer {
 
     public CounterTransformer(UidGenerator uidGenerator) {
-        super(Method.COUNTER, uidGenerator, true, false);
+        super(COUNTER, uidGenerator, true, false);
     }
 
     @Override
     public Calendar transform(Calendar object) {
         Optional<Method> method = object.getProperty(Property.METHOD);
-        if (!method.isPresent() || !Method.REQUEST.equals(method.get())) {
+        if (!method.isPresent() || !REQUEST.equals(method.get())) {
             throw new IllegalArgumentException("Expecting REQUEST method in source");
         }
         return super.transform(object);

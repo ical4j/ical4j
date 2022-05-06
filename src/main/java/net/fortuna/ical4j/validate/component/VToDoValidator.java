@@ -9,6 +9,8 @@ import net.fortuna.ical4j.validate.*;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
+
 @Deprecated
 public class VToDoValidator extends ComponentValidator<VToDo> {
 
@@ -33,10 +35,10 @@ public class VToDoValidator extends ComponentValidator<VToDo> {
         ValidationResult result = ComponentValidator.VTODO.validate(target);
 
         final Optional<Status> status = target.getProperty(Property.STATUS);
-        if (status.isPresent() && !Status.VTODO_NEEDS_ACTION.equals(status.get())
-                && !Status.VTODO_COMPLETED.equals(status.get())
-                && !Status.VTODO_IN_PROCESS.equals(status.get())
-                && !Status.VTODO_CANCELLED.equals(status.get())) {
+        if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
+                && !VTODO_COMPLETED.equals(status.get())
+                && !VTODO_IN_PROCESS.equals(status.get())
+                && !VTODO_CANCELLED.equals(status.get())) {
 
             result.getEntries().add(new ValidationEntry("Status property [" + status + "] may not occur in VTODO",
                     ValidationEntry.Severity.ERROR, target.getName()));

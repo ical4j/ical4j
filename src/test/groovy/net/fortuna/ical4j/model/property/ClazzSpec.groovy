@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*
+
 class ClazzSpec extends Specification {
 
     Clazz.Factory factory = []
@@ -16,8 +18,8 @@ class ClazzSpec extends Specification {
 
         where:
         value   | constantInstance
-        'CONFIDENTIAL' | Clazz.CONFIDENTIAL
-        'PRIVATE' | Clazz.PRIVATE
-        'PUBLIC' | Clazz.PUBLIC
+        'CONFIDENTIAL' | CONFIDENTIAL
+        'PRIVATE' | PRIVATE
+        'PUBLIC' | PUBLIC
     }
 }

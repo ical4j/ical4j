@@ -31,9 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.*;
 
 /**
  * $Id$
@@ -63,70 +68,6 @@ public class BusyType extends Property {
     public static final String VALUE_BUSY = "BUSY";
     public static final String VALUE_BUSY_UNAVAILABLE = "BUSY-UNAVAILABLE";
     public static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
-
-	/**
-	 * Constant for busy time.
-	 */
-	public static final BusyType BUSY = new ImmutableBusyType(VALUE_BUSY);
-
-    /**
-     * Constant for busy unavailable time.
-     */
-    public static final BusyType BUSY_UNAVAILABLE = new ImmutableBusyType(VALUE_BUSY_UNAVAILABLE);
-
-    /**
-     * Constant for tentatively busy time.
-     */
-    public static final BusyType BUSY_TENTATIVE = new ImmutableBusyType(VALUE_BUSY_TENTATIVE);
-
-    /** An immutable instance of BusyType.
-     *
-     * @author Ben Fortuna
-     * @author Mike Douglass
-     */
-    private static final class ImmutableBusyType extends BusyType implements ImmutableContent {
-
-		private static final long serialVersionUID = -2454749569982470433L;
-
-		/**
-         * @param value
-         */
-        private ImmutableBusyType(final String value) {
-            super(value);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableBusyType add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableBusyType remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableBusyType removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableBusyType replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-    }
 
     private String value;
 

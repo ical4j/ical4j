@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model.property;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*;
+
 /**
  * Created: [19/11/2008]
  *
@@ -62,21 +64,21 @@ public class ClazzTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new ClazzTest(Clazz.CONFIDENTIAL, "CONFIDENTIAL"));
-        suite.addTest(new ClazzTest(Clazz.PRIVATE, "PRIVATE"));
-        suite.addTest(new ClazzTest(Clazz.PUBLIC, "PUBLIC"));
+        suite.addTest(new ClazzTest(CONFIDENTIAL, "CONFIDENTIAL"));
+        suite.addTest(new ClazzTest(PRIVATE, "PRIVATE"));
+        suite.addTest(new ClazzTest(PUBLIC, "PUBLIC"));
 
-        suite.addTest(new ClazzTest("testEquals", Clazz.CONFIDENTIAL));
-        suite.addTest(new ClazzTest("testEquals", Clazz.PRIVATE));
-        suite.addTest(new ClazzTest("testEquals", Clazz.PUBLIC));
+        suite.addTest(new ClazzTest("testEquals", CONFIDENTIAL));
+        suite.addTest(new ClazzTest("testEquals", PRIVATE));
+        suite.addTest(new ClazzTest("testEquals", PUBLIC));
 
-        suite.addTest(new ClazzTest("testValidation", Clazz.CONFIDENTIAL));
-        suite.addTest(new ClazzTest("testValidation", Clazz.PRIVATE));
-        suite.addTest(new ClazzTest("testValidation", Clazz.PUBLIC));
+        suite.addTest(new ClazzTest("testValidation", CONFIDENTIAL));
+        suite.addTest(new ClazzTest("testValidation", PRIVATE));
+        suite.addTest(new ClazzTest("testValidation", PUBLIC));
 
-        suite.addTest(new ClazzTest("testImmutable", Clazz.CONFIDENTIAL));
-        suite.addTest(new ClazzTest("testImmutable", Clazz.PRIVATE));
-        suite.addTest(new ClazzTest("testImmutable", Clazz.PUBLIC));
+        suite.addTest(new ClazzTest("testImmutable", CONFIDENTIAL));
+        suite.addTest(new ClazzTest("testImmutable", PRIVATE));
+        suite.addTest(new ClazzTest("testImmutable", PUBLIC));
         return suite;
     }
 }

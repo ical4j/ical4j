@@ -31,39 +31,53 @@
  *
  */
 
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.property.immutable;
 
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.ProdId;
-
-import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.property.Transp;
 
 /**
- * Provide fluent API support for {@link Calendar}
+ * @author Ben Fortuna An immutable instance of Transp.
  */
-public interface FluentCalendar {
+public final class ImmutableTransp extends Transp implements ImmutableProperty {
 
-    Calendar getFluentTarget();
+    /**
+     * Opaque.
+     */
+    public static final Transp OPAQUE = new ImmutableTransp(VALUE_OPAQUE);
+    /**
+     * Transparent.
+     */
+    public static final Transp TRANSPARENT = new ImmutableTransp(VALUE_TRANSPARENT);
+    private static final long serialVersionUID = -6595830107310111996L;
 
-    default FluentCalendar withDefaults() {
-        getFluentTarget().add(GREGORIAN);
-        getFluentTarget().add(VERSION_2_0);
-        return getFluentTarget();
+    public ImmutableTransp(final String value) {
+        super(value);
     }
 
-    default FluentCalendar withProdId(String prodId) {
-        getFluentTarget().add(new ProdId(prodId));
-        return getFluentTarget();
+    @Override
+    public <T extends Property> T add(Parameter parameter) {
+        return ImmutableProperty.super.add(parameter);
     }
 
-    default FluentCalendar withProperty(Property property) {
-        getFluentTarget().add(property);
-        return getFluentTarget();
+    @Override
+    public <T extends Property> T remove(Parameter parameter) {
+        return ImmutableProperty.super.remove(parameter);
     }
 
-    default FluentCalendar withComponent(CalendarComponent component) {
-        getFluentTarget().add(component);
-        return getFluentTarget();
+    @Override
+    public <T extends Property> T removeAll(String... parameterName) {
+        return ImmutableProperty.super.removeAll(parameterName);
+    }
+
+    @Override
+    public <T extends Property> T replace(Parameter parameter) {
+        return ImmutableProperty.super.replace(parameter);
+    }
+
+    @Override
+    public void setValue(final String aValue) {
+        ImmutableProperty.super.setValue(aValue);
     }
 }

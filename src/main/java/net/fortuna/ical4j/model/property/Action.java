@@ -31,9 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.*;
 
 /**
  * $Id$
@@ -52,81 +57,6 @@ public class Action extends Property {
     public static final String VALUE_DISPLAY = "DISPLAY";
     public static final String VALUE_EMAIL = "EMAIL";
     public static final String VALUE_PROCEDURE = "PROCEDURE";
-
-    /**
-     * Constant actions for playing an audible sound.
-     */
-    public static final Action AUDIO;
-
-    /**
-     * Constant action for displaying a visible notification.
-     */
-    public static final Action DISPLAY;
-
-    /**
-     * Constant action for sending an email.
-     */
-    public static final Action EMAIL;
-
-    /**
-     * Constant action for a procedure.
-     */
-    public static final Action PROCEDURE;
-
-    static {
-        AUDIO = new ImmutableAction(VALUE_AUDIO);
-        DISPLAY = new ImmutableAction(VALUE_DISPLAY);
-        EMAIL = new ImmutableAction(VALUE_EMAIL);
-        PROCEDURE = new ImmutableAction(VALUE_PROCEDURE);
-    }
-
-    /**
-     * @author Ben Fortuna An immutable instance of Action.
-     */
-    private static final class ImmutableAction extends Action implements ImmutableContent {
-
-        private static final long serialVersionUID = -2752235951243969905L;
-
-        /**
-         * @param value
-         */
-        private ImmutableAction(final String value) {
-            super(value);
-        }
-
-        @Override
-        public ImmutableAction add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableAction remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableAction removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableAction replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-    }
 
     private String value;
 

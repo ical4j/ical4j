@@ -61,6 +61,8 @@ import java.util.List;
 import java.util.Set;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
 import static org.junit.Assert.assertNotEquals;
 
 /**
@@ -673,11 +675,11 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         for (URL testFile : testFiles) {
             log.info("Sample [" + testFile + "]");
             net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFile);
-            if (Method.PUBLISH.equals(calendar.getRequiredProperty(Property.METHOD))) {
+            if (PUBLISH.equals(calendar.getRequiredProperty(Property.METHOD))) {
                 calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
                     suite.addTest(new VEventTest<>("testPublishValidation", (VEvent) calendarComponent));
                 });
-            } else if (Method.REQUEST.equals(calendar.getRequiredProperty(Property.METHOD))) {
+            } else if (REQUEST.equals(calendar.getRequiredProperty(Property.METHOD))) {
                 calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
                     suite.addTest(new VEventTest<>("testRequestValidation", (VEvent) calendarComponent));
                 });

@@ -31,11 +31,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*;
 
 /**
  * $Id$
@@ -129,72 +134,6 @@ public class Priority extends Property {
     public static final int VALUE_HIGH = 1;
     public static final int VALUE_MEDIUM = 5;
     public static final int VALUE_LOW = 9;
-
-    /**
-     * Undefined priority.
-     */
-    public static final Priority UNDEFINED = new ImmutablePriority(VALUE_UNDEFINED);
-
-    /**
-     * High priority.
-     */
-    public static final Priority HIGH = new ImmutablePriority(VALUE_HIGH);
-
-    /**
-     * Medium priority.
-     */
-    public static final Priority MEDIUM = new ImmutablePriority(VALUE_MEDIUM);
-
-    /**
-     * Low priority.
-     */
-    public static final Priority LOW = new ImmutablePriority(VALUE_LOW);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Priority.
-     */
-    private static final class ImmutablePriority extends Priority implements ImmutableContent {
-
-        private static final long serialVersionUID = 5884973714694108418L;
-
-        private ImmutablePriority(final int level) {
-            super(level);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throwException();
-        }
-
-        @Override
-        public void setLevel(final int level) {
-            throwException();
-        }
-
-        @Override
-        public ImmutablePriority add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutablePriority remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutablePriority removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutablePriority replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-    }
 
     private int level;
 

@@ -33,10 +33,11 @@ package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.transform.component.OrganizerUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH;
 
 /**
  * $Id$
@@ -51,7 +52,7 @@ public class PublishTransformer extends AbstractMethodTransformer {
     private final OrganizerUpdate organizerUpdate;
 
     public PublishTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.PUBLISH, uidGenerator, false, incrementSequence);
+        super(PUBLISH, uidGenerator, false, incrementSequence);
         this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 

@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN
+
 class CalScaleSpec extends Specification {
 
     CalScale.Factory factory = []
@@ -16,6 +18,6 @@ class CalScaleSpec extends Specification {
 
         where:
         value   | constantInstance
-        'GREGORIAN' | CalScale.GREGORIAN
+        'GREGORIAN' | GREGORIAN
     }
 }

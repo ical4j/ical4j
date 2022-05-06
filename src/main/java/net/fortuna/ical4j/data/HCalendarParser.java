@@ -33,7 +33,6 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +52,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
  * A {@link CalendarParser} that parses XHTML documents that include calendar data marked up with the hCalendar
@@ -283,7 +284,7 @@ public class HCalendarParser implements CalendarParser {
         // no PRODID, as the using application should set that itself
 
         handler.startProperty(Property.VERSION);
-        handler.propertyValue(Version.VERSION_2_0.getValue());
+        handler.propertyValue(VERSION_2_0.getValue());
         handler.endProperty(Property.VERSION);
 
         Element method = findElement(XPATH_METHOD, d);

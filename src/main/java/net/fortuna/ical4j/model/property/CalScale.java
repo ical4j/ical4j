@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
 
 /**
  * $Id$
@@ -50,60 +55,6 @@ public class CalScale extends Property {
     private static final long serialVersionUID = 7446184786984981423L;
 
     public static final String VALUE_GREGORIAN = "GREGORIAN";
-
-    /**
-     * Constant for Gregorian calendar representation.
-     */
-    public static final CalScale GREGORIAN = new ImmutableCalScale(VALUE_GREGORIAN);
-
-    /**
-     * @author Ben Fortuna An immutable instance of CalScale.
-     */
-    private static final class ImmutableCalScale extends CalScale implements ImmutableContent {
-
-        private static final long serialVersionUID = 1750949550694413878L;
-
-        /**
-         * @param value
-         */
-        private ImmutableCalScale(final String value) {
-            super(value);
-        }
-
-        @Override
-        public ImmutableCalScale add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableCalScale remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableCalScale removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableCalScale replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-    }
 
     private String value;
 

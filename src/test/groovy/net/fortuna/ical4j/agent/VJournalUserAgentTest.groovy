@@ -2,12 +2,13 @@ package net.fortuna.ical4j.agent
 
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
-import net.fortuna.ical4j.model.property.Method
 import net.fortuna.ical4j.model.property.Organizer
 import net.fortuna.ical4j.model.property.ProdId
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*
 
 class VJournalUserAgentTest extends Specification {
 
@@ -41,7 +42,7 @@ class VJournalUserAgentTest extends Specification {
         def calendar = userAgent.publish(vjournal, vjournal2)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getRequiredProperty(Property.METHOD) == Method.PUBLISH
+        calendar.getRequiredProperty(Property.METHOD) == PUBLISH
 
         and: 'the sequence property is present on all components'
         calendar.getComponents().each { it.getProperty(Property.SEQUENCE).isPresent() }
@@ -75,7 +76,7 @@ class VJournalUserAgentTest extends Specification {
     def "Delegate"() {
         given: 'a request'
         def request = builder.calendar {
-            method(Method.REQUEST)
+            method(REQUEST)
             vjournal {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
@@ -94,7 +95,7 @@ class VJournalUserAgentTest extends Specification {
     def "Reply"() {
         given: 'a journal request'
         def request = builder.calendar {
-            method(Method.REQUEST)
+            method(REQUEST)
             vjournal {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
@@ -124,7 +125,7 @@ class VJournalUserAgentTest extends Specification {
         def calendar = userAgent.add(vjournal)
 
         then: 'the calendar object contains method = ADD'
-        calendar.getRequiredProperty(Property.METHOD) == Method.ADD
+        calendar.getRequiredProperty(Property.METHOD) == ADD
     }
 
     def "Cancel"() {
@@ -140,7 +141,7 @@ class VJournalUserAgentTest extends Specification {
         def calendar = userAgent.cancel(vjournal)
 
         then: 'the calendar object contains method = CANCEL'
-        calendar.getRequiredProperty(Property.METHOD) == Method.CANCEL
+        calendar.getRequiredProperty(Property.METHOD) == CANCEL
     }
 
     def "Refresh"() {
@@ -162,7 +163,7 @@ class VJournalUserAgentTest extends Specification {
     def "Counter"() {
         given: 'a journal request'
         def request = builder.calendar {
-            method(Method.REQUEST)
+            method(REQUEST)
             vjournal {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
@@ -181,7 +182,7 @@ class VJournalUserAgentTest extends Specification {
     def "DeclineCounter"() {
         given: 'a journal counter'
         def counter = builder.calendar {
-            method(Method.COUNTER)
+            method(COUNTER)
             vjournal {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }

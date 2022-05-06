@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model.property;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.*;
+
 /**
  * Created: [19/11/2008]
  *
@@ -62,25 +64,25 @@ public class ActionTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new ActionTest(Action.AUDIO, "AUDIO"));
-        suite.addTest(new ActionTest(Action.DISPLAY, "DISPLAY"));
-        suite.addTest(new ActionTest(Action.EMAIL, "EMAIL"));
-        suite.addTest(new ActionTest(Action.PROCEDURE, "PROCEDURE"));
+        suite.addTest(new ActionTest(AUDIO, "AUDIO"));
+        suite.addTest(new ActionTest(DISPLAY, "DISPLAY"));
+        suite.addTest(new ActionTest(EMAIL, "EMAIL"));
+        suite.addTest(new ActionTest(PROCEDURE, "PROCEDURE"));
 
-        suite.addTest(new ActionTest("testEquals", Action.AUDIO));
-        suite.addTest(new ActionTest("testEquals", Action.DISPLAY));
-        suite.addTest(new ActionTest("testEquals", Action.EMAIL));
-        suite.addTest(new ActionTest("testEquals", Action.PROCEDURE));
+        suite.addTest(new ActionTest("testEquals", AUDIO));
+        suite.addTest(new ActionTest("testEquals", DISPLAY));
+        suite.addTest(new ActionTest("testEquals", EMAIL));
+        suite.addTest(new ActionTest("testEquals", PROCEDURE));
 
-        suite.addTest(new ActionTest("testValidation", Action.AUDIO));
-        suite.addTest(new ActionTest("testValidation", Action.DISPLAY));
-        suite.addTest(new ActionTest("testValidation", Action.EMAIL));
-        suite.addTest(new ActionTest("testValidation", Action.PROCEDURE));
+        suite.addTest(new ActionTest("testValidation", AUDIO));
+        suite.addTest(new ActionTest("testValidation", DISPLAY));
+        suite.addTest(new ActionTest("testValidation", EMAIL));
+        suite.addTest(new ActionTest("testValidation", PROCEDURE));
 
-        suite.addTest(new ActionTest("testImmutable", Action.AUDIO));
-        suite.addTest(new ActionTest("testImmutable", Action.DISPLAY));
-        suite.addTest(new ActionTest("testImmutable", Action.EMAIL));
-        suite.addTest(new ActionTest("testImmutable", Action.PROCEDURE));
+        suite.addTest(new ActionTest("testImmutable", AUDIO));
+        suite.addTest(new ActionTest("testImmutable", DISPLAY));
+        suite.addTest(new ActionTest("testImmutable", EMAIL));
+        suite.addTest(new ActionTest("testImmutable", PROCEDURE));
         return suite;
     }
 }

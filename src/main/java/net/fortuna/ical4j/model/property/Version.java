@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
  * $Id$
@@ -53,65 +58,6 @@ public class Version extends Property {
     private static final long serialVersionUID = 8872508067309087704L;
 
     public static final String VALUE_2_0 = "2.0";
-
-    /**
-     * iCalendar version 2.0.
-     */
-    public static final Version VERSION_2_0 = new ImmutableVersion(VALUE_2_0);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Version.
-     */
-    private static final class ImmutableVersion extends Version implements ImmutableContent {
-
-        private static final long serialVersionUID = -5040679357859594835L;
-
-        private ImmutableVersion(final String value) {
-            super(new ParameterList(), value);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public void setMaxVersion(final String maxVersion) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public void setMinVersion(final String minVersion) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableVersion add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableVersion remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableVersion removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableVersion replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-    }
 
     private String minVersion;
 

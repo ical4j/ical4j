@@ -3,6 +3,9 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.BUSY_TENTATIVE
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.BUSY_UNAVAILABLE
+
 class BusyTypeSpec extends Specification {
 
     BusyType.Factory factory = []
@@ -16,7 +19,7 @@ class BusyTypeSpec extends Specification {
 
         where:
         value   | constantInstance
-        'BUSY-UNAVAILABLE' | BusyType.BUSY_UNAVAILABLE
-        'BUSY-TENTATIVE' | BusyType.BUSY_TENTATIVE
+        'BUSY-UNAVAILABLE' | BUSY_UNAVAILABLE
+        'BUSY-TENTATIVE' | BUSY_TENTATIVE
     }
 }

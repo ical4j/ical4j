@@ -32,14 +32,16 @@
 package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.Clazz;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Priority;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.model.property.Transp;
-import net.fortuna.ical4j.model.property.Version;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
  * $Id$
@@ -68,104 +70,104 @@ public final class Constants {
      */
     public static Property forProperty(final Property property) {
         Property retVal = property;
-        if (Action.AUDIO.equals(property)) {
-            retVal = Action.AUDIO;
+        if (AUDIO.equals(property)) {
+            retVal = AUDIO;
         }
-        else if (Action.DISPLAY.equals(property)) {
-            retVal = Action.DISPLAY;
+        else if (DISPLAY.equals(property)) {
+            retVal = DISPLAY;
         }
-        else if (Action.EMAIL.equals(property)) {
-            retVal = Action.EMAIL;
+        else if (EMAIL.equals(property)) {
+            retVal = EMAIL;
         }
-        else if (Action.PROCEDURE.equals(property)) {
-            retVal = Action.PROCEDURE;
+        else if (PROCEDURE.equals(property)) {
+            retVal = PROCEDURE;
         }
-        else if (CalScale.GREGORIAN.equals(property)) {
-            retVal = CalScale.GREGORIAN;
+        else if (GREGORIAN.equals(property)) {
+            retVal = GREGORIAN;
         }
-        else if (Clazz.CONFIDENTIAL.equals(property)) {
-            retVal = Clazz.CONFIDENTIAL;
+        else if (CONFIDENTIAL.equals(property)) {
+            retVal = CONFIDENTIAL;
         }
-        else if (Clazz.PRIVATE.equals(property)) {
-            retVal = Clazz.PRIVATE;
+        else if (PRIVATE.equals(property)) {
+            retVal = PRIVATE;
         }
-        else if (Clazz.PUBLIC.equals(property)) {
-            retVal = Clazz.PUBLIC;
+        else if (PUBLIC.equals(property)) {
+            retVal = PUBLIC;
         }
-        else if (Method.ADD.equals(property)) {
-            retVal = Method.ADD;
+        else if (ADD.equals(property)) {
+            retVal = ADD;
         }
-        else if (Method.CANCEL.equals(property)) {
-            retVal = Method.CANCEL;
+        else if (CANCEL.equals(property)) {
+            retVal = CANCEL;
         }
-        else if (Method.COUNTER.equals(property)) {
-            retVal = Method.COUNTER;
+        else if (COUNTER.equals(property)) {
+            retVal = COUNTER;
         }
-        else if (Method.DECLINE_COUNTER.equals(property)) {
-            retVal = Method.DECLINE_COUNTER;
+        else if (DECLINE_COUNTER.equals(property)) {
+            retVal = DECLINE_COUNTER;
         }
-        else if (Method.PUBLISH.equals(property)) {
-            retVal = Method.PUBLISH;
+        else if (PUBLISH.equals(property)) {
+            retVal = PUBLISH;
         }
-        else if (Method.REFRESH.equals(property)) {
-            retVal = Method.REFRESH;
+        else if (REFRESH.equals(property)) {
+            retVal = REFRESH;
         }
-        else if (Method.REPLY.equals(property)) {
-            retVal = Method.REPLY;
+        else if (REPLY.equals(property)) {
+            retVal = REPLY;
         }
-        else if (Method.REQUEST.equals(property)) {
-            retVal = Method.REQUEST;
+        else if (REQUEST.equals(property)) {
+            retVal = REQUEST;
         }
-        else if (Priority.HIGH.equals(property)) {
-            retVal = Priority.HIGH;
+        else if (HIGH.equals(property)) {
+            retVal = HIGH;
         }
-        else if (Priority.LOW.equals(property)) {
-            retVal = Priority.LOW;
+        else if (LOW.equals(property)) {
+            retVal = LOW;
         }
-        else if (Priority.MEDIUM.equals(property)) {
-            retVal = Priority.MEDIUM;
+        else if (MEDIUM.equals(property)) {
+            retVal = MEDIUM;
         }
-        else if (Priority.UNDEFINED.equals(property)) {
-            retVal = Priority.UNDEFINED;
+        else if (UNDEFINED.equals(property)) {
+            retVal = UNDEFINED;
         }
-        else if (Status.VEVENT_CANCELLED.equals(property)) {
-            retVal = Status.VEVENT_CANCELLED;
+        else if (VEVENT_CANCELLED.equals(property)) {
+            retVal = VEVENT_CANCELLED;
         }
-        else if (Status.VEVENT_CONFIRMED.equals(property)) {
-            retVal = Status.VEVENT_CONFIRMED;
+        else if (VEVENT_CONFIRMED.equals(property)) {
+            retVal = VEVENT_CONFIRMED;
         }
-        else if (Status.VEVENT_TENTATIVE.equals(property)) {
-            retVal = Status.VEVENT_TENTATIVE;
+        else if (VEVENT_TENTATIVE.equals(property)) {
+            retVal = VEVENT_TENTATIVE;
         }
-        else if (Status.VJOURNAL_CANCELLED.equals(property)) {
-            retVal = Status.VJOURNAL_CANCELLED;
+        else if (VJOURNAL_CANCELLED.equals(property)) {
+            retVal = VJOURNAL_CANCELLED;
         }
-        else if (Status.VJOURNAL_DRAFT.equals(property)) {
-            retVal = Status.VJOURNAL_DRAFT;
+        else if (VJOURNAL_DRAFT.equals(property)) {
+            retVal = VJOURNAL_DRAFT;
         }
-        else if (Status.VJOURNAL_FINAL.equals(property)) {
-            retVal = Status.VJOURNAL_FINAL;
+        else if (VJOURNAL_FINAL.equals(property)) {
+            retVal = VJOURNAL_FINAL;
         }
-        else if (Status.VTODO_CANCELLED.equals(property)) {
-            retVal = Status.VTODO_CANCELLED;
+        else if (VTODO_CANCELLED.equals(property)) {
+            retVal = VTODO_CANCELLED;
         }
-        else if (Status.VTODO_COMPLETED.equals(property)) {
-            retVal = Status.VTODO_COMPLETED;
+        else if (VTODO_COMPLETED.equals(property)) {
+            retVal = VTODO_COMPLETED;
         }
-        else if (Status.VTODO_IN_PROCESS.equals(property)) {
-            retVal = Status.VTODO_IN_PROCESS;
+        else if (VTODO_IN_PROCESS.equals(property)) {
+            retVal = VTODO_IN_PROCESS;
         }
-        else if (Status.VTODO_NEEDS_ACTION.equals(property)) {
-            retVal = Status.VTODO_NEEDS_ACTION;
+        else if (VTODO_NEEDS_ACTION.equals(property)) {
+            retVal = VTODO_NEEDS_ACTION;
         }
-        else if (Transp.OPAQUE.equals(property)) {
-            retVal = Transp.OPAQUE;
+        else if (OPAQUE.equals(property)) {
+            retVal = OPAQUE;
         }
-        else if (Transp.TRANSPARENT.equals(property)) {
-            retVal = Transp.TRANSPARENT;
+        else if (TRANSPARENT.equals(property)) {
+            retVal = TRANSPARENT;
         }
-        else if (Version.VERSION_2_0.equals(property)) {
-            retVal = Version.VERSION_2_0;
+        else if (VERSION_2_0.equals(property)) {
+            retVal = VERSION_2_0;
         }
         return retVal;
     }

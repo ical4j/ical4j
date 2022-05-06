@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*
+
 class MethodSpec extends Specification {
 
     Method.Factory factory = []
@@ -16,13 +18,13 @@ class MethodSpec extends Specification {
 
         where:
         value   | constantInstance
-        'ADD' | Method.ADD
-        'CANCEL' | Method.CANCEL
-        'COUNTER' | Method.COUNTER
-        'DECLINECOUNTER' | Method.DECLINE_COUNTER
-        'PUBLISH' | Method.PUBLISH
-        'REFRESH' | Method.REFRESH
-        'REPLY' | Method.REPLY
-        'REQUEST' | Method.REQUEST
+        'ADD' | ADD
+        'CANCEL' | CANCEL
+        'COUNTER' | COUNTER
+        'DECLINECOUNTER' | DECLINE_COUNTER
+        'PUBLISH' | PUBLISH
+        'REFRESH' | REFRESH
+        'REPLY' | REPLY
+        'REQUEST' | REQUEST
     }
 }

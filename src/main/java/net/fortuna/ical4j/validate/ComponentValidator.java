@@ -38,7 +38,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.Status;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -47,6 +46,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
@@ -99,8 +99,8 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
             new ValidationRule<>(OneExclusive, DTEND, DURATION),
             new ValidationRule<>(None, (Predicate<VJournal> & Serializable) a -> a.getProperties(STATUS).stream()
-                    .anyMatch(p -> !(Status.VJOURNAL_DRAFT.equals(p) || Status.VJOURNAL_FINAL.equals(p)
-                            || Status.VJOURNAL_CANCELLED.equals(p))),
+                    .anyMatch(p -> !(VJOURNAL_DRAFT.equals(p) || VJOURNAL_FINAL.equals(p)
+                            || VJOURNAL_CANCELLED.equals(p))),
                     "STATUS value not applicable for VJOURNAL", STATUS));
 
     public static final ComponentValidator<VLocation> VLOCATION = new ComponentValidator<>(Component.VLOCATION,

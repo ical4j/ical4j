@@ -1,9 +1,11 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.property.Version
-import spock.lang.Ignore
 import net.fortuna.ical4j.util.CompatibilityHints
+import spock.lang.Ignore
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0
 
 class PropertyBuilderTest extends Specification {
 
@@ -18,7 +20,7 @@ class PropertyBuilderTest extends Specification {
         Property p = builder.build()
 
         then: 'resulting property is initialised accordingly'
-        p == Version.VERSION_2_0
+        p == VERSION_2_0
     }
 
     @Ignore

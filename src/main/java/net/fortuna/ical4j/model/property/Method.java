@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
 /**
  * $Id$
@@ -57,95 +62,6 @@ public class Method extends Property {
     public static final String VALUE_REFRESH = "REFRESH";
     public static final String VALUE_COUNTER = "COUNTER";
     public static final String VALUE_DECLINECOUNTER = "DECLINECOUNTER";
-
-    /**
-     * Used to publish a calendar entry to one or more Calendar Users. There is no interactivity between the publisher
-     * and any other calendar user. An example might include a baseball team publishing its schedule to the public. [RFC
-     * 2446]
-     */
-    public static final Method PUBLISH = new ImmutableMethod(VALUE_PUBLISH);
-
-    /**
-     * Used to schedule a calendar entry with other Calendar Users. Requests are interactive in that they require the
-     * receiver to respond using the Reply methods. Meeting Requests, Busy Time requests and the assignment of VTODOs to
-     * other Calendar Users are all examples. Requests are also used by the "Organizer" to update the status of a
-     * calendar entry. [RFC 2446]
-     */
-    public static final Method REQUEST = new ImmutableMethod(VALUE_REQUEST);
-
-    /**
-     * A Reply is used in response to a Request to convey "Attendee" status to the "Organizer". Replies are commonly
-     * used to respond to meeting and task requests. [RFC2446]
-     */
-    public static final Method REPLY = new ImmutableMethod(VALUE_REPLY);
-
-    /**
-     * Add one or more instances to an existing VEVENT, VTODO, or VJOURNAL. [RFC 2446]
-     */
-    public static final Method ADD = new ImmutableMethod(VALUE_ADD);
-
-    /**
-     * Cancel one or more instances of an existing VEVENT, VTODO, or VJOURNAL. [RFC 2446]
-     */
-    public static final Method CANCEL = new ImmutableMethod(VALUE_CANCEL);
-
-    /**
-     * The Refresh method is used by an "Attendee" to request the latest version of a calendar entry. [RFC 2446]
-     */
-    public static final Method REFRESH = new ImmutableMethod(VALUE_REFRESH);
-
-    /**
-     * The Counter method is used by an "Attendee" to negotiate a change in the calendar entry. Examples include the
-     * request to change a proposed Event time or change the due date for a VTODO. [RFC 2446]
-     */
-    public static final Method COUNTER = new ImmutableMethod(VALUE_COUNTER);
-
-    /**
-     * Used by the "Organizer" to decline the proposed counter-proprosal. [RFC 2446]
-     */
-    public static final Method DECLINE_COUNTER = new ImmutableMethod(
-            VALUE_DECLINECOUNTER);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Method.
-     */
-    private static final class ImmutableMethod extends Method implements ImmutableContent {
-
-        private static final long serialVersionUID = 5332607957381969713L;
-
-        private ImmutableMethod(final String value) {
-            super(value);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableMethod add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableMethod remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableMethod removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableMethod replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-    }
 
     private String value;
 

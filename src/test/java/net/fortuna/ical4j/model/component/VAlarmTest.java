@@ -42,6 +42,9 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.Instant;
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.DISPLAY;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.EMAIL;
+
 /**
  * $Id$
  *
@@ -74,12 +77,12 @@ public class VAlarmTest extends ComponentTest {
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
 
         alarm = alarm.copy();
-        alarm.add(Action.DISPLAY).add(new Description("Testing display"));
+        alarm.add(DISPLAY).add(new Description("Testing display"));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
         alarm = new VAlarm(java.time.Duration.ofHours(2))
-            .withProperty(Action.DISPLAY)
+            .withProperty(DISPLAY)
             .withProperty(new Description("Testing display")).getFluentTarget();
         
         Duration duration = new Duration(java.time.Duration.ofMinutes(2));
@@ -96,7 +99,7 @@ public class VAlarmTest extends ComponentTest {
         
         //testValidationEmail..
         alarm = new VAlarm(java.time.Duration.ofDays(-2))
-                .withProperty(Action.EMAIL)
+                .withProperty(EMAIL)
                 .withProperty(new Attendee("mailto:john_doe@example.com"))
                 .withProperty(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
                 .withProperty(new Description("A draft agenda needs to be sent out to the attendees "

@@ -31,10 +31,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
 
 /**
  * $Id$
@@ -97,59 +103,6 @@ public class Transp extends Property {
 
     public static final String VALUE_OPAQUE = "OPAQUE";
     public static final String VALUE_TRANSPARENT = "TRANSPARENT";
-
-    /**
-     * Opaque.
-     */
-    public static final Transp OPAQUE = new ImmutableTransp(VALUE_OPAQUE);
-
-    /**
-     * Transparent.
-     */
-    public static final Transp TRANSPARENT = new ImmutableTransp(VALUE_TRANSPARENT);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Transp.
-     */
-    private static final class ImmutableTransp extends Transp implements ImmutableContent {
-
-        private static final long serialVersionUID = -6595830107310111996L;
-
-        private ImmutableTransp(final String value) {
-            super(value);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableTransp add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableTransp remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableTransp removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableTransp replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-    }
 
     private String value;
 

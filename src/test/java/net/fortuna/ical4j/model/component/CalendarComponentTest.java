@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
@@ -42,6 +41,9 @@ import org.slf4j.LoggerFactory;
 
 import java.time.temporal.Temporal;
 import java.util.Set;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REPLY;
 
 /**
  * @author Ben
@@ -83,7 +85,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      * Test component iTIP METHOD validation.
      */
     public final void testPublishValidation() throws ValidationException {
-        component.validate(Method.PUBLISH);
+        component.validate(PUBLISH);
     }
 
     /**
@@ -91,7 +93,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      */
     public final void testPublishRelaxedValidation() throws ValidationException {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        component.validate(Method.PUBLISH);
+        component.validate(PUBLISH);
     }
 
     /**
@@ -99,7 +101,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      */
     public final void testPublishValidationException() {
         try {
-            ValidationResult result = component.validate(Method.PUBLISH);
+            ValidationResult result = component.validate(PUBLISH);
 //            fail("ValidationException should be thrown!");
             assertTrue(result.hasErrors());
         } catch (ValidationException ve) {
@@ -111,7 +113,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      * Test component iTIP METHOD validation.
      */
     public final void testRequestValidation() throws ValidationException {
-        component.validate(Method.PUBLISH);
+        component.validate(PUBLISH);
     }
 
     /**
@@ -119,7 +121,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      */
     public final void testRequestRelaxedValidation() throws ValidationException {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        component.validate(Method.PUBLISH);
+        component.validate(PUBLISH);
     }
 
     /**
@@ -127,7 +129,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      */
     public final void testRequestValidationException() {
         try {
-            component.validate(Method.PUBLISH);
+            component.validate(PUBLISH);
             fail("ValidationException should be thrown!");
         } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
@@ -138,7 +140,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      * Test component iTIP METHOD validation.
      */
     public final void testReplyValidation() throws ValidationException {
-        component.validate(Method.REPLY);
+        component.validate(REPLY);
     }
 
     /**
@@ -146,7 +148,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      */
     public final void testReplyRelaxedValidation() throws ValidationException {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        component.validate(Method.REPLY);
+        component.validate(REPLY);
     }
 
     /**
@@ -154,7 +156,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      */
     public final void testReplyValidationException() {
         try {
-            ValidationResult result = component.validate(Method.REPLY);
+            ValidationResult result = component.validate(REPLY);
 //            fail("ValidationException should be thrown!");
             assertTrue(result.hasErrors());
         } catch (ValidationException ve) {

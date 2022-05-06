@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 
 /**
  * $Id$
@@ -126,100 +131,10 @@ public class Status extends Property {
     public static final String VALUE_FINAL = "FINAL";
 
     // Status values for a "VEVENT"
-    /**
-     * Tentative VEVENT status.
-     */
-    public static final Status VEVENT_TENTATIVE = new ImmutableStatus(VALUE_TENTATIVE);
-
-    /**
-     * Confirmed VEVENT status.
-     */
-    public static final Status VEVENT_CONFIRMED = new ImmutableStatus(VALUE_CONFIRMED);
-
-    /**
-     * Cancelled VEVENT status.
-     */
-    public static final Status VEVENT_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
 
     // Status values for "VTODO"
-    /**
-     * Tentative VTODO status.
-     */
-    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(VALUE_NEEDS_ACTION);
-
-    /**
-     * Completed VTODO status.
-     */
-    public static final Status VTODO_COMPLETED = new ImmutableStatus(VALUE_COMPLETED);
-
-    /**
-     * In-process VTODO status.
-     */
-    public static final Status VTODO_IN_PROCESS = new ImmutableStatus(VALUE_IN_PROCESS);
-
-    /**
-     * Cancelled VTODO status.
-     */
-    public static final Status VTODO_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
 
     // Status values for "VJOURNAL"
-    /**
-     * Draft VJOURNAL status.
-     */
-    public static final Status VJOURNAL_DRAFT = new ImmutableStatus(VALUE_DRAFT);
-
-    /**
-     * Final VJOURNAL status.
-     */
-    public static final Status VJOURNAL_FINAL = new ImmutableStatus(VALUE_FINAL);
-
-    /**
-     * Cancelled VJOURNAL status.
-     */
-    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Status.
-     */
-    private static final class ImmutableStatus extends Status implements ImmutableContent {
-
-        private static final long serialVersionUID = 7771868877237685612L;
-
-        private ImmutableStatus(final String value) {
-            super(value);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableStatus add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableStatus remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableStatus removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableStatus replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-    }
 
     private String value;
 

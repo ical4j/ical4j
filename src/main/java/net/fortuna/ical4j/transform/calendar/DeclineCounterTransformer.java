@@ -42,6 +42,9 @@ import net.fortuna.ical4j.util.UidGenerator;
 
 import java.util.Optional;
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.DECLINE_COUNTER;
+
 /**
  * $Id$
  *
@@ -57,7 +60,7 @@ public class DeclineCounterTransformer extends AbstractMethodTransformer {
     private final ComponentDeclineCounterTransformer componentMethodTransformer;
 
     public DeclineCounterTransformer(Organizer organizer, UidGenerator uidGenerator) {
-        super(Method.DECLINE_COUNTER, uidGenerator, true, false);
+        super(DECLINE_COUNTER, uidGenerator, true, false);
         this.organizerUpdate = new OrganizerUpdate(organizer);
         this.componentMethodTransformer = new ComponentDeclineCounterTransformer();
     }
@@ -65,7 +68,7 @@ public class DeclineCounterTransformer extends AbstractMethodTransformer {
     @Override
     public Calendar transform(Calendar object) {
         Optional<Method> method = object.getProperty(Property.METHOD);
-        if (!method.isPresent() || !Method.COUNTER.equals(method.get())) {
+        if (!method.isPresent() || !COUNTER.equals(method.get())) {
             throw new IllegalArgumentException("Expecting COUNTER method in source");
         }
         for (CalendarComponent component : object.getComponents()) {

@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*;
 
 /**
  * $Id$
@@ -98,69 +103,6 @@ public class Clazz extends Property {
     public static final String VALUE_PUBLIC = "PUBLIC";
     public static final String VALUE_PRIVATE = "PRIVATE";
     public static final String VALUE_CONFIDENTIAL = "CONFIDENTIAL";
-
-    /**
-     * Constant for public classification.
-     */
-    public static final Clazz PUBLIC = new ImmutableClazz(VALUE_PUBLIC);
-
-    /**
-     * Constant for private classification.
-     */
-    public static final Clazz PRIVATE = new ImmutableClazz(VALUE_PRIVATE);
-
-    /**
-     * Constant for confidential classification.
-     */
-    public static final Clazz CONFIDENTIAL = new ImmutableClazz(VALUE_CONFIDENTIAL);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Clazz.
-     */
-    private static final class ImmutableClazz extends Clazz implements ImmutableContent {
-
-        private static final long serialVersionUID = 5978394762293365042L;
-
-        /**
-         * @param value
-         */
-        private ImmutableClazz(final String value) {
-            super(value);
-        }
-
-        @Override
-        public ImmutableClazz add(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableClazz remove(Parameter parameter) {
-            throwException();
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public ImmutableClazz removeAll(String... parameterName) {
-            throwException();
-            return null;
-        }
-
-        @Override
-        public ImmutableClazz replace(Parameter parameter) {
-            throwException();
-            return null;
-        }
-    }
 
     private String value;
 

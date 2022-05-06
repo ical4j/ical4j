@@ -31,39 +31,63 @@
  *
  */
 
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.property.immutable;
 
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.ProdId;
-
-import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.property.BusyType;
 
 /**
- * Provide fluent API support for {@link Calendar}
+ * An immutable instance of BusyType.
+ *
+ * @author Ben Fortuna
+ * @author Mike Douglass
  */
-public interface FluentCalendar {
+public final class ImmutableBusyType extends BusyType implements ImmutableProperty {
 
-    Calendar getFluentTarget();
+    /**
+     * Constant for busy time.
+     */
+    public static final BusyType BUSY = new ImmutableBusyType(VALUE_BUSY);
+    /**
+* Constant for busy unavailable time.
+*/
+public static final BusyType BUSY_UNAVAILABLE = new ImmutableBusyType(VALUE_BUSY_UNAVAILABLE);
+    /**
+* Constant for tentatively busy time.
+*/
+public static final BusyType BUSY_TENTATIVE = new ImmutableBusyType(VALUE_BUSY_TENTATIVE);
+    private static final long serialVersionUID = -2454749569982470433L;
 
-    default FluentCalendar withDefaults() {
-        getFluentTarget().add(GREGORIAN);
-        getFluentTarget().add(VERSION_2_0);
-        return getFluentTarget();
+    /**
+     * @param value
+     */
+    public ImmutableBusyType(final String value) {
+        super(value);
     }
 
-    default FluentCalendar withProdId(String prodId) {
-        getFluentTarget().add(new ProdId(prodId));
-        return getFluentTarget();
+    @Override
+    public <T extends Property> T add(Parameter parameter) {
+        return ImmutableProperty.super.add(parameter);
     }
 
-    default FluentCalendar withProperty(Property property) {
-        getFluentTarget().add(property);
-        return getFluentTarget();
+    @Override
+    public <T extends Property> T remove(Parameter parameter) {
+        return ImmutableProperty.super.remove(parameter);
     }
 
-    default FluentCalendar withComponent(CalendarComponent component) {
-        getFluentTarget().add(component);
-        return getFluentTarget();
+    @Override
+    public <T extends Property> T removeAll(String... parameterName) {
+        return ImmutableProperty.super.removeAll(parameterName);
+    }
+
+    @Override
+    public <T extends Property> T replace(Parameter parameter) {
+        return ImmutableProperty.super.replace(parameter);
+    }
+
+    @Override
+    public void setValue(final String aValue) {
+        ImmutableProperty.super.setValue(aValue);
     }
 }

@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.*
+
 class ActionSpec extends Specification {
 
     Action.Factory factory = []
@@ -16,9 +18,9 @@ class ActionSpec extends Specification {
 
         where:
         value   | constantInstance
-        'AUDIO' | Action.AUDIO
-        'DISPLAY' | Action.DISPLAY
-        'EMAIL' | Action.EMAIL
-        'PROCEDURE' | Action.PROCEDURE
+        'AUDIO' | AUDIO
+        'DISPLAY' | DISPLAY
+        'EMAIL' | EMAIL
+        'PROCEDURE' | PROCEDURE
     }
 }

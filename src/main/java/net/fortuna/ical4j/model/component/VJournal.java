@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
@@ -109,17 +110,17 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
 
     private static final Map<Method, Validator<VJournal>> methodValidators = new HashMap<>();
     static {
-        methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(VJOURNAL, new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
-                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
-                new ValidationRule(None, ATTENDEE, RECURRENCE_ID)));
-        methodValidators.put(Method.CANCEL, new ComponentValidator(VJOURNAL, new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
-                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, LAST_MODIFIED,
+        methodValidators.put(ADD, new ComponentValidator<>(VJOURNAL, new ValidationRule<>(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
+                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
+                new ValidationRule<>(None, ATTENDEE, RECURRENCE_ID)));
+        methodValidators.put(CANCEL, new ComponentValidator<>(VJOURNAL, new ValidationRule<>(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
+                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, LAST_MODIFIED,
                         RECURRENCE_ID, STATUS, SUMMARY, URL),
-                new ValidationRule(None, REQUEST_STATUS)));
-        methodValidators.put(Method.PUBLISH, new ComponentValidator(VJOURNAL, new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
-                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, RECURRENCE_ID, SEQUENCE, STATUS,
+                new ValidationRule<>(None, REQUEST_STATUS)));
+        methodValidators.put(PUBLISH, new ComponentValidator<>(VJOURNAL, new ValidationRule<>(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
+                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, RECURRENCE_ID, SEQUENCE, STATUS,
                         SUMMARY, URL),
-                new ValidationRule(None, ATTENDEE)));
+                new ValidationRule<>(None, ATTENDEE)));
     }
 
     /**

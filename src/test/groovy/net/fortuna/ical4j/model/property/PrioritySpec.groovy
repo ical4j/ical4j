@@ -4,6 +4,8 @@ package net.fortuna.ical4j.model.property
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*
+
 class PrioritySpec extends Specification {
 
     Priority.Factory factory = []
@@ -21,9 +23,9 @@ class PrioritySpec extends Specification {
 
         where:
         value   | constantInstance
-        '9' | Priority.LOW
-        '5' | Priority.MEDIUM
-        '1' | Priority.HIGH
+        '9' | LOW
+        '5' | MEDIUM
+        '1' | HIGH
     }
 
     def 'test relaxed parsing with invalid values'() {

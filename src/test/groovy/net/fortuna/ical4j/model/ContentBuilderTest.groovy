@@ -33,8 +33,9 @@ package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VFreeBusy
 import net.fortuna.ical4j.model.parameter.XParameter
-import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.util.RandomUidGenerator
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0
 
 /**
  * $Id$
@@ -118,10 +119,10 @@ public class ContentBuilderTest extends GroovyTestCase {
     
     void testBuildVersion() {
         def version = new ContentBuilder().version(value: '2.0')
-        assert version == Version.VERSION_2_0
+        assert version == VERSION_2_0
         
         version = new ContentBuilder().version('2.0')
-        assert version.is(Version.VERSION_2_0)
+        assert version.is(VERSION_2_0)
     }
     
     void testBuildAbbrev() {

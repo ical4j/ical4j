@@ -2,10 +2,11 @@ package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VJournal;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
 public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
 
@@ -28,7 +29,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      */
     @Override
     public Calendar publish(VJournal... component) {
-        Calendar published = wrap(Method.PUBLISH, component);
+        Calendar published = wrap(PUBLISH, component);
         published.validate();
         return published;
     }
@@ -81,7 +82,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      */
     @Override
     public Calendar add(VJournal component) {
-        Calendar add = wrap(Method.ADD, component);
+        Calendar add = wrap(ADD, component);
         add.validate();
         return add;
     }
@@ -119,7 +120,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      */
     @Override
     public Calendar cancel(VJournal... component) {
-        Calendar cancel = wrap(Method.CANCEL, component);
+        Calendar cancel = wrap(CANCEL, component);
         cancel.validate();
         return cancel;
     }

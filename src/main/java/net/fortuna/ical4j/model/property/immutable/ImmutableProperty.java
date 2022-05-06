@@ -31,39 +31,38 @@
  *
  */
 
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.property.immutable;
 
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
+public interface ImmutableProperty {
 
-/**
- * Provide fluent API support for {@link Calendar}
- */
-public interface FluentCalendar {
-
-    Calendar getFluentTarget();
-
-    default FluentCalendar withDefaults() {
-        getFluentTarget().add(GREGORIAN);
-        getFluentTarget().add(VERSION_2_0);
-        return getFluentTarget();
+    default <T extends Property> T add(Parameter parameter) {
+        throwException();
+        return null;
     }
 
-    default FluentCalendar withProdId(String prodId) {
-        getFluentTarget().add(new ProdId(prodId));
-        return getFluentTarget();
+    default <T extends Property> T remove(Parameter parameter) {
+        throwException();
+        return null;
     }
 
-    default FluentCalendar withProperty(Property property) {
-        getFluentTarget().add(property);
-        return getFluentTarget();
+    default <T extends Property> T removeAll(String... parameterName) {
+        throwException();
+        return null;
     }
 
-    default FluentCalendar withComponent(CalendarComponent component) {
-        getFluentTarget().add(component);
-        return getFluentTarget();
+    default <T extends Property> T replace(Parameter parameter) {
+        throwException();
+        return null;
+    }
+
+    default void setValue(final String aValue) {
+        throwException();
+    }
+
+    default void throwException() {
+        throw new UnsupportedOperationException("Cannot modify constant instances");
     }
 }

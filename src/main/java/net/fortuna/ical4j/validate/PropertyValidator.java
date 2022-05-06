@@ -36,12 +36,20 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.immutable.ImmutableAction;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Parameter.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.AUDIO;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
@@ -107,8 +115,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Action> ACTION = new PropertyValidator<>(Property.ACTION,
-            new ValidationRule<>(ValueMatch, String.join("|", Action.AUDIO.getValue(),
-                    Action.DISPLAY.getValue(), Action.EMAIL.getValue(), "X-[A-Z]+")));
+            new ValidationRule<>(ValueMatch, String.join("|", AUDIO.getValue(),
+                    ImmutableAction.DISPLAY.getValue(), ImmutableAction.EMAIL.getValue(), "X-[A-Z]+")));
 
 
     /**
@@ -197,7 +205,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<CalScale> CALSCALE = new PropertyValidator<>(Property.CALSCALE,
-            new ValidationRule<>(ValueMatch, CalScale.GREGORIAN.getValue()));
+            new ValidationRule<>(ValueMatch, GREGORIAN.getValue()));
 
     /**
      * <pre>
@@ -240,8 +248,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Clazz> CLAZZ = new PropertyValidator<>(Property.CLASS,
-            new ValidationRule<>(ValueMatch, String.join("|", Clazz.PUBLIC.getValue(), Clazz.PRIVATE.getValue(),
-                    Clazz.CONFIDENTIAL.getValue())));
+            new ValidationRule<>(ValueMatch, String.join("|", PUBLIC.getValue(), PRIVATE.getValue(),
+                    CONFIDENTIAL.getValue())));
 
     /**
      * <pre>
@@ -890,11 +898,11 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Status> STATUS = new PropertyValidator<>(Property.STATUS,
-        new ValidationRule<>(ValueMatch, String.join("|", Status.VEVENT_TENTATIVE.getValue(),
-                Status.VEVENT_CONFIRMED.getValue(), Status.VEVENT_CANCELLED.getValue(),
-                Status.VTODO_NEEDS_ACTION.getValue(), Status.VTODO_COMPLETED.getValue(),
-                Status.VTODO_IN_PROCESS.getValue(), Status.VTODO_CANCELLED.getValue(),
-                Status.VJOURNAL_DRAFT.getValue(), Status.VJOURNAL_FINAL.getValue(), Status.VJOURNAL_CANCELLED.getValue())));
+        new ValidationRule<>(ValueMatch, String.join("|", VEVENT_TENTATIVE.getValue(),
+                VEVENT_CONFIRMED.getValue(), VEVENT_CANCELLED.getValue(),
+                VTODO_NEEDS_ACTION.getValue(), VTODO_COMPLETED.getValue(),
+                VTODO_IN_PROCESS.getValue(), VTODO_CANCELLED.getValue(),
+                VJOURNAL_DRAFT.getValue(), VJOURNAL_FINAL.getValue(), VJOURNAL_CANCELLED.getValue())));
 
     public static final Validator<StructuredData> STRUCTURED_DATA = new PropertyValidator<>(Property.STRUCTURED_DATA,
             new ValidationRule<>(OneOrLess, FMTTYPE, SCHEMA));
@@ -947,8 +955,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Transp> TRANSP = new PropertyValidator<>(Property.TRANSP,
-            new ValidationRule<>(ValueMatch, String.join("|", Transp.OPAQUE.getValue(),
-                    Transp.TRANSPARENT.getValue())));
+            new ValidationRule<>(ValueMatch, String.join("|", OPAQUE.getValue(),
+                    TRANSPARENT.getValue())));
 
     /**
      * <pre>
@@ -1132,7 +1140,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Version> VERSION = new PropertyValidator<>(Property.VERSION,
-            new ValidationRule<>(ValueMatch, Version.VERSION_2_0.getValue()));
+            new ValidationRule<>(ValueMatch, VERSION_2_0.getValue()));
 
     @SafeVarargs
     public PropertyValidator(String context, ValidationRule<T>... rules) {

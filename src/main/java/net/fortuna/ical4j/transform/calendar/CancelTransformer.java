@@ -33,10 +33,11 @@ package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.transform.component.OrganizerUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.CANCEL;
 
 /**
  * $Id$
@@ -51,7 +52,7 @@ public class CancelTransformer extends AbstractMethodTransformer {
     private final OrganizerUpdate organizerUpdate;
 
     public CancelTransformer(Organizer organizer, UidGenerator uidGenerator) {
-        super(Method.CANCEL, uidGenerator, true, true);
+        super(CANCEL, uidGenerator, true, true);
         this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 
