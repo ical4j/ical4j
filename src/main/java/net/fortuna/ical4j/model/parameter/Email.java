@@ -1,13 +1,12 @@
 package net.fortuna.ical4j.model.parameter;
 
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
 
