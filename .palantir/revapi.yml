@@ -1971,3 +1971,17 @@ acceptedBreaks:
       old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Rsvp::copy()"
       new: "method net.fortuna.ical4j.model.parameter.Rsvp net.fortuna.ical4j.model.parameter.Rsvp::copy()"
       justification: "updated_rsvp_copy_return_type"
+  "3.2.1":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws javax.mail.internet.AddressException"
+      new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws jakarta.mail.internet.AddressException"
+      justification: "jarkata_mail_package_changed"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws javax.mail.internet.AddressException"
+      new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws jakarta.mail.internet.AddressException"
+      justification: "jarkata_mail_package_changed"
