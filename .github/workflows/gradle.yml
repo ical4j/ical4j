@@ -22,7 +22,7 @@ jobs:
         java-version: ${{ matrix.jdk }}
     - uses: eskatos/gradle-command-action@v1
       with:
-        arguments: check
+        arguments: check --console=plain --warning-mode all
 
   publish:
     name: Publish Artifact
