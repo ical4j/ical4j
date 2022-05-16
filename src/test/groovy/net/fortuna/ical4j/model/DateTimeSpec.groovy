@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VTimeZone
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
