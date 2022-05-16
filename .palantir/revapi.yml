@@ -867,18 +867,6 @@ acceptedBreaks:
       old: "class net.fortuna.ical4j.validate.PropertyValidator"
       new: "class net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>"
       justification: "Refatoring validation framework"
-    - code: "java.field.removedWithConstant"
-      old: "field net.fortuna.ical4j.validate.PropertyValidator.ASSERT_NONE_MESSAGE"
-      justification: "Refactoring"
-    - code: "java.field.removedWithConstant"
-      old: "field net.fortuna.ical4j.validate.PropertyValidator.ASSERT_ONE_MESSAGE"
-      justification: "Refactoring"
-    - code: "java.field.removedWithConstant"
-      old: "field net.fortuna.ical4j.validate.PropertyValidator.ASSERT_ONE_OR_LESS_MESSAGE"
-      justification: "Refactoring"
-    - code: "java.field.removedWithConstant"
-      old: "field net.fortuna.ical4j.validate.PropertyValidator.ASSERT_ONE_OR_MORE_MESSAGE"
-      justification: "Refactoring"
     - code: "java.class.visibilityReduced"
       old: "class net.fortuna.ical4j.transform.recurrence.AbstractDateExpansionRule"
       new: "class net.fortuna.ical4j.transform.recurrence.AbstractDateExpansionRule<T\
@@ -3306,22 +3294,6 @@ acceptedBreaks:
       old: "method void net.fortuna.ical4j.validate.component.VTimeZoneValidator::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
       new: "method void net.fortuna.ical4j.validate.component.VTimeZoneValidator::<init>()"
       justification: "Refatoring validation framework"
-    - code: "java.method.removed"
-      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertNone(java.lang.String,\
-        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
-      justification: "Refactoring"
-    - code: "java.method.removed"
-      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertOne(java.lang.String,\
-        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
-      justification: "Refactoring"
-    - code: "java.method.removed"
-      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertOneOrLess(java.lang.String,\
-        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
-      justification: "Refactoring"
-    - code: "java.method.removed"
-      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertOneOrMore(java.lang.String,\
-        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
-      justification: "Refactoring"
     - code: "java.method.parameterTypeChanged"
       old: "parameter <C extends T extends net.fortuna.ical4j.model.Component> java.util.List<C>\
         \ net.fortuna.ical4j.model.ComponentList<T extends net.fortuna.ical4j.model.Component>::getComponents(===java.lang.String===)"
@@ -4992,6 +4964,22 @@ acceptedBreaks:
     - code: "java.method.removed"
       old: "method void net.fortuna.ical4j.transform.recurrence.ByYearDayRule::<init>(net.fortuna.ical4j.model.NumberList,\
         \ net.fortuna.ical4j.model.Recur.Frequency, java.util.Optional<net.fortuna.ical4j.model.WeekDay.Day>)"
+      justification: "Refactoring"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertNone(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "Refactoring"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertOne(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "Refactoring"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertOneOrLess(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "Refactoring"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator::assertOneOrMore(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList) throws net.fortuna.ical4j.validate.ValidationException"
       justification: "Refactoring"
     - code: "java.method.returnTypeChanged"
       old: "method <C extends T extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.ComponentContainer<T\
@@ -8378,6 +8366,144 @@ acceptedBreaks:
       justification: "updated_rsvp_copy_return_type"
   "3.2.1":
     org.mnode.ical4j:ical4j:
+    - code: "java.class.noLongerInheritsFromClass"
+      old: "class net.fortuna.ical4j.model.property.TzUntil"
+      new: "class net.fortuna.ical4j.model.property.TzUntil"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.class.noLongerInheritsFromClass"
+      old: "class net.fortuna.ical4j.validate.property.TriggerValidator"
+      new: "class net.fortuna.ical4j.validate.property.TriggerValidator"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.class.nonFinalClassInheritsFromNewClass"
+      old: "class net.fortuna.ical4j.model.property.TzUntil"
+      new: "class net.fortuna.ical4j.model.property.TzUntil"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.validate.property.TriggerValidator"
+      new: "class net.fortuna.ical4j.validate.property.TriggerValidator"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.property.UtcPropertyValidator<T extends\
+        \ net.fortuna.ical4j.model.property.UtcProperty>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.element.nowDeprecated"
+      old: "method <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(java.lang.String[])"
+      new: "method java.util.List<net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList::getProperties(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Action.AUDIO"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Action.DISPLAY"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Action.EMAIL"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Action.PROCEDURE"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.BusyType.BUSY"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.BusyType.BUSY_TENTATIVE"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.BusyType.BUSY_UNAVAILABLE"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.CalScale.GREGORIAN"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Clazz.CONFIDENTIAL"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Clazz.PRIVATE"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Clazz.PUBLIC"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.ADD"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.CANCEL"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.COUNTER"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.DECLINE_COUNTER"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.PUBLISH"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.REFRESH"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.REPLY"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Method.REQUEST"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Priority.HIGH"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Priority.LOW"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Priority.MEDIUM"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Priority.UNDEFINED"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VEVENT_CANCELLED"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VEVENT_CONFIRMED"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VEVENT_TENTATIVE"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VJOURNAL_CANCELLED"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VJOURNAL_DRAFT"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VJOURNAL_FINAL"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VTODO_CANCELLED"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VTODO_COMPLETED"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VTODO_IN_PROCESS"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Status.VTODO_NEEDS_ACTION"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Transp.OPAQUE"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Transp.TRANSPARENT"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.Version.VERSION_2_0"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.generics.formalTypeParameterRemoved"
+      old: "method <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(java.lang.String[])"
+      new: "method java.util.List<net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList::getProperties(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
     - code: "java.method.exception.checkedAdded"
       old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws javax.mail.internet.AddressException"
@@ -8385,8 +8511,947 @@ acceptedBreaks:
         \ throws jakarta.mail.internet.AddressException"
       justification: "jarkata_mail_package_changed"
     - code: "java.method.exception.checkedRemoved"
+      old: "method T net.fortuna.ical4j.model.ParameterFactory<T extends net.fortuna.ical4j.model.Parameter>::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method T net.fortuna.ical4j.model.ParameterFactory<T extends net.fortuna.ical4j.model.Parameter>::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.ParameterBuilder::build()\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.ParameterBuilder::build()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.PropertyBuilder::build()\
+        \ throws java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.PropertyBuilder::build()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.CalendarAddress::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ @ net.fortuna.ical4j.model.property.CalendarAddress"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DateListProperty::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ @ net.fortuna.ical4j.model.property.DateListProperty<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DateProperty::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ @ net.fortuna.ical4j.model.property.DateProperty<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Abbrev net.fortuna.ical4j.model.parameter.Abbrev.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Abbrev net.fortuna.ical4j.model.parameter.Abbrev.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.AltRep net.fortuna.ical4j.model.parameter.AltRep.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.AltRep net.fortuna.ical4j.model.parameter.AltRep.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Cn net.fortuna.ical4j.model.parameter.Cn.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Cn net.fortuna.ical4j.model.parameter.Cn.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.CuType net.fortuna.ical4j.model.parameter.CuType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.CuType net.fortuna.ical4j.model.parameter.CuType.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.DelegatedFrom net.fortuna.ical4j.model.parameter.DelegatedFrom.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.DelegatedFrom net.fortuna.ical4j.model.parameter.DelegatedFrom.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.DelegatedTo net.fortuna.ical4j.model.parameter.DelegatedTo.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.DelegatedTo net.fortuna.ical4j.model.parameter.DelegatedTo.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Derived net.fortuna.ical4j.model.parameter.Derived.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Derived net.fortuna.ical4j.model.parameter.Derived.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Dir net.fortuna.ical4j.model.parameter.Dir.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Dir net.fortuna.ical4j.model.parameter.Dir.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Encoding net.fortuna.ical4j.model.parameter.Encoding.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Encoding net.fortuna.ical4j.model.parameter.Encoding.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.FbType net.fortuna.ical4j.model.parameter.FbType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.FbType net.fortuna.ical4j.model.parameter.FbType.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.FmtType net.fortuna.ical4j.model.parameter.FmtType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.FmtType net.fortuna.ical4j.model.parameter.FmtType.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Language net.fortuna.ical4j.model.parameter.Language.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Language net.fortuna.ical4j.model.parameter.Language.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Member net.fortuna.ical4j.model.parameter.Member.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Member net.fortuna.ical4j.model.parameter.Member.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Order net.fortuna.ical4j.model.parameter.Order.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Order net.fortuna.ical4j.model.parameter.Order.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.PartStat net.fortuna.ical4j.model.parameter.PartStat.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.PartStat net.fortuna.ical4j.model.parameter.PartStat.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Range net.fortuna.ical4j.model.parameter.Range.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Range net.fortuna.ical4j.model.parameter.Range.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.RelType net.fortuna.ical4j.model.parameter.RelType.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.RelType net.fortuna.ical4j.model.parameter.RelType.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Related net.fortuna.ical4j.model.parameter.Related.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Related net.fortuna.ical4j.model.parameter.Related.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Role net.fortuna.ical4j.model.parameter.Role.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Role net.fortuna.ical4j.model.parameter.Role.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Rsvp net.fortuna.ical4j.model.parameter.Rsvp.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Rsvp net.fortuna.ical4j.model.parameter.Rsvp.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.ScheduleAgent net.fortuna.ical4j.model.parameter.ScheduleAgent.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.ScheduleAgent net.fortuna.ical4j.model.parameter.ScheduleAgent.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.ScheduleStatus net.fortuna.ical4j.model.parameter.ScheduleStatus.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.ScheduleStatus net.fortuna.ical4j.model.parameter.ScheduleStatus.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Schema net.fortuna.ical4j.model.parameter.Schema.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Schema net.fortuna.ical4j.model.parameter.Schema.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.SentBy net.fortuna.ical4j.model.parameter.SentBy.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.SentBy net.fortuna.ical4j.model.parameter.SentBy.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Type net.fortuna.ical4j.model.parameter.Type.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Type net.fortuna.ical4j.model.parameter.Type.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.TzId net.fortuna.ical4j.model.parameter.TzId.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.TzId net.fortuna.ical4j.model.parameter.TzId.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Value net.fortuna.ical4j.model.parameter.Value.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Value net.fortuna.ical4j.model.parameter.Value.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.Vvenue net.fortuna.ical4j.model.parameter.Vvenue.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.Vvenue net.fortuna.ical4j.model.parameter.Vvenue.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.parameter.XParameter net.fortuna.ical4j.model.parameter.XParameter.Factory::createParameter(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.parameter.XParameter net.fortuna.ical4j.model.parameter.XParameter.Factory::createParameter(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Acknowledged net.fortuna.ical4j.model.property.Acknowledged.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Acknowledged net.fortuna.ical4j.model.property.Acknowledged.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Attach net.fortuna.ical4j.model.property.Attach.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Attach net.fortuna.ical4j.model.property.Attach.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Attendee net.fortuna.ical4j.model.property.Attendee.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Attendee net.fortuna.ical4j.model.property.Attendee.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.CalendarAddress net.fortuna.ical4j.model.property.CalendarAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.CalendarAddress net.fortuna.ical4j.model.property.CalendarAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Categories net.fortuna.ical4j.model.property.Categories.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Categories net.fortuna.ical4j.model.property.Categories.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Comment net.fortuna.ical4j.model.property.Comment.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Comment net.fortuna.ical4j.model.property.Comment.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Completed net.fortuna.ical4j.model.property.Completed.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Completed net.fortuna.ical4j.model.property.Completed.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Contact net.fortuna.ical4j.model.property.Contact.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Contact net.fortuna.ical4j.model.property.Contact.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Country net.fortuna.ical4j.model.property.Country.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Country net.fortuna.ical4j.model.property.Country.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Created net.fortuna.ical4j.model.property.Created.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Created net.fortuna.ical4j.model.property.Created.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Description net.fortuna.ical4j.model.property.Description.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Description net.fortuna.ical4j.model.property.Description.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.DtEnd net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.DtEnd.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.DtStamp net.fortuna.ical4j.model.property.DtStamp.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.DtStamp net.fortuna.ical4j.model.property.DtStamp.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.DtStart net.fortuna.ical4j.model.property.DtStart.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.DtStart.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Due net.fortuna.ical4j.model.property.Due.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.Due.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Duration net.fortuna.ical4j.model.property.Duration.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Duration net.fortuna.ical4j.model.property.Duration.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.ExDate net.fortuna.ical4j.model.property.ExDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.ExDate.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.ExRule net.fortuna.ical4j.model.property.ExRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ExRule net.fortuna.ical4j.model.property.ExRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.ExtendedAddress net.fortuna.ical4j.model.property.ExtendedAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ExtendedAddress net.fortuna.ical4j.model.property.ExtendedAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.FreeBusy net.fortuna.ical4j.model.property.FreeBusy.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.FreeBusy net.fortuna.ical4j.model.property.FreeBusy.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Geo net.fortuna.ical4j.model.property.Geo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Geo net.fortuna.ical4j.model.property.Geo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.LastModified net.fortuna.ical4j.model.property.LastModified.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.LastModified net.fortuna.ical4j.model.property.LastModified.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Locality net.fortuna.ical4j.model.property.Locality.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Locality net.fortuna.ical4j.model.property.Locality.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Location net.fortuna.ical4j.model.property.Location.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Location net.fortuna.ical4j.model.property.Location.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.LocationType net.fortuna.ical4j.model.property.LocationType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.LocationType net.fortuna.ical4j.model.property.LocationType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Name net.fortuna.ical4j.model.property.Name.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Name net.fortuna.ical4j.model.property.Name.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Organizer net.fortuna.ical4j.model.property.Organizer.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Organizer net.fortuna.ical4j.model.property.Organizer.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.ParticipantType net.fortuna.ical4j.model.property.ParticipantType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ParticipantType net.fortuna.ical4j.model.property.ParticipantType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.PercentComplete net.fortuna.ical4j.model.property.PercentComplete.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.PercentComplete net.fortuna.ical4j.model.property.PercentComplete.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.ProdId net.fortuna.ical4j.model.property.ProdId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ProdId net.fortuna.ical4j.model.property.ProdId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.RDate net.fortuna.ical4j.model.property.RDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RDate.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.RRule net.fortuna.ical4j.model.property.RRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RRule.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.RecurrenceId net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RecurrenceId.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Region net.fortuna.ical4j.model.property.Region.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Region net.fortuna.ical4j.model.property.Region.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.RelatedTo net.fortuna.ical4j.model.property.RelatedTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.RelatedTo net.fortuna.ical4j.model.property.RelatedTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Repeat net.fortuna.ical4j.model.property.Repeat.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Repeat net.fortuna.ical4j.model.property.Repeat.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.RequestStatus net.fortuna.ical4j.model.property.RequestStatus.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.RequestStatus net.fortuna.ical4j.model.property.RequestStatus.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.ResourceType net.fortuna.ical4j.model.property.ResourceType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.ResourceType net.fortuna.ical4j.model.property.ResourceType.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Resources net.fortuna.ical4j.model.property.Resources.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Resources net.fortuna.ical4j.model.property.Resources.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.StreetAddress net.fortuna.ical4j.model.property.StreetAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.StreetAddress net.fortuna.ical4j.model.property.StreetAddress.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.StructuredData net.fortuna.ical4j.model.property.StructuredData.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.StructuredData net.fortuna.ical4j.model.property.StructuredData.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.StyledDescription net.fortuna.ical4j.model.property.StyledDescription.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.StyledDescription net.fortuna.ical4j.model.property.StyledDescription.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Summary net.fortuna.ical4j.model.property.Summary.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Summary net.fortuna.ical4j.model.property.Summary.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Tel net.fortuna.ical4j.model.property.Tel.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Tel net.fortuna.ical4j.model.property.Tel.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Trigger net.fortuna.ical4j.model.property.Trigger.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Trigger net.fortuna.ical4j.model.property.Trigger.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.TzId net.fortuna.ical4j.model.property.TzId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzId net.fortuna.ical4j.model.property.TzId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.TzIdAliasOf net.fortuna.ical4j.model.property.TzIdAliasOf.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzIdAliasOf net.fortuna.ical4j.model.property.TzIdAliasOf.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.TzName net.fortuna.ical4j.model.property.TzName.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzName net.fortuna.ical4j.model.property.TzName.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.TzOffsetFrom net.fortuna.ical4j.model.property.TzOffsetFrom.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzOffsetFrom net.fortuna.ical4j.model.property.TzOffsetFrom.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.TzOffsetTo net.fortuna.ical4j.model.property.TzOffsetTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzOffsetTo net.fortuna.ical4j.model.property.TzOffsetTo.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.TzUntil net.fortuna.ical4j.model.property.TzUntil.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzUntil net.fortuna.ical4j.model.property.TzUntil.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.TzUrl net.fortuna.ical4j.model.property.TzUrl.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.TzUrl net.fortuna.ical4j.model.property.TzUrl.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Uid net.fortuna.ical4j.model.property.Uid.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Uid net.fortuna.ical4j.model.property.Uid.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.property.Url net.fortuna.ical4j.model.property.Url.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.property.Url net.fortuna.ical4j.model.property.Url.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.data.ContentHandler::endProperty(java.lang.String)\
+        \ throws java.net.URISyntaxException, java.text.ParseException, java.io.IOException"
+      new: "method void net.fortuna.ical4j.data.ContentHandler::endProperty(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.data.ContentHandler::parameter(java.lang.String,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.data.ContentHandler::parameter(java.lang.String,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.data.ContentHandler::propertyValue(java.lang.String)\
+        \ throws java.net.URISyntaxException, java.text.ParseException, java.io.IOException"
+      new: "method void net.fortuna.ical4j.data.ContentHandler::propertyValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.data.DefaultContentHandler::endProperty(java.lang.String)\
+        \ throws java.net.URISyntaxException, java.text.ParseException, java.io.IOException"
+      new: "method void net.fortuna.ical4j.data.DefaultContentHandler::endProperty(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.data.DefaultContentHandler::parameter(java.lang.String,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.data.DefaultContentHandler::parameter(java.lang.String,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.Property::setValue(java.lang.String)\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method void net.fortuna.ical4j.model.Property::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.AltRep::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.AltRep::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.DelegatedFrom::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.DelegatedFrom::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.DelegatedTo::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.DelegatedTo::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.Dir::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.Dir::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
       old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws javax.mail.internet.AddressException"
       new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws jakarta.mail.internet.AddressException"
       justification: "jarkata_mail_package_changed"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.Member::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.Member::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.Schema::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.Schema::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.SentBy::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.SentBy::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Attach::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Attach::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Attach::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Attach::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Attendee::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Attendee::<init>(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Attendee::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Attendee::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Attendee::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Attendee::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.CalendarAddress::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.CalendarAddress::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.CalendarAddress::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.CalendarAddress::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Organizer::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Organizer::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Organizer::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Organizer::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Proximity::setValue(java.lang.String)\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method void net.fortuna.ical4j.model.property.Proximity::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.StructuredData::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.StructuredData::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.StyledDescription::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.StyledDescription::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.TzIdAliasOf::setValue(java.lang.String)\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method void net.fortuna.ical4j.model.property.TzIdAliasOf::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.TzUntil::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.text.ParseException"
+      new: "method void net.fortuna.ical4j.model.property.TzUntil::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.TzUrl::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.TzUrl::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.TzUrl::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.TzUrl::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Url::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Url::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Url::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Url::setValue(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.CalendarAddress::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ @ net.fortuna.ical4j.model.property.CalendarAddress"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DateListProperty::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ @ net.fortuna.ical4j.model.property.DateListProperty<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.movedToSuperClass"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DateProperty::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ @ net.fortuna.ical4j.model.property.DateProperty<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.nowFinal"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.nowFinal"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.property.DateProperty::copy()\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()\
+        \ @ net.fortuna.ical4j.model.property.DateProperty<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.DtEnd net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.DtEnd.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.DtStart net.fortuna.ical4j.model.property.DtStart.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.DtStart.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.Due net.fortuna.ical4j.model.property.Due.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.Due.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.ExDate net.fortuna.ical4j.model.property.ExDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.ExDate.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RDate net.fortuna.ical4j.model.property.RDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RDate.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RRule net.fortuna.ical4j.model.property.RRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RRule.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RecurrenceId net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RecurrenceId.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(===java.lang.String[]===)"
+      new: "parameter java.util.List<net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList::getProperties(===java.lang.String===)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.removed"
+      old: "method <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(java.lang.String[])"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.removed"
+      old: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
+        \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.parameter.Rsvp net.fortuna.ical4j.model.parameter.Rsvp::copy()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.property.Acknowledged::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ net.fortuna.ical4j.model.DateTime)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.property.TzIdAliasOf::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ net.fortuna.ical4j.model.PropertyFactory)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.property.TzUntil::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ net.fortuna.ical4j.model.PropertyFactory)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeChanged"
+      old: "method <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(java.lang.String[])"
+      new: "method java.util.List<net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList::getProperties(java.lang.String)"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.DtEnd net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.DtEnd<T> net.fortuna.ical4j.model.property.DtEnd.Factory<T\
+        \ extends java.time.temporal.Temporal>::createProperty()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.DtEnd net.fortuna.ical4j.model.property.DtEnd.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.DtEnd.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.DtStart net.fortuna.ical4j.model.property.DtStart.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.DtStart<T> net.fortuna.ical4j.model.property.DtStart.Factory<T\
+        \ extends java.time.temporal.Temporal>::createProperty()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.DtStart net.fortuna.ical4j.model.property.DtStart.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.DtStart.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.Due net.fortuna.ical4j.model.property.Due.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.Due<T> net.fortuna.ical4j.model.property.Due.Factory<T\
+        \ extends java.time.temporal.Temporal>::createProperty()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.Due net.fortuna.ical4j.model.property.Due.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.Due.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.ExDate net.fortuna.ical4j.model.property.ExDate.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.ExDate<T> net.fortuna.ical4j.model.property.ExDate.Factory<T\
+        \ extends java.time.temporal.Temporal>::createProperty()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.ExDate net.fortuna.ical4j.model.property.ExDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.ExDate.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RDate net.fortuna.ical4j.model.property.RDate.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RDate<T> net.fortuna.ical4j.model.property.RDate.Factory<T\
+        \ extends java.time.temporal.Temporal>::createProperty()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RDate net.fortuna.ical4j.model.property.RDate.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RDate.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RRule net.fortuna.ical4j.model.property.RRule.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RRule<T> net.fortuna.ical4j.model.property.RRule.Factory<T\
+        \ extends java.time.temporal.Temporal>::createProperty()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RRule net.fortuna.ical4j.model.property.RRule.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RRule.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RecurrenceId net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty()"
+      new: "method net.fortuna.ical4j.model.property.RecurrenceId<T> net.fortuna.ical4j.model.property.RecurrenceId.Factory<T\
+        \ extends java.time.temporal.Temporal>::createProperty()"
+      justification: "approve_all_api_changes_with_major_refactor"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.property.RecurrenceId net.fortuna.ical4j.model.property.RecurrenceId.Factory::createProperty(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
+        \ java.text.ParseException"
+      new: "method T net.fortuna.ical4j.model.PropertyFactory<T extends net.fortuna.ical4j.model.Property>::createProperty(java.lang.String)\
+        \ @ net.fortuna.ical4j.model.property.RecurrenceId.Factory<T extends java.time.temporal.Temporal>"
+      justification: "approve_all_api_changes_with_major_refactor"
