@@ -42,7 +42,7 @@ dependencies {
             "commons-codec:commons-codec:$commonsCodecVersion",
             "org.apache.commons:commons-lang3:$commonsLangVersion",
             "org.apache.commons:commons-collections4:$commonsCollectionsVersion",
-            'com.sun.mail:javax.mail:1.6.2',
+            'com.sun.mail:jakarta.mail:2.0.1',
             "org.threeten:threeten-extra:$threetenExtraVersion",
             "org.jooq:jool-java-8:$joolVersion"
 
@@ -84,12 +84,16 @@ dependencies {
 
 test {
     useJUnitPlatform()
+
+    finalizedBy jacocoTestReport // Ensure Jacoco is run after tests have completed
+
+    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        html.enabled 'true' == jacoco_htmlReport
+        xml.required = true
+        html.required = jacoco_htmlReport == 'true'
     }
 }
 

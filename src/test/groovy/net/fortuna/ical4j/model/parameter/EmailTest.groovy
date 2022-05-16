@@ -3,8 +3,8 @@ package net.fortuna.ical4j.model.parameter
 import net.fortuna.ical4j.AbstractBuilderTest
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.util.CompatibilityHints
+import jakarta.mail.internet.AddressException;
 
-import javax.mail.internet.AddressException
 
 /**
  * Created by fortuna on 6/09/15.

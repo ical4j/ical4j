@@ -33,9 +33,10 @@
 
 package net.fortuna.ical4j.validate;
 
+import java.util.Comparator;
 import java.util.Objects;
 
-public class ValidationEntry {
+public class ValidationEntry implements Comparable<ValidationEntry> {
 
     public enum Severity {
         ERROR, WARNING, INFO
@@ -91,5 +92,13 @@ public class ValidationEntry {
     @Override
     public int hashCode() {
         return Objects.hash(message, severity, context);
+    }
+
+    @Override
+    public int compareTo(ValidationEntry o) {
+        return Comparator.comparing(ValidationEntry::getContext)
+                .thenComparing(ValidationEntry::getSeverity)
+                .thenComparing(ValidationEntry::getMessage)
+                .compare(this, o);
     }
 }
