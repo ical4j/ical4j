@@ -54,7 +54,7 @@ public class ValidationEntry implements Comparable<ValidationEntry> {
         this.context = context;
     }
 
-    public ValidationEntry(ValidationRule rule, String context, String...instances) {
+    public ValidationEntry(ValidationRule<?> rule, String context, String...instances) {
         this.message = rule.getMessage(instances);
         this.severity = rule.getSeverity();
         this.context = context;

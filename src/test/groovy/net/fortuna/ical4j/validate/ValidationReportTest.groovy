@@ -63,7 +63,7 @@ class ValidationReportTest extends Specification {
         new ValidationReport(TEXT).output(result, writer)
 
         then: 'output matches expected'
-        writer as String == 'VCALENDAR: ERROR - Missing mandatory properties\n'
+        writer as String == '- ERROR: VCALENDAR - Missing mandatory properties\n'
     }
 
     def 'generate multiline text format report'() {
@@ -79,7 +79,7 @@ class ValidationReportTest extends Specification {
         new ValidationReport(TEXT).output(result, writer)
 
         then: 'output matches expected'
-        writer as String == 'DTSTART: WARNING - Invalid parameter\nVCALENDAR: ERROR - Missing mandatory properties\n'
+        writer as String == '- WARNING: DTSTART - Invalid parameter\n- ERROR: VCALENDAR - Missing mandatory properties\n'
     }
 
     def 'generate multiline html format report'() {
