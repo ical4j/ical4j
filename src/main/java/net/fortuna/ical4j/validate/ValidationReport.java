@@ -79,7 +79,7 @@ public class ValidationReport {
 
     private void outputText(ValidationResult result, Writer out) throws IOException {
         for (ValidationEntry entry : result.getEntries()) {
-            out.write(String.format("%s: %s - %s\n", entry.getContext(), entry.getSeverity(), entry.getMessage()));
+            out.write(String.format("- %s: %s - %s\n", entry.getSeverity(), entry.getContext(), entry.getMessage()));
         }
     }
 }
