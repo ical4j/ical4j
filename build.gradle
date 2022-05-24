@@ -10,21 +10,20 @@ buildscript {
 }
 
 plugins {
-    id 'pl.allegro.tech.build.axion-release' version '1.13.3'
-    id "nebula.provided-base" version "3.0.3"
-    id "net.ltgt.errorprone" version "1.2.1" apply false
+    id 'java'
+    id 'java-library'
+    id 'groovy'
+    id 'maven-publish'
+    id 'jacoco'
+    id 'signing'
+    id "pl.allegro.tech.build.axion-release" version "1.13.6"
+    id "nebula.provided-base" version "7.0.0"
+    id "nebula.optional-base" version "7.0.0"
+    id "com.palantir.revapi" version "1.7.0"
+    id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-apply plugin: 'jacoco'
-apply plugin: 'signing'
-apply plugin: 'pl.allegro.tech.build.axion-release'
-apply plugin: 'nebula.optional-base'
-apply plugin: 'com.palantir.revapi'
 apply from: 'gradle/dist.gradle'
 
 sourceCompatibility = 1.8
@@ -44,7 +43,7 @@ dependencies {
             "commons-codec:commons-codec:$commonsCodecVersion",
             "org.apache.commons:commons-lang3:$commonsLangVersion",
             "org.apache.commons:commons-collections4:$commonsCollectionsVersion",
-            'com.sun.mail:javax.mail:1.6.2'
+            'com.sun.mail:jakarta.mail:2.0.1'
 
     // optional timezone caching..
     implementation 'javax.cache:cache-api:1.1.1', optional
@@ -64,12 +63,14 @@ dependencies {
 
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
-    testCompile "org.codehaus.groovy:groovy:$groovyVersion",
+    testCompileOnly "org.codehaus.groovy:groovy:$groovyVersion",
             "org.slf4j:slf4j-log4j12:$slf4jVersion",
             "org.apache.logging.log4j:log4j:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
-            "org.cache2k:cache2k-jcache:$jcacheVersion",
             "org.codehaus.groovy:groovy-xml:$groovyVersion"
+
+    // A CachingProvider is required for TimeZoneCacheTest.groovy
+    testImplementation "org.cache2k:cache2k-jcache:$jcacheVersion"
 
     // junit
     testImplementation "org.junit.vintage:junit-vintage-engine:$junitVintageVersion"
@@ -78,18 +79,22 @@ dependencies {
     testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
 
     // spock
-    testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
+    testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0"),
             "org.spockframework:spock-core"
 }
 
 test {
     useJUnitPlatform()
+
+    finalizedBy jacocoTestReport // Ensure Jacoco is run after tests have completed
+
+    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        html.enabled 'true' == jacoco_htmlReport
+        xml.required = true
+        html.required = jacoco_htmlReport == 'true'
     }
 }
 
@@ -143,6 +148,10 @@ scmVersion {
     branchVersionCreator = ['master': 'simple']
     branchVersionCreator = ['ical4j-1.x-maintenance': 'simple']
     branchVersionCreator = ['ical4j-2.x-maintenance': 'simple']
+    nextVersion {
+        suffix = 'pre'
+        separator = '-'
+    }
 }
 
 group = 'org.mnode.ical4j'
