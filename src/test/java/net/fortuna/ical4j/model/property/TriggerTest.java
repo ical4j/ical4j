@@ -111,7 +111,7 @@ public class TriggerTest extends PropertyTest {
         ValidationResult result = trigger.validate();
         assertFalse(result.hasErrors());
 
-        trigger.getParameters().add(Value.DURATION);
+        trigger.add(Value.DURATION);
         assertValidationError(trigger);
     }
 

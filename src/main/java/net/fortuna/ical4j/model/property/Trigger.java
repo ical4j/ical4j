@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
+import java.util.Collections;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Parameter.VALUE;
@@ -165,7 +166,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param aValue a value string for this component
      */
     public Trigger(final ParameterList aList, final String aValue) {
-        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
+        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
         setValue(aValue);
     }
 
@@ -185,7 +186,7 @@ public class Trigger extends DateProperty<Instant> {
     }
 
     private Trigger(final TemporalAmountAdapter duration) {
-        super(TRIGGER, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
+        super(TRIGGER, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
         this.duration = duration;
     }
 
@@ -215,7 +216,8 @@ public class Trigger extends DateProperty<Instant> {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final Instant dateTime) {
-        super(TRIGGER, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
+        super(TRIGGER, new ParameterList(Collections.singletonList(Value.DATE_TIME)),
+                CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
         setDate(dateTime);
     }
 
@@ -242,7 +244,7 @@ public class Trigger extends DateProperty<Instant> {
     @Override
     public ValidationResult validate() throws ValidationException {
         ValidationResult result = super.validate();
-        if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.DATE_TIME).equals(getParameter(Parameter.VALUE))) {
             result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));
         } else {
             result = result.merge(PropertyValidator.TRIGGER_REL.validate(this));

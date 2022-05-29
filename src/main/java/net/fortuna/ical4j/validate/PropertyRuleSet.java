@@ -55,7 +55,7 @@ public class PropertyRuleSet<T extends Property> extends AbstractValidationRuleS
                 int total = rule.getInstances().stream().mapToInt(s -> target.getParameters(s).size()).sum();
                 switch (rule.getType()) {
                     case None:
-                        matches = matches(rule.getInstances(), s -> target.getParameter(s) != null);
+                        matches = matches(rule.getInstances(), s -> target.getParameter(s).isPresent());
                         break;
                     case One:
                         matches = matches(rule.getInstances(), s -> target.getParameters(s).size() != 1);

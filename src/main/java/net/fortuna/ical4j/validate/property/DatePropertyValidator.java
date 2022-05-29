@@ -33,13 +33,9 @@
 
 package net.fortuna.ical4j.validate.property;
 
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.validate.*;
-
-import java.util.Optional;
 
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -63,44 +59,9 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        result.getEntries().addAll(new PropertyRuleSet(OPTIONAL_PARAMS).apply(target.getName(), target));
+        result.getEntries().addAll(new PropertyRuleSet<T>(OPTIONAL_PARAMS).apply(target.getName(), target));
         if (target.isUtc()) {
-            result.getEntries().addAll(new PropertyRuleSet(UTC_PARAMS).apply(target.getName(), target));
-        }
-        final Optional<Value> value = target.getParameter(Parameter.VALUE);
-
-        if (target.getDate() instanceof DateTime) {
-
-            if (value.isPresent() && !Value.DATE_TIME.equals(value.get())) {
-                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance", ValidationEntry.Severity.ERROR,
-                        target.getName()));
-            }
-
-            final DateTime dateTime = (DateTime) target.getDate();
-
-            // ensure tzid matches date-time timezone..
-            final Optional<Parameter> tzId = target.getParameter(Parameter.TZID);
-            if (dateTime.getTimeZone() != null
-                    && (!tzId.isPresent() || !tzId.get().getValue().equals(
-                    dateTime.getTimeZone().getID()))) {
-
-                result.getEntries().add(new ValidationEntry("TZID parameter [" + tzId
-                        + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]", ValidationEntry.Severity.ERROR,
-                        target.getName()));
-            }
-        } else if (target.getDate() != null) {
-
-            if (value == null) {
-                result.getEntries().add(new ValidationEntry("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance", ValidationEntry.Severity.ERROR,
-                        target.getName()));
-            } else if (!Value.DATE.equals(value)) {
-                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
-                        + "] is invalid for DATE instance", ValidationEntry.Severity.ERROR,
-                        target.getName()));
-            }
+            result.getEntries().addAll(new PropertyRuleSet<T>(UTC_PARAMS).apply(target.getName(), target));
         }
         return result;
     }
