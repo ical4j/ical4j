@@ -77,4 +77,14 @@ public final class ImmutableVersion extends Version implements ImmutableProperty
     public void setValue(final String aValue) {
         ImmutableProperty.super.setValue(aValue);
     }
+
+    @Override
+    public void setMaxVersion(String maxVersion) {
+        throwException();
+    }
+
+    @Override
+    public void setMinVersion(String minVersion) {
+        throwException();
+    }
 }

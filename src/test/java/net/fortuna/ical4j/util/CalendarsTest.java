@@ -219,7 +219,7 @@ public class CalendarsTest extends TestCase {
 
         suite.addTest(new CalendarsTest("testLoad", "/samples/valid/Australian32Holidays.ics"));
         suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "/samples/valid/doesnt-exist.ics"));
-        suite.addTest(new CalendarsTest("testLoadParserException", "/samples/valid/google_aus_holidays.ics"));
+        suite.addTest(new CalendarsTest("testLoad", "/samples/valid/google_aus_holidays.ics"));
 
         List<Calendar> calendars = new ArrayList<Calendar>();
         calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))));

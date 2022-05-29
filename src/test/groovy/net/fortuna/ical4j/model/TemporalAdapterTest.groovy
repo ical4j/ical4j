@@ -41,7 +41,7 @@ class TemporalAdapterTest extends Specification {
         parsed.temporal.zone == expectedZone
 
         and:
-        parsed as String == dateString
+        parsed.toString(expectedZone) == dateString
 
         where:
         dateString              | expectedType      | expectedZone

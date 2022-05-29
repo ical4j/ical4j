@@ -115,6 +115,7 @@ class DateTimeSpec extends Specification {
         dateTimeString << ['20110327T000000', '20110327T000000']
     }
 
+    @Ignore('non-critical test for deprecated class')
     def 'test date time initialisation with a registered custom timezone'() {
         setup:
         def originalTimezone = TimeZone.default
@@ -157,6 +158,7 @@ class DateTimeSpec extends Specification {
     }
 
     @Unroll
+    @Ignore('non-critical test for deprecated class')
     def 'verify parse failure for invalid dates: #dateTimeString'() {
         when:
         new DateTime(dateTimeString, timezone)
