@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
+import java.util.TimeZone;
 
 /**
  * $Id$
@@ -63,7 +64,9 @@ public class PeriodTest extends TestCase {
     private ZoneId expectedTimezone;
     
     private boolean expectedIsUtc;
-    
+
+    private TimeZone originalDefault;
+
     /**
      * @param period
      * @param expectedDate
@@ -119,6 +122,22 @@ public class PeriodTest extends TestCase {
     public PeriodTest(String name)
     {
         super(name);
+    }
+
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    @Override
+    protected void setUp() throws Exception {
+        originalDefault = java.util.TimeZone.getDefault();
+    }
+
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    @Override
+    protected void tearDown() throws Exception {
+        TimeZone.setDefault(originalDefault);
     }
 
     /**
