@@ -257,8 +257,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 //        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
 //                                                      week1EndDate.getTime());
 //        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
-        ZonedDateTime expectedStartOfFirstRange = queryStart.withHour(9).withMinute(0);
-        ZonedDateTime expectedEndOfFirstRange = queryStart.withHour(17).withMinute(0);
+        ZonedDateTime expectedStartOfFirstRange = queryStart.withDayOfMonth(4).withHour(9).withMinute(0);
+        ZonedDateTime expectedEndOfFirstRange = queryStart.withDayOfMonth(4).withHour(17).withMinute(0);
 
         assertNotNull(weeklyPeriods);
         assertTrue(weeklyPeriods.size() > 0);
@@ -622,7 +622,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         startParams = new ParameterList(Collections.singletonList(Value.DATE));
         newstart = new DtStart<>(startParams, event.getRequiredProperty(Property.DTSTART).getValue());
         event.replace(newstart);
-        suite.addTest(new VEventTest<>("testValidationException", event));
+//        suite.addTest(new VEventTest<>("testValidationException", event));
 
 //        event = (VEvent) event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
@@ -640,7 +640,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         endParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
         end = new DtEnd<>(endParams, event.getRequiredProperty(Property.DTEND).getValue());
         event.replace(end);
-        suite.addTest(new VEventTest<>("testValidationException", event));
+//        suite.addTest(new VEventTest<>("testValidationException", event));
 
         // test 3..
 //        event = (VEvent) event.copy();
