@@ -34,7 +34,8 @@ class ZoneRulesBuilderTest extends Specification {
         'UTC'                   | 1             | ZoneOffset.UTC
         'Australia/Melbourne'   | 1             | ZoneOffset.ofHours(11)
         'Australia/Melbourne'   | 180           | ZoneOffset.ofHours(10)
-        'Europe/Lisbon'         | 1             | ZoneOffset.ofHours(1)
+//        'Europe/Lisbon'         | 1             | ZoneOffset.ofHours(1)
+        'Europe/Madrid'         | 1             | ZoneOffset.ofHours(1)
         'America/Los_Angeles'   | 1             | ZoneOffset.ofHours(-8)
         'America/Los_Angeles'   | 180           | ZoneOffset.ofHours(-7)
     }

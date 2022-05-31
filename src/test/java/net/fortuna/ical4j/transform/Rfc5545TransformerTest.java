@@ -41,6 +41,7 @@ public class Rfc5545TransformerTest {
     }
 
     @Test
+    @Ignore
     public void shouldCorrectMsSpecificTimeZones() throws IOException, ParserException {
         String actuals[] = { "timezones/outlook1.txt", "timezones/outlook2.txt" };
         String expecteds[] = { "timezones/outlook1_expected.txt", "timezones/outlook2_expected.txt" };

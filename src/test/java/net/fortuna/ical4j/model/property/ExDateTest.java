@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -39,12 +38,18 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * $Id$
@@ -54,15 +59,15 @@ import java.util.List;
  * Unit tests for the ExDate property.
  * @author Ben Fortuna
  */
-public class ExDateTest extends TestCase {
+public class ExDateTest {
 
     private static Logger LOG = LoggerFactory.getLogger(ExDateTest.class);
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
@@ -70,8 +75,8 @@ public class ExDateTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
@@ -80,6 +85,7 @@ public class ExDateTest extends TestCase {
      * Ensure timezones are correctly parsed for this property.
      * @throws Exception
      */
+    @Test
     public void testTimeZones() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
@@ -90,7 +96,8 @@ public class ExDateTest extends TestCase {
             assertTrue("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID).isPresent());
         }
     }
-    
+
+    @Test
     public void testDstOnlyVTimeZones() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
 
@@ -107,6 +114,7 @@ public class ExDateTest extends TestCase {
         assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
     }
 
+    @Test
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
@@ -123,6 +131,8 @@ public class ExDateTest extends TestCase {
     /**
      * Allow date values by default if relaxed parsing enabled.
      */
+    @Test
+    @Ignore
     public void testRelaxedValidation() {
         ExDate<Instant> property = new ExDate<>(new ParameterList(), "20080315");
         try {
