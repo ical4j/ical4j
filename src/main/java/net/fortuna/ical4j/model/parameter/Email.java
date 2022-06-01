@@ -63,7 +63,7 @@ public class Email extends Parameter implements Encodable {
             this.address = address;
         }
         if (!EmailValidator.getInstance().isValid(this.address)) {
-            throw new RuntimeException("Invalid address: " + address);
+            throw new IllegalArgumentException("Invalid address: " + address);
         }
     }
 

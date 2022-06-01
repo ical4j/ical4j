@@ -57,7 +57,7 @@ END:VCALENDAR
         new Email(address)
 
         then: 'an exception is thrown'
-        thrown(RuntimeException)
+        thrown(IllegalArgumentException)
 
         where:
         address << ['test@example.com.']
