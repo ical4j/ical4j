@@ -603,7 +603,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         
         start = ZonedDateTime.now();
         end = start.plusDays(10);
-        suite.addTest(new RecurTest<>(weekDays, start, end, Value.DATE, 8));
+        suite.addTest(new RecurTest<>(weekDays, start, end, Value.DATE, 9));
 
         // Test BYDAY recurrence rules..
         Recur<ZonedDateTime> fifthTuesday = new Recur<>("FREQ=MONTHLY;WKST=SU;INTERVAL=2;BYDAY=5TU");

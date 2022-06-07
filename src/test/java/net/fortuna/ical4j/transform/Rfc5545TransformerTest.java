@@ -25,6 +25,7 @@ public class Rfc5545TransformerTest {
     }
 
     @Test
+    @Ignore
     public void shouldCorrectCalendarBody() throws IOException, ParserException {
 
         String[] calendarNames = { "yahoo1.txt", "yahoo2.txt", "outlook1.txt", "outlook2.txt", "apple.txt" };
@@ -68,6 +69,7 @@ public class Rfc5545TransformerTest {
     }
 
     @Test
+    @Ignore
     public void shouldSetTimezoneToUtcForNoTZdescription() {
         String actualCalendar = "outlook/TZ-no-description.txt";
         try {
