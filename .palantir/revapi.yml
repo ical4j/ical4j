@@ -9133,6 +9133,11 @@ acceptedBreaks:
     - code: "java.method.exception.checkedRemoved"
       old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws javax.mail.internet.AddressException"
+      new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)"
+      justification: "switched_email_validation_lib"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws javax.mail.internet.AddressException"
       new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws jakarta.mail.internet.AddressException"
       justification: "jarkata_mail_package_changed"

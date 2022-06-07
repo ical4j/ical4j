@@ -42,7 +42,7 @@ dependencies {
             "commons-codec:commons-codec:$commonsCodecVersion",
             "org.apache.commons:commons-lang3:$commonsLangVersion",
             "org.apache.commons:commons-collections4:$commonsCollectionsVersion",
-            'com.sun.mail:jakarta.mail:2.0.1',
+            "commons-validator:commons-validator:$commonsValidatorVersion",
             "org.threeten:threeten-extra:$threetenExtraVersion",
             "org.jooq:jool-java-8:$joolVersion"
 
