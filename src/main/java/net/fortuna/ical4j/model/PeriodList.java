@@ -85,6 +85,11 @@ public class PeriodList<T extends Temporal> implements Serializable {
         this.dateFormat = dateFormat;
     }
 
+    public PeriodList(Interval[] intervals) {
+        this(Arrays.stream(intervals).map(i -> new Period<>((T) i.getStart(), (T) i.getEnd())).collect(Collectors.toList()),
+                CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    }
+
     /**
      * Parses the specified string representation to create a list of periods.
      * 
@@ -262,6 +267,10 @@ public class PeriodList<T extends Temporal> implements Serializable {
         Set<Period<T>> copy = new TreeSet<>(periods);
         copy.addAll(arg0);
         return new PeriodList<>(copy, dateFormat);
+    }
+
+    public List<Interval> toIntervalList() {
+        return periods.stream().map(p -> p.toInterval()).collect(Collectors.toList());
     }
 
     @Override

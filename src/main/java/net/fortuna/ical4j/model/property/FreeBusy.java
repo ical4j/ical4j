@@ -35,8 +35,8 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.threeten.extra.Interval;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,14 +109,14 @@ public class FreeBusy extends Property {
 
     private static final long serialVersionUID = -6415954847619338567L;
 
-    private PeriodList<Instant> periods;
+    private List<Interval> intervals;
 
     /**
      * Default constructor.
      */
     public FreeBusy() {
         super(FREEBUSY);
-        periods = new PeriodList<>(CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        intervals = new ArrayList<>();
     }
 
     /**
@@ -139,18 +139,18 @@ public class FreeBusy extends Property {
     /**
      * @param pList a list of periods
      */
-    public FreeBusy(final List<Period<Instant>> pList) {
+    public FreeBusy(final List<Interval> pList) {
         super(FREEBUSY);
-        periods = new PeriodList<>(pList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        intervals = new ArrayList<>(pList);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param pList a list of periods
      */
-    public FreeBusy(final ParameterList aList, final List<Period<Instant>> pList) {
+    public FreeBusy(final ParameterList aList, final List<Interval> pList) {
         super(FREEBUSY, aList);
-        periods = new PeriodList<>(pList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        intervals = new ArrayList<>(pList);
     }
 
     /**
@@ -164,8 +164,8 @@ public class FreeBusy extends Property {
     /**
      * @return Returns the periods.
      */
-    public final List<Period<Instant>> getPeriods() {
-        return new ArrayList<>(periods.getPeriods());
+    public final List<Interval> getIntervals() {
+        return new ArrayList<>(intervals);
     }
 
     /**
@@ -173,7 +173,7 @@ public class FreeBusy extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        periods = PeriodList.parse(aValue, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        intervals = PeriodList.parse(aValue, CalendarDateFormat.UTC_DATE_TIME_FORMAT).toIntervalList();
     }
 
     /**
@@ -181,7 +181,7 @@ public class FreeBusy extends Property {
      */
     @Override
     public final String getValue() {
-        return periods.toString();
+        return new PeriodList<>(intervals.toArray(new Interval[0])).toString();
     }
 
     @Override

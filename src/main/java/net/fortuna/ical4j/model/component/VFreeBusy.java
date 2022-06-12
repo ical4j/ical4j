@@ -41,6 +41,7 @@ import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -351,7 +352,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
                 .components(components).build();
         }
 
-        if (!fb.getPeriods().isEmpty()) {
+        if (!fb.getIntervals().isEmpty()) {
             add(fb);
         }
     }
@@ -387,10 +388,10 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
 
         public FreeBusy build() {
             // periods must be in UTC time for freebusy..
-            final List<Period<Instant>> periods = getConsumedTime(components, new Period<>(start, end));
+            final List<Interval> periods = getConsumedTime(components, new Period<>(start, end));
             periods.removeIf(period -> {
                 // check if period outside bounds..
-                return !period.intersects(new Period<>(start, end));
+                return !period.overlaps(Interval.of(start, end));
             });
             return new FreeBusy(periods);
         }
@@ -433,24 +434,23 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         }
 
         public FreeBusy build() {
-            final List<Period<Instant>> periods = getConsumedTime(components, new Period<>(start, end));
+            final List<Interval> periods = getConsumedTime(components, new Period<>(start, end));
             final Interval interval = Interval.of(start, end);
             // Add final consumed time to avoid special-case end-of-list processing
-            periods.add(new Period<>(end, end));
+            periods.add(Interval.of(end, end));
             Instant lastPeriodEnd = start;
 
-            List<Period<Instant>> freePeriods = new ArrayList<>();
+            List<Interval> freePeriods = new ArrayList<>();
             // where no time is consumed set the last period end as the range start..
-            for (final Period<Instant> period : periods) {
+            for (final Interval period : periods) {
                 // check if period outside bounds.. or period intersects with the end of the range..
-                if (interval.encloses(period.toInterval()) ||
-                		(interval.overlaps(period.toInterval())
+                if (interval.encloses(period) || (interval.overlaps(period)
                                 && Instant.from(period.getStart()).isAfter(Instant.from(interval.getStart())))) {
 
                     // calculate duration between this period start and last period end..
                     final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
                     if (new TemporalAmountComparator().compare(freeDuration.getDuration(), duration) >= 0) {
-                        freePeriods.add(new Period<>(lastPeriodEnd, freeDuration.getDuration()));
+                        freePeriods.add(Interval.of(lastPeriodEnd, (java.time.Duration) freeDuration.getDuration()));
                     }
                 }
 
@@ -469,14 +469,14 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      * @param components
      * @return
      */
-    private static <T extends Temporal> List<Period<T>> getConsumedTime(final List<CalendarComponent> components,
+    private static <T extends Temporal> List<Interval> getConsumedTime(final List<CalendarComponent> components,
                                                                  final Period<T> range) {
 
         List<Period<T>> periods = new ArrayList<>();
         // only events consume time..
         components.stream().filter(c -> c.getName().equals(Component.VEVENT)).forEach(
                 c -> periods.addAll(((VEvent) c).getConsumedTime(range, false)));
-        return new ArrayList<>(new PeriodList(periods).normalise().getPeriods());
+        return new PeriodList<>(periods).normalise().getPeriods().stream().map(Period::toInterval).collect(Collectors.toList());
     }
 
     /**
