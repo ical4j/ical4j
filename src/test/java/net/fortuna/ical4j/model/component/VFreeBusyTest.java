@@ -41,6 +41,7 @@ import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.threeten.extra.Interval;
 
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -75,9 +76,9 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
 
     private FbType expectedFbType;
 
-    private int expectedPeriodCount;
+    private int expectedIntervalCount;
 
-    private List<Period<T>> expectedPeriods;
+    private List<Interval> expectedIntervals;
 
     /**
      * @param testMethod
@@ -97,13 +98,13 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
     /**
      * @param testMethod
      * @param component
-     * @param expectedPeriodCount
+     * @param expectedIntervalCount
      */
-    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, int expectedPeriodCount) {
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, int expectedIntervalCount) {
         super(testMethod, component);
         this.request = component;
         this.components = components;
-        this.expectedPeriodCount = expectedPeriodCount;
+        this.expectedIntervalCount = expectedIntervalCount;
     }
 
     /**
@@ -123,13 +124,15 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
      * @param testMethod
      * @param component
      * @param components
-     * @param expectedPeriods
+     * @param expectedIntervals
      */
-    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, List<Period<T>> expectedPeriods) {
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components,
+                         List<Interval> expectedIntervals) {
+
         super(testMethod, component);
         this.request = component;
         this.components = components;
-        this.expectedPeriods = expectedPeriods;
+        this.expectedIntervals = expectedIntervals;
     }
 
     /*
@@ -316,9 +319,9 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
         Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
-        if (expectedPeriodCount > 0) {
+        if (expectedIntervalCount > 0) {
             assertTrue(fb.isPresent());
-            assertEquals(expectedPeriodCount, fb.get().getPeriods().size());
+            assertEquals(expectedIntervalCount, fb.get().getIntervals().size());
         } else {
             assertFalse(fb.isPresent());
         }
@@ -332,7 +335,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         VFreeBusy result = new VFreeBusy(request, components.getAll());
         Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
         assertTrue(fb.isPresent());
-        assertEquals(expectedPeriods, fb.get().getPeriods());
+        assertEquals(expectedIntervals, fb.get().getIntervals());
     }
 
     /**
@@ -394,8 +397,8 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         suite.addTest(new VFreeBusyTest<>("testPeriodCount", requestFree, components, 1));
 
         // period should be from the start to the end date..
-        List<Period<Instant>> periods = Collections.singletonList(new Period<>(start,
-                TemporalAmountAdapter.between(start, end).getDuration()));
+        List<Interval> periods = Collections.singletonList(Interval.of(start, end));
+//                TemporalAmountAdapter.between(start, end).getDuration()));
         suite.addTest(new VFreeBusyTest<>("testFreeBusyPeriods", requestFree, components, periods));
 
         //testBusyTime..
@@ -413,7 +416,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
 //        suite.addTest(new VFreeBusyTest<>("testFbType", request, components, FbType.BUSY));
         suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 1));
 
-        periods = Collections.singletonList(new Period<>((Instant) TemporalAdapter.parse("20050104T080000Z").getTemporal(),
+        periods = Collections.singletonList(Interval.of((Instant) TemporalAdapter.parse("20050104T080000Z").getTemporal(),
                 java.time.Duration.parse("PT5H")));
         suite.addTest(new VFreeBusyTest<>("testFreeBusyPeriods", request, components, periods));
 
@@ -439,7 +442,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         suite.addTest(new VFreeBusyTest<>("testFbType", request, components, FbType.FREE));
         suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 1));
 
-        periods = Collections.singletonList(new Period<>(start, java.time.Duration.ofMinutes(30)));
+        periods = Collections.singletonList(Interval.of(start, java.time.Duration.ofMinutes(30)));
         suite.addTest(new VFreeBusyTest<>("testFreeBusyPeriods", request, components, periods));
 
         //some components are not in range
@@ -450,9 +453,9 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         VEvent e = new VEvent().withProperty(dts).withProperty(new Duration(java.time.Duration.parse("PT1H")))
                 .withProperty(new RRule<>("FREQ=DAILY")).getFluentTarget();
         components = new ComponentList<>(Collections.singletonList(e));
-        Period<Instant> periodInstant = new Period<>((Instant) TemporalAdapter.parse("20130124T110000Z").getTemporal(),
-                (Instant) TemporalAdapter.parse("20130125T110000Z").getTemporal());
-        request = new VFreeBusy(periodInstant.getStart(), periodInstant.getEnd());
+
+        request = new VFreeBusy(TemporalAdapter.parse("20130124T110000Z").getTemporal(),
+                TemporalAdapter.parse("20130125T110000Z").getTemporal());
         suite.addTest(new VFreeBusyTest<>("testPeriodCount", request, components, 1));
 
         return suite;
