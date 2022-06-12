@@ -339,24 +339,26 @@ public abstract class Component extends Content implements Serializable, Propert
         // but still intersect with it..
         final T startMinusDuration = (T) period.getStart().minus(rDuration);
 
+        final T seed = start.get().getDate();
+
         // add recurrence rules..
         List<Property> rRules = getProperties(Property.RRULE);
         if (!rRules.isEmpty()) {
-            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule) r).getRecur().getDates(start.get().getDate(),
+            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule<T>) r).getRecur().getDates(seed,
                     startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
-                    .map(rruleDate -> new Period<T>(rruleDate, rDuration)).collect(Collectors.toList()));
+                    .map(rruleDate -> new Period<>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {
             // add initial instance if intersection with the specified period..
             Period<T> startPeriod;
             if (end.isPresent()) {
-                startPeriod = new Period<>(start.get().getDate(), end.get().getDate());
+                startPeriod = new Period<>(seed, end.get().getDate());
             } else {
                 /*
                  * PeS: Anniversary type has no DTEND nor DUR, define DUR
                  * locally, otherwise we get NPE
                  */
-                startPeriod = duration.map(value -> new Period<>(start.get().getDate(), value.getDuration())).orElseGet(
-                        () -> new Period<>(start.get().getDate(), new Duration(rDuration).getDuration()));
+                startPeriod = duration.map(value -> new Period<>(seed, value.getDuration())).orElseGet(
+                        () -> new Period<>(seed, new Duration(rDuration).getDuration()));
             }
             if (period.intersects(startPeriod)) {
                 recurrenceSet.add(startPeriod);
@@ -372,7 +374,7 @@ public abstract class Component extends Content implements Serializable, Propert
 
         // subtract exception rules..
         List<Property> exRules = getProperties(Property.EXRULE);
-        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(start.get().getDate(),
+        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(seed,
                 period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));
