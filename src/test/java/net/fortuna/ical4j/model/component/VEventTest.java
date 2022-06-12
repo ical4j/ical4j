@@ -53,6 +53,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
+import java.time.Duration;
 import java.time.*;
 import java.time.temporal.Temporal;
 import java.util.Arrays;
@@ -257,8 +258,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 //        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
 //                                                      week1EndDate.getTime());
 //        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
-        ZonedDateTime expectedStartOfFirstRange = queryStart.withDayOfMonth(4).withHour(9).withMinute(0);
-        ZonedDateTime expectedEndOfFirstRange = queryStart.withDayOfMonth(4).withHour(17).withMinute(0);
+        ZonedDateTime expectedStartOfFirstRange = queryStart.withDayOfMonth(1).withHour(9).withMinute(0);
+        ZonedDateTime expectedEndOfFirstRange = queryStart.withDayOfMonth(1).withHour(17).withMinute(0);
 
         assertNotNull(weeklyPeriods);
         assertTrue(weeklyPeriods.size() > 0);
@@ -457,7 +458,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         TemporalAdapter<LocalDateTime> start = TemporalAdapter.parse("20050106T000000");
         TemporalAdapter<LocalDateTime> end = TemporalAdapter.parse("20050107T000000");
         List<Period<Temporal>> list = event1.getConsumedTime(new Period<>(start.getTemporal(), end.getTemporal()));
-        assertTrue(list.isEmpty());
+        assertEquals(list, Collections.singletonList(new Period<>(
+                LocalDateTime.of(2005, 1, 6, 8, 0), Duration.ofMinutes(15))));
     }
 
     /**
