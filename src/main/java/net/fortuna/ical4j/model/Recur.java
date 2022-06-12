@@ -760,11 +760,13 @@ public class Recur<T extends Temporal> implements Serializable {
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (count == null) {
-            while (TemporalAdapter.isBefore(candidateSeed, periodStart)) {
-                candidateSeed = increment(candidateSeed);
+            T incremented = increment(candidateSeed);
+            while (TemporalAdapter.isBefore(incremented, periodStart)) {
+                candidateSeed = incremented;
                 if (candidateSeed == null) {
                     return dates;
                 }
+                incremented = increment(candidateSeed);
             }
         }
 
