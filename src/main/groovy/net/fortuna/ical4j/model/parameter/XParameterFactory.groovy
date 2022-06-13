@@ -39,16 +39,16 @@ class XParameterFactory extends AbstractFactory {
 
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        def parameter
+        XParameter parameter
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XParameter)) {
-            parameter = value
+            parameter = (XParameter) value
         }
         else {
-            def paramName = attributes.remove('name')
+            String paramName = attributes.remove('name')
             if (paramName == null) {
                 paramName = value
             }
-            def paramValue = attributes.remove('value')
+            String paramValue = attributes.remove('value')
             parameter = [paramName, paramValue]
         }
         return parameter
