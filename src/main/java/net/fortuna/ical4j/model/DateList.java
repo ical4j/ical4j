@@ -53,6 +53,9 @@ public class DateList<T extends Temporal> implements Serializable {
 
 	private static final long serialVersionUID = -3700862452550012357L;
 
+    @SuppressWarnings("rawtypes")
+    public static final DateList EMPTY_LIST = new DateList();
+
     private final List<TemporalAdapter<T>> dates;
 
     /**
@@ -65,12 +68,21 @@ public class DateList<T extends Temporal> implements Serializable {
     /**
      * Constructs a new date list of the specified type containing
      * the dates in the specified list.
-     * @param list a list of dates to include in the new list
+     * @param dates a list of dates to include in the new list
      */
-    public DateList(final List<TemporalAdapter<T>> list) {
-        this.dates = list;
+    public DateList(final T...dates) {
+        this.dates = Arrays.stream(dates).map(TemporalAdapter::new).collect(Collectors.toList());
     }
 
+    public DateList(TimeZoneRegistry timeZoneRegistry, T...dates) {
+        this.dates = Arrays.stream(dates).map(date -> new TemporalAdapter<>(date, timeZoneRegistry))
+                .collect(Collectors.toList());
+    }
+
+    private DateList(List<TemporalAdapter<T>> dates) {
+        this.dates = dates;
+    }
+    
     /**
      * Parse a string representation of a date/time list.
      *
@@ -79,6 +91,10 @@ public class DateList<T extends Temporal> implements Serializable {
      * @throws DateTimeParseException
      */
     public static DateList<? extends Temporal> parse(String value) {
+        if (value == null || value.isEmpty()) {
+            return emptyList();
+        }
+
         List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(","))
                 .parallel().map(TemporalAdapter::parse)
                 .collect(Collectors.toList());
@@ -86,11 +102,31 @@ public class DateList<T extends Temporal> implements Serializable {
         return new DateList<>(dates);
     }
 
+    public static DateList<? extends Temporal> parse(String value, ZoneId zoneId) {
+        if (value == null || value.isEmpty()) {
+            return emptyList();
+        }
+
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
+                .parallel().map(s -> TemporalAdapter.parse(s, zoneId))
+                .collect(Collectors.toList());
+        return new DateList<>(dates);
+    }
+
     public static DateList<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+        if (value == null || value.isEmpty()) {
+            return emptyList();
+        }
+
         List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
                 .parallel().map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
                 .collect(Collectors.toList());
         return new DateList<>(dates);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Temporal> DateList<T> emptyList() {
+        return (DateList<T>) EMPTY_LIST;
     }
 
     @Override
