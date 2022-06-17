@@ -62,7 +62,7 @@ dependencies {
 
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
-    testCompileOnly "org.codehaus.groovy:groovy:$groovyVersion",
+    testImplementation "org.codehaus.groovy:groovy:$groovyVersion",
             "org.slf4j:slf4j-log4j12:$slf4jVersion",
             "org.apache.logging.log4j:log4j:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
@@ -98,6 +98,7 @@ jacocoTestReport {
 }
 
 javadoc {
+    options.addBooleanOption('-no-module-directories', true)
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
