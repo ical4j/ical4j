@@ -9463,6 +9463,12 @@ acceptedBreaks:
   "3.2.3":
     org.mnode.ical4j:ical4j:
     - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.DateList::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.model.parameter.Value) throws java.text.ParseException"
+      new: "method void net.fortuna.ical4j.model.DateList<T extends java.time.temporal.Temporal>::<init>(net.fortuna.ical4j.model.TimeZoneRegistry,\
+        \ T[])"
+      justification: "improve_datelist_signature"
+    - code: "java.method.exception.checkedRemoved"
       old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws jakarta.mail.internet.AddressException"
       new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)"
@@ -9471,6 +9477,22 @@ acceptedBreaks:
       old: "method void net.fortuna.ical4j.model.PeriodList::<init>(boolean, boolean)"
       new: "method void net.fortuna.ical4j.model.PeriodList<T extends java.time.temporal.Temporal>::<init>(org.threeten.extra.Interval[])"
       justification: "major_version_update"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.DateList::<init>(===boolean===)"
+      new: "parameter void net.fortuna.ical4j.model.DateList<T extends java.time.temporal.Temporal>::<init>(===T[]===)"
+      justification: "improve_datelist_signature"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.DateList::<init>(===java.lang.String===,\
+        \ net.fortuna.ical4j.model.parameter.Value) throws java.text.ParseException"
+      new: "parameter void net.fortuna.ical4j.model.DateList<T extends java.time.temporal.Temporal>::<init>(===net.fortuna.ical4j.model.TimeZoneRegistry===,\
+        \ T[])"
+      justification: "improve_datelist_signature"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.DateList::<init>(java.lang.String,\
+        \ ===net.fortuna.ical4j.model.parameter.Value===) throws java.text.ParseException"
+      new: "parameter void net.fortuna.ical4j.model.DateList<T extends java.time.temporal.Temporal>::<init>(net.fortuna.ical4j.model.TimeZoneRegistry,\
+        \ ===T[]===)"
+      justification: "improve_datelist_signature"
     - code: "java.method.parameterTypeChanged"
       old: "parameter void net.fortuna.ical4j.model.property.FreeBusy::<init>(===net.fortuna.ical4j.model.PeriodList===)"
       new: "parameter void net.fortuna.ical4j.model.property.FreeBusy::<init>(===java.util.List<org.threeten.extra.Interval>===)"
@@ -9484,3 +9506,7 @@ acceptedBreaks:
     - code: "java.method.removed"
       old: "method net.fortuna.ical4j.model.PeriodList net.fortuna.ical4j.model.property.FreeBusy::getPeriods()"
       justification: "major_version_update"
+    - code: "java.method.visibilityReduced"
+      old: "method void net.fortuna.ical4j.model.DateList::<init>(net.fortuna.ical4j.model.parameter.Value)"
+      new: "method void net.fortuna.ical4j.model.DateList<T extends java.time.temporal.Temporal>::<init>(java.util.List<net.fortuna.ical4j.model.TemporalAdapter<T>>)"
+      justification: "improve_datelist_signature"
