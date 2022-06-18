@@ -38,6 +38,8 @@ import net.fortuna.ical4j.model.parameter.TzId;
 
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  * $Id$
@@ -49,13 +51,13 @@ import java.text.ParseException;
  */
 public class DateListPropertyTest extends PropertyTest {
 
-    private DateListProperty property;
+    private DateListProperty<?> property;
 
     /**
      * @param property
      * @param expectedValue
      */
-    public DateListPropertyTest(DateListProperty property, String expectedValue) {
+    public DateListPropertyTest(DateListProperty<?> property, String expectedValue) {
         super(property, expectedValue);
     }
 
@@ -63,7 +65,7 @@ public class DateListPropertyTest extends PropertyTest {
      * @param testMethod
      * @param property
      */
-    public DateListPropertyTest(String testMethod, DateListProperty property) {
+    public DateListPropertyTest(String testMethod, DateListProperty<?> property) {
         super(testMethod, property);
         this.property = property;
     }
@@ -82,11 +84,12 @@ public class DateListPropertyTest extends PropertyTest {
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        ExDate exZulu = new ExDate();
+        ExDate<Instant> exZulu = new ExDate<>();
         exZulu.setValue("20111212T000000Z");
         suite.addTest(new DateListPropertyTest("testCopy", exZulu));
 
-        ExDate exMelbourne = new ExDate().withParameter(new TzId("Australia/Melbourne")).getFluentTarget();
+        ExDate<ZonedDateTime> exMelbourne = new ExDate<>().withParameter(new TzId("Australia/Melbourne"))
+                .getFluentTarget();
         exMelbourne.setValue("20111212T000000");
 
         suite.addTest(new DateListPropertyTest("testCopy", exMelbourne));

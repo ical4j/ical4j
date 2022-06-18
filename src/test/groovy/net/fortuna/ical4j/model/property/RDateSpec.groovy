@@ -34,6 +34,9 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
+import java.time.ZoneId
+import java.time.ZonedDateTime
+
 class RDateSpec extends Specification {
 
 	def 'should not be able to add periods to default rdate instance'() {
@@ -42,5 +45,20 @@ class RDateSpec extends Specification {
 
 		expect: 'periods not available'
 		!rdate.periods.isPresent()
+	}
+
+	def 'test rdate with default timezone'() {
+		given: 'a floating date list string'
+		def dates = '20220617T140000,20220618T140000'
+
+		and: 'an rdate property with default timezone'
+		RDate<ZonedDateTime> rdate = new RDate<>()
+		rdate.setDefaultTimeZone(ZoneId.of('America/Toronto'))
+
+		when: 'rdate value is set from date list string'
+		rdate.setValue(dates)
+
+		then: 'rdate dates are rendered local in the default timezone'
+		rdate.dates.forEach(d -> d.zone.id == 'America/Toronto')
 	}
 }

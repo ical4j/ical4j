@@ -5,6 +5,7 @@ import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.codec.DecoderException;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class PropertyBuilder extends AbstractContentBuilder {
     private final List<Parameter> parameters = new ArrayList<>();
 
     private TimeZoneRegistry timeZoneRegistry;
+
+    private ZoneId defaultTimeZone;
 
     public PropertyBuilder() {
         this(new ArrayList<>());
@@ -68,6 +71,11 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return this;
     }
 
+    public PropertyBuilder defaultTimeZone(ZoneId defaultTimeZone) {
+        this.defaultTimeZone = defaultTimeZone;
+        return this;
+    }
+
     public Property build() {
         Property property = null;
         String decodedValue;
@@ -81,10 +89,14 @@ public class PropertyBuilder extends AbstractContentBuilder {
             if (factory.supports(name)) {
                 property = factory.createProperty(new ParameterList(parameters), value);
                 if (property instanceof DateProperty) {
-                    ((DateProperty<?>) property).setTimeZoneRegistry(timeZoneRegistry);
+                    DateProperty<?> dateProp = (DateProperty<?>) property;
+                    dateProp.setTimeZoneRegistry(timeZoneRegistry);
+                    dateProp.setDefaultTimeZone(defaultTimeZone);
                     property.setValue(value);
                 } else if (property instanceof DateListProperty) {
-                    ((DateListProperty<?>) property).setTimeZoneRegistry(timeZoneRegistry);
+                    DateListProperty<?> dateListProperty = (DateListProperty<?>) property;
+                    dateListProperty.setTimeZoneRegistry(timeZoneRegistry);
+                    dateListProperty.setDefaultTimeZone(defaultTimeZone);
                     property.setValue(value);
                 }
             }

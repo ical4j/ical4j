@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 
+import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +73,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     private DateList<T> dates;
 
     private transient TimeZoneRegistry timeZoneRegistry;
+
+    private ZoneId defaultTimeZone;
 
     /**
      * @param name the property name
@@ -131,6 +134,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
             dates = (DateList<T>) DateList.parse(aValue, tzId.get(), timeZoneRegistry);
+        } else if (defaultTimeZone != null) {
+            dates = (DateList<T>) DateList.parse(aValue, defaultTimeZone);
         } else {
             dates = (DateList<T>) DateList.parse(aValue);
         }
@@ -151,5 +156,14 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
 
     public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
+    }
+
+    /**
+     * A default timezone may be specified for interpreting floating DATE-TIME values. In the absence of a default
+     * timezone the system default timezone will be used.
+     * @param defaultTimeZone a timezone identifier
+     */
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        this.defaultTimeZone = defaultTimeZone;
     }
 }

@@ -82,6 +82,11 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     private transient TimeZoneRegistry timeZoneRegistry;
 
     /**
+     *
+     */
+    private ZoneId defaultTimeZone;
+
+    /**
      * @param name       the property name
      * @param parameters a list of initial parameters
      */
@@ -163,8 +168,13 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         if (value != null && !value.isEmpty()) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
             try {
-                this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
-                        .orElseGet(() -> TemporalAdapter.parse(value, parseFormat));
+                if (tzId.isPresent()) {
+                    this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, tzId.get(), timeZoneRegistry);
+                } else if (defaultTimeZone != null) {
+                    this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, defaultTimeZone);
+                } else {
+                    this.date = TemporalAdapter.parse(value, parseFormat);
+                }
             } catch (DateTimeParseException dtpe) {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     LoggerFactory.getLogger(DateProperty.class).warn("Invalid DATE-TIME format", dtpe);
@@ -196,6 +206,15 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
+    }
+
+    /**
+     * A default timezone may be specified for interpreting floating DATE-TIME values. In the absence of a default
+     * timezone the system default timezone will be used.
+     * @param defaultTimeZone a timezone identifier
+     */
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        this.defaultTimeZone = defaultTimeZone;
     }
 
     private boolean shouldApplyTimezone() {
