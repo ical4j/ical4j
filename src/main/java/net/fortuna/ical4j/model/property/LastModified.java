@@ -31,13 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.CalendarDateFormat;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 
 import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * $Id$
@@ -78,7 +76,7 @@ import java.time.Instant;
  *
  * @author benf
  */
-public class LastModified extends DateProperty<Instant> {
+public class LastModified extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 5288572652052836062L;
 
@@ -120,6 +118,16 @@ public class LastModified extends DateProperty<Instant> {
     public LastModified(final ParameterList aList, final Instant aDate) {
         super(LAST_MODIFIED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
     }
 
     @Override

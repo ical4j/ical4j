@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
 import java.util.Collections;
@@ -148,7 +149,7 @@ import static net.fortuna.ical4j.model.Parameter.VALUE;
  *
  * @author Ben Fortuna
  */
-public class Trigger extends DateProperty<Instant> {
+public class Trigger extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 5049421499261722194L;
 
@@ -306,6 +307,16 @@ public class Trigger extends DateProperty<Instant> {
         super.setDate(null);
         // duration is the default value type for Trigger..
         replace(Value.DURATION);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
     }
 
     @Override

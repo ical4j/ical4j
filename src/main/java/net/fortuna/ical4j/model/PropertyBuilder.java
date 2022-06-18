@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.UtcProperty;
 import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.codec.DecoderException;
 
@@ -90,9 +91,12 @@ public class PropertyBuilder extends AbstractContentBuilder {
                 property = factory.createProperty(new ParameterList(parameters), value);
                 if (property instanceof DateProperty) {
                     DateProperty<?> dateProp = (DateProperty<?>) property;
-                    dateProp.setTimeZoneRegistry(timeZoneRegistry);
-                    dateProp.setDefaultTimeZone(defaultTimeZone);
-                    property.setValue(value);
+                    // don't set timezone on UTC-formatted properties..
+                    if (!(dateProp instanceof UtcProperty)) {
+                        dateProp.setTimeZoneRegistry(timeZoneRegistry);
+                        dateProp.setDefaultTimeZone(defaultTimeZone);
+                        property.setValue(value);
+                    }
                 } else if (property instanceof DateListProperty) {
                     DateListProperty<?> dateListProperty = (DateListProperty<?>) property;
                     dateListProperty.setTimeZoneRegistry(timeZoneRegistry);

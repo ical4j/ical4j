@@ -7,13 +7,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.CalendarDateFormat;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 
 import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * 
@@ -65,7 +63,7 @@ import java.time.Instant;
 
    ACKNOWLEDGED:20090604T084500Z
  */
-public class Acknowledged extends DateProperty<Instant> {
+public class Acknowledged extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 596619479148598528L;
 
@@ -104,6 +102,16 @@ public class Acknowledged extends DateProperty<Instant> {
     public Acknowledged(final ParameterList aList, final Instant aDate) {
         super(ACKNOWLEDGED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
     }
 
     @Override

@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 
 import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * $Id$
@@ -82,7 +83,7 @@ import java.time.Instant;
  *
  * @author Ben Fortuna
  */
-public class DtStamp extends DateProperty<Instant> {
+public class DtStamp extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 7581197869433744070L;
 
@@ -132,6 +133,16 @@ public class DtStamp extends DateProperty<Instant> {
             return new TemporalComparator().compare(getDate(), ((DateProperty) o).getDate());
         }
         return super.compareTo(o);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
     }
 
     @Override

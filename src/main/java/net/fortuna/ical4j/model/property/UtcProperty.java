@@ -33,53 +33,17 @@
 
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 
-import java.time.Instant;
 import java.time.ZoneId;
 
-public class TzUntil extends DateProperty<Instant> implements UtcProperty {
+public interface UtcProperty {
 
-    public TzUntil() {
-        super(TZUNTIL, new ParameterList(), CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
+    default void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        throw new UnsupportedOperationException("UTC properties don't support timezones");
     }
 
-    public TzUntil(ParameterList parameters, String value) {
-        super(TZUNTIL, parameters, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
-        setValue(value);
-    }
-
-    @Override
-    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
-        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
-    }
-
-    @Override
-    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
-        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
-    }
-
-    @Override
-    protected PropertyFactory<TzUntil> newFactory() {
-        return new Factory();
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory<TzUntil> {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(TZUNTIL);
-        }
-
-        @Override
-        public TzUntil createProperty(final ParameterList parameters, final String value) {
-            return new TzUntil(parameters, value);
-        }
-
-        @Override
-        public TzUntil createProperty() {
-            return new TzUntil();
-        }
+    default void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        throw new UnsupportedOperationException("UTC properties don't support timezones");
     }
 }
