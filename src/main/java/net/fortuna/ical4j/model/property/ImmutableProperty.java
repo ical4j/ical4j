@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2022, Ben Fortuna
+ *  Copyright (c) 2022-2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
  *
  */
 
-package net.fortuna.ical4j.model.property.immutable;
+package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;

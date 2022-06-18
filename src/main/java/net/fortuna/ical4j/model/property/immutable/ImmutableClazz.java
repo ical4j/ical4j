@@ -36,6 +36,7 @@ package net.fortuna.ical4j.model.property.immutable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.Clazz;
+import net.fortuna.ical4j.model.property.ImmutableProperty;
 
 /**
  * @author Ben Fortuna An immutable instance of Clazz.

@@ -115,12 +115,6 @@ public class CalendarBuilder implements Consumer<Calendar> {
         this.contentHandler = new DefaultContentHandler(this, tzRegistry);
     }
 
-    public CalendarBuilder(CalendarParser parser, TimeZoneRegistry tzRegistry, ContentHandler contentHandler) {
-        this.parser = parser;
-        this.tzRegistry = tzRegistry;
-        this.contentHandler = contentHandler;
-    }
-
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
@@ -139,7 +133,7 @@ public class CalendarBuilder implements Consumer<Calendar> {
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
-     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser,TimeZoneRegistry, ContentHandler)}
+     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser,ContentHandlerContext, TimeZoneRegistry)}
      */
     @Deprecated
     public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
@@ -158,9 +152,7 @@ public class CalendarBuilder implements Consumer<Calendar> {
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
-     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser, TimeZoneRegistry, ContentHandler)}
      */
-    @Deprecated
     public CalendarBuilder(CalendarParser parser, ContentHandlerContext contentHandlerContext,
                            TimeZoneRegistry tzRegistry) {
 

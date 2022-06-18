@@ -35,6 +35,7 @@ package net.fortuna.ical4j.model.property.immutable;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.property.ImmutableProperty;
 import net.fortuna.ical4j.model.property.Priority;
 
 /**
