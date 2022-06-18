@@ -20,16 +20,16 @@ public class DefaultContentHandler implements ContentHandler {
 
     private final Consumer<Calendar> consumer;
 
-    private PropertyBuilder propertyBuilder;
+    protected PropertyBuilder propertyBuilder;
 
     /**
      * The current component builders.
      */
-    private final LinkedList<ComponentBuilder<CalendarComponent>> components = new LinkedList<>();
+    protected final LinkedList<ComponentBuilder<CalendarComponent>> components = new LinkedList<>();
 
-    private List<Property> calendarProperties;
+    protected List<Property> calendarProperties;
 
-    private List<CalendarComponent> calendarComponents;
+    protected List<CalendarComponent> calendarComponents;
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
         this(consumer, tzRegistry, new ContentHandlerContext());
@@ -127,7 +127,8 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void startProperty(String name) {
         if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
-            propertyBuilder = new PropertyBuilder(context.getPropertyFactorySupplier().get()).name(name).timeZoneRegistry(tzRegistry);
+            propertyBuilder = new PropertyBuilder(context.getPropertyFactorySupplier().get()).name(name)
+                    .timeZoneRegistry(tzRegistry);
         } else {
             propertyBuilder = null;
         }

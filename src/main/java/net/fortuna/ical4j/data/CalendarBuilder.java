@@ -115,6 +115,12 @@ public class CalendarBuilder implements Consumer<Calendar> {
         this.contentHandler = new DefaultContentHandler(this, tzRegistry);
     }
 
+    public CalendarBuilder(CalendarParser parser, TimeZoneRegistry tzRegistry, ContentHandler contentHandler) {
+        this.parser = parser;
+        this.tzRegistry = tzRegistry;
+        this.contentHandler = contentHandler;
+    }
+
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
@@ -123,14 +129,17 @@ public class CalendarBuilder implements Consumer<Calendar> {
     public CalendarBuilder(CalendarParser parser, PropertyFactoryRegistry propertyFactoryRegistry,
                            ParameterFactoryRegistry parameterFactoryRegistry, TimeZoneRegistry tzRegistry) {
 
-        this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactoryRegistry)
-                        .withPropertyFactorySupplier(propertyFactoryRegistry), tzRegistry);
+        this.parser = parser;
+        this.tzRegistry = tzRegistry;
+        this.contentHandler = new DefaultContentHandler(this, tzRegistry,
+                new ContentHandlerContext().withParameterFactorySupplier(parameterFactoryRegistry)
+                        .withPropertyFactorySupplier(propertyFactoryRegistry));
     }
 
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
-     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser, ContentHandlerContext, TimeZoneRegistry)}
+     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser,TimeZoneRegistry, ContentHandler)}
      */
     @Deprecated
     public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
@@ -138,15 +147,20 @@ public class CalendarBuilder implements Consumer<Calendar> {
                            Supplier<List<ComponentFactory<?>>> componentFactorySupplier,
                            TimeZoneRegistry tzRegistry) {
 
-        this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
+        this.parser = parser;
+        this.tzRegistry = tzRegistry;
+        this.contentHandler = new DefaultContentHandler(this, tzRegistry,
+                new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
                 .withPropertyFactorySupplier(propertyFactorySupplier)
-                .withComponentFactorySupplier(componentFactorySupplier), tzRegistry);
+                .withComponentFactorySupplier(componentFactorySupplier));
     }
 
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
+     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser, TimeZoneRegistry, ContentHandler)}
      */
+    @Deprecated
     public CalendarBuilder(CalendarParser parser, ContentHandlerContext contentHandlerContext,
                            TimeZoneRegistry tzRegistry) {
 
