@@ -272,12 +272,20 @@ public class Priority extends Property {
                 throws IOException, URISyntaxException, ParseException {
 
             if (parameters.isEmpty()) {
-                int level = Integer.parseInt(value);
-                switch (level) {
-                    case VALUE_UNDEFINED: return UNDEFINED;
-                    case VALUE_HIGH: return HIGH;
-                    case VALUE_MEDIUM: return MEDIUM;
-                    case VALUE_LOW: return LOW;
+                try {
+                    int level = Integer.parseInt(value);
+                    switch (level) {
+                        case VALUE_UNDEFINED: return UNDEFINED;
+                        case VALUE_HIGH: return HIGH;
+                        case VALUE_MEDIUM: return MEDIUM;
+                        case VALUE_LOW: return LOW;
+                    }
+                } catch (NumberFormatException e) {
+                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                        return UNDEFINED;
+                    } else {
+                        throw e;
+                    }
                 }
             }
             return new Priority(parameters, value);
