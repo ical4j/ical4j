@@ -37,7 +37,7 @@ class PrioritySpec extends Specification {
         def priority = factory.createProperty(value)
 
         then: 'an illegal argument exception is thrown'
-        thrown(IllegalArgumentException)
+        notThrown(IllegalArgumentException)
 
         where:
         value << ['', 'low', 'blah']
