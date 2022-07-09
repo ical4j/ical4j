@@ -233,17 +233,17 @@ public class Priority extends Property {
                 try {
                     int level = Integer.parseInt(value);
                     switch (level) {
-                        case VALUE_UNDEFINED:
-                            return UNDEFINED;
-                        case VALUE_HIGH:
-                            return HIGH;
-                        case VALUE_MEDIUM:
-                            return MEDIUM;
-                        case VALUE_LOW:
-                            return LOW;
+                        case VALUE_UNDEFINED: return UNDEFINED;
+                        case VALUE_HIGH: return HIGH;
+                        case VALUE_MEDIUM: return MEDIUM;
+                        case VALUE_LOW: return LOW;
                     }
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException(e);
+                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                        return UNDEFINED;
+                    } else {
+                        throw new IllegalArgumentException(e);
+                    }
                 }
             }
             return new Priority(parameters, value);

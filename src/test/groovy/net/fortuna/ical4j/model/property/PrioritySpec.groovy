@@ -26,6 +26,7 @@ class PrioritySpec extends Specification {
         '9' | LOW
         '5' | MEDIUM
         '1' | HIGH
+        '0' | UNDEFINED
     }
 
     def 'test relaxed parsing with invalid values'() {
