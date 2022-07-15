@@ -462,4 +462,18 @@ class RecurSpec extends Specification {
         rule	| seed	| start	| expectedDate
         'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| new DateTime('20180329T025959')	| new DateTime('20170729T030000')	| new DateTime('20180329T025959')
     }
+
+    def 'test BYDAY with MINUTELY precision'() {
+        given: 'a recurrence rule'
+        Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).interval(1)
+                .dayList(new WeekDayList(MO)).hourList(new NumberList('16')).minuteList(new NumberList('37,38'))
+                .until(new DateTime('20220519T165900')).build()
+
+        when: 'dates are generated for a period'
+        def dates = recur.getDates(new DateTime('20220505T143700Z'),
+                new DateTime('20220519T145900Z'), Value.DATE_TIME)
+
+        then: 'result matches expected'
+        dates == new DateList('20220509T163700Z,20220509T163800Z,20220516T163700Z,20220516T163800Z', Value.DATE_TIME)
+    }
 }
