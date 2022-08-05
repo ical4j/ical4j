@@ -221,8 +221,14 @@ public class Geo extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue, final boolean relaxed) {
-        String sep = relaxed ? "\\;" : ";";
+        String sep = ";";
+
+        if (relaxed && aValue.indexOf("\\;" != -1) {
+            sep = "\\;";
+        }
+
         final String latitudeString = aValue.substring(0, aValue.indexOf(sep));
+        if ()
         if (StringUtils.isNotBlank(latitudeString)) {
             latitude = new BigDecimal(latitudeString);
         } else {
