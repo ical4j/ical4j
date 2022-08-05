@@ -38,6 +38,7 @@ import spock.lang.Specification
 
 import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING
 import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_UNFOLDING
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_GEO_PARSING
 
 class CalendarParserImplSpec extends Specification {
 	
@@ -87,6 +88,7 @@ class CalendarParserImplSpec extends Specification {
 		'/samples/valid/bhav23-1.ics'	| []
 		'/samples/invalid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
 		'/samples/valid/blankTzid.ics'  | []
+		'/samples/invalid/sogo-geo-escaped-semicolon.ics' | [KEY_RELAXED_GEO_PARSING]
 	}
 
 	def 'verify parsing empty lines'() {

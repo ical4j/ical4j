@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -159,7 +161,7 @@ public class Geo extends Property {
      */
     public Geo(final String value) {
         super(GEO, new Factory());
-        setValue(value);
+        setValue(value, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_GEO_PARSING));
     }
 
     /**
@@ -168,7 +170,7 @@ public class Geo extends Property {
      */
     public Geo(final ParameterList aList, final String aValue) {
         super(GEO, aList, new Factory());
-        setValue(aValue);
+        setValue(aValue, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_GEO_PARSING));
     }
 
     /**
@@ -212,14 +214,22 @@ public class Geo extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        final String latitudeString = aValue.substring(0, aValue.indexOf(';'));
+        setValue(aValue, false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final void setValue(final String aValue, final boolean relaxed) {
+        String sep = relaxed ? "\\;" : ";";
+        final String latitudeString = aValue.substring(0, aValue.indexOf(sep));
         if (StringUtils.isNotBlank(latitudeString)) {
             latitude = new BigDecimal(latitudeString);
         } else {
             latitude = BigDecimal.valueOf(0);
         }
 
-        final String longitudeString = aValue.substring(aValue.indexOf(';') + 1);
+        final String longitudeString = aValue.substring(aValue.indexOf(sep) + sep.length());
         if (StringUtils.isNotBlank(longitudeString)) {
             longitude = new BigDecimal(longitudeString);
         } else {

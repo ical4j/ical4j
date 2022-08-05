@@ -81,6 +81,11 @@ public final class CompatibilityHints {
      */
     public static final String KEY_VCARD_COMPATIBILITY = "ical4j.compatibility.vcard";
 
+    /**
+     * Support GEO fields being delimited by \; instead of ; as SOGo does.
+     */
+    public static final String KEY_RELAXED_GEO_PARSING = "ical4j.compatibility.geo";
+
     private static final Map<String, Boolean> HINTS = new ConcurrentHashMap<String, Boolean>();
     // preload known hints from the configurator
     static {
@@ -89,6 +94,7 @@ public final class CompatibilityHints {
         setHintEnabled(KEY_RELAXED_VALIDATION, "true".equals(Configurator.getProperty(KEY_RELAXED_VALIDATION).orElse("false")));
         setHintEnabled(KEY_OUTLOOK_COMPATIBILITY, "true".equals(Configurator.getProperty(KEY_OUTLOOK_COMPATIBILITY).orElse("false")));
         setHintEnabled(KEY_NOTES_COMPATIBILITY, "true".equals(Configurator.getProperty(KEY_NOTES_COMPATIBILITY).orElse("false")));
+        setHintEnabled(KEY_RELAXED_GEO_PARSING, "true".equals(Configurator.getProperty(KEY_RELAXED_GEO_PARSING).orElse("false")));
     }
 
     /**
