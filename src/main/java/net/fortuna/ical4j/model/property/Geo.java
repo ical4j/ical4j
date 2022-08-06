@@ -37,15 +37,17 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * $Id$
@@ -141,6 +143,10 @@ public class Geo extends Property {
 
     private static final long serialVersionUID = -902100715801867636L;
 
+    private static final Pattern VALUE_PATTERN = Pattern.compile("([+-]?[0-9]+\\.?[0-9]*);([+-]?[0-9]+\\.?[0-9]*)");
+
+    private static final Pattern RELAXED_VALUE_PATTERN = Pattern.compile("([+-]?[0-9]+\\.?[0-9]*)\\\\?;([+-]?[0-9]+\\.?[0-9]*)");
+
     private BigDecimal latitude;
 
     private BigDecimal longitude;
@@ -214,33 +220,20 @@ public class Geo extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        setValue(aValue, false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue, final boolean relaxed) {
-        String sep = ";";
-
-        if (relaxed && aValue.indexOf("\\;" != -1) {
-            sep = "\\;";
-        }
-
-        final String latitudeString = aValue.substring(0, aValue.indexOf(sep));
-        if ()
-        if (StringUtils.isNotBlank(latitudeString)) {
-            latitude = new BigDecimal(latitudeString);
+        Matcher matcher;
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            matcher = RELAXED_VALUE_PATTERN.matcher(aValue);
         } else {
-            latitude = BigDecimal.valueOf(0);
+            matcher = VALUE_PATTERN.matcher(aValue);
         }
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid GEO string");
+        }
+        final String latitudeString = matcher.group(1);
+        latitude = new BigDecimal(latitudeString);
 
-        final String longitudeString = aValue.substring(aValue.indexOf(sep) + sep.length());
-        if (StringUtils.isNotBlank(longitudeString)) {
-            longitude = new BigDecimal(longitudeString);
-        } else {
-            longitude = BigDecimal.valueOf(0);
-        }
+        final String longitudeString = matcher.group(2);
+        longitude = new BigDecimal(longitudeString);
     }
 
     /**
