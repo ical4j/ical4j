@@ -428,15 +428,16 @@ class RecurSpec extends Specification {
 
     def 'test BYDAY with MINUTELY precision'() {
         given: 'a recurrence rule'
-        Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).interval(1)
-                .dayList(new WeekDayList(MO)).hourList(new NumberList('16')).minuteList(new NumberList('37,38'))
-                .until(new DateTime('20220519T165900')).build()
+        Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
+                .dayList(new WeekDayList(MO)).hourList(new NumberList('16'))
+                .minuteList(new NumberList('37,38'))
+                .until((LocalDateTime) TemporalAdapter.parse('20220519T165900').temporal).build()
 
         when: 'dates are generated for a period'
-        def dates = recur.getDates(new DateTime('20220505T143700Z'),
-                new DateTime('20220519T145900Z'), Value.DATE_TIME)
+        def dates = recur.getDates((LocalDateTime) TemporalAdapter.parse('20220505T143700').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20220519T145900').temporal)
 
         then: 'result matches expected'
-        dates == new DateList('20220509T163700Z,20220509T163800Z,20220516T163700Z,20220516T163800Z', Value.DATE_TIME)
+        dates == DateList.parse('20220509T163700,20220509T163800,20220516T163700,20220516T163800').dates
     }
 }
