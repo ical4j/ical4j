@@ -8,6 +8,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_VALIDATION;
 
 /**
  * From specification:
@@ -62,7 +63,8 @@ public class Email extends Parameter implements Encodable {
         } else {
             this.address = address;
         }
-        if (!EmailValidator.getInstance().isValid(this.address)) {
+        if (!CompatibilityHints.isHintEnabled(KEY_RELAXED_VALIDATION)
+                && !EmailValidator.getInstance().isValid(this.address)) {
             throw new IllegalArgumentException("Invalid address: " + address);
         }
     }
