@@ -96,7 +96,7 @@ public class StructuredData extends Property implements Encodable {
      */
     public final void setValue(final String aValue) {
         // value can be either binary or a URI or default to text
-        if (getParameters(Parameter.ENCODING).isEmpty()) {
+        if (!getParameters(Parameter.ENCODING).isEmpty()) {
             // binary = Base64.decode(aValue);
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
