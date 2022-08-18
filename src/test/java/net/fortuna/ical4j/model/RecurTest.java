@@ -601,9 +601,9 @@ public class RecurTest<T extends Temporal> extends TestCase {
                 .dayList(new WeekDayList(MO, TU, WE, TH, FR)).build();
         log.debug(weekDays.toString());
         
-        start = ZonedDateTime.now();
+        start = ZonedDateTime.of(2022, 8, 18, 11, 3, 0, 0, ZoneId.systemDefault());
         end = start.plusDays(10);
-        suite.addTest(new RecurTest<>(weekDays, start, end, Value.DATE, 8));
+        suite.addTest(new RecurTest<>(weekDays, start, end, Value.DATE, 7));
 
         // Test BYDAY recurrence rules..
         Recur<ZonedDateTime> fifthTuesday = new Recur<>("FREQ=MONTHLY;WKST=SU;INTERVAL=2;BYDAY=5TU");
