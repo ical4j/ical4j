@@ -15,7 +15,7 @@
 [RFC9073]: https://datatracker.ietf.org/doc/html/rfc9073
 [RFC9074]: https://datatracker.ietf.org/doc/html/rfc9074
 
-[Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
+[mavenrepo]: https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j
 
 [Introduction]: #introduction
 
@@ -71,7 +71,7 @@ standard.
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
 
- - You will find examples of how to use iCal4j in [the wiki](https://github.com/ical4j/ical4j/wiki)
+ - You will find examples of how to use iCal4j in [the official website](https://www.ical4j.org/examples/overview/)
  and throughout the [API documentation](https://ical4j.github.io/docs/ical4j/api).
 
  - Detailed descriptions of changes included in each release may be found
@@ -84,6 +84,7 @@ standard.
 
 ### System requirements
 
+ - Version 4.x - Java 8 or later
  - Version 3.x - Java 8 or later
  - Version 2.x - Java 7 or later
 
@@ -114,7 +115,7 @@ is used only to generate version information in the javadoc API documentation.
 
 ### Release Downloads
 
-* [Bintray Releases]
+* [mavenrepo]
 
 ### Install with Maven
 
