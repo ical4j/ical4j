@@ -177,7 +177,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                 }
             } catch (DateTimeParseException dtpe) {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                    LoggerFactory.getLogger(DateProperty.class).warn("Invalid DATE-TIME format", dtpe);
+                    LoggerFactory.getLogger(DateProperty.class).debug("Invalid DATE-TIME format", dtpe);
 
                     // parse with relaxed format..
                     this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
