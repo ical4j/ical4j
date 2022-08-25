@@ -179,7 +179,7 @@ public class DefaultContentHandler implements ContentHandler {
                     .name(name).value(value).build();
 
             if (parameter instanceof TzId && tzRegistry != null) {
-                // VTIMEZONE may be defined later, so so keep
+                // VTIMEZONE may be defined later, so keep
                 // track of dates until all components have been
                 // parsed, and then try again later
                 propertyHasTzId = true;
