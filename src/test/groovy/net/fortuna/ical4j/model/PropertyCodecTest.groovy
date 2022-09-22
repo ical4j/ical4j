@@ -42,10 +42,10 @@ class PropertyCodecTest extends Specification {
         PropertyCodec.INSTANCE.encode(value) == encodedValue
 
         where:
-        value   | encodedValue
-        ''      | ''
-        '\n'    | '\\n'
-        '\r\n'    | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\\r test R\\r end'
+        value                                           | encodedValue
+        ''                                              | ''
+        '\n'                                            | '\\n'
+        '\r\n'                                          | '\\n'
+        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
     }
 }
