@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable, PropertyContainer {
+public abstract class Component implements Serializable, PropertyContainer, FluentComponent {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -180,6 +181,11 @@ public abstract class Component implements Serializable, PropertyContainer {
         return name;
     }
 
+    @Override
+    public <C extends Component> C getFluentTarget() {
+        return (C) this;
+    }
+
     /**
      * @return Returns the properties.
      */
@@ -207,8 +213,8 @@ public abstract class Component implements Serializable, PropertyContainer {
      *
      * @throws ValidationException where the component is not in a valid state
      */
-    public final void validate() throws ValidationException {
-        validate(true);
+    public ValidationResult validate() throws ValidationException {
+        return validate(true);
     }
 
     /**
@@ -217,17 +223,19 @@ public abstract class Component implements Serializable, PropertyContainer {
      * @param recurse indicates whether to validate the component's properties
      * @throws ValidationException where the component is not in a valid state
      */
-    public abstract void validate(final boolean recurse) throws ValidationException;
+    public abstract ValidationResult validate(final boolean recurse) throws ValidationException;
 
     /**
      * Invoke validation on the component properties in its current state.
      *
      * @throws ValidationException where any of the component properties is not in a valid state
      */
-    protected final void validateProperties() throws ValidationException {
+    protected ValidationResult validateProperties() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
-            property.validate();
+            result = result.merge(property.validate());
         }
+        return result;
     }
 
     /**

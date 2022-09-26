@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.UtcPropertyValidator;
 
 /**
@@ -104,7 +105,7 @@ public abstract class UtcProperty extends DateProperty {
      * {@inheritDoc}
      */
     @Override
-    public void validate() throws ValidationException {
-        new UtcPropertyValidator<>().validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return new UtcPropertyValidator<>().validate(this);
     }
 }

@@ -35,8 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -55,10 +56,12 @@ public class CalScale extends Property {
 
     private static final long serialVersionUID = 7446184786984981423L;
 
+    public static final String VALUE_GREGORIAN = "GREGORIAN";
+
     /**
      * Constant for Gregorian calendar representation.
      */
-    public static final CalScale GREGORIAN = new ImmutableCalScale("GREGORIAN");
+    public static final CalScale GREGORIAN = new ImmutableCalScale(VALUE_GREGORIAN);
 
     /**
      * @author Ben Fortuna An immutable instance of CalScale.
@@ -130,16 +133,8 @@ public class CalScale extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void validate() throws ValidationException {
-        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            if (!GREGORIAN.getValue().equalsIgnoreCase(value)) {
-                throw new ValidationException("Invalid value [" + value + "]");
-            }
-        } else {
-            if (!GREGORIAN.getValue().equals(value)) {
-                throw new ValidationException("Invalid value [" + value + "]");
-            }
-        }
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.CALSCALE.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<CalScale> {
@@ -153,13 +148,10 @@ public class CalScale extends Property {
         public CalScale createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            CalScale calScale;
-            if (GREGORIAN.getValue().equals(value)) {
-                calScale = GREGORIAN;
-            } else {
-                calScale = new CalScale(parameters, value);
+            if (parameters.isEmpty() && VALUE_GREGORIAN.equals(value)) {
+                return GREGORIAN;
             }
-            return calScale;
+            return new CalScale(parameters, value);
         }
 
         @Override
@@ -167,5 +159,4 @@ public class CalScale extends Property {
             return new CalScale();
         }
     }
-
 }

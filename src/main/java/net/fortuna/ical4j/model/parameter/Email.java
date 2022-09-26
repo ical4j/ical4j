@@ -5,11 +5,10 @@ import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_VALIDATION;
 
 /**
  * From specification:
@@ -55,20 +54,24 @@ public class Email extends Parameter implements Encodable {
 
     private static final String PARAMETER_NAME = "EMAIL";
 
-    private final InternetAddress address;
+    private final String address;
 
-    public Email(String address) throws AddressException {
+    public Email(String address) {
         super(PARAMETER_NAME, new Factory());
         if (CompatibilityHints.isHintEnabled(KEY_RELAXED_PARSING)) {
-            this.address = InternetAddress.parse(address.replaceFirst("\\.$", ""), false)[0];
+            this.address = address.replaceFirst("\\.$", "");
         } else {
-            this.address = InternetAddress.parse(address)[0];
+            this.address = address;
+        }
+        if (!CompatibilityHints.isHintEnabled(KEY_RELAXED_VALIDATION)
+                && !EmailValidator.getInstance().isValid(this.address)) {
+            throw new IllegalArgumentException("Invalid address: " + address);
         }
     }
 
     @Override
     public String getValue() {
-        return address.getAddress();
+        return address;
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<Email> {
@@ -80,11 +83,7 @@ public class Email extends Parameter implements Encodable {
 
         @Override
         public Email createParameter(final String value) {
-            try {
-                return new Email(value);
-            } catch (AddressException e) {
-                throw new IllegalArgumentException(e);
-            }
+            return new Email(value);
         }
     }
 }

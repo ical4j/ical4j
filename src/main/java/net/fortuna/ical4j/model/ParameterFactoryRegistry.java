@@ -44,7 +44,7 @@ public final class ParameterFactoryRegistry extends ParameterFactoryImpl {
      * @param name a non-standard parameter name
      * @param factory a factory for the non-standard parameter
      */
-    public void register(String name, ParameterFactory factory) {
+    public void register(String name, ParameterFactory<?> factory) {
         registerExtendedFactory(name, factory);
     }
 }

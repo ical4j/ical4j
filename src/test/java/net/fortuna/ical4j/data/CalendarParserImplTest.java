@@ -123,6 +123,7 @@ public class CalendarParserImplTest extends TestCase {
         suite.addTest(new CalendarParserImplTest("/samples/invalid/overlaps.ics", 1));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/schedule-unstable.ics", 196));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/zidestoreical4jbomb.ics", 10));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/sogo-geo-escaped-semicolon.ics", 9));
         return suite;
     }
 }

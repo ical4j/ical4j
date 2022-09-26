@@ -77,6 +77,18 @@ public class RelType extends Parameter implements Encodable {
      * VALARM "Snooze".
      */
     public static final RelType SNOOZE = new RelType(VALUE_SNOOZE);
+    
+    public static final RelType FINISHTOSTART = new RelType("FINISHTOSTART");
+
+    public static final RelType FINISHTOFINISH = new RelType("FINISHTOFINISH");
+
+    public static final RelType STARTTOFINISH = new RelType("STARTTOFINISH");
+    
+    public static final RelType STARTTOSTART = new RelType("STARTTOSTART");
+    public static final RelType FIRST = new RelType("FIRST");
+    public static final RelType DEPENDS_ON = new RelType("DEPENDS-ON");
+    public static final RelType REFID = new RelType("REFID");
+    public static final RelType CONCEPT = new RelType("CONCEPT");
 
     private final String value;
 
@@ -105,17 +117,13 @@ public class RelType extends Parameter implements Encodable {
 
         @Override
         public RelType createParameter(final String value) throws URISyntaxException {
-            RelType parameter = new RelType(value);
-            if (RelType.PARENT.equals(parameter)) {
-                parameter = RelType.PARENT;
-            } else if (RelType.CHILD.equals(parameter)) {
-                parameter = RelType.CHILD;
-            } else if (RelType.SIBLING.equals(parameter)) {
-                parameter = RelType.SIBLING;
-            } else if (RelType.SNOOZE.equals(parameter)) {
-                parameter = RelType.SNOOZE;
+            switch (value) {
+                case VALUE_CHILD: return CHILD;
+                case VALUE_PARENT: return PARENT;
+                case VALUE_SIBLING: return SIBLING;
+                case VALUE_SNOOZE: return SNOOZE;
             }
-            return parameter;
+            return new RelType(value);
         }
     }
 }

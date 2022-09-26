@@ -37,15 +37,20 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.validate.ParameterValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
+
+@Deprecated
 public class DatePropertyValidator<T extends DateProperty> implements Validator<T> {
 
+    private static final ValidationRule OPTIONAL_PARAMS = new ValidationRule(OneOrLess, Parameter.VALUE, Parameter.TZID);
+
+    private static final ValidationRule UTC_PARAMS = new ValidationRule(None, Parameter.TZID);
+
     @Override
-    public void validate(T target) throws ValidationException {
+    public ValidationResult validate(T target) throws ValidationException {
         ValidationResult result = new ValidationResult();
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
@@ -56,24 +61,18 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                target.getParameters());
-
+        result.getEntries().addAll(new PropertyRuleSet(OPTIONAL_PARAMS).apply(target.getName(), target));
         if (target.isUtc()) {
-            ParameterValidator.assertNone(Parameter.TZID,
-                    target.getParameters());
-        } else {
-            ParameterValidator.assertOneOrLess(Parameter.TZID,
-                    target.getParameters());
+            result.getEntries().addAll(new PropertyRuleSet(UTC_PARAMS).apply(target.getName(), target));
         }
-
         final Value value = target.getParameter(Parameter.VALUE);
 
         if (target.getDate() instanceof DateTime) {
 
             if (value != null && !Value.DATE_TIME.equals(value)) {
-                result.getErrors().add("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance");
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
+                        + "] is invalid for DATE-TIME instance", ValidationEntry.Severity.ERROR,
+                        target.getName()));
             }
 
             final DateTime dateTime = (DateTime) target.getDate();
@@ -84,22 +83,23 @@ public class DatePropertyValidator<T extends DateProperty> implements Validator<
                     && (tzId == null || !tzId.getValue().equals(
                     dateTime.getTimeZone().getID()))) {
 
-                result.getErrors().add("TZID parameter [" + tzId
+                result.getEntries().add(new ValidationEntry("TZID parameter [" + tzId
                         + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]");
+                        + dateTime.getTimeZone().getID() + "]", ValidationEntry.Severity.ERROR,
+                        target.getName()));
             }
         } else if (target.getDate() != null) {
 
             if (value == null) {
-                result.getErrors().add("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance");
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + Value.DATE
+                        + "] must be specified for DATE instance", ValidationEntry.Severity.ERROR,
+                        target.getName()));
             } else if (!Value.DATE.equals(value)) {
-                result.getErrors().add("VALUE parameter [" + value
-                        + "] is invalid for DATE instance");
+                result.getEntries().add(new ValidationEntry("VALUE parameter [" + value
+                        + "] is invalid for DATE instance", ValidationEntry.Severity.ERROR,
+                        target.getName()));
             }
         }
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
+        return result;
     }
 }

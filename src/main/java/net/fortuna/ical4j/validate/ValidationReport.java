@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2022, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,26 +31,55 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VJournal;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
-public class VJournalValidator implements Validator<VJournal> {
+/**
+ * Generate a report from a {@link ValidationResult}.
+ */
+public class ValidationReport {
 
-    @Override
-    public void validate(VJournal target) throws ValidationException {
-        ComponentValidator.VJOURNAL.validate(target);
+    public enum Format {
+        HTML, TEXT
+    }
 
-        final Status status = target.getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property [" + status + "] may not occur in VJOURNAL");
+    private final Format format;
+
+    public ValidationReport() {
+        this(Format.HTML);
+    }
+
+    public ValidationReport(Format format) {
+        this.format = format;
+    }
+
+    public void output(ValidationResult result, OutputStream out) throws IOException {
+        output(result, new OutputStreamWriter(out, StandardCharsets.UTF_8));
+    }
+
+    public void output(ValidationResult result, Writer out) throws IOException {
+        switch (format) {
+            case HTML: outputHtml(result, out); break;
+            case TEXT: outputText(result, out); break;
+        }
+    }
+
+    private void outputHtml(ValidationResult result, Writer out) throws IOException {
+        out.write("<ol>");
+        for (ValidationEntry entry : result.getEntries()) {
+            out.write(String.format("<li>%s: %s - %s</li>\n", entry.getContext(), entry.getSeverity(), entry.getMessage()));
+        }
+        out.write("</ol>");
+    }
+
+    private void outputText(ValidationResult result, Writer out) throws IOException {
+        for (ValidationEntry entry : result.getEntries()) {
+            out.write(String.format("- %s: %s - %s\n", entry.getSeverity(), entry.getContext(), entry.getMessage()));
         }
     }
 }

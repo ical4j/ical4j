@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.EmptyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
 /**
@@ -84,10 +85,10 @@ public abstract class CalendarComponent extends Component {
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
-    public final void validate(Method method) throws ValidationException {
+    public ValidationResult validate(Method method) throws ValidationException {
         final Validator<CalendarComponent> validator = getValidator(method);
         if (validator != null) {
-            validator.validate(this);
+            return validator.validate(this);
         }
         else {
             throw new ValidationException("Unsupported method: " + method);
@@ -98,13 +99,14 @@ public abstract class CalendarComponent extends Component {
      * @param method a method to validate on
      * @return a validator for the specified method or null if the method is not supported
      */
-    protected abstract Validator<CalendarComponent> getValidator(Method method);
+    protected abstract <T extends Validator<? extends CalendarComponent>> T getValidator(Method method);
     
     /**
      * Apply validation for METHOD=PUBLISH.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validatePublish() throws ValidationException {
         validate(Method.PUBLISH);
     }
@@ -114,6 +116,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validateRequest() throws ValidationException {
         validate(Method.REQUEST);
     }
@@ -123,6 +126,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validateReply() throws ValidationException {
         validate(Method.REPLY);
     }
@@ -132,6 +136,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validateAdd() throws ValidationException {
         validate(Method.ADD);
     }
@@ -141,6 +146,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validateCancel() throws ValidationException {
         validate(Method.CANCEL);
     }
@@ -150,6 +156,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validateRefresh() throws ValidationException {
         validate(Method.REFRESH);
     }
@@ -159,6 +166,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validateCounter() throws ValidationException {
         validate(Method.COUNTER);
     }
@@ -168,6 +176,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
+    @Deprecated
     public final void validateDeclineCounter() throws ValidationException {
         validate(Method.DECLINE_COUNTER);
     }

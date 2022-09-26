@@ -34,9 +34,10 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VAvailabilityValidator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -141,11 +142,12 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      * {@inheritDoc}
      */
     @Override
-    public final void validate(final boolean recurse) throws ValidationException {
-        new VAvailabilityValidator().validate(this);
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VAVAILABILITY.validate(this);
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     /**
@@ -157,6 +159,9 @@ public class VAvailability extends CalendarComponent implements ComponentContain
         return null;
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<VAvailability> {
 
         public Factory() {

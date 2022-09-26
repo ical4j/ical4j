@@ -52,6 +52,16 @@ public class Schema extends Parameter {
 
     private static final long serialVersionUID = -8581904779721020689L;
 
+    public static final Schema SCHEMA_ACTION = new Schema(URI.create("https://schema.org/Action"));
+
+    public static final Schema SCHEMA_PLACE = new Schema(URI.create("https://schema.org/Place"));
+
+    public static final Schema SCHEMA_THING = new Schema(URI.create("https://schema.org/Thing"));
+
+    public static final Schema SCHEMA_EVENT = new Schema(URI.create("https://schema.org/Event"));
+
+    public static final Schema SCHEMA_PERSON = new Schema(URI.create("https://schema.org/Person"));
+
     private final URI uri;
 
     /**

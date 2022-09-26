@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022c//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2020b/Europe/Belgrade
-LAST-MODIFIED:20201010T011804Z
+TZID:/tzurl.org/2022c/Europe/Belgrade
+LAST-MODIFIED:20220816T024023Z
 TZURL:http://tzurl.org/zoneinfo-global/Europe/Belgrade
 X-LIC-LOCATION:Europe/Belgrade
 X-PROLEPTIC-TZNAME:LMT

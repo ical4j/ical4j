@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -93,6 +94,7 @@ import static net.fortuna.ical4j.model.Property.*;
  * @author Mike Douglass
  */
 public class VResource extends Component {
+
     private static final long serialVersionUID = -8193965477414653802L;
 
     /**
@@ -122,11 +124,12 @@ public class VResource extends Component {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse) throws ValidationException {
-        ComponentValidator.VRESOURCE.validate(this);
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VRESOURCE.validate(this);
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     /**
@@ -174,6 +177,9 @@ public class VResource extends Component {
         return getProperties(STRUCTURED_DATA);
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<VResource> {
 
         public Factory() {

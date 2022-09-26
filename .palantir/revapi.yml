@@ -382,6 +382,789 @@ acceptedBreaks:
       justification: "Refactoring"
   "3.1.3":
     org.mnode.ical4j:ical4j:
+    - code: "java.annotation.added"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule<T>[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.noLongerFinal"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.AddValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.CancelValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.CounterValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.DeclineCounterValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.PublishValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.RefreshValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.ReplyValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.CalendarValidatorImpl.RequestValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.validate.component.VJournalValidator"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.element.nowDeprecated"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.ComponentContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.ComponentContainer<?>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.element.nowDeprecated"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.element.nowDeprecated"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.PropertyContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.PropertyContainer)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>.TRIGGER"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>.TZ_NAME"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.visibilityReduced"
+      old: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_NONE_MESSAGE"
+      new: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_NONE_MESSAGE"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.visibilityReduced"
+      old: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_MESSAGE"
+      new: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_MESSAGE"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.field.visibilityReduced"
+      old: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE"
+      new: "field net.fortuna.ical4j.validate.ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.elementNowParameterized"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
+        \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "class net.fortuna.ical4j.validate.ValidationRule"
+      new: "class net.fortuna.ical4j.validate.ValidationRule<T extends java.lang.Object>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
+        \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.movedToSuperClass"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::validate(net.fortuna.ical4j.model.Property)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.AbstractValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException @ net.fortuna.ical4j.validate.PropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.Property>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.ComponentContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.ComponentContainer<?>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.PropertyContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.PropertyContainer)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.util.List<net.fortuna.ical4j.validate.ValidationRule>)"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ java.util.List<net.fortuna.ical4j.validate.PropertyRuleSet<? super T>>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule<T>[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::<init>(java.lang.String,\
+        \ net.fortuna.ical4j.validate.ValidationRule[])"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.ValidationException::<init>()"
+      new: "method void net.fortuna.ical4j.validate.ValidationException::<init>(java.lang.Throwable)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.ValidationException::<init>(net.fortuna.ical4j.validate.ValidationResult)"
+      new: "method void net.fortuna.ical4j.validate.ValidationException::<init>(java.lang.String,\
+        \ java.lang.Throwable)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.ValidationResult::<init>()"
+      new: "method void net.fortuna.ical4j.validate.ValidationResult::<init>(java.util.Collection<net.fortuna.ical4j.validate.ValidationEntry>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(===java.lang.String===)"
+      new: "parameter <C extends T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<C>\
+        \ net.fortuna.ical4j.model.PropertyList<T extends net.fortuna.ical4j.model.Property>::getProperties(===java.lang.String[]===)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(===java.lang.String===)"
+      new: "parameter <T extends net.fortuna.ical4j.model.Property> net.fortuna.ical4j.model.PropertyList<T>\
+        \ net.fortuna.ical4j.model.PropertyContainer::getProperties(===java.lang.String[]===)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.validate.PropertyValidator<T extends\
+        \ net.fortuna.ical4j.model.Property>::validate(===net.fortuna.ical4j.model.Property===)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "parameter net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.AbstractValidator<T>::validate(===T===)\
+        \ throws net.fortuna.ical4j.validate.ValidationException @ net.fortuna.ical4j.validate.PropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.Property>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.validate.ValidationResult::<init>(===java.lang.String[]===)"
+      new: "parameter void net.fortuna.ical4j.validate.ValidationResult::<init>(===net.fortuna.ical4j.validate.ValidationEntry[]===)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method boolean net.fortuna.ical4j.validate.ValidationRule::isRelaxedModeSupported()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.ValidationResult::getErrors()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.ValidationResult::getWarnings()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.ValidationException::getResult()"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Calendar::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Calendar::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Calendar::validate(boolean) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Calendar::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Component::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Component::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Component::validate(boolean) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Component::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Component::validateProperties() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Component::validateProperties()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.Property::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.Property::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.Available::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.Available::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.CalendarComponent::validate(net.fortuna.ical4j.model.property.Method)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.CalendarComponent::validate(net.fortuna.ical4j.model.property.Method)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.Observance::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.Observance::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.Participant::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.Participant::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VAlarm::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VAlarm::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VAvailability::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VAvailability::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VEvent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VEvent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VFreeBusy::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VFreeBusy::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VJournal::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VJournal::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VLocation::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VLocation::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VResource::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VResource::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VTimeZone::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VTimeZone::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VToDo::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VToDo::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.VVenue::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.VVenue::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.component.XComponent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.component.XComponent::validate(boolean)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Action::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Action::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Attach::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Attach::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Attendee::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Attendee::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.BusyType::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.BusyType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.CalScale::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.CalScale::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.CalendarAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.CalendarAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Categories::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Categories::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Clazz::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Clazz::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Color::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Color::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Comment::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Comment::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Conference::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Conference::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Contact::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Contact::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Country::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Country::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.DateProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.DateProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Description::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Description::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Duration::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Duration::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ExDate::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ExDate::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ExRule::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ExRule::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ExtendedAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ExtendedAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.FreeBusy::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.FreeBusy::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Geo::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Geo::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Image::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Image::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Locality::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Locality::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Location::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Location::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.LocationType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.LocationType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Method::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Method::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Name::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Name::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Organizer::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Organizer::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ParticipantType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ParticipantType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.PercentComplete::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.PercentComplete::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Postalcode::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Postalcode::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Priority::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Priority::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ProdId::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ProdId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Proximity::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Proximity::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RDate::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RDate::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RRule::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RRule::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RecurrenceId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RecurrenceId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RefreshInterval::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RefreshInterval::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Region::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Region::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RelatedTo::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RelatedTo::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Repeat::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Repeat::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.RequestStatus::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.RequestStatus::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.ResourceType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.ResourceType::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Resources::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Resources::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Sequence::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Sequence::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Source::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Source::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Status::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Status::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.StreetAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.StreetAddress::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.StructuredData::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.StructuredData::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.StyledDescription::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.StyledDescription::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Summary::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Summary::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Tel::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Tel::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Transp::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Transp::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Trigger::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Trigger::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzId::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzId::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzIdAliasOf::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzIdAliasOf::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzName::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzName::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzOffsetFrom::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzOffsetFrom::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzOffsetTo::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzOffsetTo::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.TzUrl::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.TzUrl::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Uid::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Uid::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Url::validate() throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Url::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.UtcProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.UtcProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.Version::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.Version::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.model.property.XProperty::validate() throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.model.property.XProperty::validate()\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.CalendarValidatorImpl::validate(net.fortuna.ical4j.model.Calendar)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.CalendarValidatorImpl::validate(net.fortuna.ical4j.model.Calendar)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.ComponentValidator<T\
+        \ extends net.fortuna.ical4j.model.Component>::validate(T) throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.EmptyValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.EmptyValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>::validate(net.fortuna.ical4j.model.Property)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.AbstractValidator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException @ net.fortuna.ical4j.validate.PropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.Property>"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.Validator<T>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.Validator<T>::validate(T)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.AvailableValidator::validate(net.fortuna.ical4j.model.component.Available)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.AvailableValidator::validate(net.fortuna.ical4j.model.component.Available)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VAvailabilityValidator::validate(net.fortuna.ical4j.model.component.VAvailability)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VAvailabilityValidator::validate(net.fortuna.ical4j.model.component.VAvailability)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VEventValidator::validate(net.fortuna.ical4j.model.component.VEvent)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VEventValidator::validate(net.fortuna.ical4j.model.component.VEvent)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VFreeBusyValidator::validate(net.fortuna.ical4j.model.component.VFreeBusy)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VFreeBusyValidator::validate(net.fortuna.ical4j.model.component.VFreeBusy)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VTimeZoneValidator::validate(net.fortuna.ical4j.model.component.VTimeZone)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VTimeZoneValidator::validate(net.fortuna.ical4j.model.component.VTimeZone)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.component.VToDoValidator::validate(net.fortuna.ical4j.model.component.VToDo)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.component.VToDoValidator::validate(net.fortuna.ical4j.model.component.VToDo)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.AttachValidator::validate(net.fortuna.ical4j.model.property.Attach)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.AttachValidator::validate(net.fortuna.ical4j.model.property.Attach)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.DatePropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.DateProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.DatePropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.DateProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.TriggerValidator::validate(net.fortuna.ical4j.model.property.Trigger)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.TriggerValidator::validate(net.fortuna.ical4j.model.property.Trigger)\
+        \ throws net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeChanged"
+      old: "method void net.fortuna.ical4j.validate.property.UtcPropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.UtcProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      new: "method net.fortuna.ical4j.validate.ValidationResult net.fortuna.ical4j.validate.property.UtcPropertyValidator<T\
+        \ extends net.fortuna.ical4j.model.property.UtcProperty>::validate(T) throws\
+        \ net.fortuna.ical4j.validate.ValidationException"
+      justification: "validation_refactor_from_exception_to_result"
     - code: "java.method.returnTypeChangedCovariantly"
       old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Abbrev.Factory::createParameter(java.lang.String)\
         \ throws java.net.URISyntaxException"
@@ -1148,3 +1931,62 @@ acceptedBreaks:
         \ java.lang.String) throws java.io.IOException, java.net.URISyntaxException,\
         \ java.text.ParseException"
       justification: "generics_fixes"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.ComponentContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.ComponentContainer<?>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.Property)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.List<java.lang.String> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ net.fortuna.ical4j.model.PropertyContainer)"
+      new: "method java.util.List<net.fortuna.ical4j.validate.ValidationEntry> net.fortuna.ical4j.validate.Validator<T>::apply(net.fortuna.ical4j.validate.ValidationRule,\
+        \ java.lang.String, net.fortuna.ical4j.model.PropertyContainer)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.validate.Validator<net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      new: "method <T extends net.fortuna.ical4j.validate.Validator<? extends net.fortuna.ical4j.model.component.CalendarComponent>>\
+        \ T net.fortuna.ical4j.model.component.CalendarComponent::getValidator(net.fortuna.ical4j.model.property.Method)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.visibilityReduced"
+      old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(java.lang.String,\
+        \ java.util.Set<net.fortuna.ical4j.validate.ValidationRule<T>>)"
+      justification: "validation_refactor_from_exception_to_result"
+    - code: "java.method.visibilityReduced"
+      old: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(net.fortuna.ical4j.validate.ValidationRule[])"
+      new: "method void net.fortuna.ical4j.validate.ComponentValidator<T extends net.fortuna.ical4j.model.Component>::<init>(java.lang.String,\
+        \ java.util.Set<net.fortuna.ical4j.validate.ValidationRule>)"
+      justification: "validation_refactor_from_exception_to_result"
+  "3.2.0":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.parameter.Rsvp::copy()"
+      new: "method net.fortuna.ical4j.model.parameter.Rsvp net.fortuna.ical4j.model.parameter.Rsvp::copy()"
+      justification: "updated_rsvp_copy_return_type"
+  "3.2.1":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws javax.mail.internet.AddressException"
+      new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws jakarta.mail.internet.AddressException"
+      justification: "jarkata_mail_package_changed"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws javax.mail.internet.AddressException"
+      new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)"
+      justification: "switched_email_validation_lib"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws javax.mail.internet.AddressException"
+      new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
+        \ throws jakarta.mail.internet.AddressException"
+      justification: "jarkata_mail_package_changed"

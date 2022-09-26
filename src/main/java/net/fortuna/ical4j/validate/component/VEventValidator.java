@@ -2,31 +2,39 @@ package net.fortuna.ical4j.validate.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.*;
 
+import java.util.stream.Collectors;
+
+@Deprecated
 public class VEventValidator extends ComponentValidator<VEvent> {
+
+    private static final ComponentContainerRuleSet NO_ALARMS_RULE_SET = new ComponentContainerRuleSet(
+            NO_ALARMS);
 
     private final boolean alarmsAllowed;
 
-    public VEventValidator(ValidationRule... rules) {
+    @SafeVarargs
+    public VEventValidator(ValidationRule<VEvent>... rules) {
         this(true, rules);
     }
 
-    public VEventValidator(boolean alarmsAllowed, ValidationRule... rules) {
-        super(rules);
+    @SafeVarargs
+    public VEventValidator(boolean alarmsAllowed, ValidationRule<VEvent>... rules) {
+        super(Component.VALARM, rules);
         this.alarmsAllowed = alarmsAllowed;
     }
 
     @Override
-    public void validate(VEvent target) throws ValidationException {
-        super.validate(target);
+    public ValidationResult validate(VEvent target) throws ValidationException {
+        ValidationResult result = super.validate(target);
 
         if (alarmsAllowed) {
-            target.getAlarms().forEach(ComponentValidator.VALARM_ITIP::validate);
+            result.getEntries().addAll(target.getAlarms().stream().map(ComponentValidator.VALARM_ITIP::validate)
+                    .flatMap(r -> r.getEntries().stream()).collect(Collectors.toList()));
         } else {
-            ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
+            result.getEntries().addAll(NO_ALARMS_RULE_SET.apply(target.getName(), target));
         }
+        return result;
     }
 }

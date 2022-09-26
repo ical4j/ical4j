@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -106,12 +107,11 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * @return a property list
      */
     @SuppressWarnings("unchecked")
-    public final <C extends T> PropertyList<C> getProperties(final String name) {
+    public final <C extends T> PropertyList<C> getProperties(final String... name) {
         final PropertyList<C> list = new PropertyList<C>();
-        for (final T p : this) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                list.add((C) p);
-            }
+        for (String propName : name) {
+            List<T> match = stream().filter(p -> p.getName().equalsIgnoreCase(propName)).collect(Collectors.toList());
+            list.addAll((List<C>) match);
         }
         return list;
     }

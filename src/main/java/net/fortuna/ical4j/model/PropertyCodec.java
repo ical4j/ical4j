@@ -23,7 +23,7 @@ public class PropertyCodec implements StringEncoder, StringDecoder {
     private static final Pattern BACKSLASH_EX = Pattern.compile("\\\\");
 
     // matches an unencoded newline character..
-    private static final Pattern NEWLINE_EX = Pattern.compile("\n");
+    private static final Pattern NEWLINE_EX = Pattern.compile("\r?\n");
 
     // matches an unencoded special character..
     private static final Pattern SPECIALCHAR_EX = Pattern.compile("([,;\"])");

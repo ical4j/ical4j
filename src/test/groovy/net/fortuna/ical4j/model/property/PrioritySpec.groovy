@@ -24,6 +24,7 @@ class PrioritySpec extends Specification {
         '9' | Priority.LOW
         '5' | Priority.MEDIUM
         '1' | Priority.HIGH
+        '0' | Priority.UNDEFINED
     }
 
     def 'test relaxed parsing with invalid values'() {
@@ -31,7 +32,7 @@ class PrioritySpec extends Specification {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
 
         and: 'factory is invoked with invalid value'
-        def priority = factory.createProperty(new ParameterList(), value)
+        def priority = new Priority.Factory().createProperty(new ParameterList(), value)
 
         then: 'the returned priority is UNDEFINED'
         priority == Priority.UNDEFINED

@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -54,25 +55,30 @@ public class Action extends Property {
 
     private static final long serialVersionUID = -2353353838411753712L;
 
+    public static final String VALUE_AUDIO = "AUDIO";
+    public static final String VALUE_DISPLAY = "DISPLAY";
+    public static final String VALUE_EMAIL = "EMAIL";
+    public static final String VALUE_PROCEDURE = "PROCEDURE";
+
     /**
      * Constant action for playing an audible sound.
      */
-    public static final Action AUDIO = new ImmutableAction("AUDIO");
+    public static final Action AUDIO = new ImmutableAction(VALUE_AUDIO);
 
     /**
      * Constant action for displaying a visible notification.
      */
-    public static final Action DISPLAY = new ImmutableAction("DISPLAY");
+    public static final Action DISPLAY = new ImmutableAction(VALUE_DISPLAY);
 
     /**
      * Constant action for sending an email.
      */
-    public static final Action EMAIL = new ImmutableAction("EMAIL");
+    public static final Action EMAIL = new ImmutableAction(VALUE_EMAIL);
 
     /**
      * Constant action for a procedure.
      */
-    public static final Action PROCEDURE = new ImmutableAction("PROCEDURE");
+    public static final Action PROCEDURE = new ImmutableAction(VALUE_PROCEDURE);
 
     /**
      * @author Ben Fortuna An immutable instance of Action.
@@ -104,7 +110,11 @@ public class Action extends Property {
      * Default constructor.
      */
     public Action() {
-        super(ACTION, new Factory());
+        this(new Factory());
+    }
+
+    private Action(PropertyFactory<Action> factory) {
+        super(ACTION, factory);
     }
 
     /**
@@ -120,7 +130,11 @@ public class Action extends Property {
      * @param aValue a value string for this component
      */
     public Action(final ParameterList aList, final String aValue) {
-        super(ACTION, aList, new Factory());
+        this(aList, aValue, new Factory());
+    }
+
+    private Action(final ParameterList aList, final String aValue, PropertyFactory<Action> factory) {
+        super(ACTION, aList, factory);
         this.value = aValue;
     }
 
@@ -141,8 +155,8 @@ public class Action extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Action> {
@@ -156,27 +170,20 @@ public class Action extends Property {
         public Action createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            Action action;
-            if (AUDIO.getValue().equals(value)) {
-                action = AUDIO;
+            if (parameters.isEmpty()) {
+                switch (value) {
+                    case VALUE_AUDIO: return AUDIO;
+                    case VALUE_DISPLAY: return DISPLAY;
+                    case VALUE_EMAIL: return EMAIL;
+                    case VALUE_PROCEDURE: return PROCEDURE;
+                }
             }
-            else if (DISPLAY.getValue().equals(value)) {
-                action = DISPLAY;
-            }
-            else if (EMAIL.getValue().equals(value)) {
-                action = EMAIL;
-            }
-            else if (PROCEDURE.getValue().equals(value)) {
-                action = PROCEDURE;
-            } else {
-                action = new Action(parameters, value);
-            }
-            return action;
+            return new Action(parameters, value, this);
         }
 
         @Override
         public Action createProperty() {
-            return new Action();
+            return new Action(this);
         }
     }
 

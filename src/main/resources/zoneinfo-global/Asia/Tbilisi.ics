@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022c//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2020b/Asia/Tbilisi
-LAST-MODIFIED:20201010T011804Z
+TZID:/tzurl.org/2022c/Asia/Tbilisi
+LAST-MODIFIED:20220816T024023Z
 TZURL:http://tzurl.org/zoneinfo-global/Asia/Tbilisi
 X-LIC-LOCATION:Asia/Tbilisi
 X-PROLEPTIC-TZNAME:LMT

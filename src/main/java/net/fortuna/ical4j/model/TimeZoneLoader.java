@@ -82,7 +82,7 @@ public class TimeZoneLoader {
                 try (InputStream in = resource.openStream()) {
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(in);
-                    // load any available updates for the timezone.. can be explicility disabled via configuration
+                    // load any available updates for the timezone.. can be explicitly disabled via configuration
                     final VTimeZone vTimeZone = zoneUpdater.updateDefinition(calendar.getComponent(Component.VTIMEZONE));
                     if (vTimeZone != null) {
                         cache.putIfAbsent(id, vTimeZone);

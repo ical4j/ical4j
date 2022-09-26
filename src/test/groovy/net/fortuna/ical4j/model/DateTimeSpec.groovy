@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VTimeZone
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -115,7 +114,6 @@ class DateTimeSpec extends Specification {
         dateTimeString << ['20110327T000000', '20110327T000000']
     }
 
-    @Ignore
     def 'test date time initialisation with a registered custom timezone'() {
         setup:
         def originalTimezone = TimeZone.default
@@ -157,7 +155,6 @@ class DateTimeSpec extends Specification {
         dateTimeString << ['20110327T000000']
     }
 
-    @Ignore
     @Unroll
     def 'verify parse failure for invalid dates: #dateTimeString'() {
         when:

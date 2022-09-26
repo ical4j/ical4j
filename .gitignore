@@ -10,3 +10,5 @@ zones.tab
 .project
 .settings/
 out/
+**/zoneinfo/**/index.html
+**/zoneinfo/**/tz.availableIds

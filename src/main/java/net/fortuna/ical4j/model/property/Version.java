@@ -35,7 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -57,10 +59,12 @@ public class Version extends Property {
 
     private static final long serialVersionUID = 8872508067309087704L;
 
+    public static final String VALUE_2_0 = "2.0";
+
     /**
      * iCalendar version 2.0.
      */
-    public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
+    public static final Version VERSION_2_0 = new ImmutableVersion(VALUE_2_0);
 
     /**
      * @author Ben Fortuna An immutable instance of Version.
@@ -199,8 +203,8 @@ public class Version extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.VERSION.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Version> {
@@ -214,13 +218,10 @@ public class Version extends Property {
         public Version createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            Version version;
-            if (VERSION_2_0.getValue().equals(value)) {
-                version = VERSION_2_0;
-            } else {
-                version = new Version(parameters, value);
+            if (parameters.isEmpty() && VALUE_2_0.equals(value)) {
+                return VERSION_2_0;
             }
-            return version;
+            return new Version(parameters, value);
         }
 
         @Override

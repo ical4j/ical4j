@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 
 import java.io.IOException;
@@ -225,8 +226,8 @@ public abstract class DateProperty extends Property {
      * {@inheritDoc}
      */
     @Override
-    public void validate() throws ValidationException {
-        new DatePropertyValidator<>().validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return new DatePropertyValidator<>().validate(this);
     }
 
     /**

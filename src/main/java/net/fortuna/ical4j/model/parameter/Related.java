@@ -96,13 +96,11 @@ public class Related extends Parameter implements Encodable {
 
         @Override
         public Related createParameter(final String value) throws URISyntaxException {
-            Related parameter = new Related(value);
-            if (Related.START.equals(parameter)) {
-                parameter = Related.START;
-            } else if (Related.END.equals(parameter)) {
-                parameter = Related.END;
+            switch (value) {
+                case VALUE_END: return END;
+                case VALUE_START: return START;
             }
-            return parameter;
+            return new Related(value);
         }
     }
 

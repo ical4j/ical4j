@@ -43,14 +43,16 @@ import static net.fortuna.ical4j.validate.Validator.assertFalse;
  * lists.
  * 
  * @author Ben Fortuna
+ * @deprecated default property validation moved to relevant property. See also {@link PropertyRuleSet}.
  */
+@Deprecated
 public final class ParameterValidator {
 
-    public static final String ASSERT_NONE_MESSAGE = "Parameter [{0}] is not applicable";
+    private static final String ASSERT_NONE_MESSAGE = "Parameter [{0}] is not applicable";
 
-    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Parameter [{0}] must only be specified once";
+    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Parameter [{0}] must only be specified once";
 
-    public static final String ASSERT_ONE_MESSAGE = "Parameter [{0}] must be specified once";
+    private static final String ASSERT_ONE_MESSAGE = "Parameter [{0}] must be specified once";
 
     private static final String ASSERT_NULL_OR_EQUAL_MESSAGE = "Parameter [{0}] is invalid";
 
@@ -91,7 +93,7 @@ public final class ParameterValidator {
         assertFalse(parameters1 -> parameters1.getParameters(paramName).size() != 1, ASSERT_ONE_MESSAGE, false,
                 parameters, paramName);
     }
-    
+
     /**
      * Ensure a parameter doesn't occur in the specified list.
      * @param paramName the name of a parameter
