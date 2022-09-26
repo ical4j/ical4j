@@ -14,8 +14,9 @@
 [RFC7529]: https://datatracker.ietf.org/doc/html/rfc7529
 [RFC9073]: https://datatracker.ietf.org/doc/html/rfc9073
 [RFC9074]: https://datatracker.ietf.org/doc/html/rfc9074
+[RFC9253]: https://www.rfc-editor.org/rfc/rfc9253.html
 
-[Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
+[mavenrepo]: https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j
 
 [Java Legacy Date-Time Code]: https://docs.oracle.com/javase/tutorial/datetime/iso/legacy.html
 
@@ -73,7 +74,7 @@ standard.
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
 
- - You will find examples of how to use iCal4j in [the wiki](https://github.com/ical4j/ical4j/wiki)
+ - You will find examples of how to use iCal4j in [the official website](https://www.ical4j.org/examples/overview/)
  and throughout the [API documentation](https://ical4j.github.io/docs/ical4j/api).
 
  - Detailed descriptions of changes included in each release may be found
@@ -86,6 +87,7 @@ standard.
 
 ### System requirements
 
+ - Version 4.x - Java 8 or later
  - Version 3.x - Java 8 or later
  - Version 2.x - Java 7 or later
 
@@ -116,7 +118,7 @@ is used only to generate version information in the javadoc API documentation.
 
 ### Release Downloads
 
-* [Bintray Releases]
+* [mavenrepo]
 
 ### Install with Maven
 
@@ -157,6 +159,7 @@ You may also find the [Java Legacy Date-Time Code] web page useful.
 * [RFC7529] - Non-Gregorian Recurrence Rules in iCalendar
 * [RFC9073] - Event Publishing Extensions to iCalendar
 * [RFC9074] - "VALARM" Extensions for iCalendar
+* [RFC9253] - Support for iCalendar Relationships
 
 
 ## Configuration

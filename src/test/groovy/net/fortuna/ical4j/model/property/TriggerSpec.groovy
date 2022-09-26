@@ -61,5 +61,6 @@ class TriggerSpec extends Specification {
 		where:
 		value	| expectedString
 		'-P2D'  | 'TRIGGER:-P2D\r\n'
+		'-PT15M'  | 'TRIGGER:-PT15M\r\n'
 	}
 }
