@@ -31,21 +31,50 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.parameter;
 
-import spock.lang.Specification
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.model.TemporalAmountAdapter;
 
-class PropertyCodecTest extends Specification {
+import java.net.URISyntaxException;
+import java.time.temporal.TemporalAmount;
 
-    def 'verify string encoding'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
+public class Gap extends Parameter {
 
-        where:
-        value                                           | encodedValue
-        ''                                              | ''
-        '\n'                                            | '\\n'
-        '\r\n'                                          | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
+    private static final String PARAM_NAME = "GAP";
+
+    private TemporalAmountAdapter duration;
+
+    public Gap(String value) {
+        super(PARAM_NAME, new Factory());
+        duration = TemporalAmountAdapter.parse(value);
+    }
+
+    public Gap(TemporalAmount temporalAmount) {
+        super(PARAM_NAME, new Factory());
+        this.duration = new TemporalAmountAdapter(temporalAmount);
+    }
+
+    public TemporalAmountAdapter getDuration() {
+        return duration;
+    }
+
+    @Override
+    public String getValue() {
+        return duration.toString();
+    }
+
+    public static class Factory extends Content.Factory implements ParameterFactory<Gap> {
+
+        public Factory() {
+            super(PARAM_NAME);
+        }
+
+        @Override
+        public Gap createParameter(String value) throws URISyntaxException {
+            return new Gap(value);
+        }
     }
 }

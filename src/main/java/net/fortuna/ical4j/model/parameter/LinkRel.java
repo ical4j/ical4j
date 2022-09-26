@@ -31,21 +31,50 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.parameter;
 
-import spock.lang.Specification
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
 
-class PropertyCodecTest extends Specification {
+import java.net.URI;
+import java.net.URISyntaxException;
 
-    def 'verify string encoding'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
+public class LinkRel extends Parameter {
 
-        where:
-        value                                           | encodedValue
-        ''                                              | ''
-        '\n'                                            | '\\n'
-        '\r\n'                                          | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
+    private static final String PARAM_NAME = "LINKREL";
+
+    private final URI uri;
+
+    public LinkRel(String value) throws URISyntaxException {
+        this(Uris.create(Strings.unquote(value)));
+    }
+
+    public LinkRel(URI uri) {
+        super(PARAM_NAME, new Factory());
+        this.uri = uri;
+    }
+
+    public URI getUri() {
+        return uri;
+    }
+
+    @Override
+    public String getValue() {
+        return Uris.decode(Strings.valueOf(getUri()));
+    }
+
+    public static class Factory extends Content.Factory implements ParameterFactory<LinkRel> {
+
+        public Factory() {
+            super(PARAM_NAME);
+        }
+
+        @Override
+        public LinkRel createParameter(String value) throws URISyntaxException {
+            return new LinkRel(value);
+        }
     }
 }

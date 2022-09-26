@@ -31,21 +31,40 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.property;
 
-import spock.lang.Specification
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
-class PropertyCodecTest extends Specification {
+public class RefId extends Property {
 
-    def 'verify string encoding'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
+    private static final String PROPERTY_NAME = "REFID";
 
-        where:
-        value                                           | encodedValue
-        ''                                              | ''
-        '\n'                                            | '\\n'
-        '\r\n'                                          | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
+    private String value;
+
+    public RefId(PropertyFactory factory) {
+        super(PROPERTY_NAME, factory);
+    }
+
+    public RefId(ParameterList aList, PropertyFactory factory) {
+        super(PROPERTY_NAME, aList, factory);
+    }
+
+    @Override
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(String aValue) {
+        this.value = aValue;
+    }
+
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return null;
     }
 }

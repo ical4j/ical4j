@@ -31,21 +31,49 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.property;
 
-import spock.lang.Specification
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
-class PropertyCodecTest extends Specification {
+import java.net.URI;
+import java.net.URISyntaxException;
 
-    def 'verify string encoding'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
+public class Concept extends Property {
 
-        where:
-        value                                           | encodedValue
-        ''                                              | ''
-        '\n'                                            | '\\n'
-        '\r\n'                                          | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
+    private static final String PROPERTY_NAME = "CONCEPT";
+    
+    private URI uri;
+
+    public Concept(PropertyFactory factory) {
+        super(PROPERTY_NAME, factory);
+    }
+
+    public Concept(ParameterList aList, PropertyFactory factory) {
+        super(PROPERTY_NAME, aList, factory);
+    }
+
+    public URI getUri() {
+        return uri;
+    }
+
+    @Override
+    public String getValue() {
+        return Uris.decode(Strings.valueOf(getUri()));
+    }
+
+    @Override
+    public void setValue(String aValue) throws URISyntaxException {
+        this.uri = Uris.create(aValue);
+    }
+
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return null;
     }
 }

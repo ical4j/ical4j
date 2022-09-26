@@ -147,6 +147,10 @@ public class Value extends Parameter implements Encodable {
      */
     public static final Value UTC_OFFSET = new Value(VALUE_UTC_OFFSET);
 
+    public static final Value UID = new Value("UID");
+    
+    public static final Value XML_REFERENCE = new Value("XML-REFERENCE");
+
     private final String value;
 
     /**
