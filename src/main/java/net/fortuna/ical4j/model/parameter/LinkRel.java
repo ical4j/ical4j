@@ -48,12 +48,17 @@ public class LinkRel extends Parameter {
 
     private final URI uri;
 
-    public LinkRel(String value) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(value)));
+    public LinkRel(String value) {
+        super(PARAM_NAME);
+        try {
+            this.uri = Uris.create(Strings.unquote(value));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     public LinkRel(URI uri) {
-        super(PARAM_NAME, new Factory());
+        super(PARAM_NAME);
         this.uri = uri;
     }
 
@@ -73,7 +78,7 @@ public class LinkRel extends Parameter {
         }
 
         @Override
-        public LinkRel createParameter(String value) throws URISyntaxException {
+        public LinkRel createParameter(String value) {
             return new LinkRel(value);
         }
     }

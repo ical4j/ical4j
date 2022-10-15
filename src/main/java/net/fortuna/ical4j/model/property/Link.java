@@ -40,10 +40,8 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 public class Link extends Property {
 
@@ -54,11 +52,11 @@ public class Link extends Property {
     private String text;
 
     public Link() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
     }
 
-    public Link(ParameterList aList, String value) throws URISyntaxException {
-        super(PROPERTY_NAME, aList, new Factory());
+    public Link(ParameterList aList, String value) {
+        super(PROPERTY_NAME, aList);
         setValue(value);
     }
 
@@ -72,22 +70,25 @@ public class Link extends Property {
 
     @Override
     public String getValue() {
-        if (Value.XML_REFERENCE.equals(getParameter(Parameter.VALUE)) ||
-                Value.URI.equals(getParameter(Parameter.VALUE))) {
-            return Uris.decode(Strings.valueOf(getUri()));
-        } else { // if (Value.UID.equals(getParameter(Parameter.VALUE))) {
+        if (Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
             return getText();
+        } else {
+            return Uris.decode(Strings.valueOf(getUri()));
         }
     }
 
     @Override
-    public void setValue(String aValue) throws URISyntaxException {
-        if (Value.TEXT.equals(getParameter(Parameter.VALUE))) {
+    public void setValue(String aValue) {
+        if (Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
             this.text = aValue;
             this.uri = null;
         } else {
-            this.uri = Uris.create(aValue);
-            this.text = null;
+            try {
+                this.uri = Uris.create(aValue);
+                this.text = null;
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
     }
 
@@ -104,8 +105,7 @@ public class Link extends Property {
         }
 
         @Override
-        public Link createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Link createProperty(final ParameterList parameters, final String value) {
             return new Link(parameters, value);
         }
 
@@ -113,5 +113,10 @@ public class Link extends Property {
         public Link createProperty() {
             return new Link();
         }
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return new Factory();
     }
 }
