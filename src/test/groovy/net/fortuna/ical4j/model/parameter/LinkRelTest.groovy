@@ -65,6 +65,7 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components[0].properties[1].getParameter('LINKREL').value == 'https://example.com/linkrel/derivedFrom'
+        LinkRel linkRel = calendar?.components[0].properties[1].getParameter('LINKREL')
+        linkRel.value == 'https://example.com/linkrel/derivedFrom'
     }
 }

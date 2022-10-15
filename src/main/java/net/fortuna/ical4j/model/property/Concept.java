@@ -33,6 +33,7 @@
 
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
@@ -41,8 +42,10 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 
 public class Concept extends Property {
 
@@ -50,12 +53,13 @@ public class Concept extends Property {
     
     private URI uri;
 
-    public Concept(PropertyFactory factory) {
-        super(PROPERTY_NAME, factory);
+    public Concept() {
+        super(PROPERTY_NAME, new Factory());
     }
 
-    public Concept(ParameterList aList, PropertyFactory factory) {
-        super(PROPERTY_NAME, aList, factory);
+    public Concept(ParameterList aList, String value) throws URISyntaxException {
+        super(PROPERTY_NAME, aList, new Factory());
+        setValue(value);
     }
 
     public URI getUri() {
@@ -75,5 +79,24 @@ public class Concept extends Property {
     @Override
     public ValidationResult validate() throws ValidationException {
         return null;
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<Concept> {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(PROPERTY_NAME);
+        }
+
+        @Override
+        public Concept createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Concept(parameters, value);
+        }
+
+        @Override
+        public Concept createProperty() {
+            return new Concept();
+        }
     }
 }

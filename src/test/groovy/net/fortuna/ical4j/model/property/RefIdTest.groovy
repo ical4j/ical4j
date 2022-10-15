@@ -54,6 +54,7 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components[0].properties[1].value == 'itinerary-2014-11-17'
+        RefId refId = calendar?.components[0].properties[1]
+        refId.value == 'itinerary-2014-11-17'
     }
 }
