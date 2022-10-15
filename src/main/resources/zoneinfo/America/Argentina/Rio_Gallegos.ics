@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022c//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:America/Argentina/Rio_Gallegos
-LAST-MODIFIED:20220816T024022Z
+LAST-MODIFIED:20221013T075636Z
 TZURL:http://tzurl.org/zoneinfo/America/Argentina/Rio_Gallegos
 X-LIC-LOCATION:America/Argentina/Rio_Gallegos
 X-PROLEPTIC-TZNAME:LMT

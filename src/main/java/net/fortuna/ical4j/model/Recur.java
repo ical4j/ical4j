@@ -834,7 +834,7 @@ public class Recur<T extends Temporal> implements Serializable {
     }
 
     /**
-     * Returns the the next date of this recurrence given a seed date
+     * Returns the next date of this recurrence given a seed date
      * and start date.  The seed date indicates the start of the fist
      * occurrence of this recurrence. The start date is the
      * starting date to search for the next recurrence.  Return null

@@ -1132,10 +1132,10 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *                   / maxver
      *                   / (minver ";" maxver)
      *
-     *        minver     = <A IANA-registered iCalendar version identifier>
+     *        minver     = &lt;A IANA-registered iCalendar version identifier&gt;
      *        ;Minimum iCalendar version needed to parse the iCalendar object.
      *
-     *        maxver     = <A IANA-registered iCalendar version identifier>
+     *        maxver     = &lt;A IANA-registered iCalendar version identifier&gt;
      *        ;Maximum iCalendar version needed to parse the iCalendar object.
      * </pre>
      */

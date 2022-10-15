@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022c//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022c/America/Thule
-LAST-MODIFIED:20220816T024023Z
+TZID:/tzurl.org/2022e/America/Thule
+LAST-MODIFIED:20221013T075637Z
 TZURL:http://tzurl.org/zoneinfo-global/America/Thule
 X-LIC-LOCATION:America/Thule
 X-PROLEPTIC-TZNAME:LMT
