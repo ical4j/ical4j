@@ -54,6 +54,7 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components[0].properties[1].value == 'https://example.com/event-types/arts/music'
+        Concept concept = calendar?.components[0].properties[1]
+        concept.value == 'https://example.com/event-types/arts/music'
     }
 }

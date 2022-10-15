@@ -33,10 +33,7 @@
 
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
@@ -56,12 +53,13 @@ public class Link extends Property {
 
     private String text;
 
-    public Link(PropertyFactory factory) {
-        super(PROPERTY_NAME, factory);
+    public Link() {
+        super(PROPERTY_NAME, new Factory());
     }
 
-    public Link(ParameterList aList, PropertyFactory factory) {
-        super(PROPERTY_NAME, aList, factory);
+    public Link(ParameterList aList, String value) throws URISyntaxException {
+        super(PROPERTY_NAME, aList, new Factory());
+        setValue(value);
     }
 
     public URI getUri() {
@@ -83,12 +81,37 @@ public class Link extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws IOException, URISyntaxException, ParseException {
-
+    public void setValue(String aValue) throws URISyntaxException {
+        if (Value.TEXT.equals(getParameter(Parameter.VALUE))) {
+            this.text = aValue;
+            this.uri = null;
+        } else {
+            this.uri = Uris.create(aValue);
+            this.text = null;
+        }
     }
 
     @Override
     public ValidationResult validate() throws ValidationException {
         return null;
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<Link> {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(PROPERTY_NAME);
+        }
+
+        @Override
+        public Link createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Link(parameters, value);
+        }
+
+        @Override
+        public Link createProperty() {
+            return new Link();
+        }
     }
 }
