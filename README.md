@@ -14,6 +14,7 @@
 [RFC7529]: https://datatracker.ietf.org/doc/html/rfc7529
 [RFC9073]: https://datatracker.ietf.org/doc/html/rfc9073
 [RFC9074]: https://datatracker.ietf.org/doc/html/rfc9074
+[RFC9253]: https://www.rfc-editor.org/rfc/rfc9253.html
 
 [mavenrepo]: https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j
 
@@ -139,6 +140,7 @@ is used only to generate version information in the javadoc API documentation.
 * [RFC7529] - Non-Gregorian Recurrence Rules in iCalendar
 * [RFC9073] - Event Publishing Extensions to iCalendar
 * [RFC9074] - "VALARM" Extensions for iCalendar
+* [RFC9253] - Support for iCalendar Relationships
 
 
 ## Configuration

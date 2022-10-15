@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022c//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022c/America/Nuuk
-LAST-MODIFIED:20220816T024023Z
+TZID:/tzurl.org/2022e/America/Nuuk
+LAST-MODIFIED:20221013T075637Z
 TZURL:http://tzurl.org/zoneinfo-global/America/Nuuk
 X-LIC-LOCATION:America/Nuuk
 X-PROLEPTIC-TZNAME:LMT

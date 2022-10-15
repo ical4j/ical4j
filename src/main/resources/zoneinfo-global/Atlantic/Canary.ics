@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022c//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022c/Atlantic/Canary
-LAST-MODIFIED:20220816T024023Z
+TZID:/tzurl.org/2022e/Atlantic/Canary
+LAST-MODIFIED:20221013T075637Z
 TZURL:http://tzurl.org/zoneinfo-global/Atlantic/Canary
 X-LIC-LOCATION:Atlantic/Canary
 X-PROLEPTIC-TZNAME:LMT
