@@ -53,7 +53,7 @@ public abstract class Content implements Serializable {
     private static final long serialVersionUID = -2892694760294583989L;
 
     /**
-     * @return the cotent name
+     * @return the content name
      */
     public abstract String getName();
 
