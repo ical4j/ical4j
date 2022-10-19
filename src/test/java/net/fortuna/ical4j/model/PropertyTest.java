@@ -116,7 +116,7 @@ public class PropertyTest extends AbstractPropertyTest {
         assertTrue(property.equals(property));
 
         @SuppressWarnings("serial")
-		Property notEqual = new Property("notEqual", null) {
+		Property notEqual = new Property("notEqual", new ParameterList()) {
             @Override
             public String getValue() {
                 return "";
@@ -217,7 +217,7 @@ public class PropertyTest extends AbstractPropertyTest {
         TestSuite suite = new TestSuite();
 
         @SuppressWarnings("serial")
-		Property property = new Property("name", null) {
+		Property property = new Property("name", new ParameterList()) {
             @Override
             public String getValue() {
                 return "value";
@@ -239,7 +239,7 @@ public class PropertyTest extends AbstractPropertyTest {
         };
 
         @SuppressWarnings("serial")
-		Property invalidProperty = new Property("name", null) {
+		Property invalidProperty = new Property("name", new ParameterList()) {
             @Override
             public String getValue() {
                 return "value";

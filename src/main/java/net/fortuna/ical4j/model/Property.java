@@ -396,6 +396,11 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
     private final String name;
 
+    /**
+     * Support for a content line prefix used to group related properties. This is only used with vCard properties.
+     */
+    private final String prefix;
+
     private ParameterList parameters;
 
     /**
@@ -404,7 +409,11 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @param aName   property name
      */
     protected Property(final String aName) {
-        this(aName, new ParameterList());
+        this(aName, null, new ParameterList());
+    }
+
+    protected Property(final String aName, String prefix) {
+        this(aName, prefix, new ParameterList());
     }
 
     /**
@@ -412,7 +421,12 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @param aList   a list of initial parameters
      */
     protected Property(final String aName, final ParameterList aList) {
+        this(aName, null, aList);
+    }
+
+    protected Property(final String aName, String prefix, final ParameterList aList) {
         this.name = aName;
+        this.prefix = prefix;
         this.parameters = aList;
     }
 
@@ -438,6 +452,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
     @Override
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
+        if (prefix != null) {
+            buffer.append(prefix);
+            buffer.append('.');
+        }
         buffer.append(getName());
         if (parameters != null) {
             buffer.append(parameters);
