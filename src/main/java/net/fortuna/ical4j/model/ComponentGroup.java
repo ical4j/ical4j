@@ -10,11 +10,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * Support for operations applicable to a group of components. Typically this class is used to manage
+ * Support for operations applicable to a group of components. Typically, this class is used to manage
  * component revisions (whereby each revision is a separate component), and the resulting output of
  * such group functions.
  *
- * Example - Find latest revision of an event:
+ * Example - Find the latest revision of an event:
  *
  * <pre>
  *     Calendar calendar = ...
@@ -29,23 +29,27 @@ import java.util.stream.Collectors;
  *
  * Created by fortuna on 20/07/2017.
  */
-public class ComponentGroup<C extends Component> {
+public class ComponentGroup<C extends Component> implements ComponentListAccessor<C> {
 
-    private final List<C> components;
-
-    private final Predicate<C> componentPredicate;
+    private final ComponentList<C> componentList;
 
     public ComponentGroup(List<C> components, Uid uid) {
         this(components, uid, null);
     }
 
-    public ComponentGroup(List<C> components, Uid uid, RecurrenceId recurrenceId) {
-        this.components = components;
+    public ComponentGroup(List<C> components, Uid uid, RecurrenceId<?> recurrenceId) {
+        Predicate<C> componentPredicate;
         if (recurrenceId != null) {
             componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
         } else {
             componentPredicate = new PropertyEqualToRule<>(uid);
         }
+        this.componentList = new ComponentList<>(components.stream().filter(componentPredicate).collect(Collectors.toList()));
+    }
+
+    @Override
+    public ComponentList<C> getComponentList() {
+        return componentList;
     }
 
     /**
@@ -55,7 +59,7 @@ public class ComponentGroup<C extends Component> {
      * @return
      */
     public List<C> getRevisions() {
-        return components.stream().filter(componentPredicate).collect(Collectors.toList());
+        return getComponents();
     }
 
     /**
@@ -64,7 +68,7 @@ public class ComponentGroup<C extends Component> {
      * @return
      */
     public C getLatestRevision() {
-        List<C> revisions = getRevisions();
+        List<C> revisions = new ArrayList<>(getRevisions());
         revisions.sort(new ComponentSequenceComparator());
         Collections.reverse(revisions);
         return revisions.iterator().next();

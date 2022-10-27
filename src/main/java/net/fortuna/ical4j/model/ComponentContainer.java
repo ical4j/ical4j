@@ -1,21 +1,8 @@
 package net.fortuna.ical4j.model;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface ComponentContainer<T extends Component> {
-
-    ComponentList<T> getComponentList();
+public interface ComponentContainer<T extends Component> extends ComponentListAccessor<T> {
 
     void setComponentList(ComponentList<T> components);
-
-    default <C extends T> List<C> getComponents(final String... name) {
-        return getComponentList().get(name);
-    }
-
-    default <C extends T> Optional<C> getComponent(final String name) {
-        return getComponentList().getFirst(name);
-    }
 
     /**
      * Add a subcomponent to this component.
