@@ -337,7 +337,7 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
                 .map(RDate::getPeriods).flatMap(PeriodList::stream).filter(period::intersects)
                 .collect(Collectors.toList()));
 
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME)
+        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME || p.getParameter(Parameter.VALUE) == null)
                 .map(DateListProperty::getDates).flatMap(DateList::stream).filter(period::includes)
                 .map(rdateTime -> new Period((DateTime) rdateTime, rDuration)).collect(Collectors.toList()));
 
