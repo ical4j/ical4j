@@ -1,8 +1,8 @@
 package net.fortuna.ical4j.model
 
-import spock.lang.Specification
+import net.fortuna.ical4j.AbstractTzurlIntegrationTest
 
-class TimeZoneLoaderTest extends Specification {
+class TimeZoneLoaderTest extends AbstractTzurlIntegrationTest {
 
     def 'assert timezone loads correctly'() {
         given: 'a timezone loader instance'
