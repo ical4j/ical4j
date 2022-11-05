@@ -41,8 +41,8 @@ import net.fortuna.ical4j.util.Configurator;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.net.*;
+import java.util.Optional;
 
 /**
  * Support for updating timezone definitions.
