@@ -1,10 +1,10 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022e/Asia/Hovd
-LAST-MODIFIED:20221013T075637Z
-TZURL:http://tzurl.org/zoneinfo-global/Asia/Hovd
+TZID:/tzurl.org/2022f/Asia/Hovd
+LAST-MODIFIED:20221105T024527Z
+TZURL:https://www.tzurl.org/zoneinfo-global/Asia/Hovd
 X-LIC-LOCATION:Asia/Hovd
 X-PROLEPTIC-TZNAME:LMT
 BEGIN:STANDARD

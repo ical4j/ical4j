@@ -79,6 +79,10 @@ dependencies {
     // spock
     testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0"),
             "org.spockframework:spock-core"
+
+    // testcontainers
+    testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
+            "org.testcontainers:spock:$testcontainersVersion"
 }
 
 test {

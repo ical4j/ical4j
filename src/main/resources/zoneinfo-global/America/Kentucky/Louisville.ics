@@ -1,10 +1,10 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022e/America/Kentucky/Louisville
-LAST-MODIFIED:20221013T075637Z
-TZURL:http://tzurl.org/zoneinfo-global/America/Kentucky/Louisville
+TZID:/tzurl.org/2022f/America/Kentucky/Louisville
+LAST-MODIFIED:20221105T024527Z
+TZURL:https://www.tzurl.org/zoneinfo-global/America/Kentucky/Louisville
 X-LIC-LOCATION:America/Kentucky/Louisville
 X-PROLEPTIC-TZNAME:LMT
 BEGIN:STANDARD

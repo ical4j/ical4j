@@ -41,11 +41,8 @@ import net.fortuna.ical4j.util.Configurator;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Optional;
+import java.net.*;
 
 /**
  * Support for updating timezone definitions.
@@ -59,6 +56,11 @@ public class TimeZoneUpdater {
     private static final String UPDATE_PROXY_TYPE = "net.fortuna.ical4j.timezone.update.proxy.type";
     private static final String UPDATE_PROXY_HOST = "net.fortuna.ical4j.timezone.update.proxy.host";
     private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
+
+    private static final String UPDATE_SCHEME_OVERRIDE = "net.fortuna.ical4j.timezone.update.scheme";
+    private static final String UPDATE_HOST_OVERRIDE = "net.fortuna.ical4j.timezone.update.host";
+    private static final String UPDATE_PORT_OVERRIDE = "net.fortuna.ical4j.timezone.update.port";
+
     private static final String SECURE_CONNECTION_ENABLED = "net.fortuna.ical4j.timezone.update.connection.secure";
 
     private Proxy proxy = null;
@@ -87,19 +89,10 @@ public class TimeZoneUpdater {
         final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);
 
         URLConnection connection;
-        if ("true".equals(Configurator.getProperty(SECURE_CONNECTION_ENABLED).orElse("false"))) {
-            URL secureUrl = new URL("https", url.getHost(), url.getFile());
-            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
-                connection = secureUrl.openConnection(proxy);
-            } else {
-                connection = secureUrl.openConnection();
-            }
+        if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
+            connection = url.openConnection(proxy);
         } else {
-            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
-                connection = url.openConnection(proxy);
-            } else {
-                connection = url.openConnection();
-            }
+            connection = url.openConnection();
         }
 
         connection.setConnectTimeout(connectTimeout);
@@ -116,7 +109,12 @@ public class TimeZoneUpdater {
             final Optional<TzUrl> tzUrl = vTimeZone.getProperty(Property.TZURL);
             if (tzUrl.isPresent()) {
                 try {
-                    URLConnection connection = openConnection(tzUrl.get().getUri().toURL());
+                    boolean secureScheme = "true".equals(Configurator.getProperty(SECURE_CONNECTION_ENABLED).orElse("false"));
+                    URL updateUrl = new UrlBuilder(tzUrl.get().getUri())
+                            .withScheme(Configurator.getProperty(UPDATE_SCHEME_OVERRIDE).orElse(secureScheme ? "https" : null))
+                            .withHost(Configurator.getProperty(UPDATE_HOST_OVERRIDE).orElse(null))
+                            .withPort(Configurator.getIntProperty(UPDATE_PORT_OVERRIDE).orElse(-1)).toUrl();
+                    URLConnection connection = openConnection(updateUrl);
 
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(connection.getInputStream());
@@ -124,11 +122,59 @@ public class TimeZoneUpdater {
                     if (updatedVTimeZone.isPresent()) {
                         return updatedVTimeZone.get();
                     }
-                } catch (IOException | ParserException e) {
+                } catch (IOException | ParserException | URISyntaxException e) {
                     LoggerFactory.getLogger(TimeZoneUpdater.class).warn("Error updating timezone definition", e);
                 }
             }
         }
         return vTimeZone;
+    }
+
+    private static class UrlBuilder {
+
+        private final URI base;
+
+        private String scheme;
+
+        private String host;
+
+        private int port;
+
+        public UrlBuilder(URI base) {
+            this.base = base;
+        }
+
+        public UrlBuilder withScheme(String scheme) {
+            this.scheme = scheme;
+            return this;
+        }
+
+        public UrlBuilder withHost(String host) {
+            this.host = host;
+            return this;
+        }
+
+        public UrlBuilder withPort(int port) {
+            this.port = port;
+            return this;
+        }
+
+        URL toUrl() throws MalformedURLException, URISyntaxException {
+            URI uri = base;
+            if (scheme != null) {
+                uri = new URI(scheme, uri.getUserInfo(), uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(),
+                        uri.getFragment());
+            }
+            if (host != null) {
+                uri = new URI(uri.getScheme(), uri.getUserInfo(), host, uri.getPort(), uri.getPath(), uri.getQuery(),
+                        uri.getFragment());
+            }
+            if (port > 0) {
+                uri = new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), port, uri.getPath(), uri.getQuery(),
+                        uri.getFragment());
+            }
+
+            return uri.toURL();
+        }
     }
 }

@@ -1,8 +1,8 @@
 package net.fortuna.ical4j.model
 
-import spock.lang.Specification
+import net.fortuna.ical4j.AbstractTzurlIntegrationTest
 
-class TimeZoneLoaderTest extends Specification {
+class TimeZoneLoaderTest extends AbstractTzurlIntegrationTest {
 
     def 'assert timezone loads correctly'() {
         given: 'a timezone loader instance'
@@ -13,6 +13,9 @@ class TimeZoneLoaderTest extends Specification {
 
         then: 'a non-null instance is returned'
         tz?.timeZoneId.get().value == id
+
+        and: 'subsequent retrieval returns the same object'
+        loader.loadVTimeZone(id) === tz
 
         where:
         id << ['Australia/Melbourne', 'Europe/London', 'Asia/Singapore']
@@ -31,6 +34,9 @@ class TimeZoneLoaderTest extends Specification {
 
         then: 'a non-null instance is returned'
         tz?.timeZoneId.get().value == id
+
+        and: 'subsequent retrieval returns the same object'
+        loader.loadVTimeZone(id) === tz
 
         where:
         id << ['Australia/Melbourne', 'Europe/London', 'Asia/Singapore']
