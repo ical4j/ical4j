@@ -14,6 +14,9 @@ class TimeZoneLoaderTest extends AbstractTzurlIntegrationTest {
         then: 'a non-null instance is returned'
         tz?.timeZoneId.value == id
 
+        and: 'subsequent retrieval returns the same object'
+        loader.loadVTimeZone(id) === tz
+
         where:
         id << ['Australia/Melbourne', 'Europe/London', 'Asia/Singapore']
     }
@@ -31,6 +34,9 @@ class TimeZoneLoaderTest extends AbstractTzurlIntegrationTest {
 
         then: 'a non-null instance is returned'
         tz?.timeZoneId.value == id
+
+        and: 'subsequent retrieval returns the same object'
+        loader.loadVTimeZone(id) === tz
 
         where:
         id << ['Australia/Melbourne', 'Europe/London', 'Asia/Singapore']
