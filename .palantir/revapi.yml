@@ -1990,3 +1990,53 @@ acceptedBreaks:
       new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws jakarta.mail.internet.AddressException"
       justification: "jarkata_mail_package_changed"
+  "3.2.6":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ net.fortuna.ical4j.model.PropertyFactory)"
+      new: "method void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.property.Link::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ net.fortuna.ical4j.model.PropertyFactory)"
+      new: "method void net.fortuna.ical4j.model.property.Link::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Link::setValue(java.lang.String)\
+        \ throws java.io.IOException, java.net.URISyntaxException, java.text.ParseException"
+      new: "method void net.fortuna.ical4j.model.property.Link::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.PropertyFactory)"
+      new: "method void net.fortuna.ical4j.model.property.Concept::<init>()"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.property.Link::<init>(net.fortuna.ical4j.model.PropertyFactory)"
+      new: "method void net.fortuna.ical4j.model.property.Link::<init>()"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.property.RefId::<init>(net.fortuna.ical4j.model.PropertyFactory)"
+      new: "method void net.fortuna.ical4j.model.property.RefId::<init>()"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===net.fortuna.ical4j.model.PropertyFactory===)"
+      new: "parameter void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===java.lang.String===) throws java.net.URISyntaxException"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.property.Link::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===net.fortuna.ical4j.model.PropertyFactory===)"
+      new: "parameter void net.fortuna.ical4j.model.property.Link::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===java.lang.String===) throws java.net.URISyntaxException"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.property.RefId::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===net.fortuna.ical4j.model.PropertyFactory===)"
+      new: "parameter void net.fortuna.ical4j.model.property.RefId::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===java.lang.String===)"
+      justification: "fixes_for_ical_relationships"
