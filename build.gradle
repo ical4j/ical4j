@@ -101,7 +101,7 @@ jacocoTestReport {
 }
 
 javadoc {
-    options.addBooleanOption('-no-module-directories', true)
+//    options.addBooleanOption('-no-module-directories', true)
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
