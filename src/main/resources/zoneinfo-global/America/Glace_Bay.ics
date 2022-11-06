@@ -1,10 +1,10 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022e/America/Glace_Bay
-LAST-MODIFIED:20221013T075637Z
-TZURL:http://tzurl.org/zoneinfo-global/America/Glace_Bay
+TZID:/tzurl.org/2022f/America/Glace_Bay
+LAST-MODIFIED:20221105T024528Z
+TZURL:https://www.tzurl.org/zoneinfo-global/America/Glace_Bay
 X-LIC-LOCATION:America/Glace_Bay
 X-PROLEPTIC-TZNAME:LMT
 BEGIN:STANDARD

@@ -53,6 +53,8 @@ public class TimeZoneLoader {
         NO_TRANSITIONS.getProperties().add(start);
     }
 
+    private static final Map<String, TimeZoneLoader> LOADER_MAP = new HashMap<>();
+
     private final String resourcePrefix;
 
     private final TimeZoneUpdater zoneUpdater;
@@ -228,6 +230,14 @@ public class TimeZoneLoader {
                 throw new RuntimeException(MESSAGE_MISSING_DEFAULT_TZ_CACHE_IMPL, e);
             }
         });
+    }
+
+    public static TimeZoneLoader getInstance(String resourcePrefix) {
+        TimeZoneLoader loader = LOADER_MAP.get(resourcePrefix);
+        if (loader == null) {
+            LOADER_MAP.put(resourcePrefix, new TimeZoneLoader(resourcePrefix));
+        }
+        return LOADER_MAP.get(resourcePrefix);
     }
 
     private static class ZoneOffsetKey {

@@ -33,11 +33,16 @@
 
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 public class RefId extends Property {
 
@@ -45,12 +50,13 @@ public class RefId extends Property {
 
     private String value;
 
-    public RefId(PropertyFactory factory) {
-        super(PROPERTY_NAME, factory);
+    public RefId() {
+        super(PROPERTY_NAME, new Factory());
     }
 
-    public RefId(ParameterList aList, PropertyFactory factory) {
-        super(PROPERTY_NAME, aList, factory);
+    public RefId(ParameterList aList, String value) {
+        super(PROPERTY_NAME, aList, new Factory());
+        setValue(value);
     }
 
     @Override
@@ -66,5 +72,24 @@ public class RefId extends Property {
     @Override
     public ValidationResult validate() throws ValidationException {
         return null;
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<RefId> {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(PROPERTY_NAME);
+        }
+
+        @Override
+        public RefId createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RefId(parameters, value);
+        }
+
+        @Override
+        public RefId createProperty() {
+            return new RefId();
+        }
     }
 }

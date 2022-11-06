@@ -34,4 +34,25 @@ class ComponentSpec extends Specification {
                                                                    '20150430T000000Z/PT1H',
                                                                    '20150530T000000Z/PT1H', '20150630T000000Z/PT1H']
     }
+
+    def "test Component.calculateRecurrenceSet with RDATE"() {
+        given: 'a component'
+        VEvent component = new ContentBuilder().with {
+            vevent {
+                dtstart '20221014T194500'
+                dtend '20221014T194501'
+                rdate '20221014T194500,20221028T194500,20221111T194500, 20221125T194500,20221209T194500,20230113T194500'
+            }
+        }
+        and: 'an expected list of periods'
+        def expectedPeriods = new PeriodList()
+        expectedPeriods.addAll(expectedResults.collect { new Period(it)})
+
+        expect: 'calculate recurrence set returns the expected results'
+        component.calculateRecurrenceSet(period) == expectedPeriods
+
+        where:
+        period    | expectedResults
+        new Period('20221014T194500/20230113T194500') | ['20221014T194500/PT1S', '20221028T194500/PT1S', '20221111T194500/PT1S', '20221209T194500/PT1S', '20230113T194500/PT1S']
+    }
 }

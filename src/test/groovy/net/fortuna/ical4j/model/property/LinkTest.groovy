@@ -54,6 +54,7 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components[0].properties[1].value == 'https://example.com/tasks/01234567-abcd1234.ics'
+        Link link = calendar?.components[0].properties[1]
+        link.value == 'https://example.com/tasks/01234567-abcd1234.ics'
     }
 }

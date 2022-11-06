@@ -1,10 +1,10 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022e/Antarctica/Davis
-LAST-MODIFIED:20221013T075637Z
-TZURL:http://tzurl.org/zoneinfo-global/Antarctica/Davis
+TZID:/tzurl.org/2022f/Antarctica/Davis
+LAST-MODIFIED:20221105T024527Z
+TZURL:https://www.tzurl.org/zoneinfo-global/Antarctica/Davis
 X-LIC-LOCATION:Antarctica/Davis
 X-PROLEPTIC-TZNAME:-00
 BEGIN:STANDARD

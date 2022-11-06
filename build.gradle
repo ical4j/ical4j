@@ -61,7 +61,7 @@ dependencies {
 
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
-    testCompileOnly "org.codehaus.groovy:groovy:$groovyVersion",
+    testImplementation "org.codehaus.groovy:groovy:$groovyVersion",
             "org.slf4j:slf4j-log4j12:$slf4jVersion",
             "org.apache.logging.log4j:log4j:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
@@ -79,6 +79,10 @@ dependencies {
     // spock
     testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0"),
             "org.spockframework:spock-core"
+
+    // testcontainers
+    testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
+            "org.testcontainers:spock:$testcontainersVersion"
 }
 
 test {

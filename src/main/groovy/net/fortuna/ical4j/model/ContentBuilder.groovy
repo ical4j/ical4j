@@ -139,6 +139,10 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('image', new PropertyFactoryWrapper(Image, new Image.Factory()))
         registerFactory('refreshinterval', new PropertyFactoryWrapper(RefreshInterval, new RefreshInterval.Factory()))
         registerFactory('source', new PropertyFactoryWrapper(Source, new Source.Factory()))
+
+        registerFactory('concept', new PropertyFactoryWrapper(Concept, new Concept.Factory()))
+        registerFactory('link', new PropertyFactoryWrapper(Link, new Link.Factory()))
+        registerFactory('refid', new PropertyFactoryWrapper(RefId, new RefId.Factory()))
     }
     
     def registerParameters() {
@@ -172,6 +176,9 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('email', new ParameterFactoryWrapper(Email, new Email.Factory()))
         registerFactory('feature', new ParameterFactoryWrapper(Feature, new Feature.Factory()))
         registerFactory('label', new ParameterFactoryWrapper(Label, new Label.Factory()))
+
+        registerFactory('gap', new ParameterFactoryWrapper(Gap, new Gap.Factory()))
+        registerFactory('linkrel', new ParameterFactoryWrapper(LinkRel, new LinkRel.Factory()))
     }
 }
 

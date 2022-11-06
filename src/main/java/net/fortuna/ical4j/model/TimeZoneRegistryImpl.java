@@ -128,7 +128,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     }
 
     public TimeZoneRegistryImpl(final String resourcePrefix, boolean lenientTzResolution) {
-        this.timeZoneLoader = new TimeZoneLoader(resourcePrefix);
+        this.timeZoneLoader = TimeZoneLoader.getInstance(resourcePrefix);
         timezones = new ConcurrentHashMap<>();
         this.lenientTzResolution = lenientTzResolution;
     }
