@@ -298,8 +298,10 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public final boolean includes(final Temporal date) {
         Objects.requireNonNull(date, "date");
+        Instant dateInstant = (date instanceof LocalDateTime) ? ((LocalDateTime) date)
+                .toInstant(ZoneOffset.from(ZonedDateTime.now())) : Instant.from(date);
         return start.equals(date) || end.equals(date)
-                || toInterval().encloses(Interval.of(Instant.from(date), Duration.ZERO));
+                || toInterval().encloses(Interval.of(dateInstant, Duration.ZERO));
     }
 
     /**

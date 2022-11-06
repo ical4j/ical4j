@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model
 import net.fortuna.ical4j.model.component.VEvent
 import spock.lang.Specification
 
+import java.time.temporal.Temporal
+
 class ComponentSpec extends Specification {
 
     def "test Component.calculateRecurrenceSet"() {
@@ -40,18 +42,18 @@ class ComponentSpec extends Specification {
             vevent {
                 dtstart '20221014T194500'
                 dtend '20221014T194501'
-                rdate '20221014T194500,20221028T194500,20221111T194500, 20221125T194500,20221209T194500,20230113T194500'
+                rdate '20221014T194500,20221028T194500,20221111T194500,20221125T194500,20221209T194500,20230113T194500'
             }
         }
         and: 'an expected list of periods'
-        def expectedPeriods = new PeriodList()
-        expectedPeriods.addAll(expectedResults.collect { new Period(it)})
+        def expectedPeriods = new HashSet<Period<? extends Temporal>>()
+        expectedPeriods.addAll(expectedResults.collect { Period.parse(it)})
 
         expect: 'calculate recurrence set returns the expected results'
         component.calculateRecurrenceSet(period) == expectedPeriods
 
         where:
         period    | expectedResults
-        new Period('20221014T194500/20230113T194500') | ['20221014T194500/PT1S', '20221028T194500/PT1S', '20221111T194500/PT1S', '20221209T194500/PT1S', '20230113T194500/PT1S']
+        Period.parse('20221014T194500/20230113T194500') | ['20221014T194500/PT1S', '20221028T194500/PT1S', '20221111T194500/PT1S', '20221125T194500/PT1S', '20221209T194500/PT1S', '20230113T194500/PT1S']
     }
 }
