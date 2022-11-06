@@ -45,7 +45,7 @@ class TimeZoneUpdaterTest extends Specification {
         TimeZoneUpdater updater = []
 
         when: 'a timezone is updated'
-        VTimeZone tz = Calendars.load(files).getComponent('VTIMEZONE').get()
+        VTimeZone tz = Calendars.load(files).getComponent('VTIMEZONE')
 
         then: 'result is different from input'
         updater.updateDefinition(tz) != tz
