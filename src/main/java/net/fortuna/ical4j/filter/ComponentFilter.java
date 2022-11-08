@@ -9,6 +9,18 @@ import net.fortuna.ical4j.model.Property;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * ComponentFilter produces predicates for lambda-style filtering of {@link Component iCalendar components}.
+ * <p>
+ * The following example prints all events where the event's categories contain the the word "Holiday".
+ * </p>
+ * <pre>
+ * Predicate<Component> filter = new ComponentFilter().predicate(FilterExpression.contains(Property.CATEGORIES, "Holiday"));
+ * calendar.getComponents(Component.VEVENT).stream()
+ *   .filter(filter)
+ *   .forEach(System.out::println);
+ * </pre>
+ */
 public class ComponentFilter<T extends Component> extends AbstractFilter<T> {
 
     public Predicate<T> predicate(UnaryExpression expression) {
