@@ -26,6 +26,7 @@ import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneOffsetTransitionRule;
 import java.util.TimeZone;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TimeZoneLoader {
 
@@ -48,7 +49,7 @@ public class TimeZoneLoader {
         NO_TRANSITIONS.add(new DtStart<>(Instant.EPOCH));
     }
 
-    private static final Map<String, TimeZoneLoader> LOADER_MAP = new HashMap<>();
+    private static final Map<String, TimeZoneLoader> LOADER_MAP = new ConcurrentHashMap<>();
 
     private final String resourcePrefix;
 

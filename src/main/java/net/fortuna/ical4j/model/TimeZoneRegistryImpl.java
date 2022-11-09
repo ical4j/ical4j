@@ -193,10 +193,11 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                             try {
                                 final VTimeZone vTimeZone = timeZoneLoader.loadVTimeZone(id);
                                 if (vTimeZone != null) {
-                                    // XXX: temporary kludge..
-                                    // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
                                     timezone = new TimeZone(vTimeZone);
                                     DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
+                                    if (!timezone.getID().equals(id)) {
+                                        DEFAULT_TIMEZONES.put(id, timezone);
+                                    }
                                 } else if (lenientTzResolution) {
                                     // strip global part of id and match on default tz..
                                     Matcher matcher = TZ_ID_SUFFIX.matcher(id);
