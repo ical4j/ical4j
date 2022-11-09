@@ -54,7 +54,7 @@ import java.util.function.Predicate;
  *
  * @author Ben Fortuna
  *
- * @deprecated Most of the functionality of this class can now be achieved via lambda expressions.
+ * @deprecated Most of the functionality of this class can now be achieved via lambda expressions using {@link ComponentFilter Component Filters}
  */
 @Deprecated
 public class Filter<T> {
