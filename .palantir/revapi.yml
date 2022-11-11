@@ -9581,3 +9581,9 @@ acceptedBreaks:
       old: "method void net.fortuna.ical4j.model.DateList::<init>(net.fortuna.ical4j.model.parameter.Value)"
       new: "method void net.fortuna.ical4j.model.DateList<T extends java.time.temporal.Temporal>::<init>(java.util.List<net.fortuna.ical4j.model.TemporalAdapter<T>>)"
       justification: "improve_datelist_signature"
+  "4.0.0-beta3":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
+      justification: "added_static_comparator_instance"
