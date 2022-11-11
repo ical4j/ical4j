@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.TimeZones;
+
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
@@ -17,16 +19,27 @@ public class TemporalComparator implements Comparator<Temporal> {
 
     private final TemporalUnit defaultComparisonUnit;
 
+    private final ZoneId defaultZoneId;
+
     public TemporalComparator() {
-        this(ChronoUnit.SECONDS);
+        this(ChronoUnit.SECONDS, TimeZones.getDefault().toZoneId());
+    }
+
+    public TemporalComparator(TemporalUnit defaultComparisonUnit) {
+        this(defaultComparisonUnit, TimeZones.getDefault().toZoneId());
+    }
+
+    public TemporalComparator(ZoneId defaultZoneId) {
+        this(ChronoUnit.SECONDS, defaultZoneId);
     }
 
     /**
      *
      * @param defaultComparisonUnit the fallback comparison unit if all other temporal comparisons are not applicable.
      */
-    public TemporalComparator(TemporalUnit defaultComparisonUnit) {
+    public TemporalComparator(TemporalUnit defaultComparisonUnit, ZoneId defaultZoneId) {
         this.defaultComparisonUnit = defaultComparisonUnit;
+        this.defaultZoneId = defaultZoneId;
     }
 
     @Override
@@ -77,11 +90,11 @@ public class TemporalComparator implements Comparator<Temporal> {
     }
 
     public int compare(Instant o1, LocalDateTime o2) {
-        return o1.compareTo(ZonedDateTime.of(o2, ZoneId.systemDefault()).toInstant());
+        return o1.compareTo(ZonedDateTime.of(o2, defaultZoneId).toInstant());
     }
 
     public int compare(LocalDateTime o1, Instant o2) {
-        return ZonedDateTime.of(o1, ZoneId.systemDefault()).toInstant().compareTo(o2);
+        return ZonedDateTime.of(o1, defaultZoneId).toInstant().compareTo(o2);
     }
 
     public int compare(Instant o1, LocalDate o2) {

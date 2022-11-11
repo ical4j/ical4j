@@ -253,7 +253,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @return a temporal adapter instance equivalent to the specified date/time value
      */
     @SuppressWarnings("deprecation")
-    public static TemporalAdapter from(Date date) {
+    public static TemporalAdapter<?> from(Date date) {
         Temporal temporal;
         if (date instanceof DateTime) {
             DateTime dateTime = (DateTime) date;
