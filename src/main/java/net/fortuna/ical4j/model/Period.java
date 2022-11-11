@@ -36,7 +36,6 @@ import org.threeten.extra.Interval;
 import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
@@ -506,11 +505,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         if (period == null) {
             throw new ClassCastException("Cannot compare this object to null");
         }
-        if (start instanceof LocalDate) {
-            return compareTo(period, new TemporalComparator(ChronoUnit.DAYS));
-        } else {
-            return compareTo(period, DATE_RANGE_COMPARATOR);
-        }
+        return compareTo(period, DATE_RANGE_COMPARATOR);
     }
 
     private int compareTo(final Period<T> period, TemporalComparator comparator) {

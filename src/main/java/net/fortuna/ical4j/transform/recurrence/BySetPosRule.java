@@ -3,7 +3,6 @@ package net.fortuna.ical4j.transform.recurrence;
 import net.fortuna.ical4j.model.TemporalComparator;
 import net.fortuna.ical4j.transform.Transformer;
 
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,11 +29,8 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
             return dates;
         }
         // sort the list before processing..
-        if (dates.get(0).isSupported(ChronoUnit.SECONDS)) {
-            dates.sort(ONSET_COMPARATOR);
-        } else {
-            dates.sort(new TemporalComparator(ChronoUnit.DAYS));
-        }
+        dates.sort(ONSET_COMPARATOR);
+
         final List<T> setPosDates = new ArrayList<>();
         final int size = dates.size();
         for (final Integer setPos : setPosList) {

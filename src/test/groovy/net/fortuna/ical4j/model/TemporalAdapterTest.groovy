@@ -71,4 +71,13 @@ class TemporalAdapterTest extends Specification {
         where:
         dateString << ['20150504T120000Z']
     }
+
+    def 'verify isbefore works correctly'() {
+        expect: 'isbefore result matches expected'
+        TemporalAdapter.isBefore(t1, t2) == isBefore
+
+        where:
+        t1  | t2    | isBefore
+        Instant.now()   | LocalDate.now()   | false
+    }
 }

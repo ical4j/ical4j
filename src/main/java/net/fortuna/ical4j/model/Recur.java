@@ -792,11 +792,8 @@ public class Recur<T extends Temporal> implements Serializable {
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
-                if (seed instanceof LocalDate) {
-                    candidates.sort(new TemporalComparator(ChronoUnit.DAYS));
-                } else {
-                    candidates.sort(CANDIDATE_SORTER);
-                }
+                candidates.sort(CANDIDATE_SORTER);
+
                 for (T candidate1 : candidates) {
                     candidate = candidate1;
                     // don't count candidates that occur before the seed date..
@@ -873,11 +870,7 @@ public class Recur<T extends Temporal> implements Serializable {
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
-                if (seed instanceof LocalDate) {
-                    candidates.sort(new TemporalComparator(ChronoUnit.DAYS));
-                } else {
-                    candidates.sort(CANDIDATE_SORTER);
-                }
+                candidates.sort(CANDIDATE_SORTER);
 
                 for (T candidate1 : candidates) {
                     candidate = candidate1;
