@@ -36,6 +36,7 @@ import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 import static java.lang.String.format
@@ -439,5 +440,17 @@ class RecurSpec extends Specification {
 
         then: 'result matches expected'
         dates == DateList.parse('20220509T163700,20220509T163800,20220516T163700,20220516T163800').dates
+    }
+
+    def 'test unlike temporals'() {
+        given: 'a date-time recurrence with date precision in UNTIL field'
+        Recur<LocalDateTime> recur = new Recur<>("FREQ=YEARLY;INTERVAL=2;UNTIL=20230101");
+
+        expect: 'dates are returned correctly'
+        recur.getDates(LocalDate.of(2020, 1, 1).atStartOfDay(),
+                LocalDate.of(2020, 1, 1).atStartOfDay(),
+                LocalDate.of(2025, 1, 1).atStartOfDay()) == [
+                    LocalDate.of(2020, 1, 1).atStartOfDay(),
+                    LocalDate.of(2022, 1, 1).atStartOfDay()]
     }
 }
