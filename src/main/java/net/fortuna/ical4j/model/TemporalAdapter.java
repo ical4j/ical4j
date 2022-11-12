@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.TimeZones;
 
 import java.io.Serializable;
 import java.time.*;
@@ -57,9 +58,9 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     public TemporalAdapter(T temporal, TimeZoneRegistry timeZoneRegistry) {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
-        this.valueString = toString(temporal, ZoneId.systemDefault());
+        this.valueString = toString(temporal, TimeZones.getDefault().toZoneId());
         if (ChronoUnit.SECONDS.isSupportedBy(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
-            this.tzId = new TzId.Factory().createParameter(ZoneId.systemDefault().getId());
+            this.tzId = new TzId.Factory().createParameter(TimeZones.getDefault().toZoneId().getId());
         } else {
             this.tzId = null;
         }
@@ -138,7 +139,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     @Override
     public String toString() {
-        return toString(getTemporal(), ZoneId.systemDefault());
+        return toString(getTemporal(), TimeZones.getDefault().toZoneId());
     }
 
     public String toString(ZoneId zoneId) {
@@ -174,7 +175,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     }
 
     public ZonedDateTime toLocalTime() {
-        return toLocalTime(ZoneId.systemDefault());
+        return toLocalTime(TimeZones.getDefault().toZoneId());
     }
 
     public ZonedDateTime toLocalTime(ZoneId zoneId) {
@@ -260,7 +261,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
             if (dateTime.isUtc()) {
                 temporal = date.toInstant();
             } else if (dateTime.getTimeZone() == null) {
-                temporal = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+                temporal = LocalDateTime.ofInstant(date.toInstant(), TimeZones.getDefault().toZoneId());
             } else {
                 temporal = ZonedDateTime.ofInstant(date.toInstant(), dateTime.getTimeZone().toZoneId());
             }

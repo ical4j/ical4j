@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.TimeZones;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
@@ -321,8 +322,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
             newPeriodStart = getStart();
             newPeriodEnd = getEnd();
         } else {
-            Interval thisInterval = TemporalAdapter.isFloating(getStart()) ? toInterval(ZoneId.systemDefault()) : toInterval();
-            Interval thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(ZoneId.systemDefault()) : period.toInterval();
+            Interval thisInterval = TemporalAdapter.isFloating(getStart()) ? toInterval(TimeZones.getDefault().toZoneId()) : toInterval();
+            Interval thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(TimeZones.getDefault().toZoneId()) : period.toInterval();
 
             if (thisInterval.getStart().isBefore(thatInterval.getStart())) {
                 newPeriodStart = getStart();
@@ -365,9 +366,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     private PeriodList<T> subtractInterval(Period<T> period) {
         Interval thisInterval = TemporalAdapter.isFloating(getStart())
-                ? toInterval(ZoneId.systemDefault()) : toInterval();
+                ? toInterval(TimeZones.getDefault().toZoneId()) : toInterval();
         Interval thatInterval = TemporalAdapter.isFloating(getStart())
-                ? period.toInterval(ZoneId.systemDefault()) : period.toInterval();
+                ? period.toInterval(TimeZones.getDefault().toZoneId()) : period.toInterval();
         
         if (thatInterval.encloses(thisInterval)) {
             return new PeriodList<>(period.dateFormat);
@@ -469,7 +470,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     }
 
     public Interval toInterval() {
-        return toInterval(ZoneId.systemDefault());
+        return toInterval(TimeZones.getDefault().toZoneId());
     }
 
     public Interval toInterval(ZoneId zoneId) {
