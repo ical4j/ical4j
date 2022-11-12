@@ -9587,3 +9587,9 @@ acceptedBreaks:
       old: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
       new: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
       justification: "added_static_comparator_instance"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.TemporalAdapter net.fortuna.ical4j.model.TemporalAdapter<T\
+        \ extends java.time.temporal.Temporal>::from(net.fortuna.ical4j.model.Date)"
+      new: "method net.fortuna.ical4j.model.TemporalAdapter<?> net.fortuna.ical4j.model.TemporalAdapter<T\
+        \ extends java.time.temporal.Temporal>::from(net.fortuna.ical4j.model.Date)"
+      justification: "use_generics"
