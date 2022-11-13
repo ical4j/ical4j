@@ -282,7 +282,7 @@ public class TimeZoneTest extends TestCase {
             assertEquals(tz.getOffset(date.getTime()), timezone.getOffset(date.getTime()));
         } else {
             int era = GregorianCalendar.AD;
-            int year = 2005;
+            int year = 2015;
             int month = 9;
             int day = 18;
             int dayOfWeek = Calendar.SUNDAY;
