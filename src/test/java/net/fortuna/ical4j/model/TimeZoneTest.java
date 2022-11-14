@@ -284,7 +284,7 @@ public class TimeZoneTest extends TestCase {
         }
         else {
             int era = GregorianCalendar.AD;
-            int year = 2005;
+            int year = 2015;
             int month = 9;
             int day = 18;
             int dayOfWeek = Calendar.SUNDAY;
