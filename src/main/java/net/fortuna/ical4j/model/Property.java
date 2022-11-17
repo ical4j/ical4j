@@ -489,7 +489,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * Returns the property prefix for applicable property types.
      * @return a string prefix, or null if not applicable
      */
-    String getPrefix() {
+    public String getPrefix() {
         return prefix;
     }
 
