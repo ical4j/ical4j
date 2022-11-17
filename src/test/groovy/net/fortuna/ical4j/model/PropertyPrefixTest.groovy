@@ -41,7 +41,7 @@ class PropertyPrefixTest extends Specification {
 
     def 'test creating property with a pefix'() {
         given: 'a property with a defined prefix'
-        def prop = new Property('name', 'prefix') {
+        def prop = new Property('name') {
             @Override
             void setValue(String aValue) {}
 
@@ -60,6 +60,7 @@ class PropertyPrefixTest extends Specification {
                 return 'value'
             }
         }
+        prop.prefix = 'prefix'
 
         expect: 'prefix is output when converted to string'
         prop as String == 'prefix.name:value\r\n'
