@@ -9600,6 +9600,11 @@ acceptedBreaks:
         \ java.lang.String, net.fortuna.ical4j.model.ParameterList)"
       justification: "revert_signature_change_for_property"
     - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Set<net.fortuna.ical4j.validate.ValidationRule<T>> net.fortuna.ical4j.validate.AbstractValidationRuleSet<T>::getRules()"
+      new: "method java.util.Set<net.fortuna.ical4j.validate.ValidationRule<? super\
+        \ T>> net.fortuna.ical4j.validate.AbstractValidationRuleSet<T>::getRules()"
+      justification: "refined_generics_for_property_validator_rules"
+    - code: "java.method.returnTypeTypeParametersChanged"
       old: "method net.fortuna.ical4j.model.TemporalAdapter net.fortuna.ical4j.model.TemporalAdapter<T\
         \ extends java.time.temporal.Temporal>::from(net.fortuna.ical4j.model.Date)"
       new: "method net.fortuna.ical4j.model.TemporalAdapter<?> net.fortuna.ical4j.model.TemporalAdapter<T\
