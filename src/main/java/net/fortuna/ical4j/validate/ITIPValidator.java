@@ -42,11 +42,11 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 public class ITIPValidator implements Validator<Calendar> {
 
     private static final PropertyContainerRuleSet<Calendar> PROPS_RULE_SET = new PropertyContainerRuleSet<>(
-            new ValidationRule(One, Property.PRODID, Property.VERSION, Property.METHOD),
-            new ValidationRule(OneOrLess, Property.CALSCALE));
+            new ValidationRule<>(One, Property.PRODID, Property.VERSION, Property.METHOD),
+            new ValidationRule<>(OneOrLess, Property.CALSCALE));
 
     private static final ComponentContainerRuleSet COMPONENTS_RULE_SET = new ComponentContainerRuleSet(
-            new ValidationRule(OneExclusive, VEVENT, VFREEBUSY, VTODO, VJOURNAL));
+            new ValidationRule<>(OneExclusive, VEVENT, VFREEBUSY, VTODO, VJOURNAL));
 
     @Override
     public ValidationResult validate(Calendar target) throws ValidationException {

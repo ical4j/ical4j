@@ -1143,7 +1143,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
             new ValidationRule<>(ValueMatch, VERSION_2_0.getValue()));
 
     @SafeVarargs
-    public PropertyValidator(String context, ValidationRule<T>... rules) {
+    public PropertyValidator(String context, ValidationRule<? super T>... rules) {
         super(context, new PropertyRuleSet<>(rules));
     }
 
