@@ -233,11 +233,30 @@ public class CalendarDateFormat implements Serializable {
 
     private final TemporalQuery<? extends TemporalAccessor>[] parsers;
 
+    /**
+     * Construct a calendar date format instance by deriving a {@link DateTimeFormatter} from the specified
+     * pattern.
+     * @param pattern a pattern to match against parsed value strings
+     * @param parsers a list of parsers to apply in order to determine the best parsed value
+     */
     @SafeVarargs
     public CalendarDateFormat(String pattern, TemporalQuery<? extends TemporalAccessor>...parsers) {
         Objects.requireNonNull(pattern, "pattern");
         this.pattern = pattern;
         this.parsers = parsers;
+    }
+
+    /**
+     * Construct a calendar date format instances using an explicit {@link DateTimeFormatter}. Note that because
+     * {@link DateTimeFormatter} is not serializable, the volatile formatter value may be lost using this constructor,
+     * in which case it will fall back to using the same pattern as the DEFAULT_PARSE_FORMAT.
+     *
+     * @param formatter the formatter used to derive temporal values from parsed strings
+     */
+    @SafeVarargs
+    public CalendarDateFormat(DateTimeFormatter formatter, TemporalQuery<? extends TemporalAccessor>...parsers) {
+        this("yyyyMMdd['T'HHmmss[X]]", parsers);
+        this.formatter = formatter;
     }
 
     private DateTimeFormatter getFormatter() {
@@ -276,6 +295,11 @@ public class CalendarDateFormat implements Serializable {
         return getFormatter().withZone(zoneId).format(date);
     }
 
+    /**
+     * Identify the most applicable date format for the specified temporal list
+     * @param list a list of temporal values
+     * @return a date format instance applicable to the given temporal values
+     */
     public static CalendarDateFormat from(List<? extends Temporal> list) {
         if (!list.isEmpty()) {
             return from(list.get(0));
@@ -283,6 +307,11 @@ public class CalendarDateFormat implements Serializable {
         return FLOATING_DATE_TIME_FORMAT;
     }
 
+    /**
+     * Identify the most applicable date format for the specified temporal value
+     * @param temporal a temporal value
+     * @return a date format instance applicable to the given temporal value
+     */
     public static CalendarDateFormat from(Temporal temporal) {
         if (temporal instanceof Instant) {
             return UTC_DATE_TIME_FORMAT;

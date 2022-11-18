@@ -26,7 +26,7 @@ import java.util.Objects;
  *     <li>{@link ZonedDateTime} - represents an iCalendar FORM #3: DATE-TIME value as defined in section 3.3.5 of RFC5545</li>
  * </ul>
  *
- * Note that a local (i.e. floating) temporal type is used we need to apply a {@link ZoneId} for calculations such as
+ * Note that where a local (i.e. floating) temporal type is used we need to apply a {@link ZoneId} for calculations such as
  * recurrence inclusions and other date-based comparisons. Use {@link TemporalAdapter#isFloating(Temporal)} to determine floating
  * instances.
  *
