@@ -9584,6 +9584,10 @@ acceptedBreaks:
   "4.0.0-beta3":
     org.mnode.ical4j:ical4j:
     - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.CalendarDateFormat"
+      new: "class net.fortuna.ical4j.model.CalendarDateFormat"
+      justification: "support_standard_formatters_in_calendarDateFormat"
+    - code: "java.class.defaultSerializationChanged"
       old: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
       new: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
       justification: "added_static_comparator_instance"
