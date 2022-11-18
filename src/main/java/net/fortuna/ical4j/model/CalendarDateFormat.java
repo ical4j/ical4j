@@ -169,7 +169,7 @@ import java.util.Objects;
  */
 public class CalendarDateFormat implements Serializable {
 
-    private static class LocalDateTemporalQuery implements TemporalQuery<LocalDate>, Serializable {
+    public static class LocalDateTemporalQuery implements TemporalQuery<LocalDate>, Serializable {
         @Override
         public LocalDate queryFrom(TemporalAccessor temporal) {
             return LocalDate.from(temporal);
@@ -182,7 +182,7 @@ public class CalendarDateFormat implements Serializable {
         }
     }
 
-    private static class LocalDateTimeTemporalQuery implements TemporalQuery<LocalDateTime>, Serializable {
+    public static class LocalDateTimeTemporalQuery implements TemporalQuery<LocalDateTime>, Serializable {
         @Override
         public LocalDateTime queryFrom(TemporalAccessor temporal) {
             return LocalDateTime.from(temporal);
@@ -195,7 +195,7 @@ public class CalendarDateFormat implements Serializable {
         }
     }
 
-    private static class InstantTemporalQuery implements TemporalQuery<Instant>, Serializable {
+    public static class InstantTemporalQuery implements TemporalQuery<Instant>, Serializable {
         @Override
         public Instant queryFrom(TemporalAccessor temporal) {
             return Instant.from(temporal);
