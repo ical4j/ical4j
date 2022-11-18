@@ -49,7 +49,7 @@ public class PropertyContainerRuleSet<T extends PropertyContainer> extends Abstr
     @Override
     public List<ValidationEntry> apply(String context, T target) {
         List<ValidationEntry> results = new ArrayList<>();
-        for (ValidationRule<T> rule: rules) {
+        for (ValidationRule<? super T> rule: rules) {
             List<String> matches = Collections.emptyList();
             if (rule.getPredicate().test(target)) {
                 int total = rule.getInstances().stream().mapToInt(s -> target.getProperties(s).size()).sum();

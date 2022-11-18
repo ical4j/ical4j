@@ -2040,3 +2040,8 @@ acceptedBreaks:
       new: "parameter void net.fortuna.ical4j.model.property.RefId::<init>(net.fortuna.ical4j.model.ParameterList,\
         \ ===java.lang.String===)"
       justification: "fixes_for_ical_relationships"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Set<net.fortuna.ical4j.validate.ValidationRule<T>> net.fortuna.ical4j.validate.AbstractValidationRuleSet<T>::getRules()"
+      new: "method java.util.Set<net.fortuna.ical4j.validate.ValidationRule<? super\
+        \ T>> net.fortuna.ical4j.validate.AbstractValidationRuleSet<T>::getRules()"
+      justification: "refined_generics_for_property_validator_rules"
