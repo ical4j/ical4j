@@ -55,7 +55,12 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     private static final ValidationRule<Property> DATE_OR_DATETIME_VALUE = new ValidationRule<>(None, prop -> {
         Value v = prop.getParameter(VALUE);
         return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
-    }, VALUE);
+    }, "MUST be specified as a DATE or DATE-TIME:", VALUE);
+
+    private static final ValidationRule<Property> BINARY_VALUE = new ValidationRule<>(None, prop -> {
+        Value v = prop.getParameter(VALUE);
+        return !(v == null || Value.BINARY.equals(v));
+    }, "MUST be specified as a BINARY:", VALUE);
 
     /**
      * <pre>
@@ -71,11 +76,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final PropertyRuleSet<DateProperty> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
-            new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
-            new ValidationRule<DateProperty>(None, prop -> {
-                Value v = prop.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
-            }, "MUST be specified as a DATE or DATE-TIME:", VALUE));
+            new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID), DATE_OR_DATETIME_VALUE);
 
     /**
      * <pre>
@@ -144,18 +145,18 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *                    )
      *                    </pre>
      */
-    public static final Validator<Attach> ATTACH = new PropertyValidator<>(Property.ATTACH,
+    public static final Validator<Attach> ATTACH_URI = new PropertyValidator<>(Property.ATTACH,
             new ValidationRule<>(OneOrLess, FMTTYPE));
 
     /**
-     * @see PropertyValidator#ATTACH
+     * @see PropertyValidator#ATTACH_URI
      */
     public static final Validator<Attach> ATTACH_BIN = new PropertyValidator<>(Property.ATTACH,
+            new ValidationRule<>(OneOrLess, FMTTYPE),
             new ValidationRule<>(One, VALUE, ENCODING),
-            new ValidationRule<>(One, attach -> Value.BINARY.equals(attach.getParameter(VALUE)),
-                    "VALUE=BINARY for binary attachments", VALUE),
             new ValidationRule<>(One, attach -> Encoding.BASE64.equals(attach.getParameter(ENCODING)),
-                    "ENCODING=BASE64 for binary attachments",ENCODING));
+                    "ENCODING=BASE64 for binary attachments",ENCODING),
+            BINARY_VALUE);
 
     /**
      * <pre>
