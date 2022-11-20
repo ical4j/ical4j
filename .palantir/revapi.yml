@@ -9214,9 +9214,6 @@ acceptedBreaks:
       old: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(net.fortuna.ical4j.model.ParameterList,\
   "3.2.6":
     org.mnode.ical4j:ical4j:
-    - code: "java.field.removed"
-      old: "field net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>.ATTACH"
-      justification: "minor_validation_refactoring"
     - code: "java.method.exception.checkedAdded"
       old: "method void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.ParameterList,\
         \ net.fortuna.ical4j.model.PropertyFactory)"
