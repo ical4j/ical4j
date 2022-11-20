@@ -9212,6 +9212,15 @@ acceptedBreaks:
       justification: "approve_all_api_changes_with_major_refactor"
     - code: "java.method.exception.checkedRemoved"
       old: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(net.fortuna.ical4j.model.ParameterList,\
+  "3.2.6":
+    org.mnode.ical4j:ical4j:
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.validate.PropertyValidator<T extends net.fortuna.ical4j.model.Property>.ATTACH"
+      justification: "minor_validation_refactoring"
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ net.fortuna.ical4j.model.PropertyFactory)"
+      new: "method void net.fortuna.ical4j.model.property.Concept::<init>(net.fortuna.ical4j.model.ParameterList,\
         \ java.lang.String) throws java.net.URISyntaxException"
       new: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(net.fortuna.ical4j.model.ParameterList,\
         \ java.lang.String)"
@@ -9610,3 +9619,13 @@ acceptedBreaks:
       new: "method net.fortuna.ical4j.model.TemporalAdapter<?> net.fortuna.ical4j.model.TemporalAdapter<T\
         \ extends java.time.temporal.Temporal>::from(net.fortuna.ical4j.model.Date)"
       justification: "use_generics"
+      old: "parameter void net.fortuna.ical4j.model.property.RefId::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===net.fortuna.ical4j.model.PropertyFactory===)"
+      new: "parameter void net.fortuna.ical4j.model.property.RefId::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===java.lang.String===)"
+      justification: "fixes_for_ical_relationships"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Set<net.fortuna.ical4j.validate.ValidationRule<T>> net.fortuna.ical4j.validate.AbstractValidationRuleSet<T>::getRules()"
+      new: "method java.util.Set<net.fortuna.ical4j.validate.ValidationRule<? super\
+        \ T>> net.fortuna.ical4j.validate.AbstractValidationRuleSet<T>::getRules()"
+      justification: "refined_generics_for_property_validator_rules"

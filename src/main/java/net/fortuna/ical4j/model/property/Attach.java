@@ -85,7 +85,7 @@ import java.util.Optional;
  *          specified multiple times within an iCalendar object.
  * </pre>
  *
- * @see net.fortuna.ical4j.validate.PropertyValidator#ATTACH
+ * @see net.fortuna.ical4j.validate.PropertyValidator#ATTACH_URI
  * @author benf
  */
 public class Attach extends Property {
@@ -154,11 +154,10 @@ public class Attach extends Property {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = PropertyValidator.ATTACH.validate(this);
         if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
-            result = result.merge(PropertyValidator.ATTACH_BIN.validate(this));
+            return PropertyValidator.ATTACH_BIN.validate(this);
         }
-        return result;
+        return PropertyValidator.ATTACH_URI.validate(this);
     }
 
     /**
