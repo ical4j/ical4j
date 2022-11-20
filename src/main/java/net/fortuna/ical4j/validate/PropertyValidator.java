@@ -62,13 +62,13 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 public final class PropertyValidator<T extends Property> extends AbstractValidator<T> {
 
     private static final ValidationRule<Property> DATE_OR_DATETIME_VALUE = new ValidationRule<>(None, prop -> {
-        Value v = prop.getParameter(VALUE);
-        return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
+        Optional<Value> v = prop.getParameter(VALUE);
+        return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get()));
     }, "MUST be specified as a DATE or DATE-TIME:", VALUE);
 
     private static final ValidationRule<Property> BINARY_VALUE = new ValidationRule<>(None, prop -> {
-        Value v = prop.getParameter(VALUE);
-        return !(v == null || Value.BINARY.equals(v));
+        Optional<Value> v = prop.getParameter(VALUE);
+        return !(!v.isPresent() || Value.BINARY.equals(v.get()));
     }, "MUST be specified as a BINARY:", VALUE);
 
     /**
@@ -84,7 +84,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        TZID=America/New_York:19980119T020000
      * </pre>
      */
-    public static final PropertyRuleSet<DateProperty> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
+    public static final PropertyRuleSet<DateProperty<?>> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID), DATE_OR_DATETIME_VALUE);
 
     /**
