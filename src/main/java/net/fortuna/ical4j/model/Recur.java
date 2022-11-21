@@ -757,15 +757,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     public final List<T> getDates(final T seed, final T periodStart, final T periodEnd, final int maxCount) {
 
-        final DateList dates = new DateList(value);
-        if (seed instanceof DateTime) {
-            if (((DateTime) seed).isUtc()) {
-                dates.setUtc(true);
-            } else {
-                dates.setTimeZone(((DateTime) seed).getTimeZone());
-            }
-        }
-        dates.addAll(getDatesAsStream(seed, periodStart, periodEnd, value, maxCount).collect(Collectors.toList()));
+        final List<T> dates = getDatesAsStream(seed, periodStart, periodEnd, maxCount).collect(Collectors.toList());
 
         // sort final list..
         if (seed instanceof LocalDate) {
@@ -776,10 +768,8 @@ public class Recur<T extends Temporal> implements Serializable {
         return dates;
     }
 
-    public final Stream<Date> getDatesAsStream(final Date seed, final Date periodStart,
-                                               final Date periodEnd, final Value value, int maxCount) {
-
-        Spliterator<Date> spliterator = new DateSpliterator(seed, periodStart, periodEnd, value, maxCount);
+    public final Stream<T> getDatesAsStream(final T seed, final T periodStart, final T periodEnd, int maxCount) {
+        Spliterator<T> spliterator = new DateSpliterator(seed, periodStart, periodEnd, maxCount);
         return StreamSupport.stream(spliterator, true);
     }
 
@@ -1236,96 +1226,80 @@ public class Recur<T extends Temporal> implements Serializable {
         }
     }
 
-    private class DateSpliterator implements Spliterator<Date> {
+    private class DateSpliterator implements Spliterator<T> {
 
-        final Date seed;
-        final Date periodStart;
-        final Date periodEnd;
-        final Value value;
+        final T seed;
+        final T periodStart;
+        final T periodEnd;
         final int maxCount;
 
-        final DateList dates;
+        final List<T> dates;
 
-        final Calendar cal, rootSeed;
+        T candidateSeed = null;
 
-        Date candidate = null;
+        T candidate = null;
 
-        HashSet<Date> invalidCandidates = new HashSet<>();
+        HashSet<T> invalidCandidates = new HashSet<>();
 
         int noCandidateIncrementCount = 0;
 
-        public DateSpliterator(Date seed, Date periodStart, Date periodEnd, Value value, int maxCount) {
+        public DateSpliterator(T seed, T periodStart, T periodEnd, int maxCount) {
             this.seed = seed;
             this.periodStart = periodStart;
             this.periodEnd = periodEnd;
-            this.value = value;
             this.maxCount = maxCount;
 
-            dates = new DateList(value);
-            if (seed instanceof DateTime) {
-                if (((DateTime) seed).isUtc()) {
-                    dates.setUtc(true);
-                } else {
-                    dates.setTimeZone(((DateTime) seed).getTimeZone());
-                }
-            }
-            cal = getCalendarInstance(seed, true);
-            rootSeed = (Calendar)cal.clone();
+            dates = new ArrayList<>();
+
+            candidateSeed = seed;
 
             // optimize the start time for selecting candidates
             // (only applicable where a COUNT is not specified)
             if (count == null) {
-                final Calendar seededCal = (Calendar) cal.clone();
-                while (seededCal.getTime().before(periodStart)) {
-                    cal.setTime(seededCal.getTime());
-                    increment(seededCal);
+                T incremented = increment(candidateSeed);
+                while (TemporalAdapter.isBefore(incremented, periodStart)) {
+                    candidateSeed = incremented;
+                    if (candidateSeed == null) {
+                        break;
+                    }
+                    incremented = increment(candidateSeed);
                 }
             }
         }
 
         @Override
-        public boolean tryAdvance(Consumer<? super Date> action) {
-            boolean advance = true;
-            if ((maxCount < 0) || (dates.size() < maxCount)) {
-                final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
+        public boolean tryAdvance(Consumer<? super T> action) {
+            boolean advance = candidateSeed != null;
+            if (advance && (maxCount < 0) || (dates.size() < maxCount)) {
 
-                if (getUntil() != null && candidate != null && candidate.after(getUntil())) {
+                if (getUntil() != null && candidate != null && TemporalAdapter.isAfter(candidate, getUntil())) {
                     advance = false;
-                } else if (periodEnd != null && candidate != null && candidate.after(periodEnd)) {
+                } else if (periodEnd != null && candidate != null && TemporalAdapter.isAfter(candidate, periodEnd)) {
                     advance = false;
                 } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                     advance = false;
                 }
-
-//            if (Value.DATE_TIME.equals(value)) {
-                if (candidateSeed instanceof DateTime) {
-                    if (dates.isUtc()) {
-                        ((DateTime) candidateSeed).setUtc(true);
-                    } else {
-                        ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
-                    }
-                }
-
                 // rootSeed = date used for the seed for the RRule at the
                 //            start of the first period.
                 // candidateSeed = date used for the start of
                 //                 the current period.
-                final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
+                final List<T> candidates = getCandidates(seed, candidateSeed);
                 if (!candidates.isEmpty()) {
                     noCandidateIncrementCount = 0;
                     // sort candidates for identifying when UNTIL date is exceeded..
-                    Collections.sort(candidates);
-                    for (Date candidate1 : candidates) {
+                    candidates.sort(CANDIDATE_SORTER);
+
+                    for (T candidate1 : candidates) {
                         candidate = candidate1;
                         // don't count candidates that occur before the seed date..
-                        if (!candidate.before(seed)) {
+                        if (!TemporalAdapter.isBefore(candidate, seed)) {
                             // candidates exclusive of periodEnd..
-                            if (candidate.before(periodStart) || candidate.after(periodEnd)) {
+                            if (TemporalAdapter.isBefore(candidate, periodStart) || TemporalAdapter.isAfter(candidate, periodEnd)) {
                                 invalidCandidates.add(candidate);
                             } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                                 break;
-                            } else if (!candidate.before(periodStart) && !candidate.after(periodEnd)
-                                    && (getUntil() == null || !candidate.after(getUntil()))) {
+                            } else if (!TemporalAdapter.isBefore(candidate, periodStart) && !TemporalAdapter.isAfter(candidate, periodEnd)
+                                    && (getUntil() == null || !TemporalAdapter.isAfter(candidate, getUntil()))) {
 
                                 dates.add(candidate);
                                 action.accept(candidate);
@@ -1338,13 +1312,16 @@ public class Recur<T extends Temporal> implements Serializable {
                         advance = false;
                     }
                 }
-                increment(cal);
+                candidateSeed = increment(candidateSeed);
+                if (candidateSeed == null) {
+                    advance= false;
+                }
             }
             return advance;
         }
 
         @Override
-        public Spliterator<Date> trySplit() {
+        public Spliterator<T> trySplit() {
             //TODO
             return null;
         }
