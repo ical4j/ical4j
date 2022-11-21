@@ -770,7 +770,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     public final Stream<T> getDatesAsStream(final T seed, final T periodStart, final T periodEnd, int maxCount) {
         Spliterator<T> spliterator = new DateSpliterator(seed, periodStart, periodEnd, maxCount);
-        return StreamSupport.stream(spliterator, true);
+        return StreamSupport.stream(spliterator, false);
     }
 
     /**
@@ -1235,11 +1235,11 @@ public class Recur<T extends Temporal> implements Serializable {
 
         final List<T> dates;
 
-        T candidateSeed = null;
+        T candidateSeed;
 
         T candidate = null;
 
-        HashSet<T> invalidCandidates = new HashSet<>();
+        final HashSet<T> invalidCandidates = new HashSet<>();
 
         int noCandidateIncrementCount = 0;
 
