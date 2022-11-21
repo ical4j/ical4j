@@ -43,6 +43,10 @@ import java.time.LocalDate;
 import java.time.chrono.Chronology;
 import java.time.temporal.*;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -753,74 +757,16 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     public final List<T> getDates(final T seed, final T periodStart, final T periodEnd, final int maxCount) {
 
-        final List<T> dates = new ArrayList<>();
-
-        T candidateSeed = seed;
-
-        // optimize the start time for selecting candidates
-        // (only applicable where a COUNT is not specified)
-        if (count == null) {
-            T incremented = increment(candidateSeed);
-            while (TemporalAdapter.isBefore(incremented, periodStart)) {
-                candidateSeed = incremented;
-                if (candidateSeed == null) {
-                    return dates;
-                }
-                incremented = increment(candidateSeed);
-            }
-        }
-
-        HashSet<T> invalidCandidates = new HashSet<>();
-        int noCandidateIncrementCount = 0;
-        T candidate = null;
-        while ((maxCount < 0) || (dates.size() < maxCount)) {
-            if (getUntil() != null && candidate != null && TemporalAdapter.isAfter(candidate, getUntil())) {
-                break;
-            }
-            if (periodEnd != null && candidate != null && TemporalAdapter.isAfter(candidate, periodEnd)) {
-                break;
-            }
-            if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                break;
-            }
-
-            // rootSeed = date used for the seed for the RRule at the
-            //            start of the first period.
-            // candidateSeed = date used for the start of 
-            //                 the current period.
-            final List<T> candidates = getCandidates(seed, candidateSeed);
-            if (!candidates.isEmpty()) {
-                noCandidateIncrementCount = 0;
-                // sort candidates for identifying when UNTIL date is exceeded..
-                candidates.sort(CANDIDATE_SORTER);
-
-                for (T candidate1 : candidates) {
-                    candidate = candidate1;
-                    // don't count candidates that occur before the seed date..
-                    if (!TemporalAdapter.isBefore(candidate, seed)) {
-                        // candidates exclusive of periodEnd..
-                        if (TemporalAdapter.isBefore(candidate, periodStart) || TemporalAdapter.isAfter(candidate, periodEnd)) {
-                            invalidCandidates.add(candidate);
-                        } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                            break;
-                        } else if (!TemporalAdapter.isBefore(candidate, periodStart) && !TemporalAdapter.isAfter(candidate, periodEnd)
-                            && (getUntil() == null || !TemporalAdapter.isAfter(candidate, getUntil()))) {
-
-                            dates.add(candidate);
-                        }
-                    }
-                }
+        final DateList dates = new DateList(value);
+        if (seed instanceof DateTime) {
+            if (((DateTime) seed).isUtc()) {
+                dates.setUtc(true);
             } else {
-                noCandidateIncrementCount++;
-                if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
-                    break;
-                }
-            }
-            candidateSeed = increment(candidateSeed);
-            if (candidateSeed == null) {
-                break;
+                dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
+        dates.addAll(getDatesAsStream(seed, periodStart, periodEnd, value, maxCount).collect(Collectors.toList()));
+
         // sort final list..
         if (seed instanceof LocalDate) {
             dates.sort(new TemporalComparator(ChronoUnit.DAYS));
@@ -828,6 +774,13 @@ public class Recur<T extends Temporal> implements Serializable {
             dates.sort(CANDIDATE_SORTER);
         }
         return dates;
+    }
+
+    public final Stream<Date> getDatesAsStream(final Date seed, final Date periodStart,
+                                               final Date periodEnd, final Value value, int maxCount) {
+
+        Spliterator<Date> spliterator = new DateSpliterator(seed, periodStart, periodEnd, value, maxCount);
+        return StreamSupport.stream(spliterator, true);
     }
 
     /**
@@ -1280,6 +1233,132 @@ public class Recur<T extends Temporal> implements Serializable {
             recur.weekStartDay = weekStartDay;
             recur.validateFrequency();
             return recur;
+        }
+    }
+
+    private class DateSpliterator implements Spliterator<Date> {
+
+        final Date seed;
+        final Date periodStart;
+        final Date periodEnd;
+        final Value value;
+        final int maxCount;
+
+        final DateList dates;
+
+        final Calendar cal, rootSeed;
+
+        Date candidate = null;
+
+        HashSet<Date> invalidCandidates = new HashSet<>();
+
+        int noCandidateIncrementCount = 0;
+
+        public DateSpliterator(Date seed, Date periodStart, Date periodEnd, Value value, int maxCount) {
+            this.seed = seed;
+            this.periodStart = periodStart;
+            this.periodEnd = periodEnd;
+            this.value = value;
+            this.maxCount = maxCount;
+
+            dates = new DateList(value);
+            if (seed instanceof DateTime) {
+                if (((DateTime) seed).isUtc()) {
+                    dates.setUtc(true);
+                } else {
+                    dates.setTimeZone(((DateTime) seed).getTimeZone());
+                }
+            }
+            cal = getCalendarInstance(seed, true);
+            rootSeed = (Calendar)cal.clone();
+
+            // optimize the start time for selecting candidates
+            // (only applicable where a COUNT is not specified)
+            if (count == null) {
+                final Calendar seededCal = (Calendar) cal.clone();
+                while (seededCal.getTime().before(periodStart)) {
+                    cal.setTime(seededCal.getTime());
+                    increment(seededCal);
+                }
+            }
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super Date> action) {
+            boolean advance = true;
+            if ((maxCount < 0) || (dates.size() < maxCount)) {
+                final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
+
+                if (getUntil() != null && candidate != null && candidate.after(getUntil())) {
+                    advance = false;
+                } else if (periodEnd != null && candidate != null && candidate.after(periodEnd)) {
+                    advance = false;
+                } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
+                    advance = false;
+                }
+
+//            if (Value.DATE_TIME.equals(value)) {
+                if (candidateSeed instanceof DateTime) {
+                    if (dates.isUtc()) {
+                        ((DateTime) candidateSeed).setUtc(true);
+                    } else {
+                        ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
+                    }
+                }
+
+                // rootSeed = date used for the seed for the RRule at the
+                //            start of the first period.
+                // candidateSeed = date used for the start of
+                //                 the current period.
+                final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
+                if (!candidates.isEmpty()) {
+                    noCandidateIncrementCount = 0;
+                    // sort candidates for identifying when UNTIL date is exceeded..
+                    Collections.sort(candidates);
+                    for (Date candidate1 : candidates) {
+                        candidate = candidate1;
+                        // don't count candidates that occur before the seed date..
+                        if (!candidate.before(seed)) {
+                            // candidates exclusive of periodEnd..
+                            if (candidate.before(periodStart) || candidate.after(periodEnd)) {
+                                invalidCandidates.add(candidate);
+                            } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
+                                break;
+                            } else if (!candidate.before(periodStart) && !candidate.after(periodEnd)
+                                    && (getUntil() == null || !candidate.after(getUntil()))) {
+
+                                dates.add(candidate);
+                                action.accept(candidate);
+                            }
+                        }
+                    }
+                } else {
+                    noCandidateIncrementCount++;
+                    if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                        advance = false;
+                    }
+                }
+                increment(cal);
+            }
+            return advance;
+        }
+
+        @Override
+        public Spliterator<Date> trySplit() {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public long estimateSize() {
+            //TODO
+            return 0;
+        }
+
+        @Override
+        public int characteristics() {
+            //TODO
+            return 0;
         }
     }
 }
