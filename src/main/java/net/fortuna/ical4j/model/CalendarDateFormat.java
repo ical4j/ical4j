@@ -195,10 +195,10 @@ public class CalendarDateFormat implements Serializable {
         }
     }
 
-    public static class InstantTemporalQuery implements TemporalQuery<Instant>, Serializable {
+    public static class ZuluTemporalQuery implements TemporalQuery<ZonedDateTime>, Serializable {
         @Override
-        public Instant queryFrom(TemporalAccessor temporal) {
-            return Instant.from(temporal);
+        public ZonedDateTime queryFrom(TemporalAccessor temporal) {
+            return ZonedDateTime.from(temporal);
         }
 
         @Override
@@ -215,16 +215,16 @@ public class CalendarDateFormat implements Serializable {
             "yyyyMMdd'T'HHmmss", new LocalDateTimeTemporalQuery());
 
     public static final CalendarDateFormat UTC_DATE_TIME_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd'T'HHmmss'Z'", new InstantTemporalQuery());
+            "yyyyMMdd'T'HHmmss'Z'", new ZuluTemporalQuery());
 
     public static final CalendarDateFormat RELAXED_DATE_TIME_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd'T'HHmmss[X]", new InstantTemporalQuery(), new LocalDateTimeTemporalQuery());
+            "yyyyMMdd'T'HHmmss[X]", new ZuluTemporalQuery(), new LocalDateTimeTemporalQuery());
 
     /**
      * A formatter capable of parsing to multiple temporal types based on the input string.
      */
     public static final CalendarDateFormat DEFAULT_PARSE_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd['T'HHmmss[X]]", new InstantTemporalQuery(), new LocalDateTimeTemporalQuery(),
+            "yyyyMMdd['T'HHmmss[X]]", new ZuluTemporalQuery(), new LocalDateTimeTemporalQuery(),
             new LocalDateTemporalQuery());
 
     private final String pattern;

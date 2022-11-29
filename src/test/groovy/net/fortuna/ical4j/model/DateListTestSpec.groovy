@@ -55,7 +55,7 @@ class DateListTestSpec extends Specification {
         '20220617'          | new DateList<>(LocalDate.of(2022, 06, 17))
         '20220617,20220618' | new DateList<>(LocalDate.of(2022, 06, 17), LocalDate.of(2022, 06, 18))
         '20220617T140000'   | new DateList<>(LocalDateTime.of(2022, 06, 17, 14, 0))
-        '20220617T140000Z'  | new DateList<>(LocalDateTime.of(2022, 06, 17, 14, 0).toInstant(ZoneOffset.UTC))
+        '20220617T140000Z'  | new DateList<>(LocalDateTime.of(2022, 06, 17, 14, 0).atOffset(ZoneOffset.UTC))
     }
 
     def 'test date list string parsing in another timezone'() {

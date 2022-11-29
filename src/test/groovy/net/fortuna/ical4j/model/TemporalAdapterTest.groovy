@@ -32,7 +32,7 @@ class TemporalAdapterTest extends Specification {
         dateString              | expectedType
         '20150504'              | LocalDate
         '20150504T120000'       | LocalDateTime
-        '20150504T120000Z'      | Instant
+        '20150504T120000Z'      | ZonedDateTime
     }
 
     def 'verify zoned date string parsing'() {

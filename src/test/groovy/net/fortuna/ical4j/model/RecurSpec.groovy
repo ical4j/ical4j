@@ -71,6 +71,7 @@ class RecurSpec extends Specification {
         where:
         rule					                                                                | start			    | end
         'FREQ=WEEKLY;BYDAY=MO'	                                                                | '20110101T000000'	| '20110201T000000'
+        'FREQ=WEEKLY;WKST=SU;INTERVAL=2;BYDAY=MO'                                               | '20221101T170000Z'    | '20221130T230000Z'
         'FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12'                                          | '20181011'	    | '20181231'
         'FREQ=WEEKLY;BYDAY=MO,TH,FR,SA,SU;BYHOUR=11;BYMINUTE=5'                                 | '20160325T110500'	| '20160329T121000'
         'FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;UNTIL=20170127T003000'	                        | '20160727T003000'	| '20170127T003000'
@@ -83,6 +84,7 @@ class RecurSpec extends Specification {
 
         expected << [
                 ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000'],
+                ['20221114T170000Z', '20221128T170000Z'],
                 ['20181011', '20181025', '20181206', '20181220'],
                 ['20160325T110500', '20160326T110500', '20160327T110500', '20160328T110500'],
                 ['20160729T003000',
