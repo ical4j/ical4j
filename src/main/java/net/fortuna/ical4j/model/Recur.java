@@ -812,8 +812,6 @@ public class Recur<T extends Temporal> implements Serializable {
             final List<T> candidates = getCandidates(seed, candidateSeed);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
-                // sort candidates for identifying when UNTIL date is exceeded..
-                candidates.sort(CANDIDATE_SORTER);
 
                 for (T candidate1 : candidates) {
                     candidate = candidate1;
@@ -848,7 +846,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     private T increment(final T cal) {
         // initialise interval..
-        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
+        final int calInterval = Math.max(getInterval(), 1);
         return (T) cal.plus(calInterval, calIncField);
     }
 
@@ -945,6 +943,7 @@ public class Recur<T extends Temporal> implements Serializable {
                 log.debug("Dates after SETPOS processing: " + dates);
             }
         }
+        dates.sort(CANDIDATE_SORTER);
         return dates;
     }
 
@@ -1226,7 +1225,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
     }
 
-    private class DateSpliterator implements Spliterator<T> {
+    private class DateSpliterator extends Spliterators.AbstractSpliterator<T> {
 
         final T seed;
         final T periodStart;
@@ -1237,13 +1236,16 @@ public class Recur<T extends Temporal> implements Serializable {
 
         T candidateSeed;
 
-        T candidate = null;
+        T lastCandidate = null;
+
+        Iterator<T> candidates = null;
 
         final HashSet<T> invalidCandidates = new HashSet<>();
 
         int noCandidateIncrementCount = 0;
 
         public DateSpliterator(T seed, T periodStart, T periodEnd, int maxCount) {
+            super(maxCount, 0);
             this.seed = seed;
             this.periodStart = periodStart;
             this.periodEnd = periodEnd;
@@ -1269,73 +1271,57 @@ public class Recur<T extends Temporal> implements Serializable {
 
         @Override
         public boolean tryAdvance(Consumer<? super T> action) {
-            boolean advance = candidateSeed != null;
-            if (advance && (maxCount < 0) || (dates.size() < maxCount)) {
-
-                if (getUntil() != null && candidate != null && TemporalAdapter.isAfter(candidate, getUntil())) {
+            boolean advance = maxCount < 0 || dates.size() < maxCount;
+            if (advance) {
+                if (getUntil() != null && lastCandidate != null && TemporalAdapter.isAfter(lastCandidate, getUntil())) {
                     advance = false;
-                } else if (periodEnd != null && candidate != null && TemporalAdapter.isAfter(candidate, periodEnd)) {
+                } else if (periodEnd != null && lastCandidate != null && TemporalAdapter.isAfter(lastCandidate, periodEnd)) {
                     advance = false;
                 } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                     advance = false;
                 }
-                // rootSeed = date used for the seed for the RRule at the
-                //            start of the first period.
-                // candidateSeed = date used for the start of
-                //                 the current period.
-                final List<T> candidates = getCandidates(seed, candidateSeed);
-                if (!candidates.isEmpty()) {
-                    noCandidateIncrementCount = 0;
-                    // sort candidates for identifying when UNTIL date is exceeded..
-                    candidates.sort(CANDIDATE_SORTER);
+            }
 
-                    for (T candidate1 : candidates) {
-                        candidate = candidate1;
-                        // don't count candidates that occur before the seed date..
-                        if (!TemporalAdapter.isBefore(candidate, seed)) {
-                            // candidates exclusive of periodEnd..
-                            if (TemporalAdapter.isBefore(candidate, periodStart) || TemporalAdapter.isAfter(candidate, periodEnd)) {
-                                invalidCandidates.add(candidate);
-                            } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                                break;
-                            } else if (!TemporalAdapter.isBefore(candidate, periodStart) && !TemporalAdapter.isAfter(candidate, periodEnd)
-                                    && (getUntil() == null || !TemporalAdapter.isAfter(candidate, getUntil()))) {
+            if (advance) {
+                // generate new candidate list..
+                while (candidates == null || !candidates.hasNext()) {
 
-                                dates.add(candidate);
-                                action.accept(candidate);
-                            }
+                    // rootSeed = date used for the seed for the RRule at the
+                    //            start of the first period.
+                    // candidateSeed = date used for the start of
+                    //                 the current period.
+                    candidates = getCandidates(seed, candidateSeed).iterator();
+
+                    if (!candidates.hasNext()) {
+                        noCandidateIncrementCount++;
+                        if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                            advance = false;
+                            break;
                         }
+                    } else {
+                        noCandidateIncrementCount = 0;
                     }
-                } else {
-                    noCandidateIncrementCount++;
-                    if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
-                        advance = false;
-                    }
+                    candidateSeed = increment(candidateSeed);
                 }
-                candidateSeed = increment(candidateSeed);
-                if (candidateSeed == null) {
-                    advance= false;
+            }
+
+            if (advance) {
+                // iterate current candidate list..
+                lastCandidate = candidates.next();
+                // don't count candidates that occur before the seed date..
+                if (!TemporalAdapter.isBefore(lastCandidate, seed)) {
+                    // candidates exclusive of periodEnd..
+                    if (TemporalAdapter.isBefore(lastCandidate, periodStart) || TemporalAdapter.isAfter(lastCandidate, periodEnd)) {
+                        invalidCandidates.add(lastCandidate);
+                    } else if (!TemporalAdapter.isBefore(lastCandidate, periodStart) && !TemporalAdapter.isBefore(lastCandidate, periodEnd)
+                            && (getUntil() == null || !TemporalAdapter.isAfter(lastCandidate, getUntil()))) {
+
+                        dates.add(lastCandidate);
+                        action.accept(lastCandidate);
+                    }
                 }
             }
             return advance;
-        }
-
-        @Override
-        public Spliterator<T> trySplit() {
-            //TODO
-            return null;
-        }
-
-        @Override
-        public long estimateSize() {
-            //TODO
-            return 0;
-        }
-
-        @Override
-        public int characteristics() {
-            //TODO
-            return 0;
         }
     }
 }
