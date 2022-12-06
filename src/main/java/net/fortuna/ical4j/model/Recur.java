@@ -778,7 +778,7 @@ public class Recur implements Serializable {
                                                final Date periodEnd, final Value value, int maxCount) {
 
         Spliterator<Date> spliterator = new DateSpliterator(seed, periodStart, periodEnd, value, maxCount);
-        return StreamSupport.stream(spliterator, true);
+        return StreamSupport.stream(spliterator, false);
     }
 
     /**
@@ -834,8 +834,6 @@ public class Recur implements Serializable {
             final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
-                // sort candidates for identifying when UNTIL date is exceeded..
-                Collections.sort(candidates);
 
                 for (Date candidate1 : candidates) {
                     candidate = candidate1;
@@ -872,7 +870,7 @@ public class Recur implements Serializable {
      */
     private void increment(final Calendar cal) {
         // initialise interval..
-        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
+        final int calInterval = Math.max(getInterval(), 1);
         cal.add(calIncField, calInterval);
     }
 
@@ -977,6 +975,7 @@ public class Recur implements Serializable {
                 log.debug("Dates after SETPOS processing: " + dates);
             }
         }
+        Collections.sort(dates);
         return dates;
     }
 
@@ -1254,7 +1253,7 @@ public class Recur implements Serializable {
         }
     }
 
-    private class DateSpliterator implements Spliterator<Date> {
+    private class DateSpliterator extends Spliterators.AbstractSpliterator<Date> {
 
         final Date seed;
         final Date periodStart;
@@ -1266,13 +1265,16 @@ public class Recur implements Serializable {
 
         final Calendar cal, rootSeed;
 
-        Date candidate = null;
+        Date lastCandidate = null;
+
+        Iterator<Date> candidates = null;
 
         HashSet<Date> invalidCandidates = new HashSet<>();
 
         int noCandidateIncrementCount = 0;
 
         public DateSpliterator(Date seed, Date periodStart, Date periodEnd, Value value, int maxCount) {
+            super(maxCount, 0);
             this.seed = seed;
             this.periodStart = periodStart;
             this.periodEnd = periodEnd;
@@ -1303,80 +1305,66 @@ public class Recur implements Serializable {
 
         @Override
         public boolean tryAdvance(Consumer<? super Date> action) {
-            boolean advance = true;
-            if ((maxCount < 0) || (dates.size() < maxCount)) {
-                final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
-
-                if (getUntil() != null && candidate != null && candidate.after(getUntil())) {
+            boolean advance = maxCount < 0 || dates.size() < maxCount;
+            if (advance) {
+                if (getUntil() != null && lastCandidate != null && lastCandidate.after(getUntil())) {
                     advance = false;
-                } else if (periodEnd != null && candidate != null && candidate.after(periodEnd)) {
+                } else if (periodEnd != null && lastCandidate != null && lastCandidate.after(periodEnd)) {
                     advance = false;
                 } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                     advance = false;
                 }
+            }
 
-//            if (Value.DATE_TIME.equals(value)) {
-                if (candidateSeed instanceof DateTime) {
-                    if (dates.isUtc()) {
-                        ((DateTime) candidateSeed).setUtc(true);
-                    } else {
-                        ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
-                    }
-                }
+            if (advance) {
+                // generate new candidate list..
+                while (candidates == null || !candidates.hasNext()) {
+                    final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
 
-                // rootSeed = date used for the seed for the RRule at the
-                //            start of the first period.
-                // candidateSeed = date used for the start of
-                //                 the current period.
-                final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
-                if (!candidates.isEmpty()) {
-                    noCandidateIncrementCount = 0;
-                    // sort candidates for identifying when UNTIL date is exceeded..
-                    Collections.sort(candidates);
-                    for (Date candidate1 : candidates) {
-                        candidate = candidate1;
-                        // don't count candidates that occur before the seed date..
-                        if (!candidate.before(seed)) {
-                            // candidates exclusive of periodEnd..
-                            if (candidate.before(periodStart) || candidate.after(periodEnd)) {
-                                invalidCandidates.add(candidate);
-                            } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                                break;
-                            } else if (!candidate.before(periodStart) && !candidate.after(periodEnd)
-                                    && (getUntil() == null || !candidate.after(getUntil()))) {
-
-                                dates.add(candidate);
-                                action.accept(candidate);
-                            }
+                    if (candidateSeed instanceof DateTime) {
+                        if (dates.isUtc()) {
+                            ((DateTime) candidateSeed).setUtc(true);
+                        } else {
+                            ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
                         }
                     }
-                } else {
-                    noCandidateIncrementCount++;
-                    if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
-                        advance = false;
+
+                    // rootSeed = date used for the seed for the RRule at the
+                    //            start of the first period.
+                    // candidateSeed = date used for the start of
+                    //                 the current period.
+                    candidates = getCandidates(rootSeed, candidateSeed, value).iterator();
+
+                    if (!candidates.hasNext()) {
+                        noCandidateIncrementCount++;
+                        if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                            advance = false;
+                            break;
+                        }
+                    } else {
+                        noCandidateIncrementCount = 0;
+                    }
+                    increment(cal);
+                }
+            }
+
+            if (advance) {
+                // iterate current candidate list..
+                lastCandidate = candidates.next();
+                // don't count candidates that occur before the seed date..
+                if (!lastCandidate.before(seed)) {
+                    // candidates exclusive of periodEnd..
+                    if (lastCandidate.before(periodStart) || lastCandidate.after(periodEnd)) {
+                        invalidCandidates.add(lastCandidate);
+                    } else if (!lastCandidate.before(periodStart) && !lastCandidate.after(periodEnd)
+                            && (getUntil() == null || !lastCandidate.after(getUntil()))) {
+
+                        dates.add(lastCandidate);
+                        action.accept(lastCandidate);
                     }
                 }
-                increment(cal);
             }
             return advance;
-        }
-
-        @Override
-        public Spliterator<Date> trySplit() {
-            //TODO
-            return null;
-        }
-
-        @Override
-        public long estimateSize() {
-            //TODO
-            return 0;
-        }
-
-        @Override
-        public int characteristics() {
-            //TODO
-            return 0;
         }
     }
 }
