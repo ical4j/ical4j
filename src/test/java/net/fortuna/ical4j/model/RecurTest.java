@@ -564,7 +564,6 @@ public class RecurTest extends TestCase {
 //                new DateTime(end), Value.DATE_TIME);
     }
     */
-    
     /**
      * @return
      * @throws ParseException 
@@ -849,6 +848,13 @@ public class RecurTest extends TestCase {
                 new DateTime("20130101T120000Z"), new DateTime("20130123T120000Z"), Value.DATE_TIME, 4));
         suite.addTest(new RecurTest(recur, new DateTime("20130101T120000Z"),
                 new DateTime("20160101T120000Z"), new DateTime("20160123T120000Z"), Value.DATE_TIME, 3));
+        recur = new Recur("FREQ=MONTHLY;BYWEEKNO=1,2,3,4");
+        suite.addTest(new RecurTest(recur, new DateTime("20130101T120000Z"),
+                new DateTime("20130101T120000Z"), new DateTime("20130123T120000Z"), Value.DATE_TIME, 4));
+        // Test issue: https://github.com/ical4j/ical4j/issues/576
+        recur = new Recur("FREQ=WEEKLY;BYDAY=WE;BYWEEKNO=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53");
+        suite.addTest(new RecurTest(recur,
+                new Date("20220501"), new Date("20230501"), Value.DATE, 26));
 
         recur = new Recur("FREQ=DAILY;COUNT=3;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         suite.addTest(new RecurTest(recur, new DateTime("20131215T000000Z"),

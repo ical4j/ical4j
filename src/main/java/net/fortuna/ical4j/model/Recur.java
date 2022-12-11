@@ -900,7 +900,15 @@ public class Recur implements Serializable {
         }
 
         if (transformers.get(BYWEEKNO) != null) {
-            dates = transformers.get(BYWEEKNO).transform(dates);
+            Calendar rangeDateEnd = getCalendarInstance(date, true);
+            increment(rangeDateEnd);
+            Transformer<DateList> byWeekNoTransformer = new ByWeekNoRule(
+                    this.weekNoList,
+                    frequency,
+                    Optional.ofNullable(weekStartDay),
+                    new DateRange(date, Dates.getInstance(rangeDateEnd.getTime(), value))
+            );
+            dates = byWeekNoTransformer.transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYWEEKNO processing: " + dates);
