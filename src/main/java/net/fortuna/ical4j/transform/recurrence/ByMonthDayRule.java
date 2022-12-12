@@ -26,14 +26,26 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
 
     private final NumberList monthDayList;
 
+    private final Recur.Skip skip;
+
     public ByMonthDayRule(NumberList monthDayList, Frequency frequency) {
+        this(monthDayList, frequency, Recur.Skip.OMIT);
+    }
+
+    public ByMonthDayRule(NumberList monthDayList, Frequency frequency, Recur.Skip skip) {
         super(frequency);
         this.monthDayList = monthDayList;
+        this.skip = skip;
     }
 
     public ByMonthDayRule(NumberList monthDayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+        this(monthDayList, frequency, weekStartDay, Recur.Skip.OMIT);
+    }
+
+    public ByMonthDayRule(NumberList monthDayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay, Recur.Skip skip) {
         super(frequency, weekStartDay);
         this.monthDayList = monthDayList;
+        this.skip = skip;
     }
 
     @Override
@@ -47,9 +59,7 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
                 monthDayDates.addAll(new ExpansionFilter(monthDayDates.getType()).apply(date));
             } else {
                 Optional<Date> limit = new LimitFilter().apply(date);
-                if (limit.isPresent()) {
-                    monthDayDates.add(limit.get());
-                }
+                limit.ifPresent(monthDayDates::add);
             }
         }
         return monthDayDates;
@@ -89,19 +99,37 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
                 }
                 final int numDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                 if (monthDay > 0) {
+                    // month-day exceeds maximum for current month..
                     if (numDaysInMonth < monthDay) {
-                        continue;
+                        if (skip == Recur.Skip.BACKWARD) {
+                            cal.set(Calendar.DAY_OF_MONTH, numDaysInMonth);
+                        } else if (skip == Recur.Skip.FORWARD) {
+                            cal.add(Calendar.MONTH, 1);
+                            cal.set(Calendar.DAY_OF_MONTH, 1);
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        cal.set(Calendar.DAY_OF_MONTH, monthDay);
                     }
-                    cal.set(Calendar.DAY_OF_MONTH, monthDay);
                 } else {
+                    // negative month-day exceeds minimum for current month..
                     if (numDaysInMonth < -monthDay) {
-                        continue;
+                        if (skip == Recur.Skip.BACKWARD) {
+                            cal.add(Calendar.MONTH, -1);
+                            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                        } else if (skip == Recur.Skip.FORWARD) {
+                            cal.set(Calendar.DAY_OF_MONTH, 1);
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        cal.set(Calendar.DAY_OF_MONTH, numDaysInMonth);
+                        cal.add(Calendar.DAY_OF_MONTH, monthDay + 1);
                     }
-                    cal.set(Calendar.DAY_OF_MONTH, numDaysInMonth);
-                    cal.add(Calendar.DAY_OF_MONTH, monthDay + 1);
                 }
                 retVal.add(Dates.getInstance(getTime(date, cal), type));
-            };
+            }
             return retVal;
         }
     }

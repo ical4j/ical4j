@@ -32,10 +32,12 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Strings;
+import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.net.URISyntaxException;
+import java.util.Comparator;
 
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
@@ -49,7 +51,7 @@ import java.net.URISyntaxException;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Parameter extends Content {
+public abstract class Parameter extends Content implements Comparable<Parameter> {
 
     private static final long serialVersionUID = -2058497904769713528L;
 
@@ -84,14 +86,34 @@ public abstract class Parameter extends Content {
     public static final String DELEGATED_TO = "DELEGATED-TO";
 
     /**
+     * Derived.
+     */
+    public static final String DERIVED = "DERIVED";
+
+    /**
      * Directory entry.
      */
     public static final String DIR = "DIR";
 
     /**
+     * Display format.
+     */
+    public static final String DISPLAY = "DISPLAY";
+    
+    /**
+     * Email address.
+     */
+    public static final String EMAIL = "EMAIL";
+    
+    /**
      * Inline encoding.
      */
     public static final String ENCODING = "ENCODING";
+
+    /**
+     * Feature specification.
+     */
+    public static final String FEATURE = "FEATURE";
 
     /**
      * Format type.
@@ -104,6 +126,11 @@ public abstract class Parameter extends Content {
     public static final String FBTYPE = "FBTYPE";
 
     /**
+     * Label.
+     */
+    public static final String LABEL = "LABEL";
+
+    /**
      * Language for text.
      */
     public static final String LANGUAGE = "LANGUAGE";
@@ -112,6 +139,11 @@ public abstract class Parameter extends Content {
      * Group or list membership.
      */
     public static final String MEMBER = "MEMBER";
+
+    /**
+     * Order.
+     */
+    public static final String ORDER = "ORDER";
 
     /**
      * Participation status.
@@ -154,6 +186,11 @@ public abstract class Parameter extends Content {
     public static final String SCHEDULE_STATUS = "SCHEDULE-STATUS";
 
     /**
+     * Schema for structured data.
+     */
+    public static final String SCHEMA = "SCHEMA";
+
+    /**
      * Sent by.
      */
     public static final String SENT_BY = "SENT-BY";
@@ -183,7 +220,7 @@ public abstract class Parameter extends Content {
      */
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
-    private String name;
+    private final String name;
 
     private final ParameterFactory factory;
 
@@ -199,31 +236,29 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         b.append(getName());
         b.append('=');
-        if (isQuotable()) {
-            b.append(Strings.quote(Strings.valueOf(getValue())));
+        String value;
+        if (this instanceof Encodable) {
+            try {
+                value = ParameterCodec.INSTANCE.encode(getValue());
+            } catch (EncoderException e) {
+                value = getValue();
+            }
         } else {
-            b.append(Strings.valueOf(getValue()));
+            value = getValue();
         }
+        b.append(Strings.valueOf(value));
         return b.toString();
-    }
-
-    /**
-     * Indicates whether the current parameter value should be quoted.
-     *
-     * @return true if the value should be quoted, otherwise false
-     */
-    protected boolean isQuotable() {
-        return Strings.PARAM_QUOTE_PATTERN.matcher(Strings.valueOf(getValue()))
-                .find();
     }
 
     /**
      * @return Returns the name.
      */
+    @Override
     public final String getName() {
         return name;
     }
@@ -231,6 +266,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
             final Parameter p = (Parameter) arg0;
@@ -243,6 +279,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         // as parameter name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
@@ -260,5 +297,15 @@ public abstract class Parameter extends Content {
             throw new UnsupportedOperationException("No factory specified");
         }
         return (T) factory.createParameter(getValue());
+    }
+
+    @Override
+    public int compareTo(Parameter o) {
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Parameter::getName)
+                .thenComparing(Parameter::getValue)
+                .compare(this, o);
     }
 }

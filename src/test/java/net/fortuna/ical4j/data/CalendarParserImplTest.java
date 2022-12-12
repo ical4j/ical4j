@@ -71,6 +71,7 @@ public class CalendarParserImplTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
@@ -79,6 +80,7 @@ public class CalendarParserImplTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
@@ -106,6 +108,7 @@ public class CalendarParserImplTest extends TestCase {
     /**
      * Overridden to return the current iCalendar file under test.
      */
+    @Override
     public final String getName() {
         return super.getName() + " [" + resource + "]";
     }
@@ -117,14 +120,10 @@ public class CalendarParserImplTest extends TestCase {
         TestSuite suite = new TestSuite();
         suite.addTest(new CalendarParserImplTest("/samples/invalid/google_aus_holidays.ics", 11));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/13-MoonPhase.ics", 215));
-
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/CalendarDataFile.ics", 25));
-
         suite.addTest(new CalendarParserImplTest("/samples/invalid/overlaps.ics", 1));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/schedule-unstable.ics", 196));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/smallcluster.ics", 12));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/twinkle.ics", 67));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/zidestoreical4jbomb.ics", 10));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/sogo-geo-escaped-semicolon.ics", 9));
         return suite;
     }
 }

@@ -41,14 +41,12 @@ import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_UNFOLDING
 
 class CalendarParserImplSpec extends Specification {
 	
-	CalendarBuilder builder = new CalendarBuilder()
-	
 	def 'verify parsing of VEVENT properties'() {
 		setup:
 		String input = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\n$contentLines\r\nEND:VEVENT\r\nEND:VCALENDAR"
 		
 		expect:
-		Calendar calendar = builder.build(new StringReader(input))
+		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
 		assert calendar.components[0].properties[0] as String == expectedProperty
 		
 		where:
@@ -61,13 +59,13 @@ class CalendarParserImplSpec extends Specification {
 		String input = "BEGIN:VCALENDAR\r\n$contentLines\r\nEND:VCALENDAR"
 		
 		expect:
-		Calendar calendar = builder.build(new StringReader(input))
+		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
 		assert calendar.properties[0] as String == expectedProperty
 		
 		where:
 		contentLines																																			| expectedProperty
 //		'PRODID;X-NO-QUOTES=a\nb;X-QUOTES="a\nb":sample'																										| 'PRODID;X-NO-QUOTES=a\\nb;X-QUOTES="a\\nb":sample\r\n'
-		'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop\nCupertino CA 95014\nUnited States:geo:37.331684,-122.030758'	| 'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop\\nCupertino CA 95014\\nUnited States:geo:37.331684,-122.030758\r\n'
+		'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop\nCupertino CA 95014\nUnited States:geo:37.331684,-122.030758'	| 'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop^nCupertino CA 95014^nUnited States:geo:37.331684,-122.030758\r\n'
 	}
 	
 	def 'verify parsing of calendar file'() {
@@ -88,17 +86,19 @@ class CalendarParserImplSpec extends Specification {
 		resource							| compatibilityHints
 		'/samples/valid/bhav23-1.ics'	| []
 		'/samples/invalid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
+		'/samples/valid/blankTzid.ics'  | []
+		'/samples/invalid/sogo-geo-escaped-semicolon.ics' | [KEY_RELAXED_PARSING]
 	}
 
 	def 'verify parsing empty lines'() {
 		setup:
-		String input = "BEGIN:VCALENDAR\r\n$contentLines\r\nEND:VCALENDAR"
+		String input = "BEGIN:VCALENDAR\r\n\r\n$contentLines\r\nEND:VCALENDAR"
 		compatibilityHints.each {
 			CompatibilityHints.setHintEnabled(it, true)
 		}
 
 		expect:
-		Calendar calendar = builder.build(new StringReader(input))
+		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
 		assert calendar.components[0].properties.size() == 24
 
 		cleanup:
@@ -108,6 +108,7 @@ class CalendarParserImplSpec extends Specification {
 
 		where:
 		contentLines << ['''BEGIN:VEVENT
+
 CLASS:
 CREATED:20121015T070600Z
 DTSTART:20121018T020000Z
@@ -142,12 +143,15 @@ X-MS-OLK-CONFTYPE:0
 X-MICROSOFT-CDO-ATTENDEE-CRITICAL-CHANGE:20121015T070600Z
 X-MICROSOFT-CDO-OWNER-CRITICAL-CHANGE:20121015T070600Z
 BEGIN:VALARM
+
 ACTION:DISPLAY
 TRIGGER;VALUE=DURATION:-PT15M
 DESCRIPTION:REMINDER
 RELATED=START:-PT00H15M00S
 END:VALARM
-END:VEVENT''']
+
+END:VEVENT
+''']
 		compatibilityHints << [[KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]]
 	}
 }

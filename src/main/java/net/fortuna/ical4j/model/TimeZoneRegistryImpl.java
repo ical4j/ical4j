@@ -107,13 +107,15 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private final TimeZoneLoader timeZoneLoader;
 
-    private Map<String, TimeZone> timezones;
+    private final Map<String, TimeZone> timezones;
+
+    private final boolean lenientTzResolution;
 
     /**
      * Default constructor.
      */
     public TimeZoneRegistryImpl() {
-        this(DEFAULT_RESOURCE_PREFIX);
+        this(DEFAULT_RESOURCE_PREFIX, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     /**
@@ -122,13 +124,19 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * @param resourcePrefix a prefix prepended to classpath resource lookups for default timezones
      */
     public TimeZoneRegistryImpl(final String resourcePrefix) {
-        this.timeZoneLoader = new TimeZoneLoader(resourcePrefix);
-        timezones = new ConcurrentHashMap<String, TimeZone>();
+        this(resourcePrefix, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    public TimeZoneRegistryImpl(final String resourcePrefix, boolean lenientTzResolution) {
+        this.timeZoneLoader = TimeZoneLoader.getInstance(resourcePrefix);
+        timezones = new ConcurrentHashMap<>();
+        this.lenientTzResolution = lenientTzResolution;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void register(final TimeZone timezone) {
         // for now we only apply updates to included definitions by default..
         register(timezone, false);
@@ -137,6 +145,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void register(final TimeZone timezone, boolean update) {
         if (update) {
             try {
@@ -154,6 +163,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void clear() {
         timezones.clear();
     }
@@ -161,11 +171,13 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final TimeZone getTimeZone(final String id) {
-        Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
-
         TimeZone timezone = timezones.get(id);
         if (timezone == null) {
+            /* A blank TZID is only invalid if it is not declared under the
+             * TZID property in the BEGIN:TIMEZONE section. */
+            Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
             timezone = DEFAULT_TIMEZONES.get(id);
             if (timezone == null) {
                 // if timezone not found with identifier, try loading an alias..
@@ -180,11 +192,12 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                             try {
                                 final VTimeZone vTimeZone = timeZoneLoader.loadVTimeZone(id);
                                 if (vTimeZone != null) {
-                                    // XXX: temporary kludge..
-                                    // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
                                     timezone = new TimeZone(vTimeZone);
                                     DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
-                                } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                                    if (!timezone.getID().equals(id)) {
+                                        DEFAULT_TIMEZONES.put(id, timezone);
+                                    }
+                                } else if (lenientTzResolution) {
                                     // strip global part of id and match on default tz..
                                     Matcher matcher = TZ_ID_SUFFIX.matcher(id);
                                     if (matcher.find()) {

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -48,16 +49,17 @@ import java.util.ServiceLoader;
  * @author Ben Fortuna
  */
 @Deprecated
-public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactory> {
+public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactory<? extends Parameter>> {
 
     private static final long serialVersionUID = -4034423507432249165L;
 
     protected ParameterFactoryImpl() {
-        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
+        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()),
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     @Override
-    protected boolean factorySupports(ParameterFactory factory, String key) {
+    protected boolean factorySupports(ParameterFactory<?> factory, String key) {
         return factory.supports(key);
     }
 
@@ -72,7 +74,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
      */
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
-        final ParameterFactory factory = getFactory(name);
+        final ParameterFactory<?> factory = getFactory(name);
         Parameter parameter;
         if (factory != null) {
             parameter = factory.createParameter(value);

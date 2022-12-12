@@ -34,8 +34,9 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -198,30 +199,9 @@ public class RDate extends DateListProperty {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE" /
-         * "PERIOD")) / (";" tzidparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
-
-        final Parameter valueParam = getParameter(Parameter.VALUE);
-
-        if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
-                && !Value.DATE.equals(valueParam)
-                && !Value.PERIOD.equals(valueParam)) {
-            throw new ValidationException("Parameter [" + Parameter.VALUE
-                    + "] is invalid");
-        }
-
-        ParameterValidator.assertOneOrLess(Parameter.TZID,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.RDATE.validate(this);
     }
 
     /**
@@ -234,6 +214,7 @@ public class RDate extends DateListProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws ParseException {
         if (Value.PERIOD.equals(getParameter(Parameter.VALUE))) {
             periods = new PeriodList(aValue);
@@ -245,6 +226,7 @@ public class RDate extends DateListProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
             return Strings.valueOf(getPeriods());
@@ -255,6 +237,7 @@ public class RDate extends DateListProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setTimeZone(TimeZone timezone) {
         if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
             periods.setTimeZone(timezone);
@@ -263,19 +246,21 @@ public class RDate extends DateListProperty {
         }
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RDate> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RDATE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public RDate createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RDate(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public RDate createProperty() {
             return new RDate();
         }
     }

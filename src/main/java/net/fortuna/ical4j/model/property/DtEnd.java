@@ -194,19 +194,21 @@ public class DtEnd extends DateProperty {
         setDate(aDate);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<DtEnd> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DTEND);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public DtEnd createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new DtEnd(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public DtEnd createProperty() {
             return new DtEnd();
         }
     }

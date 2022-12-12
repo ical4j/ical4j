@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -101,6 +102,7 @@ public class ExRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws ParseException {
         recur = new Recur(aValue);
     }
@@ -108,6 +110,7 @@ public class ExRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getRecur().toString();
     }
@@ -120,23 +123,25 @@ public class ExRule extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExRule> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(EXRULE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public ExRule createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ExRule(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public ExRule createProperty() {
             return new ExRule();
         }
     }

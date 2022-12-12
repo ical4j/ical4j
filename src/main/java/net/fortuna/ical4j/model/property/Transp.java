@@ -35,7 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -100,15 +102,18 @@ public class Transp extends Property {
 
     private static final long serialVersionUID = 3801479657311785518L;
 
+    public static final String VALUE_OPAQUE = "OPAQUE";
+    public static final String VALUE_TRANSPARENT = "TRANSPARENT";
+
     /**
      * Opaque.
      */
-    public static final Transp OPAQUE = new ImmutableTransp("OPAQUE");
+    public static final Transp OPAQUE = new ImmutableTransp(VALUE_OPAQUE);
 
     /**
      * Transparent.
      */
-    public static final Transp TRANSPARENT = new ImmutableTransp("TRANSPARENT");
+    public static final Transp TRANSPARENT = new ImmutableTransp(VALUE_TRANSPARENT);
 
     /**
      * @author Ben Fortuna An immutable instance of Transp.
@@ -121,6 +126,7 @@ public class Transp extends Property {
             super(new ParameterList(true), value);
         }
 
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -156,6 +162,7 @@ public class Transp extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -163,13 +170,14 @@ public class Transp extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.TRANSP.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Transp> {
@@ -179,6 +187,7 @@ public class Transp extends Property {
             super(TRANSP);
         }
 
+        @Override
         public Transp createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
@@ -194,6 +203,7 @@ public class Transp extends Property {
             return transp;
         }
 
+        @Override
         public Transp createProperty() {
             return new Transp();
         }

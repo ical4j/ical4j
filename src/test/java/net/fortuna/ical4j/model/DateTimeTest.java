@@ -92,10 +92,17 @@ public class DateTimeTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // ensure relaxing parsing is disabled for these tests..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 
     /**
@@ -139,8 +146,6 @@ public class DateTimeTest extends TestCase {
             assertEquals(this.expectedToString, dt.toString());
         } catch (ParseException pe) {
             fail("exception not expected with relaxed parsing is used");
-        } finally {
-            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         }
     }
 
@@ -218,6 +223,7 @@ public class DateTimeTest extends TestCase {
         assertFalse(date5.isUtc());
     }
 
+    @Override
     public String getName() {
         if (StringUtils.isNotEmpty(expectedToString)) {
             return super.getName() + " [" + expectedToString + "]";

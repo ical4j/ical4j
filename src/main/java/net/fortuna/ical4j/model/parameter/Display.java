@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -50,14 +51,14 @@ import org.apache.commons.lang3.StringUtils;
  * mple.com/images/weather-cloudy.png
  * </pre>
  */
-public class Display extends Parameter {
+public class Display extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 1L;
 
     private static final String PARAMETER_NAME = "DISPLAY";
 
     public enum Value {
-        BADGE, GRAPHIC, FULLSIZE, THUMBNAIL;
+        BADGE, GRAPHIC, FULLSIZE, THUMBNAIL
     }
 
     private final String[] values;
@@ -82,14 +83,15 @@ public class Display extends Parameter {
         return StringUtils.join(values, ",");
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Display> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PARAMETER_NAME);
         }
 
-        public Parameter createParameter(final String value) {
+        @Override
+        public Display createParameter(final String value) {
             return new Display(value);
         }
     }

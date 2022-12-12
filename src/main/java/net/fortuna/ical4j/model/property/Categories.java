@@ -34,16 +34,11 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
-
-import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -102,8 +97,6 @@ public class Categories extends Property {
 
     private TextList categories;
 
-    private Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
     /**
      * Default constructor.
      */
@@ -149,6 +142,7 @@ public class Categories extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         categories = new TextList(aValue);
     }
@@ -163,29 +157,32 @@ public class Categories extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getCategories().toString();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Categories> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(CATEGORIES);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Categories createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Categories(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Categories createProperty() {
             return new Categories();
         }
     }
 
     @Override
-    public void validate() throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.CATEGORIES.validate(this);
     }
 }

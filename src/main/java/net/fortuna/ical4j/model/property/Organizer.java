@@ -31,17 +31,20 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
 
 /**
  * $Id$
@@ -184,23 +187,9 @@ public class Organizer extends Property {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" cnparam) / (";" dirparam) / (";"
-         * sentbyparam) / (";" languageparam) /
-         */
-        Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
-                Parameter.LANGUAGE).forEach(parameter -> ParameterValidator.assertOneOrLess(parameter, getParameters()));
-
-        /* schedulestatus added for CalDAV scheduling
-         */
-        ParameterValidator.assertOneOrLess(Parameter.SCHEDULE_STATUS,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.ORGANIZER.validate(this);
     }
 
     /**
@@ -213,6 +202,7 @@ public class Organizer extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws URISyntaxException {
         calAddress = Uris.create(aValue);
     }
@@ -220,6 +210,7 @@ public class Organizer extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getCalAddress()));
     }
@@ -231,19 +222,21 @@ public class Organizer extends Property {
         this.calAddress = calAddress;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Organizer> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ORGANIZER);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Organizer createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Organizer(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Organizer createProperty() {
             return new Organizer();
         }
     }

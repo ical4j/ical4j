@@ -53,7 +53,10 @@ import java.util.function.Predicate;
  * your code to use explicit constructors.
  *
  * @author Ben Fortuna
+ *
+ * @deprecated Most of the functionality of this class can now be achieved via lambda expressions using {@link ComponentFilter Component Filters}
  */
+@Deprecated
 public class Filter<T> {
 
     /**
@@ -68,7 +71,7 @@ public class Filter<T> {
 
     private List<Predicate<T>> rules;
 
-    private int type;
+    private final int type;
 
     /**
      * @param rules one or more rules that are applied by this filter

@@ -39,7 +39,6 @@ import net.fortuna.ical4j.model.PropertyList
  */
 class VAvailabilityFactory extends AbstractComponentFactory{
 
-
      Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VAvailability availability
          if (FactoryBuilderSupport.checkValueIsType(value, name, VAvailability.class)) {

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -45,7 +46,7 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class Role extends Parameter {
+public class Role extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 1438225631470825963L;
 
@@ -77,7 +78,7 @@ public class Role extends Parameter {
      */
     public static final Role NON_PARTICIPANT = new Role(VALUE_NON_PARTICIPANT);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a participation role
@@ -90,29 +91,27 @@ public class Role extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Role> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ROLE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            Role parameter = new Role(value);
-            if (Role.CHAIR.equals(parameter)) {
-                parameter = Role.CHAIR;
-            } else if (Role.REQ_PARTICIPANT.equals(parameter)) {
-                parameter = Role.REQ_PARTICIPANT;
-            } else if (Role.OPT_PARTICIPANT.equals(parameter)) {
-                parameter = Role.OPT_PARTICIPANT;
-            } else if (Role.NON_PARTICIPANT.equals(parameter)) {
-                parameter = Role.NON_PARTICIPANT;
+        @Override
+        public Role createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_CHAIR: return CHAIR;
+                case VALUE_NON_PARTICIPANT: return NON_PARTICIPANT;
+                case VALUE_OPT_PARTICIPANT: return OPT_PARTICIPANT;
+                case VALUE_REQ_PARTICIPANT: return REQ_PARTICIPANT;
             }
-            return parameter;
+            return new Role(value);
         }
     }
 

@@ -34,11 +34,9 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -201,24 +199,24 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusy extends CalendarComponent {
+public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
-    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
-    {
-        methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(new ValidationRule(OneOrMore, FREEBUSY),
+    private static final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+    static {
+        methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(VFREEBUSY, new ValidationRule(OneOrMore, FREEBUSY),
                 new ValidationRule(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
                 new ValidationRule(None, ATTENDEE, DURATION, REQUEST_STATUS)));
-        methodValidators.put(Method.REPLY, new ComponentValidator(new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
+        methodValidators.put(Method.REPLY, new ComponentValidator(VFREEBUSY, new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
                 new ValidationRule(None, DURATION, SEQUENCE)));
-        methodValidators.put(Method.REQUEST, new ComponentValidator(new ValidationRule(OneOrMore, ATTENDEE),
+        methodValidators.put(Method.REQUEST, new ComponentValidator(VFREEBUSY, new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule(None, FREEBUSY, DURATION, REQUEST_STATUS, URL)));
     }
-    
+
     /**
      * Default constructor.
      */
@@ -249,14 +247,14 @@ public class VFreeBusy extends CalendarComponent {
      */
     public VFreeBusy(final DateTime start, final DateTime end) {
         this();
-        
+
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
         getProperties().add(new DtStart(start, true));
-        
+
         // 4.8.2.2 Date/Time End
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -275,14 +273,14 @@ public class VFreeBusy extends CalendarComponent {
      */
     public VFreeBusy(final DateTime start, final DateTime end, final TemporalAmount duration) {
         this();
-        
+
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
         getProperties().add(new DtStart(start, true));
-        
+
         // 4.8.2.2 Date/Time End
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -308,20 +306,20 @@ public class VFreeBusy extends CalendarComponent {
      */
     public VFreeBusy(final VFreeBusy request, final ComponentList<CalendarComponent> components) {
         this();
-        
+
         final DtStart start = request.getProperty(Property.DTSTART);
-        
+
         final DtEnd end = request.getProperty(Property.DTEND);
-        
+
         final Duration duration = request.getProperty(Property.DURATION);
-        
+
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
         getProperties().add(new DtStart(start.getDate(), true));
-        
+
         // 4.8.2.2 Date/Time End
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -329,7 +327,7 @@ public class VFreeBusy extends CalendarComponent {
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
         getProperties().add(new DtEnd(end.getDate(), true));
-        
+
         if (duration != null) {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified duration..
@@ -365,28 +363,28 @@ public class VFreeBusy extends CalendarComponent {
      * empty period list).
      */
     private class BusyTimeBuilder {
-        
+
         private DateTime start;
-        
+
         private DateTime end;
-        
+
         private ComponentList<CalendarComponent> components;
-        
+
         public BusyTimeBuilder start(DateTime start) {
             this.start = start;
             return this;
         }
-        
+
         public BusyTimeBuilder end(DateTime end) {
             this.end = end;
             return this;
         }
-        
+
         public BusyTimeBuilder components(ComponentList<CalendarComponent> components) {
             this.components = components;
             return this;
         }
-        
+
         public FreeBusy build() {
             final PeriodList periods = getConsumedTime(components, start, end);
             final DateRange range = new DateRange(start, end);
@@ -407,35 +405,35 @@ public class VFreeBusy extends CalendarComponent {
      * empty FREEBUSY property is returned (i.e. empty period list).
      */
     private class FreeTimeBuilder {
-        
+
         private DateTime start;
-        
+
         private DateTime end;
-        
+
         private TemporalAmount duration;
-        
+
         private ComponentList<CalendarComponent> components;
-        
+
         public FreeTimeBuilder start(DateTime start) {
             this.start = start;
             return this;
         }
-        
+
         public FreeTimeBuilder end(DateTime end) {
             this.end = end;
             return this;
         }
-        
+
         private FreeTimeBuilder duration(TemporalAmount duration) {
             this.duration = duration;
             return this;
         }
-        
+
         public FreeTimeBuilder components(ComponentList<CalendarComponent> components) {
             this.components = components;
             return this;
         }
-        
+
         public FreeBusy build() {
             final FreeBusy fb = new FreeBusy();
             fb.getParameters().add(FbType.FREE);
@@ -447,16 +445,16 @@ public class VFreeBusy extends CalendarComponent {
             // where no time is consumed set the last period end as the range start..
             for (final Period period : periods) {
                 // check if period outside bounds.. or period intersects with the end of the range..
-                if (range.contains(period) || 
+                if (range.contains(period) ||
                 		(range.intersects(period) && period.getStart().after(range.getRangeStart()))) {
-                    
+
                     // calculate duration between this period start and last period end..
                     final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
                     if (new TemporalAmountComparator().compare(freeDuration.getDuration(), duration) >= 0) {
                         fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                     }
                 }
-                
+
                 if (period.getEnd().after(lastPeriodEnd)) {
                     lastPeriodEnd = period.getEnd();
                 }
@@ -472,7 +470,7 @@ public class VFreeBusy extends CalendarComponent {
      */
     private PeriodList getConsumedTime(final ComponentList<CalendarComponent> components, final DateTime rangeStart,
             final DateTime rangeEnd) {
-        
+
         final PeriodList periods = new PeriodList();
         // only events consume time..
         for (final Component event : components.getComponents(Component.VEVENT)) {
@@ -484,81 +482,35 @@ public class VFreeBusy extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse) throws ValidationException {
+    @Override
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VFREEBUSY.validate(this);
 
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once contact / dtstart / dtend / duration /
-         * dtstamp / organizer / uid / url /
-         */
-        Arrays.asList(Property.CONTACT, Property.DTSTART, Property.DTEND, Property.DURATION,
-                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL).forEach(parameter -> PropertyValidator.assertOneOrLess(parameter, getProperties()));
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attendee / comment / freebusy / rstatus / x-prop
-         */
-
-        /*
-         * The recurrence properties ("RRULE", "EXRULE", "RDATE", "EXDATE") are not permitted within a "VFREEBUSY"
-         * calendar component. Any recurring events are resolved into their individual busy time periods using the
-         * "FREEBUSY" property.
-         */
-        Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> PropertyValidator.assertNone(property, getProperties()));
-
-        // DtEnd value must be later in time that DtStart..
         final DtStart dtStart = getProperty(Property.DTSTART);
-        
-        // 4.8.2.4 Date/Time Start:
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    start date and time for the free or busy time information. The time
-        //    MUST be specified in UTC time.
-        if (dtStart != null && !dtStart.isUtc()) {
-            throw new ValidationException("DTSTART must be specified in UTC time");
-        }
-        
         final DtEnd dtEnd = getProperty(Property.DTEND);
-        
-        // 4.8.2.2 Date/Time End
-        //
-        //    Within the "VFREEBUSY" calendar component, this property defines the
-        //    end date and time for the free or busy time information. The time
-        //    MUST be specified in the UTC time format. The value MUST be later in
-        //    time than the value of the "DTSTART" property.
-        if (dtEnd != null && !dtEnd.isUtc()) {
-            throw new ValidationException("DTEND must be specified in UTC time");
-        }
-        
         if (dtStart != null && dtEnd != null
                 && !dtStart.getDate().before(dtEnd.getDate())) {
-            throw new ValidationException("Property [" + Property.DTEND
-                    + "] must be later in time than [" + Property.DTSTART + "]");
+            result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
+                    + "] must be later in time than [" + Property.DTSTART + "]", ValidationEntry.Severity.ERROR,
+                    getName()));
         }
-
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         return methodValidators.get(method);
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
     }
 
     /**
@@ -618,6 +570,9 @@ public class VFreeBusy extends CalendarComponent {
         return getProperty(Property.UID);
     }
 
+    /**
+     * Default factory.
+     */
     public static class Factory extends Content.Factory implements ComponentFactory<VFreeBusy> {
 
         public Factory() {
@@ -633,11 +588,5 @@ public class VFreeBusy extends CalendarComponent {
         public VFreeBusy createComponent(PropertyList properties) {
             return new VFreeBusy(properties);
         }
-
-        @Override
-        public VFreeBusy createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VFREEBUSY));
-        }
-
     }
 }

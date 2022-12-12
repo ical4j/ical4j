@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.lang3.Validate;
 
 import java.io.Serializable;
@@ -52,14 +51,17 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
 
     private final Map<String, T> extendedFactories;
 
-    protected transient ServiceLoader<T> factoryLoader;
+    protected transient ServiceLoader factoryLoader;
+
+    private final boolean allowIllegalNames;
 
     /**
      * Default constructor.
      */
-    public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
+    public AbstractContentFactory(ServiceLoader factoryLoader, boolean allowIllegalNames) {
         extendedFactories = new HashMap<>();
         this.factoryLoader = factoryLoader;
+        this.allowIllegalNames = allowIllegalNames;
     }
 
     /**
@@ -82,7 +84,7 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
     protected final T getFactory(String key) {
         Validate.notBlank(key, "Invalid factory key: [%s]", key);
         T factory = null;
-        for (T candidate : factoryLoader) {
+        for (T candidate : (ServiceLoader<T>) factoryLoader) {
             if (factorySupports(candidate, key)) {
                 factory = candidate;
                 break;
@@ -98,13 +100,13 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
      * @return true if non-standard names are allowed, otherwise false
      */
     protected boolean allowIllegalNames() {
-        return CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        return allowIllegalNames;
     }
 
     @Override
     public List<T> get() {
         List<T> factories = new ArrayList<>();
-        for (T candidate : factoryLoader) {
+        for (T candidate : (ServiceLoader<T>) factoryLoader) {
             factories.add(candidate);
         }
         factories.addAll(extendedFactories.values());

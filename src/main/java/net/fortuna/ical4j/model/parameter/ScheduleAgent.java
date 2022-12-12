@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -43,7 +44,7 @@ import java.net.URISyntaxException;
  *
  * @author Mike Douglass
  */
-public class ScheduleAgent extends Parameter {
+public class ScheduleAgent extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 4205758749959461020L;
 
@@ -59,7 +60,7 @@ public class ScheduleAgent extends Parameter {
 
     public static final ScheduleAgent NONE = new ScheduleAgent(VALUE_NONE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a scheduling agent
@@ -73,11 +74,12 @@ public class ScheduleAgent extends Parameter {
      * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<ScheduleAgent> {
         /**
          *
          */
@@ -87,17 +89,14 @@ public class ScheduleAgent extends Parameter {
             super(SCHEDULE_AGENT);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            final ScheduleAgent parameter = new ScheduleAgent(value);
-            if (ScheduleAgent.SERVER.equals(parameter)) {
-                return ScheduleAgent.SERVER;
-            } else if (ScheduleAgent.CLIENT.equals(parameter)) {
-                return ScheduleAgent.CLIENT;
-            } else if (ScheduleAgent.NONE.equals(parameter)) {
-                return ScheduleAgent.NONE;
+        @Override
+        public ScheduleAgent createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_CLIENT: return CLIENT;
+                case VALUE_NONE: return NONE;
+                case VALUE_SERVER: return SERVER;
             }
-            return parameter;
+            return new ScheduleAgent(value);
         }
     }
-
 }

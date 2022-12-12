@@ -1,29 +1,42 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.util.CompatibilityHints
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.Duration
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 class TemporalAmountAdapterTest extends Specification {
 
+    def cleanup() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+    }
+
     def "verify string representation"() {
+        setup: 'Set default seed date for test consistency'
+        def seed = LocalDateTime.parse("2021-04-01T00:00:00")
+
         expect:
-        new TemporalAmountAdapter(duration) as String == expectedValue
+        new TemporalAmountAdapter(duration).toString(seed) == expectedValue
 
         where:
         duration                    | expectedValue
         Duration.ofHours(4)         | "PT4H"
         Duration.ofHours(-4)         | "-PT4H"
         Duration.ofDays(12)         | "P12D"
+        Duration.ofDays(12).plusMinutes(30)     | "P12DT30M"
+        Duration.ofDays(12).plusMinutes(-30)    | "P11DT23H30M"
+        Duration.ofDays(-12).plusMinutes(-30)    | "-P12DT30M"
         java.time.Period.ofDays(12) | "P12D"
         java.time.Period.ofWeeks(7) | "P7W"
         java.time.Period.ofDays(365) | "P365D"
         java.time.Period.ofDays(364) | "P52W"
         java.time.Period.ofYears(1) | "P52W"
-        java.time.Period.ofMonths(6) | "P24W"
-        java.time.Period.ofMonths(-6) | "-P24W"
+        java.time.Period.ofMonths(6) | "P26W"
+        java.time.Period.ofMonths(-6) | "-P26W"
         Duration.ofDays(15).plusHours(5).plusSeconds(20)    | 'P15DT5H0M20S'
     }
 
@@ -37,6 +50,8 @@ class TemporalAmountAdapterTest extends Specification {
         where:
         stringValue     | expectedDuration
         "P"             | java.time.Period.ZERO
+        "PT"            | java.time.Period.ZERO
+        "P90M"          | Duration.of(90, ChronoUnit.MINUTES)
     }
 
     def 'verify temporalamount creation'() {
@@ -52,8 +67,15 @@ class TemporalAmountAdapterTest extends Specification {
     }
 
     def 'test creation from  date range'() {
+        setup: 'Override default timezone for test consistency'
+        def originalTimezone = TimeZone.default
+        TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
+
         expect:
         TemporalAmountAdapter.fromDateRange(new DateTime(start), new DateTime(end)).duration == expectedTemporalAmount
+
+        cleanup:
+        TimeZone.default = originalTimezone
 
         where:
         start   | end   | expectedTemporalAmount
@@ -153,7 +175,7 @@ class TemporalAmountAdapterTest extends Specification {
 
     def 'extension module test: negative'() {
         expect:
-        -TemporalAmountAdapter.from(new Dur('P1D')).duration == TemporalAmountAdapter.from(new Dur('-P1D')).duration
+        TemporalAmountAdapter.from(-(new Dur('P1D'))).duration == TemporalAmountAdapter.from(new Dur('-P1D')).duration
     }
 
     def 'test hashcode equality'() {
@@ -170,9 +192,10 @@ class TemporalAmountAdapterTest extends Specification {
         adapter1.hashCode() == adapter2.hashCode()
     }
 
+    @Ignore
     def 'week period parsing and values'() {
-	given: 'a one week amount adapter'
-	TemporalAmountAdapter adapter1 = TemporalAmountAdapter.parse('P1W')
+        given: 'a one week amount adapter'
+        TemporalAmountAdapter adapter1 = TemporalAmountAdapter.parse('P1W')
 
         and: 'a negative one week identical period'
         TemporalAmountAdapter adapter2 = TemporalAmountAdapter.parse('-P1W')
@@ -181,4 +204,21 @@ class TemporalAmountAdapterTest extends Specification {
         adapter1.duration == -adapter2.duration
     }
 
+    def 'testTemporalAmountAdapter_durationToString_DropsMinutes'() {
+        expect: "P1DT1H4M" == TemporalAmountAdapter.parse("P1DT1H4M") as String
+    }
+
+    @Ignore
+    def 'testTemporalAmountAdapter_Months'() {
+        // https://github.com/ical4j/ical4j/issues/419
+        // A month usually doesn't have 4 weeks = 4*7 days = 28 days (except February in non-leap years).
+        expect: "P4W" != new TemporalAmountAdapter(java.time.Period.ofMonths(1)) as String
+    }
+
+    @Ignore
+    def 'testTemporalAmountAdapter_Year'() {
+        // https://github.com/ical4j/ical4j/issues/419
+        // A year has 365 or 366 days, but never 52 weeks = 52*7 days = 364 days.
+        expect: "P52W" != new TemporalAmountAdapter(java.time.Period.ofYears(1)) as String
+    }
 }

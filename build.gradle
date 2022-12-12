@@ -1,86 +1,102 @@
-import aQute.bnd.gradle.Bundle
-
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.2.0'
+        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1', 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
     }
 }
 
 plugins {
-    id 'pl.allegro.tech.build.axion-release' version '1.10.2'
-    id "nebula.provided-base" version "3.0.3"
-    id "com.jfrog.bintray" version "1.8.4"
-    id "net.ltgt.errorprone" version "0.8.1"
+    id 'java'
+    id 'java-library'
+    id 'groovy'
+    id 'maven-publish'
+    id 'jacoco'
+    id 'signing'
+    id "pl.allegro.tech.build.axion-release" version "1.13.6"
+    id "nebula.provided-base" version "7.0.0"
+    id "nebula.optional-base" version "7.0.0"
+    id "com.palantir.revapi" version "1.7.0"
+    id "net.ltgt.errorprone" version "2.0.2" apply false
+    id "biz.aQute.bnd.builder" version "$bndVersion"
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'groovy'
-apply plugin: 'biz.aQute.bnd.builder'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'jacoco'
-apply plugin: 'signing'
-apply plugin: 'pl.allegro.tech.build.axion-release'
-apply plugin: 'nebula.optional-base'
 apply from: 'gradle/dist.gradle'
-
-group = 'org.mnode.ical4j'
-description = '''
-A Java library for reading and writing iCalendar (*.ics) files
-'''
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-ext {
-    slf4jVersion = '1.7.25'
-    groovyVersion = '2.5.4'
-}
+//modularity.mixedJavaRelease 8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    errorprone "com.google.errorprone:error_prone_core:2.3.3"
-    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+//    errorprone "com.google.errorprone:error_prone_core:2.3.3"
+//    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
     api "org.slf4j:slf4j-api:$slf4jVersion",
-            'commons-codec:commons-codec:1.11',
-            'org.apache.commons:commons-lang3:3.8.1',
-            'org.apache.commons:commons-collections4:4.1',
-            'com.sun.mail:javax.mail:1.6.2'
-    
-    implementation 'javax.cache:cache-api:1.0.0', optional
-    implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
+            "commons-codec:commons-codec:$commonsCodecVersion",
+            "org.apache.commons:commons-lang3:$commonsLangVersion",
+            "org.apache.commons:commons-collections4:$commonsCollectionsVersion",
+            "commons-validator:commons-validator:$commonsValidatorVersion"
+
+    // optional timezone caching..
+    implementation 'javax.cache:cache-api:1.1.1', optional
+
+    // optional support for non-Gregorian chronologies..
+    implementation "org.threeten:threeten-extra:$threetenExtraVersion", optional
+
+    // optional parser for filter expressions..
+    implementation "org.jparsec:jparsec:$jparsecVersion", optional
+
+    // optional groovy DSL for calendar builder..
+    implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
     implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
 
-    compileOnly 'biz.aQute.bnd:bndlib:2.3.0'
+    // optional JSON schema validation for structured-data..
+    implementation "com.github.erosb:everit-json-schema:$everitJsonSchemaVersion", optional
 
-    testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion",
-        'org.spockframework:spock-core:1.1-groovy-2.4',
-        'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
-        "org.slf4j:slf4j-log4j12:$slf4jVersion",
-        'org.ehcache:ehcache:3.4.0', 'com.sun.mail:javax.mail:1.5.4'
+    compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
+
+    testImplementation "org.codehaus.groovy:groovy:$groovyVersion",
+            "org.slf4j:slf4j-log4j12:$slf4jVersion",
+            "org.apache.logging.log4j:log4j:$log4jVersion",
+            "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
+            "org.codehaus.groovy:groovy-xml:$groovyVersion"
+
+    // A CachingProvider is required for TimeZoneCacheTest.groovy
+    testImplementation "org.cache2k:cache2k-jcache:$jcacheVersion"
+
+    // junit
+    testImplementation "org.junit.vintage:junit-vintage-engine:$junitVintageVersion"
+
+    // groovy-test
+    testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
+
+    // spock
+    testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0"),
+            "org.spockframework:spock-core"
+
+    // testcontainers
+    testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
+            "org.testcontainers:spock:$testcontainersVersion"
 }
 
-tasks.withType(JavaCompile).configureEach {
-    if (JavaVersion.current().isJava12Compatible()) {
-        // TODO: Remove when resolved https://github.com/google/error-prone/issues/1106
-        options.errorprone.disable("Finally")
-    }
+test {
+    useJUnitPlatform()
+
+    finalizedBy jacocoTestReport // Ensure Jacoco is run after tests have completed
+
+    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        html.enabled project.hasProperty('jacoco_htmlReport') \
-                && 'true' == project.property('jacoco_htmlReport')
+        xml.required = true
+        html.required = jacoco_htmlReport == 'true'
     }
 }
 
@@ -88,113 +104,69 @@ javadoc {
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
-}
-
-task bundle(type: Bundle) {
-    from sourceSets.main.output
-    bndfile = 'bnd.bnd'
+    options {
+        links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    archiveClassifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
-jar.enabled = false
-build.dependsOn bundle
-
 artifacts {
-    archives bundle
     archives javadocJar
     archives sourcesJar
 }
 
 scmVersion {
     tag {
-        prefix = 'ical4j'
-        branchPrefix = [
-            'ical4j-1.x-maintenance' : 'jdk14_ical4j'
-        ]
-        branchPrefix = [
-            'ical4j-2.x-maintenance' : 'jdk7_ical4j'
-        ]
+        prefix = 'ical4j-'
+        branchPrefix = ['ical4j-1.x-maintenance' : 'jdk14_ical4j']
+        branchPrefix = ['ical4j-2.x-maintenance' : 'jdk7_ical4j']
     }
     versionCreator 'versionWithBranch'
-    branchVersionCreator = [
-        'master': 'simple'
-    ]
-    branchVersionCreator = [
-        'ical4j-1.x-maintenance': 'simple'
-    ]
-    branchVersionCreator = [
-        'ical4j-2.x-maintenance': 'simple'
-    ]
+    branchVersionCreator = ['master': 'simple']
+    branchVersionCreator = ['ical4j-1.x-maintenance': 'simple']
+    branchVersionCreator = ['ical4j-2.x-maintenance': 'simple']
+    nextVersion {
+        suffix = 'pre'
+        separator = '-'
+    }
 }
+
+group = 'org.mnode.ical4j'
+description = '''
+A Java library for reading and writing iCalendar (*.ics) files
+'''
 version = scmVersion.version
+
+jar {
+    manifest {
+        attributes (
+                'Implementation-Title': 'iCal4j',
+                'Implementation-Version': version,
+                'Implementation-Vendor': 'Ben Fortuna'
+        )
+    }
+}
+
+revapi {
+    oldVersion = revApiOldVersion
+}
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
-
-    // sonatype credentials
-    sonatype_username = project.hasProperty('sonatype_username') ? project.getProperty('sonatype_username') : ''
-    sonatype_password = project.hasProperty('sonatype_password') ? project.getProperty('sonatype_password') : ''
-
-    // bintray credentials
-    bintray_user = project.hasProperty('bintray_user') ? project.getProperty('bintray_user') : ''
-    bintray_key = project.hasProperty('bintray_key') ? project.getProperty('bintray_key') : ''
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            // artefact management
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatype_username, password: sonatype_password)
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: sonatype_username, password: sonatype_password)
-            }
-            // maven project model
-            pom.project {
-                name project.name
-                packaging 'jar'
-                description project.description
-                url 'http://ical4j.github.io'
-                // source code management
-                scm {
-                    url 'https://github.com/ical4j/ical4j'
-                    connection 'scm:git@github.com:ical4j/ical4j.git'
-                    developerConnection 'scm:git@github.com:ical4j/ical4j.git'
-                }
-                // open source license
-                licenses {
-                    license {
-                        name 'iCal4j - License'
-                        url 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE'
-                        distribution 'repo'
-                    }
-                }
-                // contributors
-                developers {
-                    developer {
-                        id 'fortuna'
-                        name 'Ben Fortuna'
-                    }
-                }
-            }
-        }
-    }
 }
 
 publishing {
     publications {
-        mavenArtifacts(MavenPublication) {
+        ical4j(MavenPublication) {
             from components.java
             artifact javadocJar
             artifact sourcesJar
@@ -209,8 +181,8 @@ publishing {
                 scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j.git')
 
                 def licenseNode = asNode().appendNode('licenses').appendNode('license')
-                licenseNode.appendNode('name', 'iCal4j - License')
-                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE')
+                licenseNode.appendNode('name', 'BSD-3-Clause')
+                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt')
                 licenseNode.appendNode('distribution', 'repo')
 
                 def developerNode = asNode().appendNode('developers').appendNode('developer')
@@ -219,39 +191,28 @@ publishing {
             }
         }
     }
+
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = !isReleaseVersion ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+//        maven {
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/ical4j/ical4j")
+//            credentials {
+//                username = System.getenv("GPR_USERNAME")
+//                password = System.getenv("GPR_TOKEN")
+//            }
+//        }
+    }
 }
 
 signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-//    sign configurations.archives
-    sign publishing.publications.mavenArtifacts
-}
-
-bintray {
-    user = bintray_user
-    key = bintray_key
-    pkg {
-        repo = 'maven'
-        name = 'ical4j'
-        userOrg = 'ical4j'
-        licenses = ['BSD']
-        vcsUrl = 'https://github.com/ical4j/ical4j.git'
-        version {
-            name = scmVersion.version
-            desc = "iCal4j $scmVersion.version"
-            released  = new Date()
-            vcsTag = "ical4j-$scmVersion.version"
-            gpg {
-                sign = isReleaseVersion
-            }
-            mavenCentralSync {
-                sync = isReleaseVersion
-                user = sonatype_username //OSS user token: mandatory
-                password = sonatype_password //OSS user password: mandatory
-//                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-            }
-        }
-    }
-//    configurations = ['archives']
-    publications = ['mavenArtifacts']
+    required { isReleaseVersion }
+    sign publishing.publications.ical4j
 }

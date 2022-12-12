@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +90,7 @@ public class ComponentTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
@@ -127,8 +129,9 @@ public class ComponentTest extends TestCase {
      */
     public final void testValidationException() {
         try {
-            component.validate();
-            fail("ValidationException should be thrown!");
+            ValidationResult result = component.validate();
+            assertTrue(result.hasErrors());
+//            fail("ValidationException should be thrown!");
         }
         catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
@@ -149,14 +152,18 @@ public class ComponentTest extends TestCase {
         TestSuite suite = new TestSuite();
         
         Component component = new Component("test") {
-            public void validate(boolean recurse) throws ValidationException {
+            @Override
+            public ValidationResult validate(boolean recurse) throws ValidationException {
+                return null;
             }
         };
         suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime(),
                 java.time.Duration.ofDays(1)), new PeriodList()));
         
         component = new Component("test") {
-            public void validate(boolean recurse) throws ValidationException {
+            @Override
+            public ValidationResult validate(boolean recurse) throws ValidationException {
+                return null;
             }
         };
         // 10am-12pm for 7 days..
@@ -176,7 +183,9 @@ public class ComponentTest extends TestCase {
                 java.time.Duration.ofDays(7)), expectedPeriods));
 
         component = new Component("test") {
-            public void validate(boolean recurse) throws ValidationException {
+            @Override
+            public ValidationResult validate(boolean recurse) throws ValidationException {
+                return null;
             }
         };
         // weekly for 5 instances using DATE format and due date.

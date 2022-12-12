@@ -1,41 +1,52 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.component.VAlarm;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VToDo;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.model.property.Status;
+import net.fortuna.ical4j.validate.*;
 
-import static net.fortuna.ical4j.model.Component.VALARM;
-import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
+import java.util.stream.Collectors;
 
+@Deprecated
 public class VToDoValidator extends ComponentValidator<VToDo> {
 
-    private final Validator<VAlarm> itipValidator = new ComponentValidator<>(new ValidationRule(One, ACTION, TRIGGER),
-            new ValidationRule(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
+    private static final ComponentContainerRuleSet NO_ALARMS_RULE_SET = new ComponentContainerRuleSet(
+            NO_ALARMS);
 
     private final boolean alarmsAllowed;
 
-    public VToDoValidator(ValidationRule... rules) {
+    @SafeVarargs
+    public VToDoValidator(ValidationRule<VToDo>... rules) {
         this(true, rules);
     }
 
-    public VToDoValidator(boolean alarmsAllowed, ValidationRule... rules) {
-        super(rules);
+    @SafeVarargs
+    public VToDoValidator(boolean alarmsAllowed, ValidationRule<VToDo>... rules) {
+        super(Component.VTODO, rules);
         this.alarmsAllowed = alarmsAllowed;
     }
 
     @Override
-    public void validate(VToDo target) throws ValidationException {
-        super.validate(target);
+    public ValidationResult validate(VToDo target) throws ValidationException {
+        ValidationResult result = ComponentValidator.VTODO.validate(target);
+
+        final Status status = target.getProperty(Property.STATUS);
+        if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
+                && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
+                && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
+                && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
+
+            result.getEntries().add(new ValidationEntry("Status property [" + status + "] may not occur in VTODO",
+                    ValidationEntry.Severity.ERROR, target.getName()));
+        }
 
         if (alarmsAllowed) {
-            target.getAlarms().forEach(itipValidator::validate);
+            result.getEntries().addAll(target.getAlarms().stream().map(ComponentValidator.VALARM_ITIP::validate)
+                    .flatMap(r -> r.getEntries().stream()).collect(Collectors.toList()));
         } else {
-            ComponentValidator.assertNone(VALARM, target.getAlarms());
+            result.getEntries().addAll(NO_ALARMS_RULE_SET.apply(target.getName(), target));
         }
+        return result;
     }
 }

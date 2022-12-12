@@ -43,8 +43,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
+import java.time.chrono.Chronology;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -86,8 +92,40 @@ public class Recur implements Serializable {
 
     private static final String WKST = "WKST";
 
+    private static final String RSCALE = "RSCALE";
+
+    private static final String SKIP = "SKIP";
+
     public enum Frequency {
-        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY;
+        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY
+    }
+
+    public enum RScale {
+
+        JAPANESE("Japanese"),
+        BUDDHIST("ThaiBuddhist"),
+        ROC("Minguo"),
+        ISLAMIC("islamic"),
+        ISO8601("ISO"),
+
+        CHINESE("ISO"),
+        ETHIOPIC("Ethiopic"),
+        HEBREW("ISO"),
+        GREGORIAN("ISO");
+
+        private final String chronology;
+
+        RScale(String chronology) {
+            this.chronology = chronology;
+        }
+
+        public String getChronology() {
+            return chronology;
+        }
+    }
+
+    public enum Skip {
+        OMIT, BACKWARD, FORWARD
     }
 
     /**
@@ -147,7 +185,7 @@ public class Recur implements Serializable {
      */
     public static final String KEY_MAX_INCREMENT_COUNT = "net.fortuna.ical4j.recur.maxincrementcount";
 
-    private static int maxIncrementCount;
+    private static final int maxIncrementCount;
 
     static {
         maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
@@ -157,7 +195,11 @@ public class Recur implements Serializable {
 
     private Frequency frequency;
 
+    private Skip skip;
+
     private Date until;
+
+    private RScale rscale;
 
     private Integer count;
 
@@ -177,7 +219,7 @@ public class Recur implements Serializable {
 
     private NumberList weekNoList;
 
-    private NumberList monthList;
+    private MonthList monthList;
 
     private NumberList setPosList;
 
@@ -187,7 +229,7 @@ public class Recur implements Serializable {
 
     private int calendarWeekStartDay;
 
-    private Map<String, String> experimentalValues = new HashMap<String, String>();
+    private final Map<String, String> experimentalValues = new HashMap<String, String>();
 
     // Calendar field we increment based on frequency.
     private int calIncField;
@@ -206,16 +248,33 @@ public class Recur implements Serializable {
      *
      * @param aValue a string representation of a recurrence.
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
+     * @throws IllegalArgumentException where the recurrence string contains an unrecognised token
      */
     public Recur(final String aValue) throws ParseException {
+        this(aValue, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    /**
+     * Constructs a new recurrence from the specified string value.
+     * @param aValue a string representation of a recurrence.
+     * @param experimentalTokensAllowed allow unrecognised tokens in the recurrence
+     * @throws ParseException
+     */
+    public Recur(final String aValue, boolean experimentalTokensAllowed) throws ParseException {
         // default week start is Monday per RFC5545
         calendarWeekStartDay = Calendar.MONDAY;
 
+        Chronology chronology = Chronology.ofLocale(Locale.getDefault());
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
         while (tokens.hasNext()) {
             final String token = tokens.next();
             if (FREQ.equals(token)) {
                 frequency = Frequency.valueOf(nextToken(tokens, token));
+            } else if (SKIP.equals(token)) {
+                skip = Skip.valueOf(nextToken(tokens, token));
+            } else if (RSCALE.equals(token)) {
+                rscale = RScale.valueOf(nextToken(tokens, token));
+                chronology = Chronology.of(rscale.getChronology());
             } else if (UNTIL.equals(token)) {
                 final String untilString = nextToken(tokens, token);
                 if (untilString != null && untilString.contains("T")) {
@@ -230,28 +289,28 @@ public class Recur implements Serializable {
             } else if (INTERVAL.equals(token)) {
                 interval = Integer.parseInt(nextToken(tokens, token));
             } else if (BYSECOND.equals(token)) {
-                secondList = new NumberList(nextToken(tokens, token), 0, 59, false);
+                secondList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.SECOND_OF_MINUTE), false);
             } else if (BYMINUTE.equals(token)) {
-                minuteList = new NumberList(nextToken(tokens, token), 0, 59, false);
+                minuteList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.MINUTE_OF_HOUR), false);
             } else if (BYHOUR.equals(token)) {
-                hourList = new NumberList(nextToken(tokens, token), 0, 23, false);
+                hourList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.HOUR_OF_DAY), false);
             } else if (BYDAY.equals(token)) {
                 dayList = new WeekDayList(nextToken(tokens, token));
             } else if (BYMONTHDAY.equals(token)) {
-                monthDayList = new NumberList(nextToken(tokens, token), 1, 31, true);
+                monthDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_MONTH), true);
             } else if (BYYEARDAY.equals(token)) {
-                yearDayList = new NumberList(nextToken(tokens, token), 1, 366, true);
+                yearDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
             } else if (BYWEEKNO.equals(token)) {
-                weekNoList = new NumberList(nextToken(tokens, token), 1, 53, true);
+                weekNoList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.ALIGNED_WEEK_OF_YEAR), true);
             } else if (BYMONTH.equals(token)) {
-                monthList = new NumberList(nextToken(tokens, token), 1, 12, false);
+                monthList = new MonthList(nextToken(tokens, token), chronology.range(ChronoField.MONTH_OF_YEAR));
             } else if (BYSETPOS.equals(token)) {
-                setPosList = new NumberList(nextToken(tokens, token), 1, 366, true);
+                setPosList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
             } else if (WKST.equals(token)) {
                 weekStartDay = WeekDay.Day.valueOf(nextToken(tokens, token));
                 calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay));
             } else {
-                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                if (experimentalTokensAllowed) {
                     // assume experimental value..
                     experimentalValues.put(token, nextToken(tokens, token));
                 } else {
@@ -318,41 +377,43 @@ public class Recur implements Serializable {
 
     private void initTransformers() {
         transformers = new HashMap<>();
+        Chronology chronology = rscale != null ? Chronology.of(rscale.getChronology())
+                : Chronology.ofLocale(Locale.getDefault());
         if (secondList != null) {
             transformers.put(BYSECOND, new BySecondRule(secondList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
-            secondList = new NumberList(0, 59, false);
+            secondList = new NumberList(chronology.range(ChronoField.SECOND_OF_MINUTE), false);
         }
         if (minuteList != null) {
             transformers.put(BYMINUTE, new ByMinuteRule(minuteList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
-            minuteList = new NumberList(0, 59, false);
+            minuteList = new NumberList(chronology.range(ChronoField.MINUTE_OF_HOUR), false);
         }
         if (hourList != null) {
             transformers.put(BYHOUR, new ByHourRule(hourList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
-            hourList = new NumberList(0, 23, false);
+            hourList = new NumberList(chronology.range(ChronoField.HOUR_OF_DAY), false);
         }
         if (monthDayList != null) {
-            transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, frequency, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, frequency, Optional.ofNullable(weekStartDay), skip));
         } else {
-            monthDayList = new NumberList(1, 31, true);
+            monthDayList = new NumberList(chronology.range(ChronoField.DAY_OF_MONTH), true);
         }
         if (yearDayList != null) {
             transformers.put(BYYEARDAY, new ByYearDayRule(yearDayList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
-            yearDayList = new NumberList(1, 366, true);
+            yearDayList = new NumberList(chronology.range(ChronoField.DAY_OF_YEAR), true);
         }
         if (weekNoList != null) {
             transformers.put(BYWEEKNO, new ByWeekNoRule(weekNoList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
-            weekNoList = new NumberList(1, 53, true);
+            weekNoList = new NumberList(chronology.range(ChronoField.ALIGNED_WEEK_OF_YEAR), true);
         }
         if (monthList != null) {
             transformers.put(BYMONTH, new ByMonthRule(monthList, frequency,
-                    Optional.ofNullable(weekStartDay)));
+                    Optional.ofNullable(weekStartDay), skip));
         } else {
-            monthList = new NumberList(1, 12, false);
+            monthList = new MonthList(chronology.range(ChronoField.MONTH_OF_YEAR));
         }
         if (dayList != null) {
             transformers.put(BYDAY, new ByDayRule(dayList, deriveFilterType(), Optional.ofNullable(weekStartDay)));
@@ -362,7 +423,7 @@ public class Recur implements Serializable {
         if (setPosList != null) {
             transformers.put(BYSETPOS, new BySetPosRule(setPosList));
         } else {
-            setPosList = new NumberList(1, 366, true);
+            setPosList = new NumberList(chronology.range(ChronoField.DAY_OF_YEAR), true);
         }
     }
 
@@ -373,10 +434,9 @@ public class Recur implements Serializable {
             return Frequency.WEEKLY;
         } else if (frequency == Frequency.MONTHLY || !getMonthList().isEmpty()) {
             return Frequency.MONTHLY;
-        } else if (frequency == Frequency.YEARLY) {
-            return Frequency.YEARLY;
+        } else {
+            return frequency;
         }
-        return null;
     }
 
     /**
@@ -425,7 +485,7 @@ public class Recur implements Serializable {
      *
      * @return Returns the monthList.
      */
-    public final NumberList getMonthList() {
+    public final MonthList getMonthList() {
         return monthList;
     }
 
@@ -491,6 +551,14 @@ public class Recur implements Serializable {
     }
 
     /**
+     *
+     * @return leap month skip behaviour.
+     */
+    public Skip getSkip() {
+        return skip;
+    }
+
+    /**
      * @return Returns the interval or -1 if the rule does not have an interval defined.
      */
     public final int getInterval() {
@@ -529,6 +597,12 @@ public class Recur implements Serializable {
     @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
+        if (rscale != null) {
+            b.append(RSCALE);
+            b.append('=');
+            b.append(rscale);
+            b.append(';');
+        }
         b.append(FREQ);
         b.append('=');
         b.append(frequency);
@@ -611,6 +685,12 @@ public class Recur implements Serializable {
             b.append('=');
             b.append(setPosList);
         }
+        if (skip != null) {
+            b.append(';');
+            b.append(SKIP);
+            b.append('=');
+            b.append(skip);
+        }
         return b.toString();
     }
 
@@ -687,89 +767,22 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        final Calendar cal = getCalendarInstance(seed, true);
-        final Calendar rootSeed = (Calendar)cal.clone();
-        
-        // optimize the start time for selecting candidates
-        // (only applicable where a COUNT is not specified)
-        if (count == null) {
-            final Calendar seededCal = (Calendar) cal.clone();
-            while (seededCal.getTime().before(periodStart)) {
-                cal.setTime(seededCal.getTime());
-                increment(seededCal);
-            }
-        }
+        dates.addAll(getDatesAsStream(seed, periodStart, periodEnd, value, maxCount).collect(Collectors.toList()));
 
-        HashSet<Date> invalidCandidates = new HashSet<Date>();
-        int noCandidateIncrementCount = 0;
-        Date candidate = null;
-        while ((maxCount < 0) || (dates.size() < maxCount)) {
-            final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
-
-            if (getUntil() != null && candidate != null
-                    && candidate.after(getUntil())) {
-                break;
-            }
-            if (periodEnd != null && candidate != null
-                    && candidate.after(periodEnd)) {
-                break;
-            }
-            if (getCount() >= 1
-                    && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                break;
-            }
-
-//            if (Value.DATE_TIME.equals(value)) {
-            if (candidateSeed instanceof DateTime) {
-                if (dates.isUtc()) {
-                    ((DateTime) candidateSeed).setUtc(true);
-                } else {
-                    ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
-                }
-            }
-
-            // rootSeed = date used for the seed for the RRule at the
-            //            start of the first period.
-            // candidateSeed = date used for the start of 
-            //                 the current period.
-            final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
-            if (!candidates.isEmpty()) {
-                noCandidateIncrementCount = 0;
-                // sort candidates for identifying when UNTIL date is exceeded..
-                Collections.sort(candidates);
-                for (Date candidate1 : candidates) {
-                    candidate = candidate1;
-                    // don't count candidates that occur before the seed date..
-                    if (!candidate.before(seed)) {
-                        // candidates exclusive of periodEnd..
-                        if (candidate.before(periodStart)
-                                || candidate.after(periodEnd)) {
-                            invalidCandidates.add(candidate);
-                        } else if (getCount() >= 1
-                                && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                            break;
-                        } else if (!candidate.before(periodStart) && !candidate.after(periodEnd)
-                            && (getUntil() == null || !candidate.after(getUntil()))) {
-
-                            dates.add(candidate);
-                        }
-                    }
-                }
-            } else {
-                noCandidateIncrementCount++;
-                if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
-                    break;
-                }
-            }
-            increment(cal);
-        }
         // sort final list..
         Collections.sort(dates);
         return dates;
     }
 
+    public final Stream<Date> getDatesAsStream(final Date seed, final Date periodStart,
+                                               final Date periodEnd, final Value value, int maxCount) {
+
+        Spliterator<Date> spliterator = new DateSpliterator(seed, periodStart, periodEnd, value, maxCount);
+        return StreamSupport.stream(spliterator, false);
+    }
+
     /**
-     * Returns the the next date of this recurrence given a seed date
+     * Returns the next date of this recurrence given a seed date
      * and start date.  The seed date indicates the start of the fist
      * occurrence of this recurrence. The start date is the
      * starting date to search for the next recurrence.  Return null
@@ -821,8 +834,6 @@ public class Recur implements Serializable {
             final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
-                // sort candidates for identifying when UNTIL date is exceeded..
-                Collections.sort(candidates);
 
                 for (Date candidate1 : candidates) {
                     candidate = candidate1;
@@ -859,7 +870,7 @@ public class Recur implements Serializable {
      */
     private void increment(final Calendar cal) {
         // initialise interval..
-        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
+        final int calInterval = Math.max(getInterval(), 1);
         cal.add(calIncField, calInterval);
     }
 
@@ -915,7 +926,7 @@ public class Recur implements Serializable {
 
             NumberList implicitMonthDayList = new NumberList();
             implicitMonthDayList.add(rootSeed.get(Calendar.DAY_OF_MONTH));
-            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, frequency, Optional.ofNullable(weekStartDay));
+            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, frequency, Optional.ofNullable(weekStartDay), skip);
             dates = implicitRule.transform(dates);
         }
 
@@ -964,6 +975,7 @@ public class Recur implements Serializable {
                 log.debug("Dates after SETPOS processing: " + dates);
             }
         }
+        Collections.sort(dates);
         return dates;
     }
 
@@ -1058,6 +1070,26 @@ public class Recur implements Serializable {
         log = LoggerFactory.getLogger(Recur.class);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recur recur = (Recur) o;
+        return frequency == recur.frequency && skip == recur.skip && Objects.equals(until, recur.until) &&
+                rscale == recur.rscale && Objects.equals(count, recur.count) && Objects.equals(interval, recur.interval) &&
+                Objects.equals(secondList, recur.secondList) && Objects.equals(minuteList, recur.minuteList) &&
+                Objects.equals(hourList, recur.hourList) && Objects.equals(dayList, recur.dayList) &&
+                Objects.equals(monthDayList, recur.monthDayList) && Objects.equals(yearDayList, recur.yearDayList) &&
+                Objects.equals(weekNoList, recur.weekNoList) && Objects.equals(monthList, recur.monthList) &&
+                Objects.equals(setPosList, recur.setPosList) && weekStartDay == recur.weekStartDay;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(frequency, skip, until, rscale, count, interval, secondList, minuteList, hourList, dayList,
+                monthDayList, yearDayList, weekNoList, monthList, setPosList, weekStartDay);
+    }
+
     /**
      * Support for building Recur instances.
      */
@@ -1065,7 +1097,11 @@ public class Recur implements Serializable {
 
         private Frequency frequency;
 
+        private Skip skip;
+
         private Date until;
+
+        private RScale rscale;
 
         private Integer count;
 
@@ -1085,19 +1121,51 @@ public class Recur implements Serializable {
 
         private NumberList weekNoList;
 
-        private NumberList monthList;
+        private MonthList monthList;
 
         private NumberList setPosList;
 
         private WeekDay.Day weekStartDay;
+
+        public Builder() {
+        }
+
+        public Builder(Recur recur) {
+            this.frequency = recur.frequency;
+            this.rscale = recur.rscale;
+            this.skip = recur.skip;
+            this.until = recur.until;
+            this.count = recur.count;
+            this.interval = recur.interval;
+            this.secondList = recur.secondList;
+            this.minuteList = recur.minuteList;
+            this.hourList = recur.hourList;
+            this.dayList = recur.dayList;
+            this.monthDayList = recur.monthDayList;
+            this.yearDayList = recur.yearDayList;
+            this.weekNoList = recur.weekNoList;
+            this.monthList = recur.monthList;
+            this.setPosList = recur.setPosList;
+            this.weekStartDay = recur.weekStartDay;
+        }
 
         public Builder frequency(Frequency frequency) {
             this.frequency = frequency;
             return this;
         }
 
+        public Builder skip(Skip skip) {
+            this.skip = skip;
+            return this;
+        }
+
         public Builder until(Date until) {
             this.until = until;
+            return this;
+        }
+
+        public Builder rscale(RScale rscale) {
+            this.rscale = rscale;
             return this;
         }
 
@@ -1146,7 +1214,7 @@ public class Recur implements Serializable {
             return this;
         }
 
-        public Builder monthList(NumberList monthList) {
+        public Builder monthList(MonthList monthList) {
             this.monthList = monthList;
             return this;
         }
@@ -1164,6 +1232,8 @@ public class Recur implements Serializable {
         public Recur build() {
             Recur recur = new Recur();
             recur.frequency = frequency;
+            recur.rscale = rscale;
+            recur.skip = skip;
             recur.until = until;
             recur.count = count;
             recur.interval = interval;
@@ -1180,6 +1250,121 @@ public class Recur implements Serializable {
             recur.validateFrequency();
             recur.initTransformers();
             return recur;
+        }
+    }
+
+    private class DateSpliterator extends Spliterators.AbstractSpliterator<Date> {
+
+        final Date seed;
+        final Date periodStart;
+        final Date periodEnd;
+        final Value value;
+        final int maxCount;
+
+        final DateList dates;
+
+        final Calendar cal, rootSeed;
+
+        Date lastCandidate = null;
+
+        Iterator<Date> candidates = null;
+
+        HashSet<Date> invalidCandidates = new HashSet<>();
+
+        int noCandidateIncrementCount = 0;
+
+        public DateSpliterator(Date seed, Date periodStart, Date periodEnd, Value value, int maxCount) {
+            super(maxCount, 0);
+            this.seed = seed;
+            this.periodStart = periodStart;
+            this.periodEnd = periodEnd;
+            this.value = value;
+            this.maxCount = maxCount;
+
+            dates = new DateList(value);
+            if (seed instanceof DateTime) {
+                if (((DateTime) seed).isUtc()) {
+                    dates.setUtc(true);
+                } else {
+                    dates.setTimeZone(((DateTime) seed).getTimeZone());
+                }
+            }
+            cal = getCalendarInstance(seed, true);
+            rootSeed = (Calendar)cal.clone();
+
+            // optimize the start time for selecting candidates
+            // (only applicable where a COUNT is not specified)
+            if (count == null) {
+                final Calendar seededCal = (Calendar) cal.clone();
+                while (seededCal.getTime().before(periodStart)) {
+                    cal.setTime(seededCal.getTime());
+                    increment(seededCal);
+                }
+            }
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super Date> action) {
+            boolean advance = maxCount < 0 || dates.size() < maxCount;
+            if (advance) {
+                if (getUntil() != null && lastCandidate != null && lastCandidate.after(getUntil())) {
+                    advance = false;
+                } else if (periodEnd != null && lastCandidate != null && lastCandidate.after(periodEnd)) {
+                    advance = false;
+                } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
+                    advance = false;
+                }
+            }
+
+            if (advance) {
+                // generate new candidate list..
+                while (candidates == null || !candidates.hasNext()) {
+                    final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
+
+                    if (candidateSeed instanceof DateTime) {
+                        if (dates.isUtc()) {
+                            ((DateTime) candidateSeed).setUtc(true);
+                        } else {
+                            ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
+                        }
+                    }
+
+                    // rootSeed = date used for the seed for the RRule at the
+                    //            start of the first period.
+                    // candidateSeed = date used for the start of
+                    //                 the current period.
+                    candidates = getCandidates(rootSeed, candidateSeed, value).iterator();
+
+                    if (!candidates.hasNext()) {
+                        noCandidateIncrementCount++;
+                        if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                            advance = false;
+                            break;
+                        }
+                    } else {
+                        noCandidateIncrementCount = 0;
+                    }
+                    increment(cal);
+                }
+            }
+
+            if (advance) {
+                // iterate current candidate list..
+                lastCandidate = candidates.next();
+                // don't count candidates that occur before the seed date..
+                if (!lastCandidate.before(seed)) {
+                    // candidates exclusive of periodEnd..
+                    if (lastCandidate.before(periodStart) || lastCandidate.after(periodEnd)) {
+                        invalidCandidates.add(lastCandidate);
+                    } else if (!lastCandidate.before(periodStart) && !lastCandidate.after(periodEnd)
+                            && (getUntil() == null || !lastCandidate.after(getUntil()))) {
+
+                        dates.add(lastCandidate);
+                        action.accept(lastCandidate);
+                    }
+                }
+            }
+            return advance;
         }
     }
 }

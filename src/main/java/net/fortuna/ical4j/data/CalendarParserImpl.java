@@ -66,7 +66,7 @@ public class CalendarParserImpl implements CalendarParser {
 
     private static final String UNEXPECTED_TOKEN_MESSAGE = "Expected [{0}], read [{1}]";
 
-    private Logger log = LoggerFactory.getLogger(CalendarParserImpl.class);
+    private final Logger log = LoggerFactory.getLogger(CalendarParserImpl.class);
 
     private final ComponentListParser componentListParser = new ComponentListParser();
 
@@ -80,9 +80,20 @@ public class CalendarParserImpl implements CalendarParser {
 
     private final ParameterParser paramParser = new ParameterParser();
 
+    private final boolean absorbWhitespaceEnabled;
+
+    public CalendarParserImpl() {
+        this(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
+    }
+
+    public CalendarParserImpl(boolean absorbWhitespaceEnabled) {
+        this.absorbWhitespaceEnabled = absorbWhitespaceEnabled;
+    }
+
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void parse(final InputStream in, final ContentHandler handler)
             throws IOException, ParserException {
         parse(new InputStreamReader(in), handler);
@@ -111,6 +122,8 @@ public class CalendarParserImpl implements CalendarParser {
 
         handler.startCalendar();
 
+        absorbWhitespace(tokeniser, in);
+
         // parse calendar properties..
         propertyListParser.parse(tokeniser, in, handler);
 
@@ -129,6 +142,7 @@ public class CalendarParserImpl implements CalendarParser {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
 
@@ -178,7 +192,8 @@ public class CalendarParserImpl implements CalendarParser {
         int ntok = assertToken(tokeniser, in, Calendar.BEGIN, false, true);
         while (ntok != StreamTokenizer.TT_EOF) {
             parseCalendar(tokeniser, in, handler);
-            ntok = absorbWhitespace(tokeniser, in, true);
+            absorbWhitespace(tokeniser, in);
+            ntok = nextToken(tokeniser, in, true);
         }
     }
 
@@ -209,10 +224,12 @@ public class CalendarParserImpl implements CalendarParser {
                     componentParser.parse(tokeniser, in, handler);
                 } else if (tokeniser.sval != null) {
                     propertyParser.parse(tokeniser, in, handler);
-                } else if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                } else if (absorbWhitespaceEnabled) {
+                    absorbWhitespace(tokeniser, in);
+                } else {
                     throw new ParserException("Invalid property name", getLineNumber(tokeniser, in));
                 }
-                absorbWhitespace(tokeniser, in, false);
+                nextToken(tokeniser, in, false);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
         }
@@ -392,7 +409,8 @@ public class CalendarParserImpl implements CalendarParser {
 
             while (Component.BEGIN.equals(tokeniser.sval)) {
                 componentParser.parse(tokeniser, in, handler);
-                absorbWhitespace(tokeniser, in, false);
+                absorbWhitespace(tokeniser, in);
+                nextToken(tokeniser, in, false);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
         }
@@ -423,6 +441,7 @@ public class CalendarParserImpl implements CalendarParser {
             handler.startComponent(name);
 
             assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
+            absorbWhitespace(tokeniser, in);
 
             propertyListParser.parse(tokeniser, in, handler);
 
@@ -577,10 +596,8 @@ public class CalendarParserImpl implements CalendarParser {
      * @return int value of the ttype field of the tokeniser
      * @throws IOException
      */
-    private int absorbWhitespace(final StreamTokenizer tokeniser, Reader in, boolean ignoreEOF) throws IOException, ParserException {
-        // HACK: absorb extraneous whitespace between components (KOrganizer)..
-        int ntok;
-        while ((ntok = nextToken(tokeniser, in, ignoreEOF)) == StreamTokenizer.TT_EOL) {
+    private void absorbWhitespace(final StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
+        while (nextToken(tokeniser, in, true) == StreamTokenizer.TT_EOL) {
             if (log.isTraceEnabled()) {
                 log.trace("Absorbing extra whitespace..");
             }
@@ -588,7 +605,10 @@ public class CalendarParserImpl implements CalendarParser {
         if (log.isTraceEnabled()) {
             log.trace("Aborting: absorbing extra whitespace complete");
         }
-        return ntok;
+        /* In effect, we only want to absorb extra newlines after the current
+         * token, and not absorb the current token, even if it is a newline.
+         */
+        tokeniser.pushBack();
     }
 
     /**

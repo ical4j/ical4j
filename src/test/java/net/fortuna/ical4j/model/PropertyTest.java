@@ -34,7 +34,9 @@ package net.fortuna.ical4j.model;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -86,6 +88,7 @@ public class PropertyTest extends AbstractPropertyTest {
      * (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
@@ -112,15 +115,19 @@ public class PropertyTest extends AbstractPropertyTest {
 
         @SuppressWarnings("serial")
 		Property notEqual = new Property("notEqual", null) {
+            @Override
             public String getValue() {
                 return "";
             }
 
+            @Override
             public void setValue(String value) throws IOException,
                     URISyntaxException, ParseException {
             }
 
-            public void validate() throws ValidationException {
+            @Override
+            public ValidationResult validate() throws ValidationException {
+                return ValidationResult.EMPTY;
             }
         };
 
@@ -162,8 +169,9 @@ public class PropertyTest extends AbstractPropertyTest {
      */
     public final void testValidationException() {
         try {
-            property.validate();
-            fail("Should throw ValidationException");
+            ValidationResult result = property.validate();
+//            fail("Should throw ValidationException");
+            assertTrue(result.hasErrors());
         }
         catch (ValidationException e) {
             e.printStackTrace();
@@ -186,6 +194,7 @@ public class PropertyTest extends AbstractPropertyTest {
 
         try {
             property.getParameters().add(new Parameter("name", null) {
+                @Override
                 public String getValue() {
                     return null;
                 }
@@ -204,30 +213,38 @@ public class PropertyTest extends AbstractPropertyTest {
 
         @SuppressWarnings("serial")
 		Property property = new Property("name", null) {
+            @Override
             public String getValue() {
                 return "value";
             }
 
+            @Override
             public void setValue(String value) throws IOException,
                     URISyntaxException, ParseException {
             }
 
-            public void validate() throws ValidationException {
+            @Override
+            public ValidationResult validate() throws ValidationException {
+                return ValidationResult.EMPTY;
             }
         };
 
         @SuppressWarnings("serial")
 		Property invalidProperty = new Property("name", null) {
+            @Override
             public String getValue() {
                 return "value";
             }
 
+            @Override
             public void setValue(String value) throws IOException,
                     URISyntaxException, ParseException {
             }
 
-            public void validate() throws ValidationException {
-                throw new ValidationException();
+            @Override
+            public ValidationResult validate() throws ValidationException {
+                return new ValidationResult(new ValidationEntry("Fail",
+                        ValidationEntry.Severity.ERROR, getName()));
             }
         };
         suite.addTest(new PropertyTest("testEquals", property));

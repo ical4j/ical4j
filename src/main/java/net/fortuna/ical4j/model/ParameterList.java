@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * for constant properties that you don't want modified.
  * @author Ben Fortuna
  */
-public class ParameterList implements Serializable, Iterable<Parameter> {
+public class ParameterList implements Serializable, Iterable<Parameter>, Comparable<ParameterList> {
 
     private static final long serialVersionUID = -1913059830016450169L;
 
@@ -103,6 +103,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         if (!parameters.isEmpty()) {
             return parameters.stream().map(Parameter::toString)
@@ -176,9 +177,19 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     }
 
     /**
+     * Returns true if this parameter list includes the specified parameter.
+     * @param parameter a parameter specification
+     * @return true if parameter matching specification is found
+     */
+    public boolean contains(Parameter parameter) {
+        return parameters.contains(parameter);
+    }
+
+    /**
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<Parameter> iterator() {
         return parameters.iterator();
     }
@@ -213,6 +224,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof ParameterList) {
             final ParameterList p = (ParameterList) arg0;
@@ -224,7 +236,25 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         return new HashCodeBuilder().append(parameters).toHashCode();
+    }
+
+    @Override
+    public int compareTo(ParameterList o) {
+        // test for equality
+        if (parameters.equals(o.parameters)) {
+            return 0;
+        }
+        // then test for size..
+        int retval = parameters.size() - o.parameters.size();
+        if (retval != 0) {
+            return retval;
+        } else {
+            // compare individual params..
+            return parameters.stream().filter(o.parameters::contains)
+                    .mapToInt(p -> p.compareTo(o.parameters.get(o.parameters.indexOf(p)))).sum();
+        }
     }
 }

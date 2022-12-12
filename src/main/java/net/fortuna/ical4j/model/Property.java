@@ -35,12 +35,16 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -54,7 +58,7 @@ import java.text.ParseException;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content {
+public abstract class Property extends Content implements Comparable<Property>, FluentProperty {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -288,6 +292,11 @@ public abstract class Property extends Content {
     public static final String RELATED_TO = "RELATED-TO";
 
     /**
+     * Resource type property name.
+     */
+    public static final String RESOURCE_TYPE = "RESOURCE-TYPE";
+
+    /**
      * Resources property name.
      */
     public static final String RESOURCES = "RESOURCES";
@@ -323,11 +332,6 @@ public abstract class Property extends Content {
     public static final String LOCALITY = "LOCALITY";
 
     /**
-     * VVENUE location type property name.
-     */
-    public static final String LOCATION_TYPE = "LOCATION-TYPE";
-
-    /**
      * VVENUE name property name.
      */
     public static final String NAME = "NAME";
@@ -356,12 +360,45 @@ public abstract class Property extends Content {
      *  Acknowledged Property taken from http://tools.ietf.org/html/draft-daboo-valarm-extensions-04
      */
     public static final String ACKNOWLEDGED = "ACKNOWLEDGED";
-    
+
+    public static final String PROXIMITY = "PROXIMITY";
+
+    /* Event publication properties */
+
+    /**
+     * Participant cua property name.
+     */
+    public static final String CALENDAR_ADDRESS = "CALENDAR-ADDRESS";
+
+    /**
+     * Location type property name.
+     */
+    public static final String LOCATION_TYPE = "LOCATION-TYPE";
+
+    /**
+     * Participant type.
+     */
+    public static final String PARTICIPANT_TYPE = "PARTICIPANT-TYPE";
+
+    /**
+     * Structured data property name.
+     */
+    public static final String STRUCTURED_DATA = "STRUCTURED-DATA";
+
+    /**
+     * Styled description property name.
+     */
+    public static final String STYLED_DESCRIPTION = "STYLED-DESCRIPTION";
+
+    public static final String TZUNTIL = "TZUNTIL";
+
+    public static final String TZID_ALIAS_OF = "TZID-ALIAS-OF";
+
     private final String name;
 
     private final ParameterList parameters;
 
-    private final PropertyFactory factory;
+    private final PropertyFactory<?> factory;
 
     /**
      * Constructor.
@@ -414,35 +451,43 @@ public abstract class Property extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
-        if (getParameters() != null) {
-            buffer.append(getParameters());
+        if (parameters != null) {
+            buffer.append(parameters);
         }
         buffer.append(':');
-        boolean needsEscape = false;
-        if (this instanceof XProperty) {
-            Value valParam = getParameter(Parameter.VALUE);
-            if (valParam == null || valParam.equals(Value.TEXT)) {
-                needsEscape = true;
+        String value;
+
+        if (this instanceof XProperty && getParameter(Parameter.VALUE) != null
+                && !Value.TEXT.equals(getParameter(Parameter.VALUE))) {
+            value = getValue();
+        } else if (this instanceof Encodable) {
+            try {
+                value = PropertyCodec.INSTANCE.encode(getValue());
+            } catch (EncoderException e) {
+                value = getValue();
             }
-        } else if (this instanceof Escapable) {
-            needsEscape = true;
-        }
-        if (needsEscape) {
-            buffer.append(Strings.escape(Strings.valueOf(getValue())));
         } else {
-            buffer.append(Strings.valueOf(getValue()));
+            value = getValue();
         }
+        buffer.append(Strings.valueOf(value));
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
     }
 
+    @Override
+    public <P extends Property> P getFluentTarget() {
+        return (P) this;
+    }
+
     /**
      * @return Returns the name.
      */
+    @Override
     public final String getName() {
         return name;
     }
@@ -482,19 +527,19 @@ public abstract class Property extends Content {
      * @throws URISyntaxException possibly thrown by setting the value of certain properties
      * @throws ParseException     possibly thrown by setting the value of certain properties
      */
-    public abstract void setValue(String aValue) throws IOException,
-            URISyntaxException, ParseException;
+    public abstract void setValue(String aValue) throws IOException, URISyntaxException, ParseException;
 
     /**
      * Perform validation on a property.
      *
      * @throws ValidationException where the property is not in a valid state
      */
-    public abstract void validate() throws ValidationException;
+    public abstract ValidationResult validate() throws ValidationException;
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
@@ -507,6 +552,7 @@ public abstract class Property extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
@@ -528,5 +574,16 @@ public abstract class Property extends Content {
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
         return factory.createProperty(params, getValue());
+    }
+
+    @Override
+    public int compareTo(Property o) {
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Property::getName)
+                .thenComparing(Property::getValue)
+                .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                .compare(this, o);
     }
 }

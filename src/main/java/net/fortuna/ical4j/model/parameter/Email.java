@@ -1,11 +1,14 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.apache.commons.validator.routines.EmailValidator;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_VALIDATION;
 
 /**
  * From specification:
@@ -45,37 +48,42 @@ import javax.mail.internet.InternetAddress;
  *  n-1234@example.com
  * </pre>
  */
-public class Email extends Parameter {
+public class Email extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 1L;
 
     private static final String PARAMETER_NAME = "EMAIL";
 
-    private final InternetAddress address;
+    private final String address;
 
-    public Email(String address) throws AddressException {
+    public Email(String address) {
         super(PARAMETER_NAME, new Factory());
-        this.address = InternetAddress.parse(address)[0];
+        if (CompatibilityHints.isHintEnabled(KEY_RELAXED_PARSING)) {
+            this.address = address.replaceFirst("\\.$", "");
+        } else {
+            this.address = address;
+        }
+        if (!CompatibilityHints.isHintEnabled(KEY_RELAXED_VALIDATION)
+                && !EmailValidator.getInstance().isValid(this.address)) {
+            throw new IllegalArgumentException("Invalid address: " + address);
+        }
     }
 
     @Override
     public String getValue() {
-        return address.getAddress();
+        return address;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Email> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PARAMETER_NAME);
         }
 
-        public Parameter createParameter(final String value) {
-            try {
-                return new Email(value);
-            } catch (AddressException e) {
-                throw new IllegalArgumentException(e);
-            }
+        @Override
+        public Email createParameter(final String value) {
+            return new Email(value);
         }
     }
 }

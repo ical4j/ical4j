@@ -33,7 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -47,7 +49,7 @@ import java.text.ParseException;
  * Defines an extension property.
  * @author benfortuna
  */
-public class XProperty extends Property implements Escapable {
+public class XProperty extends Property implements Encodable {
 
     private static final long serialVersionUID = 2331763266954894541L;
 
@@ -84,6 +86,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -91,6 +94,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -98,20 +102,22 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-        
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                 && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
             
-            throw new ValidationException(
+            result.getEntries().add(new ValidationEntry(
                     "Invalid name ["
                             + getName()
                             + "]. Experimental properties must have the following prefix: "
-                            + EXPERIMENTAL_PREFIX);
+                            + EXPERIMENTAL_PREFIX, ValidationEntry.Severity.ERROR, getName()));
         }
+        return result;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<XProperty> {
         private static final long serialVersionUID = 1L;
 
         private final String name;
@@ -121,12 +127,14 @@ public class XProperty extends Property implements Escapable {
             this.name = name;
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public XProperty createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new XProperty(name, parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public XProperty createProperty() {
             return new XProperty(name);
         }
     }

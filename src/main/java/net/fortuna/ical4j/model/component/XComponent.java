@@ -34,7 +34,9 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 
 /**
@@ -69,25 +71,26 @@ public class XComponent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-        
+    @Override
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = new ValidationResult();
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                 && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
-            
-            throw new ValidationException(
-                    "Experimental components must have the following prefix: "
-                            + EXPERIMENTAL_PREFIX);
+
+            result.getEntries().add(new ValidationEntry("Experimental components must have the following prefix: "
+                            + EXPERIMENTAL_PREFIX, ValidationEntry.Severity.ERROR, getName()));
         }
         
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         // No method validation required.. 
         return EMPTY_VALIDATOR;

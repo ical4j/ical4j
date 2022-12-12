@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -85,7 +86,7 @@ import java.net.URISyntaxException;
  *
  * @author Ben Fortuna
  */
-public class Encoding extends Parameter {
+public class Encoding extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 7536336461076399077L;
 
@@ -125,7 +126,7 @@ public class Encoding extends Parameter {
      */
     public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of an Inline Encoding
@@ -138,25 +139,28 @@ public class Encoding extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Encoding> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ENCODING);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            Encoding parameter = new Encoding(value);
-            if (Encoding.EIGHT_BIT.equals(parameter)) {
-                parameter = Encoding.EIGHT_BIT;
-            } else if (Encoding.BASE64.equals(parameter)) {
-                parameter = Encoding.BASE64;
+        @Override
+        public Encoding createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_BASE64: return BASE64;
+                case VALUE_BINARY: return BINARY;
+                case VALUE_EIGHT_BIT: return EIGHT_BIT;
+                case VALUE_QUOTED_PRINTABLE: return QUOTED_PRINTABLE;
+                case VALUE_SEVEN_BIT: return SEVEN_BIT;
             }
-            return parameter;
+            return new Encoding(value);
         }
     }
 

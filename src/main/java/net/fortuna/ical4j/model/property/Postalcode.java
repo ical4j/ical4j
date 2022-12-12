@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -48,7 +49,7 @@ import java.text.ParseException;
  * @author benf
  * @author Mike Douglass
  */
-public class Postalcode extends Property implements Escapable {
+public class Postalcode extends Property implements Encodable {
 
     private static final long serialVersionUID = 1983456638722378724L;
 
@@ -81,6 +82,7 @@ public class Postalcode extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -88,13 +90,14 @@ public class Postalcode extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Postalcode> {
@@ -104,11 +107,13 @@ public class Postalcode extends Property implements Escapable {
             super(POSTALCODE);
         }
 
+        @Override
         public Postalcode createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Postalcode(parameters, value);
         }
 
+        @Override
         public Postalcode createProperty() {
             return new Postalcode();
         }

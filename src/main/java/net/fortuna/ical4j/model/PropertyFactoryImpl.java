@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -48,7 +49,7 @@ import java.util.ServiceLoader;
  *         $Id$ [05-Apr-2004]
  */
 @Deprecated
-public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory> {
+public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory<? extends Property>> {
 
     private static final long serialVersionUID = -7174232004486979641L;
 
@@ -56,7 +57,8 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
      * Constructor made private to prevent instantiation.
      */
     protected PropertyFactoryImpl() {
-        super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
+        super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()),
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     @Override
@@ -64,9 +66,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
         return factory.supports(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Property createProperty(final String name) {
         final PropertyFactory factory = getFactory(name);
         if (factory != null) {
@@ -81,9 +80,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Property createProperty(final String name,
                                    final ParameterList parameters, final String value)
             throws IOException, URISyntaxException, ParseException {

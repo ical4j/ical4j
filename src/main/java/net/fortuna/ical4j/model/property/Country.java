@@ -34,16 +34,11 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
-
-import static net.fortuna.ical4j.model.Parameter.ABBREV;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -55,14 +50,12 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * @author benf
  * @author Mike Douglass
  */
-public class Country extends Property implements Escapable {
+public class Country extends Property implements Encodable {
 
     private static final long serialVersionUID = -8091183292558005452L;
 
     private String value;
 
-    private Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, ABBREV)));
     /**
      * Default constructor.
      */
@@ -90,6 +83,7 @@ public class Country extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -97,29 +91,32 @@ public class Country extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Country> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(COUNTRY);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Country createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Country(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Country createProperty() {
             return new Country();
         }
     }
 
     @Override
-    public void validate() throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.COUNTRY.validate(this);
     }
 }

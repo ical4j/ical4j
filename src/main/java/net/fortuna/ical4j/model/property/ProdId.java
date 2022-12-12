@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -47,7 +49,7 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class ProdId extends Property implements Escapable {
+public class ProdId extends Property implements Encodable {
 
     private static final long serialVersionUID = -2433059917714523286L;
 
@@ -94,11 +96,11 @@ public class ProdId extends Property implements Escapable {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.PROD_ID.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ProdId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -106,13 +108,13 @@ public class ProdId extends Property implements Escapable {
         }
 
         @Override
-        public Property createProperty(final ParameterList parameters, final String value)
+        public ProdId createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ProdId(parameters, value);
         }
 
         @Override
-        public Property createProperty() {
+        public ProdId createProperty() {
             return new ProdId();
         }
     }

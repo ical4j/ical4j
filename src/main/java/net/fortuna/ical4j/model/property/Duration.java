@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -182,6 +184,7 @@ public class Duration extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         duration = TemporalAmountAdapter.parse(aValue);
     }
@@ -189,6 +192,7 @@ public class Duration extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return duration.toString();
     }
@@ -201,23 +205,25 @@ public class Duration extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.DURATION.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Duration> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DURATION);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Duration createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Duration(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Duration createProperty() {
             return new Duration();
         }
     }

@@ -31,22 +31,29 @@
  */
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.ComponentContainer;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * @author fortuna
+ * Implementors apply validation rules to iCalendar content to determine a level of compliance with the published
+ * specifications.
  *
+ * @author fortuna
  */
 public interface Validator<T> extends Serializable {
 
-    static <T> void assertFalse(Predicate<T> predicate, String message, boolean warn, T components,
-                                Object...messageParams) {
+    @Deprecated
+    static <T> void assertFalse(Predicate<T> predicate, String message, boolean warn, T target,
+                                Object...messageParams) throws ValidationException {
 
-        if (predicate.test(components)) {
+        if (predicate.test(target)) {
             if (warn) {
                 LoggerFactory.getLogger(Validator.class).warn(MessageFormat.format(message, messageParams));
             } else {
@@ -56,8 +63,50 @@ public interface Validator<T> extends Serializable {
     }
 
     /**
-     * Validates the associated model against an applicable standard.
-     * @throws ValidationException where the model does not confirm to the applicable standard
+     * Validates the target content by applying validation rules. When content fails validation the validator
+     * may throw an exception depending on the implementation.
+     *
+     * @param target the target of validation
+     * @return the result of validation applied to the specified target
+     * @throws ValidationException indicates validation failure (implementation-specific)
      */
-    void validate(T target) throws ValidationException;
+    ValidationResult validate(T target) throws ValidationException;
+
+    /**
+     *
+     * @param rule
+     * @param context
+     * @param target
+     * @return
+     * @deprecated use {@link ComponentContainerRuleSet#apply(String, ComponentContainer)}
+     */
+    @Deprecated
+    default List<ValidationEntry> apply(ValidationRule rule, String context, ComponentContainer<?> target) {
+        return new ComponentContainerRuleSet(rule).apply(context, target);
+    }
+
+    /**
+     *
+     * @param rule
+     * @param context
+     * @param target
+     * @return
+     * @deprecated use {@link PropertyContainerRuleSet#apply(String, PropertyContainer)}
+     */
+    @Deprecated
+    default List<ValidationEntry> apply(ValidationRule rule, String context, PropertyContainer target) {
+        return new PropertyContainerRuleSet<>(rule).apply(context, target);
+    }
+
+    /**
+     *
+     * @param rule
+     * @param target
+     * @return
+     * @deprecated use {@link PropertyRuleSet#apply(String, Property)}
+     */
+    @Deprecated
+    default List<ValidationEntry> apply(ValidationRule rule, Property target) {
+        return new PropertyRuleSet<>(rule).apply(target.getName(), target);
+    }
 }

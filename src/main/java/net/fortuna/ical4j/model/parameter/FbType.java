@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -45,7 +46,7 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class FbType extends Parameter {
+public class FbType extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -2217689716824679375L;
 
@@ -78,7 +79,7 @@ public class FbType extends Parameter {
      */
     public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a format type
@@ -92,29 +93,27 @@ public class FbType extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<FbType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(FBTYPE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            FbType parameter = new FbType(value);
-            if (FbType.FREE.equals(parameter)) {
-                parameter = FbType.FREE;
-            } else if (FbType.BUSY.equals(parameter)) {
-                parameter = FbType.BUSY;
-            } else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
-                parameter = FbType.BUSY_TENTATIVE;
-            } else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
-                parameter = FbType.BUSY_UNAVAILABLE;
+        @Override
+        public FbType createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_BUSY: return BUSY;
+                case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;
+                case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;
+                case VALUE_FREE: return FREE;
             }
-            return parameter;
+            return new FbType(value);
         }
     }
 

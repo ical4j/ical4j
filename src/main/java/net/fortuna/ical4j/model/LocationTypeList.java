@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -49,7 +50,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
 
     private static final long serialVersionUID = -9181735547604179160L;
 
-    private List<String> locationTypes;
+    private final List<String> locationTypes;
 
     /**
      * Default constructor.
@@ -73,9 +74,15 @@ public class LocationTypeList implements Serializable, Iterable<String> {
         }
     }
 
+    public LocationTypeList(LocationType... locationTypes) {
+        this.locationTypes = Arrays.stream(locationTypes).map(LocationType::toString)
+                .collect(Collectors.toList());
+    }
+
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return locationTypes.stream().collect(Collectors.joining(","));
     }
@@ -103,6 +110,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<String> iterator() {
         return locationTypes.iterator();
     }

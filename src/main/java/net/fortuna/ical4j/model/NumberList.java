@@ -34,8 +34,8 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.Numbers;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.time.temporal.ValueRange;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -49,9 +49,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     
     private static final long serialVersionUID = -1667481795613729889L;
 
-    private final int minValue;
-    
-    private final int maxValue;
+    private final ValueRange valueRange;
 
     private final boolean allowsNegativeValues;
     
@@ -59,7 +57,17 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * Default constructor.
      */
     public NumberList() {
-    	this(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+    	this(ValueRange.of(Integer.MIN_VALUE, Integer.MAX_VALUE), true);
+    }
+
+    /**
+     * Construct a number list restricted by the specified {@link ValueRange}.
+     * @param valueRange a range defining the lower and upper bounds of allowed values
+     * @param allowsNegativeValues allow negative values, where abs(value) is within the specified range
+     */
+    public NumberList(ValueRange valueRange, boolean allowsNegativeValues) {
+        this.valueRange = valueRange;
+        this.allowsNegativeValues = allowsNegativeValues;
     }
 
     /**
@@ -67,11 +75,12 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @param minValue the minimum allowable value
      * @param maxValue the maximum allowable value
      * @param allowsNegativeValues indicates whether negative values are allowed
+     *
+     * @deprecated use {@link NumberList#NumberList(ValueRange, boolean)}
      */
+    @Deprecated
     public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
-    	this.minValue = minValue;
-    	this.maxValue = maxValue;
-        this.allowsNegativeValues = allowsNegativeValues;
+    	this(ValueRange.of(minValue, maxValue), allowsNegativeValues);
     }
 
     /**
@@ -79,15 +88,29 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @param aString a string representation of a number list
      */
     public NumberList(final String aString) {
-    	this(aString, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+    	this(aString, ValueRange.of(Integer.MIN_VALUE, Integer.MAX_VALUE), true);
     }
-    
+
+    /**
+     * Construct a number list restricted by the specified {@link ValueRange}.
+     * @param aString a string representation of a list of values
+     * @param valueRange a range defining the lower and upper bounds of allowed values
+     * @param allowsNegativeValues allow negative values, where abs(value) is within the specified range
+     */
+    public NumberList(final String aString, ValueRange valueRange, boolean allowsNegativeValues) {
+        this(valueRange, allowsNegativeValues);
+        addAll(Arrays.stream(aString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
+    }
+
     /**
      * @param aString a string representation of a number list
      * @param minValue the minimum allowable value
      * @param maxValue the maximum allowable value
      * @param allowsNegativeValues indicates whether negative values are allowed
+     *
+     * @deprecated use {@link NumberList#NumberList(String, ValueRange, boolean)}
      */
+    @Deprecated
     public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
     	this(minValue, maxValue, allowsNegativeValues);
         final StringTokenizer t = new StringTokenizer(aString, ",");
@@ -101,6 +124,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @param aNumber a number to add to the list
      * @return true if the number was added, otherwise false
      */
+    @Override
     public final boolean add(final Integer aNumber) {
         int abs = aNumber;
         if ((abs >> 31 | -abs >>> 31) < 0) {
@@ -109,16 +133,33 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
             }
             abs = Math.abs(abs);
         }
-    	if (abs < minValue || abs > maxValue) {
-    		throw new IllegalArgumentException(
-    		        "Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
+    	if (!valueRange.isValidIntValue(abs)) {
+    		throw new IllegalArgumentException("Value not in range [" + valueRange + "]: " + aNumber);
     	}
         return super.add(aNumber);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends Integer> c) {
+        Optional<? extends Integer> negativeValue = c.stream().filter(v -> (v >> 31 | -v >>> 31) < 0)
+                .findFirst();
+        if (!allowsNegativeValues && negativeValue.isPresent()) {
+            throw new IllegalArgumentException("Negative value not allowed: " + negativeValue.get());
+        }
+
+        Optional<? extends Integer> invalidValue = c.stream().filter(v -> !valueRange.isValidValue(Math.abs(v)))
+                .findFirst();
+        if (invalidValue.isPresent()) {
+            throw new IllegalArgumentException(
+                    "Value not in range [" + valueRange + "]: " + invalidValue);
+        }
+        return super.addAll(c);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return stream().map(Object::toString).collect(Collectors.joining(","));
     }

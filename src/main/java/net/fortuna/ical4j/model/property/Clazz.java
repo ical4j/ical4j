@@ -35,7 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -100,20 +102,24 @@ public class Clazz extends Property {
 
     private static final long serialVersionUID = 4939943639175551481L;
 
+    public static final String VALUE_PUBLIC = "PUBLIC";
+    public static final String VALUE_PRIVATE = "PRIVATE";
+    public static final String VALUE_CONFIDENTIAL = "CONFIDENTIAL";
+
     /**
      * Constant for public classification.
      */
-    public static final Clazz PUBLIC = new ImmutableClazz("PUBLIC");
+    public static final Clazz PUBLIC = new ImmutableClazz(VALUE_PUBLIC);
 
     /**
      * Constant for private classification.
      */
-    public static final Clazz PRIVATE = new ImmutableClazz("PRIVATE");
+    public static final Clazz PRIVATE = new ImmutableClazz(VALUE_PRIVATE);
 
     /**
      * Constant for confidential classification.
      */
-    public static final Clazz CONFIDENTIAL = new ImmutableClazz("CONFIDENTIAL");
+    public static final Clazz CONFIDENTIAL = new ImmutableClazz(VALUE_CONFIDENTIAL);
 
     /**
      * @author Ben Fortuna An immutable instance of Clazz.
@@ -132,6 +138,7 @@ public class Clazz extends Property {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -167,6 +174,7 @@ public class Clazz extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -174,6 +182,7 @@ public class Clazz extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -185,31 +194,28 @@ public class Clazz extends Property {
             super(CLASS);
         }
 
+        @Override
         public Clazz createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            Clazz clazz;
-            if (CONFIDENTIAL.getValue().equals(value)) {
-                clazz = CONFIDENTIAL;
+            if (parameters.isEmpty()) {
+                switch (value) {
+                    case VALUE_PUBLIC: return PUBLIC;
+                    case VALUE_PRIVATE: return PRIVATE;
+                    case VALUE_CONFIDENTIAL: return CONFIDENTIAL;
+                }
             }
-            else if (PRIVATE.getValue().equals(value)) {
-                clazz = PRIVATE;
-            }
-            else if (PUBLIC.getValue().equals(value)) {
-                clazz = PUBLIC;
-            } else {
-                clazz = new Clazz(parameters, value);
-            }
-            return clazz;
+            return new Clazz(parameters, value);
         }
 
+        @Override
         public Clazz createProperty() {
             return new Clazz();
         }
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.CLAZZ.validate(this);
     }
 }

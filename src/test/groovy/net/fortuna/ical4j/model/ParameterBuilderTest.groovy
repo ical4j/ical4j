@@ -2,16 +2,26 @@ package net.fortuna.ical4j.model
 
 
 import net.fortuna.ical4j.model.parameter.Value
+import net.fortuna.ical4j.model.parameter.XParameter
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
 class ParameterBuilderTest extends Specification {
 
+    def setupSpec() {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false)
+    }
+
+    def cleanupSpec() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+    }
+
     def 'test build parameter'() {
         given: 'a parameter builder instance'
-        ParameterBuilder builder = []
+        ParameterBuilder builder = [Arrays.asList(new Value.Factory())]
 
         and: 'builder is initialised'
-        builder.factories(Arrays.asList(new Value.Factory())).name('value').value("test")
+        builder.name('value').value("test")
 
         when: 'build method called'
         Parameter p = builder.build()
@@ -20,17 +30,17 @@ class ParameterBuilderTest extends Specification {
         p == new ContentBuilder().value('test')
     }
 
-    def 'test build invalid parameter'() {
+    def 'test build unrecognised parameter'() {
         given: 'a parameter builder instance'
-        ParameterBuilder builder = []
+        ParameterBuilder builder = [Arrays.asList(new Value.Factory())]
 
         and: 'builder is initialised'
-        builder.factories(Arrays.asList(new Value.Factory())).name('type')
+        builder.name('type')
 
         when: 'build method called'
         Parameter p = builder.build()
 
-        then: 'an exception is thrown'
-        thrown(IllegalArgumentException)
+        then: 'type param is unrecognised'
+        p instanceof XParameter
     }
 }

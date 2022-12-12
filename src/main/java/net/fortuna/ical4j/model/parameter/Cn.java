@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -45,11 +46,11 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class Cn extends Parameter {
+public class Cn extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -8087119055007093293L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a Common Name
@@ -62,18 +63,20 @@ public class Cn extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Cn> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(CN);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        @Override
+        public Cn createParameter(final String value) throws URISyntaxException {
             return new Cn(value);
         }
     }

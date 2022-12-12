@@ -6,9 +6,17 @@
 
 [RFC5545]: https://tools.ietf.org/html/rfc5545
 [RFC5546]: https://tools.ietf.org/html/rfc5546
-[RFC5547]: https://tools.ietf.org/html/rfc5547
+[RFC6047]: https://datatracker.ietf.org/doc/html/rfc6047
+[RFC6868]: https://datatracker.ietf.org/doc/html/rfc6868
+[RFC7808]: https://datatracker.ietf.org/doc/html/rfc7808
+[RFC7953]: https://datatracker.ietf.org/doc/html/rfc7953
+[RFC7986]: https://datatracker.ietf.org/doc/html/rfc7986
+[RFC7529]: https://datatracker.ietf.org/doc/html/rfc7529
+[RFC9073]: https://datatracker.ietf.org/doc/html/rfc9073
+[RFC9074]: https://datatracker.ietf.org/doc/html/rfc9074
+[RFC9253]: https://www.rfc-editor.org/rfc/rfc9253.html
 
-[Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
+[mavenrepo]: https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j
 
 [Introduction]: #introduction
 
@@ -22,7 +30,7 @@
 
 [Examples]: #examples
 
-[Reference]: #reference
+[References]: #references
 [Specifications]: #specifications
 
 [Configuration]: #configuration
@@ -41,8 +49,11 @@
 2. [Setup - Download and installation of iCal4j][Setup]
     - [System requirements - What is required to use iCal4j][System requirements]
     - [Release downloads - Where to get iCal4j][Release downloads]
-4. [Reference - Specification][Reference]
-    - [Specifications]
+    - [Install with Maven]
+    - [Install with Gradle]
+3. [Usage - The iCal4j object model and how to use it][Usage]
+    - [Examples - common usage scenarios][Examples]
+4. [References][References]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
 7. [Development - Guide for contributing to the iCalj project][Development]
@@ -60,7 +71,7 @@ standard.
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
 
- - You will find examples of how to use iCal4j in [the wiki](https://github.com/ical4j/ical4j/wiki)
+ - You will find examples of how to use iCal4j in [the official website](https://www.ical4j.org/examples/overview/)
  and throughout the [API documentation](https://ical4j.github.io/docs/ical4j/api).
 
  - Detailed descriptions of changes included in each release may be found
@@ -73,6 +84,7 @@ standard.
 
 ### System requirements
 
+ - Version 4.x - Java 8 or later
  - Version 3.x - Java 8 or later
  - Version 2.x - Java 7 or later
 
@@ -103,15 +115,32 @@ is used only to generate version information in the javadoc API documentation.
 
 ### Release Downloads
 
-* [Bintray Releases]
+* [mavenrepo]
 
-## Reference
+### Install with Maven
 
-### Specifications
+### Install with Gradle
 
-* [RFC5545] (Supersedes [RFC2445])
-* [RFC5546] (Supersedes [RFC2446])
-* [RFC5547] (Supersedes [RFC2447])
+
+## Usage
+
+### Examples
+
+
+## References
+
+* [RFC5545] - Internet Calendaring and Scheduling Core Object Specification (iCalendar)
+* [RFC5546] - iCalendar Transport-Independent Interoperability Protocol (iTIP)
+* [RFC6047] - iCalendar Message-Based Interoperability Protocol (iMIP)
+* [RFC6868] - Parameter Value Encoding in iCalendar and vCard
+* [RFC7953] - Calendar Availability
+* [RFC7808] - Time Zone Data Distribution Service
+* [RFC7986] - New Properties for iCalendar
+* [RFC7529] - Non-Gregorian Recurrence Rules in iCalendar
+* [RFC9073] - Event Publishing Extensions to iCalendar
+* [RFC9074] - "VALARM" Extensions for iCalendar
+* [RFC9253] - Support for iCalendar Relationships
+
 
 ## Configuration
 

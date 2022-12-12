@@ -35,6 +35,7 @@ package net.fortuna.ical4j.data;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Strings;
 
 import java.io.StringReader;
@@ -77,6 +78,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final String getValue() {
             return value;
         }
@@ -89,11 +91,9 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         // try to build with a regular builder
         CalendarBuilder builder = new CalendarBuilder();
-        try {
-            builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
-            fail("expected exception");
-        } catch (ParserException ioe) {
-        }
+        Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
+        assertTrue(cal.getComponent(Component.VEVENT).getProperty(Property.ATTENDEE)
+                .getParameter(SCHEDULE_STATUS) instanceof XParameter);
 
         // try to build with a custom parameter factory
         final ParameterFactoryRegistry paramFactory = new ParameterFactoryRegistry();
@@ -106,6 +106,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
                     return SCHEDULE_STATUS.equals(name);
                 }
 
+                @Override
                 public Parameter createParameter(final String value) throws URISyntaxException {
                     return new ScheduleStatus(value, this);
                 }
@@ -116,7 +117,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
                 paramFactory,
                 TimeZoneRegistryFactory.getInstance().createRegistry());
 
-        Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
+        cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
 
         VEvent event = (VEvent)cal.getComponent(Component.VEVENT);
         VEvent eventBis = (VEvent)event.copy();

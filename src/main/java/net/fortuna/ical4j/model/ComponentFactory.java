@@ -7,9 +7,12 @@ public interface ComponentFactory<T extends Component> {
 
     T createComponent();
 
-    T createComponent(PropertyList properties);
+    T createComponent(PropertyList<Property> properties);
 
-    T createComponent(PropertyList properties, ComponentList subComponents);
+    default T createComponent(PropertyList<Property> properties, ComponentList<Component> subComponents) {
+        // ignore subcomponents by default. override this method for subclasses that support subcomponents..
+        return createComponent(properties);
+    }
 
     boolean supports(String name);
 }

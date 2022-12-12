@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -45,7 +46,7 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class CuType extends Parameter {
+public class CuType extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -3134064324693983052L;
 
@@ -84,7 +85,7 @@ public class CuType extends Parameter {
      */
     public static final CuType UNKNOWN = new CuType(VALUE_UNKNOWN);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a Calendar User Type
@@ -97,31 +98,28 @@ public class CuType extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<CuType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(CUTYPE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            CuType parameter = new CuType(value);
-            if (CuType.INDIVIDUAL.equals(parameter)) {
-                parameter = CuType.INDIVIDUAL;
-            } else if (CuType.GROUP.equals(parameter)) {
-                parameter = CuType.GROUP;
-            } else if (CuType.RESOURCE.equals(parameter)) {
-                parameter = CuType.RESOURCE;
-            } else if (CuType.ROOM.equals(parameter)) {
-                parameter = CuType.ROOM;
-            } else if (CuType.UNKNOWN.equals(parameter)) {
-                parameter = CuType.UNKNOWN;
+        @Override
+        public CuType createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_INDIVIDUAL: return INDIVIDUAL;
+                case VALUE_GROUP: return GROUP;
+                case VALUE_RESOURCE: return RESOURCE;
+                case VALUE_ROOM: return ROOM;
+                case VALUE_UNKNOWN: return UNKNOWN;
             }
-            return parameter;
+            return new CuType(value);
         }
     }
 

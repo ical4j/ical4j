@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -42,14 +43,14 @@ import org.apache.commons.lang3.StringUtils;
  *  ple.com/;group-id=1234
  *  </pre>
  */
-public class Feature extends Parameter {
+public class Feature extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 1L;
 
     private static final String PARAMETER_NAME = "FEATURE";
 
     public enum Value {
-        AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO;
+        AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO
     }
 
     private final String[] values;
@@ -74,14 +75,15 @@ public class Feature extends Parameter {
         return StringUtils.join(values, ",");
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Feature> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PARAMETER_NAME);
         }
 
-        public Parameter createParameter(final String value) {
+        @Override
+        public Feature createParameter(final String value) {
             return new Feature(value);
         }
     }

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -46,11 +47,11 @@ import java.net.URISyntaxException;
  * @author benfortuna
  * @author Mike Douglass
  */
-public class Abbrev extends Parameter {
+public class Abbrev extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -8650841407406422738L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string abbreviation
@@ -63,18 +64,20 @@ public class Abbrev extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Abbrev> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ABBREV);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        @Override
+        public Abbrev createParameter(final String value) throws URISyntaxException {
             return new Abbrev(value);
         }
     }

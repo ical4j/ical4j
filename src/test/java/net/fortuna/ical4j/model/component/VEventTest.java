@@ -111,6 +111,7 @@ public class VEventTest extends CalendarComponentTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         // relax validation to avoid UID requirement..
@@ -126,9 +127,13 @@ public class VEventTest extends CalendarComponentTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         // relax validation to avoid UID requirement..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         super.tearDown();
     }
 

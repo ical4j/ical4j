@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -122,6 +124,7 @@ public class TzOffsetFrom extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         offset = new ZoneOffsetAdapter(ZoneOffset.of(aValue));
     }
@@ -129,6 +132,7 @@ public class TzOffsetFrom extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (offset != null) {
             return offset.toString();
@@ -144,23 +148,25 @@ public class TzOffsetFrom extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.TZOFFSETFROM.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetFrom> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TZOFFSETFROM);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public TzOffsetFrom createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new TzOffsetFrom(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public TzOffsetFrom createProperty() {
             return new TzOffsetFrom();
         }
     }

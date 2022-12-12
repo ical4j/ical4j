@@ -44,6 +44,7 @@ public class DefaultTimeZoneRegistryFactory extends TimeZoneRegistryFactory {
     /**
      * {@inheritDoc}
      */
+    @Override
     public TimeZoneRegistry createRegistry() {
         return new TimeZoneRegistryImpl();
     }

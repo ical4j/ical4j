@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -66,20 +67,24 @@ public class BusyType extends Property {
 
 	private static final long serialVersionUID = -5140360270562621159L;
 
+    public static final String VALUE_BUSY = "BUSY";
+    public static final String VALUE_BUSY_UNAVAILABLE = "BUSY-UNAVAILABLE";
+    public static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
+
 	/**
 	 * Constant for busy time.
 	 */
-	public static final BusyType BUSY = new ImmutableBusyType("BUSY");
+	public static final BusyType BUSY = new ImmutableBusyType(VALUE_BUSY);
 
     /**
      * Constant for busy unavailable time.
      */
-    public static final BusyType BUSY_UNAVAILABLE = new ImmutableBusyType("BUSY-UNAVAILABLE");
+    public static final BusyType BUSY_UNAVAILABLE = new ImmutableBusyType(VALUE_BUSY_UNAVAILABLE);
 
     /**
      * Constant for tentatively busy time.
      */
-    public static final BusyType BUSY_TENTATIVE = new ImmutableBusyType("BUSY-TENTATIVE");
+    public static final BusyType BUSY_TENTATIVE = new ImmutableBusyType(VALUE_BUSY_TENTATIVE);
 
     /** An immutable instance of BusyType.
      *
@@ -100,6 +105,7 @@ public class BusyType extends Property {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -135,6 +141,7 @@ public class BusyType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -142,13 +149,14 @@ public class BusyType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<BusyType> {
@@ -158,22 +166,21 @@ public class BusyType extends Property {
             super(BUSYTYPE);
         }
 
+        @Override
         public BusyType createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            BusyType busyType;
-            if (BUSY.getValue().equals(value)) {
-                busyType = BUSY;
-            } else if (BUSY_TENTATIVE.getValue().equals(value)) {
-                busyType = BUSY_TENTATIVE;
-            } else if (BUSY_UNAVAILABLE.getValue().equals(value)) {
-                busyType = BUSY_UNAVAILABLE;
-            } else {
-                busyType = new BusyType(parameters, value);
+            if (parameters.isEmpty()) {
+                switch (value) {
+                    case VALUE_BUSY: return BUSY;
+                    case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;
+                    case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;
+                }
             }
-            return busyType;
+            return new BusyType(parameters, value);
         }
 
+        @Override
         public BusyType createProperty() {
             return new BusyType();
         }

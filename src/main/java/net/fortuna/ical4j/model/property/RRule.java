@@ -33,7 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Recur.Frequency;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -64,7 +66,8 @@ public class RRule extends Property {
 
     /**
      * @param value a rule string
-     * @throws ParseException where the specified string is not a valid rule
+     * @throws ParseException where the if the UNTIL part of the recurrence string is an invalid date representation
+     * @throws IllegalArgumentException where the recurrence string contains an unrecognised token
      */
     public RRule(String value) throws ParseException {
         super(RRULE, new Factory());
@@ -110,6 +113,7 @@ public class RRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws ParseException {
         recur = new Recur(aValue);
     }
@@ -117,28 +121,31 @@ public class RRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getRecur().toString();
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.RRULE.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RRule> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RRULE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public RRule createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RRule(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public RRule createProperty() {
             return new RRule();
         }
     }

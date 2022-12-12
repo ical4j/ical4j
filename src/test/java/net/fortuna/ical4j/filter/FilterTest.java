@@ -34,6 +34,7 @@ package net.fortuna.ical4j.filter;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.filter.predicate.PropertyEqualToRule;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.CalendarComponent;
@@ -138,11 +139,11 @@ public class FilterTest<T extends Component> extends TestCase {
         calendar.getComponents().add(e2);
         calendar.getComponents().add(e3);
         
-        Predicate<Component> organiserRuleMatch = new HasPropertyRule(organizer);
-        Predicate<Component> attendee1RuleMatch = new HasPropertyRule(a1);
+        Predicate<Component> organiserRuleMatch = new PropertyEqualToRule<>(organizer);
+        Predicate<Component> attendee1RuleMatch = new PropertyEqualToRule<>(a1);
 
-        Predicate<Component> organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
-        Predicate<Component> attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
+        Predicate<Component> organiserRuleNoMatch = new PropertyEqualToRule<>(new Organizer(new URI("Mailto:X@example.com")));
+        Predicate<Component> attendeeRuleNoMatch = new PropertyEqualToRule<>(new Attendee(new URI("Mailto:X@example.com")));
         
         TestSuite suite = new TestSuite();
         //testFilterMatchAll..

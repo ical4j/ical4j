@@ -39,6 +39,7 @@ import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -115,7 +116,8 @@ import java.text.ParseException;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable {
+public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent>,
+    FluentCalendar {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -144,7 +146,7 @@ public class Calendar implements Serializable {
      * Default constructor.
      */
     public Calendar() {
-        this(new PropertyList<Property>(), new ComponentList<CalendarComponent>());
+        this(new PropertyList<>(), new ComponentList<>());
     }
 
     /**
@@ -152,7 +154,7 @@ public class Calendar implements Serializable {
      * @param components a list of components to add to the calendar
      */
     public Calendar(final ComponentList<CalendarComponent> components) {
-        this(new PropertyList<Property>(), components);
+        this(new PropertyList<>(), components);
     }
 
     /**
@@ -183,27 +185,22 @@ public class Calendar implements Serializable {
      * @throws ParseException where calendar parsing fails
      * @throws URISyntaxException where an invalid URI string is encountered
      */
-    public Calendar(Calendar c) throws ParseException, IOException,
-            URISyntaxException {
-        
-        this(new PropertyList<Property>(c.getProperties()),
-        		new ComponentList<CalendarComponent>(c.getComponents()));
+    public Calendar(Calendar c) throws ParseException, IOException, URISyntaxException {
+        this(new PropertyList<>(c.getProperties()), new ComponentList<>(c.getComponents()));
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
-        return BEGIN +
-                ':' +
-                VCALENDAR +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getComponents() +
-                END +
-                ':' +
-                VCALENDAR +
+        return BEGIN + ':' + VCALENDAR + Strings.LINE_SEPARATOR + properties + components + END + ':' + VCALENDAR +
                 Strings.LINE_SEPARATOR;
+    }
+
+    @Override
+    public Calendar getFluentTarget() {
+        return this;
     }
 
     /**
@@ -214,24 +211,6 @@ public class Calendar implements Serializable {
     }
 
     /**
-     * Convenience method for retrieving a list of named components.
-     * @param name name of components to retrieve
-     * @return a component list containing only components with the specified name
-     */
-    public final <C extends CalendarComponent> ComponentList<C> getComponents(final String name) {
-        return getComponents().getComponents(name);
-    }
-
-    /**
-     * Convenience method for retrieving a named component.
-     * @param name name of the component to retrieve
-     * @return the first matching component in the component list with the specified name
-     */
-    public final CalendarComponent getComponent(final String name) {
-        return getComponents().getComponent(name);
-    }
-
-    /**
      * @return Returns the properties.
      */
     public final PropertyList<Property> getProperties() {
@@ -239,29 +218,11 @@ public class Calendar implements Serializable {
     }
 
     /**
-     * Convenience method for retrieving a list of named properties.
-     * @param name name of properties to retrieve
-     * @return a property list containing only properties with the specified name
-     */
-    public final PropertyList<Property> getProperties(final String name) {
-        return getProperties().getProperties(name);
-    }
-
-    /**
-     * Convenience method for retrieving a named property.
-     * @param name name of the property to retrieve
-     * @return the first matching property in the property list with the specified name
-     */
-    public final <T extends Property> T getProperty(final String name) {
-        return getProperties().getProperty(name);
-    }
-
-    /**
      * Perform validation on the calendar, its properties and its components in its current state.
      * @throws ValidationException where the calendar is not in a valid state
      */
-    public final void validate() throws ValidationException {
-        validate(true);
+    public ValidationResult validate() throws ValidationException {
+        return validate(true);
     }
 
     /**
@@ -269,32 +230,37 @@ public class Calendar implements Serializable {
      * @param recurse indicates whether to validate the calendar's properties and components
      * @throws ValidationException where the calendar is not in a valid state
      */
-    public void validate(final boolean recurse) throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = validator.validate(this);
         if (recurse) {
-            validateProperties();
-            validateComponents();
+            result = result.merge(validateProperties());
+            result = result.merge(validateComponents());
         }
+        return result;
     }
 
     /**
      * Invoke validation on the calendar properties in its current state.
      * @throws ValidationException where any of the calendar properties is not in a valid state
      */
-    private void validateProperties() throws ValidationException {
+    private ValidationResult validateProperties() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         for (final Property property : getProperties()) {
-            property.validate();
+            result = result.merge(property.validate());
         }
+        return result;
     }
 
     /**
      * Invoke validation on the calendar components in its current state.
      * @throws ValidationException where any of the calendar components is not in a valid state
      */
-    private void validateComponents() throws ValidationException {
+    private ValidationResult validateComponents() throws ValidationException {
+        ValidationResult result = new ValidationResult();
         for (Component component : getComponents()) {
-            component.validate();
+            result = result.merge(component.validate());
         }
+        return result;
     }
 
     /**
@@ -332,11 +298,12 @@ public class Calendar implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Calendar) {
             final Calendar calendar = (Calendar) arg0;
             return new EqualsBuilder().append(getProperties(), calendar.getProperties())
-                .append(getComponents(), calendar.getComponents()).isEquals();
+                .append(components, calendar.components).isEquals();
         }
         return super.equals(arg0);
     }
@@ -344,8 +311,8 @@ public class Calendar implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
-        return new HashCodeBuilder().append(getProperties()).append(
-                getComponents()).toHashCode();
+        return new HashCodeBuilder().append(properties).append(components).toHashCode();
     }
 }

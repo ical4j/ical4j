@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,12 @@ public class CalendarComponentTest extends ComponentTest {
         this.component = component;
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+    }
+
     /**
      * Test component iTIP METHOD validation.
      */
@@ -90,8 +97,9 @@ public class CalendarComponentTest extends ComponentTest {
      */
     public final void testPublishValidationException() {
         try {
-            component.validate(Method.PUBLISH);
-            fail("ValidationException should be thrown!");
+            ValidationResult result = component.validate(Method.PUBLISH);
+//            fail("ValidationException should be thrown!");
+            assertTrue(result.hasErrors());
         } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
@@ -144,8 +152,9 @@ public class CalendarComponentTest extends ComponentTest {
      */
     public final void testReplyValidationException() {
         try {
-            component.validate(Method.REPLY);
-            fail("ValidationException should be thrown!");
+            ValidationResult result = component.validate(Method.REPLY);
+//            fail("ValidationException should be thrown!");
+            assertTrue(result.hasErrors());
         } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }

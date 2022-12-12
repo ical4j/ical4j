@@ -5,6 +5,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 /**
  * Created by fortuna on 11/09/15.
@@ -32,8 +33,8 @@ public class Source extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 
     @Override
@@ -46,10 +47,12 @@ public class Source extends Property {
             super(PROPERTY_NAME);
         }
 
+        @Override
         public Source createProperty() {
             return new Source();
         }
 
+        @Override
         public Source createProperty(ParameterList parameters, String value) {
             Source property = new Source(parameters, value);
             return property;

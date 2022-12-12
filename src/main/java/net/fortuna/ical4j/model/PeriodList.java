@@ -108,6 +108,7 @@ public class PeriodList implements Set<Period>, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return stream().map(Period::toString).collect(Collectors.joining(","));
     }
@@ -120,6 +121,7 @@ public class PeriodList implements Set<Period>, Serializable {
      * @return true
      * @see java.util.List#add(java.lang.Object)
      */
+    @Override
     public final boolean add(final Period period) {
         if (isUtc()) {
             period.setUtc(true);
@@ -138,6 +140,7 @@ public class PeriodList implements Set<Period>, Serializable {
      * @return true if the list contained the specified period
      * @see java.util.List#remove(java.lang.Object)
      */
+    @Override
     public final boolean remove(final Object period) {
         return periods.remove(period);
     }
@@ -298,6 +301,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean addAll(Collection<? extends Period> arg0) {
 		for (Period p : arg0) {
 			add(p);
@@ -308,6 +312,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clear() {
 		periods.clear();
 	}
@@ -315,6 +320,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean contains(Object o) {
 		return periods.contains(o);
 	}
@@ -322,6 +328,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean containsAll(Collection<?> arg0) {
 		return periods.containsAll(arg0);
 	}
@@ -329,6 +336,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isEmpty() {
 		return periods.isEmpty();
 	}
@@ -336,6 +344,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Iterator<Period> iterator() {
 		return periods.iterator();
 	}
@@ -343,6 +352,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean removeAll(Collection<?> arg0) {
 		return periods.removeAll(arg0);
 	}
@@ -350,6 +360,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean retainAll(Collection<?> arg0) {
 		return periods.retainAll(arg0);
 	}
@@ -357,6 +368,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int size() {
 		return periods.size();
 	}
@@ -364,6 +376,7 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] toArray() {
 		return periods.toArray();
 	}
@@ -371,10 +384,12 @@ public class PeriodList implements Set<Period>, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public <T> T[] toArray(T[] arg0) {
 		return periods.toArray(arg0);
 	}
-	
+
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PeriodList)) {
 			return false;
@@ -385,7 +400,8 @@ public class PeriodList implements Set<Period>, Serializable {
 			.append(utc, rhs.utc)
 			.isEquals();
 	}
-	
+
+	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().append(periods)
 			.append(timezone)

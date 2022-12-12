@@ -32,8 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -164,21 +165,9 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" fbtypeparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.FBTYPE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
-
-        if (!periods.isUtc()) {
-            throw new ValidationException("Periods must be in UTC format");
-        }
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.FREEBUSY.validate(this);
     }
 
     /**
@@ -191,6 +180,7 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws ParseException {
         periods = new PeriodList(aValue);
     }
@@ -198,23 +188,26 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getPeriods().toString();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<FreeBusy> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(FREEBUSY);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public FreeBusy createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new FreeBusy(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public FreeBusy createProperty() {
             return new FreeBusy();
         }
     }

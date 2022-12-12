@@ -35,12 +35,14 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Comparator;
 
 /**
  * $Id$
@@ -127,6 +129,7 @@ public abstract class DateProperty extends Property {
      * @throws ParseException where the specified value is not a valid DATE or DATE-TIME
      *                        representation
      */
+    @Override
     public void setValue(final String value) throws ParseException {
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
@@ -141,6 +144,7 @@ public abstract class DateProperty extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getValue() {
         return Strings.valueOf(getDate());
     }
@@ -221,64 +225,15 @@ public abstract class DateProperty extends Property {
     /**
      * {@inheritDoc}
      */
-    public void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
-
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
-
-        if (isUtc()) {
-            ParameterValidator.assertNone(Parameter.TZID,
-                    getParameters());
-        } else {
-            ParameterValidator.assertOneOrLess(Parameter.TZID,
-                    getParameters());
-        }
-
-        final Value value = getParameter(Parameter.VALUE);
-
-        if (getDate() instanceof DateTime) {
-
-            if (value != null && !Value.DATE_TIME.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance");
-            }
-
-            final DateTime dateTime = (DateTime) date;
-
-            // ensure tzid matches date-time timezone..
-            final Parameter tzId = getParameter(Parameter.TZID);
-            if (dateTime.getTimeZone() != null
-                    && (tzId == null || !tzId.getValue().equals(
-                    dateTime.getTimeZone().getID()))) {
-
-                throw new ValidationException("TZID parameter [" + tzId
-                        + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]");
-            }
-        } else if (getDate() != null) {
-
-            if (value == null) {
-                throw new ValidationException("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance");
-            } else if (!Value.DATE.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value
-                        + "] is invalid for DATE instance");
-            }
-        }
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return new DatePropertyValidator<>().validate(this);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public Property copy() throws IOException, URISyntaxException, ParseException {
         final Property copy = super.copy();
 
@@ -286,5 +241,15 @@ public abstract class DateProperty extends Property {
         ((DateProperty) copy).setValue(getValue());
 
         return copy;
+    }
+
+    @Override
+    public int compareTo(Property o) {
+        if (o instanceof DateProperty) {
+            return Comparator.comparing(DateProperty::getName)
+                    .thenComparing(DateProperty::getDate)
+                    .compare(this, (DateProperty) o);
+        }
+        return super.compareTo(o);
     }
 }

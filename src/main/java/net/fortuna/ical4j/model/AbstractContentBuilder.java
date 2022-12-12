@@ -1,8 +1,23 @@
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.CompatibilityHints;
-
 public abstract class AbstractContentBuilder {
+
+    private final boolean allowIllegalNames;
+
+    /**
+     * Default constructor.
+     */
+    public AbstractContentBuilder() {
+        this(true);
+    }
+
+    /**
+     *
+     * @param allowIllegalNames store unrecognised names as experimental content
+     */
+    public AbstractContentBuilder(boolean allowIllegalNames) {
+        this.allowIllegalNames = allowIllegalNames;
+    }
 
     /**
      * @param name
@@ -17,6 +32,6 @@ public abstract class AbstractContentBuilder {
      * @return true if non-standard names are allowed, otherwise false
      */
     protected boolean allowIllegalNames() {
-        return CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        return allowIllegalNames;
     }
 }

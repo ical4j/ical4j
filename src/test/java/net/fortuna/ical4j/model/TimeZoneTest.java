@@ -282,16 +282,13 @@ public class TimeZoneTest extends TestCase {
             assertEquals(tz.getOffset(date.getTime()), timezone.getOffset(date.getTime()));
         } else {
             int era = GregorianCalendar.AD;
-            int year = 2005;
+            int year = 2015;
             int month = 9;
             int day = 18;
             int dayOfWeek = Calendar.SUNDAY;
             int millisecods = 0;
-            assertEquals(tz
-                            .getOffset(era, year, month, day, dayOfWeek, millisecods),
-                    timezone.getOffset(era, year, month, day, dayOfWeek,
-                            millisecods)
-            );
+            assertEquals(tz.getOffset(era, year, month, day, dayOfWeek, millisecods),
+                    timezone.getOffset(era, year, month, day, dayOfWeek, millisecods));
         }
     }
 
@@ -331,6 +328,7 @@ public class TimeZoneTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
+    @Override
     public String getName() {
         if (timezone != null) {
             return super.getName() + " [" + timezone.getID() + "]";

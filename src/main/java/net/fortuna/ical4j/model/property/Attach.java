@@ -38,8 +38,9 @@ import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.EncoderFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
@@ -82,29 +83,9 @@ import java.text.ParseException;
  *          Description: The property can be specified within &quot;VEVENT&quot;, &quot;VTODO&quot;,
  *          &quot;VJOURNAL&quot;, or &quot;VALARM&quot; calendar components. This property can be
  *          specified multiple times within an iCalendar object.
- *
- *          Format Definition: The property is defined by the following notation:
- *
- *            attach     = &quot;ATTACH&quot; attparam &quot;:&quot; uri  CRLF
- *
- *        attach     =/ &quot;ATTACH&quot; attparam &quot;;&quot; &quot;ENCODING&quot; &quot;=&quot; &quot;BASE64&quot;
- *                          &quot;;&quot; &quot;VALUE&quot; &quot;=&quot; &quot;BINARY&quot; &quot;:&quot; binary
- *
- *            attparam   = *(
- *
- *                       ; the following is optional,
- *                       ; but MUST NOT occur more than once
- *
- *                       (&quot;;&quot; fmttypeparam) /
- *
- *                       ; the following is optional,
- *                       ; and MAY occur more than once
- *
- *                       (&quot;;&quot; xparam)
- *
- *                       )
  * </pre>
  *
+ * @see net.fortuna.ical4j.validate.PropertyValidator#ATTACH_URI
  * @author benf
  */
 public class Attach extends Property {
@@ -173,32 +154,12 @@ public class Attach extends Property {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" fmttypeparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.FMTTYPE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
-
-        /*
-         * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
-         * value ";ENCODING=BASE64".
-         */
+    @Override
+    public ValidationResult validate() throws ValidationException {
         if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
-            ParameterValidator.assertOne(Parameter.ENCODING,
-                    getParameters());
-            if (!Encoding.BASE64.equals(getParameter(Parameter.ENCODING))) {
-                throw new ValidationException(
-                        "If the value type parameter is [BINARY], the inline"
-                                + "encoding parameter MUST be specified with the value [BASE64]"
-                );
-            }
+            return PropertyValidator.ATTACH_BIN.validate(this);
         }
+        return PropertyValidator.ATTACH_URI.validate(this);
     }
 
     /**
@@ -224,6 +185,7 @@ public class Attach extends Property {
      * @param aValue a string encoded binary or URI value
      * @throws URISyntaxException where the specified value is not a valid URI
      */
+    @Override
     public final void setValue(final String aValue) throws
             URISyntaxException {
 
@@ -253,6 +215,7 @@ public class Attach extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (getUri() != null) {
             return Uris.decode(Strings.valueOf(getUri()));
@@ -289,19 +252,21 @@ public class Attach extends Property {
         this.binary = null;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
+    public static class Factory extends Content.Factory implements PropertyFactory<Attach> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ATTACH);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Attach createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Attach(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Attach createProperty() {
             return new Attach();
         }
     }

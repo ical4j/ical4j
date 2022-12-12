@@ -31,14 +31,21 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.apache.commons.lang3.StringUtils;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * $Id$
@@ -134,6 +141,10 @@ public class Geo extends Property {
 
     private static final long serialVersionUID = -902100715801867636L;
 
+    private static final Pattern VALUE_PATTERN = Pattern.compile("([+-]?[0-9]+\\.?[0-9]*);([+-]?[0-9]+\\.?[0-9]*)");
+
+    private static final Pattern RELAXED_VALUE_PATTERN = Pattern.compile("([+-]?[0-9]+\\.?[0-9]*)\\\\?;([+-]?[0-9]+\\.?[0-9]*)");
+
     private BigDecimal latitude;
 
     private BigDecimal longitude;
@@ -205,28 +216,31 @@ public class Geo extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
-        final String latitudeString = aValue.substring(0, aValue.indexOf(';'));
-        if (StringUtils.isNotBlank(latitudeString)) {
-            latitude = new BigDecimal(latitudeString);
+        Matcher matcher;
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            matcher = RELAXED_VALUE_PATTERN.matcher(aValue);
         } else {
-            latitude = BigDecimal.valueOf(0);
+            matcher = VALUE_PATTERN.matcher(aValue);
         }
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid GEO string");
+        }
+        final String latitudeString = matcher.group(1);
+        latitude = new BigDecimal(latitudeString);
 
-        final String longitudeString = aValue.substring(aValue.indexOf(';') + 1);
-        if (StringUtils.isNotBlank(longitudeString)) {
-            longitude = new BigDecimal(longitudeString);
-        } else {
-            longitude = BigDecimal.valueOf(0);
-        }
+        final String longitudeString = matcher.group(2);
+        longitude = new BigDecimal(longitudeString);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
-        return String.valueOf(getLatitude()) + ";"
-                + String.valueOf(getLongitude());
+        return getLatitude() + ";"
+                + getLongitude();
     }
 
     /**
@@ -243,25 +257,27 @@ public class Geo extends Property {
         this.longitude = longitude;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Geo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(GEO);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Geo createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Geo(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Geo createProperty() {
             return new Geo();
         }
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.GEO.validate(this);
     }
 }

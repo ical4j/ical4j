@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -56,7 +57,7 @@ import java.util.function.Supplier;
  */
 public class CalendarBuilder implements Consumer<Calendar> {
 
-    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private final CalendarParser parser;
 
@@ -122,23 +123,36 @@ public class CalendarBuilder implements Consumer<Calendar> {
     public CalendarBuilder(CalendarParser parser, PropertyFactoryRegistry propertyFactoryRegistry,
                            ParameterFactoryRegistry parameterFactoryRegistry, TimeZoneRegistry tzRegistry) {
 
-        this(parser, parameterFactoryRegistry, propertyFactoryRegistry, new DefaultComponentFactorySupplier(),
-                tzRegistry);
+        this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactoryRegistry)
+                        .withPropertyFactorySupplier(propertyFactoryRegistry), tzRegistry);
+    }
+
+    /**
+     * @param parser                   a custom calendar parser
+     * @param tzRegistry               a custom timezone registry
+     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser, ContentHandlerContext, TimeZoneRegistry)}
+     */
+    @Deprecated
+    public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
+                           Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
+                           Supplier<List<ComponentFactory<?>>> componentFactorySupplier,
+                           TimeZoneRegistry tzRegistry) {
+
+        this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
+                .withPropertyFactorySupplier(propertyFactorySupplier)
+                .withComponentFactorySupplier(componentFactorySupplier), tzRegistry);
     }
 
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
      */
-    public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory>> parameterFactorySupplier,
-                           Supplier<List<PropertyFactory>> propertyFactorySupplier,
-                           Supplier<List<ComponentFactory>> componentFactorySupplier,
+    public CalendarBuilder(CalendarParser parser, ContentHandlerContext contentHandlerContext,
                            TimeZoneRegistry tzRegistry) {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry, parameterFactorySupplier,
-                propertyFactorySupplier, componentFactorySupplier);
+        this.contentHandler = new DefaultContentHandler(this, tzRegistry, contentHandlerContext);
     }
 
     @Override

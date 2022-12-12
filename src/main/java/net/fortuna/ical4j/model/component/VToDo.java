@@ -33,20 +33,11 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -58,59 +49,59 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * $Id$ [Apr 5, 2004]
  *
  * Defines an iCalendar VTODO component.
- * 
+ *
  * <pre>
  *       4.6.2 To-do Component
- *  
+ *
  *          Component Name: VTODO
- *  
+ *
  *          Purpose: Provide a grouping of calendar properties that describe a
  *          to-do.
- *  
+ *
  *          Formal Definition: A &quot;VTODO&quot; calendar component is defined by the
  *          following notation:
- *  
+ *
  *            todoc      = &quot;BEGIN&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
  *                         todoprop *alarmc
  *                         &quot;END&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
- *  
+ *
  *            todoprop   = *(
- *  
+ *
  *                       ; the following are optional,
  *                       ; but MUST NOT occur more than once
- *  
+ *
  *                       class / completed / created / description / dtstamp /
  *                       dtstart / geo / last-mod / location / organizer /
  *                       percent / priority / recurid / seq / status /
  *                       summary / uid / url /
- *  
+ *
  *                       ; either 'due' or 'duration' may appear in
  *                       ; a 'todoprop', but 'due' and 'duration'
  *                       ; MUST NOT occur in the same 'todoprop'
- *  
+ *
  *                       due / duration /
- *  
+ *
  *                       ; the following are optional,
  *                       ; and MAY occur more than once
  *                       attach / attendee / categories / comment / contact /
  *                       exdate / exrule / rstatus / related / resources /
  *                       rdate / rrule / x-prop
- *  
+ *
  *                       )
  * </pre>
- * 
+ *
  * Example 1 - Creating a todo of two (2) hour duration starting tomorrow:
- * 
+ *
  * <pre><code>
  * java.util.Calendar cal = java.util.Calendar.getInstance();
  * // tomorrow..
  * cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
  * cal.set(java.util.Calendar.HOUR_OF_DAY, 11);
  * cal.set(java.util.Calendar.MINUTE, 00);
- * 
+ *
  * VToDo documentation = new VEvent(cal.getTime(), 1000 * 60 * 60 * 2,
  *         &quot;Document calendar component usage&quot;);
- * 
+ *
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
@@ -118,15 +109,15 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * documentation.getProperties().getProperty(Property.DTSTART).getParameters()
  *         .add(tzParam);
  * </code></pre>
- * 
+ *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent {
+public class VToDo extends CalendarComponent implements ComponentContainer<Component> {
 
     private static final long serialVersionUID = -269658210065896668L;
 
-    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
-    {
+    private static final Map<Method, Validator> methodValidators = new HashMap<>();
+    static {
         methodValidators.put(Method.ADD, new VToDoValidator(new ValidationRule(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RESOURCES, STATUS, URL),
@@ -166,8 +157,6 @@ public class VToDo extends CalendarComponent {
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, STATUS, URL),
                 new ValidationRule(None, REQUEST_STATUS)));
     }
-    
-    private ComponentList<VAlarm> alarms = new ComponentList<>();
 
     /**
      * Default constructor.
@@ -192,8 +181,7 @@ public class VToDo extends CalendarComponent {
     }
 
     public VToDo(PropertyList properties, ComponentList<VAlarm> alarms) {
-        super(VTODO, properties);
-        this.alarms = alarms;
+        super(VTODO, properties, alarms);
     }
 
     /**
@@ -239,61 +227,24 @@ public class VToDo extends CalendarComponent {
      * @return a component list
      */
     public final ComponentList<VAlarm> getAlarms() {
-        return alarms;
+        return (ComponentList<VAlarm>) components;
+    }
+
+    @Override
+    public ComponentList<Component> getComponents() {
+        return (ComponentList<Component>) components;
     }
 
     /**
      * {@inheritDoc}
      */
-    public final String toString() {
-        return BEGIN +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getAlarms() +
-                END +
-                ':' +
-                getName() +
-                Strings.LINE_SEPARATOR;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
+    @Override
+    public ValidationResult validate(final boolean recurse) throws ValidationException {
+        ValidationResult result = ComponentValidator.VTODO.validate(this);
         // validate that getAlarms() only contains VAlarm components
         for (VAlarm component : getAlarms()) {
             component.validate(recurse);
         }
-
-        if (!CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once class / completed / created / description /
-         * dtstamp / dtstart / geo / last-mod / location / organizer / percent / priority / recurid / seq / status /
-         * summary / uid / url /
-         */
-        Arrays.asList(Property.CLASS, Property.COMPLETED, Property.CREATED, Property.DESCRIPTION,
-                Property.DTSTAMP, Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
-                Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RECURRENCE_ID, Property.SEQUENCE, Property.STATUS,
-                Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
@@ -301,35 +252,19 @@ public class VToDo extends CalendarComponent {
                 && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
                 && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
             throw new ValidationException("Status property ["
-                    + status.toString() + "] may not occur in VTODO");
+                    + status + "] may not occur in VTODO");
         }
-
-        /*
-         * ; either 'due' or 'duration' may appear in ; a 'todoprop', but 'due' and 'duration' ; MUST NOT occur in the
-         * same 'todoprop' due / duration /
-         */
-        try {
-            PropertyValidator.assertNone(Property.DUE,
-                    getProperties());
-        }
-        catch (ValidationException ve) {
-            PropertyValidator.assertNone(Property.DURATION,
-                    getProperties());
-        }
-
-        /*
-         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
-         * contact / exdate / exrule / rstatus / related / resources / rdate / rrule / x-prop
-         */
 
         if (recurse) {
-            validateProperties();
+            result = result.merge(validateProperties());
         }
+        return result;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         return methodValidators.get(method);
     }
@@ -479,10 +414,11 @@ public class VToDo extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VToDo) {
             return super.equals(arg0)
-                    && Objects.equals(alarms, ((VToDo) arg0).getAlarms());
+                    && Objects.equals(getAlarms(), ((VToDo) arg0).getAlarms());
         }
         return super.equals(arg0);
     }
@@ -490,23 +426,10 @@ public class VToDo extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getAlarms()).toHashCode();
-    }
-
-    /**
-     * Overrides default copy method to add support for copying alarm sub-components.
-     * @return a copy of the instance
-     * @throws ParseException where an error occurs parsing data
-     * @throws IOException where an error occurs reading data
-     * @throws URISyntaxException where an invalid URI is encountered
-     * @see net.fortuna.ical4j.model.Component#copy()
-     */
-    public Component copy() throws ParseException, IOException, URISyntaxException {
-        final VToDo copy = (VToDo) super.copy();
-        copy.alarms = new ComponentList<VAlarm>(alarms);
-        return copy;
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VToDo> {
@@ -521,7 +444,7 @@ public class VToDo extends CalendarComponent {
         }
 
         @Override
-        public VToDo createComponent(PropertyList properties) {
+        public VToDo createComponent(PropertyList<Property> properties) {
             return new VToDo(properties);
         }
 

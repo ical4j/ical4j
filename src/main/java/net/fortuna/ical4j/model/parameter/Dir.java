@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -47,11 +48,11 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class Dir extends Parameter {
+public class Dir extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -8581904779721020689L;
 
-    private URI uri;
+    private final URI uri;
 
     /**
      * @param aValue a string representation of a directory entry reference
@@ -79,18 +80,20 @@ public class Dir extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Dir> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DIR);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        @Override
+        public Dir createParameter(final String value) throws URISyntaxException {
             return new Dir(value);
         }
     }

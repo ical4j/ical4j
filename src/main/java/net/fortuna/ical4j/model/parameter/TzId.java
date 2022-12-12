@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -42,7 +45,7 @@ import java.net.URISyntaxException;
  * Defines a Time Zone Identifier parameter.
  * @author benfortuna
  */
-public class TzId extends Parameter implements Escapable {
+public class TzId extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 2366516258055857879L;
 
@@ -51,7 +54,7 @@ public class TzId extends Parameter implements Escapable {
      */
     public static final String PREFIX = "/";
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a time zone identifier
@@ -66,18 +69,20 @@ public class TzId extends Parameter implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<TzId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TZID);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        @Override
+        public TzId createParameter(final String value) throws URISyntaxException {
             return new TzId(Strings.unescape(value));
         }
     }

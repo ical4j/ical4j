@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.filter.Filter;
-import net.fortuna.ical4j.filter.HasPropertyRule;
+import net.fortuna.ical4j.filter.predicate.PropertyEqualToRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 
@@ -35,7 +34,7 @@ public class ComponentGroup<T extends Component> {
 
     private final ComponentList<T> components;
 
-    private final Filter<T> componentFilter;
+    private final Predicate<T> componentPredicate;
 
     public ComponentGroup(ComponentList<T> components, Uid uid) {
         this(components, uid, null);
@@ -44,13 +43,11 @@ public class ComponentGroup<T extends Component> {
     public ComponentGroup(ComponentList<T> components, Uid uid, RecurrenceId recurrenceId) {
         this.components = components;
 
-        Predicate<T> componentPredicate;
         if (recurrenceId != null) {
-            componentPredicate = new HasPropertyRule<T>(uid).and(new HasPropertyRule<T>(recurrenceId));
+            componentPredicate = new PropertyEqualToRule<T>(uid).and(new PropertyEqualToRule<>(recurrenceId));
         } else {
-            componentPredicate = new HasPropertyRule<T>(uid);
+            componentPredicate = new PropertyEqualToRule<>(uid);
         }
-        componentFilter = new Filter<>(componentPredicate);
     }
 
     /**
@@ -60,7 +57,7 @@ public class ComponentGroup<T extends Component> {
      * @return
      */
     public ComponentList<T> getRevisions() {
-        return (ComponentList<T>) componentFilter.filter(components);
+        return new ComponentList<T>(components.stream().filter(componentPredicate).collect(Collectors.toList()));
     }
 
     /**
@@ -99,11 +96,10 @@ public class ComponentGroup<T extends Component> {
         PeriodList finalPeriods = periods;
         replacements.forEach(component -> {
             RecurrenceId recurrenceId = component.getProperty(Property.RECURRENCE_ID);
-            List<Period> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.getDate()))
-                    .collect(Collectors.toList());
-            finalPeriods.removeAll(match);
-
-            finalPeriods.addAll(component.calculateRecurrenceSet(period));
+            finalPeriods.removeIf(p -> p.getStart().equals(recurrenceId.getDate()));
+            component.calculateRecurrenceSet(period).stream()
+                    .filter(p -> p.getStart().equals(recurrenceId.getDate()))
+                    .forEach(finalPeriods::add);
         });
 
         return periods;

@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.AddressList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -47,7 +50,7 @@ public class Member extends Parameter {
 
     private static final long serialVersionUID = 287348849443687499L;
 
-    private AddressList groups;
+    private final AddressList groups;
 
     /**
      * @param aValue a string representation of a group or list membership
@@ -75,26 +78,20 @@ public class Member extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getGroups().toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected boolean isQuotable() {
-        // override default behaviour as quoting is handled by the implementation..
-        return false;
-    }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Member> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(MEMBER);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        @Override
+        public Member createParameter(final String value) throws URISyntaxException {
             return new Member(value);
         }
     }

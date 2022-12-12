@@ -1,109 +1,130 @@
 package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.component.*;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.util.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DefaultContentHandler implements ContentHandler {
 
-    private final Supplier<List<ParameterFactory>> parameterFactorySupplier;
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultContentHandler.class);
 
-    private final Supplier<List<PropertyFactory>> propertyFactorySupplier;
-
-    private final Supplier<List<ComponentFactory>> componentFactorySupplier;
+    private final ContentHandlerContext context;
 
     private final TimeZoneRegistry tzRegistry;
 
-    private List<TzId> propertiesWithTzId;
+    private List<Property> propertiesWithTzId;
+
+    private boolean propertyHasTzId = false;
 
     private final Consumer<Calendar> consumer;
 
     private PropertyBuilder propertyBuilder;
 
-    private ComponentBuilder<CalendarComponent> componentBuilder;
-
-    private ComponentBuilder<Component> subComponentBuilder;
+    /**
+     * The current component builders.
+     */
+    private final LinkedList<ComponentBuilder<CalendarComponent>> components = new LinkedList<>();
 
     private Calendar calendar;
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
-        this(consumer, tzRegistry, new DefaultParameterFactorySupplier(), new DefaultPropertyFactorySupplier(),
-                new DefaultComponentFactorySupplier());
+        this(consumer, tzRegistry, new ContentHandlerContext());
+    }
+
+    /**
+     *
+     * @param consumer
+     * @param tzRegistry
+     * @param parameterFactorySupplier
+     * @param propertyFactorySupplier
+     * @param componentFactorySupplier
+     * @deprecated use {@link DefaultContentHandler#DefaultContentHandler(Consumer, TimeZoneRegistry, ContentHandlerContext)}
+     */
+    @Deprecated
+    public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry,
+                                 Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
+                                 Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
+                                 Supplier<List<ComponentFactory<?>>> componentFactorySupplier) {
+        this(consumer, tzRegistry, new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
+                .withPropertyFactorySupplier(propertyFactorySupplier)
+                .withComponentFactorySupplier(componentFactorySupplier));
     }
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry,
-                                 Supplier<List<ParameterFactory>> parameterFactorySupplier,
-                                 Supplier<List<PropertyFactory>> propertyFactorySupplier,
-                                 Supplier<List<ComponentFactory>> componentFactorySupplier) {
+                                 ContentHandlerContext context) {
 
         this.consumer = consumer;
         this.tzRegistry = tzRegistry;
-        this.parameterFactorySupplier = parameterFactorySupplier;
-        this.propertyFactorySupplier = propertyFactorySupplier;
-        this.componentFactorySupplier = componentFactorySupplier;
+        this.context = context;
+    }
+
+    public ComponentBuilder<CalendarComponent> getComponentBuilder() {
+        if (components.size() == 0) {
+            return null;
+        }
+        return components.peek();
+    }
+
+    public void endComponent() {
+        components.pop();
     }
 
     @Override
     public void startCalendar() {
         calendar = new Calendar();
+        components.clear();
         propertiesWithTzId = new ArrayList<>();
     }
 
     @Override
     public void endCalendar() throws IOException {
-        if (propertiesWithTzId.size() > 0 && tzRegistry != null) {
-            for (CalendarComponent component : calendar.getComponents()) {
-                resolveTimezones(component.getProperties());
+        resolveTimezones();
 
-                if (component instanceof VAvailability) {
-                    for (Component available : ((VAvailability) component).getAvailable()) {
-                        resolveTimezones(available.getProperties());
-                    }
-                } else if (component instanceof VEvent) {
-                    for (Component alarm : ((VEvent) component).getAlarms()) {
-                        resolveTimezones(alarm.getProperties());
-                    }
-                } else if (component instanceof VToDo) {
-                    for (Component todo : ((VToDo) component).getAlarms()) {
-                        resolveTimezones(todo.getProperties());
-                    }
-                }
-            }
-        }
         consumer.accept(calendar);
     }
 
     @Override
     public void startComponent(String name) {
-        if (componentBuilder != null) {
-            subComponentBuilder = new ComponentBuilder<>();
-            subComponentBuilder.factories(componentFactorySupplier.get()).name(name);
-        } else {
-            componentBuilder = new ComponentBuilder<>();
-            componentBuilder.factories(componentFactorySupplier.get()).name(name);
+        if (components.size() > 10) {
+            throw new RuntimeException("Components nested too deep");
         }
+
+        ComponentBuilder<CalendarComponent> componentBuilder = new ComponentBuilder<>(
+                context.getComponentFactorySupplier().get());
+        componentBuilder.name(name);
+        components.push(componentBuilder);
     }
 
     @Override
     public void endComponent(String name) {
-        assertComponent(componentBuilder);
+        assertComponent(getComponentBuilder());
 
-        if (subComponentBuilder != null) {
-            Component subComponent = subComponentBuilder.build();
-            componentBuilder.subComponent(subComponent);
+        final ComponentBuilder<CalendarComponent> componentBuilder =
+                getComponentBuilder();
 
-            subComponentBuilder = null;
+        DefaultContentHandler.this.endComponent();
+
+        final ComponentBuilder<CalendarComponent> parent =
+                getComponentBuilder();
+
+        if (parent != null) {
+            Component subComponent = componentBuilder.build();
+            parent.subComponent(subComponent);
         } else {
             CalendarComponent component = componentBuilder.build();
             calendar.getComponents().add(component);
@@ -111,59 +132,63 @@ public class DefaultContentHandler implements ContentHandler {
                 // register the timezone for use with iCalendar objects..
                 tzRegistry.register(new TimeZone((VTimeZone) component));
             }
-
-            componentBuilder = null;
         }
     }
 
     @Override
     public void startProperty(String name) {
-        propertyBuilder = new PropertyBuilder().factories(propertyFactorySupplier.get()).name(name);
+        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+            propertyBuilder = new PropertyBuilder(context.getPropertyFactorySupplier().get()).name(name);
+            propertyHasTzId = false;
+        } else {
+            propertyBuilder = null;
+        }
     }
 
     @Override
     public void propertyValue(String value) {
-        propertyBuilder.value(value);
+        if (propertyBuilder != null) {
+            propertyBuilder.value(value);
+        }
     }
 
     @Override
     public void endProperty(String name) throws URISyntaxException, ParseException, IOException {
-        assertProperty(propertyBuilder);
-        Property property = propertyBuilder.build();
+        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+            assertProperty(propertyBuilder);
+            Property property = propertyBuilder.build();
 
-        // replace with a constant instance if applicable..
-        property = Constants.forProperty(property);
-        if (componentBuilder != null) {
-            if (subComponentBuilder != null) {
-                subComponentBuilder.property(property);
-            } else {
-                componentBuilder.property(property);
+            if (propertyHasTzId) {
+                propertiesWithTzId.add(property);
             }
-        } else if (calendar != null) {
-            calendar.getProperties().add(property);
+            // replace with a constant instance if applicable..
+            property = Constants.forProperty(property);
+            if (getComponentBuilder() != null) {
+                getComponentBuilder().property(property);
+            } else if (calendar != null) {
+                calendar.getProperties().add(property);
+            }
+            property = null;
         }
-
-        property = null;
     }
 
     @Override
     public void parameter(String name, String value) throws URISyntaxException {
-        assertProperty(propertyBuilder);
+        if (propertyBuilder != null) {
+            Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
+                    .name(name).value(value).build();
 
-        Parameter parameter = new ParameterBuilder().factories(parameterFactorySupplier.get())
-                .name(name).value(value).build();
-
-        if (parameter instanceof TzId && tzRegistry != null) {
-            // VTIMEZONE may be defined later, so so keep
-            // track of dates until all components have been
-            // parsed, and then try again later
-            propertiesWithTzId.add((TzId) parameter);
+            if (parameter instanceof TzId && tzRegistry != null) {
+                // VTIMEZONE may be defined later, so keep
+                // track of dates until all components have been
+                // parsed, and then try again later
+                propertyHasTzId = true;
+            }
+            propertyBuilder.parameter(parameter);
         }
-
-        propertyBuilder.parameter(parameter);
     }
 
-    private void assertComponent(ComponentBuilder component) {
+    private void assertComponent(ComponentBuilder<?> component) {
         if (component == null) {
             throw new CalendarException("Expected component not initialised");
         }
@@ -175,39 +200,41 @@ public class DefaultContentHandler implements ContentHandler {
         }
     }
 
-    private void resolveTimezones(List<Property> properties) throws IOException {
+    private void resolveTimezones() throws IOException {
 
         // Go through each property and try to resolve the TZID.
-        for (TzId tzParam : propertiesWithTzId) {
+        for (Property property : propertiesWithTzId) {
 
-            //lookup timezone
-            final TimeZone timezone = tzRegistry.getTimeZone(tzParam.getValue());
+            TzId tzParam = property.getParameter(Parameter.TZID);
 
-            // If timezone found, then update date property
-            if (timezone != null) {
-                for (Property property : properties) {
-                    if (tzParam.equals(property.getParameter(Parameter.TZID))) {
+            // extra null check in case validation has removed the TZID param..
+            if (tzParam != null) {
 
-                        // Get the String representation of date(s) as
-                        // we will need this after changing the timezone
-                        final String strDate = property.getValue();
+                //lookup timezone
+                final TimeZone timezone = tzRegistry.getTimeZone(tzParam.getValue());
 
-                        // Change the timezone
-                        if (property instanceof DateProperty) {
-                            ((DateProperty) property).setTimeZone(timezone);
-                        } else if (property instanceof DateListProperty) {
-                            ((DateListProperty) property).setTimeZone(timezone);
-                        } else {
-                            throw new CalendarException("Invalid parameter: " + tzParam.getName());
-                        }
+                // If timezone found, then update date property
+                if (timezone != null) {
 
-                        // Reset value
-                        try {
-                            property.setValue(strDate);
-                        } catch (ParseException | URISyntaxException e) {
-                            // shouldn't happen as its already been parsed
-                            throw new CalendarException(e);
-                        }
+                    // Get the String representation of date(s) as
+                    // we will need this after changing the timezone
+                    final String strDate = property.getValue();
+
+                    // Change the timezone
+                    if (property instanceof DateProperty) {
+                        ((DateProperty) property).setTimeZone(timezone);
+                    } else if (property instanceof DateListProperty) {
+                        ((DateListProperty) property).setTimeZone(timezone);
+                    } else {
+                        LOG.warn("Property [%s] doesn't support parameter [%s]", property.getName(), tzParam.getName());
+                    }
+
+                    // Reset value
+                    try {
+                        property.setValue(strDate);
+                    } catch (ParseException | URISyntaxException e) {
+                        // shouldn't happen as its already been parsed
+                        throw new CalendarException(e);
                     }
                 }
             }

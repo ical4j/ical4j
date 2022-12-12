@@ -54,14 +54,5 @@ class VTimeZoneFactory extends AbstractComponentFactory{
      protected Object newInstance(PropertyList properties) {
          return new VTimeZone(properties)
      }
-    
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-		if (child instanceof Observance) {
-			parent.observances.add child
-		}
-		else {
-			super.setChild(build, parent, child)
-		}
-    }
 }
 

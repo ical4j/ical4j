@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.AddressList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -47,7 +50,7 @@ public class DelegatedTo extends Parameter {
 
     private static final long serialVersionUID = 567577003350648021L;
 
-    private AddressList delegatees;
+    private final AddressList delegatees;
 
     /**
      * @param aValue a string representation of Delegatees
@@ -75,26 +78,20 @@ public class DelegatedTo extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getDelegatees().toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected boolean isQuotable() {
-        // override default behaviour as quoting is handled by the implementation..
-        return false;
-    }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<DelegatedTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DELEGATED_TO);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        @Override
+        public DelegatedTo createParameter(final String value) throws URISyntaxException {
             return new DelegatedTo(value);
         }
     }

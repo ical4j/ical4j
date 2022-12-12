@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -46,7 +47,7 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class Range extends Parameter {
+public class Range extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -3057531444558393776L;
 
@@ -64,7 +65,7 @@ public class Range extends Parameter {
      */
     public static final Range THISANDFUTURE = new Range(VALUE_THISANDFUTURE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a recurrence identifier range
@@ -88,25 +89,25 @@ public class Range extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Range> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RANGE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            Range parameter = new Range(value);
-            if (Range.THISANDFUTURE.equals(parameter)) {
-                parameter = Range.THISANDFUTURE;
-            } else if (Range.THISANDPRIOR.equals(parameter)) {
-                parameter = Range.THISANDPRIOR;
+        @Override
+        public Range createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_THISANDFUTURE: return THISANDFUTURE;
+                case VALUE_THISANDPRIOR: return THISANDPRIOR;
             }
-            return parameter;
+            return new Range(value);
         }
     }
 

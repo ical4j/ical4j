@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
@@ -44,7 +45,7 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class Rsvp extends Parameter {
+public class Rsvp extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -5381653882942018012L;
 
@@ -62,7 +63,7 @@ public class Rsvp extends Parameter {
      */
     public static final Rsvp FALSE = new Rsvp(VALUE_FALSE);
 
-    private Boolean rsvp;
+    private final Boolean rsvp;
 
     /**
      * @param aValue a string representation of an RSVP
@@ -89,6 +90,7 @@ public class Rsvp extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (rsvp) {
             return VALUE_TRUE;
@@ -101,7 +103,7 @@ public class Rsvp extends Parameter {
      * {@inheritDoc}
      */
     @Override
-    public final Parameter copy() {
+    public final Rsvp copy() {
         if (rsvp) {
             return TRUE;
         } else {
@@ -109,21 +111,20 @@ public class Rsvp extends Parameter {
         }
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Rsvp> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RSVP);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            Rsvp parameter = new Rsvp(value);
-            if (Rsvp.TRUE.equals(parameter)) {
-                parameter = Rsvp.TRUE;
-            } else if (Rsvp.FALSE.equals(parameter)) {
-                parameter = Rsvp.FALSE;
+        @Override
+        public Rsvp createParameter(final String value) throws URISyntaxException {
+            switch (value) {
+                case VALUE_FALSE: return FALSE;
+                case VALUE_TRUE: return TRUE;
             }
-            return parameter;
+            return new Rsvp(value);
         }
     }
 

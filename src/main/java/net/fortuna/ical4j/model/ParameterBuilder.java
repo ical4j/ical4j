@@ -1,7 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
-import net.fortuna.ical4j.util.Strings;
+import org.apache.commons.codec.DecoderException;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -12,13 +12,29 @@ import java.util.List;
  */
 public class ParameterBuilder extends AbstractContentBuilder {
 
-    private List<ParameterFactory> factories = new ArrayList<>();
+    private final List<ParameterFactory<?>> factories;
 
     private String name;
 
     private String value;
 
-    public ParameterBuilder factories(List<ParameterFactory> factories) {
+    public ParameterBuilder() {
+        this(new ArrayList<>());
+    }
+
+    public ParameterBuilder(List<ParameterFactory<? extends Parameter>> factories) {
+        this.factories = factories;
+    }
+
+    /**
+     * Set the list of parameter factories supporting this builder instance.
+     * @param factories a list of parameter factories
+     * @return the builder instance
+     * @deprecated preference the constructor option for specifying factories
+     */
+    @Deprecated
+    public ParameterBuilder factories(List<ParameterFactory<?>> factories) {
+        this.factories.clear();
         this.factories.addAll(factories);
         return this;
     }
@@ -30,7 +46,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
     }
 
     public ParameterBuilder value(String value) {
-        this.value = Strings.escapeNewline(value);
+        this.value = value;
         return this;
     }
 
@@ -39,19 +55,25 @@ public class ParameterBuilder extends AbstractContentBuilder {
      */
     public Parameter build() throws URISyntaxException {
         Parameter parameter = null;
-        for (ParameterFactory factory : factories) {
+        String decodedValue;
+        try {
+            decodedValue = ParameterCodec.INSTANCE.decode(value);
+        } catch (DecoderException e) {
+            decodedValue = value;
+        }
+        for (ParameterFactory<?> factory : factories) {
             if (factory.supports(name)) {
-                parameter = factory.createParameter(value);
+                parameter = factory.createParameter(decodedValue);
                 break;
             }
         }
 
         if (parameter == null) {
             if (isExperimentalName(name)) {
-                parameter = new XParameter(name, value);
+                parameter = new XParameter(name, decodedValue);
             }
             else if (allowIllegalNames()) {
-                parameter = new XParameter(name, value);
+                parameter = new XParameter(name, decodedValue);
             }
             else {
                 throw new IllegalArgumentException(String.format("Unsupported parameter name: %s", name));

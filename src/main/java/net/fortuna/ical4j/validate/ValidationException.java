@@ -36,20 +36,13 @@ import java.text.MessageFormat;
 /**
  * $Id$ [23-Apr-2004]
  *
- * An exception thrown during validation.
+ * An exception thrown during validation to indicate abnormal completion.
  * 
  * @author Ben Fortuna
  */
 public class ValidationException extends RuntimeException {
     
     private static final long serialVersionUID = 309245291364742896L;
-
-    /**
-     * Default constructor.
-     */
-    public ValidationException() {
-        super();
-    }
 
     /**
      * Constructor with message.
@@ -66,5 +59,13 @@ public class ValidationException extends RuntimeException {
      */
     public ValidationException(final String message, Object[] args) {
         super(MessageFormat.format(message, args));
+    }
+
+    public ValidationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ValidationException(Throwable cause) {
+        super(cause);
     }
 }

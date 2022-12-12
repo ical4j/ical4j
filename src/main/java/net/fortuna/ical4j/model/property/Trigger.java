@@ -33,8 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -219,34 +220,15 @@ public class Trigger extends UtcProperty {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-        super.validate();
-
-        final Parameter relParam = getParameter(Parameter.RELATED);
-        final Parameter valueParam = getParameter(Parameter.VALUE);
-
-        if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
-
-            ParameterValidator.assertOneOrLess(Parameter.RELATED,
-                    getParameters());
-
-            ParameterValidator.assertNullOrEqual(Value.DURATION,
-                    getParameters());
-
-            if (getDuration() == null) {
-                throw new ValidationException("Duration value not specified");
-            }
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        ValidationResult result = super.validate();
+        if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
+            result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));
         } else {
-            ParameterValidator.assertOne(Parameter.VALUE,
-                    getParameters());
-
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME,
-                    getParameters());
-
-            if (getDateTime() == null) {
-                throw new ValidationException("DATE-TIME value not specified");
-            }
+            result = result.merge(PropertyValidator.TRIGGER_REL.validate(this));
         }
+        return result;
     }
 
     /**
@@ -262,6 +244,7 @@ public class Trigger extends UtcProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         try {
             super.setValue(aValue);
@@ -275,6 +258,7 @@ public class Trigger extends UtcProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (duration != null) {
             return duration.toString();
@@ -285,6 +269,7 @@ public class Trigger extends UtcProperty {
     /**
      * @param dateTime The dateTime to set.
      */
+    @Override
     public final void setDateTime(final DateTime dateTime) {
         super.setDateTime(dateTime);
         duration = null;
@@ -303,19 +288,21 @@ public class Trigger extends UtcProperty {
         }
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Trigger> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TRIGGER);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Trigger createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Trigger(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Trigger createProperty() {
             return new Trigger();
         }
     }

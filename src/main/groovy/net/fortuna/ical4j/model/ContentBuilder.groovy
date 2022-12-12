@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.model.LocationType
 import net.fortuna.ical4j.model.component.*
 import net.fortuna.ical4j.model.parameter.*
 import net.fortuna.ical4j.model.property.*
@@ -67,6 +68,9 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('vtimezone', new VTimeZoneFactory())
         registerFactory('vtodo', new VToDoFactory())
         registerFactory('vvenue', new VVenueFactory())
+        registerFactory('vlocation', new VLocationFactory())
+        registerFactory('vresource', new VResourceFactory())
+        registerFactory('participant', new ParticipantFactory())
         registerFactory('xcomponent', new XComponentFactory())
     }
     
@@ -88,7 +92,7 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('dtend', new DefaultPropertyFactory(klass: DtEnd))
         registerFactory('dtstamp', new DtStampFactory())
         registerFactory('dtstart', new DefaultPropertyFactory(klass: DtStart))
-        registerFactory('due', new DefaultPropertyFactory(klass: Due))
+        registerFactory('due', new PropertyFactoryWrapper(Due, new Due.Factory()))
         registerFactory('duration', new DefaultPropertyFactory(klass: Duration))
         registerFactory('exdate', new DefaultPropertyFactory(klass: ExDate))
         registerFactory('exrule', new DefaultPropertyFactory(klass: ExRule))
@@ -135,6 +139,10 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('image', new PropertyFactoryWrapper(Image, new Image.Factory()))
         registerFactory('refreshinterval', new PropertyFactoryWrapper(RefreshInterval, new RefreshInterval.Factory()))
         registerFactory('source', new PropertyFactoryWrapper(Source, new Source.Factory()))
+
+        registerFactory('concept', new PropertyFactoryWrapper(Concept, new Concept.Factory()))
+        registerFactory('link', new PropertyFactoryWrapper(Link, new Link.Factory()))
+        registerFactory('refid', new PropertyFactoryWrapper(RefId, new RefId.Factory()))
     }
     
     def registerParameters() {
@@ -168,6 +176,9 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('email', new ParameterFactoryWrapper(Email, new Email.Factory()))
         registerFactory('feature', new ParameterFactoryWrapper(Feature, new Feature.Factory()))
         registerFactory('label', new ParameterFactoryWrapper(Label, new Label.Factory()))
+
+        registerFactory('gap', new ParameterFactoryWrapper(Gap, new Gap.Factory()))
+        registerFactory('linkrel', new ParameterFactoryWrapper(LinkRel, new LinkRel.Factory()))
     }
 }
 

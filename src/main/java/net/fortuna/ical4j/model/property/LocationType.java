@@ -34,25 +34,48 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
-
-import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
- * $Id$
- * <p/>
- * Created: [Apr 6, 2004]
- * <p/>
- * Defines a LOCATION_TYPE iCalendar component property.
+ * <pre>
+ * 6.1.  Location Type
  *
- * @author benf
+ *    Property name:  LOCATION-TYPE
+ *
+ *    Purpose:  To specify the type(s) of a location.
+ *
+ *    Value type:  The value type for this property is TEXT.  The allowable
+ *       values are defined below.
+ *
+ *    Description:  This property MAY be specified in VLOCATION components
+ *       and provides a way to differentiate multiple locations.  For
+ *       example, it allows event producers to provide location information
+ *       for the venue and the parking.
+ *
+ *    Format Definition:
+ *
+ *    This property is defined by the following notation:
+ *
+ *       loctype      = "LOCATION-TYPE" loctypeparam ":"
+ *                      text *("," text)
+ *                      CRLF
+ *
+ *       loctypeparam   = *(";" other-param)
+ *
+ *       Multiple values may be used if the location has multiple purposes,
+ *       for example a hotel and a restaurant.
+ *
+ *       Values for this parameter are taken from the values defined in
+ *       [RFC4589] section 3.  New location types SHOULD be registered in
+ *       the manner laid down in section 5 of that specification.
+ * </pre>
+ *
+ * @author Mike Douglass, Ben Fortuna
+ * @see <a href="https://tools.ietf.org/html/draft-ietf-calext-eventpub-extensions-18#section-6.1">Event Publishing Extensions to iCalendar</a>
  */
 public class LocationType extends Property {
 
@@ -60,8 +83,6 @@ public class LocationType extends Property {
 
     private LocationTypeList locationTypes;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
     /**
      * Default constructor.
      */
@@ -104,9 +125,20 @@ public class LocationType extends Property {
         locationTypes = cList;
     }
 
+    public LocationType(net.fortuna.ical4j.model.LocationType... locationTypes) {
+        super(LOCATION_TYPE, new ParameterList(), new Factory());
+        this.locationTypes = new LocationTypeList(locationTypes);
+    }
+
+    public LocationType(ParameterList params, net.fortuna.ical4j.model.LocationType... locationTypes) {
+        super(LOCATION_TYPE, params, new Factory());
+        this.locationTypes = new LocationTypeList(locationTypes);
+    }
+
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         locationTypes = new LocationTypeList(aValue);
     }
@@ -121,28 +153,31 @@ public class LocationType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getLocationTypes().toString();
     }
 
     @Override
-    public void validate() throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.LOCATION_TYPE.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<LocationType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(LOCATION_TYPE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public LocationType createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new LocationType(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public LocationType createProperty() {
             return new LocationType();
         }
     }

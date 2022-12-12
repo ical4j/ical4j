@@ -34,7 +34,6 @@ package net.fortuna.ical4j.data;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -45,6 +44,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.List;
 
 /**
  * $Id: CalendarBuilderTimezoneTest.java [Jul 1, 2008]
@@ -59,6 +59,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
@@ -71,6 +72,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
@@ -96,7 +98,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
         calendar = builder.build(in);
         assertNotNull("Calendar is null", calendar);
-        ComponentList<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
+        List<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
         assertTrue("VEVENT not found", comps.size() == 1);
         VEvent vevent = (VEvent) comps.get(0);
 
@@ -174,7 +176,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
         calendar = builder.build(in);
         assertNotNull("Calendar is null", calendar);
-        ComponentList<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
+        List<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
         assertEquals("2 VEVENTs not found", 2, comps.size());
         VEvent vevent0 = (VEvent) comps.get(0);
 

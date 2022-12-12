@@ -31,9 +31,10 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.nio.charset.Charset;
-
 import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Base class for model outputters.
@@ -52,7 +53,7 @@ public abstract class AbstractOutputter {
     /**
      * The default character set used to generate output.
      */
-    protected static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private boolean validating;
 

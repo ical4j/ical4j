@@ -31,8 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.UtcPropertyValidator;
 
 /**
  * $Id$
@@ -91,6 +96,7 @@ public abstract class UtcProperty extends DateProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setTimeZone(TimeZone timezone) {
         throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
     }
@@ -98,19 +104,8 @@ public abstract class UtcProperty extends DateProperty {
     /**
      * {@inheritDoc}
      */
-    public void validate() throws ValidationException {
-        super.validate();
-
-        if (getDate() != null && !(getDate() instanceof DateTime)) {
-            throw new ValidationException(
-                    "Property must have a DATE-TIME value");
-        }
-
-        final DateTime dateTime = (DateTime) getDate();
-
-        if (dateTime != null && !dateTime.isUtc()) {
-            throw new ValidationException(getName() +
-                    ": DATE-TIME value must be specified in UTC time");
-        }
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return new UtcPropertyValidator<>().validate(this);
     }
 }

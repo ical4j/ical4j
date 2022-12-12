@@ -37,17 +37,12 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.StringTokenizer;
-
-import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -87,9 +82,6 @@ public class RequestStatus extends Property {
     private String description;
 
     private String exData;
-
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
 
     /**
      * Default constructor.
@@ -158,6 +150,7 @@ public class RequestStatus extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         final StringTokenizer t = new StringTokenizer(aValue, ";");
 
@@ -177,6 +170,7 @@ public class RequestStatus extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         final StringBuilder b = new StringBuilder();
 
@@ -219,23 +213,25 @@ public class RequestStatus extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.REQUEST_STATUS.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RequestStatus> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(REQUEST_STATUS);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public RequestStatus createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RequestStatus(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public RequestStatus createProperty() {
             return new RequestStatus();
         }
     }

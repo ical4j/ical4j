@@ -34,16 +34,11 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationRule;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
-
-import static net.fortuna.ical4j.model.Parameter.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -105,14 +100,11 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author Ben Fortuna
  */
-public class Location extends Property implements Escapable {
+public class Location extends Property implements Encodable {
 
     private static final long serialVersionUID = 8651881536125682401L;
 
     private String value;
-
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, ALTREP, LANGUAGE, VVENUE)));
 
     /**
      * Default constructor.
@@ -141,6 +133,7 @@ public class Location extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -148,28 +141,31 @@ public class Location extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
     @Override
-    public void validate() throws ValidationException {
-        validator.validate(this);
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.LOCATION.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Location> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(LOCATION);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Location createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Location(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Location createProperty() {
             return new Location();
         }
     }

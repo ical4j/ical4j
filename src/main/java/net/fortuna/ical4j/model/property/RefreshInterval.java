@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.time.temporal.TemporalAmount;
 
@@ -36,8 +37,8 @@ public class RefreshInterval extends Property {
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 
     @Override
@@ -50,10 +51,12 @@ public class RefreshInterval extends Property {
             super(PROPERTY_NAME);
         }
 
+        @Override
         public RefreshInterval createProperty() {
             return new RefreshInterval();
         }
 
+        @Override
         public RefreshInterval createProperty(ParameterList parameters, String value) {
             RefreshInterval property = new RefreshInterval(parameters, value);
             return property;

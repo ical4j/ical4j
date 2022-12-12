@@ -64,6 +64,7 @@ public class AttachTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         FileInputStream fin = new FileInputStream("etc/artwork/logo.png");
@@ -104,10 +105,8 @@ public class AttachTest extends TestCase {
         christmas.getProperties().add(attach);
         christmas.getProperties().add(new Uid("000001@modularity.net.au"));
 
-        Calendar calendar = new Calendar();
-        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
+        Calendar calendar = new Calendar().withDefaults()
+                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
         calendar.getComponents().add(christmas);
 
         StringWriter sw = new StringWriter();

@@ -52,7 +52,7 @@ public class TextList implements Serializable, Iterable<String> {
 
 	private static final long serialVersionUID = -417427815871330636L;
 	
-	private List<String> texts;
+	private final List<String> texts;
 
     /**
      * Default constructor.
@@ -87,6 +87,7 @@ public class TextList implements Serializable, Iterable<String> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return texts.stream().map(t -> Strings.escape(t)).collect(Collectors.joining(","));
     }
@@ -113,6 +114,7 @@ public class TextList implements Serializable, Iterable<String> {
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<String> iterator() {
         return texts.iterator();
     }

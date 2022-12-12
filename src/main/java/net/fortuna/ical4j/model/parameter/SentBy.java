@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -47,11 +48,11 @@ import java.net.URISyntaxException;
  *
  * @author benfortuna
  */
-public class SentBy extends Parameter {
+public class SentBy extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -1169413145174029391L;
 
-    private URI address;
+    private final URI address;
 
     /**
      * @param aValue a string representation of a sent by
@@ -79,18 +80,20 @@ public class SentBy extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getAddress()));
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<SentBy> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(SENT_BY);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        @Override
+        public SentBy createParameter(final String value) throws URISyntaxException {
             return new SentBy(value);
         }
     }

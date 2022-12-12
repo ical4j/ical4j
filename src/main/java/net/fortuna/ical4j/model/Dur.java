@@ -373,6 +373,7 @@ public class Dur implements Comparable<Dur>, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         if (negative) {
@@ -417,6 +418,7 @@ public class Dur implements Comparable<Dur>, Serializable {
      * @return a postive value if this duration is longer, zero if the duration
      * lengths are equal, otherwise a negative value
      */
+    @Override
     public final int compareTo(final Dur arg0) {
         int result;
         if (isNegative() != arg0.isNegative()) {
@@ -456,6 +458,7 @@ public class Dur implements Comparable<Dur>, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals(final Object obj) {
         if (obj instanceof Dur) {
             return ((Dur) obj).compareTo(this) == 0;
@@ -466,6 +469,7 @@ public class Dur implements Comparable<Dur>, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(weeks).append(days).append(
                 hours).append(minutes).append(seconds).append(negative).toHashCode();

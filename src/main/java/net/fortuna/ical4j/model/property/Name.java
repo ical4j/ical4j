@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -48,7 +49,7 @@ import java.text.ParseException;
  * @author benf
  * @author Mike Douglass
  */
-public class Name extends Property implements Escapable {
+public class Name extends Property implements Encodable {
 
     private static final long serialVersionUID = -6930099834219160086L;
 
@@ -81,6 +82,7 @@ public class Name extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -88,28 +90,31 @@ public class Name extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
 
     @Override
-    public void validate() throws ValidationException {
-
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Name> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(NAME);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public Name createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Name(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public Name createProperty() {
             return new Name();
         }
     }

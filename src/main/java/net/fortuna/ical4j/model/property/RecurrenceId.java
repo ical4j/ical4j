@@ -32,8 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -205,35 +206,28 @@ public class RecurrenceId extends DateProperty {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-        super.validate();
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE)) /
-         * (";" tzidparam) / (";" rangeparam) /
-         */
-
-        ParameterValidator.assertOneOrLess(Parameter.RANGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        ValidationResult result = super.validate();
+        result = result.merge(PropertyValidator.RECURRENCE_ID.validate(this));
+        return result;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RecurrenceId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RECURRENCE_ID);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public RecurrenceId createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RecurrenceId(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public RecurrenceId createProperty() {
             return new RecurrenceId();
         }
     }

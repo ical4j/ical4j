@@ -31,10 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -89,44 +92,26 @@ public class ExDate extends DateListProperty {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
-
-        final Parameter valueParam = getParameter(Parameter.VALUE);
-
-        if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
-                && !Value.DATE.equals(valueParam)) {
-            throw new ValidationException("Parameter [" + Parameter.VALUE
-                    + "] is invalid");
-        }
-
-        ParameterValidator.assertOneOrLess(Parameter.TZID,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return PropertyValidator.EXDATE.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExDate> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(EXDATE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        @Override
+        public ExDate createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ExDate(parameters, value);
         }
 
-        public Property createProperty() {
+        @Override
+        public ExDate createProperty() {
             return new ExDate();
         }
     }
