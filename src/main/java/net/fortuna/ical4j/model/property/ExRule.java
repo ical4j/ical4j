@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
+import net.fortuna.ical4j.validate.RecurValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
@@ -118,7 +119,7 @@ public class ExRule extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return ValidationResult.EMPTY;
+        return new RecurValidator().validate(recur);
     }
 
     @Override

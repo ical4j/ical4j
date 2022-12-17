@@ -58,7 +58,6 @@
 4. [References][References]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
-6. [Limitations - CUA compatibility, etc.][Limitations]
 7. [Development - Guide for contributing to the iCalj project][Development]
     - [Building with Gradle]
     - [Redistribution]
@@ -304,12 +303,7 @@ Microsoft Outlook also appears to provide quoted TZID parameter values, as follo
 #### Lotus Notes compatibility
 
     ical4j.compatibility.notes={true|false}
- 
 
-## Limitations
-
-
- 
 ## Development
 
 ### Building with Gradle
