@@ -1084,7 +1084,7 @@ public class Recur<T extends Temporal> implements Serializable {
             this.frequency = recur.frequency;
             this.rscale = recur.rscale;
             this.skip = recur.skip;
-            this.until = recur.until.getTemporal();
+            this.until = recur.until != null ? recur.until.getTemporal() : null;
             this.count = recur.count;
             this.interval = recur.interval;
             this.secondList = recur.secondList;
