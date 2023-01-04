@@ -2072,3 +2072,9 @@ acceptedBreaks:
       new: "method net.fortuna.ical4j.model.TemporalAdapter<?> net.fortuna.ical4j.model.TemporalAdapter<T\
         \ extends java.time.temporal.Temporal>::from(net.fortuna.ical4j.model.Date)"
       justification: "minor_validation_refactoring"
+  "4.0.0-beta4":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.Month"
+      new: "class net.fortuna.ical4j.model.Month"
+      justification: "added_method"
