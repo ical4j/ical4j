@@ -41,7 +41,9 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.util.Optional;
@@ -147,6 +149,13 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public void setDate(T date) {
         if (date != null) {
             this.date = new TemporalAdapter<>(date, timeZoneRegistry);
+            if (date instanceof LocalDate) {
+                replace(Value.DATE);
+                removeAll(Parameter.TZID);
+            } else if (date instanceof ZonedDateTime) {
+                ZoneId zoneId = ((ZonedDateTime) date).getZone();
+                replace(new TzId(zoneId.getId()));
+            }
         } else {
             this.date = null;
         }
