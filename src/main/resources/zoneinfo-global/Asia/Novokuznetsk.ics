@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022f/Asia/Novokuznetsk
-LAST-MODIFIED:20221105T024527Z
+TZID:/tzurl.org/2022g/Asia/Novokuznetsk
+LAST-MODIFIED:20230104T023645Z
 TZURL:https://www.tzurl.org/zoneinfo-global/Asia/Novokuznetsk
 X-LIC-LOCATION:Asia/Novokuznetsk
 X-PROLEPTIC-TZNAME:LMT
