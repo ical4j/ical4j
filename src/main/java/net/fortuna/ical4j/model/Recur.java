@@ -47,6 +47,10 @@ import java.time.chrono.Chronology;
 import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -763,85 +767,18 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        final Calendar cal = getCalendarInstance(seed, true);
-        final Calendar rootSeed = (Calendar)cal.clone();
-        
-        // optimize the start time for selecting candidates
-        // (only applicable where a COUNT is not specified)
-        if (count == null) {
-            final Calendar seededCal = (Calendar) cal.clone();
-            while (seededCal.getTime().before(periodStart)) {
-                cal.setTime(seededCal.getTime());
-                increment(seededCal);
-            }
-        }
+        dates.addAll(getDatesAsStream(seed, periodStart, periodEnd, value, maxCount).collect(Collectors.toList()));
 
-        HashSet<Date> invalidCandidates = new HashSet<Date>();
-        int noCandidateIncrementCount = 0;
-        Date candidate = null;
-        while ((maxCount < 0) || (dates.size() < maxCount)) {
-            final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
-
-            if (getUntil() != null && candidate != null
-                    && candidate.after(getUntil())) {
-                break;
-            }
-            if (periodEnd != null && candidate != null
-                    && candidate.after(periodEnd)) {
-                break;
-            }
-            if (getCount() >= 1
-                    && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                break;
-            }
-
-//            if (Value.DATE_TIME.equals(value)) {
-            if (candidateSeed instanceof DateTime) {
-                if (dates.isUtc()) {
-                    ((DateTime) candidateSeed).setUtc(true);
-                } else {
-                    ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
-                }
-            }
-
-            // rootSeed = date used for the seed for the RRule at the
-            //            start of the first period.
-            // candidateSeed = date used for the start of 
-            //                 the current period.
-            final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
-            if (!candidates.isEmpty()) {
-                noCandidateIncrementCount = 0;
-                // sort candidates for identifying when UNTIL date is exceeded..
-                Collections.sort(candidates);
-                for (Date candidate1 : candidates) {
-                    candidate = candidate1;
-                    // don't count candidates that occur before the seed date..
-                    if (!candidate.before(seed)) {
-                        // candidates exclusive of periodEnd..
-                        if (candidate.before(periodStart)
-                                || candidate.after(periodEnd)) {
-                            invalidCandidates.add(candidate);
-                        } else if (getCount() >= 1
-                                && (dates.size() + invalidCandidates.size()) >= getCount()) {
-                            break;
-                        } else if (!candidate.before(periodStart) && !candidate.after(periodEnd)
-                            && (getUntil() == null || !candidate.after(getUntil()))) {
-
-                            dates.add(candidate);
-                        }
-                    }
-                }
-            } else {
-                noCandidateIncrementCount++;
-                if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
-                    break;
-                }
-            }
-            increment(cal);
-        }
         // sort final list..
         Collections.sort(dates);
         return dates;
+    }
+
+    public final Stream<Date> getDatesAsStream(final Date seed, final Date periodStart,
+                                               final Date periodEnd, final Value value, int maxCount) {
+
+        Spliterator<Date> spliterator = new DateSpliterator(seed, periodStart, periodEnd, value, maxCount);
+        return StreamSupport.stream(spliterator, false);
     }
 
     /**
@@ -897,8 +834,6 @@ public class Recur implements Serializable {
             final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
-                // sort candidates for identifying when UNTIL date is exceeded..
-                Collections.sort(candidates);
 
                 for (Date candidate1 : candidates) {
                     candidate = candidate1;
@@ -935,7 +870,7 @@ public class Recur implements Serializable {
      */
     private void increment(final Calendar cal) {
         // initialise interval..
-        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
+        final int calInterval = Math.max(getInterval(), 1);
         cal.add(calIncField, calInterval);
     }
 
@@ -1040,6 +975,7 @@ public class Recur implements Serializable {
                 log.debug("Dates after SETPOS processing: " + dates);
             }
         }
+        Collections.sort(dates);
         return dates;
     }
 
@@ -1314,6 +1250,121 @@ public class Recur implements Serializable {
             recur.validateFrequency();
             recur.initTransformers();
             return recur;
+        }
+    }
+
+    private class DateSpliterator extends Spliterators.AbstractSpliterator<Date> {
+
+        final Date seed;
+        final Date periodStart;
+        final Date periodEnd;
+        final Value value;
+        final int maxCount;
+
+        final DateList dates;
+
+        final Calendar cal, rootSeed;
+
+        Date lastCandidate = null;
+
+        Iterator<Date> candidates = null;
+
+        HashSet<Date> invalidCandidates = new HashSet<>();
+
+        int noCandidateIncrementCount = 0;
+
+        public DateSpliterator(Date seed, Date periodStart, Date periodEnd, Value value, int maxCount) {
+            super(maxCount, 0);
+            this.seed = seed;
+            this.periodStart = periodStart;
+            this.periodEnd = periodEnd;
+            this.value = value;
+            this.maxCount = maxCount;
+
+            dates = new DateList(value);
+            if (seed instanceof DateTime) {
+                if (((DateTime) seed).isUtc()) {
+                    dates.setUtc(true);
+                } else {
+                    dates.setTimeZone(((DateTime) seed).getTimeZone());
+                }
+            }
+            cal = getCalendarInstance(seed, true);
+            rootSeed = (Calendar)cal.clone();
+
+            // optimize the start time for selecting candidates
+            // (only applicable where a COUNT is not specified)
+            if (count == null) {
+                final Calendar seededCal = (Calendar) cal.clone();
+                while (seededCal.getTime().before(periodStart)) {
+                    cal.setTime(seededCal.getTime());
+                    increment(seededCal);
+                }
+            }
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super Date> action) {
+            boolean advance = maxCount < 0 || dates.size() < maxCount;
+            if (advance) {
+                if (getUntil() != null && lastCandidate != null && lastCandidate.after(getUntil())) {
+                    advance = false;
+                } else if (periodEnd != null && lastCandidate != null && lastCandidate.after(periodEnd)) {
+                    advance = false;
+                } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
+                    advance = false;
+                }
+            }
+
+            if (advance) {
+                // generate new candidate list..
+                while (candidates == null || !candidates.hasNext()) {
+                    final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
+
+                    if (candidateSeed instanceof DateTime) {
+                        if (dates.isUtc()) {
+                            ((DateTime) candidateSeed).setUtc(true);
+                        } else {
+                            ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
+                        }
+                    }
+
+                    // rootSeed = date used for the seed for the RRule at the
+                    //            start of the first period.
+                    // candidateSeed = date used for the start of
+                    //                 the current period.
+                    candidates = getCandidates(rootSeed, candidateSeed, value).iterator();
+
+                    if (!candidates.hasNext()) {
+                        noCandidateIncrementCount++;
+                        if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                            advance = false;
+                            break;
+                        }
+                    } else {
+                        noCandidateIncrementCount = 0;
+                    }
+                    increment(cal);
+                }
+            }
+
+            if (advance) {
+                // iterate current candidate list..
+                lastCandidate = candidates.next();
+                // don't count candidates that occur before the seed date..
+                if (!lastCandidate.before(seed)) {
+                    // candidates exclusive of periodEnd..
+                    if (lastCandidate.before(periodStart) || lastCandidate.after(periodEnd)) {
+                        invalidCandidates.add(lastCandidate);
+                    } else if (!lastCandidate.before(periodStart) && !lastCandidate.after(periodEnd)
+                            && (getUntil() == null || !lastCandidate.after(getUntil()))) {
+
+                        dates.add(lastCandidate);
+                        action.accept(lastCandidate);
+                    }
+                }
+            }
+            return advance;
         }
     }
 }

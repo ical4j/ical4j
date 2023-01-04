@@ -33,23 +33,24 @@
 
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentContainer;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ComponentContainerRuleSet extends AbstractValidationRuleSet<ComponentContainer<?>> {
+public class ComponentContainerRuleSet extends AbstractValidationRuleSet<ComponentContainer<? extends Component>> {
 
     @SafeVarargs
-    public ComponentContainerRuleSet(ValidationRule<ComponentContainer<?>>... rules) {
+    public ComponentContainerRuleSet(ValidationRule<ComponentContainer<? extends Component>>... rules) {
         super(rules);
     }
 
     @Override
-    public List<ValidationEntry> apply(String context, ComponentContainer<?> target) {
+    public List<ValidationEntry> apply(String context, ComponentContainer<? extends Component> target) {
         List<ValidationEntry> results = new ArrayList<>();
-        for (ValidationRule<ComponentContainer<?>> rule: rules) {
+        for (ValidationRule<? super ComponentContainer<? extends Component>> rule: rules) {
             List<String> matches = Collections.emptyList();
             if (rule.getPredicate().test(target)) {
                 // only consider the specified instances in the total count..

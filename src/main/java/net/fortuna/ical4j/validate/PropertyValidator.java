@@ -52,6 +52,16 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  */
 public final class PropertyValidator<T extends Property> extends AbstractValidator<T> {
 
+    private static final ValidationRule<Property> DATE_OR_DATETIME_VALUE = new ValidationRule<>(None, prop -> {
+        Value v = prop.getParameter(VALUE);
+        return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
+    }, "MUST be specified as a DATE or DATE-TIME:", VALUE);
+
+    private static final ValidationRule<Property> BINARY_VALUE = new ValidationRule<>(None, prop -> {
+        Value v = prop.getParameter(VALUE);
+        return !(v == null || Value.BINARY.equals(v));
+    }, "MUST be specified as a BINARY:", VALUE);
+
     /**
      * <pre>
      *           FORM #3: DATE WITH LOCAL TIME AND TIME ZONE REFERENCE
@@ -66,11 +76,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final PropertyRuleSet<DateProperty> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
-            new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
-            new ValidationRule<DateProperty>(None, prop -> {
-                Value v = prop.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
-            }, "MUST be specified as a DATE or DATE-TIME:", VALUE));
+            new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID), DATE_OR_DATETIME_VALUE);
 
     /**
      * <pre>
@@ -139,18 +145,18 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *                    )
      *                    </pre>
      */
-    public static final Validator<Attach> ATTACH = new PropertyValidator<>(Property.ATTACH,
+    public static final Validator<Attach> ATTACH_URI = new PropertyValidator<>(Property.ATTACH,
             new ValidationRule<>(OneOrLess, FMTTYPE));
 
     /**
-     * @see PropertyValidator#ATTACH
+     * @see PropertyValidator#ATTACH_URI
      */
     public static final Validator<Attach> ATTACH_BIN = new PropertyValidator<>(Property.ATTACH,
+            new ValidationRule<>(OneOrLess, FMTTYPE),
             new ValidationRule<>(One, VALUE, ENCODING),
-            new ValidationRule<Attach>(One, attach -> Value.BINARY.equals(attach.getParameter(VALUE)),
-                    "VALUE=BINARY for binary attachments", VALUE),
-            new ValidationRule<Attach>(One, attach -> Encoding.BASE64.equals(attach.getParameter(ENCODING)),
-                    "ENCODING=BASE64 for binary attachments",ENCODING));
+            new ValidationRule<>(One, attach -> Encoding.BASE64.equals(attach.getParameter(ENCODING)),
+                    "ENCODING=BASE64 for binary attachments",ENCODING),
+            BINARY_VALUE);
 
     /**
      * <pre>
@@ -485,10 +491,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      */
     public static final Validator<ExDate> EXDATE = new PropertyValidator<>(Property.EXDATE,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
-            new ValidationRule<>(None, prop -> {
-                Value v = prop.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
-            }, VALUE));
+            DATE_OR_DATETIME_VALUE);
 
     /**
      * <pre>
@@ -722,10 +725,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      */
     public static final Validator<RecurrenceId> RECURRENCE_ID = new PropertyValidator<>(Property.RECURRENCE_ID,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID, RANGE),
-            new ValidationRule<>(None, prop -> {
-                Value v = prop.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
-            }, VALUE));
+            DATE_OR_DATETIME_VALUE);
 
     public static final Validator<Region> REGION = new PropertyValidator<>(Property.REGION,
             new ValidationRule<>(OneOrLess, ABBREV));
@@ -1133,7 +1133,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
             new ValidationRule<>(ValueMatch, Version.VERSION_2_0.getValue()));
 
     @SafeVarargs
-    public PropertyValidator(String context, ValidationRule<T>... rules) {
+    public PropertyValidator(String context, ValidationRule<? super T>... rules) {
         super(context, new PropertyRuleSet<>(rules));
     }
 
