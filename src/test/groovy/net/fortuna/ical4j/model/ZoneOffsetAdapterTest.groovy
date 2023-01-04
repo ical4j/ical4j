@@ -24,6 +24,7 @@ class ZoneOffsetAdapterTest extends Specification {
         where:
         utcOffset       | expectedOffset
         new UtcOffset('+1000')  | ZoneOffset.ofHours(10)
+        new UtcOffset('+1030')  | ZoneOffset.ofHoursMinutes(10, 30)
         new UtcOffset('-0600')  | ZoneOffset.ofHours(-6)
         new UtcOffset('+0545')  | ZoneOffset.ofHoursMinutes(5, 45)
     }
