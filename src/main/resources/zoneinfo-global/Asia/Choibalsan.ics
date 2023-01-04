@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022f/Asia/Choibalsan
-LAST-MODIFIED:20221105T024527Z
+TZID:/tzurl.org/2022g/Asia/Choibalsan
+LAST-MODIFIED:20230104T023645Z
 TZURL:https://www.tzurl.org/zoneinfo-global/Asia/Choibalsan
 X-LIC-LOCATION:Asia/Choibalsan
 X-PROLEPTIC-TZNAME:LMT

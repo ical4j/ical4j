@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022f/America/Dawson
-LAST-MODIFIED:20221105T024528Z
+TZID:/tzurl.org/2022g/America/Dawson
+LAST-MODIFIED:20230104T023645Z
 TZURL:https://www.tzurl.org/zoneinfo-global/America/Dawson
 X-LIC-LOCATION:America/Dawson
 X-PROLEPTIC-TZNAME:LMT

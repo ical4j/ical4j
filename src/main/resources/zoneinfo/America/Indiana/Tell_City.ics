@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:America/Indiana/Tell_City
-LAST-MODIFIED:20221105T024526Z
+LAST-MODIFIED:20230104T023643Z
 TZURL:https://www.tzurl.org/zoneinfo/America/Indiana/Tell_City
 X-LIC-LOCATION:America/Indiana/Tell_City
 X-PROLEPTIC-TZNAME:LMT

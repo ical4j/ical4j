@@ -63,6 +63,10 @@ class DateTimeSpec extends Specification {
         dateTimeString	| timezoneId
         '20110327T000000'| 'Europe/London'
         '20110326T090000'| 'Europe/Minsk'
+        '20110326T090000'| 'Australia/Melbourne'
+        '20110326T090000'| 'Australia/Adelaide'
+        // XXX: issue with tz definition for LHI..
+//        '20110326T090000'| 'Australia/Lord_Howe'
     }
 
 //    @Ignore

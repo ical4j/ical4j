@@ -48,7 +48,7 @@ class TimeZoneUpdaterTest extends Specification {
         VTimeZone tz = Calendars.load(files).getComponent('VTIMEZONE').get()
 
         then: 'result is different from input'
-        updater.updateDefinition(tz) != tz
+        updater.updateDefinition(tz) !== tz
 
         where:
         files << getInputFiles(new File('src/main/resources/zoneinfo'))
