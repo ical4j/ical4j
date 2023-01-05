@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.Constants;
+import org.slf4j.LoggerFactory;
 
 import java.time.zone.ZoneRulesProvider;
 import java.util.ArrayList;
@@ -148,9 +149,9 @@ public class DefaultContentHandler implements ContentHandler {
             Property property;
             try {
                 property = propertyBuilder.build();
-            } catch (URISyntaxException | ParseException | IOException e) {
+            } catch (RuntimeException e) {
                 if (context.isSupressInvalidProperties()) {
-                    LOG.warn("Suppressing invalid property", e);
+                    LoggerFactory.getLogger(DefaultContentHandler.class).warn("Suppressing invalid property", e);
                     return;
                 } else {
                     throw  e;
