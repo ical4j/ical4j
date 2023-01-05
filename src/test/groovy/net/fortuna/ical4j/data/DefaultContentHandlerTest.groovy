@@ -88,7 +88,7 @@ class DefaultContentHandlerTest extends Specification {
         contentHandler.endProperty('dtstart')
         contentHandler.startProperty('dtend')
         contentHandler.parameter('value', 'DATE')
-        contentHandler.propertyValue('20181213T120000Z')
+        contentHandler.propertyValue('INVALID')
         contentHandler.endProperty('dtend')
         contentHandler.endComponent('vevent')
         contentHandler.endCalendar()
