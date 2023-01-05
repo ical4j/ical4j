@@ -156,7 +156,17 @@ public class DefaultContentHandler implements ContentHandler {
     public void endProperty(String name) throws URISyntaxException, ParseException, IOException {
         if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
             assertProperty(propertyBuilder);
-            Property property = propertyBuilder.build();
+            Property property;
+            try {
+                property = propertyBuilder.build();
+            } catch (URISyntaxException | ParseException | IOException e) {
+                if (context.isSupressInvalidProperties()) {
+                    LOG.warn("Suppressing invalid property", e);
+                    return;
+                } else {
+                    throw  e;
+                }
+            }
 
             if (propertyHasTzId) {
                 propertiesWithTzId.add(property);
@@ -168,7 +178,6 @@ public class DefaultContentHandler implements ContentHandler {
             } else if (calendar != null) {
                 calendar.getProperties().add(property);
             }
-            property = null;
         }
     }
 
