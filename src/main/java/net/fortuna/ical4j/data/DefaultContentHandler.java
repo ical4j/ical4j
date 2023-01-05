@@ -145,7 +145,17 @@ public class DefaultContentHandler implements ContentHandler {
     public void endProperty(String name) {
         if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
             assertProperty(propertyBuilder);
-            Property property = propertyBuilder.build();
+            Property property;
+            try {
+                property = propertyBuilder.build();
+            } catch (URISyntaxException | ParseException | IOException e) {
+                if (context.isSupressInvalidProperties()) {
+                    LOG.warn("Suppressing invalid property", e);
+                    return;
+                } else {
+                    throw  e;
+                }
+            }
 
             // replace with a constant instance if applicable..
             property = Constants.forProperty(property);
