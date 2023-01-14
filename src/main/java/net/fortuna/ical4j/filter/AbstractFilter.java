@@ -39,15 +39,27 @@ import net.fortuna.ical4j.filter.expression.BinaryExpression;
 import net.fortuna.ical4j.filter.expression.LiteralExpression;
 import net.fortuna.ical4j.filter.expression.TargetExpression;
 import net.fortuna.ical4j.filter.expression.UnaryExpression;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterBuilder;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyBuilder;
+import net.fortuna.ical4j.model.*;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class AbstractFilter<T> implements PredicateFactory<T> {
+
+    private final Supplier<List<ParameterFactory<?>>> parameterFactorySupplier;
+
+    private final Supplier<List<PropertyFactory<?>>> propertyFactorySupplier;
+
+    public AbstractFilter() {
+        this(new DefaultPropertyFactorySupplier(), new DefaultParameterFactorySupplier());
+    }
+
+    public AbstractFilter(Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
+                          Supplier<List<ParameterFactory<?>>> parameterFactorySupplier) {
+        this.propertyFactorySupplier = propertyFactorySupplier;
+        this.parameterFactorySupplier = parameterFactorySupplier;
+    }
 
     protected <V> V literal(FilterExpression expression) {
         if (expression instanceof BinaryExpression && ((BinaryExpression) expression).right instanceof LiteralExpression) {
@@ -117,7 +129,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Property property(FilterTarget operand) {
-        PropertyBuilder spec = new PropertyBuilder(new DefaultPropertyFactorySupplier().get()).name(operand.getName());
+        PropertyBuilder spec = new PropertyBuilder(propertyFactorySupplier.get()).name(operand.getName());
         if (operand.getValue().isPresent()) {
             spec.value(operand.getValue().get());
         } else {
@@ -134,7 +146,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Property property(FilterTarget operand, String value) {
-        PropertyBuilder spec = new PropertyBuilder(new DefaultPropertyFactorySupplier().get()).name(operand.getName());
+        PropertyBuilder spec = new PropertyBuilder(propertyFactorySupplier.get()).name(operand.getName());
         if (value != null) {
             spec.value(value);
         } else {
@@ -180,7 +192,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
     }
 
     protected Parameter parameter(FilterTarget.Attribute a) {
-        return new ParameterBuilder(new DefaultParameterFactorySupplier().get())
+        return new ParameterBuilder(parameterFactorySupplier.get())
                 .name(a.getName()).value(a.getValue()).build();
     }
 
@@ -191,6 +203,6 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return a parameter instance
      */
     protected Parameter parameter(String name, String value) {
-        return new ParameterBuilder(new DefaultParameterFactorySupplier().get()).name(name).value(value).build();
+        return new ParameterBuilder(parameterFactorySupplier.get()).name(name).value(value).build();
     }
 }
