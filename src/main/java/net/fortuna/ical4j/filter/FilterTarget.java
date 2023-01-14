@@ -81,6 +81,15 @@ public class FilterTarget {
         return Objects.hash(name, value, attributes);
     }
 
+    @Override
+    public String toString() {
+        return "FilterTarget{" +
+                "name='" + name + '\'' +
+                ", value=" + value +
+                ", attributes=" + attributes +
+                '}';
+    }
+
     public static class Attribute {
 
         private final String name;
@@ -121,6 +130,14 @@ public class FilterTarget {
             String name = string.split(":")[0];
             String value = string.contains(":") ? string.split(":")[1] : null;
             return new Attribute(name, value);
+        }
+
+        @Override
+        public String toString() {
+            return "Attribute{" +
+                    "name='" + name + '\'' +
+                    ", value='" + value + '\'' +
+                    '}';
         }
     }
 }
