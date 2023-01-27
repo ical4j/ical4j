@@ -3,6 +3,7 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.time.ZoneOffset;
 import java.util.Objects;
+import java.util.Locale;
 
 /**
  * Support adapter for {@link java.time.ZoneOffset} to output in iCalendar format.
@@ -31,9 +32,9 @@ public class ZoneOffsetAdapter implements Serializable {
             int minutes = Math.abs(offset.getTotalSeconds()) % (60 * 60) / 60;
             int seconds = Math.abs(offset.getTotalSeconds()) % (60 * 60) % 60;
             if (seconds > 0) {
-                retVal = String.format("%+03d%02d%02d", hours, minutes, seconds);
+                retVal = String.format(Locale.US, "%+03d%02d%02d", hours, minutes, seconds);
             } else {
-                retVal = String.format("%+03d%02d", hours, minutes);
+                retVal = String.format(Locale.US, "%+03d%02d", hours, minutes);
             }
         }
         return retVal;
