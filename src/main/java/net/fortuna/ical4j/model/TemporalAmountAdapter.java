@@ -14,6 +14,7 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Support adapter for {@link java.time.temporal.TemporalAmount} representation in iCalendar format.
@@ -58,16 +59,16 @@ public class TemporalAmountAdapter implements Serializable {
         Temporal adjustedSeed = seed.plus(period);
         if (period.getYears() != 0) {
             long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
-            retVal = String.format("P%dW", weeks);
+            retVal = String.format(Locale.US, "P%dW", weeks);
         } else if (period.getMonths() != 0) {
             long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
-            retVal = String.format("P%dW", weeks);
+            retVal = String.format(Locale.US, "P%dW", weeks);
         } else if (period.getDays() % 7 == 0) {
             long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
-            retVal = String.format("P%dW", weeks);
+            retVal = String.format(Locale.US, "P%dW", weeks);
         } else {
             long days = Math.abs(seed.until(adjustedSeed, ChronoUnit.DAYS));
-            retVal = String.format("P%dD", days);
+            retVal = String.format(Locale.US, "P%dD", days);
         }
         if (period.isNegative() && !retVal.startsWith("-")) {
             return "-" + retVal;
@@ -99,23 +100,23 @@ public class TemporalAmountAdapter implements Serializable {
                 int seconds = (int) durationMinusDays.minusHours(hours).minusMinutes(minutes).getSeconds();
                 if (hours > 0) {
                     if (seconds > 0) {
-                        retVal = String.format("P%dDT%dH%dM%dS", days, hours, minutes, seconds);
+                        retVal = String.format(Locale.US, "P%dDT%dH%dM%dS", days, hours, minutes, seconds);
                     } else if (minutes > 0) {
-                        retVal = String.format("P%dDT%dH%dM", days, hours, minutes);
+                        retVal = String.format(Locale.US, "P%dDT%dH%dM", days, hours, minutes);
                     } else {
-                        retVal = String.format("P%dDT%dH", days, hours);
+                        retVal = String.format(Locale.US, "P%dDT%dH", days, hours);
                     }
                 } else if (minutes > 0) {
                     if (seconds > 0) {
-                        retVal = String.format("P%dDT%dM%dS", days, minutes, seconds);
+                        retVal = String.format(Locale.US, "P%dDT%dM%dS", days, minutes, seconds);
                     } else {
-                        retVal = String.format("P%dDT%dM", days, minutes);
+                        retVal = String.format(Locale.US, "P%dDT%dM", days, minutes);
                     }
                 } else if (seconds > 0) {
-                    retVal = String.format("P%dDT%dS", days, seconds);
+                    retVal = String.format(Locale.US, "P%dDT%dS", days, seconds);
                 }
             } else {
-                retVal = String.format("P%dD", days);
+                retVal = String.format(Locale.US, "P%dD", days);
             }
         } else {
             retVal = absDuration.toString();
