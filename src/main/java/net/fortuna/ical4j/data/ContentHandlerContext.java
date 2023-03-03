@@ -21,7 +21,7 @@ public class ContentHandlerContext {
 
     private List<String> ignoredPropertyNames = Collections.emptyList();
 
-    private boolean supressInvalidProperties;
+    private boolean suppressInvalidProperties;
 
     public ContentHandlerContext withParameterFactorySupplier(Supplier<List<ParameterFactory<?>>> parameterFactorySupplier) {
         ContentHandlerContext context = new ContentHandlerContext();
@@ -29,7 +29,7 @@ public class ContentHandlerContext {
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
-        context.supressInvalidProperties = this.supressInvalidProperties;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
         return context;
     }
 
@@ -39,7 +39,7 @@ public class ContentHandlerContext {
         context.propertyFactorySupplier = propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
-        context.supressInvalidProperties = this.supressInvalidProperties;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
         return context;
     }
 
@@ -49,7 +49,7 @@ public class ContentHandlerContext {
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
-        context.supressInvalidProperties = this.supressInvalidProperties;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
         return context;
     }
 
@@ -59,7 +59,7 @@ public class ContentHandlerContext {
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = ignoredPropertyNames;
-        context.supressInvalidProperties = this.supressInvalidProperties;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
         return context;
     }
 
@@ -69,7 +69,7 @@ public class ContentHandlerContext {
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
-        context.supressInvalidProperties = supressInvalidProperties;
+        context.suppressInvalidProperties = supressInvalidProperties;
         return context;
     }
 
@@ -89,7 +89,7 @@ public class ContentHandlerContext {
         return ignoredPropertyNames;
     }
 
-    public boolean isSupressInvalidProperties() {
-        return supressInvalidProperties;
+    public boolean isSuppressInvalidProperties() {
+        return suppressInvalidProperties;
     }
 }
