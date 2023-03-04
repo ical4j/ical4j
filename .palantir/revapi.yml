@@ -2048,6 +2048,11 @@ acceptedBreaks:
       new: "method java.util.Set<net.fortuna.ical4j.validate.ValidationRule<? super\
         \ T>> net.fortuna.ical4j.validate.AbstractValidationRuleSet<T>::getRules()"
       justification: "refined_generics_for_property_validator_rules"
+  "3.2.9":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.removed"
+      old: "method boolean net.fortuna.ical4j.data.ContentHandlerContext::isSupressInvalidProperties()"
+      justification: "fixed_spelling"
   "4.0.0-beta3":
     org.mnode.ical4j:ical4j:
     - code: "java.class.defaultSerializationChanged"

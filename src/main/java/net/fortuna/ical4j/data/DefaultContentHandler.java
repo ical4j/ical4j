@@ -150,7 +150,7 @@ public class DefaultContentHandler implements ContentHandler {
             try {
                 property = propertyBuilder.build();
             } catch (RuntimeException e) {
-                if (context.isSupressInvalidProperties()) {
+                if (context.isSuppressInvalidProperties()) {
                     LoggerFactory.getLogger(DefaultContentHandler.class).warn("Suppressing invalid property", e);
                     return;
                 } else {
