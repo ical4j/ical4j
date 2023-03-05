@@ -159,8 +159,8 @@ public class DefaultContentHandler implements ContentHandler {
             Property property;
             try {
                 property = propertyBuilder.build();
-            } catch (URISyntaxException | ParseException | IOException e) {
-                if (context.isSupressInvalidProperties()) {
+            } catch (URISyntaxException | ParseException | IOException | IllegalArgumentException e) {
+                if (context.isSuppressInvalidProperties()) {
                     LOG.warn("Suppressing invalid property", e);
                     return;
                 } else {

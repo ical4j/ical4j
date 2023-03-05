@@ -90,6 +90,9 @@ class DefaultContentHandlerTest extends Specification {
         contentHandler.parameter('value', 'DATE')
         contentHandler.propertyValue('20181213T120000Z')
         contentHandler.endProperty('dtend')
+        contentHandler.startProperty('geo')
+        contentHandler.propertyValue('')
+        contentHandler.endProperty('geo')
         contentHandler.endComponent('vevent')
         contentHandler.endCalendar()
 
