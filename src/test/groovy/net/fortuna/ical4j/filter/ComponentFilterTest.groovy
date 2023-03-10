@@ -1,8 +1,10 @@
 package net.fortuna.ical4j.filter
 
 import net.fortuna.ical4j.model.ContentBuilder
+import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.property.Attendee
 import net.fortuna.ical4j.model.property.Organizer
+import net.fortuna.ical4j.model.property.Summary
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
@@ -18,10 +20,14 @@ class ComponentFilterTest extends Specification {
     @Shared
     Attendee attendee
 
+    @Shared
+    Summary summary
+
     def setupSpec() {
         builder = new ContentBuilder()
         organiser = builder.organizer('Mailto:B@example.com')
         attendee = builder.attendee('Mailto:A@example.com')
+        summary = builder.summary('Test')
     }
 
     def 'test filter expression equals'() {
@@ -148,5 +154,20 @@ class ComponentFilterTest extends Specification {
         'attendee exists'                                               | true
         'request-status not exists'                                     | true
         'sequence > 1'                                                  | true
+    }
+
+    def 'test filter expressions with sets'() {
+        given: 'a filter expression using sets'
+        def filter = FilterExpression.in(Property.SUMMARY, ['Test'] as Set)
+
+        and: 'an event'
+        def event = builder.vevent {
+            organizer(organiser)
+            attendee(attendee)
+            summary(summary)
+        }
+
+        expect: 'filter matches the event'
+        new ComponentFilter().predicate(filter).test(event)
     }
 }

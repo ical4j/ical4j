@@ -113,7 +113,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent implements ComponentContainer<Component> {
+public class VToDo extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VToDo> {
 
     private static final long serialVersionUID = -269658210065896668L;
 

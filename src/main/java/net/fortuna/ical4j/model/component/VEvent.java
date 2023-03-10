@@ -189,7 +189,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent implements ComponentContainer<Component> {
+public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent> {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -477,7 +477,9 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @param date a date on which the occurence should occur
      * @return a single non-recurring event instance for the specified date, or null if the event doesn't
      * occur on the specified date
+     * @deprecated use {@link RecurrenceSupport#getOccurrences(Period)}
      */
+    @Deprecated
     public final <T extends Temporal> VEvent getOccurrence(final T date) {
 
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
