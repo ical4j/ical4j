@@ -48,7 +48,7 @@ class RecurrenceSupportTest extends Specification {
         }
 
         expect: 'calculated occurrences match expected'
-        event.getOccurrences(new Period(period)).collect { it.getProperty('RECURRENCE-ID').value} == expectedOccurrences
+        event.getOccurrences(Period.parse(period)).collect { it.getProperty('RECURRENCE-ID').get().value} == expectedOccurrences
 
         where:
         period                  | expectedOccurrences
