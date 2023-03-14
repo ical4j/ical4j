@@ -1104,7 +1104,7 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder skip(Skip skip) {
+        public Builder<T> skip(Skip skip) {
             this.skip = skip;
             return this;
         }
@@ -1114,7 +1114,7 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder rscale(RScale rscale) {
+        public Builder<T> rscale(RScale rscale) {
             this.rscale = rscale;
             return this;
         }
