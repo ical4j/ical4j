@@ -52,8 +52,8 @@ class DatePropertySpec extends Specification {
 
     def 'test auto population of tzid'() {
         expect: 'tzid is populated with expected value'
-        Optional<net.fortuna.ical4j.model.parameter.TzId> tzId = property.getParameter('TZID')
-        tzId.ifPresent {it.toZoneId() == expectedTzid }
+        Optional<net.fortuna.ical4j.model.parameter.TzId> tzid = property.getParameter('TZID')
+        tzid.present && tzid.get().value == expectedTzid.getId()
 
         where:
         property                                                                | expectedTzid
@@ -65,8 +65,8 @@ class DatePropertySpec extends Specification {
 
     def 'test auto population of tzid with tz registry'() {
         expect: 'tzid is populated with expected value'
-        Optional<net.fortuna.ical4j.model.parameter.TzId> tzId = property.getParameter('TZID')
-        tzId.ifPresent {it.toZoneId(timeZoneRegistry) == expectedTzid }
+        Optional<net.fortuna.ical4j.model.parameter.TzId> tzid = property.getParameter('TZID')
+        tzid.present && tzid.get().value == expectedTzid.getId()
 
         where:
         property                                                | expectedTzid
@@ -84,7 +84,7 @@ class DatePropertySpec extends Specification {
 
         expect: 'a TZID parameter is populated'
         Optional<net.fortuna.ical4j.model.parameter.TzId> tzid = dtStart.getParameter('TZID')
-        tzid.ifPresent { it.toZoneId() == ZoneId.of("Europe/Warsaw") }
+        tzid.present && tzid.get().value == "Europe/Warsaw"
 
         and: 'VALUE parameter is not populated'
         !dtStart.getParameter('VALUE').present
