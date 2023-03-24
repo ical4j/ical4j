@@ -6,6 +6,7 @@ import net.fortuna.ical4j.util.TimeZones;
 
 import java.io.Serializable;
 import java.time.*;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
@@ -58,7 +59,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     public TemporalAdapter(T temporal, TimeZoneRegistry timeZoneRegistry) {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
-        this.valueString = toString(temporal, TimeZones.getDefault().toZoneId());
+        this.valueString = toString(temporal);
         if (ChronoUnit.SECONDS.isSupportedBy(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
             this.tzId = new TzId.Factory().createParameter(TimeZones.getDefault().toZoneId().getId());
         } else {
@@ -139,13 +140,28 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     @Override
     public String toString() {
-        return toString(getTemporal(), TimeZones.getDefault().toZoneId());
+        return toString(getTemporal());
     }
 
     public String toString(ZoneId zoneId) {
         return toString(getTemporal(), zoneId);
     }
 
+    private String toString(T temporal) {
+        if (getTemporal() instanceof ChronoZonedDateTime) {
+            return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT,
+                    ((ChronoZonedDateTime<?>)temporal).getZone(), temporal);
+        }
+        return toString(getTemporal(), TimeZones.getDefault().toZoneId());
+    }
+
+    /**
+     * Return a string representation of the given temporal value, using the specified zone ID
+     * for applicable values (i.e. values that support the DATE-TIME format).
+     * @param temporal a temporal value
+     * @param zoneId the overriding zone id for DATE-TIME instances
+     * @return a string
+     */
     private String toString(T temporal, ZoneId zoneId) {
         if (ZoneOffset.UTC.equals(zoneId)) {
             return toInstantString(temporal);
@@ -162,6 +178,11 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         }
     }
 
+    /**
+     * Return an ISO8601 instant string for the specified temporal value.
+     * @param temporal a temporal value
+     * @return a string
+     */
     private String toInstantString(T temporal) {
         return toString(CalendarDateFormat.UTC_DATE_TIME_FORMAT, temporal);
     }
@@ -285,7 +306,17 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @return true if the temporal type is in UTC time, otherwise false
      */
     public static boolean isUtc(Temporal date) {
-        return !ChronoField.OFFSET_SECONDS.isSupportedBy(date);
+        return ChronoField.INSTANT_SECONDS.isSupportedBy(date) &&
+                !ChronoField.OFFSET_SECONDS.isSupportedBy(date);
+    }
+
+    /**
+     * Indicates whether the temporal type represents a date/time value.
+     * @return true if the temporal type has DATE-TIME precision, otherwise false
+     */
+    public static boolean isDateTimePrecision(Temporal date) {
+        return ChronoField.INSTANT_SECONDS.isSupportedBy(date) ||
+                ChronoField.HOUR_OF_DAY.isSupportedBy(date);
     }
 
     public static <T extends Temporal> boolean isBefore(T date1, T date2) {

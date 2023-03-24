@@ -21,6 +21,9 @@ class TemporalAdapterTest extends Specification {
         LocalDateTime.of(2001, 04, 03, 11, 00).toInstant(ZoneOffset.UTC) | '20010403T110000Z'
 
         LocalDateTime.of(2001, 04, 03, 11, 00) | '20010403T110000'
+        ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 16, 18, 0, 0),
+                ZoneId.of("Europe/Warsaw")) | '20221216T180000'
     }
 
     def 'verify date string parsing'() {

@@ -84,23 +84,27 @@ class DatePropertySpec extends Specification {
 
         expect: 'a TZID parameter is populated'
         Optional<net.fortuna.ical4j.model.parameter.TzId> tzid = dtStart.getParameter('TZID')
-        tzid.present && tzid.get().value == "Europe/Warsaw"
+        tzid.present && tzid.get().value == 'Europe/Warsaw'
 
         and: 'VALUE parameter is not populated'
         !dtStart.getParameter('VALUE').present
+
+        and: 'value matches expected string'
+        dtStart.value == '20221216T180000'
     }
 
     def 'test auto update of parameters'() {
         given: 'a DTSTART initialised with a DATE-TIME value'
-        DtStart dtStart = new DtStart(ZonedDateTime.of(
-                LocalDateTime.of(2022, 12, 16, 18, 0, 0),
-                ZoneId.of("Europe/Warsaw")))
+        DtStart dtStart = [LocalDateTime.of(2022, 12, 16, 18, 0, 0)
+                .atZone(ZoneId.of("Europe/Warsaw"))]
 
         and: 'set to a DATE value'
         dtStart.date = LocalDate.of(2022, 12, 16)
 
-        expect:
+        expect: 'tzid param is not present for date values'
         !dtStart.getParameter('TZID').present
+
+        and: 'value param is set to date'
         dtStart.getParameter('VALUE') == Optional.of(Value.DATE)
     }
 
