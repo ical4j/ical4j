@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.*;
@@ -164,7 +163,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
         boolean normalised = false;
         for (Period<T> period1 : periods) {
             period = period1;
-            if (period.getStart() instanceof LocalDate) {
+            if (!TemporalAdapter.isDateTimePrecision(period.getStart())) {
                 continue;
             }
             if (period.isEmpty()) {
@@ -244,7 +243,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
         PeriodList<T> tmpResult = new PeriodList<>(dateFormat);
 
         for (final Period<T> subtraction : subtractions.getPeriods()) {
-            if (subtraction.getStart() instanceof LocalDate) {
+            if (!TemporalAdapter.isDateTimePrecision(subtraction.getStart())) {
                 tmpResult = tmpResult.addAll(result.getPeriods().stream()
                         .filter(p -> !p.equals(subtraction)).collect(Collectors.toList()));
             } else {

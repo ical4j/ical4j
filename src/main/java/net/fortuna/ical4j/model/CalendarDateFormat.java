@@ -313,9 +313,9 @@ public class CalendarDateFormat implements Serializable {
      * @return a date format instance applicable to the given temporal value
      */
     public static CalendarDateFormat from(Temporal temporal) {
-        if (temporal instanceof Instant) {
+        if (TemporalAdapter.isUtc(temporal)) {
             return UTC_DATE_TIME_FORMAT;
-        } else if (temporal instanceof LocalDate) {
+        } else if (!TemporalAdapter.isDateTimePrecision(temporal)) {
             return DATE_FORMAT;
         } else {
             return FLOATING_DATE_TIME_FORMAT;

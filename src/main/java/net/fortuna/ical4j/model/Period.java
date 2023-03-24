@@ -358,7 +358,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     public final PeriodList<T> subtract(final Period<T> period) {
         if (period.equals(this)) {
             return new PeriodList<>(dateFormat);
-        } else if (!period.intersects(this) || start instanceof LocalDate) {
+        } else if (!period.intersects(this) || !TemporalAdapter.isDateTimePrecision(start)) {
             return new PeriodList<>(Collections.singletonList(this), dateFormat);
         }
         return subtractInterval(period);
@@ -405,7 +405,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return true if this period consumes no time, otherwise false
      */
     public final boolean isEmpty() {
-        if (start instanceof LocalDate) {
+        if (!TemporalAdapter.isDateTimePrecision(start)) {
             return start.equals(end);
         }
         return toInterval().isEmpty();

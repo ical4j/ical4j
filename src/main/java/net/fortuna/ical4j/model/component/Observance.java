@@ -137,7 +137,7 @@ public abstract class Observance extends Component {
      * specified date
      */
     public final OffsetDateTime getLatestOnset(final Temporal date) {
-        if (date instanceof LocalDate) {
+        if (!TemporalAdapter.isDateTimePrecision(date)) {
             throw new UnsupportedOperationException("Unable to get timezone observance for date-only temporal.");
         }
 

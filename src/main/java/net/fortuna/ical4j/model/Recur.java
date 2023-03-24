@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.chrono.Chronology;
 import java.time.temporal.*;
 import java.util.*;
@@ -760,7 +759,7 @@ public class Recur<T extends Temporal> implements Serializable {
         final List<T> dates = getDatesAsStream(seed, periodStart, periodEnd, maxCount).collect(Collectors.toList());
 
         // sort final list..
-        if (seed instanceof LocalDate) {
+        if (!TemporalAdapter.isDateTimePrecision(seed)) {
             dates.sort(new TemporalComparator(ChronoUnit.DAYS));
         } else {
             dates.sort(CANDIDATE_SORTER);
