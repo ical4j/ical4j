@@ -2083,3 +2083,17 @@ acceptedBreaks:
       old: "class net.fortuna.ical4j.model.Month"
       new: "class net.fortuna.ical4j.model.Month"
       justification: "added_method"
+  "4.0.0-beta6":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Recur.Builder net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::rscale(net.fortuna.ical4j.model.Recur.RScale)"
+      new: "method net.fortuna.ical4j.model.Recur.Builder<T> net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::rscale(net.fortuna.ical4j.model.Recur.RScale)"
+      justification: "refined_recur_builder_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Recur.Builder net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::skip(net.fortuna.ical4j.model.Recur.Skip)"
+      new: "method net.fortuna.ical4j.model.Recur.Builder<T> net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::skip(net.fortuna.ical4j.model.Recur.Skip)"
+      justification: "refined_recur_builder_generics"
