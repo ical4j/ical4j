@@ -42,7 +42,6 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jooq.lambda.Unchecked;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -294,9 +293,9 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public final Calendar copy() {
         return new Calendar(
                 new PropertyList(getProperties().parallelStream()
-                        .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
+                        .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                    .map(Unchecked.function(c -> (CalendarComponent) c.copy())).collect(Collectors.toList())));
+                    .map(c -> (CalendarComponent) c.copy()).collect(Collectors.toList())));
     }
 
     /**

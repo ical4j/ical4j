@@ -38,7 +38,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jooq.lambda.Unchecked;
 
 import java.io.Serializable;
 import java.time.temporal.Temporal;
@@ -272,7 +271,7 @@ public abstract class Component extends Content implements Serializable, Propert
      */
     public <T extends Component> T copy() {
         return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                .map(Unchecked.function(Property::copy)).collect(Collectors.toList())));
+                .map(Property::copy).collect(Collectors.toList())));
     }
 
     /**
