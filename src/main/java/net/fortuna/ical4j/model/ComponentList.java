@@ -133,7 +133,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
      * @param name name of components to return
      * @return a list of components with the matching name
      *
-     * @deprecated use {@link ComponentList#get(String)}
+     * @deprecated use {@link ContentCollection#get(String...)}
      */
     @Deprecated
 	public final <C extends T> List<C> getComponents(final String... name) {
