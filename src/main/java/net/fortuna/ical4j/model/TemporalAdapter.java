@@ -60,8 +60,9 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         this.temporal = temporal;
         this.valueString = toString(temporal);
         if (isDateTimePrecision(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
-            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
-            this.tzId = new TzId(zoneId.getId());
+//            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
+//            this.tzId = new TzId(zoneId.getId());
+            this.tzId = new TzId.Factory().createParameter(TimeZones.getDefault().toZoneId().getId());
         } else {
             this.tzId = null;
         }
