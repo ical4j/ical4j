@@ -9,7 +9,6 @@ import java.time.*;
 import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.Objects;
 
@@ -60,8 +59,9 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
         this.valueString = toString(temporal);
-        if (ChronoUnit.SECONDS.isSupportedBy(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
-            this.tzId = new TzId.Factory().createParameter(TimeZones.getDefault().toZoneId().getId());
+        if (isDateTimePrecision(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
+            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
+            this.tzId = new TzId(zoneId.getId());
         } else {
             this.tzId = null;
         }
@@ -165,7 +165,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     private String toString(T temporal, ZoneId zoneId) {
         if (ZoneOffset.UTC.equals(zoneId)) {
             return toInstantString(temporal);
-        } else if (!ChronoUnit.SECONDS.isSupportedBy(temporal)) {
+        } else if (!isDateTimePrecision(temporal)) {
             return toString(CalendarDateFormat.DATE_FORMAT, temporal);
         } else {
             if (isFloating(getTemporal())) {
