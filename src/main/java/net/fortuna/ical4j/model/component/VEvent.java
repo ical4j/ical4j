@@ -190,7 +190,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent implements ComponentContainer<Component> {
+public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent> {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -451,7 +451,9 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @throws IOException where an error occurs reading data
      * @throws URISyntaxException where an invalid URI is encountered
      * @throws ParseException where an error occurs parsing data
+     * @deprecated use {@link RecurrenceSupport#getOccurrences(Period)}
      */
+    @Deprecated
     public final VEvent getOccurrence(final Date date) throws IOException,
         URISyntaxException, ParseException {
 

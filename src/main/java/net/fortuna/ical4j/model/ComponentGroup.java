@@ -57,7 +57,7 @@ public class ComponentGroup<T extends Component> {
      * @return
      */
     public ComponentList<T> getRevisions() {
-        return new ComponentList<T>(components.stream().filter(componentPredicate).collect(Collectors.toList()));
+        return new ComponentList<>(components.stream().filter(componentPredicate).collect(Collectors.toList()));
     }
 
     /**

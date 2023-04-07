@@ -44,6 +44,7 @@ import net.fortuna.ical4j.model.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -122,7 +123,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      */
     protected List<Comparable<Property>> properties(BinaryExpression expression) {
         FilterTarget operand = target(expression);
-        List<String> literal = literal(expression);
+        Collection<String> literal = literal(expression);
         return literal.stream().map(l -> property(operand, l)).collect(Collectors.toList());
     }
 
@@ -198,7 +199,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
     protected List<Comparable<Parameter>> parameters(BinaryExpression expression) {
         // only applicable for operand expressions..
         FilterTarget specification = target(expression);
-        List<String> literal = literal(expression);
+        Collection<String> literal = literal(expression);
         return literal.stream().map(l -> parameter(specification.getName(), l)).collect(Collectors.toList());
     }
 
