@@ -44,9 +44,13 @@ import com.github.erosb.jsonsKema.SchemaLoader;
 import com.github.erosb.jsonsKema.ValidationFailure;
 import com.github.erosb.jsonsKema.Validator;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 public class JsonSchemaValidator implements net.fortuna.ical4j.validate.Validator<StructuredData> {
 
@@ -59,8 +63,12 @@ public class JsonSchemaValidator implements net.fortuna.ical4j.validate.Validato
     @Override
     public ValidationResult validate(StructuredData target) throws ValidationException {
         ValidationResult result = new ValidationResult();
-        try (InputStream in = schemaUrl.openStream()) {
-            final JsonValue rawSchema = new JsonParser(new String(in.readAllBytes())).parse();
+        try (final InputStream in = schemaUrl.openStream()) {
+            final String schemaJson = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
+
+            final JsonValue rawSchema = new JsonParser(schemaJson).parse();
 
             final Schema schema = new SchemaLoader(rawSchema).load();
             final Validator validator = Validator.forSchema(schema);
