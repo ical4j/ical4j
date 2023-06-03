@@ -124,7 +124,7 @@ public class CalendarBuilder {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry,
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry,
                 new ContentHandlerContext().withParameterFactorySupplier(parameterFactoryRegistry)
                         .withPropertyFactorySupplier(propertyFactoryRegistry));
     }
@@ -142,7 +142,7 @@ public class CalendarBuilder {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry,
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry,
                 new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
                 .withPropertyFactorySupplier(propertyFactorySupplier)
                 .withComponentFactorySupplier(componentFactorySupplier));
