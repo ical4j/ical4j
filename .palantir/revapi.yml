@@ -1990,6 +1990,19 @@ acceptedBreaks:
       new: "method void net.fortuna.ical4j.model.parameter.Email::<init>(java.lang.String)\
         \ throws jakarta.mail.internet.AddressException"
       justification: "jarkata_mail_package_changed"
+  "3.2.11":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.data.CalendarBuilder"
+      new: "class net.fortuna.ical4j.data.CalendarBuilder"
+      justification: "simplify_exposed_interfaces"
+    - code: "java.method.removed"
+      old: "method java.util.function.Consumer<T> java.util.function.Consumer<T>::andThen(java.util.function.Consumer<?\
+        \ super T>) @ net.fortuna.ical4j.data.CalendarBuilder"
+      justification: "simplify_exposed_interfaces"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.data.CalendarBuilder::accept(net.fortuna.ical4j.model.Calendar)"
+      justification: "simplify_exposed_interfaces"
   "3.2.6":
     org.mnode.ical4j:ical4j:
     - code: "java.field.removed"
