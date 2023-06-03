@@ -40,7 +40,6 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -55,7 +54,7 @@ import java.util.function.Supplier;
  *                         </pre>
  * @version 2.0
  */
-public class CalendarBuilder implements Consumer<Calendar> {
+public class CalendarBuilder {
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
@@ -76,7 +75,7 @@ public class CalendarBuilder implements Consumer<Calendar> {
     public CalendarBuilder() {
         this.parser = CalendarParserFactory.getInstance().get();
         this.tzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry);
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry);
     }
 
     /**
@@ -87,7 +86,7 @@ public class CalendarBuilder implements Consumer<Calendar> {
     public CalendarBuilder(final CalendarParser parser) {
         this.parser = parser;
         this.tzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry);
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry);
     }
 
     /**
@@ -98,7 +97,7 @@ public class CalendarBuilder implements Consumer<Calendar> {
     public CalendarBuilder(final TimeZoneRegistry tzRegistry) {
         this.parser = CalendarParserFactory.getInstance().get();
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry);
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry);
     }
 
     /**
@@ -112,7 +111,7 @@ public class CalendarBuilder implements Consumer<Calendar> {
     public CalendarBuilder(CalendarParser parser, TimeZoneRegistry tzRegistry) {
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry);
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry);
     }
 
     /**
@@ -152,12 +151,7 @@ public class CalendarBuilder implements Consumer<Calendar> {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new DefaultContentHandler(this, tzRegistry, contentHandlerContext);
-    }
-
-    @Override
-    public void accept(Calendar calendar) {
-        this.calendar = calendar;
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry, contentHandlerContext);
     }
 
     /**
