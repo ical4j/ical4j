@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
@@ -113,7 +114,7 @@ public class BusyType extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return ValidationResult.EMPTY;
+        return PropertyValidator.BUSY_TYPE.validate(this);
     }
 
     @Override

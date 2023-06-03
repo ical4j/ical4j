@@ -121,7 +121,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Action> ACTION = new PropertyValidator<>(Property.ACTION,
-            new ValidationRule<>(ValueMatch, String.join("|", AUDIO.getValue(),
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", AUDIO.getValue(),
                     ImmutableAction.DISPLAY.getValue(), ImmutableAction.EMAIL.getValue(), "X-[A-Z]+")));
 
 
@@ -198,6 +198,10 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
             new ValidationRule<>(OneOrLess, CUTYPE, MEMBER, ROLE, PARTSTAT,
                     RSVP, DELEGATED_TO, DELEGATED_FROM, SENT_BY, CN, DIR, LANGUAGE, SCHEDULE_AGENT, SCHEDULE_STATUS));
 
+    public static final Validator<BusyType> BUSY_TYPE = new PropertyValidator<>(Property.BUSYTYPE,
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", BusyType.VALUE_BUSY,
+                    BusyType.VALUE_BUSY_TENTATIVE, BusyType.VALUE_BUSY_UNAVAILABLE)));
+
     /**
      * <pre>
      *        Format Definition:  This property is defined by the following
@@ -211,7 +215,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<CalScale> CALSCALE = new PropertyValidator<>(Property.CALSCALE,
-            new ValidationRule<>(ValueMatch, GREGORIAN.getValue()));
+            new ValidationRule<>(ValueMatch, "(?i)" + GREGORIAN.getValue()));
 
     /**
      * <pre>
@@ -254,7 +258,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Clazz> CLAZZ = new PropertyValidator<>(Property.CLASS,
-            new ValidationRule<>(ValueMatch, String.join("|", PUBLIC.getValue(), PRIVATE.getValue(),
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", PUBLIC.getValue(), PRIVATE.getValue(),
                     CONFIDENTIAL.getValue())));
 
     /**
@@ -598,7 +602,10 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        metvalue   = iana-token
      * </pre>
      */
-    public static final Validator<Method> METHOD = new PropertyValidator<>(Property.METHOD);
+    public static final Validator<Method> METHOD = new PropertyValidator<>(Property.METHOD,
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", Method.VALUE_PUBLISH,
+                    Method.VALUE_REQUEST, Method.VALUE_REPLY, Method.VALUE_ADD, Method.VALUE_CANCEL,
+                    Method.VALUE_COUNTER, Method.VALUE_DECLINECOUNTER, Method.VALUE_REFRESH)));
 
     /**
      * <pre>
@@ -898,7 +905,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Status> STATUS = new PropertyValidator<>(Property.STATUS,
-        new ValidationRule<>(ValueMatch, String.join("|", VEVENT_TENTATIVE.getValue(),
+        new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", VEVENT_TENTATIVE.getValue(),
                 VEVENT_CONFIRMED.getValue(), VEVENT_CANCELLED.getValue(),
                 VTODO_NEEDS_ACTION.getValue(), VTODO_COMPLETED.getValue(),
                 VTODO_IN_PROCESS.getValue(), VTODO_CANCELLED.getValue(),
@@ -955,7 +962,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Transp> TRANSP = new PropertyValidator<>(Property.TRANSP,
-            new ValidationRule<>(ValueMatch, String.join("|", OPAQUE.getValue(),
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", OPAQUE.getValue(),
                     TRANSPARENT.getValue())));
 
     /**
@@ -1140,7 +1147,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Version> VERSION = new PropertyValidator<>(Property.VERSION,
-            new ValidationRule<>(ValueMatch, VERSION_2_0.getValue()));
+            new ValidationRule<>(ValueMatch, "(?i)" + VERSION_2_0.getValue()));
 
     @SafeVarargs
     public PropertyValidator(String context, ValidationRule<? super T>... rules) {
