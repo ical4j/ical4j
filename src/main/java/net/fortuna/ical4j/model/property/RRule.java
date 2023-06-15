@@ -105,6 +105,10 @@ public class RRule<T extends Temporal> extends Property {
         return recur;
     }
 
+    public void setRecur(Recur recur) {
+        this.recur = recur;
+    }
+
     /**
      * {@inheritDoc}
      */
