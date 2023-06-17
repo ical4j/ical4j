@@ -189,7 +189,9 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent> {
+public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent>,
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
+        RelationshipPropertyAccessor {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -494,148 +496,31 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     }
 
     /**
-     * @return the optional access classification property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Clazz> getClassification() {
-        return getProperty(CLASS);
-    }
-
-    /**
-     * @return the optional creation-time property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Created> getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
-     * @return the optional description property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Description> getDescription() {
-        return getProperty(DESCRIPTION);
-    }
-
-    /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
-     * @deprecated use {@link VEvent#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
     @Deprecated
-    public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(DTSTART);
-    }
-
-    /**
-     * @return the optional geographic position property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Geo> getGeographicPos() {
-        return getProperty(GEO);
-    }
-
-    /**
-     * @return the optional last-modified property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional location property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Location> getLocation() {
-        return getProperty(LOCATION);
-    }
-
-    /**
-     * @return the optional organizer property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Organizer> getOrganizer() {
-        return getProperty(ORGANIZER);
-    }
-
-    /**
-     * @return the optional priority property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Priority> getPriority() {
-        return getProperty(PRIORITY);
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
      * @return the optional date-stamp property
-     * @deprecated use {@link VEvent#getProperty(String)}
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(DTSTAMP);
-    }
-
-    /**
-     * @return the optional sequence number property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Sequence> getSequence() {
-        return getProperty(SEQUENCE);
-    }
-
-    /**
-     * @return the optional status property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Status> getStatus() {
-        return getProperty(STATUS);
-    }
-
-    /**
-     * @return the optional summary property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Summary> getSummary() {
-        return getProperty(SUMMARY);
+        return getDateTimeStamp();
     }
 
     /**
      * @return the optional time transparency property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getTimeTransparency()}
      */
     @Deprecated
     public final Optional<Transp> getTransparency() {
-        return getProperty(TRANSP);
-    }
-
-    /**
-     * @return the optional URL property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Url> getUrl() {
-        return getProperty(URL);
-    }
-
-    /**
-     * @return the optional recurrence identifier property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<RecurrenceId<?>> getRecurrenceId() {
-        return getProperty(RECURRENCE_ID);
+        return getTimeTransparency();
     }
 
     /**
@@ -685,25 +570,6 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
             }
         }
         return dtEnd;
-    }
-
-    /**
-     * @return the optional Duration property
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Duration> getDuration() {
-        return getProperty(DURATION);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
     }
 
     /**

@@ -32,7 +32,10 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.Temporal;
@@ -104,7 +107,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VJournal extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VJournal> {
+public class VJournal extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VJournal>,
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor, RelationshipPropertyAccessor {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
@@ -211,122 +215,22 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
     }
 
     /**
-     * @return the optional access classification property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Clazz> getClassification() {
-        return getProperty(CLASS);
-    }
-
-    /**
-     * @return the optional creation-time property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Created> getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
-     * @return the optional description property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Description> getDescription() {
-        return getProperty(DESCRIPTION);
-    }
-
-    /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
-     * @deprecated use {@link VJournal#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
     @Deprecated
-    public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(DTSTART);
-    }
-
-    /**
-     * @return the optional last-modified property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional organizer property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Organizer> getOrganizer() {
-        return getProperty(ORGANIZER);
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
      * @return the optional date-stamp property
-     * @deprecated use {@link VJournal#getProperty(String)}
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(DTSTAMP);
-    }
-
-    /**
-     * @return the optional sequence number property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Sequence> getSequence() {
-        return getProperty(SEQUENCE);
-    }
-
-    /**
-     * @return the optional status property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Status> getStatus() {
-        return getProperty(STATUS);
-    }
-
-    /**
-     * @return the optional summary property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Summary> getSummary() {
-        return getProperty(SUMMARY);
-    }
-
-    /**
-     * @return the optional URL property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Url> getUrl() {
-        return getProperty(URL);
-    }
-
-    /**
-     * @return the optional recurrence identifier property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<RecurrenceId<?>> getRecurrenceId() {
-        return getProperty(RECURRENCE_ID);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
+        return getDateTimeStamp();
     }
 
     @Override

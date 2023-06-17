@@ -2110,3 +2110,326 @@ acceptedBreaks:
       new: "method net.fortuna.ical4j.model.Recur.Builder<T> net.fortuna.ical4j.model.Recur.Builder<T\
         \ extends java.time.temporal.Temporal>::skip(net.fortuna.ical4j.model.Recur.Skip)"
       justification: "refined_recur_builder_generics"
+  "4.0.0-beta7":
+    org.mnode.ical4j:ical4j:
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Due<?>> net.fortuna.ical4j.model.component.VToDo::getDue()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.Due<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getDue()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Due<?>> net.fortuna.ical4j.model.component.VToDo::getDue()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.Due<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getDue()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Due<?>> net.fortuna.ical4j.model.component.VToDo::getDue()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.Due<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getDue()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"

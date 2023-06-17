@@ -385,7 +385,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 
         List<VEvent> vev = calendar.getComponents(Component.VEVENT);
 
-        LocalDate start = (LocalDate) vev.get(0).getStartDate().get().getDate();
+        LocalDate start = (LocalDate) vev.get(0).getDateTimeStart().get().getDate();
         LocalDate latest = LocalDate.now().plusYears(1);
 
         List<Period<LocalDate>> pl = vev.get(0).getConsumedTime(new Period<>(start, latest));
@@ -593,7 +593,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 
         //testGetOccurrence..
         suite.addTest(new VEventTest<>("testGetOccurrence", weekdayNineToFiveEvents,
-                weekdayNineToFiveEvents.getStartDate().get().getDate()));
+                weekdayNineToFiveEvents.getDateTimeStart().get().getDate()));
 
         //testGetConsumedTime..
         suite.addTest(new VEventTest<>("testGetConsumedTime", weekdayNineToFiveEvents));
