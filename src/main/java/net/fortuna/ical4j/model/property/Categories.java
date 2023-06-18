@@ -149,14 +149,14 @@ public class Categories extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         categories = new TextList(aValue);
     }
 
     /**
      * @return Returns the categories.
      */
-    public final List<String> getCategories() {
+    public List<String> getCategories() {
         return categories.getTexts();
     }
 
@@ -164,7 +164,7 @@ public class Categories extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final String getValue() {
+    public String getValue() {
         return categories.toString();
     }
 
