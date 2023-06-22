@@ -72,7 +72,7 @@ public class ParticipantType extends Property implements Encodable {
      */
     public ParticipantType(final ParameterList aList, final String aValue) {
         super(PARTICIPANT_TYPE, aList);
-        setValue(aValue);
+        this.value = aValue;
     }
 
     /**
