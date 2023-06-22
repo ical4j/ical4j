@@ -34,7 +34,7 @@ package net.fortuna.ical4j.model.component;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.ParticipantType;
+import net.fortuna.ical4j.model.property.immutable.ImmutableParticipantType;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
 
@@ -70,7 +70,7 @@ public class ParticipantTest extends ComponentTest {
         
         final UidGenerator g = new RandomUidGenerator();
         p = new Participant().withProperty(g.generateUid())
-                .withProperty(ParticipantType.VOTER)
+                .withProperty(ImmutableParticipantType.ACTIVE)
                 .withProperty(new DtStamp()).getFluentTarget();
         suite.addTest(new ParticipantTest("testValidation", p));
         return suite;

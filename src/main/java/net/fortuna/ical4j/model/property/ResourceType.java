@@ -92,7 +92,7 @@ public class ResourceType extends Property implements Encodable {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 

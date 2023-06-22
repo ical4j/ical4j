@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.property.immutable.ImmutableParticipantType;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
@@ -48,9 +49,6 @@ import net.fortuna.ical4j.validate.ValidationResult;
 public class ParticipantType extends Property implements Encodable {
 
     private static final long serialVersionUID = 7753849118575885600L;
-
-    public static final ParticipantType VOTER =
-            new ParticipantType("VOTER");
 
     private String value;
 
@@ -80,7 +78,7 @@ public class ParticipantType extends Property implements Encodable {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 
@@ -111,9 +109,8 @@ public class ParticipantType extends Property implements Encodable {
         public ParticipantType createProperty(final ParameterList parameters, final String value) {
             final ParticipantType participantType;
 
-            if (ParticipantType.VOTER
-                    .getValue().equals(value)) {
-                participantType = ParticipantType.VOTER;
+            if (ImmutableParticipantType.ACTIVE.getValue().equals(value)) {
+                participantType = ImmutableParticipantType.ACTIVE;
             } else {
                 participantType = new ParticipantType(parameters, value);
             }
