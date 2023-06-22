@@ -36,10 +36,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -77,6 +73,16 @@ public class RelatedTo extends Property implements Encodable {
     public RelatedTo(final ParameterList aList, final String aValue) {
         super(RELATED_TO, aList);
         setValue(aValue);
+    }
+
+    public RelatedTo(Component component) {
+        super(RELATED_TO);
+        setValue(component.getRequiredProperty(Property.UID).getValue());
+    }
+
+    public RelatedTo(ParameterList parameters, Component component) {
+        super(RELATED_TO, parameters);
+        setValue(component.getRequiredProperty(Property.UID).getValue());
     }
 
     /**

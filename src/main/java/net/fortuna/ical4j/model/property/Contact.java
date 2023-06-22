@@ -32,13 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.Participant;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -77,6 +74,16 @@ public class Contact extends Property implements Encodable {
     public Contact(final ParameterList aList, final String aValue) {
         super(CONTACT, aList);
         setValue(aValue);
+    }
+
+    public Contact(Participant participant) {
+        super(CONTACT);
+        setValue(participant.getRequiredProperty(Property.NAME).getValue());
+    }
+
+    public Contact(ParameterList parameters, Participant participant) {
+        super(CONTACT, parameters);
+        setValue(participant.getRequiredProperty(Property.NAME).getValue());
     }
 
     /**

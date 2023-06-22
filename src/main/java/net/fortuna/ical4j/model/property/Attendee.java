@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.component.Participant;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -100,6 +101,30 @@ public class Attendee extends Property {
     public Attendee(final ParameterList aList, final URI aUri) {
         super(ATTENDEE, aList);
         calAddress = aUri;
+    }
+
+    /**
+     * Construct an attendee from a participant. The expectation is that the participant is schedulable (i.e.
+     * has a calendar address) and an exception will be thrown where this is not the case.
+     *
+     * @param participant a schedulable participant
+     */
+    public Attendee(Participant participant) {
+        super(ATTENDEE);
+        CalendarAddress calAddressProp = participant.getRequiredProperty(Property.CALENDAR_ADDRESS);
+        calAddress = calAddressProp.getCalAddress();
+    }
+
+    /**
+     * Construct an attendee from a participant. The expectation is that the participant is schedulable (i.e.
+     * has a calendar address) and an exception will be thrown where this is not the case.
+     *
+     * @param participant a schedulable participant
+     */
+    public Attendee(ParameterList parameters, Participant participant) {
+        super(ATTENDEE, parameters);
+        CalendarAddress calAddressProp = participant.getRequiredProperty(Property.CALENDAR_ADDRESS);
+        calAddress = calAddressProp.getCalAddress();
     }
 
     /**

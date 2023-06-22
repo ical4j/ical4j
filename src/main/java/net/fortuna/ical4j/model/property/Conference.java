@@ -22,6 +22,11 @@ public class Conference extends Property {
         super(PROPERTY_NAME);
     }
 
+    public Conference(String value) {
+        super(PROPERTY_NAME);
+        setValue(value);
+    }
+
     public Conference(ParameterList params, String value) {
         super(PROPERTY_NAME, params);
         setValue(value);

@@ -62,7 +62,7 @@ public class DateList<T extends Temporal> implements Serializable {
      * Default constructor.
      */
     public DateList() {
-        this(Collections.emptyList());
+        this.dates = Collections.emptyList();
     }
 
     /**
@@ -72,6 +72,10 @@ public class DateList<T extends Temporal> implements Serializable {
      */
     public DateList(final T...dates) {
         this.dates = Arrays.stream(dates).map(TemporalAdapter::new).collect(Collectors.toList());
+    }
+
+    public DateList(Collection<T> dates) {
+        this.dates = dates.stream().map(TemporalAdapter::new).collect(Collectors.toList());
     }
 
     public DateList(TimeZoneRegistry timeZoneRegistry, T...dates) {

@@ -68,7 +68,7 @@ public class StyledDescription extends Property implements Encodable {
     /**
      * @param aValue a value string for this component
      */
-    public StyledDescription(final String aValue) throws URISyntaxException {
+    public StyledDescription(final String aValue) {
         super(STYLED_DESCRIPTION, new ParameterList());
         setValue(aValue);
     }

@@ -32,13 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.VLocation;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -113,6 +110,11 @@ public class Location extends Property implements Encodable {
         super(LOCATION);
     }
 
+    public Location(VLocation location) {
+        super(LOCATION);
+        setValue(location.getRequiredProperty(Property.NAME).getValue());
+    }
+
     /**
      * @param aValue a value string for this component
      */
@@ -129,6 +131,7 @@ public class Location extends Property implements Encodable {
         super(LOCATION, aList);
         setValue(aValue);
     }
+
 
     /**
      * {@inheritDoc}
