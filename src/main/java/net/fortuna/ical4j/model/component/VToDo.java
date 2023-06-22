@@ -39,7 +39,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -114,7 +117,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * @author Ben Fortuna
  */
 public class VToDo extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VToDo>,
-        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor, RelationshipPropertyAccessor {
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
+        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = -269658210065896668L;
 
@@ -222,26 +226,6 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
         add(new DtStart<>(start));
         add(new Duration(duration));
         add(new Summary(summary));
-    }
-
-    /**
-     * Returns the list of alarms for this todo.
-     * @return a component list
-     */
-    public final List<VAlarm> getAlarms() {
-        return getComponents(Component.VALARM);
-    }
-
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
     }
 
     /**

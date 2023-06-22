@@ -203,7 +203,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component> {
+public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component>, ParticipantsAccessor,
+    LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
@@ -513,18 +514,6 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         else {
             return super.validate(method);
         }
-    }
-
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
     }
 
     /**

@@ -40,7 +40,6 @@ import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.Temporal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -108,7 +107,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * @author Ben Fortuna
  */
 public class VJournal extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VJournal>,
-        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor, RelationshipPropertyAccessor {
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
+        RelationshipPropertyAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
@@ -186,18 +186,6 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
         else {
             return super.validate(method);
         }
-    }
-
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
     }
 
     /**

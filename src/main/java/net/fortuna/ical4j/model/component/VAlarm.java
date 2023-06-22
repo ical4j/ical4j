@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.DescriptivePropertyAccessor;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -195,7 +192,7 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Ben Fortuna
  */
-public class VAlarm extends CalendarComponent implements DescriptivePropertyAccessor {
+public class VAlarm extends CalendarComponent implements ComponentContainer<Component>, DescriptivePropertyAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -230,6 +227,20 @@ public class VAlarm extends CalendarComponent implements DescriptivePropertyAcce
     public VAlarm(final TemporalAmount trigger) {
         this();
         add(new Trigger(trigger));
+    }
+
+    /**
+     *
+     * @return Returns the underlying component list.
+     */
+    @Override
+    public ComponentList<Component> getComponentList() {
+        return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**

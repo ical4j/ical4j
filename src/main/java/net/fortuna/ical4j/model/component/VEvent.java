@@ -191,7 +191,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  */
 public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent>,
         DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
-        RelationshipPropertyAccessor {
+        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -310,26 +310,6 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         add(new DtStart<>(start));
         add(new Duration(duration));
         add(new Summary(summary));
-    }
-
-    /**
-     * Returns the list of alarms for this event.
-     * @return a component list
-     */
-    public final List<VAlarm> getAlarms() {
-        return getComponents();
-    }
-
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
     }
 
     /**
