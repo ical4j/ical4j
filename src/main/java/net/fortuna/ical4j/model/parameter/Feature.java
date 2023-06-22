@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * <pre>
@@ -53,6 +54,20 @@ public class Feature extends Parameter implements Encodable {
 
     private static final String PARAMETER_NAME = "FEATURE";
 
+    public static final Feature AUDIO = new Feature(Value.AUDIO.name());
+
+    public static final Feature CHAT = new Feature(Value.CHAT.name());
+
+    public static final Feature FEED = new Feature(Value.FEED.name());
+
+    public static final Feature MODERATOR = new Feature(Value.MODERATOR.name());
+
+    public static final Feature PHONE = new Feature(Value.PHONE.name());
+
+    public static final Feature SCREEN = new Feature(Value.SCREEN.name());
+
+    public static final Feature VIDEO = new Feature(Value.VIDEO.name());
+
     public enum Value {
         AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO
     }
@@ -60,8 +75,11 @@ public class Feature extends Parameter implements Encodable {
     private final Set<String> values;
 
     public Feature(String value) {
+        this(value.split(","));
+    }
+
+    public Feature(String... valueStrings) {
         super(PARAMETER_NAME);
-        String[] valueStrings = value.split(",");
         for (String valueString : valueStrings) {
             try {
                 Value.valueOf(valueString);
@@ -72,6 +90,12 @@ public class Feature extends Parameter implements Encodable {
             }
         }
         this.values = Collections.unmodifiableSet(new TreeSet<>(Arrays.asList(valueStrings)));
+    }
+
+    public Feature(Value... values) {
+        super(PARAMETER_NAME);
+        this.values = Collections.unmodifiableSet(new TreeSet<>(
+                Arrays.stream(values).map(Enum::name).collect(Collectors.toList())));
     }
 
     @Override
