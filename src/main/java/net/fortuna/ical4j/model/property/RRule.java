@@ -60,7 +60,11 @@ public class RRule<T extends Temporal> extends Property {
      */
     public RRule() {
         super(RRULE);
-        recur = new Recur<>(Frequency.DAILY, 1);
+    }
+
+    public RRule(Frequency frequency) {
+        super(RRULE);
+        recur = new Recur<>(frequency);
     }
 
     /**
@@ -154,5 +158,4 @@ public class RRule<T extends Temporal> extends Property {
             return new RRule<>();
         }
     }
-
 }

@@ -407,6 +407,11 @@ public class Recur<T extends Temporal> implements Serializable {
         this(Frequency.valueOf(frequency), until);
     }
 
+    public Recur(final Frequency frequency) {
+        this.frequency = frequency;
+        validateFrequency();
+    }
+
     /**
      * @param frequency a recurrence frequency string
      * @param until     maximum recurrence date
@@ -1005,7 +1010,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Deprecated
     public final void setUntil(final T until) {
-        this.until = new TemporalAdapter<T>(until);
+        this.until = new TemporalAdapter<>(until);
         this.count = -1;
     }
 
@@ -1079,7 +1084,12 @@ public class Recur<T extends Temporal> implements Serializable {
         public Builder() {
         }
 
+        /**
+         * Initialise builder using an existing recurrence.
+         * @param recur a non-null recurrence.
+         */
         public Builder(Recur<T> recur) {
+            Objects.requireNonNull(recur);
             this.frequency = recur.frequency;
             this.rscale = recur.rscale;
             this.skip = recur.skip;
