@@ -29,27 +29,56 @@ import java.util.stream.Collectors;
  *
  * Created by fortuna on 20/07/2017.
  */
-public class ComponentGroup<C extends Component> implements ComponentListAccessor<C> {
+public class ComponentGroup<C extends Component> implements ComponentListAccessor<C>, ComponentContainer<C> {
 
-    private final ComponentList<C> componentList;
+    private ComponentList<C> componentList;
+
+    private final Predicate<C> componentPredicate;
+
+    public ComponentGroup(Uid uid) {
+        this(new ArrayList<>(), uid);
+    }
+
+    public ComponentGroup(Uid uid, RecurrenceId<?> recurrenceId) {
+        this(new ArrayList<>(), uid, recurrenceId);
+    }
 
     public ComponentGroup(List<C> components, Uid uid) {
-        this(components, uid, null);
+        this.componentPredicate = new PropertyEqualToRule<>(uid);
+        this.componentList = new ComponentList<>(components.stream().filter(componentPredicate)
+                .collect(Collectors.toList()));
     }
 
     public ComponentGroup(List<C> components, Uid uid, RecurrenceId<?> recurrenceId) {
-        Predicate<C> componentPredicate;
-        if (recurrenceId != null) {
-            componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
-        } else {
-            componentPredicate = new PropertyEqualToRule<>(uid);
-        }
-        this.componentList = new ComponentList<>(components.stream().filter(componentPredicate).collect(Collectors.toList()));
+        this.componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
+        this.componentList = new ComponentList<>(components.stream().filter(componentPredicate)
+                .collect(Collectors.toList()));
     }
 
     @Override
     public ComponentList<C> getComponentList() {
         return componentList;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<C> components) {
+        this.componentList = components;
+    }
+
+    @Override
+    public ComponentContainer<C> add(C component) {
+        if (!componentPredicate.test(component)) {
+            throw new IllegalArgumentException("Incompatible component");
+        }
+        return ComponentContainer.super.add(component);
+    }
+
+    @Override
+    public ComponentContainer<C> replace(C component) {
+        if (!componentPredicate.test(component)) {
+            throw new IllegalArgumentException("Incompatible component");
+        }
+        return ComponentContainer.super.replace(component);
     }
 
     /**
