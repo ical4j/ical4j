@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model.property;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$
  *
@@ -63,7 +65,7 @@ public class RelatedToTest extends PropertyTest {
 	/**
      * @return
      */
-    public static TestSuite suite() {
+    public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
         RelatedTo related = new RelatedTo("value");
         suite.addTest(new RelatedToTest(related, "value"));

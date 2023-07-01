@@ -45,6 +45,31 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * <pre>
+ *     Purpose:
+ *     This property defines the formal categories for a calendar component.
+ * Value type:
+ *     URI
+ * Property Parameters:
+ *     IANA and non-standard parameters can be specified on this property.
+ * Conformance:
+ *     This property can be specified zero or more times in any iCalendar component.
+ * Description:
+ *
+ *     This property is used to specify formal categories or classifications of the calendar component. The values are useful in searching for a calendar component of a particular type and category.
+ * This categorization is distinct from the more informal "tagging" of components provided by the existing CATEGORIES property. It is expected that the value of the CONCEPT property will reference an external resource that provides information about the categorization.In addition, a structured URI value allows for hierarchical categorization of events.Possible category resources are the various proprietary systems, for example, the Library of Congress, or an open source of categorization data.
+ * Format Definition:
+ *
+ *     This property is defined by the following notation:
+ *
+ *   concept        =  "CONCEPT" conceptparam ":"
+ *                         uri CRLF
+ *
+ *   conceptparam = *(";" other-param)
+ * </pre>
+ * @see  <a href="https://www.rfc-editor.org/rfc/rfc9253.html#name-concept">rfc9253</a>
+ */
 public class Concept extends Property {
 
     private static final String PROPERTY_NAME = "CONCEPT";
@@ -53,6 +78,11 @@ public class Concept extends Property {
 
     public Concept() {
         super(PROPERTY_NAME);
+    }
+
+    public Concept(URI uri) {
+        super(PROPERTY_NAME);
+        this.uri = uri;
     }
 
     public Concept(ParameterList aList, String value) {
