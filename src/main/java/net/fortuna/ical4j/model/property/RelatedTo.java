@@ -47,6 +47,40 @@ import java.text.ParseException;
  * <p/>
  * Defines a RELATED-TO iCalendar component property.
  *
+ * <pre>
+ *     Purpose:
+ *     This property is used to represent a relationship or reference between one calendar component and another. The definition here extends the definition in Section 3.8.4.5 of [RFC5545] by allowing URI or UID values and a GAP parameter.
+ * Value Type:
+ *     URI, UID, or TEXT
+ * Property Parameters:
+ *     Relationship type, IANA, and non-standard property parameters can be specified on this property.
+ * Conformance:
+ *     This property MAY be specified in any iCalendar component.
+ * Description:
+ *
+ *     By default or when VALUE=UID is specified, the property value consists of the persistent, globally unique identifier of another calendar component. This value would be represented in a calendar component by the UID property.
+ * By default, the property value points to another calendar component that has a PARENT relationship to the referencing object. The RELTYPE property parameter is used to either explicitly state the default PARENT relationship type to the referenced calendar component or to override the default PARENT relationship type and specify either a CHILD or SIBLING relationship or a temporal relationship.The PARENT relationship indicates that the calendar component is a subordinate of the referenced calendar component. The CHILD relationship indicates that the calendar component is a superior of the referenced calendar component. The SIBLING relationship indicates that the calendar component is a peer of the referenced calendar component.To preserve backwards compatibility, the value type MUST be UID when the PARENT, SIBLING, or CHILD relationships are specified.The FINISHTOSTART, FINISHTOFINISH, STARTTOFINISH, or STARTTOSTART relationships define temporal relationships, as specified in the RELTYPE parameter definition.The FIRST and NEXT define ordering relationships between calendar components.The DEPENDS-ON relationship indicates that the current calendar component depends on the referenced calendar component in some manner. For example, a task may be blocked waiting on the other, referenced, task.The REFID and CONCEPT relationships establish a reference from the current component to the referenced component.Changes to a calendar component referenced by this property can have an implicit impact on the related calendar component. For example, if a group event changes its start or end date or time, then the related, dependent events will need to have their start and end dates and times changed in a corresponding way. Similarly, if a PARENT calendar component is canceled or deleted, then there is an implied impact to the related CHILD calendar components. This property is intended only to provide information on the relationship of calendar components.Deletion of the target component, for example, the target of a FIRST, NEXT, or temporal relationship, can result in broken links.It is up to the target calendar system to maintain any property implications of these relationships.
+ * Format Definition:
+ *
+ *     This property is defined by the following notation:
+ *
+ *    related    = "RELATED-TO" relparam ":"
+ *                             ( text / ; for VALUE=UID
+ *                               uri /  ; for VALUE=URI
+ *                               text ) ; for VALUE=TEXT or default
+ *                 CRLF
+ *
+ *    relparam   = ; the elements herein may appear in any order,
+ *                 ; and the order is not significant.
+ *                 [";" "VALUE" "=" ("UID" /
+ *                                   "URI" /
+ *                                   "TEXT")]
+ *                 [";" reltypeparam]
+ *                 [";" gapparam]
+ *                 *(";" other-param)
+ * </pre>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9253.html#name-updates-to-rfc-5545">rfc9253</a>
+ *
  * @author benf
  */
 public class RelatedTo extends Property implements Encodable {
