@@ -78,7 +78,7 @@ public class RefId extends Property {
     }
 
     public RefId(String value) {
-        super(PROPERTY_NAME);
+        super(PROPERTY_NAME, new Factory());
         this.value = value;
     }
 

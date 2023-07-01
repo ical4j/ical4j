@@ -1996,6 +1996,22 @@ acceptedBreaks:
       old: "class net.fortuna.ical4j.data.CalendarBuilder"
       new: "class net.fortuna.ical4j.data.CalendarBuilder"
       justification: "simplify_exposed_interfaces"
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.property.RelatedTo::<init>(java.lang.String)"
+      new: "method void net.fortuna.ical4j.model.property.RelatedTo::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "support_uri_type_in_related_to"
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.property.RelatedTo::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String)"
+      new: "method void net.fortuna.ical4j.model.property.RelatedTo::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      justification: "support_uri_type_in_related_to"
+    - code: "java.method.exception.checkedAdded"
+      old: "method void net.fortuna.ical4j.model.property.RelatedTo::setValue(java.lang.String)"
+      new: "method void net.fortuna.ical4j.model.property.RelatedTo::setValue(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      justification: "support_uri_type_in_related_to"
     - code: "java.method.removed"
       old: "method java.util.function.Consumer<T> java.util.function.Consumer<T>::andThen(java.util.function.Consumer<?\
         \ super T>) @ net.fortuna.ical4j.data.CalendarBuilder"

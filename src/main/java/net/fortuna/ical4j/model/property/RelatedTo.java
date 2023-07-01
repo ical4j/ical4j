@@ -32,11 +32,15 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
@@ -87,6 +91,8 @@ public class RelatedTo extends Property implements Encodable {
 
     private static final long serialVersionUID = -109375299147319752L;
 
+    private URI uri;
+
     private String value;
 
     /**
@@ -96,10 +102,15 @@ public class RelatedTo extends Property implements Encodable {
         super(RELATED_TO, new ParameterList(), new Factory());
     }
 
+    public RelatedTo(URI uri) {
+        super(RELATED_TO, new Factory());
+        this.uri = uri;
+    }
+
     /**
      * @param aValue a value string for this component
      */
-    public RelatedTo(final String aValue) {
+    public RelatedTo(final String aValue) throws URISyntaxException {
         super(RELATED_TO, new ParameterList(), new Factory());
         setValue(aValue);
     }
@@ -108,7 +119,7 @@ public class RelatedTo extends Property implements Encodable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RelatedTo(final ParameterList aList, final String aValue) {
+    public RelatedTo(final ParameterList aList, final String aValue) throws URISyntaxException {
         super(RELATED_TO, aList, new Factory());
         setValue(aValue);
     }
@@ -117,8 +128,18 @@ public class RelatedTo extends Property implements Encodable {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) {
-        this.value = aValue;
+    public final void setValue(final String aValue) throws URISyntaxException {
+        if (Value.URI.equals(getParameter(Parameter.VALUE))) {
+            this.uri = Uris.create(aValue);
+            this.value = null;
+        } else {
+            this.value = aValue;
+            this.uri = null;
+        }
+    }
+
+    public URI getUri() {
+        return uri;
     }
 
     /**
@@ -126,6 +147,9 @@ public class RelatedTo extends Property implements Encodable {
      */
     @Override
     public final String getValue() {
+        if (Value.URI.equals(getParameter(Parameter.VALUE))) {
+            return Uris.decode(Strings.valueOf(getUri()));
+        }
         return value;
     }
 

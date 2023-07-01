@@ -87,20 +87,20 @@ public class Link extends Property {
 
     private URI uri;
 
-    private String uid;
+    private String value;
 
     public Link() {
         super(PROPERTY_NAME, new Factory());
     }
 
     public Link(URI uri) {
-        super(PROPERTY_NAME);
+        super(PROPERTY_NAME, new Factory());
         this.uri = uri;
     }
 
-    public Link(String uid) {
-        super(PROPERTY_NAME);
-        this.uid = uid;
+    public Link(String value) {
+        super(PROPERTY_NAME, new Factory());
+        this.value = value;
     }
 
     public Link(ParameterList aList, String value) throws URISyntaxException {
@@ -112,8 +112,14 @@ public class Link extends Property {
         return uri;
     }
 
-    public String getUid() {
-        return uid;
+    /**
+     *
+     * @return the text value of the property
+     * @deprecated use {@link Link#getValue()}
+     */
+    @Deprecated
+    public String getText() {
+        return value;
     }
 
     @Override
@@ -122,18 +128,18 @@ public class Link extends Property {
                 Value.URI.equals(getParameter(Parameter.VALUE))) {
             return Uris.decode(Strings.valueOf(getUri()));
         } else { // if (Value.UID.equals(getParameter(Parameter.VALUE))) {
-            return getUid();
+            return value;
         }
     }
 
     @Override
     public void setValue(String aValue) throws URISyntaxException {
         if (Value.TEXT.equals(getParameter(Parameter.VALUE))) {
-            this.uid = aValue;
+            this.value = aValue;
             this.uri = null;
         } else {
             this.uri = Uris.create(aValue);
-            this.uid = null;
+            this.value = null;
         }
     }
 
