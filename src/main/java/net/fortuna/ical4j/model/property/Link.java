@@ -132,16 +132,17 @@ public class Link extends Property {
 
     @Override
     public void setValue(String aValue) {
-        if (Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
-            this.value = aValue;
-            this.uri = null;
-        } else {
+        if (Value.XML_REFERENCE.equals(getParameter(Parameter.VALUE)) ||
+                Value.URI.equals(getParameter(Parameter.VALUE))) {
             try {
                 this.uri = Uris.create(aValue);
             } catch (URISyntaxException e) {
                 throw new IllegalArgumentException(e);
             }
             this.value = null;
+        } else {
+            this.value = aValue;
+            this.uri = null;
         }
     }
 
