@@ -134,12 +134,13 @@ public class Link extends Property {
 
     @Override
     public void setValue(String aValue) throws URISyntaxException {
-        if (Value.TEXT.equals(getParameter(Parameter.VALUE))) {
-            this.value = aValue;
-            this.uri = null;
-        } else {
+        if (Value.XML_REFERENCE.equals(getParameter(Parameter.VALUE)) ||
+                Value.URI.equals(getParameter(Parameter.VALUE))) {
             this.uri = Uris.create(aValue);
             this.value = null;
+        } else {
+            this.value = aValue;
+            this.uri = null;
         }
     }
 
