@@ -57,7 +57,7 @@ public class FmtTypeTest extends ParameterTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new FmtTypeTest("testGetValue", new FmtType(""), ""));
+        suite.addTest(new FmtTypeTest("testGetValue", new FmtType("text/xml"), "text/xml"));
         return suite;
     }
 }
