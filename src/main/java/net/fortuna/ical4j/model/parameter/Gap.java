@@ -41,6 +41,22 @@ import net.fortuna.ical4j.model.TemporalAmountAdapter;
 import java.net.URISyntaxException;
 import java.time.temporal.TemporalAmount;
 
+/**
+ * <pre>
+ *     Purpose:
+ *     This property specifies the length of the gap, positive or negative, between two components with a temporal relationship.
+ * Format Definition:
+ *
+ *     This parameter is defined by the following notation, where dur-value is defined in Section 3.3.6 of [RFC5545]. :
+ *
+ *   gapparam      = "GAP" "=" dur-value
+ *
+ * Description:
+ *
+ *     This parameter MAY be specified on the RELATED-TO property and defines the duration of time between the predecessor and successor in an interval. When positive, it defines the lag time between a task and its logical successor. When negative, it defines the lead time.
+ * </pre>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9253.html#name-gap">rfc9253</a>
+ */
 public class Gap extends Parameter {
 
     private static final String PARAM_NAME = "GAP";
