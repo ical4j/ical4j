@@ -36,8 +36,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.util.Uris;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -65,24 +63,25 @@ public class LinkRel extends Parameter {
 
     private static final String PARAM_NAME = "LINKREL";
 
-    private final URI uri;
+    private final String value;
 
-    public LinkRel(String value) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(value)));
+    public LinkRel(String value) {
+        super(PARAM_NAME, new Factory());
+        this.value = value;
     }
 
     public LinkRel(URI uri) {
         super(PARAM_NAME, new Factory());
-        this.uri = uri;
+        this.value = uri.toASCIIString();
     }
 
     public URI getUri() {
-        return uri;
+        return URI.create(value);
     }
 
     @Override
     public String getValue() {
-        return Uris.decode(Strings.valueOf(getUri()));
+        return value;
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<LinkRel> {

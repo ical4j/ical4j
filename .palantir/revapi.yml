@@ -2012,6 +2012,11 @@ acceptedBreaks:
       new: "method void net.fortuna.ical4j.model.property.RelatedTo::setValue(java.lang.String)\
         \ throws java.net.URISyntaxException"
       justification: "support_uri_type_in_related_to"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.parameter.LinkRel::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.parameter.LinkRel::<init>(java.lang.String)"
+      justification: "support_non_uri_iana_tokens"
     - code: "java.method.removed"
       old: "method java.util.function.Consumer<T> java.util.function.Consumer<T>::andThen(java.util.function.Consumer<?\
         \ super T>) @ net.fortuna.ical4j.data.CalendarBuilder"
