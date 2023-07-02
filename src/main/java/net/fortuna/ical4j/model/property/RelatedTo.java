@@ -39,10 +39,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -103,14 +101,14 @@ public class RelatedTo extends Property implements Encodable {
     }
 
     public RelatedTo(URI uri) {
-        super(RELATED_TO, new Factory());
+        super(RELATED_TO);
         this.uri = uri;
     }
 
     /**
      * @param aValue a value string for this component
      */
-    public RelatedTo(final String aValue) throws URISyntaxException {
+    public RelatedTo(final String aValue) {
         super(RELATED_TO);
         setValue(aValue);
     }
@@ -119,7 +117,7 @@ public class RelatedTo extends Property implements Encodable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RelatedTo(final ParameterList aList, final String aValue) throws URISyntaxException {
+    public RelatedTo(final ParameterList aList, final String aValue) {
         super(RELATED_TO, aList);
         setValue(aValue);
     }
@@ -138,9 +136,13 @@ public class RelatedTo extends Property implements Encodable {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
+    public final void setValue(final String aValue) {
         if (Value.URI.equals(getParameter(Parameter.VALUE))) {
-            this.uri = Uris.create(aValue);
+            try {
+                this.uri = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
             this.value = null;
         } else {
             this.value = aValue;

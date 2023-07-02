@@ -92,12 +92,12 @@ public class Link extends Property {
     }
 
     public Link(URI uri) {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
         this.uri = uri;
     }
 
     public Link(String value) {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
         this.value = value;
     }
 
@@ -131,12 +131,16 @@ public class Link extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws URISyntaxException {
+    public void setValue(String aValue) {
         if (Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
             this.value = aValue;
             this.uri = null;
         } else {
-            this.uri = Uris.create(aValue);
+            try {
+                this.uri = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
             this.value = null;
         }
     }
