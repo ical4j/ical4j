@@ -2460,6 +2460,33 @@ acceptedBreaks:
       old: "field net.fortuna.ical4j.model.property.ParticipantType.VOTER"
       justification: "redundant_throws"
     - code: "java.method.exception.checkedRemoved"
+      old: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.ComponentFactoryImpl::createComponent(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList) throws java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.ComponentFactoryImpl::createComponent(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.ParameterFactoryImpl::createParameter(java.lang.String,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.ParameterFactoryImpl::createParameter(java.lang.String,\
+        \ java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.CalendarAddress::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.CalendarAddress::<init>(java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Organizer::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Organizer::<init>(java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
       old: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(java.lang.String)\
         \ throws java.net.URISyntaxException"
       new: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(java.lang.String)"

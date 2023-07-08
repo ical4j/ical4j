@@ -104,7 +104,6 @@ public class TzUrl extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public TzUrl(final ParameterList aList, final String aValue) {
         super(TZURL, aList);

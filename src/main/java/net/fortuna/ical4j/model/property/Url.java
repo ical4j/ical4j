@@ -104,7 +104,6 @@ public class Url extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Url(final ParameterList aList, final String aValue) {
         super(URL, aList);

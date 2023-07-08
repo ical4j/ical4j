@@ -106,7 +106,6 @@ public class Attach extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified string is not a valid uri
      */
     public Attach(final ParameterList aList, final String aValue) {
         super(ATTACH, aList);
@@ -181,7 +180,6 @@ public class Attach extends Property {
      * location to binary data and is stored as such.
      *
      * @param aValue a string encoded binary or URI value
-     * @throws URISyntaxException where the specified value is not a valid URI
      */
     @Override
     public final void setValue(final String aValue) {

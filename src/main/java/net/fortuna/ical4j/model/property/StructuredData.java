@@ -77,7 +77,7 @@ public class StructuredData extends Property implements Encodable {
     /**
      * @param aValue a value string for this component
      */
-    public StructuredData(final String aValue) throws URISyntaxException {
+    public StructuredData(final String aValue) {
         super(STRUCTURED_DATA, new ParameterList());
         setValue(aValue);
     }
