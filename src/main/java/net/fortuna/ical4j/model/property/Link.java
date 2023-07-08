@@ -91,6 +91,13 @@ public class Link extends Property {
         super(PROPERTY_NAME);
     }
 
+    public Link(Component component) {
+        super(PROPERTY_NAME);
+        Uid componentUid = component.getRequiredProperty(Property.UID);
+        this.value = componentUid.getValue();
+        add(Value.UID);
+    }
+
     public Link(URI uri) {
         super(PROPERTY_NAME);
         this.uri = uri;
