@@ -42,7 +42,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     private transient final TimeZoneRegistry timeZoneRegistry;
 
-    private transient T temporal;
+    private transient volatile T temporal;
 
     public TemporalAdapter(TemporalAdapter<T> adapter) {
         this.temporal = adapter.temporal;

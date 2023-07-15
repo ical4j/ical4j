@@ -148,13 +148,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public void setDate(T date) {
         if (date != null) {
             this.date = new TemporalAdapter<>(date, timeZoneRegistry);
-            if (!TemporalAdapter.isDateTimePrecision(date)) {
-                replace(Value.DATE);
-                removeAll(Parameter.TZID);
-            } else if (date instanceof ZonedDateTime) {
-                ZoneId zoneId = ((ZonedDateTime) date).getZone();
-                replace(new TzId(zoneId.getId()));
-            }
+            refreshParameters();
         } else {
             this.date = null;
         }
@@ -214,6 +208,31 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
+    }
+
+    /**
+     * Sometimes following a value update the {@link Value} and {@link TzId} parameters should be
+     * updated to reflect the new value. This method will examine the current value and modify these
+     * parameters accordingly.
+     */
+    public void refreshParameters() {
+        T temporal = date.getTemporal();
+        if (!TemporalAdapter.isDateTimePrecision(temporal)) {
+            if (Value.DATE.equals(defaultValueParam)) {
+                removeAll(VALUE);
+            } else {
+                replace(Value.DATE);
+            }
+            removeAll(Parameter.TZID);
+        } else if (temporal instanceof ZonedDateTime) {
+            if (Value.DATE_TIME.equals(defaultValueParam)) {
+                removeAll(VALUE);
+            } else {
+                replace(Value.DATE_TIME);
+            }
+            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
+            replace(new TzId(zoneId.getId()));
+        }
     }
 
     /**
