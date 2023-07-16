@@ -152,7 +152,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * Constructs a new calendar with no properties and the specified components.
      * @param components a list of components to add to the calendar
      */
-    public Calendar(final ComponentList<CalendarComponent> components) {
+    public Calendar(final ComponentList<? extends CalendarComponent> components) {
         this(new PropertyList(), components);
     }
 
@@ -161,7 +161,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @param properties a list of initial calendar properties
      * @param components a list of initial calendar components
      */
-    public Calendar(PropertyList properties, ComponentList<CalendarComponent> components) {
+    public Calendar(PropertyList properties, ComponentList<? extends CalendarComponent> components) {
         this(properties, components, AbstractCalendarValidatorFactory.getInstance().newInstance());
     }
 
@@ -171,9 +171,9 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @param c a list of components
      * @param validator used to ensure the validity of the calendar instance
      */
-    public Calendar(PropertyList p, ComponentList<CalendarComponent> c, Validator<Calendar> validator) {
+    public Calendar(PropertyList p, ComponentList<? extends CalendarComponent> c, Validator<Calendar> validator) {
         this.properties = p;
-        this.components = c;
+        this.components = new ComponentList<>(c.getAll());
         this.validator = validator;
     }
 
