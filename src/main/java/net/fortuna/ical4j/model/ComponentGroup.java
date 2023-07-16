@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.filter.predicate.PropertyEqualToRule;
+import net.fortuna.ical4j.filter.predicate.PropertyExistsRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 
@@ -29,30 +30,42 @@ import java.util.stream.Collectors;
  *
  * Created by fortuna on 20/07/2017.
  */
-public class ComponentGroup<C extends Component> implements ComponentListAccessor<C>, ComponentContainer<C> {
+public class ComponentGroup<C extends Component> implements ComponentContainer<C> {
 
     private ComponentList<C> componentList;
 
     private final Predicate<C> componentPredicate;
 
+    /**
+     * Construct a component group filtered on {@link Uid}. Note that this will exclude any recurrence instances
+     * as specified by the presence of a {@link RecurrenceId} property.
+     *
+     * @param uid the UID to filter on
+     */
     public ComponentGroup(Uid uid) {
         this(new ArrayList<>(), uid);
     }
 
+    /**
+     * Construct a component group filtered on a specific recurrence of a {@link Uid}. Note that this will
+     * only include revisions of a single recurrence instance
+     * as specified by the {@link RecurrenceId} property.
+     *
+     * @param uid the UID to filter on
+     */
     public ComponentGroup(Uid uid, RecurrenceId<?> recurrenceId) {
         this(new ArrayList<>(), uid, recurrenceId);
     }
 
     public ComponentGroup(List<C> components, Uid uid) {
-        this.componentPredicate = new PropertyEqualToRule<>(uid);
-        this.componentList = new ComponentList<>(components.stream().filter(componentPredicate)
-                .collect(Collectors.toList()));
+        this.componentPredicate = new PropertyEqualToRule<C>(uid)
+                .and(new PropertyExistsRule<>(new RecurrenceId<>()).negate());
+        this.componentList = new ComponentList<>(components);
     }
 
     public ComponentGroup(List<C> components, Uid uid, RecurrenceId<?> recurrenceId) {
         this.componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
-        this.componentList = new ComponentList<>(components.stream().filter(componentPredicate)
-                .collect(Collectors.toList()));
+        this.componentList = new ComponentList<>(components);
     }
 
     @Override
@@ -88,7 +101,7 @@ public class ComponentGroup<C extends Component> implements ComponentListAccesso
      * @return
      */
     public List<C> getRevisions() {
-        return getComponents();
+        return getComponents().stream().filter(componentPredicate).collect(Collectors.toList());
     }
 
     /**
