@@ -58,14 +58,22 @@ public class ComponentGroup<C extends Component> implements ComponentContainer<C
     }
 
     public ComponentGroup(List<C> components, Uid uid) {
+        this(new ComponentList<>(components), uid);
+    }
+
+    public ComponentGroup(ComponentList<C> components, Uid uid) {
         this.componentPredicate = new PropertyEqualToRule<C>(uid)
                 .and(new PropertyExistsRule<>(new RecurrenceId<>()).negate());
-        this.componentList = new ComponentList<>(components);
+        this.componentList = components;
     }
 
     public ComponentGroup(List<C> components, Uid uid, RecurrenceId<?> recurrenceId) {
+        this(new ComponentList<>(components), uid, recurrenceId);
+    }
+
+    public ComponentGroup(ComponentList<C> components, Uid uid, RecurrenceId<?> recurrenceId) {
         this.componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
-        this.componentList = new ComponentList<>(components);
+        this.componentList = components;
     }
 
     @Override
