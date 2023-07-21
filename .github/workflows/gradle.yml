@@ -11,41 +11,46 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [ '8', '11', '17', '18' ]
+        jdk: [ '8', '11', '17', '19' ] # Gradle cannot support JDK 20 yet
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
     - name: Set up JDK ${{ matrix.jdk }}
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
+        distribution: temurin
         java-version: ${{ matrix.jdk }}
-    - uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: check --console=plain --warning-mode all
+        cache: 'gradle'
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+
+    - name: Execute Gradle build
+      run: ./gradlew check --console=plain --warning-mode all
 
   publish:
     name: Publish Artifact
     needs: gradle
     if: ${{ needs.gradle.result == 'success' }}
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
 
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
-    - uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: build -x test publish
-      env:
-        GPR_USERNAME: benfortuna
-        GPR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+      - name: Execute Gradle build
+        run: ./gradlew build -x test publish
+        env:
+          GPR_USERNAME: benfortuna
+          GPR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
