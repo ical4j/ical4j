@@ -14,7 +14,6 @@ public class OrganizerUpdate implements Transformer<Component> {
 
     @Override
     public Component transform(Component object) {
-        object.replace(organizer);
-        return object;
+        return object.replace(organizer);
     }
 }

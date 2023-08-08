@@ -11,9 +11,9 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param property the property to add
      * @return a reference to the container to support method chaining
      */
-    default PropertyContainer add(Property property) {
+    default <T extends PropertyContainer> T add(Property property) {
         setPropertyList((PropertyList) getPropertyList().add(property));
-        return this;
+        return (T) this;
     }
 
     /**
@@ -21,9 +21,9 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param properties a collection of properties to add
      * @return a reference to the container to support method chaining
      */
-    default PropertyContainer addAll(Collection<Property> properties) {
+    default <T extends PropertyContainer> T addAll(Collection<Property> properties) {
         setPropertyList((PropertyList) getPropertyList().addAll(properties));
-        return this;
+        return (T) this;
     }
 
     /**
@@ -31,9 +31,9 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param property the property to remove
      * @return a reference to the container to support method chaining
      */
-    default PropertyContainer remove(Property property) {
+    default <T extends PropertyContainer> T remove(Property property) {
         setPropertyList((PropertyList) getPropertyList().remove(property));
-        return this;
+        return (T) this;
     }
 
     /**
@@ -41,9 +41,9 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param name name of the properties to remove
      * @return a reference to the container to support method chaining
      */
-    default PropertyContainer removeAll(String... name) {
+    default <T extends PropertyContainer> T removeAll(String... name) {
         setPropertyList((PropertyList) getPropertyList().removeAll(name));
-        return this;
+        return (T) this;
     }
 
     /**
@@ -51,8 +51,8 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param property the property to add
      * @return a reference to the container to support method chaining
      */
-    default PropertyContainer replace(Property property) {
+    default <T extends PropertyContainer> T replace(Property property) {
         setPropertyList((PropertyList) getPropertyList().replace(property));
-        return this;
+        return (T) this;
     }
 }

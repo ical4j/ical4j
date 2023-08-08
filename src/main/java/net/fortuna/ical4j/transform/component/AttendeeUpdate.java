@@ -14,7 +14,6 @@ public class AttendeeUpdate implements Transformer<Component> {
 
     @Override
     public Component transform(Component object) {
-        object.replace(attendee);
-        return object;
+        return object.replace(attendee);
     }
 }

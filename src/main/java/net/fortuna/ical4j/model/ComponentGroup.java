@@ -87,7 +87,7 @@ public class ComponentGroup<C extends Component> implements ComponentContainer<C
     }
 
     @Override
-    public ComponentContainer<C> add(C component) {
+    public <T extends ComponentContainer<C>> T add(C component) {
         if (!componentPredicate.test(component)) {
             throw new IllegalArgumentException("Incompatible component");
         }
@@ -95,7 +95,7 @@ public class ComponentGroup<C extends Component> implements ComponentContainer<C
     }
 
     @Override
-    public ComponentContainer<C> replace(C component) {
+    public <T extends ComponentContainer<C>> T replace(C component) {
         if (!componentPredicate.test(component)) {
             throw new IllegalArgumentException("Incompatible component");
         }

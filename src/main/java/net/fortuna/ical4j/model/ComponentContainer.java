@@ -1,17 +1,17 @@
 package net.fortuna.ical4j.model;
 
-public interface ComponentContainer<T extends Component> extends ComponentListAccessor<T> {
+public interface ComponentContainer<C extends Component> extends ComponentListAccessor<C> {
 
-    void setComponentList(ComponentList<T> components);
+    void setComponentList(ComponentList<C> components);
 
     /**
      * Add a subcomponent to this component.
      * @param component the subcomponent to add
      * @return a reference to this component to support method chaining
      */
-    default ComponentContainer<T> add(T component) {
-        setComponentList((ComponentList<T>) getComponentList().add(component));
-        return this;
+    default <T extends ComponentContainer<C>> T add(C component) {
+        setComponentList((ComponentList<C>) getComponentList().add(component));
+        return (T) this;
     }
 
     /**
@@ -19,9 +19,9 @@ public interface ComponentContainer<T extends Component> extends ComponentListAc
      * @param component the subcomponent to remove
      * @return a reference to this component to support method chaining
      */
-    default ComponentContainer<T> remove(T component) {
-        setComponentList((ComponentList<T>)  getComponentList().remove(component));
-        return this;
+    default <T extends ComponentContainer<C>> T remove(C component) {
+        setComponentList((ComponentList<C>)  getComponentList().remove(component));
+        return (T) this;
     }
 
     /**
@@ -29,8 +29,8 @@ public interface ComponentContainer<T extends Component> extends ComponentListAc
      * @param component the subcomponent to add
      * @return a reference to the component to support method chaining
      */
-    default ComponentContainer<T> replace(T component) {
-        setComponentList((ComponentList<T>)  getComponentList().replace(component));
-        return this;
+    default <T extends ComponentContainer<C>> T replace(C component) {
+        setComponentList((ComponentList<C>)  getComponentList().replace(component));
+        return (T) this;
     }
 }

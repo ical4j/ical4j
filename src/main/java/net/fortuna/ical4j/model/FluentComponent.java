@@ -41,7 +41,6 @@ public interface FluentComponent {
     <C extends Component> C getFluentTarget();
 
     default FluentComponent withProperty(Property property) {
-        getFluentTarget().add(property);
-        return getFluentTarget();
+        return getFluentTarget().add(property);
     }
 }

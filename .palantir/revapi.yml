@@ -2459,6 +2459,214 @@ acceptedBreaks:
     - code: "java.field.removed"
       old: "field net.fortuna.ical4j.model.property.ParticipantType.VOTER"
       justification: "redundant_throws"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
     - code: "java.method.exception.checkedRemoved"
       old: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.ComponentFactoryImpl::createComponent(java.lang.String,\
         \ net.fortuna.ical4j.model.PropertyList) throws java.net.URISyntaxException"
@@ -2491,3 +2699,107 @@ acceptedBreaks:
         \ throws java.net.URISyntaxException"
       new: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(java.lang.String)"
       justification: "redundant_throws"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
