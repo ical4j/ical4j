@@ -117,7 +117,7 @@ public class RRule<T extends Temporal> extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         recur = new Recur<>(aValue);
     }
 
