@@ -35,9 +35,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar publish(VToDo... component) {
-        Calendar published = wrap(PUBLISH, component);
-        published.validate();
-        return published;
+        return validate((wrap(PUBLISH, component)));
     }
 
     /**
@@ -92,16 +90,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar request(VToDo... component) {
-        Calendar request = wrap(REQUEST, component);
-        request.validate();
-        return request;
+        return validate((wrap(REQUEST, component)));
     }
 
     @Override
     public Calendar delegate(Calendar request) {
-        Calendar delegated = delegateTransformer.transform(request);
-        delegated.validate();
-        return delegated;
+        return validate(delegateTransformer.transform(request));
     }
 
     /**
@@ -135,9 +129,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        Calendar reply = transform(REPLY, request);
-        reply.validate();
-        return reply;
+        return validate(transform(REPLY, request));
     }
 
     /**
@@ -166,9 +158,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar add(VToDo component) {
-        Calendar add = wrap(ADD, component);
-        add.validate();
-        return add;
+        return validate(wrap(ADD, component));
     }
 
     /**
@@ -212,9 +202,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar cancel(VToDo... component) {
-        Calendar cancel = wrap(CANCEL, component);
-        cancel.validate();
-        return cancel;
+        return validate(wrap(CANCEL, component));
     }
 
     /**
@@ -241,9 +229,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar refresh(VToDo component) {
-        Calendar refresh = wrap(REFRESH, component);
-        refresh.validate();
-        return refresh;
+        return validate(wrap(REFRESH, component));
     }
 
     /**
@@ -269,9 +255,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar counter(Calendar request) {
-        Calendar counter = transform(COUNTER, request);
-        counter.validate();
-        return counter;
+        return validate(transform(COUNTER, request));
     }
 
     /**
@@ -287,8 +271,6 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar declineCounter(Calendar counter) {
-        Calendar declineCounter = transform(DECLINE_COUNTER, counter);
-        declineCounter.validate();
-        return declineCounter;
+        return validate(transform(DECLINE_COUNTER, counter));
     }
 }

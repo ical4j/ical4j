@@ -90,7 +90,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(OneOrLess, CONTACT, DTSTART, DTEND, DURATION, DTSTAMP, ORGANIZER, UID, URL),
             new ValidationRule<>(None, RRULE, EXRULE, RDATE, EXDATE),
             new ValidationRule<>(None, (Predicate<VFreeBusy> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
-                    .anyMatch(p -> ((DateProperty<?>) p).isUtc()),
+                    .anyMatch(p -> !((DateProperty<?>) p).isUtc()),
                     "VFREEBUSY date properties MUST be in UTC time",
                     DTSTART, DTEND));
 

@@ -40,9 +40,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar publish(VFreeBusy... component) {
-        Calendar published = wrap(PUBLISH, component);
-        published.validate();
-        return published;
+        return validate(wrap(PUBLISH, component));
     }
 
     /**
@@ -66,9 +64,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar request(VFreeBusy... component) {
-        Calendar request = wrap(REQUEST, component);
-        request.validate();
-        return request;
+        return validate(wrap(REQUEST, component));
     }
 
     /**
@@ -95,9 +91,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        Calendar reply = transform(REPLY, request);
-        reply.validate();
-        return reply;
+        return validate(transform(REPLY, request));
     }
 
     /**

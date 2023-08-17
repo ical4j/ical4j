@@ -29,9 +29,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      */
     @Override
     public Calendar publish(VJournal... component) {
-        Calendar published = wrap(PUBLISH, component);
-        published.validate();
-        return published;
+        return validate(wrap(PUBLISH, component));
     }
 
     /**
@@ -82,9 +80,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      */
     @Override
     public Calendar add(VJournal component) {
-        Calendar add = wrap(ADD, component);
-        add.validate();
-        return add;
+        return validate((wrap(ADD, component)));
     }
 
     /**
@@ -120,9 +116,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      */
     @Override
     public Calendar cancel(VJournal... component) {
-        Calendar cancel = wrap(CANCEL, component);
-        cancel.validate();
-        return cancel;
+        return validate((wrap(CANCEL, component)));
     }
 
     /**
