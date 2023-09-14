@@ -917,6 +917,15 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     public static final Validator<StyledDescription> STYLED_DESCRIPTION = new PropertyValidator<>(Property.STYLED_DESCRIPTION,
             new ValidationRule<>(OneOrLess, ALTREP, FMTTYPE, LANGUAGE));
 
+    public static final Validator<Xml> XML = new PropertyValidator<>(Property.XML,
+            new ValidationRule<>(None, ENCODING, VALUE));
+
+    public static final Validator<Xml> XML_BIN = new PropertyValidator<>(Property.XML,
+            new ValidationRule<>(One, VALUE, ENCODING),
+            new ValidationRule<>(One, xml -> Encoding.BASE64.equals(xml.getParameter(ENCODING)),
+                    "ENCODING=BASE64 for binary attachments", ENCODING),
+            BINARY_VALUE);
+
     /**
      * <pre>
      *        Format Definition:  This property is defined by the following

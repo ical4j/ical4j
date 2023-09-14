@@ -33,16 +33,11 @@
 
 package net.fortuna.ical4j.validate.schema;
 
+import com.github.erosb.jsonsKema.*;
 import net.fortuna.ical4j.model.property.StructuredData;
 import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import com.github.erosb.jsonsKema.JsonParser;
-import com.github.erosb.jsonsKema.JsonValue;
-import com.github.erosb.jsonsKema.Schema;
-import com.github.erosb.jsonsKema.SchemaLoader;
-import com.github.erosb.jsonsKema.ValidationFailure;
-import com.github.erosb.jsonsKema.Validator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,6 +47,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
+/**
+ * XXX: The validotor library used in this class currently depends on the URLDecoder.decode(String, Charset)
+ * method added in Java 10. As such this will cause an error when used with Java < 10.
+ */
 public class JsonSchemaValidator implements net.fortuna.ical4j.validate.Validator<StructuredData> {
 
     private final URL schemaUrl;
