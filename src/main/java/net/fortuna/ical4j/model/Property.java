@@ -394,6 +394,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
     public static final String TZID_ALIAS_OF = "TZID-ALIAS-OF";
 
+    public static final String XML = "XML";
+
     private final String name;
 
     private final ParameterList parameters;

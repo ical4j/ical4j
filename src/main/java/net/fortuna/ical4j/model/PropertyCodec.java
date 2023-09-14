@@ -26,7 +26,7 @@ public class PropertyCodec implements StringEncoder, StringDecoder {
     private static final Pattern NEWLINE_EX = Pattern.compile("\r?\n");
 
     // matches an unencoded special character..
-    private static final Pattern SPECIALCHAR_EX = Pattern.compile("([,;\"])");
+    private static final Pattern SPECIALCHAR_EX = Pattern.compile("([,;])");
 
     // matches an encoded backslash character..
     private static final Pattern ENCODED_BACKSLASH_EX = Pattern.compile(ENCODED_BACKSLASH);

@@ -35,10 +35,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -154,6 +151,16 @@ public class ParameterList implements Serializable, Iterable<Parameter>, Compara
             throw new IllegalArgumentException("Trying to add null Parameter");
         }
         return parameters.add(parameter);
+    }
+
+    public final boolean addAll(Collection<Parameter> parameters) {
+        if (parameters == null) {
+            throw new IllegalArgumentException("Trying to add null Parameter");
+        }
+        if (parameters.isEmpty()) {
+            return true;
+        }
+        return this.parameters.addAll(parameters);
     }
 
     /**

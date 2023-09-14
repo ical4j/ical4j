@@ -9,6 +9,7 @@ import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.transform.*;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,14 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
     protected Calendar transform(Method method, Calendar calendar) {
         Transformer<Calendar> transformer = transformers.get(method);
         transformer.transform(calendar);
+        return calendar;
+    }
+
+    protected Calendar validate(Calendar calendar) {
+        ValidationResult result = calendar.validate();
+        if (result.hasErrors()) {
+            throw new RuntimeException(String.format("One or more components has errors: %s", result));
+        }
         return calendar;
     }
 

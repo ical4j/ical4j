@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2022, Ben Fortuna
+ *  Copyright (c) 2023, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,30 +31,37 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
-class PropertyCodecTest extends Specification {
+class XmlTest extends Specification {
 
-    def 'verify string encoding'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
+    def 'test text value validation'() {
+        given: 'an xml property'
+        Xml prop = ['''<kml xmlns="http://www.opengis.net/kml/2.2">\n
+      <Document>\n
+        <name>KML Sample</name>\n
+        <open>1</open>\n
+        <description>An incomplete example of a KML document - used as an example!</description>\n
+      </Document>\n
+    </kml>''']
 
-        where:
-        value                                           | encodedValue
-        ''                                              | ''
-        '\n'                                            | '\\n'
-        '\r\n'                                          | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
+        expect: 'no errors in validation'
+        !prop.validate().hasErrors()
     }
 
-    def 'verify Dquote escaping'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
-
-        where:
-        value            | encodedValue
-        'Test \"quote\"' | 'Test \"quote\"'
+    def 'test binary value validation'() {
+        given: 'a binary xml property'
+        Xml prop = [Base64.encoder.encode('''<kml xmlns="http://www.opengis.net/kml/2.2">\n
+      <Document>\n
+        <name>KML Sample</name>\n
+        <open>1</open>\n
+        <description>An incomplete example of a KML document - used as an example!</description>\n
+      </Document>\n
+    </kml>'''.bytes)]
+        
+        expect: 'no errors in validation'
+        !prop.validate().hasErrors()
     }
 }

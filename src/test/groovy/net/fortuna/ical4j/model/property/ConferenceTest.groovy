@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2022, Ben Fortuna
+ *  Copyright (c) 2023, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,30 +31,27 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.property
 
+import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.parameter.Feature
+import net.fortuna.ical4j.model.parameter.Label
+import net.fortuna.ical4j.model.parameter.Value
 import spock.lang.Specification
 
-class PropertyCodecTest extends Specification {
+class ConferenceTest extends Specification {
 
-    def 'verify string encoding'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
-
-        where:
-        value                                           | encodedValue
-        ''                                              | ''
-        '\n'                                            | '\\n'
-        '\r\n'                                          | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
-    }
-
-    def 'verify Dquote escaping'() {
-        expect:
-        PropertyCodec.INSTANCE.encode(value) == encodedValue
+    def 'test conference constructor'() {
+        expect: 'string result matches expected'
+        def paramList = new ParameterList()
+        paramList.addAll(params)
+        new Conference(paramList, value) as String == expectedValue
 
         where:
-        value            | encodedValue
-        'Test \"quote\"' | 'Test \"quote\"'
+        value                   | params                                    | expectedValue
+        'https://example.com'                       | []                                        | 'CONFERENCE:https://example.com\r\n'
+        'https://example.com'                       | [Value.URI, new Feature('AUDIO,VIDEO')]   | 'CONFERENCE;VALUE=URI;FEATURE="AUDIO,VIDEO":https://example.com\r\n'
+        'https://chat.example.com/audio?id=123456'  | [Value.URI, new Feature('AUDIO,VIDEO'),
+                                                       new Label('Attendee dial-in')]           | 'CONFERENCE;VALUE=URI;FEATURE="AUDIO,VIDEO";LABEL=Attendee dial-in:https://chat.example.com/audio?id=123456\r\n'
     }
 }
