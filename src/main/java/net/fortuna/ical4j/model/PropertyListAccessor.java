@@ -15,6 +15,10 @@ public interface PropertyListAccessor {
         return getPropertyList().getFirst(name);
     }
 
+    default <T extends Property> Optional<T> getProperty(final Enum<?> name) {
+        return getProperty(name.toString());
+    }
+
     /**
      * Convenience method for retrieving a required named property.
      *
@@ -24,5 +28,9 @@ public interface PropertyListAccessor {
      */
     default <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
         return getPropertyList().getRequired(name);
+    }
+
+    default <T extends Property> T getRequiredProperty(Enum<?> name) throws ConstraintViolationException {
+        return getRequiredProperty(name.toString());
     }
 }
