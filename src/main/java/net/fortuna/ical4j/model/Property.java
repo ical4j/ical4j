@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -414,6 +415,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
         this(aName, new ParameterList());
     }
 
+    protected Property(@NotNull Enum<?> name) {
+        this(name.toString(), new ParameterList());
+    }
+
     /**
      * @param aName   a property identifier
      * @param aList   a list of initial parameters
@@ -574,6 +579,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
         return parameters.getFirst(name);
     }
 
+    public final <P extends Parameter> Optional<P> getParameter(@NotNull Enum<?> name) {
+        return getParameter(name.toString());
+    }
+
     /**
      * Retrieve a single required parameter.
      * @param name
@@ -582,6 +591,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     public final <P extends Parameter> P getRequiredParameter(final String name) {
         return parameters.getRequired(name);
+    }
+
+    public final <P extends Parameter> P getRequiredParameter(@NotNull Enum<?> name) {
+        return getRequiredParameter(name.toString());
     }
 
     /**
