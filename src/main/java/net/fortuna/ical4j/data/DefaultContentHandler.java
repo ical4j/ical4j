@@ -187,11 +187,17 @@ public class DefaultContentHandler implements ContentHandler {
             Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
                     .name(name).value(value).build();
 
-            if (parameter instanceof TzId && tzRegistry != null) {
-                // VTIMEZONE may be defined later, so keep
-                // track of dates until all components have been
-                // parsed, and then try again later
-                propertyHasTzId = true;
+            if (parameter instanceof TzId) {
+                if (getComponentBuilder() != null && getComponentBuilder().hasName(Component.VTIMEZONE)
+                        && propertyBuilder.hasName(Property.DTSTART)) {
+                    // we don't allow TZID parameter in VTIMEZONE definitions as it causes StackOverflowError..
+                    return;
+                } else if (tzRegistry != null) {
+                    // VTIMEZONE may be defined later, so keep
+                    // track of dates until all components have been
+                    // parsed, and then try again later
+                    propertyHasTzId = true;
+                }
             }
             propertyBuilder.parameter(parameter);
         }

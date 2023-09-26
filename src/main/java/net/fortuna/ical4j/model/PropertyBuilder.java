@@ -51,6 +51,10 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return this;
     }
 
+    public boolean hasName(String name) {
+        return name.equals(this.name);
+    }
+
     public PropertyBuilder value(String value) {
         // remove any trailing whitespace
         this.value = value.trim();
