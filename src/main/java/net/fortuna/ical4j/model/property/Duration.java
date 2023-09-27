@@ -118,6 +118,11 @@ public class Duration extends Property {
         super(DURATION);
     }
 
+    public Duration(String value) {
+        super(DURATION);
+        setValue(value);
+    }
+
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
