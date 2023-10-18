@@ -284,7 +284,7 @@ public class CalendarDateFormat implements Serializable {
     }
 
     public ZonedDateTime parse(String dateString, ZoneId zoneId) {
-        return getFormatter().withZone(zoneId).parse(dateString, ZonedDateTime::from);
+        return ZonedDateTime.parse(dateString, getFormatter().withZone(zoneId));
     }
 
     public String format(TemporalAccessor date) {
