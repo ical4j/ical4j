@@ -78,6 +78,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 
 public class Link extends Property {
 
@@ -104,7 +105,7 @@ public class Link extends Property {
     }
 
     public Link(String value) {
-        super(PROPERTY_NAME);
+        super(PROPERTY_NAME, new ParameterList(Collections.singletonList(Value.UID)));
         this.value = value;
     }
 
