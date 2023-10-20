@@ -306,15 +306,13 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @return a Calendar instance containing all properties and components from both of the specified calendars
      */
     public Calendar merge(final Calendar c2) {
-        List<Property> mergedProperties = new ArrayList<>();
-        List<CalendarComponent> mergedComponents = new ArrayList<>();
-        mergedProperties.addAll(getProperties());
+        List<Property> mergedProperties = new ArrayList<>(getProperties());
         for (final Property p : c2.getProperties()) {
             if (!mergedProperties.contains(p)) {
                 mergedProperties.add(p);
             }
         }
-        mergedComponents.addAll(getComponents());
+        List<CalendarComponent> mergedComponents = new ArrayList<>(getComponents());
         for (final CalendarComponent c : c2.getComponents()) {
             if (!mergedComponents.contains(c)) {
                 mergedComponents.add(c);
