@@ -88,32 +88,21 @@ public final class Calendars {
     }
 
     /**
-     * Merge all properties and components from two specified calendars into one instance.
+     * Merge all properties and components from multiple calendars into one instance.
      * Note that the merge process is not very sophisticated, and may result in invalid calendar
      * data (e.g. multiple properties of a type that should only be specified once).
-     * @param c1 the first calendar to merge
-     * @param c2 the second calendar to merge
-     * @return a Calendar instance containing all properties and components from both of the specified calendars
-     * @deprecated @see {@link Calendar#merge(Calendar)}
+     * @param calendars zero or more calendars to merge
+     * @return a Calendar instance containing all properties and components from the specified calendars
      */
-    @Deprecated
-    public static Calendar merge(final Calendar c1, final Calendar c2) {
-        List<Property> mergedProperties = new ArrayList<>();
-        List<CalendarComponent> mergedComponents = new ArrayList<>();
-        mergedProperties.addAll(c1.getProperties());
-        for (final Property p : c2.getProperties()) {
-            if (!mergedProperties.contains(p)) {
-                mergedProperties.add(p);
-            }
+    public static Calendar merge(Calendar...calendars) {
+        if (calendars.length > 1) {
+            // merge last two..
+            calendars[calendars.length - 2] = calendars[calendars.length - 2].merge(calendars[calendars.length - 1]);
+            Calendar[] sub = Arrays.copyOf(calendars, calendars.length - 1);
+            return merge(sub);
+        } else {
+            return calendars[0];
         }
-        mergedComponents.addAll(c1.getComponents());
-        for (final CalendarComponent c : c2.getComponents()) {
-            if (!mergedComponents.contains(c)) {
-                mergedComponents.add(c);
-            }
-        }
-        return new Calendar(new PropertyList(mergedProperties),
-                new ComponentList<>(mergedComponents));
     }
 
     /**

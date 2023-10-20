@@ -2456,6 +2456,11 @@ acceptedBreaks:
       justification: "improved_generics"
   "4.0.0-beta8":
     org.mnode.ical4j:ical4j:
+    - code: "java.element.noLongerDeprecated"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar,\
+        \ net.fortuna.ical4j.model.Calendar)"
+      new: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar[])"
+      justification: "support_multiple_calendar_merge"
     - code: "java.field.removed"
       old: "field net.fortuna.ical4j.model.property.ParticipantType.VOTER"
       justification: "redundant_throws"
@@ -2699,6 +2704,11 @@ acceptedBreaks:
         \ throws java.net.URISyntaxException"
       new: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(java.lang.String)"
       justification: "redundant_throws"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar,\
+        \ net.fortuna.ical4j.model.Calendar)"
+      new: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar[])"
+      justification: "support_multiple_calendar_merge"
     - code: "java.method.returnTypeTypeParametersChanged"
       old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
         \ extends net.fortuna.ical4j.model.Component>::add(T)"
