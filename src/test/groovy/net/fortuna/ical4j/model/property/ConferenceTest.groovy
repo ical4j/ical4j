@@ -43,8 +43,7 @@ class ConferenceTest extends Specification {
 
     def 'test conference constructor'() {
         expect: 'string result matches expected'
-        def paramList = new ParameterList()
-        paramList.addAll(params)
+        def paramList = new ParameterList(params)
         new Conference(paramList, value) as String == expectedValue
 
         where:
