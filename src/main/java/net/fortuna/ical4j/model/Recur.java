@@ -864,7 +864,7 @@ public class Recur<T extends Temporal> implements Serializable {
         List<T> dates = new ArrayList<>();
         dates.add(date);
         if (!monthList.isEmpty()) {
-            dates = new ByMonthRule<T>(monthList, frequency, skip).transform(dates);
+            dates = new ByMonthRule<T>(monthList, frequency, skip).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTH processing: " + dates);
@@ -872,7 +872,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!weekNoList.isEmpty()) {
-            dates = new ByWeekNoRule<T>(weekNoList, frequency, WeekDay.getDayOfWeek(weekStartDay)).transform(dates);
+            dates = new ByWeekNoRule<T>(weekNoList, frequency, WeekDay.getDayOfWeek(weekStartDay)).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYWEEKNO processing: " + dates);
@@ -880,7 +880,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!yearDayList.isEmpty()) {
-            dates = new ByYearDayRule<T>(yearDayList, frequency).transform(dates);
+            dates = new ByYearDayRule<T>(yearDayList, frequency).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYYEARDAY processing: " + dates);
@@ -888,7 +888,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!monthDayList.isEmpty()) {
-            dates = new ByMonthDayRule<T>(monthDayList, frequency, skip).transform(dates);
+            dates = new ByMonthDayRule<T>(monthDayList, frequency, skip).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);
@@ -900,11 +900,11 @@ public class Recur<T extends Temporal> implements Serializable {
             // where seed doesn't provide timezone rules derive using system default timezone..
             implicitMonthDayList.add(new TemporalAdapter<>(rootSeed).toLocalTime().getDayOfMonth());
             ByMonthDayRule<T> implicitRule = new ByMonthDayRule<>(implicitMonthDayList, frequency, skip);
-            dates = implicitRule.transform(dates);
+            dates = implicitRule.apply(dates);
         }
 
         if (!dayList.isEmpty()) {
-            dates = new ByDayRule<T>(dayList, deriveFilterType(), WeekDay.getDayOfWeek(weekStartDay)).transform(dates);
+            dates = new ByDayRule<T>(dayList, deriveFilterType(), WeekDay.getDayOfWeek(weekStartDay)).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYDAY processing: " + dates);
@@ -913,11 +913,11 @@ public class Recur<T extends Temporal> implements Serializable {
                 && !weekNoList.isEmpty() && monthDayList.isEmpty())) {
 
             ByDayRule<T> implicitRule = new ByDayRule<>(rootSeed, deriveFilterType(), WeekDay.getDayOfWeek(getWeekStartDay()));
-            dates = implicitRule.transform(dates);
+            dates = implicitRule.apply(dates);
         }
 
         if (!hourList.isEmpty()) {
-            dates = new ByHourRule<T>(hourList, frequency).transform(dates);
+            dates = new ByHourRule<T>(hourList, frequency).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYHOUR processing: " + dates);
@@ -925,7 +925,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!minuteList.isEmpty()) {
-            dates = new ByMinuteRule<T>(minuteList, frequency).transform(dates);
+            dates = new ByMinuteRule<T>(minuteList, frequency).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMINUTE processing: " + dates);
@@ -933,7 +933,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!secondList.isEmpty()) {
-            dates = new BySecondRule<T>(secondList, frequency).transform(dates);
+            dates = new BySecondRule<T>(secondList, frequency).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYSECOND processing: " + dates);
@@ -941,7 +941,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!setPosList.isEmpty()) {
-            dates = new BySetPosRule<T>(setPosList).transform(dates);
+            dates = new BySetPosRule<T>(setPosList).apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after SETPOS processing: " + dates);

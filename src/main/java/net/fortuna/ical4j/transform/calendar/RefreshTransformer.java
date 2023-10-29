@@ -55,8 +55,8 @@ public class RefreshTransformer extends AbstractMethodTransformer {
     }
 
     @Override
-    public Calendar transform(Calendar object) {
-        object.getComponents().forEach(componentMethodTransformer::transform);
-        return super.transform(object);
+    public Calendar apply(Calendar object) {
+        object.getComponents().forEach(componentMethodTransformer::apply);
+        return super.apply(object);
     }
 }

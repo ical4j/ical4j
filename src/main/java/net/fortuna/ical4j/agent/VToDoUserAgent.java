@@ -95,7 +95,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
     @Override
     public Calendar delegate(Calendar request) {
-        return validate(delegateTransformer.transform(request));
+        return validate(delegateTransformer.apply(request));
     }
 
     /**

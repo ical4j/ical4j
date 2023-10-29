@@ -13,7 +13,7 @@ import java.util.List;
 public class Rfc5545Transformer implements Transformer<Calendar> {
 
     @Override
-    public Calendar transform(Calendar object) {
+    public Calendar apply(Calendar object) {
 
         conformPropertiesToRfc5545(object.getProperties());
 

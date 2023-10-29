@@ -6,7 +6,6 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.transform.calendar.*;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.UidGenerator;
@@ -15,6 +14,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
@@ -26,7 +26,7 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     private final ProdId prodId;
 
-    private final Map<Method, Transformer<Calendar>> methodTransformers;
+    private final Map<Method, UnaryOperator<Calendar>> methodTransformers;
 
     public AbstractUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
         this.prodId = prodId;
@@ -50,8 +50,8 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
     }
 
     protected Calendar transform(Method method, Calendar calendar) {
-        Transformer<Calendar> transformer = methodTransformers.get(method);
-        transformer.transform(calendar);
+        UnaryOperator<Calendar> transformer = methodTransformers.get(method);
+        transformer.apply(calendar);
         return calendar;
     }
 

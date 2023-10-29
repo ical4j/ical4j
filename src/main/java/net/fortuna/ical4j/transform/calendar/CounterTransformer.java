@@ -56,11 +56,11 @@ public class CounterTransformer extends AbstractMethodTransformer {
     }
 
     @Override
-    public Calendar transform(Calendar object) {
+    public Calendar apply(Calendar object) {
         Optional<Method> method = object.getProperty(Property.METHOD);
         if (!method.isPresent() || !REQUEST.equals(method.get())) {
             throw new IllegalArgumentException("Expecting REQUEST method in source");
         }
-        return super.transform(object);
+        return super.apply(object);
     }
 }

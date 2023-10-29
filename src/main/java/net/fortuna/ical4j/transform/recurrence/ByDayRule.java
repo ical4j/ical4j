@@ -57,7 +57,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         if (dayList.isEmpty()) {
             return dates;
         }

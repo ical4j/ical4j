@@ -23,7 +23,7 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         // return if no SETPOS rules specified..
         if (setPosList.isEmpty() || dates.isEmpty()) {
             return dates;

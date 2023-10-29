@@ -31,7 +31,7 @@ public class Rfc5545TransformerTest {
         String[] calendarNames = { "yahoo1.txt", "yahoo2.txt", "outlook1.txt", "outlook2.txt", "apple.txt" };
         for (String calendarName : calendarNames) {
             Calendar calendar = buildCalendar(calendarName);
-            calendar = transformer.transform(calendar);
+            calendar = transformer.apply(calendar);
             try {
                 calendar.validate();
             } catch (ValidationException e) {
@@ -49,7 +49,7 @@ public class Rfc5545TransformerTest {
 
         for (int i = 0; i < actuals.length; i++) {
             Calendar actual = buildCalendar(actuals[i]);
-            actual = transformer.transform(actual);
+            actual = transformer.apply(actual);
             Calendar expected = buildCalendar(expecteds[i]);
             assertEquals("on from " + expecteds[i] + " and " + actuals[i] + " failed.", expected, actual);
         }
@@ -61,7 +61,7 @@ public class Rfc5545TransformerTest {
         String calendarName = "dtstamp/invalid.txt";
         try {
             Calendar actual = buildCalendar(calendarName);
-            actual = transformer.transform(actual);
+            actual = transformer.apply(actual);
         } catch (RuntimeException | IOException | ParserException e) {
             e.printStackTrace();
             fail("RFC transformation failed for " + calendarName);
@@ -74,7 +74,7 @@ public class Rfc5545TransformerTest {
         String actualCalendar = "outlook/TZ-no-description.txt";
         try {
             Calendar actual = buildCalendar(actualCalendar);
-            actual = transformer.transform(actual);
+            actual = transformer.apply(actual);
             Calendar expected = buildCalendar("outlook/TZ-set-to-utc.txt");
             assertEquals(expected.toString(), actual.toString());
             assertEquals(expected, actual);

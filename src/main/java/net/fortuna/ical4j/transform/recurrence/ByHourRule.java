@@ -24,7 +24,7 @@ public class ByHourRule<T extends Temporal> extends AbstractDateExpansionRule<T>
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         if (hourList.isEmpty()) {
             return dates;
         }

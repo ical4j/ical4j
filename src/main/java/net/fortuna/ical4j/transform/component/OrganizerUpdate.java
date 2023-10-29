@@ -13,7 +13,7 @@ public class OrganizerUpdate implements Transformer<Component> {
     }
 
     @Override
-    public Component transform(Component object) {
+    public Component apply(Component object) {
         return object.replace(organizer);
     }
 }

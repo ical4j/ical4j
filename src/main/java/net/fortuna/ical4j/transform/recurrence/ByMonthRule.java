@@ -35,7 +35,7 @@ public class ByMonthRule<T extends Temporal> extends AbstractDateExpansionRule<T
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         if (monthList.isEmpty()) {
             return dates;
         }

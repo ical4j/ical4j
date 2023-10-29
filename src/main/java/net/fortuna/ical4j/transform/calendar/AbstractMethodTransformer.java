@@ -32,13 +32,13 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
     }
 
     @Override
-    public Calendar transform(Calendar object) {
+    public Calendar apply(Calendar object) {
         MethodUpdate methodUpdate = new MethodUpdate(method);
-        methodUpdate.transform(object);
+        methodUpdate.apply(object);
 
         Optional<Uid> uid = Optional.empty();
         for (CalendarComponent component : object.getComponents()) {
-            uidUpdate.transform(component);
+            uidUpdate.apply(component);
             if (!uid.isPresent()) {
                 uid = component.getProperty(Property.UID);
             } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {
@@ -51,7 +51,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
             // if a calendar component has already been published previously
             // update the sequence number..
             if (incrementSequence) {
-                sequenceIncrement.transform(componentGroup.getLatestRevision());
+                sequenceIncrement.apply(componentGroup.getLatestRevision());
             }
         }
         return object;

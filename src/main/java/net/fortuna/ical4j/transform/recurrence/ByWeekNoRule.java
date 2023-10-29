@@ -37,7 +37,7 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         if (weekNoList.isEmpty()) {
             return dates;
         }

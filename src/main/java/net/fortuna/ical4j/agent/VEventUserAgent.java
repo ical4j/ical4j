@@ -93,7 +93,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
     @Override
     public Calendar delegate(Calendar request) {
-        return validate(delegateTransformer.transform(request.copy()));
+        return validate(delegateTransformer.apply(request.copy()));
     }
 
     /**

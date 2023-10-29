@@ -66,15 +66,15 @@ public class DeclineCounterTransformer extends AbstractMethodTransformer {
     }
 
     @Override
-    public Calendar transform(Calendar object) {
+    public Calendar apply(Calendar object) {
         Optional<Method> method = object.getProperty(Property.METHOD);
         if (!method.isPresent() || !COUNTER.equals(method.get())) {
             throw new IllegalArgumentException("Expecting COUNTER method in source");
         }
         for (CalendarComponent component : object.getComponents()) {
-            organizerUpdate.transform(component);
-            componentMethodTransformer.transform(component);
+            organizerUpdate.apply(component);
+            componentMethodTransformer.apply(component);
         }
-        return super.transform(object);
+        return super.apply(object);
     }
 }

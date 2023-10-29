@@ -17,7 +17,7 @@ public class UidUpdate implements Transformer<Component> {
     }
 
     @Override
-    public Component transform(Component object) {
+    public Component apply(Component object) {
         Optional<Uid> uid = object.getProperty(Property.UID);
         if (!uid.isPresent()) {
             object.add(uidGenerator.generateUid());

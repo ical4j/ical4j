@@ -16,7 +16,7 @@ public class MethodUpdate implements Transformer<Calendar> {
     }
 
     @Override
-    public Calendar transform(Calendar object) {
+    public Calendar apply(Calendar object) {
         return object.replace(newMethod);
     }
 }
