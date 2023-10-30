@@ -63,7 +63,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         }
         final List<T> weekDayDates = new ArrayList<>();
 
-        Function<T, List<T>> transformer = null;
+        Function<T, List<T>> transformer;
         switch (getFrequency()) {
             case WEEKLY: transformer = new WeeklyExpansionFilter(); break;
             case MONTHLY: transformer = new MonthlyExpansionFilter(); break;

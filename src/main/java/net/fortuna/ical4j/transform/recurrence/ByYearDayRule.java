@@ -72,9 +72,10 @@ public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule
                 }
                 T candidate;
                 if (yearDay > 0) {
-                    if (numDaysInYear < yearDay) {
-                        continue;
-                    }
+//                    xxx: always false..
+//                    if (numDaysInYear < yearDay) {
+//                        continue;
+//                    }
                     candidate = withTemporalField(date, DAY_OF_YEAR, yearDay);
                 } else {
                     if (numDaysInYear < -yearDay) {
