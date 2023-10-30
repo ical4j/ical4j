@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.hidetake:gradle-ssh-plugin:2.11.2', 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
+        classpath 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
     }
 }
 
@@ -14,6 +14,7 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id 'signing'
+    id 'org.hidetake.ssh' version '2.11.2'
     id "pl.allegro.tech.build.axion-release" version "1.15.1"
     id "nebula.provided-base" version "7.0.0"
     id "nebula.optional-base" version "7.0.0"
