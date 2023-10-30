@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1', 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
+        classpath 'org.hidetake:gradle-ssh-plugin:2.11.2', 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
     }
 }
 
