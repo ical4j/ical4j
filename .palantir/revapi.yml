@@ -2672,6 +2672,9 @@ acceptedBreaks:
       old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
       new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
       justification: "improve_generics_for_method_chaining"
+    - code: "java.method.addedToInterface"
+      new: "method T net.fortuna.ical4j.transform.Transformer<T>::apply(T)"
+      justification: "added_support_for_functional_transforms"
     - code: "java.method.exception.checkedRemoved"
       old: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.ComponentFactoryImpl::createComponent(java.lang.String,\
         \ net.fortuna.ical4j.model.PropertyList) throws java.net.URISyntaxException"
@@ -2709,6 +2712,140 @@ acceptedBreaks:
         \ net.fortuna.ical4j.model.Calendar)"
       new: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar[])"
       justification: "support_multiple_calendar_merge"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByDayRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByHourRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByHourRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMinuteRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByMinuteRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMonthDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByMonthDayRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMonthRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByMonthRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.BySecondRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.BySecondRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.BySetPosRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.BySetPosRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByWeekNoRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByWeekNoRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByYearDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByYearDayRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.AddTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.AddTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.CancelTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.CancelTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.CounterTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.CounterTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.MethodUpdate::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.MethodUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.PublishTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.PublishTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.RefreshTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.RefreshTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.ReplyTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.ReplyTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.RequestTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.RequestTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.Rfc5545Transformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.Rfc5545Transformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.AbstractMethodTransfomer::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.AbstractMethodTransfomer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.AttendeeUpdate::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.AttendeeUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.OrganizerUpdate::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.OrganizerUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.UidUpdate::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.UidUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.transform.component.SequenceIncrement::transform(===net.fortuna.ical4j.model.component.CalendarComponent===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.SequenceIncrement"
+      justification: "added_support_for_functional_transforms"
     - code: "java.method.returnTypeTypeParametersChanged"
       old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
         \ extends net.fortuna.ical4j.model.Component>::add(T)"
