@@ -2,6 +2,7 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateListProperty;
@@ -187,11 +188,18 @@ public class DefaultContentHandler implements ContentHandler {
             Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
                     .name(name).value(value).build();
 
-            if (parameter instanceof TzId && tzRegistry != null) {
-                // VTIMEZONE may be defined later, so keep
-                // track of dates until all components have been
-                // parsed, and then try again later
-                propertyHasTzId = true;
+            if (parameter instanceof TzId) {
+                if (getComponentBuilder() != null && (getComponentBuilder().hasName(Observance.STANDARD)
+                        || getComponentBuilder().hasName(Observance.DAYLIGHT))
+                        && propertyBuilder.hasName(Property.DTSTART)) {
+                    // we don't allow TZID parameter in VTIMEZONE definitions as it causes StackOverflowError..
+                    return;
+                } else if (tzRegistry != null) {
+                    // VTIMEZONE may be defined later, so keep
+                    // track of dates until all components have been
+                    // parsed, and then try again later
+                    propertyHasTzId = true;
+                }
             }
             propertyBuilder.parameter(parameter);
         }

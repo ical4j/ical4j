@@ -1,0 +1,42 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MailClient.VObject/9.2.1735.0
+BEGIN:VTIMEZONE
+TZID:America/New_York
+LAST-MODIFIED:20050809T050000Z
+BEGIN:STANDARD
+DTSTART;TZID=America/New_York:20071104T020000
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+TZNAME:EST
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART;TZID=America/New_York:20070311T020000
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+TZNAME:EDT
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTAMP:20121229T212000Z
+UID:8551b150-9772-4e78-99b7-cfec95750698
+SUMMARY:Revolutionize your PPC game with GPT
+DTSTART;TZID=America/New_York:20230613T115500
+DTEND;TZID=America/New_York:20230613T122500
+DESCRIPTION:Already registered? Click the link in this invite to watch 
+ the session at its designated start time (or anytime afterward 
+ on-demand). Still have to register? Get started here: <a href="https:
+ //events.searchengineland.com/smx-advanced-2023">https:
+ //events.searchengineland.com/smx-advanced-2023</a>
+LOCATION:https://searchengineland.com/smx/advanced/agenda/#sessId-2138
+TRANSP:OPAQUE
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+LAST-MODIFIED:20230508T224629Z
+X-ALT-DESC;FMTTYPE=text/html:Already registered? Click the link in this 
+ invite to watch the session at its designated start time (or anytime 
+ afterward on-demand). Still have to register? Get started here: &lt;a 
+ href="https://events.searchengineland.com/smx-advanced-2023"&gt;https:
+ //events.searchengineland.com/smx-advanced-2023&lt;/a&gt;
+CLASS:PUBLIC
+END:VEVENT
+END:VCALENDAR
