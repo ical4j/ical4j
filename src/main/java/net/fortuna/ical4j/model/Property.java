@@ -428,6 +428,11 @@ public abstract class Property extends Content implements Comparable<Property>, 
         this.parameters = aList;
     }
 
+    protected Property(@NotNull Enum<?> name, final ParameterList aList) {
+        this.name = name.toString();
+        this.parameters = aList;
+    }
+
     /**
      * Creates a deep copy of the specified property. That is, the name, parameter list, and value are duplicated from
      * the specified property. This constructor should only be called from sub-classes to ensure type integrity is

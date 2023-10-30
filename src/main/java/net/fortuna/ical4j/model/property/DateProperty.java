@@ -104,6 +104,14 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         this.defaultValueParam = defaultValueParam;
     }
 
+    public DateProperty(final Enum<?> name, final ParameterList parameters, CalendarDateFormat parseFormat,
+                        Value defaultValueParam) {
+
+        super(name, parameters);
+        this.parseFormat = parseFormat;
+        this.defaultValueParam = defaultValueParam;
+    }
+
     /**
      * @param name the property name
      */
@@ -112,6 +120,18 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     }
 
     public DateProperty(final String name, CalendarDateFormat parseFormat, Value defaultValueParam) {
+        super(name);
+        this.parseFormat = parseFormat;
+        this.defaultValueParam = defaultValueParam;
+    }
+
+    /**
+     *
+     * @param name an enum representing a property name
+     * @param parseFormat
+     * @param defaultValueParam
+     */
+    public DateProperty(final Enum<?> name, CalendarDateFormat parseFormat, Value defaultValueParam) {
         super(name);
         this.parseFormat = parseFormat;
         this.defaultValueParam = defaultValueParam;

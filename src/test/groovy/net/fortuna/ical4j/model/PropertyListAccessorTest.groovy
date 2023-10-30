@@ -68,4 +68,22 @@ class PropertyListAccessorTest extends Specification {
         "DTSTAMP"       | propList.getFirst('DTSTAMP')
         Props.VERSION   | propList.getFirst('VERSION')
     }
+
+    def 'test get properties'() {
+        given: 'a property list accessor'
+        PropertyListAccessor accessor = new PropertyListAccessor() {
+            @Override
+            PropertyList getPropertyList() {
+                return propList
+            }
+        }
+
+        expect: 'result matches expected'
+        accessor.getProperties(propNames) == expectedResult
+
+        where:
+        propNames                   | expectedResult
+        ["DTSTAMP"] as String[]     | propList.get('DTSTAMP')
+        [Props.VERSION as String] as String[] | propList.get('VERSION')
+    }
 }
