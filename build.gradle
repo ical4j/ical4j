@@ -14,7 +14,7 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id 'signing'
-    id "pl.allegro.tech.build.axion-release" version "1.13.6"
+    id "pl.allegro.tech.build.axion-release" version "1.15.1"
     id "nebula.provided-base" version "7.0.0"
     id "nebula.optional-base" version "7.0.0"
     id "com.palantir.revapi" version "1.7.0"
@@ -115,11 +115,6 @@ javadoc {
     options {
         links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
     }
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
 }
 
 scmVersion {
