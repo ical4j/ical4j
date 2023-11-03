@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Constants;
 import org.slf4j.LoggerFactory;
 
@@ -175,6 +176,14 @@ public class DefaultContentHandler implements ContentHandler {
             Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
                     .name(name).value(value).build();
 
+            if (parameter instanceof TzId) {
+                if (getComponentBuilder() != null && (getComponentBuilder().hasName(Observance.STANDARD)
+                        || getComponentBuilder().hasName(Observance.DAYLIGHT))
+                        && propertyBuilder.hasName(Property.DTSTART)) {
+                    // we don't allow TZID parameter in VTIMEZONE definitions as it causes StackOverflowError..
+                    return;
+                }
+            }
             propertyBuilder.parameter(parameter);
         }
     }
