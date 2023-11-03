@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.RegEx;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -68,7 +70,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      */
     public LocationTypeList(final String aValue) {
         locationTypes = new CopyOnWriteArrayList<>();
-        locationTypes.addAll(Arrays.asList(aValue.split(",")));
+        locationTypes.addAll(Arrays.asList(aValue.split(RegEx.COMMA_DELIMITED)));
     }
 
     public LocationTypeList(LocationType... locationTypes) {

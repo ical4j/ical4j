@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.RegEx;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +73,7 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * @param aString a string representation of a day list
      */
     public WeekDayList(final String aString) {
-        addAll(Arrays.stream(aString.split("\\s*,\\s*")).filter(s -> !s.isEmpty())
+        addAll(Arrays.stream(aString.split(RegEx.COMMA_DELIMITED)).filter(s -> !s.isEmpty())
                 .map(WeekDay::new).collect(Collectors.toList()));
     }
 

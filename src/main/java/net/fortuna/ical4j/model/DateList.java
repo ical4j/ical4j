@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.util.RegEx;
 
 import java.io.Serializable;
 import java.time.ZoneId;
@@ -99,7 +100,7 @@ public class DateList<T extends Temporal> implements Serializable {
             return emptyList();
         }
 
-        List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(","))
+        List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
                 .parallel().map(TemporalAdapter::parse)
                 .collect(Collectors.toList());
 
@@ -111,7 +112,7 @@ public class DateList<T extends Temporal> implements Serializable {
             return emptyList();
         }
 
-        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
                 .parallel().map(s -> TemporalAdapter.parse(s, zoneId))
                 .collect(Collectors.toList());
         return new DateList<>(dates);
@@ -122,7 +123,7 @@ public class DateList<T extends Temporal> implements Serializable {
             return emptyList();
         }
 
-        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
                 .parallel().map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
                 .collect(Collectors.toList());
         return new DateList<>(dates);

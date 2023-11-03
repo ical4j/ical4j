@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.RegEx;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
@@ -103,7 +104,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> PeriodList<T> parse(final String aValue, CalendarDateFormat calendarDateFormat) {
         return (PeriodList<T>) new PeriodList<>(
-                Arrays.stream(aValue.split(",")).parallel().map(Period::parse).collect(Collectors.toList()),
+                Arrays.stream(aValue.split(RegEx.COMMA_DELIMITED)).parallel().map(Period::parse).collect(Collectors.toList()),
                 calendarDateFormat);
     }
 
