@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model
 
+
 import net.fortuna.ical4j.transform.recurrence.Frequency
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
@@ -38,6 +39,7 @@ import spock.lang.Unroll
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoField
 import java.util.stream.Collectors
 
 import static java.lang.String.format
@@ -473,23 +475,23 @@ class RecurSpec extends Specification {
 
     def 'test getdates as stream for a large date range'() {
         given: 'a recurrence rule'
-        Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).interval(1)
-                .dayList(new WeekDayList(MO)).hourList(new NumberList('16')).minuteList(new NumberList('37,38'))
-                .until(new DateTime('20520519T165900')).build()
+        Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
+                .dayList(new WeekDayList(MO)).hourList(new NumberList('16'))
+                .minuteList(new NumberList('37,38'))
+                .until((LocalDateTime) TemporalAdapter.parse('20520519T165900').temporal).build()
 
         when: 'dates are generated for a period'
-        def dates = recur.getDatesAsStream(new DateTime('20220505T143700Z'),
-                new DateTime('20220505T143700Z'), new DateTime('20520519T145900Z'),
-                Value.DATE_TIME, -1).filter { LocalDate.ofInstant(it.toInstant(), ZoneId.systemDefault()).get(ChronoField.YEAR) > 2051 }.collect(Collectors.toList())
+        def dates = recur.getDatesAsStream((LocalDateTime) TemporalAdapter.parse('20220505T143700').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20220505T143700').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20520519T145900').temporal, -1).filter { it.get(ChronoField.YEAR) > 2051 }.collect(Collectors.toList())
 
         then: 'result matches expected'
-        dates == new DateList('''20520101T163700Z, 20520101T163800Z, 20520108T163700Z, 20520108T163800Z,
- 20520115T163700Z, 20520115T163800Z, 20520122T163700Z, 20520122T163800Z, 20520129T163700Z, 20520129T163800Z,
- 20520205T163700Z, 20520205T163800Z, 20520212T163700Z, 20520212T163800Z, 20520219T163700Z, 20520219T163800Z,
- 20520226T163700Z, 20520226T163800Z, 20520304T163700Z, 20520304T163800Z, 20520311T163700Z, 20520311T163800Z,
- 20520318T163700Z, 20520318T163800Z, 20520325T163700Z, 20520325T163800Z, 20520401T163700Z, 20520401T163800Z,
- 20520408T163700Z, 20520408T163800Z, 20520415T163700Z, 20520415T163800Z, 20520422T163700Z, 20520422T163800Z,
- 20520429T163700Z, 20520429T163800Z, 20520506T163700Z, 20520506T163800Z, 20520513T163700Z, 20520513T163800Z''',
-                Value.DATE_TIME)
+        dates == DateList.parse('''20520101T163700, 20520101T163800, 20520108T163700, 20520108T163800,
+ 20520115T163700, 20520115T163800, 20520122T163700, 20520122T163800, 20520129T163700, 20520129T163800,
+ 20520205T163700, 20520205T163800, 20520212T163700, 20520212T163800, 20520219T163700, 20520219T163800,
+ 20520226T163700, 20520226T163800, 20520304T163700, 20520304T163800, 20520311T163700, 20520311T163800,
+ 20520318T163700, 20520318T163800, 20520325T163700, 20520325T163800, 20520401T163700, 20520401T163800,
+ 20520408T163700, 20520408T163800, 20520415T163700, 20520415T163800, 20520422T163700, 20520422T163800,
+ 20520429T163700, 20520429T163800, 20520506T163700, 20520506T163800, 20520513T163700, 20520513T163800''').dates
     }
 }
