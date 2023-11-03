@@ -2,6 +2,7 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.Constants;
 import org.slf4j.LoggerFactory;

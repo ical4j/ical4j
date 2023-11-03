@@ -117,11 +117,6 @@ javadoc {
     }
 }
 
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
 scmVersion {
     tag {
         prefix = 'ical4j-'

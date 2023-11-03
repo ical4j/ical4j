@@ -470,4 +470,26 @@ class RecurSpec extends Specification {
                     LocalDate.of(2020, 1, 1).atStartOfDay(),
                     LocalDate.of(2022, 1, 1).atStartOfDay()]
     }
+
+    def 'test getdates as stream for a large date range'() {
+        given: 'a recurrence rule'
+        Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).interval(1)
+                .dayList(new WeekDayList(MO)).hourList(new NumberList('16')).minuteList(new NumberList('37,38'))
+                .until(new DateTime('20520519T165900')).build()
+
+        when: 'dates are generated for a period'
+        def dates = recur.getDatesAsStream(new DateTime('20220505T143700Z'),
+                new DateTime('20220505T143700Z'), new DateTime('20520519T145900Z'),
+                Value.DATE_TIME, -1).filter { LocalDate.ofInstant(it.toInstant(), ZoneId.systemDefault()).get(ChronoField.YEAR) > 2051 }.collect(Collectors.toList())
+
+        then: 'result matches expected'
+        dates == new DateList('''20520101T163700Z, 20520101T163800Z, 20520108T163700Z, 20520108T163800Z,
+ 20520115T163700Z, 20520115T163800Z, 20520122T163700Z, 20520122T163800Z, 20520129T163700Z, 20520129T163800Z,
+ 20520205T163700Z, 20520205T163800Z, 20520212T163700Z, 20520212T163800Z, 20520219T163700Z, 20520219T163800Z,
+ 20520226T163700Z, 20520226T163800Z, 20520304T163700Z, 20520304T163800Z, 20520311T163700Z, 20520311T163800Z,
+ 20520318T163700Z, 20520318T163800Z, 20520325T163700Z, 20520325T163800Z, 20520401T163700Z, 20520401T163800Z,
+ 20520408T163700Z, 20520408T163800Z, 20520415T163700Z, 20520415T163800Z, 20520422T163700Z, 20520422T163800Z,
+ 20520429T163700Z, 20520429T163800Z, 20520506T163700Z, 20520506T163800Z, 20520513T163700Z, 20520513T163800Z''',
+                Value.DATE_TIME)
+    }
 }
