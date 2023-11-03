@@ -57,7 +57,7 @@ public class ComponentContainerRuleSet extends AbstractValidationRuleSet<Compone
                 int total = rule.getInstances().stream().mapToInt(s -> target.getComponents(s).size()).sum();
                 switch (rule.getType()) {
                     case None:
-                        matches = matches(rule.getInstances(), s -> target.getComponents(s) != null);
+                        matches = matches(rule.getInstances(), s -> !target.getComponents(s).isEmpty());
                         break;
                     case One:
                         matches = matches(rule.getInstances(), s -> target.getComponents(s).size() != 1);
@@ -66,10 +66,10 @@ public class ComponentContainerRuleSet extends AbstractValidationRuleSet<Compone
                         matches = matches(rule.getInstances(), s -> target.getComponents(s).size() > 1);
                         break;
                     case OneOrMore:
-                        matches = matches(rule.getInstances(), s -> target.getComponents(s).size() < 1);
+                        matches = matches(rule.getInstances(), s -> target.getComponents(s).isEmpty());
                         break;
                     case OneExclusive:
-                        if (rule.getInstances().stream().anyMatch(s -> target.getComponents(s).size() > 0
+                        if (rule.getInstances().stream().anyMatch(s -> !target.getComponents(s).isEmpty()
                                 && target.getComponents(s).size() != total)) {
                             matches = rule.getInstances();
                         }

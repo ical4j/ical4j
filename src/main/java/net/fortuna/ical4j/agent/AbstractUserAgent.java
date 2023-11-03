@@ -51,8 +51,7 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     protected Calendar transform(Method method, Calendar calendar) {
         UnaryOperator<Calendar> transformer = methodTransformers.get(method);
-        transformer.apply(calendar);
-        return calendar;
+        return transformer.apply(calendar);
     }
 
     protected Calendar validate(Calendar calendar) {
