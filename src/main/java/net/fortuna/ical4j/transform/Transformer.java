@@ -55,7 +55,4 @@ public interface Transformer<T> extends UnaryOperator<T> {
     default T transform(final T object) {
         return apply(object);
     }
-
-    @Override
-    T apply(T t);
 }

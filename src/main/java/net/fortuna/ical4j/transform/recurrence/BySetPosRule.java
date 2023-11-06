@@ -1,18 +1,18 @@
 package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.TemporalComparator;
-import net.fortuna.ical4j.transform.Transformer;
 
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 /**
  * Applies BYSETPOS rules to <code>dates</code>. Valid positions are from 1 to the size of the date list. Invalid
  * positions are ignored.
  */
-public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
+public class BySetPosRule<T extends Temporal> implements UnaryOperator<List<T>> {
 
     private static final Comparator<Temporal> ONSET_COMPARATOR = new TemporalComparator();
 

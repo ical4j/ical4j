@@ -2,7 +2,6 @@ package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Month;
 import net.fortuna.ical4j.model.TemporalAdapter;
-import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
 
@@ -11,6 +10,7 @@ import java.time.DayOfWeek;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import static java.time.temporal.ChronoField.*;
 
@@ -82,7 +82,7 @@ import static java.time.temporal.ChronoField.*;
  *                special expand for YEARLY.
  * </pre>
  */
-abstract class AbstractDateExpansionRule<T extends Temporal> implements Transformer<List<T>>, Serializable {
+abstract class AbstractDateExpansionRule<T extends Temporal> implements UnaryOperator<List<T>>, Serializable {
 
     private final Frequency frequency;
 

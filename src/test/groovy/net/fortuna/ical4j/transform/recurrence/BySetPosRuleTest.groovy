@@ -23,7 +23,7 @@ class BySetPosRuleTest extends Specification {
         }
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expected
+        rule.apply(dates) == expected
 
         where:
         rulePart | dateStrings  | expectedResult

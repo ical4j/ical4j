@@ -33,7 +33,7 @@ class ByDayRuleTest extends Specification {
         }
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expected
+        rule.apply(dates) == expected
 
         where:
         rulePart | frequency | dateStrings  | expectedResult

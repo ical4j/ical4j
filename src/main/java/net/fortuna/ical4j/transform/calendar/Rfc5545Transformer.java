@@ -5,12 +5,12 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.transform.RuleManager;
-import net.fortuna.ical4j.transform.Transformer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
-public class Rfc5545Transformer implements Transformer<Calendar> {
+public class Rfc5545Transformer implements UnaryOperator<Calendar> {
 
     @Override
     public Calendar apply(Calendar object) {

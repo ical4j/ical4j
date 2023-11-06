@@ -22,7 +22,7 @@ class ByWeekNoRuleTest extends Specification {
         ByWeekNoRule rule = [new NumberList(byWeekNoPart), DAILY]
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expectedResult
+        rule.apply(dates) == expectedResult
 
         where:
         byWeekNoPart     | dates                                   | expectedResult
@@ -36,7 +36,7 @@ class ByWeekNoRuleTest extends Specification {
         ByWeekNoRule rule = [new NumberList(byWeekNoPart), YEARLY]
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates.collect {LocalDate.parse(it, dateFormat)}) == expectedResult.collect { LocalDate.parse(it, dateFormat) }
+        rule.apply(dates.collect {LocalDate.parse(it, dateFormat)}) == expectedResult.collect { LocalDate.parse(it, dateFormat) }
 
         where:
         byWeekNoPart     | dates                                   | expectedResult

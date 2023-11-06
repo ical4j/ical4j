@@ -14,7 +14,7 @@ class ByMinuteRuleTest extends Specification {
         ByMinuteRule rule = [new NumberList(rulePart), frequency]
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expectedResult
+        rule.apply(dates) == expectedResult
 
         where:
         rulePart | frequency    | dates                                                     | expectedResult

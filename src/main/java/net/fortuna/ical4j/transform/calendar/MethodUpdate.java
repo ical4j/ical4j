@@ -2,12 +2,13 @@ package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.transform.Transformer;
+
+import java.util.function.UnaryOperator;
 
 /**
  * Created by fortuna on 19/07/2017.
  */
-public class MethodUpdate implements Transformer<Calendar> {
+public class MethodUpdate implements UnaryOperator<Calendar> {
 
     private final Method newMethod;
 

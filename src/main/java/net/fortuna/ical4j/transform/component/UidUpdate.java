@@ -3,12 +3,12 @@ package net.fortuna.ical4j.transform.component;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
-public class UidUpdate implements Transformer<Component> {
+public class UidUpdate implements UnaryOperator<Component> {
 
     private final UidGenerator uidGenerator;
 
