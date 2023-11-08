@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [ '8', '11', '17', '20' ] # Gradle cannot support JDK 21 yet
+        jdk: [ '11', '17', '21' ] # removed JDK due to plugin errors
 
     steps:
     - uses: actions/checkout@v4

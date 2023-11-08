@@ -14,8 +14,8 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id 'signing'
-    id 'org.hidetake.ssh' version '2.11.2'
-    id "pl.allegro.tech.build.axion-release" version "1.15.1"
+    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
+    id "pl.allegro.tech.build.axion-release" version "1.15.5" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
     id "com.netflix.nebula.provided-base" version "10.0.0" // note that nebula.provided-base plugin does nothing. see: #658
     id "com.netflix.nebula.optional-base" version "10.0.0" // note that nebula.optional-base plugin does nothing. see: #658
     id "com.palantir.revapi" version "1.7.0"
