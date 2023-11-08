@@ -16,8 +16,8 @@ plugins {
     id 'signing'
     id 'org.hidetake.ssh' version '2.11.2'
     id "pl.allegro.tech.build.axion-release" version "1.15.1"
-    id "nebula.provided-base" version "7.0.0"
-    id "nebula.optional-base" version "7.0.0"
+    id "com.netflix.nebula.provided-base" version "10.0.0" // note that nebula.provided-base plugin does nothing. see: #658
+    id "com.netflix.nebula.optional-base" version "10.0.0" // note that nebula.optional-base plugin does nothing. see: #658
     id "com.palantir.revapi" version "1.7.0"
     id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
@@ -53,20 +53,20 @@ dependencies {
     }
 
     // optional timezone caching..
-    implementation 'javax.cache:cache-api:1.1.1', optional
+    implementation 'javax.cache:cache-api:1.1.1' // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
 
     // optional support for non-Gregorian chronologies..
-    implementation "org.threeten:threeten-extra:$threetenExtraVersion", optional
+    implementation "org.threeten:threeten-extra:$threetenExtraVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
 
     // optional parser for filter expressions..
-    implementation "org.jparsec:jparsec:$jparsecVersion", optional
+    implementation "org.jparsec:jparsec:$jparsecVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
 
     // optional groovy DSL for calendar builder..
-    implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
-    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
+    implementation "org.codehaus.groovy:groovy:$groovyVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
+    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
 
     // optional JSON schema validation for structured-data..
-    implementation "com.github.erosb:json-sKema:$jsonSkemaVersion", optional
+    implementation "com.github.erosb:json-sKema:$jsonSkemaVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
 
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
@@ -97,12 +97,24 @@ dependencies {
 test {
     useJUnitPlatform()
 
-    finalizedBy jacocoTestReport // Ensure Jacoco is run after tests have completed
+    finalizedBy jacocoTestCoverageVerification, jacocoTestReport // Ensure Jacoco is run after tests have completed
 
     jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
 }
 
+jacocoTestCoverageVerification {
+    dependsOn test
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.7
+            }
+        }
+    }
+}
+
 jacocoTestReport {
+    dependsOn test
     reports {
         xml.required = true
         html.required = jacoco_htmlReport == 'true'
