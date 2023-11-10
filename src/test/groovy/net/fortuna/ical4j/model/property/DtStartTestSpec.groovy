@@ -35,9 +35,7 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.*
 import java.time.temporal.Temporal
 
 class DtStartTestSpec extends Specification {
@@ -55,6 +53,20 @@ class DtStartTestSpec extends Specification {
 
         then: 'dtstart date is rendered local in the default timezone'
         dtstart.date.zone.id == 'Asia/Singapore'
+    }
+
+    def 'test dtstart string rep'() {
+        expect: 'dtstart string matches expected'
+        new DtStart<>(date) as String == expectedString
+
+        where:
+        date                                                | expectedString
+        LocalDate.of(2023, 11, 10)                          | 'DTSTART;VALUE=DATE:20231110\r\n'
+        LocalDateTime.of(2023, 11, 10, 1, 1, 1)             | 'DTSTART:20231110T010101\r\n'
+        LocalDateTime.of(2023, 11, 10, 1, 1, 1)
+                .atZone(ZoneId.of('Australia/Melbourne'))   | 'DTSTART;TZID=Australia/Melbourne:20231110T010101\r\n'
+        LocalDateTime.of(2023, 11, 10, 1, 1, 1)
+                .toInstant(ZoneOffset.UTC)                  | 'DTSTART:20231110T010101Z\r\n'
     }
 
     def 'test factory creation'() {
