@@ -113,4 +113,32 @@ class StructuredDataTest extends Specification {
         then: 'validation fails'
         result.hasErrors()
     }
+
+    def 'create structured data for inline vcard'() {
+        given: 'a vcard object'
+        def card = '''BEGIN:VCARD\r
+FN:A Contact\r
+CALADRURI:mailto:contact@example.com\r
+END:VCARD\r\n'''
+
+        when: 'structured data is created'
+        def sd = new StructuredData(card.bytes)
+
+        then: 'result matches expected'
+        sd as String == 'STRUCTURED-DATA;VALUE=BINARY;ENCODING=BASE64:QkVHSU46VkNBUkQNCkZOOkEgQ29udGFjdA0KQ0FMQURSVVJJOm1haWx0bzpjb250YWN0QGV4YW1wbGUuY29tDQpFTkQ6VkNBUkQNCg==\r\n'
+        
+        and: 'internal bytes match expected'
+        new String(sd.binary) == card
+    }
+
+    def 'create structured data for vcard ref'() {
+        given: 'a vcard uri'
+        def carduri = URI.create('https://example.com/vcardref.vcf')
+
+        when: 'structured data is created'
+        def sd = new StructuredData(carduri)
+
+        then: 'result matches expected'
+        sd as String == 'STRUCTURED-DATA;VALUE=URI:https://example.com/vcardref.vcf\r\n'
+    }
 }
