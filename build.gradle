@@ -14,9 +14,8 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id 'signing'
-    id "pl.allegro.tech.build.axion-release" version "1.15.1"
-    id "nebula.provided-base" version "7.0.0"
-    id "nebula.optional-base" version "7.0.0"
+    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
+    id "pl.allegro.tech.build.axion-release" version "1.15.5" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
     id "com.palantir.revapi" version "1.7.0"
     id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
@@ -35,6 +34,26 @@ repositories {
 java {
     withJavadocJar()
     withSourcesJar()
+
+    registerFeature('jcacheTimezoneCache') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('extendedChronologies') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('filterExpressions') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('groovyDsl') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('schemaValidation') {
+        usingSourceSet(sourceSets.main)
+    }
 }
 
 dependencies {
@@ -52,19 +71,20 @@ dependencies {
     }
 
     // optional timezone caching..
-    implementation 'javax.cache:cache-api:1.1.1', optional
-    implementation 'org.jetbrains:annotations:23.0.0', optional
+    jcacheTimezoneCacheImplementation 'javax.cache:cache-api:1.1.1', 'org.jetbrains:annotations:23.0.0'
+
+    // optional support for non-Gregorian chronologies..
+    extendedChronologiesImplementation "org.threeten:threeten-extra:$threetenExtraVersion"
 
     // optional parser for filter expressions..
-    implementation "org.jparsec:jparsec:$jparsecVersion", optional
+    filterExpressionsImplementation "org.jparsec:jparsec:$jparsecVersion"
 
     // optional groovy DSL for calendar builder..
-    implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
-
-//    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
+    groovyDslImplementation "org.codehaus.groovy:groovy:$groovyVersion"
+    //groovyDslImplementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
     // optional JSON schema validation for structured-data..
-    implementation "com.github.erosb:json-sKema:$jsonSkemaVersion", optional
+    schemaValidationImplementation "com.github.erosb:json-sKema:$jsonSkemaVersion"
 
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
@@ -95,12 +115,24 @@ dependencies {
 test {
     useJUnitPlatform()
 
-    finalizedBy jacocoTestReport // Ensure Jacoco is run after tests have completed
+    finalizedBy jacocoTestCoverageVerification, jacocoTestReport // Ensure Jacoco is run after tests have completed
 
     jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
 }
 
+jacocoTestCoverageVerification {
+    dependsOn test
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.7
+            }
+        }
+    }
+}
+
 jacocoTestReport {
+    dependsOn test
     reports {
         xml.required = true
         html.required = jacoco_htmlReport == 'true'
