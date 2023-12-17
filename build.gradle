@@ -16,8 +16,6 @@ plugins {
     id 'signing'
     id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
     id "pl.allegro.tech.build.axion-release" version "1.15.5" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
-    id "com.netflix.nebula.provided-base" version "10.0.0" // note that nebula.provided-base plugin does nothing. see: #658
-    id "com.netflix.nebula.optional-base" version "10.0.0" // note that nebula.optional-base plugin does nothing. see: #658
     id "com.palantir.revapi" version "1.7.0"
     id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
@@ -37,6 +35,26 @@ repositories {
 java {
     withJavadocJar()
     withSourcesJar()
+
+    registerFeature('jcacheTimezoneCache') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('extendedChronologies') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('filterExpressions') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('groovyDsl') {
+        usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature('schemaValidation') {
+        usingSourceSet(sourceSets.main)
+    }
 }
 
 dependencies {
@@ -53,20 +71,20 @@ dependencies {
     }
 
     // optional timezone caching..
-    implementation 'javax.cache:cache-api:1.1.1' // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
+    jcacheTimezoneCacheImplementation 'javax.cache:cache-api:1.1.1'
 
     // optional support for non-Gregorian chronologies..
-    implementation "org.threeten:threeten-extra:$threetenExtraVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
+    extendedChronologiesImplementation "org.threeten:threeten-extra:$threetenExtraVersion"
 
     // optional parser for filter expressions..
-    implementation "org.jparsec:jparsec:$jparsecVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
+    filterExpressionsImplementation "org.jparsec:jparsec:$jparsecVersion"
 
     // optional groovy DSL for calendar builder..
-    implementation "org.codehaus.groovy:groovy:$groovyVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
-    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
+    groovyDslImplementation "org.codehaus.groovy:groovy:$groovyVersion"
+    groovyDslImplementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
     // optional JSON schema validation for structured-data..
-    implementation "com.github.erosb:json-sKema:$jsonSkemaVersion" // was previously optional but optional dependencies are no longer supported by Gradle. Should use feature varients. See #632
+    schemaValidationImplementation "com.github.erosb:json-sKema:$jsonSkemaVersion"
 
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
