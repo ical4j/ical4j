@@ -61,12 +61,12 @@ class PropertyListAccessorTest extends Specification {
         }
 
         expect: 'result matches expected'
-        accessor.getProperty(propName) == expectedResult
+        accessor.getRequiredProperty(propName) == expectedResult
 
         where:
         propName        | expectedResult
-        "DTSTAMP"       | propList.getFirst('DTSTAMP')
-        Props.VERSION   | propList.getFirst('VERSION')
+        "DTSTAMP"       | propList.getRequired('DTSTAMP')
+        Props.VERSION   | propList.getRequired('VERSION')
     }
 
     def 'test get properties'() {
