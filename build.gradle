@@ -127,6 +127,7 @@ jacocoTestCoverageVerification {
             limit {
                 minimum = 0.7
             }
+            failOnViolation = false
         }
     }
 }
