@@ -250,8 +250,14 @@ public abstract class DateProperty<T extends Temporal> extends Property {
             } else {
                 replace(Value.DATE_TIME);
             }
-            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
-            replace(new TzId(zoneId.getId()));
+
+            // update TZID param
+            if (TemporalAdapter.isUtc(temporal)) {
+                removeAll(TZID);
+            } else {
+                ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
+                replace(new TzId(zoneId.getId()));
+            }
         }
     }
 
