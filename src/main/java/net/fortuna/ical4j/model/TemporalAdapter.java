@@ -36,10 +36,22 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     private static final TemporalComparator COMPARATOR = new TemporalComparator();
 
+    /**
+     * The iCalendar-compliant string representation of a {@link Temporal} value.
+     */
     private final String valueString;
 
+    /**
+     * An iCalendar {@link TzId} parameter representing the {@link ZoneId} for a {@link Temporal} value.
+     * This value may be localized to a specific iCalendar object, and thus is only meaningful when combined with
+     * a {@link TimeZoneRegistry} instance. If no registry is provided it is assumed this represents a global
+     * timezone identifier.
+     */
     private final TzId tzId;
 
+    /**
+     * Provides localized timezone definitions for an iCalendar object.
+     */
     private transient final TimeZoneRegistry timeZoneRegistry;
 
     private transient volatile T temporal;
@@ -59,10 +71,11 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
         this.valueString = toString(temporal);
-        if (isDateTimePrecision(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
-//            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
-//            this.tzId = new TzId(zoneId.getId());
-            this.tzId = new TzId.Factory().createParameter(TimeZones.getDefault().toZoneId().getId());
+        if (temporal instanceof ZonedDateTime && !isFloating(temporal) && !isUtc(temporal)) {
+            //XXX: assume zone id is global for now.. this may need to be resolved via the
+            // timezone registry in future..
+            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
+            this.tzId = new TzId(zoneId.getId());
         } else {
             this.tzId = null;
         }
