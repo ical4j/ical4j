@@ -12,18 +12,16 @@ class TemporalAdapterTest extends Specification {
         new TemporalAdapter(temporal) as String == expectedValue
 
         where:
-        temporal                       | expectedValue
+        temporal                                                        | expectedValue
 
-        LocalDate.of(2001, 04, 03)     | '20010403'
-
-        LocalDateTime.of(2001, 04, 03, 11, 00) | '20010403T110000'
-
-        LocalDateTime.of(2001, 04, 03, 11, 00).toInstant(ZoneOffset.UTC) | '20010403T110000Z'
-
-        LocalDateTime.of(2001, 04, 03, 11, 00) | '20010403T110000'
-        ZonedDateTime.of(
-                LocalDateTime.of(2022, 12, 16, 18, 0, 0),
-                ZoneId.of("Europe/Warsaw")) | '20221216T180000'
+        LocalDate.of(2001, 04, 03)                                      | '20010403'
+        LocalDateTime.of(2001, 04, 03, 11, 00)                          | '20010403T110000'
+        LocalDateTime.of(2001, 04, 03, 11, 00).toInstant(ZoneOffset.UTC)| '20010403T110000Z'
+        LocalDateTime.of(2001, 04, 03, 11, 00)                          | '20010403T110000'
+        ZonedDateTime.of(LocalDateTime.of(2022, 12, 16, 18, 0, 0),
+                ZoneId.of("Europe/Warsaw"))                             | '20221216T180000'
+        ZonedDateTime.of(2023, 11, 15, 8, 30, 0, 0,
+                ZoneId.of("America/Sao_Paulo"))                         | '20231115T083000'
     }
 
     def 'verify date string parsing'() {
