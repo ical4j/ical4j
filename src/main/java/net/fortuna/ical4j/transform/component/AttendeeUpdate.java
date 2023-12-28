@@ -2,10 +2,9 @@ package net.fortuna.ical4j.transform.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.property.Attendee;
+import net.fortuna.ical4j.transform.Transformer;
 
-import java.util.function.UnaryOperator;
-
-public class AttendeeUpdate implements UnaryOperator<Component> {
+public class AttendeeUpdate implements Transformer<Component> {
 
     private final Attendee attendee;
 

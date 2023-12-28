@@ -2,10 +2,9 @@ package net.fortuna.ical4j.transform.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.transform.Transformer;
 
-import java.util.function.UnaryOperator;
-
-public class OrganizerUpdate implements UnaryOperator<Component> {
+public class OrganizerUpdate implements Transformer<Component> {
 
     private final Organizer organizer;
 

@@ -6,14 +6,14 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.transform.component.SequenceIncrement;
 import net.fortuna.ical4j.transform.component.UidUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import java.util.Optional;
-import java.util.function.UnaryOperator;
 
-public abstract class AbstractMethodTransformer implements UnaryOperator<Calendar> {
+public abstract class AbstractMethodTransformer implements Transformer<Calendar> {
 
     private final Method method;
 

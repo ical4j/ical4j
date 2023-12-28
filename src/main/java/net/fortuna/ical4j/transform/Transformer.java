@@ -40,10 +40,7 @@ import java.util.function.UnaryOperator;
  *
  * Base class of calendar transformations.
  * @author benfortuna
- *
- * @deprecated use functional interface {@link UnaryOperator} instead.
  */
-@Deprecated
 public interface Transformer<T> extends UnaryOperator<T> {
 
     /**
@@ -51,7 +48,9 @@ public interface Transformer<T> extends UnaryOperator<T> {
      *
      * @param object a calendar object to transform
      * @return a transformed calendar object
+     * @deprecated use {@link UnaryOperator#apply(Object)}
      */
+    @Deprecated
     default T transform(final T object) {
         return apply(object);
     }

@@ -1,10 +1,9 @@
 package net.fortuna.ical4j.transform.component;
 
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.transform.Transformer;
 
-import java.util.function.UnaryOperator;
-
-public abstract class AbstractMethodTransfomer implements UnaryOperator<Component> {
+public abstract class AbstractMethodTransfomer implements Transformer<Component> {
 
     @Override
     public Component apply(Component object) {
