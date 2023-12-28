@@ -41,6 +41,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 
 @Slf4j
@@ -53,12 +54,23 @@ class TimeZoneSpec extends Specification {
 		expect: 'specified date is in daylight time'
 		def tz = tzRegistry.getTimeZone(timezone)
 		tz.inDaylightTime(new DateTime(date)) == inDaylightTime
-		
+
 		where:
 		date				| timezone					| inDaylightTime
 		'20110328T110000'	| 'America/Los_Angeles'		| true
+		'20231214T170000'	| 'America/Los_Angeles'		| false
 		'20110328T110000'	| 'Australia/Melbourne'		| true
 		'20110231T110000'	| 'Europe/London'		    | false
+		'20231115T083000'	| 'America/Sao_Paulo'		| false
+	}
+
+	def 'test temporal adapter parsing uses correct timezone'() {
+		when: 'parsing a string using a global zone id'
+		def instance = TemporalAdapter.parse('20231214T170000',
+				ZoneId.of('America/Los_Angeles'))
+
+		then: 'correct timezone in resulting instance'
+		instance.getTemporal().getZone() == ZoneId.of('America/Los_Angeles')
 	}
 	
 	def 'verify string representation'() {
