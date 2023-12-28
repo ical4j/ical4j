@@ -104,7 +104,7 @@ dependencies {
     testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
 
     // spock
-    testImplementation platform("org.spockframework:spock-bom:2.1-groovy-3.0"),
+    testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
             "org.spockframework:spock-core"
 
     // testcontainers
