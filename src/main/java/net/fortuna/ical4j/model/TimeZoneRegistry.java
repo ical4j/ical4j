@@ -65,11 +65,7 @@ public interface TimeZoneRegistry {
         }
         Optional<Map.Entry<String, String>> zoneId = ZONE_IDS.entrySet().stream().filter(entry ->
                 entry.getValue().equals(tzId)).findFirst();
-        if (zoneId.isPresent()) {
-            return ZoneId.of(zoneId.get().getKey());
-        } else {
-            return ZoneId.of(tzId, ZONE_ALIASES);
-        }
+        return zoneId.map(mapping -> ZoneId.of(mapping.getKey())).orElseGet(() -> ZoneId.of(tzId, ZONE_ALIASES));
     }
 
     /**
