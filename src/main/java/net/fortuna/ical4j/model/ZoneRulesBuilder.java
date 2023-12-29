@@ -74,39 +74,17 @@ public class ZoneRulesBuilder {
     private List<ZoneOffsetTransition> buildDSTTransitions(List<Observance> observances) {
         List<ZoneOffsetTransition> transitions = new ArrayList<>();
 
-        Observance next = null;
-
-        // reverse iterate observances to calculate historical occurrences
-        List<Observance> sorted = new ArrayList<>(observances);
-        sorted.sort((o1, o2) -> {
-            DtStart<LocalDateTime> o1Start = o1.getRequiredProperty("DTSTART");
-            DtStart<LocalDateTime> o2Start = o2.getRequiredProperty("DTSTART");
-            return new TemporalComparator().compare(o1Start.getDate(), o2Start.getDate());
-        });
-        Collections.reverse(sorted);
-
-        for (Observance observance : sorted) {
-            // ignore transitions that have no effect..
+        for (Observance observance : observances) {
             Optional<TzOffsetFrom> offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
             TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
 
+            // ignore transitions that have no effect..
             if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.getOffset())) {
-                Period<LocalDateTime> span;
                 DtStart<LocalDateTime> start = observance.getRequiredProperty("DTSTART");
-                // if no next observance use current date for period end..
-                if (next == null) {
-                    span = new Period<>(start.getDate(), LocalDateTime.now());
-                } else {
-                    DtStart<LocalDateTime> nextStart = next.getRequiredProperty("DTSTART");
-                    span = new Period<>(start.getDate(), nextStart.getDate());
-                }
-
-                observance.calculateRecurrenceSet(span).forEach( p -> {
+                observance.calculateRecurrenceSet(new Period<>(start.getDate(), LocalDateTime.now())).forEach( p -> {
                     transitions.add(ZoneOffsetTransition.of(p.getStart(),
                             offsetFrom.get().getOffset(), offsetTo.getOffset()));
                 });
-
-                next = observance;
             }
         }
         return transitions;
@@ -161,17 +139,11 @@ public class ZoneRulesBuilder {
         List<ZoneOffsetTransition> standardOffsetTransitions = buildStandardOffsetTransitions(stdObservances);
         Collections.sort(standardOffsetTransitions);
 
-        List<ZoneOffsetTransition> standardTransitions = buildDSTTransitions(
-                vTimeZone.getComponents(Observance.STANDARD));
-        List<ZoneOffsetTransition> offsetTransitions = buildDSTTransitions(
-                vTimeZone.getComponents(Observance.DAYLIGHT));
-        offsetTransitions.addAll(standardTransitions);
+        List<ZoneOffsetTransition> offsetTransitions = buildDSTTransitions(vTimeZone.getObservances());
         Collections.sort(offsetTransitions);
 
-        //XXX: only create transition rules from the latest definitions..
-//        Set<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(
-//                vTimeZone.getObservances(), standardOffset);
-        //xxx: order of transition rules is significant..
+        // only create transition rules from the latest definitions..
+        // NOTE: order of transition rules is significant..
         List<Observance> latestObservances = Arrays.asList(currentDaylight, currentStandard);
         Set<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(latestObservances.stream()
                 .filter(Objects::nonNull).collect(Collectors.toList()), standardOffset);
