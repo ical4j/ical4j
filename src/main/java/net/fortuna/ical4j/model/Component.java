@@ -45,6 +45,8 @@ import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static net.fortuna.ical4j.model.Property.UID;
+
 /**
  * $Id$ [Apr 5, 2004]
  * <p/>
@@ -205,6 +207,14 @@ public abstract class Component extends Content implements Serializable, Propert
     @Override
     public void setPropertyList(PropertyList properties) {
         this.properties = properties;
+    }
+
+    /**
+     * Returns the UID property of this component if available.
+     * @return a Uid instance, or null if no UID property exists
+     */
+    public Optional<Uid> getUid() {
+        return getProperty(UID);
     }
 
     /**

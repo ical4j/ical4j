@@ -32,8 +32,10 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Geo;
 import net.fortuna.ical4j.model.property.LocationType;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.Name;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
@@ -163,14 +165,6 @@ public class VLocation extends Component {
      */
     public final Optional<Name> getNameProp() {
         return getProperty(NAME);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
     }
 
     /**

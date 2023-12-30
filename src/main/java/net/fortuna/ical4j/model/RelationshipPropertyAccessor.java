@@ -64,8 +64,4 @@ public interface RelationshipPropertyAccessor extends PropertyContainer {
     default Optional<Url> getUrl() {
         return getProperty(Property.URL);
     }
-
-    default Optional<Uid> getUid() {
-        return getProperty(Property.UID);
-    }
 }
