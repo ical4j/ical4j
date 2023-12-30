@@ -204,7 +204,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * @author Ben Fortuna
  */
 public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component>, ParticipantsAccessor,
-    LocationsAccessor, ResourcesAccessor {
+    LocationsAccessor, ResourcesAccessor, DateTimePropertyAccessor {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
@@ -541,29 +541,20 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
 
     /**
      * @return the DTSTART propery or null if not specified
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
     @Deprecated
-    public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(DTSTART);
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
      * @return the DTEND property or null if not specified
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeEnd()}
      */
     @Deprecated
-    public final Optional<DtEnd<?>> getEndDate() {
-        return getProperty(DTEND);
-    }
-
-    /**
-     * @return the DURATION property or null if not specified
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Duration> getDuration() {
-        return getProperty(DURATION);
+    public final <T extends Temporal> Optional<DtEnd<T>> getEndDate() {
+        return getDateTimeEnd();
     }
 
     /**
@@ -591,16 +582,6 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
     @Deprecated
     public final Optional<Url> getUrl() {
         return getProperty(URL);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
     }
 
     @Override

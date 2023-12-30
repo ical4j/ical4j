@@ -3185,3 +3185,44 @@ acceptedBreaks:
       old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
       new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
       justification: "improve_generics_for_method_chaining"
+  "4.0.0-rc2":
+    org.mnode.ical4j:ical4j:
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.method.removed"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Uid> net.fortuna.ical4j.model.RelationshipPropertyAccessor::getUid()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      justification: "use_accessor_interface_for_consistency"

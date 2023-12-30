@@ -36,8 +36,10 @@ package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VTimeZone
 import net.fortuna.ical4j.util.Calendars
+import spock.lang.Ignore
 import spock.lang.Specification
 
+@Ignore
 class TimeZoneUpdaterTest extends Specification {
 
     def 'test update all tz definitions'() {

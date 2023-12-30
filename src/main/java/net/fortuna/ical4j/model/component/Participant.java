@@ -118,7 +118,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author Mike Douglass
  */
-public class Participant extends Component implements ComponentContainer<Component> {
+public class Participant extends Component implements ComponentContainer<Component>, ChangeManagementPropertyAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -190,17 +190,12 @@ public class Participant extends Component implements ComponentContainer<Compone
     }
 
     /**
-     * @return the optional creation-time property for an event
-     */
-    public final Optional<Created> getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
      * @return the optional date-stamp property
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
+    @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(DTSTAMP);
+        return getDateTimeStamp();
     }
 
     /**
@@ -209,13 +204,6 @@ public class Participant extends Component implements ComponentContainer<Compone
      */
     public final Optional<Description> getDescription() {
         return getProperty(DESCRIPTION);
-    }
-
-    /**
-     * @return the optional last-modified property for an event
-     */
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
     }
 
     /**
@@ -234,13 +222,6 @@ public class Participant extends Component implements ComponentContainer<Compone
     }
 
     /**
-     * @return the optional sequence number property for an event
-     */
-    public final Optional<Sequence> getSequence() {
-        return getProperty(SEQUENCE);
-    }
-
-    /**
      * @return the optional status property for an event
      */
     public final Optional<Status> getStatus() {
@@ -253,14 +234,6 @@ public class Participant extends Component implements ComponentContainer<Compone
      */
     public final Optional<Summary> getSummary() {
         return getProperty(SUMMARY);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
     }
 
     /**
