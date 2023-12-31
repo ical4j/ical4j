@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2023, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,61 +31,19 @@
  *
  */
 
-package net.fortuna.ical4j.model.property;
+package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.model.property.immutable.ImmutableProximity
+import spock.lang.Specification
 
-public class Proximity extends Property {
+class ProximityTest extends Specification {
 
-    private static final String VALUE_ARRIVE = "ARRIVE";
+    def 'test proximity creation'() {
+        expect: 'string result matches expected'
+        proximity as String == expectedValue
 
-    private static final String VALUE_DEPART = "DEPART";
-
-    private static final String VALUE_CONNECT = "CONNECT";
-    
-    private static final String VALUE_DISCONNECT = "DISCONNECT";
-
-    private String value;
-
-    public Proximity() {
-        super(PROXIMITY);
-    }
-
-    public Proximity(String value) {
-        super(PROXIMITY);
-        this.value = value;
-    }
-
-    public Proximity(ParameterList aList) {
-        super(PROXIMITY, aList);
-    }
-
-    public Proximity(ParameterList aList, String value) {
-        super(PROXIMITY, aList);
-        this.value = value;
-    }
-
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(String aValue) {
-        this.value = aValue;
-    }
-
-    @Override
-    public ValidationResult validate() throws ValidationException {
-        return ValidationResult.EMPTY;
-    }
-
-    @Override
-    protected PropertyFactory<?> newFactory() {
-        return null;
+        where:
+        proximity                   | expectedValue
+        ImmutableProximity.ARRIVE   | 'PROXIMITY:ARRIVE\r\n'
     }
 }
