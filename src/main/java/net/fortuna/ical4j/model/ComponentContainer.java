@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import java.util.function.BiFunction;
+
 public interface ComponentContainer<C extends Component> extends ComponentListAccessor<C> {
 
     void setComponentList(ComponentList<C> components);
@@ -32,5 +34,20 @@ public interface ComponentContainer<C extends Component> extends ComponentListAc
     default <T extends ComponentContainer<C>> T replace(C component) {
         setComponentList((ComponentList<C>)  getComponentList().replace(component));
         return (T) this;
+    }
+
+    /**
+     * A functional method used to apply a component to a container in an undefined way.
+     *
+     * For example, a null check can be introduced as follows:
+     *
+     *  container.with((container, component) -> if (component != null) container.add(component); return container;)
+     * @param f
+     * @param c
+     * @return
+     * @param <T>
+     */
+    default <T extends ComponentContainer<C>> T with(BiFunction<T, C, T> f, C c) {
+        return f.apply((T) this, c);
     }
 }

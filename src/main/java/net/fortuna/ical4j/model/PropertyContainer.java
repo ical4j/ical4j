@@ -1,6 +1,9 @@
 package net.fortuna.ical4j.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
+import java.util.function.BiFunction;
 
 public interface PropertyContainer extends PropertyListAccessor {
 
@@ -11,7 +14,7 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param property the property to add
      * @return a reference to the container to support method chaining
      */
-    default <T extends PropertyContainer> T add(Property property) {
+    default <T extends PropertyContainer> T add(@NotNull Property property) {
         setPropertyList((PropertyList) getPropertyList().add(property));
         return (T) this;
     }
@@ -21,7 +24,7 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param properties a collection of properties to add
      * @return a reference to the container to support method chaining
      */
-    default <T extends PropertyContainer> T addAll(Collection<Property> properties) {
+    default <T extends PropertyContainer> T addAll(@NotNull Collection<Property> properties) {
         setPropertyList((PropertyList) getPropertyList().addAll(properties));
         return (T) this;
     }
@@ -54,5 +57,20 @@ public interface PropertyContainer extends PropertyListAccessor {
     default <T extends PropertyContainer> T replace(Property property) {
         setPropertyList((PropertyList) getPropertyList().replace(property));
         return (T) this;
+    }
+
+    /**
+     * A functional method used to apply a property to a container in an undefined way.
+     *
+     * For example, a null check can be introduced as follows:
+     *
+     *  container.with((c, p) -> if (p != null) c.add(p); return c;)
+     * @param f
+     * @param p
+     * @return
+     * @param <T>
+     */
+    default <T extends PropertyContainer, P> T with(BiFunction<T, P, T> f, P p) {
+        return f.apply((T) this, p);
     }
 }

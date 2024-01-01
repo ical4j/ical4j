@@ -56,4 +56,15 @@ class ComponentSpec extends Specification {
         period    | expectedResults
         Period.parse('20221014T194500/20230113T194500') | ['20221014T194500/PT1S', '20221028T194500/PT1S', '20221111T194500/PT1S', '20221125T194500/PT1S', '20221209T194500/PT1S', '20230113T194500/PT1S']
     }
+
+    def 'test functional property modifier'() {
+        given: 'a component'
+        VEvent event = [false]
+
+        when: 'a null property is applied via functional method'
+        event.with((c, p) -> { if (p != null) c.add(p); return c }, null)
+
+        then: 'the property is not added'
+        event.getProperties().isEmpty()
+    }
 }
