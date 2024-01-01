@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,14 +63,14 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     }
 
     @Override
-    public ContentCollection<T> add(T content) {
+    public ContentCollection<T> add(@NotNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.add(content);
         return new ComponentList<>(copy);
     }
 
     @Override
-    public ContentCollection<T> addAll(Collection<T> content) {
+    public ContentCollection<T> addAll(@NotNull Collection<T> content) {
         List<T> copy = new ArrayList<>(components);
         copy.addAll(content);
         return new ComponentList<>(copy);
@@ -96,7 +98,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     }
 
     @Override
-    public ContentCollection<T> replace(T content) {
+    public ContentCollection<T> replace(@NotNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.removeIf(c -> c.getName().equals(content.getName()));
         copy.add(content);

@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,7 +57,7 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
      * Creates an unmodifiable copy of the specified parameter list.
      * @param list a parameter list to copy parameters from
      */
-    public ParameterList(List<Parameter> list) {
+    public ParameterList(@NotNull List<Parameter> list) {
         this.parameters = Collections.unmodifiableList(list);
     }
 
@@ -67,7 +69,7 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
     }
 
     @Override
-    public ContentCollection<Parameter> addAll(Collection<Parameter> content) {
+    public ContentCollection<Parameter> addAll(@NotNull Collection<Parameter> content) {
         List<Parameter> copy = new ArrayList<>(parameters);
         copy.addAll(content);
         return new ParameterList(copy);
@@ -95,7 +97,7 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
     }
 
     @Override
-    public ContentCollection<Parameter> replace(Parameter content) {
+    public ContentCollection<Parameter> replace(@NotNull Parameter content) {
         List<Parameter> copy = new ArrayList<>(parameters);
         copy.removeIf(p -> p.getName().equals(content.getName()));
         copy.add(content);

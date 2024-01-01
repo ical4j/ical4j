@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,19 +58,19 @@ public class PropertyList implements ContentCollection<Property> {
      * @param properties a property list
      */
     
-    public PropertyList(List<Property> properties) {
+    public PropertyList(@NotNull List<Property> properties) {
         this.properties = Collections.unmodifiableList(properties);
     }
 
     @Override
-    public ContentCollection<Property> add(Property content) {
+    public ContentCollection<Property> add(@NotNull Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.add(content);
         return new PropertyList(copy);
     }
 
     @Override
-    public ContentCollection<Property> addAll(Collection<Property> content) {
+    public ContentCollection<Property> addAll(@NotNull Collection<Property> content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.addAll(content);
         return new PropertyList(copy);
@@ -96,7 +98,7 @@ public class PropertyList implements ContentCollection<Property> {
     }
 
     @Override
-    public ContentCollection<Property> replace(Property content) {
+    public ContentCollection<Property> replace(@NotNull Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.removeIf(p -> p.getName().equals(content.getName()));
         copy.add(content);
