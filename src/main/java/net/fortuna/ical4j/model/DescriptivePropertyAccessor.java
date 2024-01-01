@@ -10,16 +10,8 @@ import java.util.Optional;
  */
 public interface DescriptivePropertyAccessor extends PropertyContainer {
 
-    default void addAttachment(byte[] attachment) {
-        add(new Attach(attachment));
-    }
-
     default List<Attach> getAttachments() {
         return getProperties(Property.ATTACH);
-    }
-
-    default void setCategories(String...categories) {
-        replace(new Categories(new TextList(categories)));
     }
 
     default Optional<Categories> getCategories() {
@@ -61,10 +53,6 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
 
     default Optional<Status> getStatus() {
         return getProperty(Property.STATUS);
-    }
-
-    default void setSummary(String summary) {
-        replace(new Summary(summary));
     }
 
     default Optional<Summary> getSummary() {
