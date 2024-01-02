@@ -90,8 +90,8 @@ public class ZoneRulesBuilder {
         return transitions;
     }
 
-    private Set<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
-        Set<ZoneOffsetTransitionRule> transitionRules = new HashSet<>();
+    private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
+        List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
 
         for (Observance observance : observances) {
             Optional<RRule<?>> rrule = observance.getProperty(Property.RRULE);
@@ -118,10 +118,11 @@ public class ZoneRulesBuilder {
     }
 
     public ZoneRules build() throws ConstraintViolationException {
-        Observance currentStandard = VTimeZone.getApplicableObservance(Instant.now(),
+        Instant now = Instant.now();
+        Observance currentStandard = VTimeZone.getApplicableObservance(now,
                 vTimeZone.getComponents(Observance.STANDARD));
 
-        Observance currentDaylight = VTimeZone.getApplicableObservance(Instant.now(),
+        Observance currentDaylight = VTimeZone.getApplicableObservance(now,
                 vTimeZone.getComponents(Observance.DAYLIGHT));
 
         // if no standard time use daylight time..
@@ -143,12 +144,20 @@ public class ZoneRulesBuilder {
         Collections.sort(offsetTransitions);
 
         // only create transition rules from the latest definitions..
-        // NOTE: order of transition rules is significant..
-        List<Observance> latestObservances = Arrays.asList(currentDaylight, currentStandard);
-        Set<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(latestObservances.stream()
-                .filter(Objects::nonNull).collect(Collectors.toList()), standardOffset);
+        // NOTE: order of transition rules is significant.. if currently in DST next transition should be
+        // to standard time..
+        List<Observance> latestObservances = new ArrayList<>();
+        if (vTimeZone.getApplicableObservance(now).equals(currentDaylight)) {
+            latestObservances.add(currentStandard);
+            latestObservances.add(currentDaylight);
+        } else {
+            latestObservances.add(currentDaylight);
+            latestObservances.add(currentStandard);
+        }
+        latestObservances = latestObservances.stream().filter(Objects::nonNull).collect(Collectors.toList());
 
-        return ZoneRules.of(standardOffset, wallOffset, standardOffsetTransitions, offsetTransitions,
-                new ArrayList<>(transitionRules));
+        List<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(latestObservances, standardOffset);
+
+        return ZoneRules.of(standardOffset, wallOffset, standardOffsetTransitions, offsetTransitions, transitionRules);
     }
 }
