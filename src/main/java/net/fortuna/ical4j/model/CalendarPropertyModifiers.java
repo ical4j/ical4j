@@ -33,10 +33,7 @@
 
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.property.Attach;
-import net.fortuna.ical4j.model.property.Categories;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.Method;
 
 import java.util.function.BiFunction;
 
@@ -44,25 +41,9 @@ import java.util.function.BiFunction;
  * A collection of functions used to modify date-time properties in a target property container.
  * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
  */
-public interface DescriptivePropertyModifiers {
+public interface CalendarPropertyModifiers {
 
-    BiFunction<PropertyContainer, byte[], PropertyContainer> ATTACHMENT = (c, p) -> {
-        if (p != null) c.add(new Attach(p)); return c;
+    BiFunction<PropertyContainer, Method, PropertyContainer> METHOD = (c, p) -> {
+        if (p != null) c.replace(p); return c;
     };
-
-    BiFunction<PropertyContainer, String[], PropertyContainer> CATEGORIES = (c, p) -> {
-        if (p != null) c.replace(new Categories(new TextList(p))); return c;
-    };
-
-    BiFunction<PropertyContainer, String, PropertyContainer> SUMMARY = (c, p) -> {
-        if (p != null) c.replace(new Summary(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, String, PropertyContainer> DESCRIPTION = (c, p) -> {
-        if (p != null) c.replace(new Description(p)); return c;
-    };
-
-    static <T extends PropertyContainer> BiFunction<T, String, T> summary() {
-        return (BiFunction<T, String, T>) SUMMARY;
-    }
 }

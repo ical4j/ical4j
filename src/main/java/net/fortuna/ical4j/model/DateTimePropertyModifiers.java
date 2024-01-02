@@ -33,36 +33,52 @@
 
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.property.Attach;
-import net.fortuna.ical4j.model.property.Categories;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.*;
 
+import java.time.Instant;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
 import java.util.function.BiFunction;
 
 /**
  * A collection of functions used to modify date-time properties in a target property container.
  * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
  */
-public interface DescriptivePropertyModifiers {
+public interface DateTimePropertyModifiers {
 
-    BiFunction<PropertyContainer, byte[], PropertyContainer> ATTACHMENT = (c, p) -> {
-        if (p != null) c.add(new Attach(p)); return c;
+    BiFunction<PropertyContainer, Instant, PropertyContainer> COMPLETED = (c, p) -> {
+        if (p != null) c.replace(new Completed(p)); return c;
     };
 
-    BiFunction<PropertyContainer, String[], PropertyContainer> CATEGORIES = (c, p) -> {
-        if (p != null) c.replace(new Categories(new TextList(p))); return c;
+    BiFunction<PropertyContainer, Temporal, PropertyContainer> DTEND = (c, p) -> {
+        if (p != null) {
+            c.replace(new DtEnd<>(p));
+            c.removeAll(Property.DURATION);
+        }
+        return c;
     };
 
-    BiFunction<PropertyContainer, String, PropertyContainer> SUMMARY = (c, p) -> {
-        if (p != null) c.replace(new Summary(p)); return c;
+    BiFunction<PropertyContainer, Temporal, PropertyContainer> DUE = (c, p) -> {
+        if (p != null) c.replace(new Due<>(p)); return c;
     };
 
-    BiFunction<PropertyContainer, String, PropertyContainer> DESCRIPTION = (c, p) -> {
-        if (p != null) c.replace(new Description(p)); return c;
+    BiFunction<PropertyContainer, Temporal, PropertyContainer> DTSTART = (c, p) -> {
+        if (p != null) c.replace(new DtStart<>(p)); return c;
     };
 
-    static <T extends PropertyContainer> BiFunction<T, String, T> summary() {
-        return (BiFunction<T, String, T>) SUMMARY;
-    }
+    BiFunction<PropertyContainer, TemporalAmount, PropertyContainer> DURATION = (c, p) -> {
+        if (p != null) {
+            c.replace(new Duration(p));
+            c.removeAll(Property.DTEND);
+        }
+        return c;
+    };
+
+    BiFunction<PropertyContainer, Property, PropertyContainer> FREEBUSY = (c, p) -> {
+        if (p != null) c.replace(p); return c;
+    };
+
+    BiFunction<PropertyContainer, Transp, PropertyContainer> TRANSP = (c, p) -> {
+        if (p != null) c.replace(p); return c;
+    };
 }

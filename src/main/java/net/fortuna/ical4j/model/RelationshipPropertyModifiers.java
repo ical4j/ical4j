@@ -33,36 +33,44 @@
 
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.property.Attach;
-import net.fortuna.ical4j.model.property.Categories;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.UidGenerator;
 
+import java.net.URI;
+import java.time.temporal.Temporal;
 import java.util.function.BiFunction;
 
 /**
  * A collection of functions used to modify date-time properties in a target property container.
  * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
  */
-public interface DescriptivePropertyModifiers {
+public interface RelationshipPropertyModifiers {
 
-    BiFunction<PropertyContainer, byte[], PropertyContainer> ATTACHMENT = (c, p) -> {
-        if (p != null) c.add(new Attach(p)); return c;
+    BiFunction<PropertyContainer, URI, PropertyContainer> ATTENDEE = (c, p) -> {
+        if (p != null) c.add(new Attendee(p)); return c;
     };
 
-    BiFunction<PropertyContainer, String[], PropertyContainer> CATEGORIES = (c, p) -> {
-        if (p != null) c.replace(new Categories(new TextList(p))); return c;
+    BiFunction<PropertyContainer, String, PropertyContainer> CONTACT = (c, p) -> {
+        if (p != null) c.add(new Contact(p)); return c;
     };
 
-    BiFunction<PropertyContainer, String, PropertyContainer> SUMMARY = (c, p) -> {
-        if (p != null) c.replace(new Summary(p)); return c;
+    BiFunction<PropertyContainer, Organizer, PropertyContainer> ORGANIZER = (c, p) -> {
+        if (p != null) c.replace(p); return c;
     };
 
-    BiFunction<PropertyContainer, String, PropertyContainer> DESCRIPTION = (c, p) -> {
-        if (p != null) c.replace(new Description(p)); return c;
+    BiFunction<PropertyContainer, Temporal, PropertyContainer> RECURRENCE_ID = (c, p) -> {
+        if (p != null) c.replace(new RecurrenceId<>(p)); return c;
     };
 
-    static <T extends PropertyContainer> BiFunction<T, String, T> summary() {
-        return (BiFunction<T, String, T>) SUMMARY;
-    }
+    BiFunction<PropertyContainer, URI, PropertyContainer> RELATED_TO = (c, p) -> {
+        if (p != null) c.add(new RelatedTo(p)); return c;
+    };
+
+    BiFunction<PropertyContainer, URI, PropertyContainer> URL = (c, p) -> {
+        if (p != null) c.replace(new Url(p)); return c;
+    };
+
+    BiFunction<PropertyContainer, UidGenerator, PropertyContainer> UID = (c, p) -> {
+        if (p != null) c.replace(c.getProperty(Property.UID).orElse(p.generateUid())); return c;
+    };
 }

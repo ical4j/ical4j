@@ -34,9 +34,9 @@ package net.fortuna.ical4j.transform.calendar;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.transform.component.OrganizerUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
 
+import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
 
 /**
@@ -49,7 +49,7 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUES
  */
 public class RequestTransformer extends AbstractMethodTransformer {
 
-    private final OrganizerUpdate organizerUpdate;
+    private final Organizer organizer;
 
     /**
      * Support delegating mode by not specifying an organizer.
@@ -58,7 +58,7 @@ public class RequestTransformer extends AbstractMethodTransformer {
      */
     public RequestTransformer(UidGenerator uidGenerator) {
         super(REQUEST, uidGenerator, true, false);
-        this.organizerUpdate = null;
+        this.organizer = null;
     }
 
     /**
@@ -69,15 +69,13 @@ public class RequestTransformer extends AbstractMethodTransformer {
      */
     public RequestTransformer(Organizer organizer, UidGenerator uidGenerator) {
         super(REQUEST, uidGenerator, true, true);
-        this.organizerUpdate = new OrganizerUpdate(organizer);
+        this.organizer = organizer;
     }
 
     @Override
     public Calendar apply(Calendar object) {
-        if (organizerUpdate != null) {
-            for (CalendarComponent component : object.getComponents()) {
-                organizerUpdate.apply(component);
-            }
+        for (CalendarComponent component : object.getComponents()) {
+            component.with(ORGANIZER, organizer);
         }
         return super.apply(object);
     }

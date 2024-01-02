@@ -8,16 +8,19 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.transform.component.SequenceIncrement;
-import net.fortuna.ical4j.transform.component.UidUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import java.util.Optional;
+
+import static net.fortuna.ical4j.model.CalendarPropertyModifiers.METHOD;
+import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.UID;
 
 public abstract class AbstractMethodTransformer implements Transformer<Calendar> {
 
     private final Method method;
 
-    private final UidUpdate uidUpdate;
+    private final UidGenerator uidGenerator;
+
     private final SequenceIncrement sequenceIncrement;
 
     private final boolean incrementSequence;
@@ -25,7 +28,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
 
     AbstractMethodTransformer(Method method, UidGenerator uidGenerator, boolean sameUid, boolean incrementSequence) {
         this.method = method;
-        this.uidUpdate = new UidUpdate(uidGenerator);
+        this.uidGenerator = uidGenerator;
         this.sequenceIncrement = new SequenceIncrement();
         this.incrementSequence = incrementSequence;
         this.sameUid = sameUid;
@@ -33,12 +36,11 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
 
     @Override
     public Calendar apply(Calendar object) {
-        MethodUpdate methodUpdate = new MethodUpdate(method);
-        methodUpdate.apply(object);
+        object.with(METHOD, method);
 
         Optional<Uid> uid = Optional.empty();
         for (CalendarComponent component : object.getComponents()) {
-            uidUpdate.apply(component);
+            component.with(UID, uidGenerator);
             if (!uid.isPresent()) {
                 uid = component.getProperty(Property.UID);
             } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {

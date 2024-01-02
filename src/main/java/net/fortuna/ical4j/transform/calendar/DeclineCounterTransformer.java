@@ -37,11 +37,11 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.transform.component.ComponentDeclineCounterTransformer;
-import net.fortuna.ical4j.transform.component.OrganizerUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import java.util.Optional;
 
+import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.DECLINE_COUNTER;
 
@@ -55,13 +55,13 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.DECLIN
  */
 public class DeclineCounterTransformer extends AbstractMethodTransformer {
 
-    private final OrganizerUpdate organizerUpdate;
+    private final Organizer organizer;
 
     private final ComponentDeclineCounterTransformer componentMethodTransformer;
 
     public DeclineCounterTransformer(Organizer organizer, UidGenerator uidGenerator) {
         super(DECLINE_COUNTER, uidGenerator, true, false);
-        this.organizerUpdate = new OrganizerUpdate(organizer);
+        this.organizer = organizer;
         this.componentMethodTransformer = new ComponentDeclineCounterTransformer();
     }
 
@@ -72,7 +72,7 @@ public class DeclineCounterTransformer extends AbstractMethodTransformer {
             throw new IllegalArgumentException("Expecting COUNTER method in source");
         }
         for (CalendarComponent component : object.getComponents()) {
-            organizerUpdate.apply(component);
+            component.with(ORGANIZER, organizer);
             componentMethodTransformer.apply(component);
         }
         return super.apply(object);
