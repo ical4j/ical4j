@@ -13,7 +13,7 @@ import net.fortuna.ical4j.util.UidGenerator;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.CalendarPropertyModifiers.METHOD;
-import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.UID;
+import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.UIDGEN;
 
 public abstract class AbstractMethodTransformer implements Transformer<Calendar> {
 
@@ -40,7 +40,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
 
         Optional<Uid> uid = Optional.empty();
         for (CalendarComponent component : object.getComponents()) {
-            component.with(UID, uidGenerator);
+            component.with(UIDGEN, uidGenerator);
             if (!uid.isPresent()) {
                 uid = component.getProperty(Property.UID);
             } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {

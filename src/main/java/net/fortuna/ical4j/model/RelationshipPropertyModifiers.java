@@ -58,11 +58,19 @@ public interface RelationshipPropertyModifiers {
         if (p != null) c.replace(p); return c;
     };
 
+    BiFunction<PropertyContainer, URI, PropertyContainer> ORGANIZER_URI = (c, p) -> {
+        if (p != null) c.replace(new Organizer(p)); return c;
+    };
+
     BiFunction<PropertyContainer, Temporal, PropertyContainer> RECURRENCE_ID = (c, p) -> {
         if (p != null) c.replace(new RecurrenceId<>(p)); return c;
     };
 
-    BiFunction<PropertyContainer, URI, PropertyContainer> RELATED_TO = (c, p) -> {
+    BiFunction<PropertyContainer, URI, PropertyContainer> RELATED_URI = (c, p) -> {
+        if (p != null) c.add(new RelatedTo(p)); return c;
+    };
+
+    BiFunction<PropertyContainer, Component, PropertyContainer> RELATED_COMPONENT = (c, p) -> {
         if (p != null) c.add(new RelatedTo(p)); return c;
     };
 
@@ -70,7 +78,19 @@ public interface RelationshipPropertyModifiers {
         if (p != null) c.replace(new Url(p)); return c;
     };
 
-    BiFunction<PropertyContainer, UidGenerator, PropertyContainer> UID = (c, p) -> {
+    BiFunction<PropertyContainer, Uid, PropertyContainer> UID = (c, p) -> {
+        if (p != null) c.replace(p); return c;
+    };
+
+    BiFunction<PropertyContainer, UidGenerator, PropertyContainer> UIDGEN = (c, p) -> {
         if (p != null) c.replace(c.getProperty(Property.UID).orElse(p.generateUid())); return c;
+    };
+
+    BiFunction<PropertyContainer, Link, PropertyContainer> LINK = (c, p) -> {
+        if (p != null) c.add(p); return c;
+    };
+
+    BiFunction<PropertyContainer, URI, PropertyContainer> LINK_URI = (c, p) -> {
+        if (p != null) c.add(new Link(p)); return c;
     };
 }
