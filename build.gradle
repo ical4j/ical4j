@@ -15,7 +15,7 @@ plugins {
     id 'jacoco'
     id 'signing'
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
-    id "pl.allegro.tech.build.axion-release" version "1.15.5" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
+    id "pl.allegro.tech.build.axion-release" version "1.13.6" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
     id "com.palantir.revapi" version "1.7.0"
     id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
