@@ -42,6 +42,7 @@ import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
@@ -221,6 +222,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent() && shouldApplyTimezone()) {
             return date.toString(tzId.get().toZoneId(timeZoneRegistry));
+        } else if (this instanceof UtcProperty) {
+            return date.toString(ZoneOffset.UTC);
         } else {
             return Strings.valueOf(date);
         }
