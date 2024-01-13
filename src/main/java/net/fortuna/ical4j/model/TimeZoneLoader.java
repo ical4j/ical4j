@@ -69,7 +69,7 @@ public class TimeZoneLoader {
 
     public String[] getAvailableIDs() {
         return new BufferedReader(new InputStreamReader(
-                ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.availableIds")))
+                ResourceLoader.getResourceAsStream(resourcePrefix + "tz.availableIds")))
                 .lines().toArray(String[]::new);
     }
 
