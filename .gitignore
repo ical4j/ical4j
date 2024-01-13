@@ -12,3 +12,5 @@ zones.tab
 out/
 **/zoneinfo/**/index.html
 **/zoneinfo/**/tz.availableIds
+**/zoneinfo-global/**/index.html
+**/zoneinfo-global/**/tz.availableIds
