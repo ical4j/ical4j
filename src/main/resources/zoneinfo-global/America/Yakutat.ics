@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022g//EN
+PRODID:-//tzurl.org//NONSGML Olson 2023d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022g/America/Yakutat
-LAST-MODIFIED:20230104T023645Z
+TZID:/tzurl.org/2023d/America/Yakutat
+LAST-MODIFIED:20231222T233400Z
 TZURL:https://www.tzurl.org/zoneinfo-global/America/Yakutat
 X-LIC-LOCATION:America/Yakutat
 X-PROLEPTIC-TZNAME:LMT
