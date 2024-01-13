@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -73,18 +74,16 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final Properties ALIASES = new Properties();
 
     static {
-        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias")) {
-            ALIASES.load(aliasInputStream);
-        } catch (IOException ioe) {
-            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
-                    "Error loading timezone aliases: " + ioe.getMessage());
-        }
+        // load tz aliases from various sources..
+        for (String aliasResource : Arrays.asList("net/fortuna/ical4j/model/tz.alias", "tz.alias",
+                "net/fortuna/ical4j/transform/rfc5545/msTimezones")) {
 
-        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias")) {
-        	ALIASES.load(aliasInputStream);
-        } catch (IOException | NullPointerException e) {
-            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
-        			"Error loading custom timezone aliases: " + e.getMessage());
+            try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream(aliasResource)) {
+                ALIASES.load(aliasInputStream);
+            } catch (IOException | NullPointerException e) {
+                LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                        "Error loading timezone aliases: " + e.getMessage());
+            }
         }
 
         for (String alias : ALIASES.stringPropertyNames()) {
