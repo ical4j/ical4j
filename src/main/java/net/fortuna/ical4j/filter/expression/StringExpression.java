@@ -32,19 +32,21 @@
  */
 package net.fortuna.ical4j.filter.expression;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 public class StringExpression implements LiteralExpression<String> {
 
-    public final String value;
+    public final Object value;
 
-    public StringExpression(String value) {
+    public StringExpression(@NotNull Object value) {
         this.value = value;
     }
 
     @Override
     public String getValue() {
-        return value;
+        return value.toString();
     }
 
     @Override
