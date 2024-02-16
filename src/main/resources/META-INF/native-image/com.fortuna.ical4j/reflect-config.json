@@ -1,0 +1,11 @@
+[
+  {
+    "name": "net.fortuna.ical4j.util.MapTimeZoneCache",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  }
+]
