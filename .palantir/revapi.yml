@@ -3235,3 +3235,41 @@ acceptedBreaks:
       new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
         \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
       justification: "use_accessor_interface_for_consistency"
+  "4.0.0-rc3":
+    org.mnode.ical4j:ical4j:
+    - code: "java.annotation.added"
+      old: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.String===)"
+      new: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.field.typeChanged"
+      old: "field net.fortuna.ical4j.filter.expression.StringExpression.value"
+      new: "field net.fortuna.ical4j.filter.expression.StringExpression.value"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ java.util.List<net.fortuna.ical4j.filter.FilterTarget.Attribute>, ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ java.util.List<net.fortuna.ical4j.filter.FilterTarget.Attribute>, ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.String===)"
+      new: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
