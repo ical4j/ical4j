@@ -1,0 +1,7 @@
+{
+  "resources": [
+      {
+        "pattern": "net/fortuna/ical4j/model/tz\\.alias"
+      }
+  ]
+}
