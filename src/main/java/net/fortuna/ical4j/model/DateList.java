@@ -122,17 +122,15 @@ public class DateList implements List<Date>, Serializable, Iterable<Date> {
      *             if an invalid date representation exists in the date list
      *             string
      */
-    public DateList(final String aValue, final Value aType, final TimeZone timezone)
-            throws ParseException {
+    public DateList(final String aValue, final Value aType, final TimeZone timezone) throws ParseException {
     	
         this(aType, timezone);
-        final StringTokenizer t = new StringTokenizer(aValue, ",");
-        while (t.hasMoreTokens()) {
+        for (String ds : aValue.split("\\s*,\\s*")) {
             if (Value.DATE.equals(type)) {
-                add(new Date(t.nextToken()));
+                add(new Date(ds));
             }
             else {
-                add(new DateTime(t.nextToken(), timezone));
+                add(new DateTime(ds, timezone));
             }
         }
     }

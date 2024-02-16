@@ -41,7 +41,7 @@ class ComponentSpec extends Specification {
             vevent {
                 dtstart '20221014T194500'
                 dtend '20221014T194501'
-                rdate '20221014T194500,20221028T194500,20221111T194500, 20221125T194500,20221209T194500,20230113T194500'
+                rdate '20221014T194500,20221028T194500,20221111T194500,20221125T194500,20221209T194500,20230113T194500'
             }
         }
         and: 'an expected list of periods'
@@ -53,6 +53,8 @@ class ComponentSpec extends Specification {
 
         where:
         period    | expectedResults
-        new Period('20221014T194500/20230113T194500') | ['20221014T194500/PT1S', '20221028T194500/PT1S', '20221111T194500/PT1S', '20221209T194500/PT1S', '20230113T194500/PT1S']
+        new Period('20221014T194500/20230113T194500') | ['20221014T194500/PT1S', '20221028T194500/PT1S',
+                                                         '20221111T194500/PT1S', '20221125T194500/PT1S',
+                                                         '20221209T194500/PT1S', '20230113T194500/PT1S']
     }
 }
