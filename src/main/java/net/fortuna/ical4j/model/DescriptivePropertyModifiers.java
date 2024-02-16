@@ -51,7 +51,7 @@ public interface DescriptivePropertyModifiers {
     };
 
     BiFunction<PropertyContainer, String[], PropertyContainer> CATEGORIES = (c, p) -> {
-        if (p != null) c.replace(new Categories(new TextList(p))); return c;
+        if (p != null) c.add(new Categories(new TextList(p))); return c;
     };
 
     BiFunction<PropertyContainer, String, PropertyContainer> SUMMARY = (c, p) -> {
