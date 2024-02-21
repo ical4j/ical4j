@@ -1,12 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.palantir.gradle.revapi:gradle-revapi:1.5.0'
-    }
-}
-
 plugins {
     id 'java'
     id 'java-library'
@@ -17,18 +8,19 @@ plugins {
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
     id "pl.allegro.tech.build.axion-release" version "1.13.6" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
     id "com.palantir.revapi" version "1.7.0"
-    id "net.ltgt.errorprone" version "2.0.2" apply false
-    id "biz.aQute.bnd.builder" version "$bndVersion"
-    id 'org.javamodularity.moduleplugin' version '1.7.0' apply false
+//    id "net.ltgt.errorprone" version "2.0.2" apply false
+//    id "biz.aQute.bnd.builder" version "$bndVersion"
+    id 'org.javamodularity.moduleplugin' version '1.8.13'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-//modularity.mixedJavaRelease 8
+modularity.standardJavaRelease 11
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 java {
@@ -36,10 +28,6 @@ java {
     withSourcesJar()
 
     registerFeature('jcacheTimezoneCache') {
-        usingSourceSet(sourceSets.main)
-    }
-
-    registerFeature('extendedChronologies') {
         usingSourceSet(sourceSets.main)
     }
 
@@ -56,6 +44,8 @@ java {
     }
 }
 
+sourcesJar.dependsOn 'compileModuleInfoJava'
+
 dependencies {
 //    errorprone "com.google.errorprone:error_prone_core:2.3.3"
 //    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
@@ -63,18 +53,14 @@ dependencies {
     api "org.slf4j:slf4j-api:$slf4jVersion",
             "commons-codec:commons-codec:$commonsCodecVersion",
             "org.apache.commons:commons-lang3:$commonsLangVersion",
-            "org.apache.commons:commons-collections4:$commonsCollectionsVersion",
             "org.threeten:threeten-extra:$threetenExtraVersion"
 
-    api ("commons-validator:commons-validator:$commonsValidatorVersion") {
-        exclude group: 'commons-collections', module: 'commons-collections'
-    }
+//    api ("commons-validator:commons-validator:$commonsValidatorVersion") {
+//        exclude group: 'commons-collections', module: 'commons-collections'
+//    }
 
     // optional timezone caching..
     jcacheTimezoneCacheImplementation 'javax.cache:cache-api:1.1.1', 'org.jetbrains:annotations:23.0.0'
-
-    // optional support for non-Gregorian chronologies..
-    extendedChronologiesImplementation "org.threeten:threeten-extra:$threetenExtraVersion"
 
     // optional parser for filter expressions..
     filterExpressionsImplementation "org.jparsec:jparsec:$jparsecVersion"
@@ -84,12 +70,11 @@ dependencies {
     //groovyDslImplementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
     // optional JSON schema validation for structured-data..
-    schemaValidationImplementation "com.github.erosb:json-sKema:$jsonSkemaVersion"
+//    schemaValidationImplementation "com.github.erosb:json-sKema:$jsonSkemaVersion"
 
-    compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
+//    annotationProcessor "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
-    testImplementation "org.codehaus.groovy:groovy:$groovyVersion",
-            "org.slf4j:slf4j-log4j12:$slf4jVersion",
+    testImplementation "org.slf4j:slf4j-log4j12:$slf4jVersion",
             "org.apache.logging.log4j:log4j:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
             "org.codehaus.groovy:groovy-xml:$groovyVersion"
@@ -113,6 +98,10 @@ dependencies {
 }
 
 test {
+    moduleOptions {
+        runOnClasspath = true
+    }
+
     useJUnitPlatform()
 
     finalizedBy jacocoTestCoverageVerification, jacocoTestReport // Ensure Jacoco is run after tests have completed
