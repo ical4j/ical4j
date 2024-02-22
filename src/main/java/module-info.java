@@ -4,11 +4,15 @@ module ical4j.core {
 
     requires org.apache.commons.codec;
     requires org.apache.commons.lang3;
-    requires org.jetbrains.annotations;
     requires org.slf4j;
     requires org.threeten.extra;
 //    requires org.apache.commons.validator;
+
+    // optional dependencies..
+    requires static org.jetbrains.annotations;
     requires static cache.api;
+    requires static org.jparsec;
+    requires static org.codehaus.groovy;
 //    requires static json.sKema;
 
     exports net.fortuna.ical4j.filter;
