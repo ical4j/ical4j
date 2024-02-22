@@ -33,19 +33,13 @@
 
 package net.fortuna.ical4j.validate.schema;
 
-import com.github.erosb.jsonsKema.*;
+//import com.github.erosb.jsonsKema.*;
+
 import net.fortuna.ical4j.model.property.StructuredData;
-import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 /**
  * XXX: The validotor library used in this class currently depends on the URLDecoder.decode(String, Charset)
@@ -61,6 +55,8 @@ public class JsonSchemaValidator implements net.fortuna.ical4j.validate.Validato
 
     @Override
     public ValidationResult validate(StructuredData target) throws ValidationException {
+        throw new UnsupportedOperationException("Schema validation not yet implemented");
+        /*
         ValidationResult result = new ValidationResult();
         try (final InputStream in = schemaUrl.openStream()) {
             final String schemaJson = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
@@ -86,5 +82,6 @@ public class JsonSchemaValidator implements net.fortuna.ical4j.validate.Validato
             throw new ValidationException("Unable to retrieve schema");
         }
         return result;
+             */
     }
 }
