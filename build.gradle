@@ -97,6 +97,12 @@ dependencies {
             "org.testcontainers:spock:$testcontainersVersion"
 }
 
+compileTestJava {
+    moduleOptions {
+        compileOnClasspath = true
+    }
+}
+
 test {
     moduleOptions {
         runOnClasspath = true
