@@ -260,6 +260,7 @@ public final class Dates {
      * @deprecated It is not all that useful to perform rounding without specifying an
      * explicit timezone.
      */
+    @Deprecated
     public static long round(final long time, final int precision) {
         return round(time, precision, TimeZone.getDefault());
 //        return round(time, precision, TimeZone.getTimeZone(TimeZones.UTC_ID));
