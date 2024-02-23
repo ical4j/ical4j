@@ -6,6 +6,12 @@ import java.util.Collection;
 import java.util.function.BiFunction;
 
 public interface PropertyContainer extends PropertyListAccessor {
+    BiFunction<PropertyContainer, Property, PropertyContainer> ADD_IF_NOT_PRESENT = (c, p) -> {
+        if (!c.getProperty(p.getName()).isPresent()) {
+            c.add(p);
+        }
+        return c;
+    };
 
     void setPropertyList(PropertyList properties);
 
