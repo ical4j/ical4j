@@ -10,17 +10,18 @@ plugins {
     id "com.palantir.revapi" version "1.7.0"
 //    id "net.ltgt.errorprone" version "2.0.2" apply false
 //    id "biz.aQute.bnd.builder" version "$bndVersion"
-    id 'org.javamodularity.moduleplugin' version '1.8.13'
+    id 'org.javamodularity.moduleplugin' version '1.8.14'
 }
 
-modularity.standardJavaRelease 11
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     mavenCentral()
 }
 
 jar {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 java {
