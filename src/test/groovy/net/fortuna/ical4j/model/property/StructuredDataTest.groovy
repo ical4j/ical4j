@@ -64,7 +64,7 @@ class StructuredDataTest extends Specification {
         notThrown(ValidationException)
     }
 
-    @Ignore
+    @Ignore('validation removed')
     def 'test validation of place structured data'() {
         given: 'a structured data property with JSON-LD data'
         ParameterList params = []
@@ -91,6 +91,7 @@ class StructuredDataTest extends Specification {
         notThrown(ValidationException)
     }
 
+    @Ignore('validation removed')
     def 'test validation of invalid json-ld structured data'() {
         given: 'a structured data property with invalid JSON-LD data'
         def structuredData = new StructuredData.Factory().createProperty(
