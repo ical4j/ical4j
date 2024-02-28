@@ -180,8 +180,8 @@ jar {
     }
 }
 
-distZip.dependsOn 'jar', 'javadocJar'
-distTar.dependsOn 'jar', 'javadocJar'
+distZip.dependsOn 'jar', 'javadocJar', 'sourcesJar'
+distTar.dependsOn 'jar', 'javadocJar', 'sourcesJar'
 
 revapi {
     oldVersion = revApiOldVersion
