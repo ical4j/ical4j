@@ -73,17 +73,7 @@ class TzHelper {
         }
         if (property.getParameter(Parameter.TZID).isPresent()) {
             String newTimezone = getCorrectedTimezoneFromTzParameter(property);
-            String value = property.getValue();
-            if (newTimezone != null) {
-                property.setTimeZone(TIMEZONE_REGISTRY.getTimeZone(newTimezone));
-                try {
-                    property.setValue(value);
-                } catch (ParseException e) {
-                    LOG.warn("Failed to reset property value", e);
-                }
-            } else {
-                property.setUtc(true);
-            }
+            correctTzParameter(property, newTimezone);
         }
     }
 

@@ -211,7 +211,7 @@ class TimeZoneSpec extends Specification {
 		System.setProperty('net.fortuna.ical4j.timezone.update.enabled', 'false')
 
 		expect: 'tz alias resolves to a timezone'
-		tzRegistry.getTimeZone(alias)
+		TimeZoneRegistry.getGlobalZoneId(alias)
 
 		cleanup:
 		System.clearProperty('net.fortuna.ical4j.timezone.update.enabled')

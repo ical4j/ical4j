@@ -44,11 +44,7 @@ import java.io.InputStream;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,7 +72,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     static {
         // load tz aliases from various sources..
         for (String aliasResource : Arrays.asList("net/fortuna/ical4j/model/tz.alias", "tz.alias",
-                "net/fortuna/ical4j/transform/rfc5545/msTimezones")) {
+                "net/fortuna/ical4j/transform/property/msTimezones")) {
 
             try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream(aliasResource)) {
                 ALIASES.load(aliasInputStream);
