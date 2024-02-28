@@ -205,4 +205,18 @@ class TimeZoneSpec extends Specification {
 		cleanup:
 		CompatibilityHints.clearHintEnabled('net.fortuna.ical4j.timezone.offset.negative_dst_supported')
 	}
+
+	def 'test tz aliases resolve correctly'() {
+		setup:
+		System.setProperty('net.fortuna.ical4j.timezone.update.enabled', 'false')
+
+		expect: 'tz alias resolves to a timezone'
+		tzRegistry.getTimeZone(alias)
+
+		cleanup:
+		System.clearProperty('net.fortuna.ical4j.timezone.update.enabled')
+
+		where:
+		alias << ZoneId.getAvailableZoneIds()
+	}
 }
