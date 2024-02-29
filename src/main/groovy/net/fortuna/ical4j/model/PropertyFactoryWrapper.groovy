@@ -1,9 +1,5 @@
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.Parameter
-import net.fortuna.ical4j.model.ParameterList
-import net.fortuna.ical4j.model.PropertyFactory
-
 class PropertyFactoryWrapper extends AbstractFactory {
 
     Class propertyClass
@@ -18,7 +14,7 @@ class PropertyFactoryWrapper extends AbstractFactory {
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, propertyClass)) {
-            return value
+            return value.copy()
         }
         List<Parameter> parameters = (List<Parameter>) attributes.remove('parameters')
         if (parameters == null) {

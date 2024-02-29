@@ -48,7 +48,7 @@ class XPropertyFactory extends AbstractFactory{
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         def instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XProperty.class)) {
-            instance = (XProperty) value
+            instance = (XProperty) value.copy()
         }
         else {
             String propertyName = attributes.remove('name')

@@ -46,7 +46,7 @@ class DefaultPropertyFactory extends AbstractPropertyFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         def property
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, klass)) {
-            property = value
+            property = value.copy()
         }
         else if (attributes['value']) {
 			property = super.newInstance(builder, name, attributes.remove('value'), attributes)
