@@ -55,7 +55,8 @@ import static net.fortuna.ical4j.model.Property.UID;
  *
  * @author Ben Fortuna
  */
-public abstract class Component extends Content implements Serializable, PropertyContainer, FluentComponent {
+public abstract class Component extends Content implements Serializable, PropertyContainer, FluentComponent,
+        Comparable<Component> {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -392,5 +393,15 @@ public abstract class Component extends Content implements Serializable, Propert
         recurrenceSet.forEach( p -> p.setComponent(this));
 
         return recurrenceSet;
+    }
+
+    @Override
+    public int compareTo(Component o) {
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Component::getName)
+                .thenComparing(Component::getPropertyList)
+                .compare(this, o);
     }
 }

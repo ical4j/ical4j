@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * Accessor implementation for a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList implements ContentCollection<Property> {
+public class PropertyList implements ContentCollection<Property>, Comparable<PropertyList> {
 
     private final List<Property> properties;
 
@@ -154,4 +154,22 @@ public class PropertyList implements ContentCollection<Property> {
     public int hashCode() {
         return Objects.hash(properties);
     }
+
+    @Override
+    public int compareTo(PropertyList o) {
+        // test for equality
+        if (properties.equals(o.properties)) {
+            return 0;
+        }
+        // then test for size..
+        int retval = properties.size() - o.properties.size();
+        if (retval != 0) {
+            return retval;
+        } else {
+            // compare individual params..
+            return properties.stream().filter(o.properties::contains)
+                    .mapToInt(p -> p.compareTo(o.properties.get(o.properties.indexOf(p)))).sum();
+        }
+    }
+
 }

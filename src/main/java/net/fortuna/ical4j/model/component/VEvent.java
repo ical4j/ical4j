@@ -43,6 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -576,6 +577,14 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     @Override
     protected ComponentFactory<VEvent> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {

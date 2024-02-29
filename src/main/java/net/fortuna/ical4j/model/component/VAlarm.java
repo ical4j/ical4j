@@ -40,6 +40,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -325,6 +326,14 @@ public class VAlarm extends CalendarComponent implements ComponentContainer<Comp
     @Override
     protected ComponentFactory<VAlarm> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {

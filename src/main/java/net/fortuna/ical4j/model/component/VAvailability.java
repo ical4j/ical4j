@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -162,6 +163,14 @@ public class VAvailability extends CalendarComponent implements ComponentContain
     @Override
     protected ComponentFactory<VAvailability> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     /**

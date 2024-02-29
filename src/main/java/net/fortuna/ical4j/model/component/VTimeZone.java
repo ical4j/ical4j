@@ -47,6 +47,7 @@ import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -254,6 +255,14 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
     @Deprecated
     public final Optional<TzUrl> getTimeZoneUrl() {
         return getProperty(TZURL);
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     /**

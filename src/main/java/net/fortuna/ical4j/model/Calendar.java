@@ -45,7 +45,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -119,6 +123,35 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     FluentCalendar {
 
     private static final long serialVersionUID = -1654118204678581940L;
+
+    /**
+     * Smart merging of properties that identifies whether to add or replace existing properties.
+     */
+    public static final BiFunction<Calendar, List<Property>, Calendar> MERGE_PROPERTIES = (c, list) -> {
+        if (list != null && !list.isEmpty()) {
+            list.forEach(p -> {
+                switch (p.getName()) {
+                    case Property.VERSION:
+                    case Property.METHOD:
+                    case Property.PRODID:
+                        c.replace(p.copy());
+                        break;
+                    default:
+                        c.add(p.copy());
+                }
+            });
+        };
+        return c;
+    };
+
+    public static final BiFunction<Calendar, List<CalendarComponent>, Calendar> MERGE_COMPONENTS = (c, list) -> {
+        list.forEach(component -> {
+            if (!c.getComponents().contains(component)) {
+                c.add(component.copy());
+            }
+        });
+        return c;
+    };
 
     /**
      * Begin token.
@@ -306,20 +339,10 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @return a Calendar instance containing all properties and components from both of the specified calendars
      */
     public Calendar merge(final Calendar c2) {
-        List<Property> mergedProperties = new ArrayList<>(getProperties());
-        for (final Property p : c2.getProperties()) {
-            if (!mergedProperties.contains(p)) {
-                mergedProperties.add(p);
-            }
-        }
-        List<CalendarComponent> mergedComponents = new ArrayList<>(getComponents());
-        for (final CalendarComponent c : c2.getComponents()) {
-            if (!mergedComponents.contains(c)) {
-                mergedComponents.add(c);
-            }
-        }
-        return new Calendar(new PropertyList(mergedProperties),
-                new ComponentList<>(mergedComponents));
+        Calendar copy = copy();
+        copy.with(MERGE_PROPERTIES, c2.getProperties());
+        copy.with(MERGE_COMPONENTS, c2.getComponents());
+        return copy;
     }
 
     /**

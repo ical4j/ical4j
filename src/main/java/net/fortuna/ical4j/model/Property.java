@@ -653,6 +653,9 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @return the copy of the property
      */
     public final Property copy() {
+        if (getName().toUpperCase().startsWith("X-")) {
+            return new XProperty(getName(), new ParameterList(getParameters()), getValue());
+        }
         return newFactory().createProperty(parameters, getValue());
     }
 

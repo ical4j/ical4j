@@ -42,7 +42,8 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar components.
  * @author Ben Fortuna
  */
-public class ComponentList<T extends Component> implements ContentCollection<T> {
+public class ComponentList<T extends Component> implements ContentCollection<T>,
+        Comparable<ComponentList<? extends Component>> {
 
     private final List<T> components;
 
@@ -153,5 +154,22 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     @Override
     public int hashCode() {
         return Objects.hash(components);
+    }
+
+    @Override
+    public int compareTo(ComponentList<? extends Component> o) {
+        // test for equality
+        if (components.equals(o.components)) {
+            return 0;
+        }
+        // then test for size..
+        int retval = components.size() - o.components.size();
+        if (retval != 0) {
+            return retval;
+        } else {
+            // compare individual params..
+            return components.stream().filter(o.components::contains)
+                    .mapToInt(c -> c.compareTo(o.components.get(o.components.indexOf(c)))).sum();
+        }
     }
 }

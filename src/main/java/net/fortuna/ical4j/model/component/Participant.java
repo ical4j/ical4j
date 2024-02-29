@@ -37,6 +37,7 @@ import net.fortuna.ical4j.validate.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
@@ -241,6 +242,14 @@ public class Participant extends Component implements ComponentContainer<Compone
      */
     public final Optional<Url> getUrl() {
         return getProperty(URL);
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     @Override
