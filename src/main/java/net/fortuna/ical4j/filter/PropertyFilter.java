@@ -35,6 +35,7 @@ import net.fortuna.ical4j.filter.expression.BinaryExpression;
 import net.fortuna.ical4j.filter.expression.UnaryExpression;
 import net.fortuna.ical4j.filter.predicate.ParameterEqualToRule;
 import net.fortuna.ical4j.filter.predicate.ParameterExistsRule;
+import net.fortuna.ical4j.filter.predicate.ParameterStartsWithRule;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
@@ -68,6 +69,8 @@ public class PropertyFilter extends AbstractFilter<Property> {
         switch (expression.operator) {
             case equalTo:
                 return new ParameterEqualToRule<>(parameter(expression));
+            case startsWith:
+                return new ParameterStartsWithRule<>(parameter(expression), literal(expression));
             case and:
                 return predicate(expression.left).and(predicate(expression.right));
             case or:

@@ -16,7 +16,7 @@ public interface FilterExpression {
         // object matching operators..
         exists, notExists,
         // value matching operators..
-        contains, matches,
+        contains, matches, startsWith,
         // logical operators..
         and, or, not
     }
@@ -67,6 +67,10 @@ public interface FilterExpression {
 
     static FilterExpression matches(String target, Object value) {
         return new BinaryExpression(new TargetExpression(target), Op.matches, new StringExpression(value));
+    }
+
+    static FilterExpression startsWith(String target, Object value) {
+        return new BinaryExpression(new TargetExpression(target), Op.startsWith, new StringExpression(value));
     }
 
     default FilterExpression and(FilterExpression expression) {

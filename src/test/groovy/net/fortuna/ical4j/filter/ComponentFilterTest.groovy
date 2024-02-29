@@ -105,6 +105,20 @@ class ComponentFilterTest extends Specification {
         new ComponentFilter().predicate(filter).test(event)
     }
 
+    def 'test filter expression starts with'() {
+        given: 'a filter expression'
+        def filter = FilterExpression.startsWith('attendee', 'Mailto:A')
+
+        and: 'an event'
+        def event = builder.vevent {
+            organizer(organiser)
+            attendee(attendee)
+        }
+
+        expect: 'filter matches the event'
+        new ComponentFilter().predicate(filter).test(event)
+    }
+
     def 'test filter expression missing'() {
         given: 'a filter expression'
         def filter = FilterExpression.notExists('due')
