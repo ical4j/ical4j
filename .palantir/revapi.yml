@@ -3273,3 +3273,73 @@ acceptedBreaks:
       old: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.String===)"
       new: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.Object===)"
       justification: "improved_filter_literal_support"
+  "4.0.0-rc4":
+    org.mnode.ical4j:ical4j:
+    - code: "java.annotation.removed"
+      old: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>()"
+      new: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>(java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.noLongerStatic"
+      old: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object, java.lang.String)"
+      new: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object, java.lang.String)"
+      new: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>()"
+      new: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>(java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.Object===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.String===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.Object===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.String===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThan(java.lang.String,\
+        \ ===java.time.temporal.Temporal===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThan(java.lang.String,\
+        \ ===java.util.function.Supplier<java.time.temporal.Temporal>===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThanEqual(java.lang.String,\
+        \ ===java.time.temporal.Temporal===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThanEqual(java.lang.String,\
+        \ ===java.util.function.Supplier<java.time.temporal.Temporal>===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThan(java.lang.String,\
+        \ ===java.time.temporal.Temporal===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThan(java.lang.String,\
+        \ ===java.lang.Number===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThanEqual(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThanEqual(java.lang.String,\
+        \ ===java.lang.Number===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.Object===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.String===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.visibilityReduced"
+      old: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object, java.lang.String)"
+      new: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object)"
+      justification: "improved_xproperty_support"

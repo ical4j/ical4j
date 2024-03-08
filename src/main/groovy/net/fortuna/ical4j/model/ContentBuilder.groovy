@@ -49,7 +49,16 @@ class ContentBuilder extends FactoryBuilderSupport {
     ContentBuilder(boolean init = true) {
         super(init)
     }
-    
+
+    @Override
+    protected Factory resolveFactory(Object name, Map attributes, Object value) {
+        def factory = super.resolveFactory(name, attributes, value)
+        if (!factory) {
+            factory = new XPropertyFactory(name)
+        }
+        factory
+    }
+
     def registerCalendarAndCollections() {
         registerFactory('calendar', new CalendarFactory())
         registerFactory('parameters', new ParameterListFactory())
@@ -131,7 +140,6 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('uid', new DefaultPropertyFactory(klass: Uid))
         registerFactory('url', new DefaultPropertyFactory(klass: Url))
         registerFactory('version', new PropertyFactoryWrapper(Version, new Version.Factory()))
-        registerFactory('xproperty', new XPropertyFactory())
 
         // RFC7986
         registerFactory('color', new PropertyFactoryWrapper(Color, new Color.Factory()))
