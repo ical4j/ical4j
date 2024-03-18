@@ -8,6 +8,7 @@ import org.apache.commons.codec.DecoderException;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +21,8 @@ public class PropertyBuilder extends AbstractContentBuilder {
     private final List<PropertyFactory<?>> factories;
 
     private String name;
+
+    private String prefix;
 
     private String value;
 
@@ -51,8 +54,14 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public PropertyBuilder name(String name) {
-        // property names are case-insensitive, but convert to upper case to simplify further processing
-        this.name = name.toUpperCase();
+        String[] nameParts = name.split("\\.");
+        if (nameParts.length > 1) {
+            this.prefix = String.join(".", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
+            this.name = nameParts[nameParts.length-1].toUpperCase();
+        } else {
+            // property names are case-insensitive, but convert to upper case to simplify further processing
+            this.name = name.toUpperCase();
+        }
         return this;
     }
 
@@ -122,6 +131,10 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
         if (property instanceof Encodable) {
             property.setValue(decodedValue);
+        }
+
+        if (prefix != null) {
+            property.setPrefix(prefix);
         }
 
         return property;

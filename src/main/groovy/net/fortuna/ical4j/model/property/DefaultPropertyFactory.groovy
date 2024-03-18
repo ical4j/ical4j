@@ -53,6 +53,7 @@ class DefaultPropertyFactory extends AbstractPropertyFactory {
         } else {
 			property = super.newInstance(builder, name, value, attributes)
         }
+        property.prefix = propertyPrefix
         return property
     }
     

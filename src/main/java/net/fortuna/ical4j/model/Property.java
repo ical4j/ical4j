@@ -626,7 +626,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
             final Property p = (Property) arg0;
             return getName().equals(p.getName())
                     && new EqualsBuilder().append(getValue(), p.getValue()).append(parameters,
-                    p.parameters).isEquals();
+                    p.parameters).append(prefix, p.prefix).isEquals();
         }
         return super.equals(arg0);
     }
@@ -638,7 +638,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
-                getValue()).append(parameters).toHashCode();
+                getValue()).append(parameters).append(getPrefix()).toHashCode();
     }
 
     /**
@@ -667,6 +667,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
         return Comparator.comparing(Property::getName)
                 .thenComparing(Property::getValue)
                 .thenComparing(Property::getParameterList)
+                .thenComparing(Property::getPrefix, Comparator.nullsFirst(Comparator.naturalOrder()))
                 .compare(this, o);
     }
 }

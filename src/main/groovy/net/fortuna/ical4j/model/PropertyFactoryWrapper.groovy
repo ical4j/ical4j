@@ -6,6 +6,8 @@ class PropertyFactoryWrapper extends AbstractFactory {
 
     PropertyFactory factory
 
+    def propertyPrefix
+
     PropertyFactoryWrapper(Class propClass, PropertyFactory factory) {
         this.propertyClass = propClass
         this.factory = factory
@@ -21,14 +23,18 @@ class PropertyFactoryWrapper extends AbstractFactory {
             parameters = []
         }
         String propValue = attributes.remove('value')
+
+        def property
         if (propValue != null) {
-            return factory.createProperty(new ParameterList(parameters), propValue)
+            property = factory.createProperty(new ParameterList(parameters), propValue)
         }
         else if (value != null) {
-            return factory.createProperty(new ParameterList(parameters), (String) value)
+            property = factory.createProperty(new ParameterList(parameters), (String) value)
         } else {
-            return factory.createProperty()
+            property = factory.createProperty()
         }
+        property.prefix = propertyPrefix
+        return property
     }
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
