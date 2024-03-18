@@ -130,7 +130,7 @@ public class DtStamp extends DateProperty<Instant> implements UtcProperty {
     @Override
     public int compareTo(Property o) {
         if (o instanceof DateProperty) {
-            return new TemporalComparator().compare(getDate(), ((DateProperty) o).getDate());
+            return TemporalComparator.INSTANCE.compare(getDate(), ((DateProperty) o).getDate());
         }
         return super.compareTo(o);
     }

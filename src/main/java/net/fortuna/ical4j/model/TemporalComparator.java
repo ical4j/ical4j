@@ -17,6 +17,8 @@ import java.util.Comparator;
  */
 public class TemporalComparator implements Comparator<Temporal> {
 
+    public static final TemporalComparator INSTANCE = new TemporalComparator();
+
     private final TemporalUnit defaultComparisonUnit;
 
     private final ZoneId defaultZoneId;

@@ -46,7 +46,7 @@ public class ZoneRulesBuilder {
         sorted.sort((o1, o2) -> {
             DtStart<LocalDateTime> o1Start = o1.getRequiredProperty("DTSTART");
             DtStart<LocalDateTime> o2Start = o2.getRequiredProperty("DTSTART");
-            return new TemporalComparator().compare(o1Start.getDate(), o2Start.getDate());
+            return TemporalComparator.INSTANCE.compare(o1Start.getDate(), o2Start.getDate());
         });
 
         for (Standard observance : sorted) {

@@ -279,7 +279,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
 
-    private static final Comparator<Temporal> CANDIDATE_SORTER = new TemporalComparator();
+    private static final Comparator<Temporal> CANDIDATE_SORTER = TemporalComparator.INSTANCE;
 
     private Frequency frequency;
 

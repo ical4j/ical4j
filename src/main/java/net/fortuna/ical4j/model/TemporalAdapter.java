@@ -34,7 +34,7 @@ import java.util.Objects;
  */
 public class TemporalAdapter<T extends Temporal> implements Serializable {
 
-    private static final TemporalComparator COMPARATOR = new TemporalComparator();
+    private static final TemporalComparator COMPARATOR = TemporalComparator.INSTANCE;
 
     /**
      * The iCalendar-compliant string representation of a {@link Temporal} value.

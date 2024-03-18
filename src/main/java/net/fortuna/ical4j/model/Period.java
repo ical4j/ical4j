@@ -108,7 +108,7 @@ import java.util.*;
  */
 public class Period<T extends Temporal> implements Comparable<Period<T>>, Serializable {
 
-    private static final TemporalComparator DATE_RANGE_COMPARATOR = new TemporalComparator();
+    private static final TemporalComparator DATE_RANGE_COMPARATOR = TemporalComparator.INSTANCE;
 
     private final T start;
 

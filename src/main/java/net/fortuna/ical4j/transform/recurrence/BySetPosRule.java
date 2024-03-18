@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
 
-    private static final Comparator<Temporal> ONSET_COMPARATOR = new TemporalComparator();
+    private static final Comparator<Temporal> ONSET_COMPARATOR = TemporalComparator.INSTANCE;
 
     private final List<Integer> setPosList;
 
