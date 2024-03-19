@@ -3,7 +3,7 @@ METHOD:REQUEST
 VERSION:2.0
 PRODID:-//Microsoft Corporation//Windows Live Calendar//EN
 BEGIN:VTIMEZONE
-TZID:Pacific Standard Time;(UTC-08:00) Pacific Time (US and Canada)
+TZID:Pacific Standard Time
 BEGIN:STANDARD
 DTSTART:20071104T020000
 RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11
@@ -24,8 +24,8 @@ CLASS:PUBLIC
 X-MICROSOFT-CDO-BUSYSTATUS:BUSY
 TRANSP:OPAQUE
 SEQUENCE:1
-DTSTART;TZID="Pacific Standard Time;(UTC-08:00) Pacific Time (US and Canada)":20140221T133000
-DTEND;TZID="Pacific Standard Time;(UTC-08:00) Pacific Time (US and Canada)":20140221T143000
+DTSTART;TZID=Pacific Standard Time:20140221T133000
+DTEND;TZID=Pacific Standard Time:20140221T143000
 SUMMARY:From outlook edited
 DESCRIPTION:dfgdg dfgfdgdfgd äöüß_<>\;„’’
 LOCATION:room äöüß_<>\;„’’

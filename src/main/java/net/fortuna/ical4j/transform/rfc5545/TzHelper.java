@@ -71,6 +71,7 @@ class TzHelper {
         if (property.getParameter(Parameter.TZID) != null) {
             String newTimezone = getCorrectedTimezoneFromTzParameter(property);
             String value = property.getValue();
+            correctTzParameter(property, newTimezone);
             if (newTimezone != null) {
                 property.setTimeZone(TIMEZONE_REGISTRY.getTimeZone(newTimezone));
                 try {
