@@ -71,7 +71,7 @@ standard.
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
 
- - You will find examples of how to use iCal4j in [the official website](https://www.ical4j.org/examples/overview/)
+ - You will find examples of how to use iCal4j in [the official website](https://www.ical4j.org/examples/)
  and throughout the [API documentation](https://ical4j.github.io/docs/ical4j/api).
 
  - Detailed descriptions of changes included in each release may be found
