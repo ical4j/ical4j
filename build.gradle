@@ -89,8 +89,7 @@ dependencies {
     compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
     testImplementation "org.codehaus.groovy:groovy:$groovyVersion",
-            "org.slf4j:slf4j-log4j12:$slf4jVersion",
-            "org.apache.logging.log4j:log4j:$log4jVersion",
+            "org.apache.logging.log4j:log4j-core:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
             "org.codehaus.groovy:groovy-xml:$groovyVersion"
 
