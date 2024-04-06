@@ -236,18 +236,20 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         b.append(getName());
-        b.append('=');
-        String value;
-        if (this instanceof Encodable) {
-            try {
-                value = ParameterCodec.INSTANCE.encode(getValue());
-            } catch (EncoderException e) {
+        if (getValue() != null) {
+            b.append('=');
+            String value;
+            if (this instanceof Encodable) {
+                try {
+                    value = ParameterCodec.INSTANCE.encode(getValue());
+                } catch (EncoderException e) {
+                    value = getValue();
+                }
+            } else {
                 value = getValue();
             }
-        } else {
-            value = getValue();
+            b.append(Strings.valueOf(value));
         }
-        b.append(Strings.valueOf(value));
         return b.toString();
     }
 
