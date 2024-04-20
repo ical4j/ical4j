@@ -179,12 +179,14 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * @return Returns the types.
      */
     public final ComponentList<Observance> getObservances() {
-        return (ComponentList<Observance>) components;
+        ComponentList<? extends Component> list = (ComponentList<? extends Component>) components.clone();
+        list.removeIf(s -> !(s instanceof Observance));
+        return (ComponentList<Observance>) list;
     }
 
     @Override
     public ComponentList<Observance> getComponents() {
-        return (ComponentList<Observance>) components;
+        return getObservances();
     }
 
     /**
