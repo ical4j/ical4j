@@ -45,6 +45,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.TemporalAmount;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -309,11 +310,13 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @return a component list
      */
     public final ComponentList<VAlarm> getAlarms() {
-        return (ComponentList<VAlarm>) components;
+        //noinspection unchecked
+        return new ComponentList<>((List<VAlarm>) components.getComponents(VALARM));
     }
 
     @Override
     public ComponentList<Component> getComponents() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 

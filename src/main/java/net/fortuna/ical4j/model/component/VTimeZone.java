@@ -42,6 +42,7 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -179,9 +180,9 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * @return Returns the types.
      */
     public final ComponentList<Observance> getObservances() {
-        ComponentList<? extends Component> list = (ComponentList<? extends Component>) components.clone();
-        list.removeIf(s -> !(s instanceof Observance));
-        return (ComponentList<Observance>) list;
+        //noinspection unchecked
+        return new ComponentList<>((List<Observance>)components.getComponents(
+                Observance.STANDARD, Observance.DAYLIGHT));
     }
 
     @Override

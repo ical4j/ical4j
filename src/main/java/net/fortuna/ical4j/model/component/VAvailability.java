@@ -135,6 +135,7 @@ public class VAvailability extends CalendarComponent implements ComponentContain
 
     @Override
     public ComponentList<Available> getComponents() {
+        //noinspection unchecked
         return (ComponentList<Available>) components;
     }
 
