@@ -174,6 +174,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
 
     @Override
     public ComponentList<Component> getComponents() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 

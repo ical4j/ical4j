@@ -555,7 +555,7 @@ public class VEventTest extends CalendarComponentTest {
 
         assertTrue(e1.equals(e2));
 
-        e2.getAlarms().add(new VAlarm());
+        e2.getComponents().add(new VAlarm());
 
         assertFalse(e1.equals(e2));
     }

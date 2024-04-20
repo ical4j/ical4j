@@ -88,7 +88,7 @@ public final class Configurator {
                 int intValue = Integer.parseInt(property.get());
                 return Optional.of(intValue);
             } catch (NumberFormatException nfe) {
-                LOG.info(String.format("Invalid configuration value: %s", key), nfe);
+                LOG.warn(String.format("Invalid configuration value: %s", key), nfe);
                 return Optional.empty();
             }
         } else {
@@ -102,7 +102,7 @@ public final class Configurator {
             try {
                 return Optional.of(Enum.valueOf(clazz, property.get()));
             } catch (IllegalArgumentException iae) {
-                LOG.info(String.format("Invalid configuration value: %s", key), iae);
+                LOG.warn(String.format("Invalid configuration value: %s", key), iae);
                 return Optional.empty();
             }
         } else {
@@ -116,7 +116,7 @@ public final class Configurator {
             try {
                 return Optional.of((T) Class.forName(property.get()).newInstance());
             } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                LOG.info(String.format("Invalid configuration value: %s", key), e);
+                LOG.warn(String.format("Invalid configuration value: %s", key), e);
                 return Optional.empty();
             }
         } else {
