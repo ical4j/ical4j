@@ -76,6 +76,7 @@ dependencies {
 //    annotationProcessor "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
     testImplementation "org.apache.logging.log4j:log4j-core:$log4jVersion",
+            "org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
             "org.codehaus.groovy:groovy-xml:$groovyVersion"
 
