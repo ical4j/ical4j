@@ -522,6 +522,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 

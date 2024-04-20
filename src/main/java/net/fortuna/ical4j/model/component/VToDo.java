@@ -40,6 +40,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -235,6 +236,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 

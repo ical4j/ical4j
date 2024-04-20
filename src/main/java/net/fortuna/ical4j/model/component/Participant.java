@@ -174,6 +174,7 @@ public class Participant extends Component implements ComponentContainer<Compone
      */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 

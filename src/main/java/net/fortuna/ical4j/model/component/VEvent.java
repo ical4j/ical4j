@@ -313,12 +313,9 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         add(new Summary(summary));
     }
 
-    /**
-     *
-     * @return Returns the underlying component list.
-     */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 
