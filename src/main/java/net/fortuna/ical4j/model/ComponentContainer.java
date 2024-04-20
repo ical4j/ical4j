@@ -6,7 +6,7 @@ public interface ComponentContainer<T extends Component> {
 
     ComponentList<T> getComponents();
 
-    default <C extends T> List<C> getComponents(final String name) {
+    default <C extends T> List<C> getComponents(final String... name) {
         return getComponents().getComponents(name);
     }
 

@@ -2024,6 +2024,20 @@ acceptedBreaks:
     - code: "java.method.removed"
       old: "method void net.fortuna.ical4j.data.CalendarBuilder::accept(net.fortuna.ical4j.model.Calendar)"
       justification: "simplify_exposed_interfaces"
+  "3.2.14":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <C extends T extends net.fortuna.ical4j.model.Component> java.util.List<C>\
+        \ net.fortuna.ical4j.model.ComponentContainer<T extends net.fortuna.ical4j.model.Component>::getComponents(===java.lang.String===)"
+      new: "parameter <C extends T extends net.fortuna.ical4j.model.Component> java.util.List<C>\
+        \ net.fortuna.ical4j.model.ComponentContainer<T extends net.fortuna.ical4j.model.Component>::getComponents(===java.lang.String[]===)"
+      justification: "filter_multiple_component_names"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter <C extends T extends net.fortuna.ical4j.model.Component> java.util.List<C>\
+        \ net.fortuna.ical4j.model.ComponentList<T extends net.fortuna.ical4j.model.Component>::getComponents(===java.lang.String===)"
+      new: "parameter <C extends T extends net.fortuna.ical4j.model.Component> java.util.List<C>\
+        \ net.fortuna.ical4j.model.ComponentList<T extends net.fortuna.ical4j.model.Component>::getComponents(===java.lang.String[]===)"
+      justification: "filter_multiple_component_names"
   "3.2.6":
     org.mnode.ical4j:ical4j:
     - code: "java.field.removed"
