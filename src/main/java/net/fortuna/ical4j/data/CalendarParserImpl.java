@@ -249,8 +249,8 @@ public class CalendarParserImpl implements CalendarParser {
 
             final String name = tokeniser.sval;
             // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
+            if (log.isTraceEnabled()) {
+                log.trace(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
             }
 
             handler.startProperty(name);
@@ -333,8 +333,8 @@ public class CalendarParserImpl implements CalendarParser {
             final String paramName = tokeniser.sval;
 
             // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug("Parameter [" + paramName + "]");
+            if (log.isTraceEnabled()) {
+                log.trace("Parameter [{}]", paramName);
             }
 
             assertToken(tokeniser, in, '=');
@@ -467,8 +467,8 @@ public class CalendarParserImpl implements CalendarParser {
             throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.ttype), getLineNumber(tokeniser, in));
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("[" + token + "]");
+        if (log.isTraceEnabled()) {
+            log.trace("[{}]", token);
         }
         return ntok;
     }
@@ -523,8 +523,8 @@ public class CalendarParserImpl implements CalendarParser {
             throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("[" + token + "]");
+        if (log.isTraceEnabled()) {
+            log.trace("[{}]", token);
         }
         return ntok;
     }
