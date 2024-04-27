@@ -37,6 +37,8 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
         for (String id : zoneLoader.getAvailableIDs()) {
             zoneIdMap.put("ical4j~" + UUID.randomUUID(), id);
         }
+        // explicitly add UTC which is not in the generated list from tzdata
+        zoneIdMap.put("ical4j~" + UUID.randomUUID(), "UTC");
         this.zoneRulesMap = new ConcurrentHashMap<>();
     }
 
