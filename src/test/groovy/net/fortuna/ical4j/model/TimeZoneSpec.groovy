@@ -43,6 +43,7 @@ import spock.lang.Unroll
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.stream.Collectors
 
 @Slf4j
 class TimeZoneSpec extends Specification {
@@ -217,6 +218,9 @@ class TimeZoneSpec extends Specification {
 		System.clearProperty('net.fortuna.ical4j.timezone.update.enabled')
 
 		where:
-		alias << ZoneId.getAvailableZoneIds()
+		alias << getClass().getResourceAsStream('/net/fortuna/ical4j/model/tz.alias').readLines().stream()
+				.filter(line -> !line.empty && !line.contains('#')).map {
+			line -> line.split('\\s*=\\s*')[0]
+		}.collect(Collectors.toList())
 	}
 }

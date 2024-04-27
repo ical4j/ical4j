@@ -66,7 +66,7 @@ public interface TimeZoneRegistry {
         ZoneId zoneId = ZoneId.of(tzId, ZONE_ALIASES);
         Optional<Map.Entry<String, String>> lookup = ZONE_IDS.entrySet().stream().filter(entry ->
                 entry.getValue().equals(zoneId.getId())).findFirst();
-        return lookup.map(mapping -> ZoneId.of(mapping.getKey())).orElseThrow();
+        return lookup.map(mapping -> ZoneId.of(mapping.getKey())).orElse(zoneId);
     }
 
     /**
