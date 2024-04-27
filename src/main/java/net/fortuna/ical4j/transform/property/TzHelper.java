@@ -27,7 +27,7 @@ import java.util.Scanner;
  * @author daniel grigore
  *
  */
-class TzHelper {
+public class TzHelper {
 
     private static final String MS_TIMEZONES_FILE = "msTimezones";
     private static final Map<String, String> MS_TIMEZONE_IDS = new HashMap<String, String>();
@@ -107,7 +107,7 @@ class TzHelper {
      * @return a valid timezoneId for the specified timezoneValue or <code>null</code> in case the specified time zone
      *         value does not match anything known
      */
-    private static String getCorrectedTimeZoneIdFrom(String value) {
+    public static String getCorrectedTimeZoneIdFrom(String value) {
         if (value != null) {
             value = value.contains("\"") ? value.replaceAll("\"", "") : value;
             if (TIMEZONE_REGISTRY.getTimeZone(value) != null) {
