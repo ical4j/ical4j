@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.time.format.DateTimeParseException;
 
 public class DefaultContentHandler implements ContentHandler {
 
@@ -160,7 +161,7 @@ public class DefaultContentHandler implements ContentHandler {
             Property property;
             try {
                 property = propertyBuilder.build();
-            } catch (URISyntaxException | ParseException | IOException | IllegalArgumentException e) {
+            } catch (URISyntaxException | ParseException | DateTimeParseException | IOException | IllegalArgumentException e) {
                 if (context.isSuppressInvalidProperties()) {
                     LOG.warn("Suppressing invalid property", e);
                     return;
