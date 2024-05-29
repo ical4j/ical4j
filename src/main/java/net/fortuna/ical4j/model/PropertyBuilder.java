@@ -46,13 +46,12 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public PropertyBuilder name(String name) {
-        // property names are case-insensitive, but convert to upper case to simplify further processing
-        this.name = name.toUpperCase();
+        this.name = name;
         return this;
     }
 
     public boolean hasName(String name) {
-        return name.equals(this.name);
+        return name.equalsIgnoreCase(this.name);
     }
 
     public PropertyBuilder value(String value) {

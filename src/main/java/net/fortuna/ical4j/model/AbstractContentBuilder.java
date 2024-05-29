@@ -24,7 +24,7 @@ public abstract class AbstractContentBuilder {
      * @return
      */
     protected boolean isExperimentalName(final String name) {
-        return name.startsWith(Component.EXPERIMENTAL_PREFIX)
+        return name.toUpperCase().startsWith(Component.EXPERIMENTAL_PREFIX)
                 && name.length() > Component.EXPERIMENTAL_PREFIX.length();
     }
 
