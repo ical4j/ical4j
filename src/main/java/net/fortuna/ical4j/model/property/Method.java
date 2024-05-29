@@ -190,7 +190,7 @@ public class Method extends Property {
                 throws IOException, URISyntaxException, ParseException {
 
             if (parameters.isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_PUBLISH: return PUBLISH;
                     case VALUE_REQUEST: return REQUEST;
                     case VALUE_REPLY: return REPLY;

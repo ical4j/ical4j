@@ -148,7 +148,7 @@ public class CalScale extends Property {
         public CalScale createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
-            if (parameters.isEmpty() && VALUE_GREGORIAN.equals(value)) {
+            if (parameters.isEmpty() && VALUE_GREGORIAN.equalsIgnoreCase(value)) {
                 return GREGORIAN;
             }
             return new CalScale(parameters, value);

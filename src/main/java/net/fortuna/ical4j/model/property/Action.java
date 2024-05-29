@@ -171,7 +171,7 @@ public class Action extends Property {
                 throws IOException, URISyntaxException, ParseException {
 
             if (parameters.isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_AUDIO: return AUDIO;
                     case VALUE_DISPLAY: return DISPLAY;
                     case VALUE_EMAIL: return EMAIL;
