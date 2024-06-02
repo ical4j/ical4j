@@ -126,7 +126,7 @@ public class Method extends Property {
         public Method createProperty(final ParameterList parameters, final String value) {
 
             if (parameters.getAll().isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_PUBLISH: return PUBLISH;
                     case VALUE_REQUEST: return REQUEST;
                     case VALUE_REPLY: return REPLY;

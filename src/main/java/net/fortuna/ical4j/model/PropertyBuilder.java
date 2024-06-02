@@ -57,16 +57,15 @@ public class PropertyBuilder extends AbstractContentBuilder {
         String[] nameParts = name.split("\\.");
         if (nameParts.length > 1) {
             this.prefix = String.join(".", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
-            this.name = nameParts[nameParts.length-1].toUpperCase();
+            this.name = nameParts[nameParts.length-1];
         } else {
-            // property names are case-insensitive, but convert to upper case to simplify further processing
-            this.name = name.toUpperCase();
+            this.name = name;
         }
         return this;
     }
 
     public boolean hasName(String name) {
-        return name.equals(this.name);
+        return name.equalsIgnoreCase(this.name);
     }
 
     public PropertyBuilder value(String value) {

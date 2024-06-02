@@ -162,7 +162,7 @@ public class Clazz extends Property {
         public Clazz createProperty(final ParameterList parameters, final String value) {
 
             if (parameters.getAll().isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_PUBLIC: return PUBLIC;
                     case VALUE_PRIVATE: return PRIVATE;
                     case VALUE_CONFIDENTIAL: return CONFIDENTIAL;

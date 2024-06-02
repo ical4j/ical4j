@@ -166,10 +166,9 @@ public class Transp extends Property {
         @Override
         public Transp createProperty(final ParameterList parameters, final String value) {
             Transp transp;
-            if (OPAQUE.getValue().equals(value)) {
+            if (parameters.isEmpty() && OPAQUE.getValue().equalsIgnoreCase(value)) {
                 transp = OPAQUE;
-            }
-            else if (TRANSPARENT.getValue().equals(value)) {
+            } else if (parameters.isEmpty() && TRANSPARENT.getValue().equalsIgnoreCase(value)) {
                 transp = TRANSPARENT;
             } else {
                 transp = new Transp(parameters, value);

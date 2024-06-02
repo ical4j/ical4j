@@ -133,7 +133,7 @@ public class BusyType extends Property {
         public BusyType createProperty(final ParameterList parameters, final String value) {
 
             if (parameters.getAll().isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_BUSY: return BUSY;
                     case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;
                     case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;

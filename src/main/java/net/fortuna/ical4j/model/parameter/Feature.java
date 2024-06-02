@@ -83,7 +83,7 @@ public class Feature extends Parameter implements Encodable {
         super(PARAMETER_NAME);
         for (String valueString : valueStrings) {
             try {
-                Value.valueOf(valueString);
+                Value.valueOf(valueString.toUpperCase());
             } catch (IllegalArgumentException iae) {
                 if (!valueString.startsWith(Parameter.EXPERIMENTAL_PREFIX)) {
                     throw iae;

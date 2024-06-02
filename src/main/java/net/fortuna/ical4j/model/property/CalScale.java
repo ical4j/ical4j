@@ -121,7 +121,7 @@ public class CalScale extends Property {
         @Override
         public CalScale createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.getAll().isEmpty() && VALUE_GREGORIAN.equals(value)) {
+            if (parameters.getAll().isEmpty() && VALUE_GREGORIAN.equalsIgnoreCase(value)) {
                 return GREGORIAN;
             }
             return new CalScale(parameters, value);
