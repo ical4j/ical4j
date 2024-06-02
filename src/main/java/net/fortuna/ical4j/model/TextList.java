@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Strings;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -89,7 +90,7 @@ public class TextList implements Serializable, Iterable<String> {
      */
     @Override
     public final String toString() {
-        return texts.stream().map(t -> Strings.escape(t)).collect(Collectors.joining(","));
+        return texts.stream().map(Strings::escape).collect(Collectors.joining(","));
     }
 
     /**
@@ -114,6 +115,7 @@ public class TextList implements Serializable, Iterable<String> {
      * @return an iterator
      * @see List#iterator()
      */
+    @NotNull
     @Override
     public final Iterator<String> iterator() {
         return texts.iterator();
