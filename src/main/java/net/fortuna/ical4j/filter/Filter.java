@@ -174,7 +174,7 @@ public class Filter<T> {
      */
     @SuppressWarnings("unchecked")
     public final Predicate<T>[] getRules() {
-        return rules.toArray(new Predicate[0]);
+        return rules.toArray(Predicate[]::new);
     }
 
     /**

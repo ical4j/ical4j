@@ -224,7 +224,7 @@ public class CalendarsTest extends TestCase {
         List<Calendar> calendars = new ArrayList<Calendar>();
         calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))));
         calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics"))));
-        suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[0])));
+        suite.addTest(new CalendarsTest("testMerge", calendars.toArray(Calendar[]::new)));
 
         Calendar calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
         suite.addTest(new CalendarsTest("testSplit", calendar, 10));

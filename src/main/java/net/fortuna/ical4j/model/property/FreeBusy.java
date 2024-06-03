@@ -181,7 +181,7 @@ public class FreeBusy extends Property {
      */
     @Override
     public final String getValue() {
-        return new PeriodList<>(intervals.toArray(new Interval[0])).toString();
+        return new PeriodList<>(intervals.toArray(Interval[]::new)).toString();
     }
 
     @Override

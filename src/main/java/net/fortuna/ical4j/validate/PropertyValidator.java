@@ -1164,6 +1164,6 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     }
 
     public PropertyValidator(String context, List<PropertyRuleSet<? super T>> rulesets) {
-        super(context, rulesets.toArray(new PropertyRuleSet[0]));
+        super(context, rulesets.toArray(PropertyRuleSet[]::new));
     }
 }

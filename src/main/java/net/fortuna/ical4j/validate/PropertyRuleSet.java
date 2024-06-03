@@ -82,7 +82,7 @@ public class PropertyRuleSet<T extends Property> extends AbstractValidationRuleS
                         break;
                 }
                 if (!matches.isEmpty()) {
-                    results.add(new ValidationEntry(rule, target.getName(), matches.toArray(new String[0])));
+                    results.add(new ValidationEntry(rule, target.getName(), matches.toArray(String[]::new)));
                 }
             }
         }

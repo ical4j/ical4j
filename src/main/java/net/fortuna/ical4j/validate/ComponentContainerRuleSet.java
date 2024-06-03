@@ -81,7 +81,7 @@ public class ComponentContainerRuleSet extends AbstractValidationRuleSet<Compone
                         break;
                 }
                 if (!matches.isEmpty()) {
-                    results.add(new ValidationEntry(rule, context, matches.toArray(new String[0])));
+                    results.add(new ValidationEntry(rule, context, matches.toArray(String[]::new)));
                 }
             }
         }

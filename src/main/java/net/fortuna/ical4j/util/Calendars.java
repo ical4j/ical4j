@@ -167,7 +167,7 @@ public final class Calendars {
                 uidCal.add(c);
             }
         }
-        return calendars.values().toArray(new Calendar[0]);
+        return calendars.values().toArray(Calendar[]::new);
     }
     
     /**

@@ -389,7 +389,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 uidCal.add(c);
             }
         }
-        return calendars.values().toArray(new Calendar[0]);
+        return calendars.values().toArray(Calendar[]::new);
     }
 
     /**

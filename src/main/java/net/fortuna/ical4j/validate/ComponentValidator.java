@@ -159,7 +159,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
     }
 
     private ComponentValidator(String context, Set<ValidationRule<T>> rules) {
-        super(context, new PropertyContainerRuleSet<>(rules.toArray(new ValidationRule[0])));
+        super(context, new PropertyContainerRuleSet<>(rules.toArray(ValidationRule[]::new)));
     }
 
     @Override
