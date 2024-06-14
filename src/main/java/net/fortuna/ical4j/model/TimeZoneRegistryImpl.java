@@ -70,8 +70,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final Properties ALIASES = new Properties();
 
     static {
-        // load tz aliases from various sources..
-        for (String aliasResource : Arrays.asList("net/fortuna/ical4j/model/tz.alias", "tz.alias",
+        // load default tz aliases..
+        for (String aliasResource : Arrays.asList("net/fortuna/ical4j/model/tz.alias",
                 "net/fortuna/ical4j/transform/rfc5545/msTimezoneNames",
                 "net/fortuna/ical4j/transform/rfc5545/msTimezoneIds")) {
 
@@ -79,8 +79,16 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 ALIASES.load(aliasInputStream);
             } catch (IOException | NullPointerException e) {
                 LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
-                        "Error loading timezone aliases: " + e.getMessage());
+                        "Error loading timezone aliases: {}", e.getMessage());
             }
+        }
+
+        // load custom tz aliases..
+        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias")) {
+            ALIASES.load(aliasInputStream);
+        } catch (IOException | NullPointerException e) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
+                    "No custom timezone aliases: {}", e.getMessage());
         }
 
         for (String alias : ALIASES.stringPropertyNames()) {
