@@ -42,7 +42,7 @@ package net.fortuna.ical4j.model
 class ParameterListFactory extends AbstractFactory {
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        return new ParameterList()
+        return new ArrayList<Parameter>()
     }
     
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {

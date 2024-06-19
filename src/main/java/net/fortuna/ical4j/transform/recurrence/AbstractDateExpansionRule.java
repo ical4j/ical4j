@@ -1,16 +1,18 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.WeekDay;
+import net.fortuna.ical4j.model.Month;
+import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.transform.Transformer;
-import net.fortuna.ical4j.util.Dates;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.TimeZones;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Optional;
+import java.time.DayOfWeek;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalField;
+import java.util.List;
+
+import static java.time.temporal.ChronoField.*;
 
 /**
  * Subclasses provide implementations to expand (or limit) a list of dates based on rule requirements as
@@ -80,54 +82,64 @@ import java.util.Optional;
  *                special expand for YEARLY.
  * </pre>
  */
-public abstract class AbstractDateExpansionRule implements Transformer<DateList>, Serializable {
+abstract class AbstractDateExpansionRule<T extends Temporal> implements Transformer<List<T>>, Serializable {
 
     private final Frequency frequency;
 
-    private final int calendarWeekStartDay;
-
-    public AbstractDateExpansionRule(Frequency frequency) {
-        // default week start is Monday per RFC5545
-        this(frequency, Optional.of(WeekDay.Day.MO));
-    }
-
-    public AbstractDateExpansionRule(Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+    AbstractDateExpansionRule(Frequency frequency) {
         this.frequency = frequency;
-        this.calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay.orElse(WeekDay.Day.MO)));
     }
 
-    protected Frequency getFrequency() {
+    Frequency getFrequency() {
         return frequency;
     }
 
-    /**
-     * Construct a Calendar object and sets the time.
-     *
-     * @param date
-     * @param lenient
-     * @return
-     */
-    protected Calendar getCalendarInstance(final Date date, final boolean lenient) {
-        Calendar cal = Dates.getCalendarInstance(date);
-        // A week should have at least 4 days to be considered as such per RFC5545
-        cal.setMinimalDaysInFirstWeek(4);
-        cal.setFirstDayOfWeek(calendarWeekStartDay);
-        cal.setLenient(lenient);
-        cal.setTime(date);
-
-        return cal;
+    int getSecond(T date) {
+        return getTemporalField(date, SECOND_OF_MINUTE);
     }
 
-    /**
-     * Get a DateTime from cal.getTime() with the timezone of the given reference date.
-     *
-     * @param referenceDate
-     * @param cal
-     * @return
-     */
-    protected static Date getTime(final Date referenceDate, final Calendar cal) {
-        final Date zonedDate = new DateTime(referenceDate);
-        zonedDate.setTime(cal.getTime().getTime());
-        return zonedDate;
+    int getMinute(T date) {
+        return getTemporalField(date, MINUTE_OF_HOUR);
+    }
+
+    int getHour(T date) {
+        return getTemporalField(date, HOUR_OF_DAY);
+    }
+
+    DayOfWeek getDayOfWeek(T date) {
+        return DayOfWeek.of(getTemporalField(date, DAY_OF_WEEK));
+    }
+
+    int getDayOfMonth(T date) {
+        return getTemporalField(date, DAY_OF_MONTH);
+    }
+
+    int getDayOfYear(T date) {
+        return getTemporalField(date, DAY_OF_YEAR);
+    }
+
+    Month getMonth(T date) {
+        return Month.valueOf(getTemporalField(date, MONTH_OF_YEAR));
+    }
+
+    int getYear(T date) {
+        return getTemporalField(date, YEAR);
+    }
+
+    private int getTemporalField(T date, TemporalField field) {
+        if (date.isSupported(field)) {
+            return date.get(field);
+        } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            return TemporalAdapter.toLocalTime(date, TimeZones.getDefault().toZoneId()).get(field);
+        }
+        throw new IllegalArgumentException("Invalid temporal type for this rule");
+    }
+
+    @SuppressWarnings("unchecked")
+    T withTemporalField(T date, TemporalField field, int value) {
+        if (date.isSupported(field)) {
+            return (T) date.with(field, value);
+        }
+        throw new IllegalArgumentException("Invalid temporal type for this rule");
     }
 }

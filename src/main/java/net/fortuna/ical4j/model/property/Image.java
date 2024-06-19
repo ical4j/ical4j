@@ -19,11 +19,11 @@ public class Image extends Property {
     private String value;
 
     public Image() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
     }
 
     public Image(ParameterList params, String value) {
-        super(PROPERTY_NAME, params, new Factory());
+        super(PROPERTY_NAME, params);
         setValue(value);
     }
 
@@ -40,6 +40,11 @@ public class Image extends Property {
     @Override
     public String getValue() {
         return value;
+    }
+
+    @Override
+    protected PropertyFactory<Image> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Image> {

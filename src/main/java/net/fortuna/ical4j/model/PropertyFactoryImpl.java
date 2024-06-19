@@ -37,7 +37,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.ServiceLoader;
 
 /**
@@ -82,7 +81,7 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory<
 
     public Property createProperty(final String name,
                                    final ParameterList parameters, final String value)
-            throws IOException, URISyntaxException, ParseException {
+            throws IOException, URISyntaxException {
 
         final PropertyFactory factory = getFactory(name);
         if (factory != null) {

@@ -31,8 +31,8 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -86,13 +86,9 @@ public class XComponent extends CalendarComponent {
         }
         return result;
     }
-    
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    protected Validator getValidator(Method method) {
-        // No method validation required.. 
-        return EMPTY_VALIDATOR;
+    protected ComponentFactory<XComponent> newFactory() {
+        throw new UnsupportedOperationException("Cannot provide factory for non-standard components");
     }
 }

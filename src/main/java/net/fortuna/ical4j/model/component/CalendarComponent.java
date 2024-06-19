@@ -33,13 +33,14 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.EmptyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
 /**
  * $Id$
@@ -76,7 +77,7 @@ public abstract class CalendarComponent extends Component {
         super(name, properties);
     }
 
-    public CalendarComponent(String s, PropertyList<Property> p, ComponentList<? extends Component> c) {
+    public CalendarComponent(String s, PropertyList p, ComponentList<? extends Component> c) {
         super(s, p, c);
     }
 
@@ -86,21 +87,9 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      */
     public ValidationResult validate(Method method) throws ValidationException {
-        final Validator<CalendarComponent> validator = getValidator(method);
-        if (validator != null) {
-            return validator.validate(this);
-        }
-        else {
-            throw new ValidationException("Unsupported method: " + method);
-        }
+        throw new ValidationException("Unsupported method: " + method);
     }
 
-    /**
-     * @param method a method to validate on
-     * @return a validator for the specified method or null if the method is not supported
-     */
-    protected abstract <T extends Validator<? extends CalendarComponent>> T getValidator(Method method);
-    
     /**
      * Apply validation for METHOD=PUBLISH.
      * @throws ValidationException where the component does not comply with RFC2446
@@ -108,7 +97,7 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validatePublish() throws ValidationException {
-        validate(Method.PUBLISH);
+        validate(PUBLISH);
     }
 
     /**
@@ -118,7 +107,7 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validateRequest() throws ValidationException {
-        validate(Method.REQUEST);
+        validate(REQUEST);
     }
 
     /**
@@ -128,7 +117,7 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validateReply() throws ValidationException {
-        validate(Method.REPLY);
+        validate(REPLY);
     }
 
     /**
@@ -138,7 +127,7 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validateAdd() throws ValidationException {
-        validate(Method.ADD);
+        validate(ADD);
     }
 
     /**
@@ -148,7 +137,7 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validateCancel() throws ValidationException {
-        validate(Method.CANCEL);
+        validate(CANCEL);
     }
 
     /**
@@ -158,7 +147,7 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validateRefresh() throws ValidationException {
-        validate(Method.REFRESH);
+        validate(REFRESH);
     }
 
     /**
@@ -168,7 +157,7 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validateCounter() throws ValidationException {
-        validate(Method.COUNTER);
+        validate(COUNTER);
     }
 
     /**
@@ -178,7 +167,6 @@ public abstract class CalendarComponent extends Component {
      */
     @Deprecated
     public final void validateDeclineCounter() throws ValidationException {
-        validate(Method.DECLINE_COUNTER);
+        validate(DECLINE_COUNTER);
     }
-
 }

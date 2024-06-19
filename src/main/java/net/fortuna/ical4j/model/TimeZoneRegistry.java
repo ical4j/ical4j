@@ -31,6 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.time.ZoneId;
+import java.time.zone.ZoneRules;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * $Id$
  *
@@ -41,6 +49,25 @@ package net.fortuna.ical4j.model;
  * @author Ben Fortuna
  */
 public interface TimeZoneRegistry {
+
+    Map<String, String> ZONE_IDS = new ConcurrentHashMap<>();
+
+    Map<String, String> ZONE_ALIASES = new ConcurrentHashMap<>();
+
+    static ZoneId getGlobalZoneId(String tzId) {
+        Objects.requireNonNull(tzId, "tzId");
+        // Ensure zone rules are loaded..
+        Set<String> ids = ZoneId.getAvailableZoneIds();
+        try {
+            Class.forName(TimeZoneRegistryImpl.class.getCanonicalName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        ZoneId zoneId = ZoneId.of(tzId, ZONE_ALIASES);
+        Optional<Map.Entry<String, String>> lookup = ZONE_IDS.entrySet().stream().filter(entry ->
+                entry.getValue().equals(zoneId.getId())).findFirst();
+        return lookup.map(mapping -> ZoneId.of(mapping.getKey())).orElse(zoneId);
+    }
 
     /**
      * Registers a new timezone for use with iCalendar objects. If a timezone
@@ -74,4 +101,10 @@ public interface TimeZoneRegistry {
      * is registered with the specified identifier null is returned.
      */
     TimeZone getTimeZone(final String id);
+
+    Map<String, ZoneRules> getZoneRules();
+
+    ZoneId getZoneId(String tzId);
+
+    String getTzId(String zoneId);
 }

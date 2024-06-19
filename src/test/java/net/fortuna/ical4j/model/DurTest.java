@@ -33,11 +33,14 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 
 import java.text.ParseException;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -153,7 +156,7 @@ public class DurTest extends TestCase {
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
+        TimeZoneRegistry tzreg = new DefaultTimeZoneRegistryFactory().createRegistry();
         suite.addTest(new DurTest(new Dur("PT15M"), "PT15M"));
         
         Calendar cal = Calendar.getInstance();
@@ -230,22 +233,18 @@ public class DurTest extends TestCase {
         suite.addTest(new DurTest(new Dur(start, cal.getTime()), "-P654D"));
 
         // test adjacent weeks..
-//        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
-        cal = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
-        cal.clear(Calendar.SECOND);
-        cal.set(2005, 0, 1, 12, 00);
-        start = cal.getTime();
-        DtStart dtStart = new DtStart(new DateTime(start));
-        dtStart.setTimeZone(tzreg.getTimeZone("America/Los_Angeles"));
-        cal.set(2005, 0, 2, 11, 59);
-        Date end = cal.getTime();
-        DtEnd dtEnd = new DtEnd(new DateTime(end));
-        dtEnd.setTimeZone(tzreg.getTimeZone("America/Los_Angeles"));
-        suite.addTest(new DurTest(new Dur(dtStart.getDate(), dtEnd.getDate()), "PT23H59M"));
+        ZonedDateTime newstart = ZonedDateTime.now(TimeZoneRegistry.getGlobalZoneId("America/Los_Angeles"))
+                .withYear(2005).withMonth(1).withDayOfMonth(1).withHour(12).withMinute(0);
+        ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(newstart.getZone().getId())));
+        DtStart<ZonedDateTime> dtStart = new DtStart<>(tzParams, newstart);
+        DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(newstart.withDayOfMonth(2).withHour(11).withMinute(59));
+        suite.addTest(new DurTest(
+                new Dur(new DateTime(Date.from(dtStart.getDate().toInstant())), Date.from(dtEnd.getDate().toInstant())),
+                "PT23H59M"));
 
         // test accross Europe/Paris DST boundary should not matter
         start = new net.fortuna.ical4j.model.DateTime("20110326T110000", tzreg.getTimeZone("America/Los_Angeles"));
-        end = new net.fortuna.ical4j.model.DateTime("20110327T110000", tzreg.getTimeZone("America/Los_Angeles"));
+        DateTime end = new net.fortuna.ical4j.model.DateTime("20110327T110000", tzreg.getTimeZone("America/Los_Angeles"));
         suite.addTest(new DurTest(new Dur(start, end), "P1D"));
 
         // test cross-year..

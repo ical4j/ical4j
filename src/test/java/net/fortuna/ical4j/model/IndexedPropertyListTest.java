@@ -35,11 +35,8 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.parameter.CuType;
 import net.fortuna.ical4j.util.CompatibilityHints;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.FileReader;
 
 /**
  * $Id$
@@ -80,7 +77,7 @@ public class IndexedPropertyListTest extends TestCase {
      */
     public void testIndexing() {
         // a VEvent for more interesting data.. 
-        Component component = (Component) calendar.getComponents(Component.VEVENT).iterator().next();
+        Component component = calendar.getComponents(Component.VEVENT).iterator().next();
         IndexedPropertyList list = new IndexedPropertyList(component.getProperties(), Parameter.CUTYPE);
 
         LOG.info(list.getProperties(CuType.INDIVIDUAL.getValue()).size() + " individual attendees.");

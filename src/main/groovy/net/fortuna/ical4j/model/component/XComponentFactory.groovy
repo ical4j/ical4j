@@ -42,31 +42,31 @@ class XComponentFactory extends AbstractFactory {
 
 
      Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         XComponent component
+         def component
          if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XComponent.class)) {
-             component = (XComponent) value
+             component = (XComponent) value.copy()
          }
          else {
              def componentName = attributes.remove('name')
              if (componentName == null) {
                  componentName = value
              }
-             PropertyList properties = attributes.remove('properties')
+             def properties = attributes.remove('properties')
              if (properties == null) {
-                 properties = new PropertyList()
+                 properties = []
              }
              component = newInstance(componentName, properties)
          }
          return component
      }
      
-     protected static Object newInstance(String name, PropertyList properties) {
-         return new XComponent(name, properties)
+     protected static Object newInstance(def name, def properties) {
+         return new XComponent((String) name, new PropertyList((List) properties))
      }
      
      void setChild(FactoryBuilderSupport build, Object parent, Object child) {
          if (child instanceof Property) {
-             parent.properties.add(child)
+             parent.add(child)
          }
      }
 }

@@ -31,11 +31,13 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.net.URISyntaxException;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
+
+import java.net.URISyntaxException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -44,7 +46,7 @@ import net.fortuna.ical4j.model.property.Uid;
  *
  * @author fortuna
  */
-public class VToDoTest extends CalendarComponentTest {
+public class VToDoTest<T extends Temporal> extends CalendarComponentTest<T> {
 
     /**
      * @param testMethod
@@ -61,21 +63,19 @@ public class VToDoTest extends CalendarComponentTest {
         TestSuite suite = new TestSuite();
 
         VToDo td = new VToDo();
-        suite.addTest(new VToDoTest("testIsCalendarComponent", td));
+        suite.addTest(new VToDoTest<>("testIsCalendarComponent", td));
 
         // iCalendar validation
-        suite.addTest(new VToDoTest("testValidationException", td));
-        VToDo validTd = new VToDo();
-        validTd.getProperties().add(new Uid("12"));
-        suite.addTest(new VToDoTest("testValidation", validTd));
+        suite.addTest(new VToDoTest<>("testValidationException", td));
+        VToDo validTd = new VToDo().withProperty(new Uid("12")).getFluentTarget();
+        suite.addTest(new VToDoTest<>("testValidation", validTd));
 
         // iTIP REPLY validation
-        suite.addTest(new VToDoTest("testReplyValidationException", new VToDo()));
-        VToDo replyTd = new VToDo();
-        replyTd.getProperties().add(new Attendee("mailto:jane@example.com"));
-        replyTd.getProperties().add(new Organizer("mailto:joe@example.com"));
-        replyTd.getProperties().add(new Uid("12"));
-        suite.addTest(new VToDoTest("testReplyValidation", replyTd));
+        suite.addTest(new VToDoTest<>("testReplyValidationException", new VToDo()));
+        VToDo replyTd = new VToDo().withProperty(new Attendee("mailto:jane@example.com"))
+                .withProperty(new Organizer("mailto:joe@example.com"))
+                .withProperty(new Uid("12")).getFluentTarget();
+        suite.addTest(new VToDoTest<>("testReplyValidation", replyTd));
 
         return suite;
     }

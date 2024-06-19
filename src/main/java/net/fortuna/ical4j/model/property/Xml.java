@@ -43,21 +43,15 @@ import org.apache.commons.codec.DecoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * See: <a href="https://www.rfc-editor.org/rfc/rfc6321.html#section-4.2">rfc6321</a>
  */
 public class Xml extends Property implements Encodable {
-
-    private static final ParameterList BINARY_PARAMS = new ParameterList();
-    static {
-        BINARY_PARAMS.add(Value.BINARY);
-        BINARY_PARAMS.add(Encoding.BASE64);
-    }
 
     private String value;
 
@@ -67,14 +61,14 @@ public class Xml extends Property implements Encodable {
      * Default constructor.
      */
     public Xml() {
-        super(XML, new Factory());
+        super(XML);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Xml(final String aValue) throws URISyntaxException {
-        super(XML, new Factory());
+        super(XML);
         setValue(aValue);
     }
 
@@ -82,27 +76,26 @@ public class Xml extends Property implements Encodable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Xml(final ParameterList aList, final String aValue) throws URISyntaxException {
-        super(XML, aList, new Factory());
+    public Xml(final ParameterList aList, final String aValue) {
+        super(XML, aList);
         setValue(aValue);
     }
 
     public Xml(byte[] binary) {
-        super(XML, new ParameterList(BINARY_PARAMS, false), new Factory());
+        super(XML, new ParameterList(Arrays.asList(Value.BINARY, Encoding.BASE64)));
         this.binary = binary;
     }
 
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws URISyntaxException {
+    public final void setValue(final String aValue) {
         // value can be either binary or default to text
-        if (getParameter(Parameter.ENCODING) != null) {
+        if (getParameter(Parameter.ENCODING).isPresent()) {
             // binary = Base64.decode(aValue);
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(
-                                getParameter(Parameter.ENCODING));
+                        .createBinaryDecoder(getRequiredParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -125,11 +118,16 @@ public class Xml extends Property implements Encodable {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.BINARY).equals(getParameter(Parameter.VALUE))) {
             return PropertyValidator.XML_BIN.validate(this);
         } else {
             return PropertyValidator.XML.validate(this);
         }
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Xml> {
@@ -139,8 +137,7 @@ public class Xml extends Property implements Encodable {
             super(XML);
         }
 
-        public Xml createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Xml createProperty(final ParameterList parameters, final String value) {
             return new Xml(parameters, value);
         }
 

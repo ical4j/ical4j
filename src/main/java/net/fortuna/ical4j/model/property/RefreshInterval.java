@@ -18,16 +18,16 @@ public class RefreshInterval extends Property {
     private TemporalAmountAdapter duration;
 
     public RefreshInterval() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
     }
 
     public RefreshInterval(ParameterList params, String value) {
-        super(PROPERTY_NAME, params, new Factory());
+        super(PROPERTY_NAME, params);
         setValue(value);
     }
 
     public RefreshInterval(ParameterList params, TemporalAmount duration) {
-        super(PROPERTY_NAME, params, new Factory());
+        super(PROPERTY_NAME, params);
         this.duration = new TemporalAmountAdapter(duration);
     }
 
@@ -44,6 +44,11 @@ public class RefreshInterval extends Property {
     @Override
     public String getValue() {
         return duration.toString();
+    }
+
+    @Override
+    protected PropertyFactory<RefreshInterval> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<RefreshInterval> {

@@ -31,14 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * $Id$
@@ -79,7 +76,7 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class LastModified extends UtcProperty {
+public class LastModified extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 5288572652052836062L;
 
@@ -87,35 +84,30 @@ public class LastModified extends UtcProperty {
      * Default constructor.
      */
     public LastModified() {
-        super(LAST_MODIFIED, new Factory());
+        this(Instant.now());
     }
 
     /**
      * @param aValue a date-time value
-     * @throws ParseException where the specified string is not a valid date-time
      */
-    public LastModified(final String aValue) throws ParseException {
+    public LastModified(final String aValue) {
         this(new ParameterList(), aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public LastModified(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(LAST_MODIFIED, aList, new Factory());
+    public LastModified(final ParameterList aList, final String aValue) {
+        super(LAST_MODIFIED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param aDate a date representation of a date-time value
      */
-    public LastModified(final DateTime aDate) {
-        super(LAST_MODIFIED, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public LastModified(final Instant aDate) {
+        super(LAST_MODIFIED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -123,11 +115,24 @@ public class LastModified extends UtcProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date-time value
      */
-    public LastModified(final ParameterList aList, final DateTime aDate) {
-        super(LAST_MODIFIED, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public LastModified(final ParameterList aList, final Instant aDate) {
+        super(LAST_MODIFIED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
+    }
+
+    @Override
+    protected PropertyFactory<LastModified> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<LastModified> {
@@ -138,8 +143,7 @@ public class LastModified extends UtcProperty {
         }
 
         @Override
-        public LastModified createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public LastModified createProperty(final ParameterList parameters, final String value) {
             return new LastModified(parameters, value);
         }
 

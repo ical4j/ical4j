@@ -42,7 +42,7 @@ public class Label extends Parameter implements Encodable {
     private final String value;
 
     public Label(String value) {
-        super(PARAMETER_NAME, new Factory());
+        super(PARAMETER_NAME);
         this.value = value;
     }
 

@@ -31,10 +31,12 @@
  */
 package net.fortuna.ical4j.util;
 
-import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.model.property.Uid;
 
 import java.net.SocketException;
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 /**
  * $Id$
@@ -84,9 +86,9 @@ public class FixedUidGenerator implements UidGenerator {
 
     /**
      * Generates a timestamp guaranteed to be unique for the current JVM instance.
-     * @return a {@link DateTime} instance representing a unique timestamp
+     * @return a {@link TemporalAdapter<Instant>} instance representing a unique timestamp
      */
-    private static DateTime uniqueTimestamp() {
+    private static TemporalAdapter<Instant> uniqueTimestamp() {
         long currentMillis;
         synchronized (FixedUidGenerator.class) {
             currentMillis = System.currentTimeMillis();
@@ -95,13 +97,11 @@ public class FixedUidGenerator implements UidGenerator {
             if (currentMillis < lastMillis) {
                 currentMillis = lastMillis;
             }
-            if (currentMillis - lastMillis < Dates.MILLIS_PER_SECOND) {
-                currentMillis += Dates.MILLIS_PER_SECOND;
+            if (currentMillis - lastMillis < TimeUnit.SECONDS.toMillis(1)) {
+                currentMillis += TimeUnit.SECONDS.toMillis(1);
             }
             lastMillis = currentMillis;
         }
-        final DateTime timestamp = new DateTime(currentMillis);
-        timestamp.setUtc(true);
-        return timestamp;
+        return new TemporalAdapter<>(Instant.ofEpochMilli(currentMillis));
     }
 }

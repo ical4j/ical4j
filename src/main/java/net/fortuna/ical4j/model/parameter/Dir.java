@@ -56,17 +56,22 @@ public class Dir extends Parameter implements Encodable {
 
     /**
      * @param aValue a string representation of a directory entry reference
-     * @throws URISyntaxException when the specified string is not a valid (quoted) uri
+     * @throws IllegalArgumentException when the specified string is not a valid (quoted) uri
      */
-    public Dir(final String aValue) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(aValue)));
+    public Dir(final String aValue) {
+        super(DIR);
+        try {
+            this.uri = Uris.create(Strings.unquote(aValue));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
      * @param aUri a URI representing a directory entry reference
      */
     public Dir(final URI aUri) {
-        super(DIR, new Factory());
+        super(DIR);
         this.uri = aUri;
     }
 
@@ -93,7 +98,7 @@ public class Dir extends Parameter implements Encodable {
         }
 
         @Override
-        public Dir createParameter(final String value) throws URISyntaxException {
+        public Dir createParameter(final String value) {
             return new Dir(value);
         }
     }

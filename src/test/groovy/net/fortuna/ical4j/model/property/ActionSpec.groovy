@@ -1,7 +1,9 @@
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.*
 
 class ActionSpec extends Specification {
 
@@ -9,16 +11,16 @@ class ActionSpec extends Specification {
 
     def 'test factory use of constants'() {
         when: 'factory is invoked with a constant value'
-        def action = factory.createProperty(new ParameterList(), value)
+        def action = factory.createProperty(value)
 
         then: 'the returned value is the constant instance'
         action.is(constantInstance)
 
         where:
         value   | constantInstance
-        'AUDIO' | Action.AUDIO
-        'DISPLAY' | Action.DISPLAY
-        'EMAIL' | Action.EMAIL
-        'PROCEDURE' | Action.PROCEDURE
+        'AUDIO' | AUDIO
+        'DISPLAY' | DISPLAY
+        'EMAIL' | EMAIL
+        'PROCEDURE' | PROCEDURE
     }
 }

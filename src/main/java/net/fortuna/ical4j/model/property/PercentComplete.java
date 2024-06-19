@@ -39,10 +39,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -62,7 +58,7 @@ public class PercentComplete extends Property {
      * Default constructor.
      */
     public PercentComplete() {
-        super(PERCENT_COMPLETE, new Factory());
+        super(PERCENT_COMPLETE);
     }
 
     /**
@@ -70,7 +66,7 @@ public class PercentComplete extends Property {
      * @param aValue a value string for this component
      */
     public PercentComplete(final ParameterList aList, final String aValue) {
-        super(PERCENT_COMPLETE, aList, new Factory());
+        super(PERCENT_COMPLETE, aList);
         setValue(aValue);
     }
 
@@ -78,7 +74,7 @@ public class PercentComplete extends Property {
      * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final int aPercentage) {
-        super(PERCENT_COMPLETE, new Factory());
+        super(PERCENT_COMPLETE);
         percentage = aPercentage;
     }
 
@@ -87,7 +83,7 @@ public class PercentComplete extends Property {
      * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final ParameterList aList, final int aPercentage) {
-        super(PERCENT_COMPLETE, aList, new Factory());
+        super(PERCENT_COMPLETE, aList);
         percentage = aPercentage;
     }
 
@@ -129,6 +125,11 @@ public class PercentComplete extends Property {
         return PropertyValidator.PERCENT_COMPLETE.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<PercentComplete> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<PercentComplete> {
         private static final long serialVersionUID = 1L;
 
@@ -137,8 +138,7 @@ public class PercentComplete extends Property {
         }
 
         @Override
-        public PercentComplete createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public PercentComplete createProperty(final ParameterList parameters, final String value) {
             return new PercentComplete(parameters, value);
         }
 

@@ -34,11 +34,11 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.LinkRelationType;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * <pre>
@@ -66,13 +66,22 @@ public class LinkRel extends Parameter {
     private final String value;
 
     public LinkRel(String value) {
-        super(PARAM_NAME, new Factory());
+        super(PARAM_NAME);
         this.value = value;
     }
 
+    public LinkRel(LinkRelationType linkRelationType) {
+        super(PARAM_NAME);
+        this.value = linkRelationType.toString();
+    }
+
     public LinkRel(URI uri) {
-        super(PARAM_NAME, new Factory());
+        super(PARAM_NAME);
         this.value = uri.toASCIIString();
+    }
+
+    public LinkRelationType getLinkRelationType() {
+        return LinkRelationType.valueOf(value);
     }
 
     public URI getUri() {
@@ -91,7 +100,7 @@ public class LinkRel extends Parameter {
         }
 
         @Override
-        public LinkRel createParameter(String value) throws URISyntaxException {
+        public LinkRel createParameter(String value) {
             return new LinkRel(value);
         }
     }

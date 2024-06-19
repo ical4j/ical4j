@@ -31,87 +31,34 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.DateList
-import net.fortuna.ical4j.model.DateTime
-import net.fortuna.ical4j.model.Period
-import net.fortuna.ical4j.model.PeriodList
-import net.fortuna.ical4j.model.TimeZoneRegistry
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import spock.lang.Shared
+
 import spock.lang.Specification
 
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class RDateSpec extends Specification {
-	
-	@Shared TimeZoneRegistry tzRegistry
-	
-	def setupSpec() {
-		tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
-	}
-	
-	def 'should add date-time value to list'() {
-		setup: 'create new date-time'
-		DateTime date = new DateTime('20110319T140400')
-		
-		and: 'add date-time to rdate'
+
+	def 'should not be able to add periods to default rdate instance'() {
+		setup: 'create new rdate instance'
 		RDate rdate = new RDate()
-		rdate.dates.add(date)
-		
-		expect: 'rdate list contains date-time'
-		rdate.dates == [date]
+
+		expect: 'periods not available'
+		!rdate.periods.isPresent()
 	}
-	
-	def 'should throw exception when trying to add period value to default rdate instance'() {
-		setup: 'create new period'
-		Period period = new Period(new DateTime('20110319T140400'), new DateTime('20110319T180400'))
-		
-		when: 'add period to rdate'
-		RDate rdate = new RDate()
-		rdate.periods.add(period)
-		
-		then: 'exception is thrown'
-		thrown(UnsupportedOperationException)
-	}
-	
-	def 'should throw exception when trying to add date value to period rdate instance'() {
-		setup: 'create new date-time'
-		DateTime date = new DateTime('20110319T140400')
-		
-		when: 'add date to rdate'
-		RDate rdate = new RDate(new PeriodList())
-		rdate.dates.add(date)
-		
-		then: 'exception is thrown'
-		thrown(UnsupportedOperationException)
-	}
-	
-	def 'should set timezone for internal period list'() {
-		setup: 'load the timezone'
-		def tz = tzRegistry.getTimeZone(tzId)
-		
-		and: 'create an RDATE instance'
-		RDate rdate = [new PeriodList()]
-		rdate.timeZone = tz
-		
-		expect: 'timezone is set on the internal list'
-		rdate.periods.timeZone == tz
-		
-		where:
-		tzId << ['Australia/Melbourne']
-	}
-	
-	def 'should set timezone for internal date list'() {
-		setup: 'load the timezone'
-		def tz = tzRegistry.getTimeZone(tzId)
-		
-		and: 'create an RDATE instance'
-		RDate rdate = [new DateList()]
-		rdate.timeZone = tz
-		
-		expect: 'timezone is set on the internal list'
-		rdate.dates.timeZone == tz
-		
-		where:
-		tzId << ['Australia/Melbourne']
+
+	def 'test rdate with default timezone'() {
+		given: 'a floating date list string'
+		def dates = '20220617T140000,20220618T140000'
+
+		and: 'an rdate property with default timezone'
+		RDate<ZonedDateTime> rdate = new RDate<>()
+		rdate.setDefaultTimeZone(ZoneId.of('America/Toronto'))
+
+		when: 'rdate value is set from date list string'
+		rdate.setValue(dates)
+
+		then: 'rdate dates are rendered local in the default timezone'
+		rdate.dates.forEach(d -> d.zone.id == 'America/Toronto')
 	}
 }

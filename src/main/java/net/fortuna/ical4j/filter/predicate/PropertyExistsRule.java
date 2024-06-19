@@ -31,12 +31,10 @@
  */
 package net.fortuna.ical4j.filter.predicate;
 
-import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
 
 import java.util.Comparator;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -69,7 +67,7 @@ public class PropertyExistsRule<T extends PropertyContainer> implements Predicat
         @Override
         public int compareTo(Property o) {
             return Comparator.comparing(Property::getName)
-                    .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                    .thenComparing(Property::getParameterList)
                     .compare(specification, o);
         }
     }

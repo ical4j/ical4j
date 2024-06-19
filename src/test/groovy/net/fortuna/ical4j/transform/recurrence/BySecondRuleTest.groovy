@@ -1,30 +1,30 @@
 package net.fortuna.ical4j.transform.recurrence
 
-import net.fortuna.ical4j.model.DateList
-import net.fortuna.ical4j.model.DateTime
+import net.fortuna.ical4j.model.CalendarDateFormat
 import net.fortuna.ical4j.model.NumberList
-import net.fortuna.ical4j.model.parameter.Value
+import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
-import static net.fortuna.ical4j.model.Recur.Frequency.DAILY
-import static net.fortuna.ical4j.model.Recur.Frequency.SECONDLY
+import static Frequency.DAILY
+import static Frequency.SECONDLY
 
 class BySecondRuleTest extends Specification {
 
+    @Shared
+    def dateFormat = CalendarDateFormat.FLOATING_DATE_TIME_FORMAT
+
+    @Unroll
     def 'verify transformations by day'() {
         given: 'a BYSECOND rule'
         BySecondRule rule = [new NumberList(rulePart), frequency]
 
-        and: 'a list of dates'
-        DateList dateList = [Value.DATE_TIME]
-        dateList.addAll(dates)
-
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dateList) == expectedResult
+        rule.apply(dates) == expectedResult
 
         where:
         rulePart | frequency       | dates                              | expectedResult
-        '1'      | DAILY    | [new DateTime('20150103T000000Z')] | [new DateTime('20150103T000001Z')]
-        '1'      | SECONDLY | [new DateTime('20150103T000001Z'), new DateTime('20150103T000002Z')] | [new DateTime('20150103T000001Z')]
+        '1'      | DAILY    | [dateFormat.parse('20150103T000000')] | [dateFormat.parse('20150103T000001')]
+        '1'      | SECONDLY | [dateFormat.parse('20150103T000001'), dateFormat.parse('20150103T000002')] | [dateFormat.parse('20150103T000001')]
     }
 }

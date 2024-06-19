@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.RegEx;
+
 import java.time.temporal.ChronoField;
 import java.time.temporal.ValueRange;
 import java.util.ArrayList;
@@ -26,7 +28,12 @@ public class MonthList extends ArrayList<Month> {
 
     public MonthList(String aString, ValueRange valueRange) {
         this(valueRange);
-        addAll(Arrays.stream(aString.split(",")).map(Month::parse).collect(Collectors.toList()));
+        addAll(Arrays.stream(aString.split(RegEx.COMMA_DELIMITED)).map(Month::parse).collect(Collectors.toList()));
+    }
+
+    public MonthList(Collection<Month> values, ValueRange valueRange) {
+        this(valueRange);
+        addAll(values);
     }
 
     @Override

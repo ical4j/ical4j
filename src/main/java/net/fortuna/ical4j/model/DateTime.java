@@ -170,7 +170,10 @@ import java.util.WeakHashMap;
  * 
  * @author Ben Fortuna
  * @version 2.0
+ *
+ * @deprecated Use {@link java.time.Instant}, {@link java.time.LocalDateTime} or {@link java.time.ZonedDateTime} for iCalendar DATE-TIME representations.
  */
+@Deprecated
 public class DateTime extends Date {
 
 	private static final long serialVersionUID = -6407231357919440387L;

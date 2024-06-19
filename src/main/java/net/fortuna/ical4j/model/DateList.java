@@ -31,143 +31,122 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.parameter.Value;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.util.RegEx;
 
 import java.io.Serializable;
-import java.text.ParseException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
  *
- * Defines a list of iCalendar dates. If no value type is specified a list
- * defaults to DATE-TIME instances.
+ * A DateList is a grouping of date-time instances along with a common format to
+ * be applied to all dates in the group.
+ *
  * @author Ben Fortuna
  */
-public class DateList implements List<Date>, Serializable, Iterable<Date> {
+public class DateList<T extends Temporal> implements Serializable {
 
 	private static final long serialVersionUID = -3700862452550012357L;
 
-	private final Value type;
-    
-    private final List<Date> dates;
+    @SuppressWarnings("rawtypes")
+    public static final DateList EMPTY_LIST = new DateList();
 
-    private TimeZone timeZone;
-    
-    private boolean utc;
+    private final List<TemporalAdapter<T>> dates;
 
     /**
      * Default constructor.
      */
     public DateList() {
-    	this(false);
+        this.dates = Collections.emptyList();
     }
 
-    public DateList(final boolean unmodifiable) {
-    
-        this.type = Value.DATE_TIME;
-        if (unmodifiable) {
-        	dates = Collections.emptyList();
-        }
-        else {
-            dates = new ArrayList<Date>();
-        }
-    }
-
-    /**
-     * @param aType the type of dates contained by the instance
-     */
-    public DateList(final Value aType) {
-        this(aType, null);
-    }
-    
-    /**
-     * Default constructor.
-     * 
-     * @param aType
-     *            specifies the type of dates (either date or date-time)
-     * @param timezone the timezone to apply to dates contained by the instance
-     */
-    public DateList(final Value aType, final TimeZone timezone) {
-        if (aType != null) {
-            this.type = aType;
-        } else {
-            this.type = Value.DATE_TIME;
-        }
-        this.timeZone = timezone;
-        dates = new ArrayList<Date>();
-    }
-
-    /**
-     * @param aValue a string representation of a date list
-     * @param aType the date types contained in the instance
-     * @throws ParseException where the specified string is not a valid date list
-     */
-    public DateList(final String aValue, final Value aType) throws ParseException {
-        this(aValue, aType, null);
-    }
-    
-    /**
-     * Parses the specified string representation to create a list of dates.
-     * 
-     * @param aValue
-     *            a string representation of a list of dates
-     * @param aType
-     *            specifies the type of dates (either date or date-time)
-     * @param timezone the timezone to apply to contained dates
-     * @throws ParseException
-     *             if an invalid date representation exists in the date list
-     *             string
-     */
-    public DateList(final String aValue, final Value aType, final TimeZone timezone) throws ParseException {
-    	
-        this(aType, timezone);
-        for (String ds : aValue.split("\\s*,\\s*")) {
-            if (Value.DATE.equals(type)) {
-                add(new Date(ds));
-            }
-            else {
-                add(new DateTime(ds, timezone));
-            }
-        }
-    }
-    
     /**
      * Constructs a new date list of the specified type containing
      * the dates in the specified list.
-     * @param list a list of dates to include in the new list
-     * @param type the type of the new list
+     * @param dates a list of dates to include in the new list
      */
-    public DateList(final DateList list, final Value type) {
-        if (!Value.DATE.equals(type) && !Value.DATE_TIME.equals(type)) {
-            throw new IllegalArgumentException(
-                    "Type must be either DATE or DATE-TIME");
-        }
-        
-        this.type = type;
-        dates = new ArrayList<Date>();
-        
-        if (Value.DATE.equals(type)) {
-            for (Date date : list) {
-                add(new Date(date));
-            }
-        }
-        else {
-            for (final Date dateTime : list) {
-                add(new DateTime(dateTime));
-            }
-        }
+    public DateList(final T...dates) {
+        this.dates = Arrays.stream(dates).map(TemporalAdapter::new).collect(Collectors.toList());
     }
 
+    public DateList(Collection<T> dates) {
+        this.dates = dates.stream().map(TemporalAdapter::new).collect(Collectors.toList());
+    }
+
+    public DateList(TimeZoneRegistry timeZoneRegistry, T...dates) {
+        this.dates = Arrays.stream(dates).map(date -> new TemporalAdapter<>(date, timeZoneRegistry))
+                .collect(Collectors.toList());
+    }
+
+    private DateList(List<TemporalAdapter<T>> dates) {
+        this.dates = dates;
+    }
+    
     /**
-     * {@inheritDoc}
+     * Parse a string representation of a date/time list.
+     *
+     * @param value
+     * @return
+     * @throws DateTimeParseException
      */
+    public static DateList<? extends Temporal> parse(String value) {
+        if (value == null || value.isEmpty()) {
+            return emptyList();
+        }
+
+        List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
+                .parallel().map(TemporalAdapter::parse)
+                .collect(Collectors.toList());
+
+        return new DateList<>(dates);
+    }
+
+    public static DateList<? extends Temporal> parse(String value, ZoneId zoneId) {
+        if (value == null || value.isEmpty()) {
+            return emptyList();
+        }
+
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
+                .parallel().map(s -> TemporalAdapter.parse(s, zoneId))
+                .collect(Collectors.toList());
+        return new DateList<>(dates);
+    }
+
+    public static DateList<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+        if (value == null || value.isEmpty()) {
+            return emptyList();
+        }
+
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
+                .parallel().map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
+                .collect(Collectors.toList());
+        return new DateList<>(dates);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Temporal> DateList<T> emptyList() {
+        return (DateList<T>) EMPTY_LIST;
+    }
+
     @Override
-    public final String toString() {
-        return stream().map(Iso8601::toString).collect(Collectors.joining(","));
+    public String toString() {
+        if (dates.isEmpty()) {
+            return "";
+        }
+        return dates.stream().map(TemporalAdapter::toString).collect(Collectors.joining(","));
+    }
+
+    public String toString(ZoneId zoneId) {
+        if (dates.isEmpty()) {
+            return "";
+        }
+        return dates.stream().map(date -> date.toString(zoneId)).collect(Collectors.joining(","));
     }
 
     /**
@@ -178,234 +157,32 @@ public class DateList implements List<Date>, Serializable, Iterable<Date> {
      * @return true
      * @see List#add(java.lang.Object)
      */
-    @Override
-    public final boolean add(final Date date) {
-        if (!this.isUtc() && this.getTimeZone() == null) {
-            /* If list hasn't been initialized yet use defaults from the first added date element */
-            if (date instanceof DateTime) {
-                DateTime dateTime = (DateTime) date;
-                if (dateTime.isUtc()) {
-                    this.setUtc(true);
-                } else {
-                    this.setTimeZone(dateTime.getTimeZone());
-                }
-            }
-        }
-        if (date instanceof DateTime) {
-            DateTime dateTime = (DateTime) date;
-            if (isUtc()) {
-                dateTime.setUtc(true);
-            } else {
-                dateTime.setTimeZone(getTimeZone());
-            }
-        } else if (!Value.DATE.equals(getType())) {
-            final DateTime dateTime = new DateTime(date);
-            dateTime.setTimeZone(getTimeZone());
-            return dates.add(dateTime);
-        }
-        return dates.add(date);
+    public final DateList<T> add(final T date) {
+        List<TemporalAdapter<T>> copy = new ArrayList<>(dates);
+        copy.add(new TemporalAdapter<T>(date));
+        return new DateList<>(copy);
     }
 
-    /**
-     * Remove a date from the list.
-     * 
-     * @param date
-     *            the date to remove
-     * @return true if the list contained the specified date
-     * @see List#remove(java.lang.Object)
-     */
-    public final boolean remove(final Date date) {
-        return remove((Object) date);
+    public final DateList<T> addAll(Collection<? extends T> arg0) {
+        List<TemporalAdapter<T>> copy = new ArrayList<>(dates);
+        copy.addAll(arg0.stream().map(TemporalAdapter<T>::new).collect(Collectors.toList()));
+        return new DateList<>(copy);
     }
 
-    /**
-     * Returns the VALUE parameter specifying the type of dates (ie. date or
-     * date-time) stored in this date list.
-     * 
-     * @return Returns a Value parameter.
-     */
-    public final Value getType() {
-        return type;
+    public List<T> getDates() {
+        return dates.stream().map(TemporalAdapter::getTemporal).collect(Collectors.toList());
     }
 
-    /**
-     * Indicates whether this list is in local or UTC format. This property will
-     * have no affect if the type of the list is not DATE-TIME.
-     * 
-     * @return Returns true if in UTC format, otherwise false.
-     */
-    public final boolean isUtc() {
-        return utc;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DateList<?> dateList = (DateList<?>) o;
+        return Objects.equals(dates, dateList.dates);
     }
 
-    /**
-     * Sets whether this list is in UTC or local time format.
-     * 
-     * @param utc
-     *            The utc to set.
-     */
-    public final void setUtc(final boolean utc) {
-        if (!Value.DATE.equals(type)) {
-            for (Date date: this) {
-                ((DateTime) date).setUtc(utc);
-            }
-        }
-        this.timeZone = null;
-        this.utc = utc;
+    @Override
+    public int hashCode() {
+        return Objects.hash(dates);
     }
-    
-    /**
-     * Applies the specified timezone to all dates in the list.
-     * All dates added to this list will also have this timezone
-     * applied.
-     * @param timeZone a timezone to apply to contained dates
-     */
-    public final void setTimeZone(final TimeZone timeZone) {
-        if (!Value.DATE.equals(type)) {
-            for (Date date: this) {
-                ((DateTime) date).setTimeZone(timeZone);
-            }
-        }
-        this.timeZone = timeZone;
-        this.utc = false;
-    }
-
-    /**
-     * @return Returns the timeZone.
-     */
-    public final TimeZone getTimeZone() {
-        return timeZone;
-    }
-
-	@Override
-    public final void add(int arg0, Date arg1) {
-		dates.add(arg0, arg1);
-	}
-
-    @Override
-	public final boolean addAll(Collection<? extends Date> arg0) {
-		return dates.addAll(arg0);
-	}
-
-    @Override
-	public final boolean addAll(int arg0, Collection<? extends Date> arg1) {
-		return dates.addAll(arg0, arg1);
-	}
-
-    @Override
-	public final void clear() {
-		dates.clear();
-	}
-
-    @Override
-	public final boolean contains(Object o) {
-		return dates.contains(o);
-	}
-
-    @Override
-	public final boolean containsAll(Collection<?> arg0) {
-		return dates.containsAll(arg0);
-	}
-
-    @Override
-	public final Date get(int index) {
-		return dates.get(index);
-	}
-
-    @Override
-	public final int indexOf(Object o) {
-		return dates.indexOf(o);
-	}
-
-    @Override
-	public final boolean isEmpty() {
-		return dates.isEmpty();
-	}
-
-    @Override
-	public final Iterator<Date> iterator() {
-		return dates.iterator();
-	}
-
-    @Override
-	public final int lastIndexOf(Object o) {
-		return dates.lastIndexOf(o);
-	}
-
-    @Override
-	public final ListIterator<Date> listIterator() {
-		return dates.listIterator();
-	}
-
-    @Override
-	public final ListIterator<Date> listIterator(int index) {
-		return dates.listIterator(index);
-	}
-
-    @Override
-	public final Date remove(int index) {
-		return dates.remove(index);
-	}
-
-    @Override
-	public final boolean remove(Object o) {
-		return dates.remove(o);
-	}
-
-    @Override
-	public final boolean removeAll(Collection<?> arg0) {
-		return dates.removeAll(arg0);
-	}
-
-    @Override
-	public final boolean retainAll(Collection<?> arg0) {
-		return dates.retainAll(arg0);
-	}
-
-    @Override
-	public final Date set(int arg0, Date arg1) {
-		return dates.set(arg0, arg1);
-	}
-
-    @Override
-	public final int size() {
-		return dates.size();
-	}
-
-    @Override
-	public final List<Date> subList(int fromIndex, int toIndex) {
-		return dates.subList(fromIndex, toIndex);
-	}
-
-    @Override
-	public final Object[] toArray() {
-		return dates.toArray();
-	}
-
-    @Override
-	public final <T> T[] toArray(T[] arg0) {
-		return dates.toArray(arg0);
-	}
-
-    @Override
-	public final boolean equals(Object obj) {
-		if (!getClass().isAssignableFrom(obj.getClass())) {
-			return false;
-		}
-		final DateList rhs = (DateList) obj;
-		return new EqualsBuilder().append(dates, rhs.dates)
-			.append(type, rhs.type)
-			.append(timeZone, rhs.timeZone)
-			.append(utc, utc)
-			.isEquals();
-	}
-
-    @Override
-	public final int hashCode() {
-		return new HashCodeBuilder().append(dates)
-			.append(type)
-			.append(timeZone)
-			.append(utc)
-			.toHashCode();
-	}
 }

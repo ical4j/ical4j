@@ -102,7 +102,7 @@ public class Filter<T> {
      */
     @SuppressWarnings("unchecked")
     public final Collection<T> filter(final Collection<T> c) {
-        if (getRules() != null && getRules().length > 0) {
+        if (getRules().length > 0) {
             // attempt to use the same concrete collection type
             // as is passed in..
             Collection<T> filtered;
@@ -174,7 +174,7 @@ public class Filter<T> {
      */
     @SuppressWarnings("unchecked")
     public final Predicate<T>[] getRules() {
-        return rules.toArray(new Predicate[0]);
+        return rules.toArray(Predicate[]::new);
     }
 
     /**

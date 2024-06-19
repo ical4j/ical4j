@@ -39,9 +39,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 
 /**
  * $Id$
@@ -133,75 +131,10 @@ public class Status extends Property {
     public static final String VALUE_FINAL = "FINAL";
 
     // Status values for a "VEVENT"
-    /**
-     * Tentative VEVENT status.
-     */
-    public static final Status VEVENT_TENTATIVE = new ImmutableStatus(VALUE_TENTATIVE);
-
-    /**
-     * Confirmed VEVENT status.
-     */
-    public static final Status VEVENT_CONFIRMED = new ImmutableStatus(VALUE_CONFIRMED);
-
-    /**
-     * Cancelled VEVENT status.
-     */
-    public static final Status VEVENT_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
 
     // Status values for "VTODO"
-    /**
-     * Tentative VTODO status.
-     */
-    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(VALUE_NEEDS_ACTION);
-
-    /**
-     * Completed VTODO status.
-     */
-    public static final Status VTODO_COMPLETED = new ImmutableStatus(VALUE_COMPLETED);
-
-    /**
-     * In-process VTODO status.
-     */
-    public static final Status VTODO_IN_PROCESS = new ImmutableStatus(VALUE_IN_PROCESS);
-
-    /**
-     * Cancelled VTODO status.
-     */
-    public static final Status VTODO_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
 
     // Status values for "VJOURNAL"
-    /**
-     * Draft VJOURNAL status.
-     */
-    public static final Status VJOURNAL_DRAFT = new ImmutableStatus(VALUE_DRAFT);
-
-    /**
-     * Final VJOURNAL status.
-     */
-    public static final Status VJOURNAL_FINAL = new ImmutableStatus(VALUE_FINAL);
-
-    /**
-     * Cancelled VJOURNAL status.
-     */
-    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Status.
-     */
-    private static final class ImmutableStatus extends Status {
-
-        private static final long serialVersionUID = 7771868877237685612L;
-
-        private ImmutableStatus(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
 
     private String value;
 
@@ -209,14 +142,14 @@ public class Status extends Property {
      * Default constructor.
      */
     public Status() {
-        super(STATUS, new Factory());
+        super(STATUS);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Status(final String aValue) {
-        super(STATUS, new Factory());
+        super(STATUS);
         this.value = aValue;
     }
 
@@ -225,7 +158,7 @@ public class Status extends Property {
      * @param aValue a value string for this component
      */
     public Status(final ParameterList aList, final String aValue) {
-        super(STATUS, aList, new Factory());
+        super(STATUS, aList);
         this.value = aValue;
     }
 
@@ -250,6 +183,11 @@ public class Status extends Property {
         return PropertyValidator.STATUS.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Status> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Status> {
         private static final long serialVersionUID = 1L;
 
@@ -258,10 +196,9 @@ public class Status extends Property {
         }
 
         @Override
-        public Status createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Status createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value.toUpperCase()) {
                     case VALUE_TENTATIVE: return VEVENT_TENTATIVE;
                     case VALUE_CONFIRMED: return VEVENT_CONFIRMED;

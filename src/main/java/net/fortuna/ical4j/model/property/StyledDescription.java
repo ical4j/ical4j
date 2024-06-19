@@ -38,10 +38,9 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -63,16 +62,14 @@ public class StyledDescription extends Property implements Encodable {
      * Default constructor.
      */
     public StyledDescription() {
-        super(STYLED_DESCRIPTION, new ParameterList(), 
-                new Factory());
+        super(STYLED_DESCRIPTION, new ParameterList());
     }
 
     /**
      * @param aValue a value string for this component
      */
-    public StyledDescription(final String aValue) throws URISyntaxException {
-        super(STYLED_DESCRIPTION, new ParameterList(), 
-                new Factory());
+    public StyledDescription(final String aValue) {
+        super(STYLED_DESCRIPTION, new ParameterList());
         setValue(aValue);
     }
 
@@ -80,21 +77,24 @@ public class StyledDescription extends Property implements Encodable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public StyledDescription(final ParameterList aList, final String aValue) throws URISyntaxException {
-        super(STYLED_DESCRIPTION, aList, 
-                new Factory());
+    public StyledDescription(final ParameterList aList, final String aValue) {
+        super(STYLED_DESCRIPTION, aList);
         setValue(aValue);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws URISyntaxException {
+    public final void setValue(final String aValue) {
         // value can be either text or a URI - no default
-        if (Value.TEXT.equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.TEXT).equals(getParameter(Parameter.VALUE))) {
             this.value = aValue;
-        } else if (Value.URI.equals(getParameter(Parameter.VALUE))) {
-            uriValue = Uris.create(aValue);
+        } else if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
+            try {
+                uriValue = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
             this.value = aValue;
         } else {
             throw new IllegalArgumentException("No valid VALUE parameter specified");
@@ -113,6 +113,11 @@ public class StyledDescription extends Property implements Encodable {
         return PropertyValidator.STYLED_DESCRIPTION.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<StyledDescription> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<StyledDescription> {
         private static final long serialVersionUID = 1L;
 
@@ -120,8 +125,7 @@ public class StyledDescription extends Property implements Encodable {
             super(STYLED_DESCRIPTION);
         }
 
-        public StyledDescription createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public StyledDescription createProperty(final ParameterList parameters, final String value) {
             return new StyledDescription(parameters, value);
         }
 

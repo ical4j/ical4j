@@ -2,10 +2,11 @@ package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VFreeBusy;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
 public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
 
@@ -39,7 +40,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar publish(VFreeBusy... component) {
-        return validate(wrap(Method.PUBLISH, component));
+        return validate(wrap(PUBLISH, component));
     }
 
     /**
@@ -63,7 +64,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar request(VFreeBusy... component) {
-        return validate(wrap(Method.REQUEST, component));
+        return validate(wrap(REQUEST, component));
     }
 
     /**
@@ -90,7 +91,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        return validate(transform(Method.REPLY, request));
+        return validate(transform(REPLY, request));
     }
 
     /**

@@ -33,7 +33,6 @@
 
 package net.fortuna.ical4j.model
 
-
 import net.fortuna.ical4j.model.component.VTimeZone
 import net.fortuna.ical4j.util.Calendars
 import spock.lang.Specification
@@ -45,7 +44,7 @@ class TimeZoneUpdaterTest extends Specification {
         TimeZoneUpdater updater = []
 
         when: 'a timezone is updated'
-        VTimeZone tz = Calendars.load(files).getComponent('VTIMEZONE')
+        VTimeZone tz = Calendars.load(files).getComponent('VTIMEZONE').get()
 
         then: 'result is different from input'
         updater.updateDefinition(tz) !== tz

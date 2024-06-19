@@ -35,10 +35,10 @@ import net.fortuna.ical4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -49,17 +49,19 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar text elements.
  * @author Ben Fortuna
  */
-public class TextList implements Serializable, Iterable<String> {
+public class TextList implements Serializable {
 
 	private static final long serialVersionUID = -417427815871330636L;
-	
+
+    private static final Pattern PATTERN = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
+
 	private final List<String> texts;
 
     /**
      * Default constructor.
      */
     public TextList() {
-        texts = new CopyOnWriteArrayList<String>();
+        texts = Collections.emptyList();
     }
 
     /**
@@ -67,22 +69,24 @@ public class TextList implements Serializable, Iterable<String> {
      * @param aValue a string representation of a list of categories
      */
     public TextList(final String aValue) {
-        texts = new CopyOnWriteArrayList<String>();
+        List<String> values = new ArrayList<>();
 
-        final Pattern pattern = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
-
-        final Matcher matcher = pattern.matcher(aValue);
-
+        final Matcher matcher = PATTERN.matcher(aValue);
         while (matcher.find()){
-            texts.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
+            values.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
         }
+        texts = Collections.unmodifiableList(values);
+    }
+
+    public TextList(List<String> texts) {
+        this.texts = Collections.unmodifiableList(texts);
     }
 
     /**
      * @param textValues an array of text values
      */
-    public TextList(String[] textValues) {
-        texts = Arrays.asList(textValues);
+    public TextList(String...textValues) {
+        texts = Collections.unmodifiableList(Arrays.asList(textValues));
     }
     
     /**
@@ -99,26 +103,10 @@ public class TextList implements Serializable, Iterable<String> {
      * @return true
      * @see List#add(java.lang.Object)
      */
-    public final boolean add(final String text) {
-        return texts.add(text);
-    }
-
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    public final boolean isEmpty() {
-        return texts.isEmpty();
-    }
-
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    @NotNull
-    @Override
-    public final Iterator<String> iterator() {
-        return texts.iterator();
+    public final TextList add(final String text) {
+        List<String> newlist = new ArrayList<>(texts);
+        newlist.add(text);
+        return new TextList(newlist);
     }
 
     /**
@@ -127,15 +115,16 @@ public class TextList implements Serializable, Iterable<String> {
      * @return true if the list contained the specified text element
      * @see List#remove(java.lang.Object)
      */
-    public final boolean remove(final String text) {
-        return texts.remove(text);
+    public final TextList remove(final String text) {
+        List<String> newlist = new ArrayList<>(texts);
+        if (newlist.remove(text)) {
+            return new TextList(newlist);
+        } else {
+            return this;
+        }
     }
 
-    /**
-     * @return the number of text elements in the list
-     * @see List#size()
-     */
-    public final int size() {
-        return texts.size();
+    public List<String> getTexts() {
+        return texts;
     }
 }

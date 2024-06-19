@@ -36,7 +36,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.URISyntaxException;
 import java.util.ServiceLoader;
 
 /**
@@ -69,11 +68,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
      * @param name  name of the parameter
      * @param value a parameter value
      * @return a component
-     * @throws URISyntaxException thrown when the specified string is not a valid representation of a URI for selected
-     *                            parameters
      */
-    public Parameter createParameter(final String name, final String value)
-            throws URISyntaxException {
+    public Parameter createParameter(final String name, final String value) {
         final ParameterFactory<?> factory = getFactory(name);
         Parameter parameter;
         if (factory != null) {

@@ -2,9 +2,17 @@ package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.property.Uid;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.UUID;
 
 /**
+ * This {@link UidGenerator} uses the Java {@link UUID#randomUUID()} implementation to generate
+ * UIDs.
+ *
+ * For ultimate security you can also use the secure flag to generate UIDs that are less crackable
+ * (from <a href="https://neilmadden.blog/2018/08/30/moving-away-from-uuids/">Moving away from UUIDs</a>).
+ *
  * Extract from RFC7986:
  *
  * <pre>
@@ -30,8 +38,38 @@ import java.util.UUID;
  */
 public class RandomUidGenerator implements UidGenerator {
 
+    private final boolean secure;
+
+    private final SecureRandom random;
+    private final Base64.Encoder encoder;
+
+    public RandomUidGenerator() {
+        this(false);
+    }
+
+    public RandomUidGenerator(boolean secure) {
+        this.secure = secure;
+        if (secure) {
+            random = new SecureRandom();
+            encoder = Base64.getUrlEncoder().withoutPadding();
+        } else {
+            random = null;
+            encoder = null;
+        }
+    }
+
+    public boolean isSecure() {
+        return secure;
+    }
+
     @Override
     public Uid generateUid() {
-        return new Uid(UUID.randomUUID().toString());
+        if (secure) {
+            byte[] buffer = new byte[20];
+            random.nextBytes(buffer);
+            return new Uid(encoder.encodeToString(buffer));
+        } else {
+            return new Uid(UUID.randomUUID().toString());
+        }
     }
 }

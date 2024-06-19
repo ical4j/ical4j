@@ -31,14 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * $Id$
@@ -74,7 +71,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class Completed extends UtcProperty {
+public class Completed extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 6824213281785639181L;
 
@@ -82,36 +79,31 @@ public class Completed extends UtcProperty {
      * Default constructor.
      */
     public Completed() {
-        super(COMPLETED, new Factory());
+        this(Instant.now());
     }
 
     /**
      * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid date-time represenation
      */
-    public Completed(final String aValue) throws ParseException {
-        super(COMPLETED, new Factory());
+    public Completed(final String aValue) {
+        super(COMPLETED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid date-time represenation
      */
-    public Completed(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(COMPLETED, aList, new Factory());
+    public Completed(final ParameterList aList, final String aValue) {
+        super(COMPLETED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param aDate a date
      */
-    public Completed(final DateTime aDate) {
-        super(COMPLETED, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public Completed(final Instant aDate) {
+        super(COMPLETED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -119,11 +111,24 @@ public class Completed extends UtcProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Completed(final ParameterList aList, final DateTime aDate) {
-        super(COMPLETED, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public Completed(final ParameterList aList, final Instant aDate) {
+        super(COMPLETED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
+    }
+
+    @Override
+    protected PropertyFactory<Completed> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Completed> {
@@ -134,8 +139,7 @@ public class Completed extends UtcProperty {
         }
 
         @Override
-        public Completed createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Completed createProperty(final ParameterList parameters, final String value) {
             return new Completed(parameters, value);
         }
 

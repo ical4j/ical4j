@@ -35,16 +35,15 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.component.Participant;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -65,26 +64,24 @@ public class Attendee extends Property {
      * Default constructor.
      */
     public Attendee() {
-        super(ATTENDEE, new Factory());
+        super(ATTENDEE);
     }
 
     /**
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
+     * @throws IllegalArgumentException where the specified value string is not a valid uri
      */
-    public Attendee(final String aValue) throws URISyntaxException {
-        super(ATTENDEE, new Factory());
+    public Attendee(final String aValue) {
+        super(ATTENDEE);
         setValue(aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Attendee(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
-        super(ATTENDEE, aList, new Factory());
+    public Attendee(final ParameterList aList, final String aValue) {
+        super(ATTENDEE, aList);
         setValue(aValue);
     }
 
@@ -92,7 +89,7 @@ public class Attendee extends Property {
      * @param aUri a URI
      */
     public Attendee(final URI aUri) {
-        super(ATTENDEE, new Factory());
+        super(ATTENDEE);
         calAddress = aUri;
     }
 
@@ -101,16 +98,44 @@ public class Attendee extends Property {
      * @param aUri  a URI
      */
     public Attendee(final ParameterList aList, final URI aUri) {
-        super(ATTENDEE, aList, new Factory());
+        super(ATTENDEE, aList);
         calAddress = aUri;
+    }
+
+    /**
+     * Construct an attendee from a participant. The expectation is that the participant is schedulable (i.e.
+     * has a calendar address) and an exception will be thrown where this is not the case.
+     *
+     * @param participant a schedulable participant
+     */
+    public Attendee(Participant participant) {
+        super(ATTENDEE);
+        CalendarAddress calAddressProp = participant.getRequiredProperty(Property.CALENDAR_ADDRESS);
+        calAddress = calAddressProp.getCalAddress();
+    }
+
+    /**
+     * Construct an attendee from a participant. The expectation is that the participant is schedulable (i.e.
+     * has a calendar address) and an exception will be thrown where this is not the case.
+     *
+     * @param participant a schedulable participant
+     */
+    public Attendee(ParameterList parameters, Participant participant) {
+        super(ATTENDEE, parameters);
+        CalendarAddress calAddressProp = participant.getRequiredProperty(Property.CALENDAR_ADDRESS);
+        calAddress = calAddressProp.getCalAddress();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            calAddress = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -143,13 +168,9 @@ public class Attendee extends Property {
         this.calAddress = calAddress;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public final Property copy() {
-        // URI are immutable
-        return new Attendee(new ParameterList(getParameters(), false), calAddress);
+    protected PropertyFactory<Attendee> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Attendee> {
@@ -160,8 +181,7 @@ public class Attendee extends Property {
         }
 
         @Override
-        public Attendee createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Attendee createProperty(final ParameterList parameters, final String value) {
             return new Attendee(parameters, value);
         }
 

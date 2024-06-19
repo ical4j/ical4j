@@ -33,6 +33,8 @@
 
 package net.fortuna.ical4j.filter;
 
+import net.fortuna.ical4j.util.RegEx;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -51,8 +53,10 @@ public class FilterTarget {
     }
 
     public FilterTarget(String spec, List<Attribute> attributes) {
-        this.name = spec.split(":")[0].replace("_", "-");
-        this.value = Optional.ofNullable(spec.split(":").length > 1 ? spec.split(":")[1] : null);
+        this.name = spec.split(RegEx.COLON_DELIMITED)[0].replace("_", "-");
+
+        String[] split = spec.split(RegEx.COLON_DELIMITED);
+        this.value = Optional.ofNullable(split.length > 1 ? split[1] : null);
         this.attributes = attributes;
     }
 
@@ -127,8 +131,8 @@ public class FilterTarget {
         }
 
         public static Attribute parse(String string) {
-            String name = string.split(":")[0];
-            String value = string.contains(":") ? string.split(":")[1] : null;
+            String name = string.split(RegEx.COLON_DELIMITED)[0];
+            String value = string.contains(":") ? string.split(RegEx.COLON_DELIMITED)[1] : null;
             return new Attribute(name, value);
         }
 

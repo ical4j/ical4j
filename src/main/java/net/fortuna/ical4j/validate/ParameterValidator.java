@@ -32,7 +32,8 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
+
+import java.util.List;
 
 import static net.fortuna.ical4j.validate.Validator.assertFalse;
 
@@ -72,10 +73,10 @@ public final class ParameterValidator {
      * @throws ValidationException
      *             when the specified parameter occurs more than once
      */
-    public static void assertOneOrLess(final String paramName, final ParameterList parameters)
+    public static void assertOneOrLess(final String paramName, final List<Parameter> parameters)
             throws ValidationException {
 
-        assertFalse(parameters1 -> parameters1.getParameters(paramName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
+        assertFalse(parameters1 -> parameters1.stream().filter(p -> p.getName().equals(paramName)).count() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
                 parameters, paramName);
     }
 
@@ -89,9 +90,9 @@ public final class ParameterValidator {
      * @throws ValidationException
      *             when the specified parameter does not occur once
      */
-    public static void assertOne(final String paramName, final ParameterList parameters) throws ValidationException {
-        assertFalse(parameters1 -> parameters1.getParameters(paramName).size() != 1, ASSERT_ONE_MESSAGE, false,
-                parameters, paramName);
+    public static void assertOne(final String paramName, final List<Parameter> parameters) throws ValidationException {
+        assertFalse(parameters1 -> parameters1.stream().filter(p -> p.getName().equals(paramName)).count() != 1,
+                ASSERT_ONE_MESSAGE, false, parameters, paramName);
     }
 
     /**
@@ -101,8 +102,8 @@ public final class ParameterValidator {
      * @throws ValidationException thrown when the specified property
      * is found in the list of properties
      */
-    public static void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
-        assertFalse(parameters1 -> parameters1.getParameter(paramName) != null, ASSERT_NONE_MESSAGE, false,
+    public static void assertNone(final String paramName, final List<Parameter> parameters) throws ValidationException {
+        assertFalse(parameters1 -> parameters1.parallelStream().anyMatch(p -> p.getName().equals(paramName)), ASSERT_NONE_MESSAGE, false,
                 parameters, paramName);
     }
 
@@ -111,10 +112,9 @@ public final class ParameterValidator {
      * @param parameters a list of parameters
      * @throws ValidationException where the assertion fails
      */
-    public static void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
-        final Parameter p = parameters.getParameter(param.getName());
-        if (p != null && !param.equals(p)) {
-            throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[] {p});
+    public static void assertNullOrEqual(final Parameter param, final List<Parameter> parameters) throws ValidationException {
+        if (parameters.parallelStream().anyMatch(p -> !p.getName().equals(param.getName()))) {
+            throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[] {param});
         }
     }
 }

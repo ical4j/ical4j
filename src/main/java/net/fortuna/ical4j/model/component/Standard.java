@@ -85,6 +85,11 @@ public class Standard extends Observance {
         super(STANDARD, properties);
     }
 
+    @Override
+    protected ComponentFactory<Standard> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<Standard> {
 
         public Factory() {

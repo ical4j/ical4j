@@ -18,6 +18,8 @@
 
 [mavenrepo]: https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j
 
+[Java Legacy Date-Time Code]: https://docs.oracle.com/javase/tutorial/datetime/iso/legacy.html
+
 [Introduction]: #introduction
 
 [Setup]: #setup
@@ -124,6 +126,23 @@ is used only to generate version information in the javadoc API documentation.
 
 ## Usage
 
+### iCal4j 4.x (new Java Date/Time API)
+
+The following table provides a comparison between the old and
+the new date/time API for creating dates and date-based properties:
+
+| Description | New API | Old API |
+|-------------|---------|---------|
+| DTSTART with date value | `new DtStart<>(LocalDate.now())` | `new DtStart(new org.mnode.ical4j.model.Date())` |
+| DTSTART with date-time value | `new DtStart<>(ZoneDateTime.now())` | `new DtStart(new org.mnode.ical4j.model.DateTime())` |
+| DTSTART with specific timezone | `new DtStart<>(ZonedDateTime.now(tzReg.getTimeZone("Australia/Melbourne").toZoneId()));` | `dtStart = new DtStart(new org.mnode.ical4j.model.DateTime()); dtStart.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));` |
+| Parse a DATE-TIME string | `TemporalAdapter.parse("20130101T120000Z")` | `new org.mnode.ical4j.model.DateTime("20130101T120000Z")` |
+| Parse a DATE string | `TemporalAdapter.parse("20200229")` | `new org.mnode.ical4j.model.Date("20200229")` |
+
+You may also find the [Java Legacy Date-Time Code] web page useful.
+ 
+### iCal4j 3.x (old Java Date API)
+
 ### Examples
 
 
@@ -211,6 +230,27 @@ is used only to generate version information in the javadoc API documentation.
 
 
 #### iCal4j and Timezones
+
+##### iCal4j 4.x
+
+iCal4j 4.x introduces support for the new Java Date/Time API. This is a major change to how
+dates are represented in iCal4j, as the following table outlines:
+
+| Description | iCal4j 4.x | iCal4j 3.x |
+|-------------|---------|---------|
+| 3.3.4.  Date | `TemporalAdapter<LocalDate>` | `org.mnode.ical4j.model.Date` |
+| **3.3.5.  Date-Time** |  | |
+| *FORM #1: DATE WITH LOCAL TIME* | `TemporalAdapter<LocalDateTime>` | `org.mnode.ical4j.model.DateTime` |
+| *FORM #2: DATE WITH UTC TIME* | `TemporalAdapter<Instant>` | `org.mnode.ical4j.model.DateTime` |
+| *FORM #3: DATE WITH LOCAL TIME AND TIME ZONE REFERENCE* | `TemporalAdapter<ZonedDateTime>` | `org.mnode.ical4j.model.DateTime` |
+| 3.3.6.  Duration | `TemporalAmountAdapter` | `org.mnode.ical4j.model.Dur` |
+| 3.3.9.  Period of Time | `Period<T extends Temporal>` | `org.mnode.ical4j.model.Period` |
+| **3.3.12.  Time** | | | 
+| *FORM #1 LOCAL TIME* | `TemporalAdapter<LocalTime>` | `org.mnode.ical4j.model.Time` | 
+| *FORM #2: UTC TIME* | `TemporalAdapter<Instant>` | `org.mnode.ical4j.model.Time` | 
+| *FORM #3: LOCAL TIME AND TIME ZONE REFERENCE* | `TemporalAdapter<OffsetTime>` | `org.mnode.ical4j.model.Time` | 
+
+##### iCal4j 3.x
 
     net.fortuna.ical4j.timezone.date.floating={true|false}
 

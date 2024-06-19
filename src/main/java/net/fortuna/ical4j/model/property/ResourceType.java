@@ -35,16 +35,43 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
- * $Id$
- * <p/>
- * Created: [Apr 6, 2004]
- * <p/>
- * Defines a RESOURCE-TYPE iCalendar component property.
+ * <pre>
+ *      Property Name:
+ *     RESOURCE-TYPE
+ * Purpose:
+ *     This property specifies the type of resource.
+ * Value Type:
+ *     The value type for this property is TEXT. The allowable values are defined below.
+ * Format Definition:
+ *
+ *     This property is defined by the following notation:
+ *
+ * restypeprop   = "RESOURCE-TYPE" restypeparam ":"
+ *                 restypevalue CRLF
+ *
+ * restypevalue  = ("ROOM"
+ *                / "PROJECTOR"
+ *                / "REMOTE-CONFERENCE-AUDIO"
+ *                / "REMOTE-CONFERENCE-VIDEO"
+ *                / iana-token)     ; Other IANA-registered
+ *                ; values
+ *
+ * restypeparam   = *(";" other-param)
+ *
+ * Description:
+ *
+ *     This property MAY be specified in "VRESOURCE" components and provides a way to differentiate multiple resources.
+ * The registered values are described below. New resource types SHOULD be registered in the manner laid down in this specification.
+ * ROOM:
+ *     A room for the event/meeting.
+ * PROJECTOR:
+ *     Projection equipment.
+ * REMOTE-CONFERENCE-AUDIO:
+ *     Audio remote conferencing facilities.
+ * REMOTE-CONFERENCE-VIDEO:
+ *     Video remote conferencing facilities.
+ * </pre>
  *
  * @author benf
  * @author Mike Douglass
@@ -89,14 +116,14 @@ public class ResourceType extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public ResourceType(final ParameterList aList, final String aValue) {
-        super(RESOURCE_TYPE, aList, new Factory());
+        super(RESOURCE_TYPE, aList);
         setValue(aValue);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 
@@ -112,6 +139,11 @@ public class ResourceType extends Property implements Encodable {
         return ValidationResult.EMPTY;
     }
 
+    @Override
+    protected PropertyFactory<ResourceType> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<ResourceType> {
         private static final long serialVersionUID = 1L;
 
@@ -119,9 +151,7 @@ public class ResourceType extends Property implements Encodable {
             super(RESOURCE_TYPE);
         }
 
-        public ResourceType createProperty(final ParameterList parameters,
-                                           final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public ResourceType createProperty(final ParameterList parameters, final String value) {
             return new ResourceType(parameters, value);
         }
 

@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,9 +12,9 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private String name;
 
-    private final PropertyList<Property> properties = new PropertyList<>();
+    private final List<Property> properties = new ArrayList<>();
 
-    private final ComponentList<Component> subComponents = new ComponentList<>();
+    private final List<Component> subComponents = new ArrayList<>();
 
     public ComponentBuilder() {
         this(true);
@@ -58,18 +59,19 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
         for (ComponentFactory<?> factory : factories) {
             if (factory.supports(name)) {
                 if (!subComponents.isEmpty()) {
-                    component = factory.createComponent(properties, subComponents);
+                    component = factory.createComponent(new PropertyList(properties),
+                            new ComponentList<>(subComponents));
                 } else {
-                    component = factory.createComponent(properties);
+                    component = factory.createComponent(new PropertyList(properties));
                 }
             }
         }
 
         if (component == null) {
             if (isExperimentalName(name)) {
-                component = new XComponent(name, properties);
+                component = new XComponent(name, new PropertyList(properties));
             } else if (allowIllegalNames()) {
-                component = new XComponent(name, properties);
+                component = new XComponent(name, new PropertyList(properties));
             } else {
                 throw new IllegalArgumentException("Unsupported component [" + name + "]");
             }

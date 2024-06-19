@@ -76,10 +76,9 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.Collections;
 
 public class Link extends Property {
 
@@ -90,21 +89,28 @@ public class Link extends Property {
     private String value;
 
     public Link() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
+    }
+
+    public Link(Component component) {
+        super(PROPERTY_NAME);
+        Uid componentUid = component.getRequiredProperty(Property.UID);
+        this.value = componentUid.getValue();
+        add(Value.UID);
     }
 
     public Link(URI uri) {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
         this.uri = uri;
     }
 
     public Link(String value) {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME, new ParameterList(Collections.singletonList(Value.UID)));
         this.value = value;
     }
 
-    public Link(ParameterList aList, String value) throws URISyntaxException {
-        super(PROPERTY_NAME, aList, new Factory());
+    public Link(ParameterList aList, String value) {
+        super(PROPERTY_NAME, aList);
         setValue(value);
     }
 
@@ -124,8 +130,8 @@ public class Link extends Property {
 
     @Override
     public String getValue() {
-        if (Value.XML_REFERENCE.equals(getParameter(Parameter.VALUE)) ||
-                Value.URI.equals(getParameter(Parameter.VALUE))) {
+        if (Value.XML_REFERENCE.equals(getRequiredParameter(Parameter.VALUE)) ||
+                Value.URI.equals(getRequiredParameter(Parameter.VALUE))) {
             return Uris.decode(Strings.valueOf(getUri()));
         } else { // if (Value.UID.equals(getParameter(Parameter.VALUE))) {
             return value;
@@ -133,10 +139,14 @@ public class Link extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws URISyntaxException {
-        if (Value.XML_REFERENCE.equals(getParameter(Parameter.VALUE)) ||
-                Value.URI.equals(getParameter(Parameter.VALUE))) {
-            this.uri = Uris.create(aValue);
+    public void setValue(String aValue) {
+        if (Value.XML_REFERENCE.equals(getRequiredParameter(Parameter.VALUE)) ||
+                Value.URI.equals(getRequiredParameter(Parameter.VALUE))) {
+            try {
+                this.uri = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
             this.value = null;
         } else {
             this.value = aValue;
@@ -157,8 +167,7 @@ public class Link extends Property {
         }
 
         @Override
-        public Link createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Link createProperty(final ParameterList parameters, final String value) {
             return new Link(parameters, value);
         }
 
@@ -166,5 +175,10 @@ public class Link extends Property {
         public Link createProperty() {
             return new Link();
         }
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return new Factory();
     }
 }

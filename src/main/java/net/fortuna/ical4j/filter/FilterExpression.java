@@ -16,16 +16,16 @@ public interface FilterExpression {
         // object matching operators..
         exists, notExists,
         // value matching operators..
-        contains, matches,
+        contains, matches, startsWith,
         // logical operators..
         and, or, not
     }
 
-    static FilterExpression equalTo(String target, String value) {
+    static FilterExpression equalTo(String target, Object value) {
         return new BinaryExpression(new TargetExpression(target), Op.equalTo, new StringExpression(value));
     }
 
-    static FilterExpression equalTo(String target, List<FilterTarget.Attribute> attributes, String value) {
+    static FilterExpression equalTo(String target, List<FilterTarget.Attribute> attributes, Object value) {
         return new BinaryExpression(new TargetExpression(target, attributes), Op.equalTo, new StringExpression(value));
     }
 
@@ -42,11 +42,11 @@ public interface FilterExpression {
     }
 
     static FilterExpression greaterThan(String target, Temporal value) {
-        return new BinaryExpression(new TargetExpression(target), Op.greaterThan, new StringExpression(value.toString()));
+        return new BinaryExpression(new TargetExpression(target), Op.greaterThan, new StringExpression(value));
     }
 
     static FilterExpression greaterThan(String target, Number value) {
-        return new BinaryExpression(new TargetExpression(target), Op.greaterThan, new StringExpression(value.toString()));
+        return new BinaryExpression(new TargetExpression(target), Op.greaterThan, new StringExpression(value));
     }
 
     static FilterExpression greaterThanEqual(String target, Temporal value) {
@@ -61,12 +61,16 @@ public interface FilterExpression {
         return new BinaryExpression(new TargetExpression(target), Op.lessThanEqual, new StringExpression(value));
     }
 
-    static FilterExpression contains(String target, String value) {
+    static FilterExpression contains(String target, Object value) {
         return new BinaryExpression(new TargetExpression(target), Op.contains, new StringExpression(value));
     }
 
-    static FilterExpression matches(String target, String value) {
+    static FilterExpression matches(String target, Object value) {
         return new BinaryExpression(new TargetExpression(target), Op.matches, new StringExpression(value));
+    }
+
+    static FilterExpression startsWith(String target, Object value) {
+        return new BinaryExpression(new TargetExpression(target), Op.startsWith, new StringExpression(value));
     }
 
     default FilterExpression and(FilterExpression expression) {

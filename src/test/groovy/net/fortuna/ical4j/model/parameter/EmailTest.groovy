@@ -4,6 +4,7 @@ package net.fortuna.ical4j.model.parameter
 import net.fortuna.ical4j.AbstractBuilderTest
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.util.CompatibilityHints
+import spock.lang.Ignore
 
 /**
  * Created by fortuna on 6/09/15.
@@ -41,9 +42,10 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        calendar?.components[0].properties[0].getParameter('EMAIL').value == 'cyrus@example.com'
+        calendar?.getComponents()[0].getProperties()[0].getRequiredParameter('EMAIL').value == 'cyrus@example.com'
     }
 
+    @Ignore('parsing now removed')
     def 'test parsing valid addresses'() {
         expect: 'a valid email address is parsed correctly'
         new Email(address).value == address
@@ -52,6 +54,7 @@ END:VCALENDAR
         address << ['test@example.com']
     }
 
+    @Ignore('parsing now removed')
     def 'test parsing invalid addresses'() {
         when: 'an invalid email address is parsed'
         new Email(address)
@@ -63,6 +66,7 @@ END:VCALENDAR
         address << ['test@example.com.']
     }
 
+    @Ignore('parsing now removed')
     def 'test parsing with relaxed parsing enabled'() {
         given: 'relaxed parsing is enabled'
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)

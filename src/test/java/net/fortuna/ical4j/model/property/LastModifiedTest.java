@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
+
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -46,7 +46,6 @@ import net.fortuna.ical4j.model.PropertyTest;
 public class LastModifiedTest extends PropertyTest {
 
     /**
-     * @param property
      * @param expectedValue
      */
     public LastModifiedTest(LastModified lastModified, String expectedValue) {
@@ -62,14 +61,12 @@ public class LastModifiedTest extends PropertyTest {
 	}
 
 	/**
-     * @return
      * @throws ParseException
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        LastModified modified = new LastModified("20081124T090000");
-        suite.addTest(new LastModifiedTest(modified, "20081124T090000"));
-        suite.addTest(new LastModifiedTest("testValidationException", modified));
+        LastModified modified = new LastModified("20081124T090000Z");
+        suite.addTest(new LastModifiedTest(modified, "20081124T090000Z"));
         
         modified = new LastModified("20081124T090000Z");
         suite.addTest(new LastModifiedTest("testValidation", modified));

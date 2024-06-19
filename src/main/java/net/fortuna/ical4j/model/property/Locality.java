@@ -35,10 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -59,14 +55,14 @@ public class Locality extends Property implements Encodable {
      * Default constructor.
      */
     public Locality() {
-        super(LOCALITY, new Factory());
+        super(LOCALITY);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Locality(final String aValue) {
-        super(LOCALITY, new Factory());
+        super(LOCALITY);
         setValue(aValue);
     }
 
@@ -75,7 +71,7 @@ public class Locality extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Locality(final ParameterList aList, final String aValue) {
-        super(LOCALITY, aList, new Factory());
+        super(LOCALITY, aList);
         setValue(aValue);
     }
 
@@ -100,6 +96,11 @@ public class Locality extends Property implements Encodable {
         return ValidationResult.EMPTY;
     }
 
+    @Override
+    protected PropertyFactory<Locality> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Locality> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +109,7 @@ public class Locality extends Property implements Encodable {
         }
 
         @Override
-        public Locality createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Locality createProperty(final ParameterList parameters, final String value) {
             return new Locality(parameters, value);
         }
 

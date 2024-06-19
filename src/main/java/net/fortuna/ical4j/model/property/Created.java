@@ -31,14 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * $Id$
@@ -78,7 +75,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class Created extends UtcProperty {
+public class Created extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = -8658935097721652961L;
 
@@ -86,36 +83,31 @@ public class Created extends UtcProperty {
      * Default constructor.
      */
     public Created() {
-        super(CREATED, new Factory());
+        this(Instant.now());
     }
 
     /**
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Created(final String aValue) throws ParseException {
-        super(CREATED, new Factory());
+    public Created(final String aValue) {
+        super(CREATED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Created(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(CREATED, aList, new Factory());
+    public Created(final ParameterList aList, final String aValue) {
+        super(CREATED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param aDate a date
      */
-    public Created(final DateTime aDate) {
-        super(CREATED, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public Created(final Instant aDate) {
+        super(CREATED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -123,11 +115,24 @@ public class Created extends UtcProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Created(final ParameterList aList, final DateTime aDate) {
-        super(CREATED, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public Created(final ParameterList aList, final Instant aDate) {
+        super(CREATED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
+    }
+
+    @Override
+    protected PropertyFactory<Created> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Created> {
@@ -138,8 +143,7 @@ public class Created extends UtcProperty {
         }
 
         @Override
-        public Created createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Created createProperty(final ParameterList parameters, final String value) {
             return new Created(parameters, value);
         }
 

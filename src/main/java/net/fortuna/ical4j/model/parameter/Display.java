@@ -4,7 +4,12 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import org.apache.commons.lang3.StringUtils;
+import net.fortuna.ical4j.util.RegEx;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <pre>
@@ -61,11 +66,11 @@ public class Display extends Parameter implements Encodable {
         BADGE, GRAPHIC, FULLSIZE, THUMBNAIL
     }
 
-    private final String[] values;
+    private final Set<String> values;
 
     public Display(String value) {
-        super(PARAMETER_NAME, new Factory());
-        String[] valueStrings = value.split(",");
+        super(PARAMETER_NAME);
+        String[] valueStrings = value.split(RegEx.COMMA_DELIMITED);
         for (String valueString : valueStrings) {
             try {
                 Value.valueOf(valueString.toUpperCase());
@@ -75,12 +80,12 @@ public class Display extends Parameter implements Encodable {
                 }
             }
         }
-        this.values = valueStrings;
+        this.values = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(valueStrings)));
     }
 
     @Override
     public String getValue() {
-        return StringUtils.join(values, ",");
+        return String.join(",", values);
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<Display> {

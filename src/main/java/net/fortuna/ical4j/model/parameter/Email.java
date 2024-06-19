@@ -5,10 +5,8 @@ import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import org.apache.commons.validator.routines.EmailValidator;
 
 import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
-import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_VALIDATION;
 
 /**
  * From specification:
@@ -57,15 +55,11 @@ public class Email extends Parameter implements Encodable {
     private final String address;
 
     public Email(String address) {
-        super(PARAMETER_NAME, new Factory());
+        super(PARAMETER_NAME);
         if (CompatibilityHints.isHintEnabled(KEY_RELAXED_PARSING)) {
             this.address = address.replaceFirst("\\.$", "");
         } else {
             this.address = address;
-        }
-        if (!CompatibilityHints.isHintEnabled(KEY_RELAXED_VALIDATION)
-                && !EmailValidator.getInstance().isValid(this.address)) {
-            throw new IllegalArgumentException("Invalid address: " + address);
         }
     }
 

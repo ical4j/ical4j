@@ -1,7 +1,10 @@
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.BUSY_TENTATIVE
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.BUSY_UNAVAILABLE
 
 class BusyTypeSpec extends Specification {
 
@@ -9,14 +12,14 @@ class BusyTypeSpec extends Specification {
 
     def 'test factory use of constants'() {
         when: 'factory is invoked with a constant value'
-        def busyType = factory.createProperty(new ParameterList(), value)
+        def busyType = factory.createProperty(value)
 
         then: 'the returned value is the constant instance'
         busyType.is(constantInstance)
 
         where:
         value   | constantInstance
-        'BUSY-UNAVAILABLE' | BusyType.BUSY_UNAVAILABLE
-        'BUSY-TENTATIVE' | BusyType.BUSY_TENTATIVE
+        'BUSY-UNAVAILABLE' | BUSY_UNAVAILABLE
+        'BUSY-TENTATIVE' | BUSY_TENTATIVE
     }
 }

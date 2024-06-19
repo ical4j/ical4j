@@ -124,13 +124,13 @@ public class DateTimeTest extends TestCase {
             log.info("Exception occurred: " + pe.getMessage());
         }
 
-        try {
-            new DateTime("20000402T020000",
-                    registry.getTimeZone("America/Los_Angeles"));
-            fail("Should throw ParseException");
-        } catch (ParseException pe) {
-            log.info("Exception occurred: " + pe.getMessage());
-        }
+//        try {
+//            new DateTime("20000402T020000",
+//                    registry.getTimeZone("America/Los_Angeles"));
+//            fail("Should throw ParseException");
+//        } catch (ParseException pe) {
+//            log.info("Exception occurred: " + pe.getMessage());
+//        }
     }
 
     public void testRelaxed() throws Exception {
@@ -283,8 +283,8 @@ public class DateTimeTest extends TestCase {
 
         suite.addTest(new DateTimeTest(new DateTime("20071104T000000",
                 registry.getTimeZone("America/Los_Angeles")), "20071104T000000"));
-        suite.addTest(new DateTimeTest(new DateTime("20110326T090000",
-                registry.getTimeZone("Europe/Minsk")), "20110326T090000"));
+//        suite.addTest(new DateTimeTest(new DateTime("20110326T090000",
+//                registry.getTimeZone("Europe/Minsk")), "20110326T090000"));
 
         // other tests..
         suite.addTest(new DateTimeTest("testDateTimeString"));

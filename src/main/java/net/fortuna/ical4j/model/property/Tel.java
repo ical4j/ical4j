@@ -60,14 +60,14 @@ public class Tel extends Property implements Encodable {
      * Default constructor.
      */
     public Tel() {
-        super(TEL, new ParameterList(), new Factory());
+        super(TEL);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Tel(final String aValue) {
-        super(TEL, new ParameterList(), new Factory());
+        super(TEL);
         setValue(aValue);
     }
 
@@ -76,7 +76,7 @@ public class Tel extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Tel(final ParameterList aList, final String aValue) {
-        super(TEL, aList, new Factory());
+        super(TEL, aList);
         setValue(aValue);
     }
 
@@ -101,6 +101,11 @@ public class Tel extends Property implements Encodable {
         return PropertyValidator.TEL.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Tel> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Tel> {
         private static final long serialVersionUID = 1L;
 
@@ -109,8 +114,7 @@ public class Tel extends Property implements Encodable {
         }
 
         @Override
-        public Tel createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Tel createProperty(final ParameterList parameters, final String value) {
             return new Tel(parameters, value);
         }
 

@@ -38,9 +38,7 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.*;
 
 /**
  * $Id$
@@ -60,68 +58,20 @@ public class Action extends Property {
     public static final String VALUE_EMAIL = "EMAIL";
     public static final String VALUE_PROCEDURE = "PROCEDURE";
 
-    /**
-     * Constant action for playing an audible sound.
-     */
-    public static final Action AUDIO = new ImmutableAction(VALUE_AUDIO);
-
-    /**
-     * Constant action for displaying a visible notification.
-     */
-    public static final Action DISPLAY = new ImmutableAction(VALUE_DISPLAY);
-
-    /**
-     * Constant action for sending an email.
-     */
-    public static final Action EMAIL = new ImmutableAction(VALUE_EMAIL);
-
-    /**
-     * Constant action for a procedure.
-     */
-    public static final Action PROCEDURE = new ImmutableAction(VALUE_PROCEDURE);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Action.
-     */
-    private static final class ImmutableAction extends Action {
-
-        private static final long serialVersionUID = -2752235951243969905L;
-
-        /**
-         * @param value
-         */
-        private ImmutableAction(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
     private String value;
 
     /**
      * Default constructor.
      */
     public Action() {
-        this(new Factory());
-    }
-
-    private Action(PropertyFactory<Action> factory) {
-        super(ACTION, factory);
+        super(ACTION);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Action(final String aValue) {
-        super(ACTION, new Factory());
+        super(ACTION);
         this.value = aValue;
     }
 
@@ -130,11 +80,7 @@ public class Action extends Property {
      * @param aValue a value string for this component
      */
     public Action(final ParameterList aList, final String aValue) {
-        this(aList, aValue, new Factory());
-    }
-
-    private Action(final ParameterList aList, final String aValue, PropertyFactory<Action> factory) {
-        super(ACTION, aList, factory);
+        super(ACTION, aList);
         this.value = aValue;
     }
 
@@ -159,6 +105,11 @@ public class Action extends Property {
         return ValidationResult.EMPTY;
     }
 
+    @Override
+    protected PropertyFactory<Action> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Action> {
         private static final long serialVersionUID = 1L;
 
@@ -167,10 +118,9 @@ public class Action extends Property {
         }
 
         @Override
-        public Action createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Action createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value.toUpperCase()) {
                     case VALUE_AUDIO: return AUDIO;
                     case VALUE_DISPLAY: return DISPLAY;
@@ -178,13 +128,12 @@ public class Action extends Property {
                     case VALUE_PROCEDURE: return PROCEDURE;
                 }
             }
-            return new Action(parameters, value, this);
+            return new Action(parameters, value);
         }
 
         @Override
         public Action createProperty() {
-            return new Action(this);
+            return new Action();
         }
     }
-
 }

@@ -36,10 +36,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -118,14 +114,14 @@ public class TzId extends Property implements Encodable {
      * Default constructor.
      */
     public TzId() {
-        super(TZID, new Factory());
+        super(TZID);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzId(final String aValue) {
-        super(TZID, new Factory());
+        super(TZID);
         setValue(aValue);
     }
 
@@ -134,7 +130,7 @@ public class TzId extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public TzId(final ParameterList aList, final String aValue) {
-        super(TZID, aList, new Factory());
+        super(TZID, aList);
         setValue(aValue);
     }
 
@@ -159,6 +155,11 @@ public class TzId extends Property implements Encodable {
         return PropertyValidator.TZID.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<TzId> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<TzId> {
         private static final long serialVersionUID = 1L;
 
@@ -167,8 +168,7 @@ public class TzId extends Property implements Encodable {
         }
 
         @Override
-        public TzId createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public TzId createProperty(final ParameterList parameters, final String value) {
             return new TzId(parameters, value);
         }
 

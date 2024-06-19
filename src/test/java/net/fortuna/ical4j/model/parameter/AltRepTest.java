@@ -73,13 +73,13 @@ public class AltRepTest extends TestCase {
         try {
             new AltRep("<mailto:../:...invalid...>");
             
-            fail("URISyntaxException not thrown!");
+            fail("IllegalArgumentException not thrown!");
         }
-        catch (URISyntaxException use) {
+        catch (IllegalArgumentException iae) {
             // test success.
         }
 
-        AltRep ar = (AltRep) new AltRep.Factory().createParameter("mailto:valid@test.com");
+        AltRep ar = new AltRep.Factory().createParameter("mailto:valid@test.com");
         
         assertNotNull(ar.getUri());
     }

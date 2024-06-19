@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
+
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -69,7 +69,7 @@ public class FreeBusyTest extends PropertyTest {
     public static TestSuite suite() throws ParseException {
     	TestSuite suite = new TestSuite();
         FreeBusy fb = new FreeBusy("20070904T140000Z/PT3H");
-        suite.addTest(new FreeBusyTest(fb, "20070904T140000Z/PT3H"));
+        suite.addTest(new FreeBusyTest(fb, "20070904T140000Z/20070904T170000Z"));
         suite.addTest(new FreeBusyTest("testValidation", fb));
         suite.addTest(new FreeBusyTest("testEquals", fb));
     	return suite;

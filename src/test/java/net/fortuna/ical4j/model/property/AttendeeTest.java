@@ -35,6 +35,7 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ConstraintViolationException;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -82,9 +83,9 @@ public class AttendeeTest extends TestCase {
     public void testAttendeeString() throws URISyntaxException {
         try {
             new Attendee("MAILTO:CET Meeting Room@university.edu");
-            fail("Should throw URISyntaxException");
+            fail("Should throw IllegalArgumentException");
         }
-        catch (URISyntaxException use) {
+        catch (IllegalArgumentException use) {
             LOG.info("Caught exception: " + use.getMessage());
         }
         
@@ -93,7 +94,7 @@ public class AttendeeTest extends TestCase {
         assertEquals(new URI("MAILTO:CET%20Meeting%20Room@university.edu"), attendee.getCalAddress());
     }
 
-    public void testRelaxedParsing() throws IOException, ParserException {
+    public void testRelaxedParsing() throws IOException, ParserException, ConstraintViolationException {
         try {
             Calendars.load(getClass().getResource("/samples/invalid/groupwise.ics"));
             fail("Should throw URISyntaxException");
@@ -105,7 +106,7 @@ public class AttendeeTest extends TestCase {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
         Calendar calendar = Calendars.load(getClass().getResource("/samples/invalid/groupwise.ics"));
         
-        Attendee attendee = (Attendee) calendar.getComponent(Component.VEVENT).getProperty(Property.ATTENDEE);
+        Attendee attendee = calendar.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.ATTENDEE);
         assertNotNull(attendee.getCalAddress());
     }
 }

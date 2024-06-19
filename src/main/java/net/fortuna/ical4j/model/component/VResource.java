@@ -32,10 +32,16 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Geo;
+import net.fortuna.ical4j.model.property.Name;
+import net.fortuna.ical4j.model.property.ResourceType;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import java.util.List;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -108,7 +114,7 @@ public class VResource extends Component {
      * Constructor.
      * @param properties a list of properties
      */
-    public VResource(final PropertyList<Property> properties) {
+    public VResource(final PropertyList properties) {
         super(VRESOURCE, properties);
     }
 
@@ -116,7 +122,7 @@ public class VResource extends Component {
      * Constructor.
      * @param properties a list of properties
      */
-    public VResource(final PropertyList<Property> properties,
+    public VResource(final PropertyList properties,
                      final ComponentList<Component> components) {
         super(VRESOURCE, properties);
     }
@@ -136,14 +142,14 @@ public class VResource extends Component {
      * Returns the optional description property.
      * @return the DESCRIPTION property or null if not specified
      */
-    public final Description getDescription() {
+    public final Optional<Description> getDescription() {
         return getProperty(DESCRIPTION);
     }
 
     /**
      * @return the optional geo property for a vresource
      */
-    public final Geo getGeo() {
+    public final Optional<Geo> getGeo() {
         return getProperty(LAST_MODIFIED);
     }
 
@@ -151,30 +157,27 @@ public class VResource extends Component {
      * Returns the optional ResourceType property.
      * @return the ResourceType property or null if not specified
      */
-    public ResourceType getResourceType() {
+    public Optional<ResourceType> getResourceType() {
         return getProperty(RESOURCE_TYPE);
     }
 
     /**
      * @return the optional name property for a vresource
      */
-    public final Name getNameProp() {
+    public final Optional<Name> getNameProp() {
         return getProperty(NAME);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Uid getUid() {
-        return getProperty(UID);
     }
 
     /**
      * @return the optional structured data properties
      */
-    public final PropertyList<StructuredData> getStructuredData() {
+    public final List<Property> getStructuredData() {
         return getProperties(STRUCTURED_DATA);
+    }
+
+    @Override
+    protected ComponentFactory<VResource> newFactory() {
+        return new Factory();
     }
 
     /**
@@ -192,7 +195,7 @@ public class VResource extends Component {
         }
 
         @Override
-        public VResource createComponent(final PropertyList<Property> properties) {
+        public VResource createComponent(final PropertyList properties) {
             return new VResource(properties);
         }
     }

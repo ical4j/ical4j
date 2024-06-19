@@ -15,7 +15,7 @@ class ParameterListMetaClass extends DelegatingMetaClass {
         if (hasProperty(object, property)) {
             return super.getProperty(object, property)
         }
-        return object.getParameters(property)
+        return object.get(property)
     }
 
     @Override

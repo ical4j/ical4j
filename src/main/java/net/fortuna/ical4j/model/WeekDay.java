@@ -35,6 +35,7 @@ import net.fortuna.ical4j.util.Numbers;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -99,12 +100,10 @@ public class WeekDay implements Serializable {
     public WeekDay(final String value) {
         if (value.length() > 2) {
             offset = Numbers.parseInt(value.substring(0, value.length() - 2));
-        }
-        else {
+        } else {
             offset = 0;
         }
         day = Day.valueOf(value.substring(value.length() - 2));
-        validateDay();
     }
     
     /**
@@ -112,6 +111,7 @@ public class WeekDay implements Serializable {
      * @param offset a month offset value
      */
     private WeekDay(final Day day, final int offset) {
+        Objects.requireNonNull(day, "day");
         this.day = day;
         this.offset = offset;
     }
@@ -123,21 +123,11 @@ public class WeekDay implements Serializable {
      * @param offset a month offset value
      */
     public WeekDay(final WeekDay weekDay, final int offset) {
+        Objects.requireNonNull(weekDay, "weekDay");
         this.day = weekDay.getDay();
         this.offset = offset;
     }
-    
-    private void validateDay() {
-        if (!SU.day.equals(day)
-            && !MO.day.equals(day)
-            && !TU.day.equals(day)
-            && !WE.day.equals(day)
-            && !TH.day.equals(day)
-            && !FR.day.equals(day)
-            && !SA.day.equals(day)) {
-            throw new IllegalArgumentException("Invalid day: " + day);
-        }
-    }
+
     /**
      * @return Returns the day.
      */
@@ -184,9 +174,27 @@ public class WeekDay implements Serializable {
      * @return a weekday instance representing the specified calendar
      */
     public static WeekDay getWeekDay(final Calendar cal) {
-        return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), 0);
+        return getDay(cal.get(Calendar.DAY_OF_WEEK));
     }
-    
+
+    /**
+     * Returns a weekday representation of the specified day of week.
+     * @param dayOfWeek day of the week
+     * @return a weekday instance representing the specified calendar
+     */
+    public static WeekDay getWeekDay(DayOfWeek dayOfWeek) {
+        switch (dayOfWeek) {
+            case SUNDAY: return SU;
+            case MONDAY: return MO;
+            case TUESDAY: return TU;
+            case WEDNESDAY: return WE;
+            case THURSDAY: return TH;
+            case FRIDAY: return FR;
+            case SATURDAY: return SA;
+            default: return null;
+        }
+    }
+
     /**
      * Returns a weekday/offset representation of the specified calendar.
      * @param cal a calendar (java.util)
@@ -205,7 +213,7 @@ public class WeekDay implements Serializable {
         Calendar calClone = (Calendar) cal.clone();
 		int delta = -1;
 		do {
-			calClone.add(7, Calendar.DAY_OF_YEAR);
+			calClone.add(Calendar.DAY_OF_YEAR, 7);
 			if(calClone.get(Calendar.MONTH)==cal.get(Calendar.MONTH)) {
 				delta -= 1;
 			}else {
@@ -224,35 +232,18 @@ public class WeekDay implements Serializable {
      * specified
      */
     public static WeekDay getDay(final int calDay) {
-        WeekDay day = null;
         switch (calDay) {
-            case Calendar.SUNDAY:
-                day = SU;
-                break;
-            case Calendar.MONDAY:
-                day = MO;
-                break;
-            case Calendar.TUESDAY:
-                day = TU;
-                break;
-            case Calendar.WEDNESDAY:
-                day = WE;
-                break;
-            case Calendar.THURSDAY:
-                day = TH;
-                break;
-            case Calendar.FRIDAY:
-                day = FR;
-                break;
-            case Calendar.SATURDAY:
-                day = SA;
-                break;
-            default:
-                break;
+            case Calendar.SUNDAY: return SU;
+            case Calendar.MONDAY: return MO;
+            case Calendar.TUESDAY: return TU;
+            case Calendar.WEDNESDAY: return WE;
+            case Calendar.THURSDAY: return TH;
+            case Calendar.FRIDAY: return FR;
+            case Calendar.SATURDAY: return SA;
+            default: return null;
         }
-        return day;
     }
-    
+
     /**
      * Returns the corresponding <code>java.util.Calendar.DAY_OF_WEEK</code>
      * constant for the specified <code>WeekDay</code>.
@@ -260,31 +251,35 @@ public class WeekDay implements Serializable {
      * @return the corresponding <code>java.util.Calendar</code> day
      */
     public static int getCalendarDay(final WeekDay weekday) {
-        int calendarDay = -1;
-        if (SU.getDay().equals(weekday.getDay())) {
-            calendarDay = Calendar.SUNDAY;
+        switch (weekday.day) {
+            case SU: return Calendar.SUNDAY;
+            case MO: return Calendar.MONDAY;
+            case TU: return Calendar.TUESDAY;
+            case WE: return Calendar.WEDNESDAY;
+            case TH: return Calendar.THURSDAY;
+            case FR: return Calendar.FRIDAY;
+            case SA: return Calendar.SATURDAY;
+            default: return -1;
         }
-        else if (MO.getDay().equals(weekday.getDay())) {
-            calendarDay = Calendar.MONDAY;
-        }
-        else if (TU.getDay().equals(weekday.getDay())) {
-            calendarDay = Calendar.TUESDAY;
-        }
-        else if (WE.getDay().equals(weekday.getDay())) {
-            calendarDay = Calendar.WEDNESDAY;
-        }
-        else if (TH.getDay().equals(weekday.getDay())) {
-            calendarDay = Calendar.THURSDAY;
-        }
-        else if (FR.getDay().equals(weekday.getDay())) {
-            calendarDay = Calendar.FRIDAY;
-        }
-        else if (SA.getDay().equals(weekday.getDay())) {
-            calendarDay = Calendar.SATURDAY;
-        }
-        return calendarDay;
     }
-    
+
+    public static DayOfWeek getDayOfWeek(WeekDay weekday) {
+        if (weekday == null) {
+            return null;
+        }
+
+        switch (weekday.day) {
+            case SU: return DayOfWeek.SUNDAY;
+            case MO: return DayOfWeek.MONDAY;
+            case TU: return DayOfWeek.TUESDAY;
+            case WE: return DayOfWeek.WEDNESDAY;
+            case TH: return DayOfWeek.THURSDAY;
+            case FR: return DayOfWeek.FRIDAY;
+            case SA: return DayOfWeek.SATURDAY;
+            default: return null;
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -306,7 +301,6 @@ public class WeekDay implements Serializable {
      */
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder().append(getDay())
-            .append(getOffset()).toHashCode();
+        return new HashCodeBuilder().append(getDay()).append(getOffset()).toHashCode();
     }
 }

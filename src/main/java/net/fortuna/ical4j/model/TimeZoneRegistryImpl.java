@@ -41,10 +41,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Properties;
+import java.time.DateTimeException;
+import java.time.ZoneId;
+import java.time.zone.ZoneRules;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,7 +65,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static final Pattern TZ_ID_SUFFIX = Pattern.compile("(?<=/)[^/]*/[^/]*$");
 
-    private static final Map<String, TimeZone> DEFAULT_TIMEZONES = new ConcurrentHashMap<String, TimeZone>();
+    private static final Map<String, TimeZone> DEFAULT_TIMEZONES = new ConcurrentHashMap<>();
 
     private static final Properties ALIASES = new Properties();
 
@@ -90,11 +90,20 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
                     "No custom timezone aliases: {}", e.getMessage());
         }
+
+        for (String alias : ALIASES.stringPropertyNames()) {
+            TimeZoneRegistry.ZONE_ALIASES.put(alias, ALIASES.getProperty(alias));
+        }
+
     }
 
     private final TimeZoneLoader timeZoneLoader;
 
     private final Map<String, TimeZone> timezones;
+
+    private final Map<String, ZoneRules> zoneRules;
+
+    private final Map<String, String> zoneIds;
 
     private final boolean lenientTzResolution;
 
@@ -117,6 +126,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     public TimeZoneRegistryImpl(final String resourcePrefix, boolean lenientTzResolution) {
         this.timeZoneLoader = TimeZoneLoader.getInstance(resourcePrefix);
         timezones = new ConcurrentHashMap<>();
+        zoneRules = new ConcurrentHashMap<>();
+        zoneIds = new HashMap<>();
         this.lenientTzResolution = lenientTzResolution;
     }
 
@@ -138,13 +149,20 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             try {
                 // load any available updates for the timezone..
                 timezones.put(timezone.getID(), new TimeZone(timeZoneLoader.loadVTimeZone(timezone.getID())));
-            } catch (IOException | ParserException | ParseException e) {
+            } catch (IOException | ParserException e) {
                 Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                 log.warn("Error occurred loading VTimeZone", e);
             }
         } else {
             timezones.put(timezone.getID(), timezone);
         }
+
+        // use latest timezone definition to build zone rules..
+        ZoneRules newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
+                .build();
+        String globalId = "ical4j~" + UUID.randomUUID();
+        zoneIds.put(globalId, timezone.getID());
+        zoneRules.put(globalId, newZoneRules);
     }
 
     /**
@@ -191,7 +209,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                                         return getTimeZone(matcher.group());
                                     }
                                 }
-                            } catch (IOException | ParserException | ParseException e) {
+                            } catch (IOException | ParserException e) {
                                 Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                                 log.warn("Error occurred loading VTimeZone", e);
                             }
@@ -201,5 +219,22 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             }
         }
         return timezone;
+    }
+
+    @Override
+    public Map<String, ZoneRules> getZoneRules() {
+        return zoneRules;
+    }
+
+    @Override
+    public ZoneId getZoneId(String tzId) {
+        return ZoneId.of(zoneIds.entrySet().stream().filter(entry -> entry.getValue().equals(tzId))
+                .findFirst().orElseThrow(() -> new DateTimeException(String.format("Unknown timezone identifier [%s]", tzId))).getKey(),
+                TimeZoneRegistry.ZONE_ALIASES);
+    }
+
+    @Override
+    public String getTzId(String zoneId) {
+        return zoneIds.get(zoneId);
     }
 }

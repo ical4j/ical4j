@@ -33,12 +33,14 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import java.net.SocketException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  * $Id$
@@ -60,7 +62,7 @@ public class VAvailabilityTest extends ComponentTest {
      * @return
      * @throws SocketException 
      */
-    public static TestSuite suite() throws SocketException {
+    public static TestSuite suite() {
         TestSuite suite = new TestSuite();
 
         VAvailability a = new VAvailability();
@@ -68,9 +70,12 @@ public class VAvailabilityTest extends ComponentTest {
         suite.addTest(new VAvailabilityTest("testValidationException", a));
         
         UidGenerator g = new RandomUidGenerator();
-        a = new VAvailability();
-        a.getProperties().add(g.generateUid());
-        a.getProperties().add(new DtStart(new DateTime()));
+        a = new VAvailability().withProperty(g.generateUid())
+                .withProperty(new DtStart<>(ZonedDateTime.now())
+                        .withParameter(new TzId(ZoneId.systemDefault().getId()))
+                        .getFluentTarget())
+                .getFluentTarget();
+
         suite.addTest(new VAvailabilityTest("testValidation", a));
         
         return suite;

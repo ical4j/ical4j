@@ -36,8 +36,6 @@ import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -76,7 +74,7 @@ public class Rsvp extends Parameter implements Encodable {
      * @param aValue a boolean value
      */
     public Rsvp(final Boolean aValue) {
-        super(RSVP, new Factory());
+        super(RSVP);
         this.rsvp = aValue;
     }
 
@@ -99,18 +97,6 @@ public class Rsvp extends Parameter implements Encodable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final Rsvp copy() {
-        if (rsvp) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
     public static class Factory extends Content.Factory implements ParameterFactory<Rsvp> {
         private static final long serialVersionUID = 1L;
 
@@ -119,7 +105,7 @@ public class Rsvp extends Parameter implements Encodable {
         }
 
         @Override
-        public Rsvp createParameter(final String value) throws URISyntaxException {
+        public Rsvp createParameter(final String value) {
             switch (value.toUpperCase()) {
                 case VALUE_FALSE: return FALSE;
                 case VALUE_TRUE: return TRUE;

@@ -42,6 +42,22 @@ class PropertyFilterTest extends Specification {
                 .filter(new PropertyFilter().predicate(filter)).collect(Collectors.toList()).size() == 0
     }
 
+    def 'test filter expression starts with'() {
+        given: 'a filter expression'
+        def filter = FilterExpression.startsWith('role', 'REQ')
+
+        and: 'an event'
+        VEvent event = builder.vevent {
+            organizer(organiser, parameters: [Role.CHAIR])
+            attendee(attendee, parameters: [Role.REQ_PARTICIPANT])
+            attendee 'optional@example.com', parameters: [Role.OPT_PARTICIPANT]
+        }
+
+        expect: 'a filtered list of attendees matches expected'
+        event.getProperties('attendee').stream()
+                .filter(new PropertyFilter().predicate(filter)).collect(Collectors.toList()).size() == 1
+    }
+
     def 'test filter expression missing parameter'() {
         given: 'a filter expression'
         def filter = FilterExpression.notExists('role:CHAIR')

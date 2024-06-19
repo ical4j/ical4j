@@ -39,10 +39,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -62,7 +58,7 @@ public class Repeat extends Property {
      * Default constructor.
      */
     public Repeat() {
-        super(REPEAT, new Factory());
+        super(REPEAT);
     }
 
     /**
@@ -70,7 +66,7 @@ public class Repeat extends Property {
      * @param aValue a value string for this component
      */
     public Repeat(final ParameterList aList, final String aValue) {
-        super(REPEAT, aList, new Factory());
+        super(REPEAT, aList);
         setValue(aValue);
     }
 
@@ -78,7 +74,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final int aCount) {
-        super(REPEAT, new Factory());
+        super(REPEAT);
         count = aCount;
     }
 
@@ -87,7 +83,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final ParameterList aList, final int aCount) {
-        super(REPEAT, aList, new Factory());
+        super(REPEAT, aList);
         count = aCount;
     }
 
@@ -126,6 +122,11 @@ public class Repeat extends Property {
         return PropertyValidator.REPEAT.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Repeat> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Repeat> {
         private static final long serialVersionUID = 1L;
 
@@ -134,8 +135,7 @@ public class Repeat extends Property {
         }
 
         @Override
-        public Repeat createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Repeat createProperty(final ParameterList parameters, final String value) {
             return new Repeat(parameters, value);
         }
 

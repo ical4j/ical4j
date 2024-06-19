@@ -32,11 +32,16 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Geo;
 import net.fortuna.ical4j.model.property.LocationType;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.Name;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import java.util.List;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -108,7 +113,7 @@ public class VLocation extends Component {
      * Constructor.
      * @param properties a list of properties
      */
-    public VLocation(final PropertyList<Property> properties) {
+    public VLocation(final PropertyList properties) {
         super(VLOCATION, properties);
     }
 
@@ -116,7 +121,7 @@ public class VLocation extends Component {
      * Constructor.
      * @param properties a list of properties
      */
-    public VLocation(final PropertyList<Property> properties,
+    public VLocation(final PropertyList properties,
                      final ComponentList<Component> components) {
         super(VLOCATION, properties);
     }
@@ -136,14 +141,14 @@ public class VLocation extends Component {
      * Returns the optional description property.
      * @return the DESCRIPTION property or null if not specified
      */
-    public final Description getDescription() {
+    public final Optional<Description> getDescription() {
         return getProperty(DESCRIPTION);
     }
 
     /**
      * @return the optional geo property for a vlocation
      */
-    public final Geo getGeo() {
+    public final Optional<Geo> getGeo() {
         return getProperty(LAST_MODIFIED);
     }
 
@@ -151,30 +156,27 @@ public class VLocation extends Component {
      * Returns the optional LocationType property.
      * @return the LocationType property or null if not specified
      */
-    public LocationType getLocationType() {
+    public Optional<LocationType> getLocationType() {
         return getProperty(LOCATION_TYPE);
     }
 
     /**
      * @return the optional name property for a vlocation
      */
-    public final Name getNameProp() {
+    public final Optional<Name> getNameProp() {
         return getProperty(NAME);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Uid getUid() {
-        return getProperty(UID);
     }
 
     /**
      * @return the optional structured data properties
      */
-    public final PropertyList<StructuredData> getStructuredData() {
+    public final List<Property> getStructuredData() {
         return getProperties(STRUCTURED_DATA);
+    }
+
+    @Override
+    protected ComponentFactory<VLocation> newFactory() {
+        return new Factory();
     }
 
     /**
@@ -192,7 +194,7 @@ public class VLocation extends Component {
         }
 
         @Override
-        public VLocation createComponent(final PropertyList<Property> properties) {
+        public VLocation createComponent(final PropertyList properties) {
             return new VLocation(properties);
         }
     }

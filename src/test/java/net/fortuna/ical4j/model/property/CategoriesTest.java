@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,18 +90,14 @@ public class CategoriesTest extends PropertyTest {
      * Test escaping of commas in categories.
      */
     public void testCommaEscaping() throws ValidationException, IOException,
-            ParserException {
+            ParserException, ConstraintViolationException {
         Categories cat1 = new Categories("test1");
         Categories cat2 = new Categories("test2");
         Categories cat3 = new Categories("test1,test2,test 1\\,2\\,3");
 
-        VEvent event = new VEvent();
-        event.getProperties().add(cat1);
-        event.getProperties().add(cat2);
-        event.getProperties().add(cat3);
+        VEvent event = new VEvent().withProperty(cat1).withProperty(cat2).withProperty(cat3).getFluentTarget();
 
-        Calendar calendar = new Calendar();
-        calendar.getComponents().add(event);
+        Calendar calendar = new Calendar(new ComponentList<>(Collections.singletonList(event)));
 
         StringWriter tempOut = new StringWriter();
         CalendarOutputter cout = new CalendarOutputter(false);
@@ -110,8 +107,8 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        List<Categories> categories = calendar.getComponent(Component.VEVENT)
-                .getProperties(Property.CATEGORIES);
+        List<Property> categories = calendar.getComponents(Component.VEVENT)
+                .get(0).getProperties(Property.CATEGORIES);
 
         assertEquals(cat1, categories.get(0));
         assertEquals(cat2, categories.get(1));
@@ -135,7 +132,7 @@ public class CategoriesTest extends PropertyTest {
      * @throws ParserException
      */
     public static TestSuite suite() throws IOException, ValidationException,
-            ParserException {
+            ParserException, ConstraintViolationException {
         TestSuite suite = new TestSuite();
         String list = "one,two,three";
         Categories categories = new Categories(list);
@@ -143,8 +140,7 @@ public class CategoriesTest extends PropertyTest {
 
         // Test escaping of categories string representation..
         Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
-        Categories orig = (Categories) calendar.getComponent(Component.VEVENT)
-                .getProperty(Property.CATEGORIES);
+        Categories orig = calendar.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.CATEGORIES);
 
         StringWriter tempOut = new StringWriter();
         CalendarOutputter cout = new CalendarOutputter();
@@ -154,8 +150,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        Categories copy = (Categories) calendar.getComponent(Component.VEVENT)
-                .getProperty(Property.CATEGORIES);
+        Categories copy = calendar.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.CATEGORIES);
         assertEquals(orig, copy);
         suite.addTest(new CategoriesTest(copy, orig.getValue()));
 

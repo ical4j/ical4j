@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -58,7 +56,7 @@ public class FmtType extends Parameter implements Encodable {
      * @param aValue a string representation of a format type
      */
     public FmtType(final String aValue) {
-        super(FMTTYPE, new Factory());
+        super(FMTTYPE);
         try {
             String[] components = Strings.unquote(aValue).split("/");
             this.type = components[0];
@@ -92,7 +90,7 @@ public class FmtType extends Parameter implements Encodable {
         }
 
         @Override
-        public FmtType createParameter(final String value) throws URISyntaxException {
+        public FmtType createParameter(final String value) {
             return new FmtType(value);
         }
     }

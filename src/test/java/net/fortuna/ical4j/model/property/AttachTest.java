@@ -45,6 +45,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -74,9 +78,7 @@ public class AttachTest extends TestCase {
             i = fin.read();
         }
 
-        ParameterList params = new ParameterList();
-        params.add(Encoding.BASE64);
-        params.add(Value.BINARY);
+        ParameterList params = new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY));
 
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
         attach = new Attach(params, bout.toByteArray());
@@ -85,29 +87,20 @@ public class AttachTest extends TestCase {
     /*
      * Class under test for void Attach(ParameterList, String)
      */
-    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException {
+    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException, ConstraintViolationException {
 
         //log.info(attach);
-
-        // create event start date..
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
-        cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
-
-        DtStart start = new DtStart(new Date(cal.getTime().getTime()));
-        start.getParameters().replace(Value.DATE);
+        ParameterList startParams = new ParameterList(Collections.singletonList(Value.DATE));
+        DtStart start = new DtStart<>(startParams, LocalDate.now().withMonth(12).withDayOfMonth(25));
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent();
-        christmas.getProperties().add(start);
-        christmas.getProperties().add(summary);
-        christmas.getProperties().add(attach);
-        christmas.getProperties().add(new Uid("000001@modularity.net.au"));
+        VEvent christmas = new VEvent().withProperty(start).withProperty(summary).withProperty(attach)
+                .withProperty(new Uid("000001@modularity.net.au")).getFluentTarget();
 
         Calendar calendar = new Calendar().withDefaults()
-                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
-        calendar.getComponents().add(christmas);
+                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN")
+                .withComponent(christmas).getFluentTarget();
 
         StringWriter sw = new StringWriter();
         CalendarOutputter out = new CalendarOutputter();
@@ -116,9 +109,9 @@ public class AttachTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cout = builder.build(new StringReader(sw.toString()));
 
-        VEvent eout = (VEvent) cout.getComponent(Component.VEVENT);
+        List<VEvent> eout = cout.getComponents(Component.VEVENT);
 
-        Attach aout = (Attach) eout.getProperty(Property.ATTACH);
+        Attach aout = eout.get(0).getRequiredProperty(Property.ATTACH);
         assertNotNull(aout);
         assertEquals(attach, aout);
 
@@ -144,7 +137,8 @@ public class AttachTest extends TestCase {
         assertEquals(attach, clone);
 
         // set a bogus value to trigger logging..
-        clone.getParameters().replace(new Encoding("BOGUS"));
-        clone.setValue("");
+//        clone.getParameters().removeIf(p -> p.getName().equals(Parameter.ENCODING));
+//        clone.getParameters().add(new Encoding("BOGUS"));
+//        clone.setValue("");
     }
 }

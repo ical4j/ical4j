@@ -36,10 +36,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -59,14 +55,14 @@ public class ProdId extends Property implements Encodable {
      * Default constructor.
      */
     public ProdId() {
-        super(PRODID, new Factory());
+        super(PRODID);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public ProdId(final String aValue) {
-        super(PRODID, new Factory());
+        super(PRODID);
         setValue(aValue);
     }
 
@@ -75,7 +71,7 @@ public class ProdId extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public ProdId(final ParameterList aList, final String aValue) {
-        super(PRODID, aList, new Factory());
+        super(PRODID, aList);
         setValue(aValue);
     }
 
@@ -100,6 +96,11 @@ public class ProdId extends Property implements Encodable {
         return PropertyValidator.PROD_ID.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<ProdId> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<ProdId> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +109,7 @@ public class ProdId extends Property implements Encodable {
         }
 
         @Override
-        public ProdId createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public ProdId createProperty(final ParameterList parameters, final String value) {
             return new ProdId(parameters, value);
         }
 

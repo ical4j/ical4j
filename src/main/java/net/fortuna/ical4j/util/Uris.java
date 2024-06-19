@@ -121,8 +121,7 @@ public final class Uris {
             return new URI(encode(s));
         }
         catch (URISyntaxException use) {
-            if (CompatibilityHints
-                    .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                 String encoded = encode(s);
                 int index = encoded.indexOf(':');
                 if (index != -1 && index < encoded.length() -1) {

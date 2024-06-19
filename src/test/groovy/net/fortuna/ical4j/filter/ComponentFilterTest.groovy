@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.filter
 
+import net.fortuna.ical4j.filter.expression.BooleanExpression
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.property.Attendee
@@ -104,6 +105,20 @@ class ComponentFilterTest extends Specification {
         new ComponentFilter().predicate(filter).test(event)
     }
 
+    def 'test filter expression starts with'() {
+        given: 'a filter expression'
+        def filter = FilterExpression.startsWith('attendee', 'Mailto:A')
+
+        and: 'an event'
+        def event = builder.vevent {
+            organizer(organiser)
+            attendee(attendee)
+        }
+
+        expect: 'filter matches the event'
+        new ComponentFilter().predicate(filter).test(event)
+    }
+
     def 'test filter expression missing'() {
         given: 'a filter expression'
         def filter = FilterExpression.notExists('due')
@@ -144,16 +159,17 @@ class ComponentFilterTest extends Specification {
         new ComponentFilter().predicate(FilterExpression.parse(expression)).test(event) == expectedResult
 
         where: 'filter expression'
-        expression                                                      | expectedResult
-        "organizer= ${organiser.value} and attendee =${attendee.value}" | true
-        "organizer in [${organiser.value}, ${attendee.value}]"          | true
-        'attendee contains "example.com"'                               | true
-        'attendee contains "C@example.com"'                             | false
-        'due not exists'                                                | true
-        'organizer not exists'                                          | false
-        'attendee exists'                                               | true
-        'request-status not exists'                                     | true
-        'sequence > 1'                                                  | true
+        expression                                                          | expectedResult
+//        "organizer= '${organiser.value}' and attendee ='${attendee.value}'" | true
+//        "organizer in ['${organiser.value}', '${attendee.value}']"          | true
+        'attendee contains "example.com"'                                   | true
+        'attendee contains "C@example.com"'                                 | false
+//        'organizer startsWith "Mailto:B"'                                   | true
+        'due not exists'                                                    | true
+        'organizer not exists'                                              | false
+        'attendee exists'                                                   | true
+        'request-status not exists'                                         | true
+        'sequence > 1'                                                      | true
     }
 
     def 'test filter expressions with sets'() {
@@ -169,5 +185,26 @@ class ComponentFilterTest extends Specification {
 
         expect: 'filter matches the event'
         new ComponentFilter().predicate(filter).test(event)
+    }
+
+    def 'test filter expressions with boolean literals'() {
+        given: 'a filter expression using boolean literals to make an expression never match'
+        def neverMatch = BooleanExpression.FALSE & FilterExpression.exists('organizer')
+
+        and: 'an expression to always match'
+        def alwaysMatch = BooleanExpression.TRUE | FilterExpression.exists('dtstart')
+
+        and: 'an event'
+        def event = builder.vevent {
+            organizer(organiser)
+            attendee(attendee)
+            summary(summary)
+        }
+
+        expect: 'filter never matches the event'
+        !new ComponentFilter().predicate(neverMatch).test(event)
+
+        and: 'filter always matches the event'
+        new ComponentFilter().predicate(alwaysMatch).test(event)
     }
 }

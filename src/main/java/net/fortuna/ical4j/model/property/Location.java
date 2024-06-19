@@ -32,13 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.VLocation;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -110,14 +107,19 @@ public class Location extends Property implements Encodable {
      * Default constructor.
      */
     public Location() {
-        super(LOCATION, new ParameterList(), new Factory());
+        super(LOCATION);
+    }
+
+    public Location(VLocation location) {
+        super(LOCATION);
+        setValue(location.getRequiredProperty(Property.NAME).getValue());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Location(final String aValue) {
-        super(LOCATION, new ParameterList(), new Factory());
+        super(LOCATION);
         setValue(aValue);
     }
 
@@ -126,9 +128,10 @@ public class Location extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Location(final ParameterList aList, final String aValue) {
-        super(LOCATION, aList, new Factory());
+        super(LOCATION, aList);
         setValue(aValue);
     }
+
 
     /**
      * {@inheritDoc}
@@ -151,6 +154,11 @@ public class Location extends Property implements Encodable {
         return PropertyValidator.LOCATION.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Location> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Location> {
         private static final long serialVersionUID = 1L;
 
@@ -159,8 +167,7 @@ public class Location extends Property implements Encodable {
         }
 
         @Override
-        public Location createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Location createProperty(final ParameterList parameters, final String value) {
             return new Location(parameters, value);
         }
 

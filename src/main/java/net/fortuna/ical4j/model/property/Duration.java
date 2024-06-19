@@ -36,9 +36,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
 
@@ -117,7 +115,12 @@ public class Duration extends Property {
      * Default constructor.
      */
     public Duration() {
-        super(DURATION, new Factory());
+        super(DURATION);
+    }
+
+    public Duration(String value) {
+        super(DURATION);
+        setValue(value);
     }
 
     /**
@@ -125,7 +128,7 @@ public class Duration extends Property {
      * @param aValue a value string for this component
      */
     public Duration(final ParameterList aList, final String aValue) {
-        super(DURATION, aList, new Factory());
+        super(DURATION, aList);
         setValue(aValue);
     }
 
@@ -141,7 +144,7 @@ public class Duration extends Property {
      * @param duration a duration  value
      */
     public Duration(final TemporalAmount duration) {
-        super(DURATION, new Factory());
+        super(DURATION);
         this.duration = new TemporalAmountAdapter(duration);
     }
 
@@ -159,7 +162,7 @@ public class Duration extends Property {
      * @param duration a duration value
      */
     public Duration(final ParameterList aList, final TemporalAmount duration) {
-        super(DURATION, aList, new Factory());
+        super(DURATION, aList);
         setDuration(duration);
     }
 
@@ -168,10 +171,23 @@ public class Duration extends Property {
      *
      * @param start the starting time for the duration
      * @param end   the end time for the duration
+     * @deprecated use {@link Duration#Duration(Temporal, Temporal)}
      */
+    @Deprecated
     public Duration(final Date start, final Date end) {
-        super(DURATION, new Factory());
+        super(DURATION);
         setDuration(TemporalAmountAdapter.fromDateRange(start, end).getDuration());
+    }
+
+    /**
+     * Constructs a new duration representing the time between the specified start date and end date.
+     *
+     * @param start the starting time for the duration
+     * @param end   the end time for the duration
+     */
+    public Duration(final Temporal start, final Temporal end) {
+        super(DURATION);
+        setDuration(TemporalAmountAdapter.from(start, end).getDuration());
     }
 
     /**
@@ -209,6 +225,11 @@ public class Duration extends Property {
         return PropertyValidator.DURATION.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Duration> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Duration> {
         private static final long serialVersionUID = 1L;
 
@@ -217,8 +238,7 @@ public class Duration extends Property {
         }
 
         @Override
-        public Duration createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Duration createProperty(final ParameterList parameters, final String value) {
             return new Duration(parameters, value);
         }
 

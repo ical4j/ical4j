@@ -61,7 +61,7 @@ public interface ParameterFactory<T extends Parameter> extends Serializable {
      * appropriate parameter
      * @throws URISyntaxException where an invalid URI is encountered
      */
-    T createParameter(String value) throws URISyntaxException;
+    T createParameter(String value);
 
     boolean supports(String name);
 }

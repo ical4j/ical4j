@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.component.Observance;
 import org.junit.Test;
 
+import java.time.Instant;
+
 import static org.junit.Assert.assertEquals;
 
 public class TimeZoneTest2 {
@@ -17,8 +19,7 @@ public class TimeZoneTest2 {
         TimeZone karachi = origKarachi;
 
         long ts1 = 1609945200000L;       // 20210106T150000Z; 20210106T200000 Asia/Karachi
-        DateTime dt1 = new DateTime(ts1);
-        dt1.setUtc(true);
+        Instant dt1 = Instant.ofEpochMilli(ts1);
 
         System.err.println("Applicable observance: " + karachi.getVTimeZone().getApplicableObservance(dt1));
         /* prints:

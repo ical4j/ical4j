@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * Defines the scheduling status for CalDAV scheduling.
  *
@@ -53,7 +51,7 @@ public class ScheduleStatus extends Parameter implements Encodable {
      * @param aValue a string scheduling status
      */
     public ScheduleStatus(final String aValue) {
-        super(SCHEDULE_STATUS, new Factory());
+        super(SCHEDULE_STATUS);
         this.value = Strings.unquote(aValue);
     }
 
@@ -74,7 +72,7 @@ public class ScheduleStatus extends Parameter implements Encodable {
         }
 
         @Override
-        public ScheduleStatus createParameter(final String value) throws URISyntaxException {
+        public ScheduleStatus createParameter(final String value) {
             return new ScheduleStatus(value);
         }
     }

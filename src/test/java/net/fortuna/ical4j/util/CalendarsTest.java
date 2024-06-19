@@ -35,8 +35,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,7 +168,7 @@ public class CalendarsTest extends TestCase {
                 assertTrue("Property [" + p + "] not found in merged calendar",
                         result.getProperties().contains(p));
             }
-            for (Component c : value.getComponents()) {
+            for (CalendarComponent c : value.getComponents()) {
                 assertTrue("Component [" + c + "] not found in merged calendar",
                         result.getComponents().contains(c));
             }
@@ -219,17 +219,17 @@ public class CalendarsTest extends TestCase {
 
         suite.addTest(new CalendarsTest("testLoad", "/samples/valid/Australian32Holidays.ics"));
         suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "/samples/valid/doesnt-exist.ics"));
-        suite.addTest(new CalendarsTest("testLoadParserException", "/samples/invalid/google_aus_holidays.ics"));
+        suite.addTest(new CalendarsTest("testLoad", "/samples/valid/google_aus_holidays.ics"));
 
         List<Calendar> calendars = new ArrayList<Calendar>();
         calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))));
         calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics"))));
-        suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[0])));
+        suite.addTest(new CalendarsTest("testMerge", calendars.toArray(Calendar[]::new)));
 
         Calendar calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
         suite.addTest(new CalendarsTest("testSplit", calendar, 10));
 
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
 
         calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics")));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));

@@ -39,13 +39,13 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static net.fortuna.ical4j.model.Property.UID;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -55,7 +55,8 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable, PropertyContainer, FluentComponent {
+public abstract class Component extends Content implements Serializable, PropertyContainer, FluentComponent,
+        Comparable<Component> {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -136,9 +137,9 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
 
     private final String name;
 
-    private final PropertyList<Property> properties;
+    protected PropertyList properties;
 
-    protected final ComponentList<? extends Component> components;
+    protected ComponentList<? extends Component> components;
 
     /**
      * Constructs a new component containing no properties.
@@ -146,10 +147,10 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList<>(), new ComponentList<>());
+        this(s, new PropertyList(), new ComponentList<>());
     }
 
-    protected Component(final String s, final PropertyList<Property> p) {
+    protected Component(final String s, final PropertyList p) {
         this(s, p, new ComponentList<>());
     }
 
@@ -159,7 +160,7 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
      * @param s component name
      * @param p a list of properties
      */
-    protected Component(final String s, final PropertyList<Property> p, ComponentList<? extends Component> c) {
+    protected Component(final String s, final PropertyList p, ComponentList<? extends Component> c) {
         this.name = s;
         this.properties = p;
         this.components = c;
@@ -177,8 +178,18 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
     /**
      * @return Returns the name.
      */
+    @Override
     public final String getName() {
         return name;
+    }
+
+    @Override
+    public String getValue() {
+        return properties.toString();
+    }
+
+    public <T extends Property> List<T> getProperties() {
+        return PropertyContainer.super.getProperties();
     }
 
     @Override
@@ -187,25 +198,24 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
     }
 
     /**
-     * @return Returns the properties.
+     * @return Returns the underlying property list.
      */
-    public final PropertyList<Property> getProperties() {
+    @Override
+    public final PropertyList getPropertyList() {
         return properties;
     }
 
+    @Override
+    public void setPropertyList(PropertyList properties) {
+        this.properties = properties;
+    }
+
     /**
-     * Convenience method for retrieving a required named property.
-     *
-     * @param name name of the property to retrieve
-     * @return the first matching property in the property list with the specified name
-     * @throws ConstraintViolationException when a property is not found
+     * Returns the UID property of this component if available.
+     * @return a Uid instance, or null if no UID property exists
      */
-    protected final Property getRequiredProperty(String name) throws ConstraintViolationException {
-        Property p = getProperties().getProperty(name);
-        if (p == null) {
-            throw new ConstraintViolationException(String.format("Missing %s property", name));
-        }
-        return p;
+    public Optional<Uid> getUid() {
+        return getProperty(UID);
     }
 
     /**
@@ -261,20 +271,18 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
     }
 
     /**
-     * Create a (deep) copy of this component.
-     *
-     * @return the component copy
-     * @throws IOException        where an error occurs reading the component data
-     * @throws ParseException     where parsing component data fails
-     * @throws URISyntaxException where component data contains an invalid URI
+     * Returns a new component factory used to create deep copies.
+     * @return a component factory instance
      */
-    public final <T extends Component> T copy() throws ParseException, IOException, URISyntaxException {
+    protected abstract ComponentFactory<? extends Component> newFactory();
 
-        // Deep copy properties..
-        final PropertyList<Property> newprops = new PropertyList<>(properties);
-        final ComponentList<Component> newc = new ComponentList<>(components);
-
-        return new ComponentFactoryImpl().createComponent(getName(), newprops, newc);
+    /**
+     * Create a (deep) copy of this component.
+     * @return the component copy
+     */
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                .map(Property::copy).collect(Collectors.toList())));
     }
 
     /**
@@ -283,96 +291,84 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
      * recurrence rules and dates, and exception rules and dates. Note that component
      * transparency and anniversary-style dates do not affect the resulting
      * intersection.
+     *
      * <p>If an explicit DURATION is not specified, the effective duration of each
      * returned period is derived from the DTSTART and DTEND or DUE properties.
      * If the component has no DURATION, DTEND or DUE, the effective duration is set
      * to PT0S</p>
      *
-     * @param period a range to calculate recurrences for
-     * @return a list of periods
+     * NOTE: As a component may be defined in terms of floating date-time values (i.e. without a specific
+     * timezone), when calculating a recurrence set we must explicitly provide an applicable timezone
+     * for calculations.
+     *
+     * @param period a range that defines the boundary for calculations
+     * @return a list of periods representing component occurrences within the specified boundary
      */
-    public final PeriodList calculateRecurrenceSet(final Period period) {
+    public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<T> period) {
 
-//        validate();
+        final Set<Period<T>> recurrenceSet = new TreeSet<>();
 
-        final PeriodList recurrenceSet = new PeriodList();
-
-        final DtStart start = getProperty(Property.DTSTART);
-        DateProperty end = getProperty(Property.DTEND);
-        if (end == null) {
+        final Optional<DtStart<T>> start = getProperty(Property.DTSTART);
+        Optional<DateProperty<T>> end = getProperty(Property.DTEND);
+        if (!end.isPresent()) {
             end = getProperty(Property.DUE);
         }
-        Duration duration = getProperty(Property.DURATION);
+        Optional<Duration> duration = getProperty(Property.DURATION);
 
         // if no start date specified return empty list..
-        if (start == null) {
-            return recurrenceSet;
-        }
-
-        final Value startValue = start.getParameter(Parameter.VALUE);
-
-        // initialise timezone..
-//        if (startValue == null || Value.DATE_TIME.equals(startValue)) {
-        if (start.isUtc()) {
-            recurrenceSet.setUtc(true);
-        } else if (start.getDate() instanceof DateTime) {
-            recurrenceSet.setTimeZone(((DateTime) start.getDate()).getTimeZone());
+        if (!start.isPresent()) {
+            return Collections.emptySet();
         }
 
         // if an explicit event duration is not specified, derive a value for recurring
         // periods from the end date..
         TemporalAmount rDuration;
         // if no end or duration specified, end date equals start date..
-        if (end == null && duration == null) {
+        if (!end.isPresent() && !duration.isPresent()) {
             rDuration = java.time.Duration.ZERO;
-        } else if (duration == null) {
-            rDuration = TemporalAmountAdapter.fromDateRange(start.getDate(), end.getDate()).getDuration();
+        } else if (!duration.isPresent()) {
+            rDuration = TemporalAmountAdapter.between(start.get().getDate(), end.get().getDate()).getDuration();
         } else {
-            rDuration = duration.getDuration();
+            rDuration = duration.get().getDuration();
         }
 
         // add recurrence dates..
-        List<RDate> rDates = getProperties(Property.RDATE);
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.PERIOD)
-                .map(RDate::getPeriods).flatMap(PeriodList::stream).filter(period::intersects)
-                .collect(Collectors.toList()));
-
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME || p.getParameter(Parameter.VALUE) == null)
-                .map(DateListProperty::getDates).flatMap(DateList::stream).filter(period::includes)
-                .map(rdateTime -> new Period((DateTime) rdateTime, rDuration)).collect(Collectors.toList()));
-
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE)
-                .map(DateListProperty::getDates).flatMap(DateList::stream).filter(period::includes)
-                .map(rdateDate -> new Period(new DateTime(rdateDate), rDuration)).collect(Collectors.toList()));
+        List<Property> rDates = getProperties(Property.RDATE);
+        for (Property p : rDates) {
+            Optional<Value> value = p.getParameter(Parameter.VALUE);
+            if (value.equals(Optional.of(Value.PERIOD))) {
+                recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).parallelStream()
+                        .filter(period::intersects).collect(Collectors.toList()));
+            } else {
+                recurrenceSet.addAll(((DateListProperty<T>) p).getDates().parallelStream()
+                        .filter(period::includes).map(d -> new Period<>(d, rDuration)).collect(Collectors.toList()));
+            }
+        }
 
         // allow for recurrence rules that start prior to the specified period
         // but still intersect with it..
-        final DateTime startMinusDuration = new DateTime(period.getStart());
-        startMinusDuration.setTime(Date.from(period.getStart().toInstant().minus(rDuration)).getTime());
+        final T startMinusDuration = (T) period.getStart().minus(rDuration);
+
+        final T seed = start.get().getDate();
 
         // add recurrence rules..
-        List<RRule> rRules = getProperties(Property.RRULE);
+        List<Property> rRules = getProperties(Property.RRULE);
         if (!rRules.isEmpty()) {
-            recurrenceSet.addAll(rRules.stream().map(r -> r.getRecur().getDates(start.getDate(),
-                    new Period(startMinusDuration, period.getEnd()), startValue)).flatMap(DateList::stream)
-                    .map(rruleDate -> new Period(new DateTime(rruleDate), rDuration)).collect(Collectors.toList()));
+            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule<T>) r).getRecur().getDates(seed,
+                    startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
+                    .map(rruleDate -> new Period<>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {
             // add initial instance if intersection with the specified period..
-            Period startPeriod;
-            if (end != null) {
-                startPeriod = new Period(new DateTime(start.getDate()),
-                        new DateTime(end.getDate()));
+            Period<T> startPeriod;
+            if (end.isPresent()) {
+                startPeriod = new Period<>(seed, end.get().getDate());
             } else {
                 /*
                  * PeS: Anniversary type has no DTEND nor DUR, define DUR
                  * locally, otherwise we get NPE
                  */
-                if (duration == null) {
-                    duration = new Duration(rDuration);
-                }
-
-                startPeriod = new Period(new DateTime(start.getDate()),
-                        duration.getDuration());
+                startPeriod = duration.map(value -> new Period<>(seed, value.getDuration())).orElseGet(
+                        () -> new Period<>(seed, new Duration(rDuration).getDuration()));
             }
             if (period.intersects(startPeriod)) {
                 recurrenceSet.add(startPeriod);
@@ -380,29 +376,32 @@ public abstract class Component implements Serializable, PropertyContainer, Flue
         }
 
         // subtract exception dates..
-        List<ExDate> exDateProps = getProperties(Property.EXDATE);
-        List<Date> exDates = exDateProps.stream().map(DateListProperty::getDates).flatMap(DateList::stream)
-                .collect(Collectors.toList());
+        List<Property> exDateProps = getProperties(Property.EXDATE);
+        List<Temporal> exDates = exDateProps.stream().map(p -> ((DateListProperty<T>) p).getDates())
+                .flatMap(List<T>::stream).collect(Collectors.toList());
 
-        recurrenceSet.removeIf(recurrence -> {
-            // for DATE-TIME instances check for DATE-based exclusions also..
-            return exDates.contains(recurrence.getStart()) || exDates.contains(new Date(recurrence.getStart()));
-        });
+        recurrenceSet.removeIf(recurrence -> exDates.contains(recurrence.getStart()));
 
         // subtract exception rules..
-        List<ExRule> exRules = getProperties(Property.EXRULE);
-        List<Date> exRuleDates = exRules.stream().map(e -> e.getRecur().getDates(start.getDate(),
-                period, startValue)).flatMap(DateList::stream).collect(Collectors.toList());
+        List<Property> exRules = getProperties(Property.EXRULE);
+        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(seed,
+                period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
-        recurrenceSet.removeIf(recurrence -> {
-            // for DATE-TIME instances check for DATE-based exclusions also..
-            return exRuleDates.contains(recurrence.getStart())
-                    || exRuleDates.contains(new Date(recurrence.getStart()));
-        });
+        recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));
 
         // set a link to the origin
         recurrenceSet.forEach( p -> p.setComponent(this));
-        
+
         return recurrenceSet;
+    }
+
+    @Override
+    public int compareTo(Component o) {
+        if (this.equals(o)) {
+            return 0;
+        }
+        return Comparator.comparing(Component::getName)
+                .thenComparing(Component::getPropertyList)
+                .compare(this, o);
     }
 }

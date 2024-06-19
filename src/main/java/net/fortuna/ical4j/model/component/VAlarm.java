@@ -36,9 +36,13 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
 
+import java.time.Instant;
 import java.time.temporal.TemporalAmount;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -179,17 +183,17 @@ import java.time.temporal.TemporalAmount;
  * VAlarm reminder = new VAlarm(new Dur(0, -1, 0, 0));
  *
  * // repeat reminder four (4) more times every fifteen (15) minutes..
- * reminder.getProperties().add(new Repeat(4));
- * reminder.getProperties().add(new Duration(new Dur(0, 0, 15, 0)));
+ * reminder.add(new Repeat(4));
+ * reminder.add(new Duration(new Dur(0, 0, 15, 0)));
  *
  * // display a message..
- * reminder.getProperties().add(Action.DISPLAY);
- * reminder.getProperties().add(new Description(&quot;Progress Meeting at 9:30am&quot;));
+ * reminder.add(Action.DISPLAY);
+ * reminder.add(new Description(&quot;Progress Meeting at 9:30am&quot;));
  * </code></pre>
  *
  * @author Ben Fortuna
  */
-public class VAlarm extends CalendarComponent {
+public class VAlarm extends CalendarComponent implements ComponentContainer<Component>, DescriptivePropertyAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -212,9 +216,9 @@ public class VAlarm extends CalendarComponent {
      * Constructs a new VALARM instance that will trigger at the specified time.
      * @param trigger the time the alarm will trigger
      */
-    public VAlarm(final DateTime trigger) {
+    public VAlarm(final Instant trigger) {
         this();
-        getProperties().add(new Trigger(trigger));
+        add(new Trigger(trigger));
     }
 
     /**
@@ -223,7 +227,21 @@ public class VAlarm extends CalendarComponent {
      */
     public VAlarm(final TemporalAmount trigger) {
         this();
-        getProperties().add(new Trigger(trigger));
+        add(new Trigger(trigger));
+    }
+
+    /**
+     *
+     * @return Returns the underlying component list.
+     */
+    @Override
+    public ComponentList<Component> getComponentList() {
+        return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**
@@ -233,8 +251,8 @@ public class VAlarm extends CalendarComponent {
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = new ValidationResult();
 
-        if (getAction() != null) {
-            switch (getAction().getValue()) {
+        if (getAction().isPresent()) {
+            switch (getAction().get().getValue()) {
                 case "AUDIO":
                     result = ComponentValidator.VALARM_AUDIO.validate(this);
                     break;
@@ -256,67 +274,66 @@ public class VAlarm extends CalendarComponent {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Validator getValidator(Method method) {
-        throw new UnsupportedOperationException("VALARM validation included in VEVENT or VTODO method validator.");
-    }
-
-    /**
      * Returns the mandatory action property.
      * @return the ACTION property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Action getAction() {
-        return getProperty(Property.ACTION);
+    @Deprecated
+    public final Optional<Action> getAction() {
+        return getProperty(ACTION);
     }
 
     /**
      * Returns the mandatory trigger property.
      * @return the TRIGGER property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Trigger getTrigger() {
-        return getProperty(Property.TRIGGER);
+    @Deprecated
+    public final Optional<Trigger> getTrigger() {
+        return getProperty(TRIGGER);
     }
 
     /**
      * Returns the optional duration property.
      * @return the DURATION property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Duration getDuration() {
-        return getProperty(Property.DURATION);
+    @Deprecated
+    public final Optional<Duration> getDuration() {
+        return getProperty(DURATION);
     }
 
     /**
      * Returns the optional repeat property.
      * @return the REPEAT property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Repeat getRepeat() {
-        return getProperty(Property.REPEAT);
+    @Deprecated
+    public final Optional<Repeat> getRepeat() {
+        return getProperty(REPEAT);
     }
 
     /**
      * Returns the optional attachment property.
      * @return the ATTACH property or null if not specified
+     * @deprecated use {@link DescriptivePropertyAccessor#getAttachments()}
      */
-    public final Attach getAttachment() {
-        return getProperty(Property.ATTACH);
+    @Deprecated
+    public final Optional<Attach> getAttachment() {
+        return getProperty(ATTACH);
     }
 
-    /**
-     * Returns the optional description property.
-     * @return the DESCRIPTION property or null if not specified
-     */
-    public final Description getDescription() {
-        return getProperty(Property.DESCRIPTION);
+    @Override
+    protected ComponentFactory<VAlarm> newFactory() {
+        return new Factory();
     }
 
-    /**
-     * Returns the optional summary property.
-     * @return the SUMMARY property or null if not specified
-     */
-    public final Summary getSummary() {
-        return getProperty(Property.SUMMARY);
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {

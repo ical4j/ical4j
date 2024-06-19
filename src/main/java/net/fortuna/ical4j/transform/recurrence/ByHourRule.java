@@ -1,83 +1,63 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.NumberList;
-import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.Dates;
-
-import java.util.*;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
-import static net.fortuna.ical4j.model.Recur.Frequency.*;
+import static java.time.temporal.ChronoField.HOUR_OF_DAY;
+import static net.fortuna.ical4j.transform.recurrence.Frequency.*;
 
 /**
  * Applies BYHOUR rules specified in this Recur instance to the specified date list. If no BYHOUR rules are
  * specified the date list is returned unmodified.
  */
-public class ByHourRule extends AbstractDateExpansionRule {
+public class ByHourRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
-    private final NumberList hourList;
+    private final List<Integer> hourList;
 
-    public ByHourRule(NumberList hourList, Frequency frequency) {
+    public ByHourRule(List<Integer> hourList, Frequency frequency) {
         super(frequency);
         this.hourList = hourList;
     }
 
-    public ByHourRule(NumberList hourList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
-        super(frequency, weekStartDay);
-        this.hourList = hourList;
-    }
-
     @Override
-    public DateList transform(DateList dates) {
+    public List<T> apply(List<T> dates) {
         if (hourList.isEmpty()) {
             return dates;
         }
-        final DateList hourlyDates = Dates.getDateListInstance(dates);
-        for (final Date date : dates) {
+        final List<T> hourlyDates = new ArrayList<>();
+        for (final T date : dates) {
             if (EnumSet.of(DAILY, WEEKLY, MONTHLY, YEARLY).contains(getFrequency())) {
-                hourlyDates.addAll(new ExpansionFilter(hourlyDates.getType()).apply(date));
+                hourlyDates.addAll(new ExpansionFilter().apply(date));
             } else {
-                Optional<Date> limit = new LimitFilter().apply(date);
-                if (limit.isPresent()) {
-                    hourlyDates.add(limit.get());
-                }
+                Optional<T> limit = new LimitFilter().apply(date);
+                limit.ifPresent(hourlyDates::add);
             }
         }
         return hourlyDates;
     }
 
-    private class LimitFilter implements Function<Date, Optional<Date>> {
-
+    private class LimitFilter implements Function<T, Optional<T>> {
         @Override
-        public Optional<Date> apply(Date date) {
-            final Calendar cal = getCalendarInstance(date, true);
-            if (hourList.contains(cal.get(Calendar.HOUR_OF_DAY))) {
+        public Optional<T> apply(T date) {
+            if (hourList.contains(getHour(date))) {
                 return Optional.of(date);
             }
             return Optional.empty();
         }
     }
 
-    private class ExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public ExpansionFilter(Value type) {
-            this.type = type;
-        }
-
+    private class ExpansionFilter implements Function<T, List<T>> {
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, true);
-            // construct a list of possible months..
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
+            // construct a list of possible hours..
             hourList.forEach(hour -> {
-                cal.set(Calendar.HOUR_OF_DAY, hour);
-                retVal.add(Dates.getInstance(getTime(date, cal), type));
+                T candidate = withTemporalField(date, HOUR_OF_DAY, hour);
+                retVal.add(candidate);
             });
             return retVal;
         }

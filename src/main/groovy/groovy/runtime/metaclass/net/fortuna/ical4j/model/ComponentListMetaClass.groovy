@@ -15,6 +15,6 @@ class ComponentListMetaClass extends DelegatingMetaClass {
         if (hasProperty(object, property)) {
             return super.getProperty(object, property)
         }
-        return object.getComponents(property)
+        return object.get(property)
     }
 }

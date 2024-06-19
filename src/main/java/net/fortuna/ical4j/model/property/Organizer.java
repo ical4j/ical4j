@@ -41,10 +41,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -142,28 +140,25 @@ public class Organizer extends Property {
      * Default constructor.
      */
     public Organizer() {
-        super(ORGANIZER, new Factory());
+        super(ORGANIZER);
     }
 
     /**
      * Constructs a new instance with the specified value.
      *
      * @param value an organizer URI
-     * @throws URISyntaxException where the specified value is not a valid URI
      */
-    public Organizer(String value) throws URISyntaxException {
-        super(ORGANIZER, new Factory());
+    public Organizer(String value) {
+        super(ORGANIZER);
         setValue(value);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Organizer(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
-        super(ORGANIZER, aList, new Factory());
+    public Organizer(final ParameterList aList, final String aValue) {
+        super(ORGANIZER, aList);
         setValue(aValue);
     }
 
@@ -171,7 +166,7 @@ public class Organizer extends Property {
      * @param aUri a URI representation of a calendar address
      */
     public Organizer(final URI aUri) {
-        super(ORGANIZER, new Factory());
+        super(ORGANIZER);
         calAddress = aUri;
     }
 
@@ -180,7 +175,7 @@ public class Organizer extends Property {
      * @param aUri  a URI representation of a calendar address
      */
     public Organizer(final ParameterList aList, final URI aUri) {
-        super(ORGANIZER, aList, new Factory());
+        super(ORGANIZER, aList);
         calAddress = aUri;
     }
 
@@ -203,8 +198,12 @@ public class Organizer extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            calAddress = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -222,6 +221,11 @@ public class Organizer extends Property {
         this.calAddress = calAddress;
     }
 
+    @Override
+    protected PropertyFactory<Organizer> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Organizer> {
         private static final long serialVersionUID = 1L;
 
@@ -230,8 +234,7 @@ public class Organizer extends Property {
         }
 
         @Override
-        public Organizer createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Organizer createProperty(final ParameterList parameters, final String value) {
             return new Organizer(parameters, value);
         }
 

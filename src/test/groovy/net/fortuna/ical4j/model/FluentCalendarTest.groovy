@@ -33,8 +33,10 @@
 
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.property.Method
+
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH
 
 class FluentCalendarTest extends Specification {
 
@@ -59,7 +61,7 @@ class FluentCalendarTest extends Specification {
         when: 'creating a calendar with defaults via fluent api'
         def calendar = new Calendar().withDefaults()
                 .withProdId('-//Ben Fortuna//iCal4j 1.0//EN')
-                .withProperty(Method.PUBLISH).getFluentTarget()
+                .withProperty(PUBLISH).getFluentTarget()
 
         then: 'calendar includes default props'
         calendar.getProperties().size() == 4

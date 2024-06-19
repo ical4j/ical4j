@@ -42,10 +42,8 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * <pre>
@@ -79,16 +77,16 @@ public class Concept extends Property {
     private URI uri;
 
     public Concept() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
     }
 
     public Concept(URI uri) {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
         this.uri = uri;
     }
 
-    public Concept(ParameterList aList, String value) throws URISyntaxException {
-        super(PROPERTY_NAME, aList, new Factory());
+    public Concept(ParameterList aList, String value) {
+        super(PROPERTY_NAME, aList);
         setValue(value);
     }
 
@@ -102,8 +100,12 @@ public class Concept extends Property {
     }
 
     @Override
-    public void setValue(String aValue) throws URISyntaxException {
-        this.uri = Uris.create(aValue);
+    public void setValue(String aValue) {
+        try {
+            this.uri = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override
@@ -119,8 +121,7 @@ public class Concept extends Property {
         }
 
         @Override
-        public Concept createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Concept createProperty(final ParameterList parameters, final String value) {
             return new Concept(parameters, value);
         }
 
@@ -128,5 +129,10 @@ public class Concept extends Property {
         public Concept createProperty() {
             return new Concept();
         }
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return new Factory();
     }
 }

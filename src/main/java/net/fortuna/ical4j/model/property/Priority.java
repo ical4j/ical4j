@@ -40,9 +40,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*;
 
 /**
  * $Id$
@@ -137,57 +135,13 @@ public class Priority extends Property {
     public static final int VALUE_MEDIUM = 5;
     public static final int VALUE_LOW = 9;
 
-    /**
-     * Undefined priority.
-     */
-    public static final Priority UNDEFINED = new ImmutablePriority(VALUE_UNDEFINED);
-
-    /**
-     * High priority.
-     */
-    public static final Priority HIGH = new ImmutablePriority(VALUE_HIGH);
-
-    /**
-     * Medium priority.
-     */
-    public static final Priority MEDIUM = new ImmutablePriority(VALUE_MEDIUM);
-
-    /**
-     * Low priority.
-     */
-    public static final Priority LOW = new ImmutablePriority(VALUE_LOW);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Priority.
-     */
-    private static final class ImmutablePriority extends Priority {
-
-        private static final long serialVersionUID = 5884973714694108418L;
-
-        private ImmutablePriority(final int level) {
-            super(new ParameterList(true), level);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public void setLevel(final int level) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
     private int level;
 
     /**
      * Default constructor.
      */
     public Priority() {
-        super(PRIORITY, new Factory());
+        super(PRIORITY);
         level = UNDEFINED.getLevel();
     }
 
@@ -196,7 +150,7 @@ public class Priority extends Property {
      * @param aValue a value string for this component
      */
     public Priority(final ParameterList aList, final String aValue) {
-        super(PRIORITY, aList, new Factory());
+        super(PRIORITY, aList);
         try {
             level = Integer.parseInt(aValue);
         } catch (NumberFormatException e) {
@@ -212,7 +166,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final int aLevel) {
-        super(PRIORITY, new Factory());
+        super(PRIORITY);
         level = aLevel;
     }
 
@@ -221,7 +175,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final ParameterList aList, final int aLevel) {
-        super(PRIORITY, aList, new Factory());
+        super(PRIORITY, aList);
         level = aLevel;
     }
 
@@ -260,6 +214,11 @@ public class Priority extends Property {
         return PropertyValidator.PRIORITY.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Priority> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Priority> {
         private static final long serialVersionUID = 1L;
 
@@ -268,10 +227,9 @@ public class Priority extends Property {
         }
 
         @Override
-        public Priority createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Priority createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 try {
                     int level = Integer.parseInt(value);
                     switch (level) {
@@ -284,7 +242,7 @@ public class Priority extends Property {
                     if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                         return UNDEFINED;
                     } else {
-                        throw e;
+                        throw new IllegalArgumentException(e);
                     }
                 }
             }

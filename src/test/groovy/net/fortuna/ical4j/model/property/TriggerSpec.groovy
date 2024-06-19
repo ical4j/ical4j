@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.DateTime
+import net.fortuna.ical4j.model.CalendarDateFormat
 import net.fortuna.ical4j.model.ParameterList
 import spock.lang.Specification
 
@@ -44,44 +44,12 @@ class TriggerSpec extends Specification {
 		new Trigger(value).value == expectedValue
 		
 		where:
-		value                                  | expectedValue
-        java.time.Period.ZERO                  | 'P0D'
-		new DateTime('20110131T012647Z')       | '20110131T012647Z'
+		value                                                             | expectedValue
+		Period.ZERO                                                       | 'P0D'
+		CalendarDateFormat.UTC_DATE_TIME_FORMAT.parse('20110131T012647Z') | '20110131T012647Z'
 		java.time.Duration.ofDays(2).negated() | '-P2D'
 		Period.ofDays(2).negated()             | '-P2D'
 	}
-
-	def 'verify trigger date-time converts to UTC'() {
-		setup: 'override platform default timezone'
-		def originalPlatformTz = TimeZone.default
-		TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
-		
-		expect: 'derived value is expected'
-		new Trigger(new DateTime(value)).value == expectedValue
-		
-		cleanup: 'restore platform default timezone'
-		TimeZone.default = originalPlatformTz
-
-		where:
-		value				| expectedValue
-		'20110131T012647'	| '20110130T142647Z'
-	}
-	
-	def 'verify original date-time is not modified'() {
-		given: 'a date in a non-UTC timezone'
-        def originalTzDefault = TimeZone.default
-        TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
-		DateTime dateTime = []
-		
-		when: 'the date is used to construct a trigger'
-		Trigger trigger = [dateTime]
-
-        then: "the original date's timezone is not modified"
-		assert !dateTime.utc
-
-        cleanup:
-        TimeZone.default = originalTzDefault
-    }
 
 	def 'verify trigger string parsing'() {
 		given: 'a parsed string value'

@@ -41,24 +41,19 @@ package net.fortuna.ical4j.model
  */
 class CalendarFactory extends AbstractFactory {
 
-    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, name, value, Map attributes) throws InstantiationException,
+            IllegalAccessException {
         Calendar calendar
         if (FactoryBuilderSupport.checkValueIsType(value, name, Calendar)) {
             calendar = value
-        }
-        else {
+        } else {
             calendar = []
         }
         return calendar
     }
  
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof Property) {
-            parent.properties.add(child)
-        }
-        else if (child instanceof Component) {
-            parent.components.add(child)
-        }
+        parent.add(child)
     }
 }
 

@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.property
 
+
 import net.fortuna.ical4j.model.ParameterList
 import net.fortuna.ical4j.model.Property
 
@@ -42,22 +43,22 @@ class DefaultPropertyFactory extends AbstractPropertyFactory {
 
 	Class<? extends Property> klass
 
-    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, name, value, Map attributes) throws InstantiationException,
+            IllegalAccessException {
         def property
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, klass)) {
-            property = value
-        }
-        else if (attributes['value']) {
+            property = value.copy()
+        } else if (attributes['value']) {
 			property = super.newInstance(builder, name, attributes.remove('value'), attributes)
-        }
-		else {
+        } else {
 			property = super.newInstance(builder, name, value, attributes)
         }
+        property.prefix = propertyPrefix
         return property
     }
     
-    protected Object newInstance(ParameterList parameters, String value) {
+    protected Object newInstance(parameters, value) {
 		def constructor = klass.getConstructor(ParameterList, String)
-        constructor.newInstance(parameters, value)
+        constructor.newInstance(new ParameterList((List) parameters), value)
     }
 }

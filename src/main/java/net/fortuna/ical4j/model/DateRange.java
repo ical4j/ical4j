@@ -40,7 +40,10 @@ import java.util.Date;
 /**
  * @author fortuna
  *
+ * @deprecated We can no longer use DateRange to compare dates reliably due to supporting incompatible temporal types.
+ * Use {@link org.threeten.extra.Interval} instead.
  */
+@Deprecated
 public class DateRange implements Serializable {
 
     private static final long serialVersionUID = -7303846680559287286L;
@@ -108,8 +111,6 @@ public class DateRange implements Serializable {
      * @param inclusiveMask specifies whether period start and end are included
      * in the calculation
      * @return true if the date is in the period, false otherwise
-     * @see Period#INCLUSIVE_START
-     * @see Period#INCLUSIVE_END
      */
     public final boolean includes(final Date date, final int inclusiveMask) {
         boolean includes;

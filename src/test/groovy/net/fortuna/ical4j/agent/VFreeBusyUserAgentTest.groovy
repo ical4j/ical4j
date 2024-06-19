@@ -3,13 +3,14 @@ package net.fortuna.ical4j.agent
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.component.VFreeBusy
-import net.fortuna.ical4j.model.property.Method
 import net.fortuna.ical4j.model.property.Organizer
 import net.fortuna.ical4j.model.property.ProdId
-import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0
 
 class VFreeBusyUserAgentTest extends Specification {
 
@@ -25,8 +26,8 @@ class VFreeBusyUserAgentTest extends Specification {
         given: 'a calendar'
         def source = builder.calendar {
             prodid(prodId)
-            version(Version.VERSION_2_0)
-            method(Method.REQUEST)
+            version(VERSION_2_0)
+            method(REQUEST)
             vevent {
                 organizer 'mailto:org@example.com'
                 summary 'Spring Equinox'
@@ -34,28 +35,28 @@ class VFreeBusyUserAgentTest extends Specification {
                 dtstart '20090810T000000'
                 dtend '20090810T120000'
                 action 'DISPLAY'
-                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+                attach 'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
             }
         }
 
         and: 'a freebusy request'
-        VFreeBusy vfreeBusy = builder.vfreebusy {
+        VFreeBusy vfreeBusy = new ContentBuilder().vfreebusy {
             uid '1'
             dtstamp()
-            dtstart '20090801T000000'
-            dtend '20090901T000000'
+            dtstart '20090801T000000Z'
+            dtend '20090901T000000Z'
         }
 
         when: 'the result is generated and published'
-        def result = new VFreeBusy(vfreeBusy, source.components)
+        def result = new VFreeBusy(vfreeBusy, source.getComponents())
         def calendar = userAgent.publish(result)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getProperty(Property.METHOD) == Method.PUBLISH
+        calendar.getRequiredProperty(Property.METHOD) == PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE) }
+        calendar.getComponents().each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {
@@ -84,16 +85,16 @@ class VFreeBusyUserAgentTest extends Specification {
         def calendar = userAgent.request(vfreeBusy, vfreeBusy2)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getProperty(Property.METHOD) == Method.REQUEST
+        calendar.getRequiredProperty(Property.METHOD) == REQUEST
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE) }
+        calendar.getComponents().each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Delegate"() {
         given: 'a freebusy request'
         def request = builder.calendar {
-            method(Method.REQUEST)
+            method(REQUEST)
             vfreebusy {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
@@ -113,8 +114,8 @@ class VFreeBusyUserAgentTest extends Specification {
         given: 'a freebusy request'
         def request = builder.calendar {
             prodid(prodId)
-            version(Version.VERSION_2_0)
-            method(Method.REQUEST)
+            version(VERSION_2_0)
+            method(REQUEST)
             vfreebusy {
                 dtstamp()
                 dtstart '20090810T010000Z'
@@ -130,7 +131,7 @@ class VFreeBusyUserAgentTest extends Specification {
         def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
-        calendar.getProperty(Property.METHOD) == Method.REPLY
+        calendar.getRequiredProperty(Property.METHOD) == REPLY
     }
 
     def "Add"() {
@@ -184,7 +185,7 @@ class VFreeBusyUserAgentTest extends Specification {
     def "Counter"() {
         given: 'a freebusy request'
         def request = builder.calendar {
-            method(Method.REQUEST)
+            method(REQUEST)
             vfreebusy {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
@@ -203,7 +204,7 @@ class VFreeBusyUserAgentTest extends Specification {
     def "DeclineCounter"() {
         given: 'a freebusy counter'
         def counter = builder.calendar {
-            method(Method.COUNTER)
+            method(COUNTER)
             vfreebusy {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }

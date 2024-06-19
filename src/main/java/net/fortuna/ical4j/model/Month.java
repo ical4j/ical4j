@@ -40,6 +40,10 @@ public class Month implements Serializable {
         return new Month(monthOfYear);
     }
 
+    public static Month from(java.time.Month month) {
+        return new Month(month.getValue());
+    }
+
     @Override
     public String toString() {
         if (leapMonth) {

@@ -32,16 +32,17 @@
 package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.parameter.TzId;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -76,20 +77,13 @@ public class DatePropertyTest extends PropertyTest {
      * 
      */
     @Override
-    public void testCopy() throws IOException, URISyntaxException,
-            ParseException {
+    public void testCopy() throws URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
-        if (property.getTimeZone() != null) {
-            assertEquals(property.getTimeZone(), ((DateProperty) copy).getTimeZone());
-        }
-        else {
-            assertNull(((DateProperty) copy).getTimeZone());
-        }
     }
 
-    public void testHashValue() throws Exception {
-        Date date = property.getDate();
+    public void testHashValue() {
+        Temporal date = property.getDate();
         if (date != null) {
             assertEquals(date.hashCode(), property.hashCode());
         } else {
@@ -102,9 +96,6 @@ public class DatePropertyTest extends PropertyTest {
      * @return
      */
     public static TestSuite suite() {
-        TimeZoneRegistry tzReg = DefaultTimeZoneRegistryFactory.getInstance()
-                .createRegistry();
-
         TestSuite suite = new TestSuite();
         DtStamp dtStamp = new DtStamp();
         // dtStamp.getParameters().add(new TzId("Australia/Melbourne"));
@@ -112,9 +103,11 @@ public class DatePropertyTest extends PropertyTest {
         suite.addTest(new DatePropertyTest("testCopy", dtStamp));
         suite.addTest(new DatePropertyTest("testHashValue", dtStamp));
 
-        DtStart dtStart = new DtStart(new DateTime());
+        ParameterList tzParams = new ParameterList(Collections.singletonList(
+                new TzId(ZoneId.of("Australia/Melbourne").getId())));
+        DtStart dtStart = new DtStart<>(tzParams,
+                ZonedDateTime.now(TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne")));
         // dtStart.getParameters().add(new TzId("Australia/Melbourne"));
-        dtStart.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
         suite.addTest(new DatePropertyTest("testCopy", dtStart));
         suite.addTest(new DatePropertyTest("testHashValue", dtStart));
 

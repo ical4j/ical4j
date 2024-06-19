@@ -31,20 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.TimeZones;
+
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -56,25 +55,20 @@ import net.fortuna.ical4j.util.TimeZones;
  */
 public class DtStartTest extends TestCase {
 
-    private TimeZone timezone;
-    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
-        timezone = tzReg.getTimeZone("Australia/Melbourne");
     }
     
     /*
      * Test method for 'net.fortuna.ical4j.model.property.DtStart.DtStart(String)'
      */
-    public void testDtStartString() throws ParseException {
-        ParameterList params = new ParameterList();
-        params.add(Value.DATE);
-        DtStart dtStart = new DtStart(params, "20060811");
+    public void testDtStartString() {
+        ParameterList params = new ParameterList(Collections.singletonList(Value.DATE));
+        DtStart<LocalDate> dtStart = new DtStart<>(params, "20060811");
         
         Calendar calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
         calendar.clear();
@@ -84,43 +78,16 @@ public class DtStartTest extends TestCase {
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
         
-        assertEquals(dtStart.getDate(), calendar.getTime());
+        assertEquals(dtStart.getDate(), LocalDate.from(calendar.getTime().toInstant().atZone(ZoneId.systemDefault())));
     }
 
-    /**
-     * Unit tests for timezone constructor.
-     */
-    public void testDtStartTimezone() throws ParseException {
-        DtStart dtStart = new DtStart(timezone);
-
-        dtStart.setValue(new DateTime().toString());
-        assertEquals(timezone, dtStart.getTimeZone());
-
-        // initialising with DATE value should reset timezone..
-        dtStart.setDate(new Date());
-        assertNull(dtStart.getTimeZone());
-    }
-
-    /**
-     * Unit tests for value/timezone constructor.
-     */
-    public void testDtStartStringTimezone() throws ParseException {
-        String value = new DateTime().toString();
-        DtStart dtStart = new DtStart(value, timezone);
-
-        assertEquals(timezone, dtStart.getTimeZone());
-        assertEquals(value, dtStart.getValue());
-    }
-    
     /**
      * Test non-utc timezone works.
      */
     public void testNonUtcTimezone() throws ParseException {
-        DtStart start = new DtStart();
-        start.getParameters().add(Value.DATE_TIME);
-        start.getParameters().add(new TzId("GMT"));
-        start.setValue("20070101T080000");
-        
+        ParameterList dtstartParams = new ParameterList(Arrays.asList(Value.DATE_TIME, new TzId("GMT")));
+        DtStart start = new DtStart(dtstartParams, "20070101T080000");
+
         assertEquals("DTSTART;VALUE=DATE-TIME;TZID=GMT:20070101T080000" + Strings.LINE_SEPARATOR,
                 start.toString());
     }

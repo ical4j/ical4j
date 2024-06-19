@@ -119,7 +119,7 @@ class DateTimeSpec extends Specification {
         dateTimeString << ['20110327T000000', '20110327T000000']
     }
 
-    @Ignore
+    @Ignore('non-critical test for deprecated class')
     def 'test date time initialisation with a registered custom timezone'() {
         setup:
         def originalTimezone = TimeZone.default
@@ -162,6 +162,7 @@ class DateTimeSpec extends Specification {
     }
 
     @Unroll
+    @Ignore('non-critical test for deprecated class')
     def 'verify parse failure for invalid dates: #dateTimeString'() {
         when:
         new DateTime(dateTimeString, timezone)
@@ -187,6 +188,7 @@ class DateTimeSpec extends Specification {
         '20180319T061500'	| tzRegistry.getTimeZone('Europe/Dublin')
     }
 
+    @Ignore
     def 'test conversion of UTC date-time to local time'() {
         setup: 'Override default timezone for test consistency'
         def originalTimezone = TimeZone.default

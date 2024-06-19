@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.component.XComponent
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
 class ComponentBuilderTest extends Specification {
@@ -26,6 +27,9 @@ class ComponentBuilderTest extends Specification {
 
         and: 'builder is initialised'
         builder.name('vtodo')
+
+        and: 'relaxed validation is disabled'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, false)
 
         when: 'build method called'
         Component c = builder.build()

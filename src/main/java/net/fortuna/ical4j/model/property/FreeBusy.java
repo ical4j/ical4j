@@ -35,10 +35,10 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.threeten.extra.Interval;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -109,57 +109,48 @@ public class FreeBusy extends Property {
 
     private static final long serialVersionUID = -6415954847619338567L;
 
-    private PeriodList periods;
+    private List<Interval> intervals;
 
     /**
      * Default constructor.
      */
     public FreeBusy() {
-        super(FREEBUSY, new Factory());
-        periods = new PeriodList();
+        super(FREEBUSY);
+        intervals = new ArrayList<>();
     }
 
     /**
      * @param aValue a freebusy value
-     * @throws ParseException where the specified string is not a valid freebusy value
      */
-    public FreeBusy(final String aValue) throws ParseException {
-        super(FREEBUSY, new Factory());
+    public FreeBusy(final String aValue) {
+        super(FREEBUSY);
         setValue(aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid list of periods
      */
-    public FreeBusy(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(FREEBUSY, aList, new Factory());
+    public FreeBusy(final ParameterList aList, final String aValue) {
+        super(FREEBUSY, aList);
         setValue(aValue);
     }
 
     /**
      * @param pList a list of periods
      */
-    public FreeBusy(final PeriodList pList) {
-        super(FREEBUSY, new Factory());
-        if (!pList.isUtc()) {
-            throw new IllegalArgumentException("Periods must be in UTC format");
-        }
-        periods = pList;
+    public FreeBusy(final List<Interval> pList) {
+        super(FREEBUSY);
+        intervals = new ArrayList<>(pList);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param pList a list of periods
      */
-    public FreeBusy(final ParameterList aList, final PeriodList pList) {
-        super(FREEBUSY, aList, new Factory());
-        if (!pList.isUtc()) {
-            throw new IllegalArgumentException("Periods must be in UTC format");
-        }
-        periods = pList;
+    public FreeBusy(final ParameterList aList, final List<Interval> pList) {
+        super(FREEBUSY, aList);
+        intervals = new ArrayList<>(pList);
     }
 
     /**
@@ -173,16 +164,16 @@ public class FreeBusy extends Property {
     /**
      * @return Returns the periods.
      */
-    public final PeriodList getPeriods() {
-        return periods;
+    public final List<Interval> getIntervals() {
+        return new ArrayList<>(intervals);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws ParseException {
-        periods = new PeriodList(aValue);
+    public final void setValue(final String aValue) {
+        intervals = PeriodList.parse(aValue, CalendarDateFormat.UTC_DATE_TIME_FORMAT).toIntervalList();
     }
 
     /**
@@ -190,7 +181,12 @@ public class FreeBusy extends Property {
      */
     @Override
     public final String getValue() {
-        return getPeriods().toString();
+        return new PeriodList<>(intervals.toArray(Interval[]::new)).toString();
+    }
+
+    @Override
+    protected PropertyFactory<FreeBusy> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<FreeBusy> {
@@ -201,8 +197,7 @@ public class FreeBusy extends Property {
         }
 
         @Override
-        public FreeBusy createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public FreeBusy createProperty(final ParameterList parameters, final String value) {
             return new FreeBusy(parameters, value);
         }
 

@@ -32,11 +32,15 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Strings;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -53,17 +57,16 @@ public class RDateTest {
 
 //    private static final Logger LOGLoggerLogFactoLoggergetLog(RDateTest.class);
 
-    private TimeZone timezone;
+    private ZoneId timezone;
 
     @Before
     public void setUp() throws Exception {
-        TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
-        timezone = tzReg.getTimeZone("Australia/Melbourne");
+        timezone = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
     }
 
     @Test
     public void testSetTimeZone() {
-        RDate rDate = new RDate(new PeriodList());
+        RDate<Instant> rDate = new RDate(new ArrayList<>());
         
         /*
         try {
@@ -83,8 +86,8 @@ public class RDateTest {
         }
         */
 
-        rDate.setTimeZone(timezone);
-        assertEquals(timezone, rDate.getPeriods().getTimeZone());
+        rDate.add(new TzId(timezone.getId()));
+        assertEquals(timezone.getId(), rDate.getParameter(Parameter.TZID).get().getValue());
     }
 
     @Test
@@ -93,7 +96,7 @@ public class RDateTest {
         RDate rDate = new RDate(new ParameterList(), "20121212T121212Z");
         assertEquals(Property.RDATE + ":20121212T121212Z" + Strings.LINE_SEPARATOR, rDate.toString());
 
-        rDate = new RDate(new ParameterList(), new DateList("20121212T121212Z,20121213T121212Z", Value.DATE_TIME));
+        rDate = new RDate<>(new ParameterList(), DateList.parse("20121212T121212Z,20121213T121212Z"));
         assertEquals(Property.RDATE + ":20121212T121212Z,20121213T121212Z" + Strings.LINE_SEPARATOR, rDate.toString());
 
         rDate = new RDate();

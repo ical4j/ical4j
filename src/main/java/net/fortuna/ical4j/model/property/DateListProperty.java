@@ -34,11 +34,12 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.Strings;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.ZoneId;
+import java.time.temporal.Temporal;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * $Id$
@@ -47,40 +48,56 @@ import java.text.ParseException;
  * <p/>
  * Base class for properties with a list of dates as a value.
  *
+ * Note that generics have been introduced as part of the migration to the new Java Date/Time API.
+ * Date properties should now indicate the applicable {@link Temporal} type for the property.
+ *
+ * For example:
+ *
+ * <ul>
+ *     <li>UTC-based properties should use {@link java.time.Instant} to represent UTC time</li>
+ *     <li>Date-only properties should use {@link java.time.LocalDate} to represent a date value</li>
+ *     <li>Date-time properties should use {@link java.time.ZonedDateTime} to represent a date-time value influenced by timezone rules</li>
+ * </ul>
+ *
  * @author Ben Fortuna
  */
-public abstract class DateListProperty extends Property {
+public abstract class DateListProperty<T extends Temporal> extends Property {
 
     /**
      *
      */
     private static final long serialVersionUID = 5233773091972759919L;
 
-    private DateList dates;
+    private final Value defaultValueParam;
 
-    private TimeZone timeZone;
+    private DateList<T> dates;
+
+    private transient TimeZoneRegistry timeZoneRegistry;
+
+    private ZoneId defaultTimeZone;
 
     /**
      * @param name the property name
      */
-    public DateListProperty(final String name, PropertyFactory factory) {
-        this(name, new DateList(Value.DATE_TIME), factory);
+    public DateListProperty(final String name) {
+        this(name, new DateList<>());
     }
 
     /**
      * @param name       the property name
      * @param parameters property parameters
      */
-    public DateListProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
-        super(name, parameters, factory);
+    public DateListProperty(final String name, final ParameterList parameters, Value defaultValueParam) {
+        super(name, parameters);
+        this.defaultValueParam = defaultValueParam;
     }
 
     /**
      * @param name  the property name
      * @param dates a list of initial dates for the property
      */
-    public DateListProperty(final String name, final DateList dates, PropertyFactory factory) {
-        this(name, new ParameterList(), dates, factory);
+    public DateListProperty(final String name, final DateList<T> dates) {
+        this(name, new ParameterList(), dates, Value.DATE_TIME);
     }
 
     /**
@@ -88,29 +105,40 @@ public abstract class DateListProperty extends Property {
      * @param parameters property parameters
      * @param dates      a list of initial dates for the property
      */
-    public DateListProperty(final String name, final ParameterList parameters, final DateList dates,
-                            PropertyFactory factory) {
-        super(name, parameters, factory);
+    public DateListProperty(final String name, final ParameterList parameters, final DateList<T> dates,
+                            Value defaultValueParam) {
+        super(name, parameters);
         this.dates = dates;
-        if (dates != null && !Value.DATE_TIME.equals(dates.getType())) {
-            getParameters().replace(dates.getType());
-        }
+        this.defaultValueParam = defaultValueParam;
     }
 
     /**
      * @return Returns the dates.
      */
-    public final DateList getDates() {
-        return dates;
+    @SuppressWarnings("unchecked")
+    public final List<T> getDates() {
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
+        if (tzId.isPresent()) {
+            return dates.getDates().stream().map(date -> (T) TemporalAdapter.toLocalTime(
+                    date, tzId.get().toZoneId(timeZoneRegistry))).collect(Collectors.toList());
+        } else {
+            return dates.getDates();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setValue(final String aValue) throws ParseException {
-        dates = new DateList(aValue, getParameter(Parameter.VALUE),
-                timeZone);
+    public void setValue(final String aValue) {
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
+        if (tzId.isPresent()) {
+            dates = (DateList<T>) DateList.parse(aValue, tzId.get(), timeZoneRegistry);
+        } else if (defaultTimeZone != null) {
+            dates = (DateList<T>) DateList.parse(aValue, defaultTimeZone);
+        } else {
+            dates = (DateList<T>) DateList.parse(aValue);
+        }
     }
 
     /**
@@ -118,68 +146,24 @@ public abstract class DateListProperty extends Property {
      */
     @Override
     public String getValue() {
-        return Strings.valueOf(dates);
-    }
-
-    /**
-     * Sets the timezone associated with this property.
-     *
-     * @param timezone a timezone to associate with this property
-     */
-    public void setTimeZone(final TimeZone timezone) {
-        if (dates == null) {
-            throw new UnsupportedOperationException(
-                    "TimeZone is not applicable to current value");
-        }
-        this.timeZone = timezone;
-        if (timezone != null) {
-            if (!Value.DATE_TIME.equals(getDates().getType())) {
-                throw new UnsupportedOperationException(
-                        "TimeZone is not applicable to current value");
-            }
-            dates.setTimeZone(timezone);
-            getParameters().remove(getParameter(Parameter.TZID));
-            final TzId tzId = new TzId(timezone.getID());
-            getParameters().replace(tzId);
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
+        if (tzId.isPresent()) {
+            return dates.toString(tzId.get().toZoneId(timeZoneRegistry));
         } else {
-            // use setUtc() to reset timezone..
-            setUtc(false);
+            return dates.toString();
         }
     }
 
-    /**
-     * @return the timezone
-     */
-    public final TimeZone getTimeZone() {
-        return timeZone;
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        this.timeZoneRegistry = timeZoneRegistry;
     }
 
     /**
-     * Resets the timezone associated with the property. If utc is true, any TZID parameters are removed and the Java
-     * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
-     * default timezone (i.e. represents a "floating" local time)
-     *
-     * @param utc the UTC value
+     * A default timezone may be specified for interpreting floating DATE-TIME values. In the absence of a default
+     * timezone the system default timezone will be used.
+     * @param defaultTimeZone a timezone identifier
      */
-    public final void setUtc(final boolean utc) {
-        if (dates == null || !Value.DATE_TIME.equals(dates.getType())) {
-            throw new UnsupportedOperationException(
-                    "TimeZone is not applicable to current value");
-        }
-        dates.setUtc(utc);
-        getParameters().remove(getParameter(Parameter.TZID));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final Property copy() throws IOException, URISyntaxException, ParseException {
-        final Property copy = super.copy();
-
-        ((DateListProperty) copy).timeZone = timeZone;
-        ((DateListProperty) copy).setValue(getValue());
-
-        return copy;
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        this.defaultTimeZone = defaultTimeZone;
     }
 }

@@ -34,6 +34,9 @@ package net.fortuna.ical4j.model.component
 import net.fortuna.ical4j.model.ContentBuilder
 import spock.lang.Specification
 
+import java.time.ZoneId
+import java.time.ZonedDateTime
+
 class VEventSpec extends Specification {
 	
 	ContentBuilder builder = new ContentBuilder()
@@ -55,7 +58,7 @@ class VEventSpec extends Specification {
 		}
 
 		expect:
-		calendar.components[0].components.size() == 1
+		calendar.getComponents()[0].getComponents().size() == 1
 	}
 
 	def 'build event with location and resource'() {
@@ -78,6 +81,22 @@ class VEventSpec extends Specification {
 		}
 
 		expect:
-		calendar.components[0].components.size() == 2
+		calendar.getComponents()[0].getComponents().size() == 2
+	}
+
+	def 'build event with specific timezone'() {
+		setup:
+		ZonedDateTime startDate = ZonedDateTime.of(2023, 11, 15, 8, 30, 0,
+				0, ZoneId.of("America/Sao_Paulo"))
+		ZonedDateTime endDate = startDate.plusHours(1)
+
+		expect: 'creating a new event matched expected'
+		new VEvent(startDate, endDate, "Metting") as String ==~ /BEGIN:VEVENT\r
+DTSTAMP:\d{8}T\d{6}Z\r
+DTSTART;TZID=America\/Sao_Paulo:20231115T083000\r
+DTEND;TZID=America\/Sao_Paulo:20231115T093000\r
+SUMMARY:Metting\r
+END:VEVENT\r
+/
 	}
 }

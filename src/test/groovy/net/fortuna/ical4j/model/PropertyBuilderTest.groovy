@@ -1,8 +1,12 @@
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.model.property.Contact
 import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Ignore
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0
 
 class PropertyBuilderTest extends Specification {
 
@@ -17,7 +21,7 @@ class PropertyBuilderTest extends Specification {
         Property p = builder.build()
 
         then: 'resulting property is initialised accordingly'
-        p == Version.VERSION_2_0
+        p == VERSION_2_0
     }
 
     @Ignore
@@ -27,6 +31,9 @@ class PropertyBuilderTest extends Specification {
 
         and: 'builder is initialised'
         builder.name('dtend').value('20150403')
+
+        and: 'relaxed validation is disabled'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, false)
 
         when: 'build method called'
         Property p = builder.build()
@@ -47,5 +54,19 @@ class PropertyBuilderTest extends Specification {
 
         then: 'resulting property is initialised accordingly'
         p.value == '[{"DisplayName":"Microsoft Teams Meeting", "LocationCode":"013454"}]'
+    }
+
+    def 'test build property with a prefix'() {
+        given: 'a property builder instance'
+        PropertyBuilder builder = [Arrays.asList(new Contact.Factory())]
+
+        and: 'builder is initialised'
+        builder.name('work.contact').value('mailto:work@example.com')
+
+        when: 'build method called'
+        Property p = builder.build()
+
+        then: 'resulting property is initialised accordingly'
+        p.class == Contact && p.prefix == 'work' && p.value == 'mailto:work@example.com'
     }
 }

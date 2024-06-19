@@ -31,17 +31,25 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * $Id$
@@ -51,15 +59,15 @@ import java.util.List;
  * Unit tests for the ExDate property.
  * @author Ben Fortuna
  */
-public class ExDateTest extends TestCase {
+public class ExDateTest {
 
     private static Logger LOG = LoggerFactory.getLogger(ExDateTest.class);
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
@@ -67,8 +75,8 @@ public class ExDateTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
@@ -77,44 +85,45 @@ public class ExDateTest extends TestCase {
      * Ensure timezones are correctly parsed for this property.
      * @throws Exception
      */
+    @Test
     public void testTimeZones() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
-        
-        Component event = calendar.getComponent(Component.VEVENT);
-        List<ExDate> exdates = event.getProperties(Property.EXDATE);
-        for (ExDate exDate : exdates) {            
-            assertNotNull("This EXDATE should have a timezone", exDate.getDates().getTimeZone());
+
+        List<VEvent> event = calendar.getComponents(Component.VEVENT);
+        List<Property> exdates = event.get(0).getProperties(Property.EXDATE);
+        for (Property exDate : exdates) {
+            assertTrue("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID).isPresent());
         }
     }
-    
+
+    @Test
     public void testDstOnlyVTimeZones() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
 
         Calendar ical = builder.build(getClass().getResourceAsStream("/samples/valid/dst-only-vtimezone.ics"));
-        VTimeZone vTZ = (VTimeZone) ical.getComponent(VTimeZone.VTIMEZONE);
+        List<VTimeZone> vTZ = ical.getComponents(VTimeZone.VTIMEZONE);
 
-        String id = vTZ.getTimeZoneId().getValue();
+        String id = vTZ.get(0).getRequiredProperty(Property.TZID).getValue();
         assertEquals("Europe/Berlin", id);
-        assertEquals(vTZ.getObservances().get(0), vTZ.getApplicableObservance(new Date("20180403")));
+        assertEquals(vTZ.get(0).getObservances().get(0),
+                vTZ.get(0).getApplicableObservance(TemporalAdapter.parse("20180403T000000Z").getTemporal()));
 
-        VEvent vEvent = (VEvent) ical.getComponent(VEvent.VEVENT);
-        DtStart start = vEvent.getStartDate();
-        assertEquals(vTZ, start.getTimeZone().getVTimeZone());
-        assertEquals(1522738800000L, start.getDate().getTime());
+        List<VEvent> vEvent = ical.getComponents(VEvent.VEVENT);
+        DtStart<ZonedDateTime> start = vEvent.get(0).getRequiredProperty("DTSTART");
+        assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
     }
 
+    @Test
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
 
-        Component event = calendar.getComponent(Component.VEVENT);
-        List<ExDate> exdates = event.getProperties(Property.EXDATE);
-        for (ExDate exDate : exdates) {            
-            for (Date dateEx : exDate.getDates()) {
-                DateTime dateTimeEx = (DateTime) dateEx;
-                assertNotNull(dateTimeEx);
-                assertTrue("This exception date should be in UTC", dateTimeEx.isUtc());
+        List<VEvent> event = calendar.getComponents(Component.VEVENT);
+        List<Property> exdates = event.get(0).getProperties(Property.EXDATE);
+        for (Property exDate : exdates) {
+            for (Instant dateEx : ((ExDate<Instant>) exDate).getDates()) {
+                assertNotNull(dateEx);
             }
         }
     }
@@ -122,14 +131,17 @@ public class ExDateTest extends TestCase {
     /**
      * Allow date values by default if relaxed parsing enabled.
      */
-    public void testRelaxedParsing() throws ParseException {
+    @Test
+    @Ignore
+    public void testRelaxedValidation() {
+        ExDate<Instant> property = new ExDate<>(new ParameterList(), "20080315");
         try {
-            new ExDate(new ParameterList(), "20080315");
-            fail("Should throw ParseException");
-        } catch (ParseException pe) {
+            ValidationResult result = property.validate();
+            assertTrue(result.hasErrors());
+        } catch (ValidationException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());
         }
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-        new ExDate(new ParameterList(), "20080315");
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        new ExDate<>(new ParameterList(), "20080315").validate();
     }
 }

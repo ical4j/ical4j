@@ -33,6 +33,7 @@
 
 package net.fortuna.ical4j.transform.rfc5545
 
+import net.fortuna.ical4j.transform.property.TzHelper
 import spock.lang.Specification
 
 class TzHelperTest extends Specification {

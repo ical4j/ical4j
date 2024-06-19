@@ -39,9 +39,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
 
 /**
  * $Id$
@@ -105,48 +104,20 @@ public class Transp extends Property {
     public static final String VALUE_OPAQUE = "OPAQUE";
     public static final String VALUE_TRANSPARENT = "TRANSPARENT";
 
-    /**
-     * Opaque.
-     */
-    public static final Transp OPAQUE = new ImmutableTransp(VALUE_OPAQUE);
-
-    /**
-     * Transparent.
-     */
-    public static final Transp TRANSPARENT = new ImmutableTransp(VALUE_TRANSPARENT);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Transp.
-     */
-    private static final class ImmutableTransp extends Transp {
-
-        private static final long serialVersionUID = -6595830107310111996L;
-
-        private ImmutableTransp(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
     private String value;
 
     /**
      * Default constructor.
      */
     public Transp() {
-        super(TRANSP, new Factory());
+        super(TRANSP);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Transp(final String aValue) {
-        super(TRANSP, new Factory());
+        super(TRANSP);
         this.value = aValue;
     }
 
@@ -155,7 +126,7 @@ public class Transp extends Property {
      * @param aValue a value string for this component
      */
     public Transp(final ParameterList aList, final String aValue) {
-        super(TRANSP, aList, new Factory());
+        super(TRANSP, aList);
         this.value = aValue;
     }
 
@@ -180,6 +151,11 @@ public class Transp extends Property {
         return PropertyValidator.TRANSP.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Transp> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Transp> {
         private static final long serialVersionUID = 1L;
 
@@ -188,13 +164,11 @@ public class Transp extends Property {
         }
 
         @Override
-        public Transp createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public Transp createProperty(final ParameterList parameters, final String value) {
             Transp transp;
-            if (parameters.isEmpty() && OPAQUE.getValue().equalsIgnoreCase(value)) {
+            if (parameters.getAll().isEmpty() && OPAQUE.getValue().equalsIgnoreCase(value)) {
                 transp = OPAQUE;
-            } else if (parameters.isEmpty() && TRANSPARENT.getValue().equalsIgnoreCase(value)) {
+            } else if (parameters.getAll().isEmpty() && TRANSPARENT.getValue().equalsIgnoreCase(value)) {
                 transp = TRANSPARENT;
             } else {
                 transp = new Transp(parameters, value);

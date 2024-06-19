@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.Locale;
 
 /**
@@ -12,6 +13,7 @@ public class ZoneOffsetAdapter implements Serializable {
     private final ZoneOffset offset;
 
     public ZoneOffsetAdapter(ZoneOffset offset) {
+        Objects.requireNonNull(offset, "offset");
         this.offset = offset;
     }
 
@@ -42,7 +44,7 @@ public class ZoneOffsetAdapter implements Serializable {
      * @param utcOffset
      * @return a zoneoffset representing the specified utcoffset
      */
-    public static ZoneOffset from(UtcOffset utcOffset) {
+    public static ZoneOffset from(@SuppressWarnings("deprecation") UtcOffset utcOffset) {
         return ZoneOffset.of(utcOffset.toString());
     }
 }

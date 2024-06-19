@@ -33,11 +33,12 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -104,7 +105,7 @@ public class VAvailability extends CalendarComponent implements ComponentContain
     public VAvailability(boolean initialise) {
         super(VAVAILABILITY);
         if (initialise) {
-            getProperties().add(new DtStamp());
+            add(new DtStamp());
         }
     }
 
@@ -129,14 +130,23 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      * Returns the list of available times.
      * @return a component list
      */
-    public final ComponentList<Available> getAvailable() {
+    public final List<Available> getAvailable() {
         return getComponents();
     }
 
+    /**
+     *
+     * @return Returns the underlying component list.
+     */
     @Override
-    public ComponentList<Available> getComponents() {
+    public ComponentList<Available> getComponentList() {
         //noinspection unchecked
         return (ComponentList<Available>) components;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<Available> components) {
+        this.components = components;
     }
 
     /**
@@ -151,13 +161,17 @@ public class VAvailability extends CalendarComponent implements ComponentContain
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected Validator getValidator(Method method) {
-        // TODO Auto-generated method stub
-        return null;
+    protected ComponentFactory<VAvailability> newFactory() {
+        return new Factory();
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     /**
@@ -179,9 +193,9 @@ public class VAvailability extends CalendarComponent implements ComponentContain
             return new VAvailability(properties);
         }
 
-        @Override
-        public VAvailability createComponent(PropertyList properties, ComponentList subComponents) {
-            return new VAvailability(properties, subComponents);
+        @Override @SuppressWarnings("unchecked")
+        public VAvailability createComponent(PropertyList properties, ComponentList<?> subComponents) {
+            return new VAvailability(properties, (ComponentList<Available>) subComponents);
         }
     }
 }

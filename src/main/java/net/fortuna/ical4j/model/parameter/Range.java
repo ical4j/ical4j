@@ -38,8 +38,6 @@ import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -71,7 +69,7 @@ public class Range extends Parameter implements Encodable {
      * @param aValue a string representation of a recurrence identifier range
      */
     public Range(final String aValue) {
-        super(RANGE, new Factory());
+        super(RANGE);
         this.value = Strings.unquote(aValue);
 
         // allow arbitrary ranges for Lotus Notes..
@@ -102,7 +100,7 @@ public class Range extends Parameter implements Encodable {
         }
 
         @Override
-        public Range createParameter(final String value) throws URISyntaxException {
+        public Range createParameter(final String value) {
             switch (value.toUpperCase()) {
                 case VALUE_THISANDFUTURE: return THISANDFUTURE;
                 case VALUE_THISANDPRIOR: return THISANDPRIOR;

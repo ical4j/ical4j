@@ -1,152 +1,142 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.Dates;
 
-import java.util.*;
+import java.time.DayOfWeek;
+import java.time.Month;
+import java.time.Year;
+import java.time.temporal.Temporal;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
+import static java.time.temporal.ChronoField.DAY_OF_YEAR;
 
 /**
  * Applies BYDAY rules specified in this Recur instance to the specified date list. If no BYDAY rules are specified
  * the date list is returned unmodified.
  */
-public class ByDayRule extends AbstractDateExpansionRule {
+public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
-    private final WeekDayList dayList;
+    private final List<WeekDay> dayList;
 
-    public ByDayRule(WeekDayList dayList, Frequency frequency) {
-        super(frequency);
-        this.dayList = dayList;
+    private final WeekFields weekFields;
+
+    public ByDayRule(T seed, Frequency frequency) {
+        this(seed, frequency, null);
     }
 
-    public ByDayRule(WeekDayList dayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
-        super(frequency, weekStartDay);
+    public ByDayRule(T seed, Frequency frequency, DayOfWeek firstDayOfWeek) {
+        super(frequency);
+        this.dayList = new WeekDayList(WeekDay.getWeekDay(getDayOfWeek(seed)));
+        if (firstDayOfWeek != null) {
+            weekFields = WeekFields.of(firstDayOfWeek, 1);
+        } else {
+            weekFields = WeekFields.of(Locale.getDefault());
+        }
+    }
+
+    public ByDayRule(List<WeekDay> dayList, Frequency frequency) {
+        this(dayList, frequency, null);
+    }
+
+    public ByDayRule(List<WeekDay> dayList, Frequency frequency, DayOfWeek firstDayOfWeek) {
+        super(frequency);
         this.dayList = dayList;
+        if (firstDayOfWeek != null) {
+            weekFields = WeekFields.of(firstDayOfWeek, 1);
+        } else {
+            weekFields = WeekFields.of(Locale.getDefault());
+        }
     }
 
     @Override
-    public DateList transform(DateList dates) {
+    public List<T> apply(List<T> dates) {
         if (dayList.isEmpty()) {
             return dates;
         }
-        final DateList weekDayDates = Dates.getDateListInstance(dates);
+        final List<T> weekDayDates = new ArrayList<>();
 
-        Function<Date, List<Date>> transformer = null;
+        Function<T, List<T>> transformer;
         switch (getFrequency()) {
-            case WEEKLY: transformer = new WeeklyExpansionFilter(dates.getType()); break;
-            case MONTHLY: transformer = new MonthlyExpansionFilter(dates.getType()); break;
-            case YEARLY: transformer = new YearlyExpansionFilter(dates.getType()); break;
+            case WEEKLY: transformer = new WeeklyExpansionFilter(); break;
+            case MONTHLY: transformer = new MonthlyExpansionFilter(); break;
+            case YEARLY: transformer = new YearlyExpansionFilter(); break;
             case DAILY:
             default: transformer = new LimitFilter();
         }
 
-        for (final Date date : dates) {
-            List<Date> transformed = transformer.apply(date);
+        for (final T date : dates) {
+            List<T> transformed = transformer.apply(date);
 
             // filter by offset
-            List<Date> filtered = new ArrayList<>();
+            List<T> filtered = new ArrayList<>();
             dayList.forEach(day -> filtered.addAll(getOffsetDates(transformed.stream().filter(d ->
-                getCalendarInstance(d, true).get(Calendar.DAY_OF_WEEK) == WeekDay.getCalendarDay(day))
-                .collect(Collectors.toCollection(() -> Dates.getDateListInstance(weekDayDates))), day.getOffset())));
+                    getDayOfWeek(d) == WeekDay.getDayOfWeek(day))
+                .collect(Collectors.toList()), day.getOffset())));
             weekDayDates.addAll(filtered);
         }
         return weekDayDates;
     }
 
-    private class LimitFilter implements Function<Date, List<Date>> {
-
+    private class LimitFilter implements Function<T, List<T>> {
         @Override
-        public List<Date> apply(Date date) {
-            final Calendar cal = getCalendarInstance(date, true);
-            if (dayList.contains(WeekDay.getWeekDay(cal))) {
-                return Arrays.asList(date);
+        public List<T> apply(T date) {
+            if (dayList.contains(WeekDay.getWeekDay(getDayOfWeek(date)))) {
+                return Collections.singletonList(date);
             }
             return Collections.emptyList();
         }
     }
 
-    private class WeeklyExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public WeeklyExpansionFilter(Value type) {
-            this.type = type;
-        }
-
+    private class WeeklyExpansionFilter implements Function<T, List<T>> {
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, true);
-            final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
-            // construct a list of possible week days..
-            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            while (cal.get(Calendar.WEEK_OF_YEAR) == weekNo) {
-                if (!dayList.stream().map(weekDay -> WeekDay.getCalendarDay(weekDay))
-                        .filter(calDay -> cal.get(Calendar.DAY_OF_WEEK) == calDay)
-                        .collect(Collectors.toList()).isEmpty()) {
-                    retVal.add(Dates.getInstance(getTime(date, cal), type));
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
+            for (int i = 1; i <= 7; i++) {
+                T candidate = withTemporalField(date, weekFields.dayOfWeek(), i);
+                if (dayList.parallelStream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
+                    retVal.add(candidate);
                 }
-                cal.add(Calendar.DAY_OF_WEEK, 1);
             }
             return retVal;
         }
     }
 
-    private class MonthlyExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public MonthlyExpansionFilter(Value type) {
-            this.type = type;
-        }
-
+    private class MonthlyExpansionFilter implements Function<T, List<T>> {
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, true);
-            final int month = cal.get(Calendar.MONTH);
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
+            Month month = Month.of(getMonth(date).getMonthOfYear());
+            boolean leapYear = Year.isLeap(getYear(date));
             // construct a list of possible month days..
-            cal.set(Calendar.DAY_OF_MONTH, 1);
-            while (cal.get(Calendar.MONTH) == month) {
-                if (!dayList.stream().map(weekDay -> WeekDay.getCalendarDay(weekDay))
-                        .filter(calDay -> cal.get(Calendar.DAY_OF_WEEK) == calDay)
-                        .collect(Collectors.toList()).isEmpty()) {
-                    retVal.add(Dates.getInstance(getTime(date, cal), type));
+            for (int i = 1; i <= month.length(leapYear); i++) {
+                T candidate = withTemporalField(date, DAY_OF_MONTH, i);
+                if (dayList.parallelStream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
+                    retVal.add(candidate);
                 }
-                cal.add(Calendar.DAY_OF_MONTH, 1);
             }
             return retVal;
         }
     }
 
-    private class YearlyExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public YearlyExpansionFilter(Value type) {
-            this.type = type;
-        }
-
+    private class YearlyExpansionFilter implements Function<T, List<T>> {
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, true);
-            final int year = cal.get(Calendar.YEAR);
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
+            int year = getYear(date);
             // construct a list of possible year days..
-            cal.set(Calendar.DAY_OF_YEAR, 1);
-            while (cal.get(Calendar.YEAR) == year) {
-                if (!dayList.stream().map(weekDay -> WeekDay.getCalendarDay(weekDay))
-                        .filter(calDay -> cal.get(Calendar.DAY_OF_WEEK) == calDay)
-                        .collect(Collectors.toList()).isEmpty()) {
-                    retVal.add(Dates.getInstance(getTime(date, cal), type));
+            for (int i = 1; i <= Year.of(year).length(); i++) {
+                T candidate = withTemporalField(date, DAY_OF_YEAR, i);
+                if (dayList.parallelStream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
+                    retVal.add(candidate);
                 }
-                cal.add(Calendar.DAY_OF_YEAR, 1);
             }
             return retVal;
         }
@@ -160,11 +150,11 @@ public class ByDayRule extends AbstractDateExpansionRule {
      * @param dates
      * @param offset
      */
-    private List<Date> getOffsetDates(final DateList dates, final int offset) {
+    private List<T> getOffsetDates(final List<T> dates, final int offset) {
         if (offset == 0) {
             return dates;
         }
-        final List<Date> offsetDates = Dates.getDateListInstance(dates);
+        final List<T> offsetDates = new ArrayList<>();
         final int size = dates.size();
         if (offset < 0 && offset >= -size) {
             offsetDates.add(dates.get(size + offset));

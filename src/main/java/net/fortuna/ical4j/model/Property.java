@@ -39,12 +39,13 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Comparator;
-import java.util.function.Function;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -398,38 +399,38 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
     private final String name;
 
-    private final ParameterList parameters;
+    /**
+     * Support for a content line prefix used to group related properties. This is only used with vCard properties.
+     */
+    private String prefix;
 
-    private final PropertyFactory<?> factory;
+    private ParameterList parameters;
 
     /**
      * Constructor.
      *
      * @param aName   property name
-     * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, PropertyFactory factory) {
-        this(aName, new ParameterList(), factory);
+    protected Property(final String aName) {
+        this(aName, new ParameterList());
     }
 
-    /**
-     * Constructor made protected to enforce the use of <code>PropertyFactory</code> for property instantiation.
-     * @param aName property name
-     * @param aList a list of parameters
-     */
-//    protected Property(final String aName, final ParameterList aList) {
-//        this(aName, aList, new Factory());
-//    }
+    protected Property(@NotNull Enum<?> name) {
+        this(name.toString(), new ParameterList());
+    }
 
     /**
      * @param aName   a property identifier
      * @param aList   a list of initial parameters
-     * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final ParameterList aList, PropertyFactory factory) {
+    protected Property(final String aName, final ParameterList aList) {
         this.name = aName;
         this.parameters = aList;
-        this.factory = factory;
+    }
+
+    protected Property(@NotNull Enum<?> name, final ParameterList aList) {
+        this.name = name.toString();
+        this.parameters = aList;
     }
 
     /**
@@ -439,23 +440,25 @@ public abstract class Property extends Content implements Comparable<Property>, 
      *
      * @param property a property to copy
      * @throws URISyntaxException where the specified property contains an invalid URI value
-     * @throws ParseException     where the specified property has invalid data
      * @throws IOException        where an error occurs reading data from the specified property
-     * @deprecated Use {@link #copy()} instead
      */
-    protected Property(final Property property) throws IOException,
-            URISyntaxException, ParseException {
-        this(property.getName(), new ParameterList(property.getParameters(), false),
-                property.factory);
-        setValue(property.getValue());
-    }
+//    protected Property(final Property property) throws IOException, URISyntaxException {
+//        this.name = property.name;
+//        this.parameters = property.parameters;
+//        this.factory = property.factory;
+//        setValue(property.getValue());
+//    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final String toString() {
+    public String toString() {
         final StringBuilder buffer = new StringBuilder();
+        if (prefix != null && !prefix.isEmpty()) {
+            buffer.append(prefix);
+            buffer.append('.');
+        }
         buffer.append(getName());
         if (parameters != null) {
             buffer.append(parameters);
@@ -463,8 +466,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
         buffer.append(':');
         String value;
 
-        if (this instanceof XProperty && getParameter(Parameter.VALUE) != null
-                && !Value.TEXT.equals(getParameter(Parameter.VALUE))) {
+        if (this instanceof XProperty && getParameter(Parameter.VALUE).isPresent()
+                && !Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
             value = getValue();
         } else if (this instanceof Encodable) {
             try {
@@ -495,10 +498,70 @@ public abstract class Property extends Content implements Comparable<Property>, 
     }
 
     /**
-     * @return Returns the parameters.
+     * Returns the property prefix for applicable property types.
+     * @return a string prefix, or null if not applicable
      */
-    public final ParameterList getParameters() {
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    /**
+     * @return Returns the underlying parameter list.
+     */
+    public final ParameterList getParameterList() {
         return parameters;
+    }
+
+    protected void setParameters(ParameterList parameters) {
+        this.parameters = parameters;
+    }
+
+    /**
+     * Add a parameter to the property's parameter list.
+     * @param parameter the parameter to add
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T add(Parameter parameter) {
+        setParameters((ParameterList) parameters.add(parameter));
+        return (T) this;
+    }
+
+    /**
+     * Remove a parameter from the property's parameter list.
+     * @param parameter the parameter to remove
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T remove(Parameter parameter) {
+        setParameters((ParameterList) parameters.remove(parameter));
+        return (T) this;
+    }
+
+    /**
+     * Remove all parameters with the specified name from the property's parameter list.
+     * @param parameterName the name of parameters to remove
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T removeAll(String... parameterName) {
+        setParameters((ParameterList) parameters.removeAll(parameterName));
+        return (T) this;
+    }
+
+    /**
+     * Add a parameter to the property's parameter list whilst removing all other parameters with the same name.
+     * @param parameter the parameter to add
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T replace(Parameter parameter) {
+        setParameters((ParameterList) parameters.replace(parameter));
+        return (T) this;
     }
 
     /**
@@ -507,8 +570,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @param name name of parameters to retrieve
      * @return a parameter list containing only parameters with the specified name
      */
-    public final ParameterList getParameters(final String name) {
-        return getParameters().getParameters(name);
+    public final List<Parameter> getParameters(final String... name) {
+        return parameters.get(name);
     }
 
     /**
@@ -517,19 +580,35 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
      */
-    public final <T extends Parameter> T getParameter(final String name) {
-        return getParameters().getParameter(name);
+    public final <P extends Parameter> Optional<P> getParameter(final String name) {
+        return parameters.getFirst(name);
+    }
+
+    public final <P extends Parameter> Optional<P> getParameter(@NotNull Enum<?> name) {
+        return getParameter(name.toString());
+    }
+
+    /**
+     * Retrieve a single required parameter.
+     * @param name
+     * @param <P>
+     * @return
+     */
+    public final <P extends Parameter> P getRequiredParameter(final String name) {
+        return parameters.getRequired(name);
+    }
+
+    public final <P extends Parameter> P getRequiredParameter(@NotNull Enum<?> name) {
+        return getRequiredParameter(name.toString());
     }
 
     /**
      * Sets the current value of the property.
      *
      * @param aValue a string representation of the property value
-     * @throws IOException        possibly thrown by setting the value of certain properties
-     * @throws URISyntaxException possibly thrown by setting the value of certain properties
-     * @throws ParseException     possibly thrown by setting the value of certain properties
+     * @throws IllegalArgumentException possibly thrown by setting the value of certain properties
      */
-    public abstract void setValue(String aValue) throws IOException, URISyntaxException, ParseException;
+    public abstract void setValue(String aValue);
 
     /**
      * Perform validation on a property.
@@ -542,11 +621,12 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object arg0) {
+    public boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
             return getName().equals(p.getName())
-                    && new EqualsBuilder().append(getValue(), p.getValue()).append(getParameters(), p.getParameters()).isEquals();
+                    && new EqualsBuilder().append(getValue(), p.getValue()).append(parameters,
+                    p.parameters).append(prefix, p.prefix).isEquals();
         }
         return super.equals(arg0);
     }
@@ -558,24 +638,25 @@ public abstract class Property extends Content implements Comparable<Property>, 
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
-                getValue()).append(getParameters()).toHashCode();
+                getValue()).append(parameters).append(getPrefix()).toHashCode();
     }
+
+    /**
+     * Returns a new property factory used to create deep copies.
+     * @return a property factory instance
+     */
+    protected abstract PropertyFactory<?> newFactory();
 
     /**
      * Create a (deep) copy of this property.
      *
      * @return the copy of the property
-     * @throws IOException        where an error occurs reading property data
-     * @throws URISyntaxException where the property contains an invalid URI value
-     * @throws ParseException     where the property contains an invalid date value
      */
-    public Property copy() throws IOException, URISyntaxException, ParseException {
-        if (factory == null) {
-            throw new UnsupportedOperationException("No factory specified");
+    public final Property copy() {
+        if (getName().toUpperCase().startsWith("X-")) {
+            return new XProperty(getName(), new ParameterList(getParameters()), getValue());
         }
-        // Deep copy parameter list..
-        final ParameterList params = new ParameterList(getParameters(), false);
-        return factory.createProperty(params, getValue());
+        return newFactory().createProperty(parameters, getValue());
     }
 
     @Override
@@ -585,7 +666,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
         }
         return Comparator.comparing(Property::getName)
                 .thenComparing(Property::getValue)
-                .thenComparing((Function<Property, ParameterList>) Property::getParameters)
+                .thenComparing(Property::getParameterList)
+                .thenComparing(Property::getPrefix, Comparator.nullsFirst(Comparator.naturalOrder()))
                 .compare(this, o);
     }
 }

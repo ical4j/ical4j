@@ -4,7 +4,13 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import org.apache.commons.lang3.StringUtils;
+import net.fortuna.ical4j.util.RegEx;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * <pre>
@@ -49,15 +55,32 @@ public class Feature extends Parameter implements Encodable {
 
     private static final String PARAMETER_NAME = "FEATURE";
 
+    public static final Feature AUDIO = new Feature(Value.AUDIO.name());
+
+    public static final Feature CHAT = new Feature(Value.CHAT.name());
+
+    public static final Feature FEED = new Feature(Value.FEED.name());
+
+    public static final Feature MODERATOR = new Feature(Value.MODERATOR.name());
+
+    public static final Feature PHONE = new Feature(Value.PHONE.name());
+
+    public static final Feature SCREEN = new Feature(Value.SCREEN.name());
+
+    public static final Feature VIDEO = new Feature(Value.VIDEO.name());
+
     public enum Value {
         AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO
     }
 
-    private final String[] values;
+    private final Set<String> values;
 
     public Feature(String value) {
-        super(PARAMETER_NAME, new Factory());
-        String[] valueStrings = value.split(",");
+        this(value.split(RegEx.COMMA_DELIMITED));
+    }
+
+    public Feature(String... valueStrings) {
+        super(PARAMETER_NAME);
         for (String valueString : valueStrings) {
             try {
                 Value.valueOf(valueString.toUpperCase());
@@ -67,12 +90,18 @@ public class Feature extends Parameter implements Encodable {
                 }
             }
         }
-        this.values = valueStrings;
+        this.values = Collections.unmodifiableSet(new TreeSet<>(Arrays.asList(valueStrings)));
+    }
+
+    public Feature(Value... values) {
+        super(PARAMETER_NAME);
+        this.values = Collections.unmodifiableSet(new TreeSet<>(
+                Arrays.stream(values).map(Enum::name).collect(Collectors.toList())));
     }
 
     @Override
     public String getValue() {
-        return StringUtils.join(values, ",");
+        return String.join(",", values);
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<Feature> {

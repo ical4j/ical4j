@@ -39,7 +39,9 @@ import java.util.function.Predicate;
 /**
  * @author fortuna
  *
+ * @deprecated
  */
+@Deprecated
 public class DateInRangeRule implements Predicate<Date> {
 
     private final DateRange range;

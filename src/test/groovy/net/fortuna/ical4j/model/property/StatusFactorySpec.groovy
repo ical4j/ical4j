@@ -31,9 +31,10 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ContentBuilder;
-import net.fortuna.ical4j.util.Constants;
+import net.fortuna.ical4j.model.ContentBuilder
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*
 
 class StatusFactorySpec extends Specification {
 
@@ -45,8 +46,8 @@ class StatusFactorySpec extends Specification {
 		
 		where:
 		value							| constant
-		Status.VEVENT_CANCELLED.value	| Status.VEVENT_CANCELLED
-		Status.VEVENT_CONFIRMED.value	| Status.VEVENT_CONFIRMED
-		Status.VEVENT_TENTATIVE.value	| Status.VEVENT_TENTATIVE
+		VEVENT_CANCELLED.value | VEVENT_CANCELLED
+		VEVENT_CONFIRMED.value | VEVENT_CONFIRMED
+		VEVENT_TENTATIVE.value | VEVENT_TENTATIVE
 	}
 }

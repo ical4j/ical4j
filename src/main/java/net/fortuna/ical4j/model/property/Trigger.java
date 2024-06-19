@@ -36,11 +36,16 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
+import java.util.Collections;
+import java.util.Optional;
+
+import static net.fortuna.ical4j.model.Parameter.VALUE;
 
 /**
  * $Id$
@@ -144,7 +149,7 @@ import java.time.temporal.TemporalAmount;
  *
  * @author Ben Fortuna
  */
-public class Trigger extends UtcProperty {
+public class Trigger extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 5049421499261722194L;
 
@@ -154,7 +159,7 @@ public class Trigger extends UtcProperty {
      * Default constructor.
      */
     public Trigger() {
-        super(TRIGGER, new Factory());
+        this(Instant.now());
     }
 
     /**
@@ -162,7 +167,7 @@ public class Trigger extends UtcProperty {
      * @param aValue a value string for this component
      */
     public Trigger(final ParameterList aList, final String aValue) {
-        super(TRIGGER, aList, new Factory());
+        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
         setValue(aValue);
     }
 
@@ -171,15 +176,19 @@ public class Trigger extends UtcProperty {
      */
     @Deprecated
     public Trigger(final Dur duration) {
-        this(TemporalAmountAdapter.from(duration).getDuration());
+        this(TemporalAmountAdapter.from(duration));
     }
 
     /**
      * @param duration a duration in milliseconds
      */
     public Trigger(final TemporalAmount duration) {
-        super(TRIGGER, new Factory());
-        setDuration(duration);
+        this(new TemporalAmountAdapter(duration));
+    }
+
+    private Trigger(final TemporalAmountAdapter duration) {
+        super(TRIGGER, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
+        this.duration = duration;
     }
 
     /**
@@ -188,7 +197,7 @@ public class Trigger extends UtcProperty {
      */
     @Deprecated
     public Trigger(final ParameterList aList, final Dur duration) {
-        this(aList, TemporalAmountAdapter.from(duration).getDuration());
+        this(aList, TemporalAmountAdapter.from(duration));
     }
 
     /**
@@ -196,25 +205,38 @@ public class Trigger extends UtcProperty {
      * @param duration a duration in milliseconds
      */
     public Trigger(final ParameterList aList, final TemporalAmount duration) {
-        super(TRIGGER, aList, new Factory());
-        setDuration(duration);
+        this(aList, new TemporalAmountAdapter(duration));
+    }
+
+    private Trigger(final ParameterList aList, final TemporalAmountAdapter duration) {
+        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
+        this.duration = duration;
     }
 
     /**
      * @param dateTime a date representation of a date-time
      */
-    public Trigger(final DateTime dateTime) {
-        super(TRIGGER, new Factory());
-        setDateTime(dateTime);
+    public Trigger(final Instant dateTime) {
+        super(TRIGGER, new ParameterList(Collections.singletonList(Value.DATE_TIME)),
+                CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
+        setDate(dateTime);
     }
 
     /**
      * @param aList    a list of parameters for this component
      * @param dateTime a date representation of a date-time
      */
-    public Trigger(final ParameterList aList, final DateTime dateTime) {
-        super(TRIGGER, aList, new Factory());
-        setDateTime(dateTime);
+    public Trigger(final ParameterList aList, final Instant dateTime) {
+        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DURATION);
+        setDate(dateTime);
+    }
+
+    /**
+     * Indicates whether the trigger is relative or absolute.
+     * @return true if the trigger is absolute
+     */
+    public boolean isAbsolute() {
+        return Optional.of(Value.DATE_TIME).equals(getParameter(VALUE));
     }
 
     /**
@@ -223,7 +245,7 @@ public class Trigger extends UtcProperty {
     @Override
     public ValidationResult validate() throws ValidationException {
         ValidationResult result = super.validate();
-        if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.DATE_TIME).equals(getParameter(Parameter.VALUE))) {
             result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));
         } else {
             result = result.merge(PropertyValidator.TRIGGER_REL.validate(this));
@@ -249,9 +271,10 @@ public class Trigger extends UtcProperty {
         try {
             super.setValue(aValue);
             duration = null;
-        } catch (ParseException pe) {
+        } catch (DateTimeParseException pe) {
+            LoggerFactory.getLogger(Trigger.class).debug(String.format("Not a valid DATE-TIME value: %s", aValue));
             duration = TemporalAmountAdapter.parse(aValue);
-            super.setDateTime(null);
+            super.setDate(null);
         }
     }
 
@@ -270,10 +293,10 @@ public class Trigger extends UtcProperty {
      * @param dateTime The dateTime to set.
      */
     @Override
-    public final void setDateTime(final DateTime dateTime) {
-        super.setDateTime(dateTime);
+    public void setDate(final Instant dateTime) {
+        super.setDate(dateTime);
         duration = null;
-        getParameters().replace(Value.DATE_TIME);
+        replace(Value.DATE_TIME);
     }
 
     /**
@@ -281,11 +304,24 @@ public class Trigger extends UtcProperty {
      */
     public final void setDuration(final TemporalAmount duration) {
         this.duration = new TemporalAmountAdapter(duration);
-        super.setDateTime(null);
+        super.setDate(null);
         // duration is the default value type for Trigger..
-        if (getParameter(Parameter.VALUE) != null) {
-            getParameters().replace(Value.DURATION);
-        }
+        replace(Value.DURATION);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
+    }
+
+    @Override
+    protected PropertyFactory<Trigger> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Trigger> {
@@ -296,8 +332,7 @@ public class Trigger extends UtcProperty {
         }
 
         @Override
-        public Trigger createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Trigger createProperty(final ParameterList parameters, final String value) {
             return new Trigger(parameters, value);
         }
 
