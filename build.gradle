@@ -159,6 +159,7 @@ scmVersion {
     branchVersionCreator = ['master': 'simple']
     branchVersionCreator = ['ical4j-1.x-maintenance': 'simple']
     branchVersionCreator = ['ical4j-2.x-maintenance': 'simple']
+    branchVersionCreator = ['ical4j-3.x-maintenance': 'simple']
     nextVersion {
         suffix = 'pre'
         separator = '-'
