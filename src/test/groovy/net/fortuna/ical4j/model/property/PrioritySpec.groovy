@@ -1,8 +1,10 @@
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*
 
 class PrioritySpec extends Specification {
 
@@ -14,17 +16,17 @@ class PrioritySpec extends Specification {
 
     def 'test factory use of constants'() {
         when: 'factory is invoked with a constant value'
-        def priority = factory.createProperty(new ParameterList(), value)
+        def priority = factory.createProperty(value)
 
         then: 'the returned value is the constant instance'
         priority.is(constantInstance)
 
         where:
         value   | constantInstance
-        '9' | Priority.LOW
-        '5' | Priority.MEDIUM
-        '1' | Priority.HIGH
-        '0' | Priority.UNDEFINED
+        '9' | LOW
+        '5' | MEDIUM
+        '1' | HIGH
+        '0' | UNDEFINED
     }
 
     def 'test relaxed parsing with invalid values'() {
@@ -32,10 +34,10 @@ class PrioritySpec extends Specification {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
 
         and: 'factory is invoked with invalid value'
-        def priority = new Priority.Factory().createProperty(new ParameterList(), value)
+        def priority = factory.createProperty(value)
 
-        then: 'the returned priority is UNDEFINED'
-        priority == Priority.UNDEFINED
+        then: 'an illegal argument exception is thrown'
+        notThrown(IllegalArgumentException)
 
         where:
         value << ['', 'low', 'blah']

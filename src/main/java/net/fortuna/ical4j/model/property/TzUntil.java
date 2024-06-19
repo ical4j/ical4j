@@ -33,27 +33,36 @@
 
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 
-public class TzUntil extends UtcProperty {
+public class TzUntil extends DateProperty<Instant> implements UtcProperty {
 
     public TzUntil() {
-        super(TZUNTIL, new ParameterList(), new Factory());
+        super(TZUNTIL, new ParameterList(), CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
     }
 
-    public TzUntil(ParameterList parameters, String value) throws ParseException {
-        super(TZUNTIL, parameters, new Factory());
+    public TzUntil(ParameterList parameters, String value) {
+        super(TZUNTIL, parameters, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(value);
     }
 
-    public TzUntil(ParameterList parameters, PropertyFactory factory) {
-        super(TZUNTIL, parameters, factory);
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
+    }
+
+    @Override
+    protected PropertyFactory<TzUntil> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TzUntil> {
@@ -64,8 +73,7 @@ public class TzUntil extends UtcProperty {
         }
 
         @Override
-        public TzUntil createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public TzUntil createProperty(final ParameterList parameters, final String value) {
             return new TzUntil(parameters, value);
         }
 

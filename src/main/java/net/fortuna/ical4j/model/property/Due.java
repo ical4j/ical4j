@@ -31,11 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.TemporalAdapter;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -90,60 +93,28 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class Due extends DateProperty {
+public class Due<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = -2965312347832730406L;
-
-    /**
-     * Default constructor. The time value is initialised to the time of instantiation.
-     */
-    public Due() {
-        super(DUE, new Factory());
-        // defaults to UTC time..
-        setDate(new DateTime(true));
-    }
-
-    /**
-     * Creates a new DUE property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public Due(TimeZone timezone) {
-        super(DUE, timezone, new Factory());
-    }
 
     /**
      * Creates a new instance initialised with the parsed value.
      *
      * @param value the DUE value string to parse
-     * @throws ParseException where the specified string is not a valid DUE value representation
+     * @throws java.time.format.DateTimeParseException where the specified string is not a valid DUE value representation
      */
-    public Due(final String value) throws ParseException {
-        super(DUE, new Factory());
-        setValue(value);
-    }
-
-    /**
-     * Creates a new DUE property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a DUE value
-     * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public Due(String value, TimeZone timezone) throws ParseException {
-        super(DUE, timezone, new Factory());
+    public Due(final String value) {
+        super(DUE);
         setValue(value);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid date/date-time representation
+     * @throws java.time.format.DateTimeParseException when the specified string is not a valid date/date-time representation
      */
-    public Due(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(DUE, aList, new Factory());
+    public Due(final ParameterList aList, final String aValue) {
+        super(DUE, aList);
         setValue(aValue);
     }
 
@@ -152,8 +123,8 @@ public class Due extends DateProperty {
      *
      * @param aDate a date
      */
-    public Due(final Date aDate) {
-        super(DUE, new Factory());
+    public Due(final T aDate) {
+        super(DUE);
         setDate(aDate);
     }
 
@@ -163,12 +134,17 @@ public class Due extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Due(final ParameterList aList, final Date aDate) {
-        super(DUE, aList, new Factory());
+    public Due(final ParameterList aList, final T aDate) {
+        super(DUE, aList);
         setDate(aDate);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<Due> {
+    @Override
+    protected PropertyFactory<Due<T>> newFactory() {
+        return new Factory<>();
+    }
+
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<Due<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -176,14 +152,14 @@ public class Due extends DateProperty {
         }
 
         @Override
-        public Due createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Due(parameters, value);
+        public Due<T> createProperty(final ParameterList parameters, final String value) {
+            return new Due<>(parameters, value);
         }
 
         @Override
-        public Due createProperty() {
-            return new Due();
+        public Due<T> createProperty() {
+            TemporalAdapter<T> now = TemporalAdapter.parse(LocalDateTime.now(ZoneOffset.UTC).toString());
+            return new Due<>(now.getTemporal());
         }
     }
 

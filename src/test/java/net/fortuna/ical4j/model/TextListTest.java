@@ -44,7 +44,7 @@ public class TextListTest extends TestCase {
 
     private static final String VALUE_RESOURCE_LIST = "projector,laptop,pulpit";
     
-    private TextList resourcees;
+    private TextList resources;
     
     private int expectedSize;
     
@@ -55,7 +55,7 @@ public class TextListTest extends TestCase {
      */
     public TextListTest(TextList resources, int expectedSize) {
         super("testSize");
-        this.resourcees = resources;
+        this.resources = resources;
         this.expectedSize = expectedSize;
     }
     
@@ -65,7 +65,7 @@ public class TextListTest extends TestCase {
      */
     public TextListTest(TextList resources, String expectedToString) {
         super("testToString");
-        this.resourcees = resources;
+        this.resources = resources;
         this.expectedToString = expectedToString;
     }
 
@@ -73,14 +73,14 @@ public class TextListTest extends TestCase {
      * Assert three resourcees parsed from value.
      */
     public void testSize() {
-        assertEquals(expectedSize, resourcees.size());
+        assertEquals(expectedSize, resources.getTexts().size());
     }
     
     /**
      * Assert toString() produces identical resource list string value.
      */
     public void testToString() {
-        assertEquals(expectedToString, resourcees.toString());
+        assertEquals(expectedToString, resources.toString());
     }
     
     /**

@@ -31,14 +31,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Calendar;
-
-import net.fortuna.ical4j.model.Date;
+import junit.framework.TestCase;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
-import junit.framework.TestCase;
+
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -57,23 +58,21 @@ public class ObservanceTest extends TestCase {
      */
     @Override
     protected void setUp() throws Exception {
-        observance = new Standard();
-        observance.getProperties().add(new DtStart("16010101T030000"));
-        observance.getProperties().add(new TzOffsetFrom("+0200"));
-        observance.getProperties().add(new TzOffsetTo("+0100"));
-        observance.getProperties().add(new RRule("FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU"));
+        observance = new Standard().withProperty(new DtStart("16010101T030000"))
+                .withProperty(new TzOffsetFrom("+0200"))
+                .withProperty(new TzOffsetTo("+0100"))
+                .withProperty(new RRule("FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU"))
+                .getFluentTarget();
     }
 
     /**
-     * Test method for {@link net.fortuna.ical4j.model.component.Observance#getLatestOnset(net.fortuna.ical4j.model.Date)}.
+     * Test method for {@link net.fortuna.ical4j.model.component.Observance#getLatestOnset(Temporal)}.
      */
     public void testGetLatestOnset() {
         for (int i = 10; i > 0; i--) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(2000 + i, i, i);
-            Date onset = observance.getLatestOnset(new Date(cal.getTime()));
+            OffsetDateTime onset = observance.getLatestOnset(
+                    ZonedDateTime.now().withYear(2000 + 1).withMonth(i).withDayOfMonth(i));
             assertNotNull(onset);
         }
     }
-
 }

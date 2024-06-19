@@ -34,10 +34,10 @@ package net.fortuna.ical4j.validate;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentContainer;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.Status;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -46,17 +46,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * @author Ben
  *
  */
-public class ComponentValidator<T extends Component> extends AbstractValidator<T> {
-
-    private static final String ASSERT_NONE_MESSAGE = "Component [{0}] is not applicable";
-
-    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Component [{0}] must only be specified once";
+public class ComponentValidator<T extends Component> extends AbstractValidator<T> implements ContentValidator<Property> {
 
     public static final ComponentValidator<Available> AVAILABLE = new ComponentValidator<>(Component.AVAILABLE,
             new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
@@ -93,7 +90,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(OneOrLess, CONTACT, DTSTART, DTEND, DURATION, DTSTAMP, ORGANIZER, UID, URL),
             new ValidationRule<>(None, RRULE, EXRULE, RDATE, EXDATE),
             new ValidationRule<>(None, (Predicate<VFreeBusy> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
-                    .anyMatch(p -> !((DateProperty) p).isUtc()),
+                    .anyMatch(p -> !((DateProperty<?>) p).isUtc()),
                     "VFREEBUSY date properties MUST be in UTC time",
                     DTSTART, DTEND));
 
@@ -102,8 +99,8 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
             new ValidationRule<>(OneExclusive, DTEND, DURATION),
             new ValidationRule<>(None, (Predicate<VJournal> & Serializable) a -> a.getProperties(STATUS).stream()
-                    .anyMatch(p -> !(Status.VJOURNAL_DRAFT.equals(p) || Status.VJOURNAL_FINAL.equals(p)
-                            || Status.VJOURNAL_CANCELLED.equals(p))),
+                    .anyMatch(p -> !(VJOURNAL_DRAFT.equals(p) || VJOURNAL_FINAL.equals(p)
+                            || VJOURNAL_CANCELLED.equals(p))),
                     "STATUS value not applicable for VJOURNAL", STATUS));
 
     public static final ComponentValidator<VLocation> VLOCATION = new ComponentValidator<>(Component.VLOCATION,
@@ -162,7 +159,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
     }
 
     private ComponentValidator(String context, Set<ValidationRule<T>> rules) {
-        super(context, new PropertyContainerRuleSet<>(rules.toArray(new ValidationRule[0])));
+        super(context, new PropertyContainerRuleSet<>(rules.toArray(ValidationRule[]::new)));
     }
 
     @Override
@@ -177,6 +174,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
      * @param componentName a component name used in the assertion
      * @param components a list of components
      * @throws ValidationException where the assertion fails
+     * @deprecated see {@link ContentValidator#assertNone(String, List, boolean)}
      */
     @Deprecated
     public static void assertNone(String componentName, ComponentList<?> components) throws ValidationException {
@@ -188,6 +186,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
      * @param componentName a component name used in the assertion
      * @param components a list of components
      * @throws ValidationException where the assertion fails
+     * @deprecated see {@link ContentValidator#assertOneOrLess(String, List, boolean)}
      */
     @Deprecated
     public static void assertOneOrLess(String componentName, ComponentList<?> components) throws ValidationException {

@@ -31,52 +31,83 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
  *
- * Defines a list of iCalendar properties.
+ * Accessor implementation for a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList<T extends Property> extends ArrayList<T> implements Serializable {
+public class PropertyList implements ContentCollection<Property>, Comparable<PropertyList> {
 
-    private static final long serialVersionUID = -8875923766224921031L;
+    private final List<Property> properties;
 
     /**
      * Default constructor.
      */
     public PropertyList() {
+        this(Collections.emptyList());
     }
 
     /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     */
-    public PropertyList(final int initialCapacity) {
-        super(initialCapacity);
-    }
-
-    /**
-     * Creates a deep copy of the specified property list.
+     * Creates an unmodifiable copy of the specified property list.
      * @param properties a property list
-     * @throws ParseException where property data cannot be parsed
-     * @throws IOException where property data cannot be read
-     * @throws URISyntaxException where a property contains an invalid URI
      */
     
-    @SuppressWarnings("unchecked")
-    public PropertyList(PropertyList<? extends T> properties) throws ParseException, IOException, URISyntaxException {
-        super();
-        for ( T p: properties) {
-            add((T)p.copy());
+    public PropertyList(@NotNull List<Property> properties) {
+        this.properties = Collections.unmodifiableList(properties);
+    }
+
+    @Override
+    public ContentCollection<Property> add(@NotNull Property content) {
+        List<Property> copy = new ArrayList<>(properties);
+        copy.add(content);
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public ContentCollection<Property> addAll(@NotNull Collection<Property> content) {
+        List<Property> copy = new ArrayList<>(properties);
+        copy.addAll(content);
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public ContentCollection<Property> remove(Property content) {
+        List<Property> copy = new ArrayList<>(properties);
+        if (copy.remove(content)) {
+            return new PropertyList(copy);
+        } else {
+            return this;
         }
+    }
+
+    @Override
+    public ContentCollection<Property> removeAll(String... name) {
+        List<String> names = Arrays.asList(name);
+        List<Property> copy = new ArrayList<>(properties);
+        if (copy.removeIf(p -> names.contains(p.getName()))) {
+            return new PropertyList(copy);
+        } else {
+            return this;
+        }
+    }
+
+    @Override
+    public ContentCollection<Property> replace(@NotNull Property content) {
+        List<Property> copy = new ArrayList<>(properties);
+        copy.removeIf(p -> p.getName().equals(content.getName()));
+        copy.add(content);
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public List<Property> getAll() {
+        return properties;
     }
 
     /**
@@ -84,56 +115,61 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      */
     @Override
     public final String toString() {
-        return stream().map(Property::toString).collect(Collectors.joining(""));
+        return properties.stream().map(Property::toString).collect(Collectors.joining(""));
     }
 
     /**
      * Returns the first property of specified name.
      * @param aName name of property to return
      * @return a property or null if no matching property found
+     *
+     * @deprecated use {@link PropertyList#getFirst(String)}
      */
-    public final <R> R getProperty(final String aName) {
-        for (final T p : this) {
-            if (p.getName().equalsIgnoreCase(aName)) {
-                return (R) p;
-            }
-        }
-        return null;
+    @Deprecated
+    public final <T extends Property> Optional<T> getProperty(final String aName) {
+        return getFirst(aName);
     }
 
     /**
      * Returns a list of properties with the specified name.
      * @param name name of properties to return
      * @return a property list
+     *
+     * @deprecated use {@link PropertyList#get(String...)}
      */
-    @SuppressWarnings("unchecked")
-    public final <C extends T> PropertyList<C> getProperties(final String... name) {
-        final PropertyList<C> list = new PropertyList<C>();
-        for (String propName : name) {
-            List<T> match = stream().filter(p -> p.getName().equalsIgnoreCase(propName)).collect(Collectors.toList());
-            list.addAll((List<C>) match);
-        }
-        return list;
+    @Deprecated
+    public final List<Property> getProperties(final String name) {
+        return get(name);
     }
 
-    /**
-     * Add a property to the list.
-     * @param property the property to add
-     * @return true
-     * @see java.util.List#add(java.lang.Object)
-     */
     @Override
-    public final boolean add(final T property) {
-        return super.add(property);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PropertyList that = (PropertyList) o;
+        return Objects.equals(properties, that.properties);
     }
 
-    /**
-     * Remove a property from the list.
-     * @param property the property to remove
-     * @return true if the list contained the specified property
-     * @see java.util.List#remove(java.lang.Object)
-     */
-    public final boolean remove(final Property property) {
-        return super.remove(property);
+    @Override
+    public int hashCode() {
+        return Objects.hash(properties);
     }
+
+    @Override
+    public int compareTo(PropertyList o) {
+        // test for equality
+        if (properties.equals(o.properties)) {
+            return 0;
+        }
+        // then test for size..
+        int retval = properties.size() - o.properties.size();
+        if (retval != 0) {
+            return retval;
+        } else {
+            // compare individual params..
+            return properties.stream().filter(o.properties::contains)
+                    .mapToInt(p -> p.compareTo(o.properties.get(o.properties.indexOf(p)))).sum();
+        }
+    }
+
 }

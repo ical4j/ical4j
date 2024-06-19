@@ -11,10 +11,10 @@ class TimeZoneCacheTest extends Specification {
 
         when: 'a timezone is added to the cache'
         def tz = TimeZoneRegistryFactory.instance.createRegistry().getTimeZone('Australia/Melbourne').getVTimeZone()
-        def isAdded = cache.putIfAbsent(tz.timeZoneId.value, tz)
+        def isAdded = cache.putIfAbsent(tz.timeZoneId.get().value, tz)
 
         then: 'timezone exists in the cache'
-        isAdded && cache.getTimezone(tz.timeZoneId.value) == tz
+        isAdded && cache.getTimezone(tz.timeZoneId.get().value) == tz
 
         where:
         cache << [new MapTimeZoneCache(), new JCacheTimeZoneCache()]

@@ -31,13 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.PropertyTest;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
-import junit.framework.TestSuite;
-
-import net.fortuna.ical4j.model.PropertyTest;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
  * Created on 16/03/2005
@@ -74,7 +74,7 @@ public class VersionTest extends PropertyTest {
      * Test that the constant VERSION_2_0 is immutable.
      */
     @Override
-    public void testImmutable() throws IOException, URISyntaxException, ParseException {
+    public void testImmutable() throws IOException, URISyntaxException {
         super.testImmutable();
         
         try {
@@ -97,10 +97,10 @@ public class VersionTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new VersionTest(Version.VERSION_2_0, "2.0"));
-        suite.addTest(new VersionTest("testImmutable", Version.VERSION_2_0));
-        suite.addTest(new VersionTest("testValidation", Version.VERSION_2_0));
-        suite.addTest(new VersionTest("testEquals", Version.VERSION_2_0));
+        suite.addTest(new VersionTest(VERSION_2_0, "2.0"));
+        suite.addTest(new VersionTest("testImmutable", VERSION_2_0));
+        suite.addTest(new VersionTest("testValidation", VERSION_2_0));
+        suite.addTest(new VersionTest("testEquals", VERSION_2_0));
         return suite;
     }
 }

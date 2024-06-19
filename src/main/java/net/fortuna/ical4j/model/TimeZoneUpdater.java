@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Optional;
 
 /**
  * Support for updating timezone definitions.
@@ -105,11 +106,11 @@ public class TimeZoneUpdater {
      */
     public VTimeZone updateDefinition(VTimeZone vTimeZone) {
         if (isEnabled() && vTimeZone != null) {
-            final TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
-            if (tzUrl != null) {
+            final Optional<TzUrl> tzUrl = vTimeZone.getProperty(Property.TZURL);
+            if (tzUrl.isPresent()) {
                 try {
                     boolean secureScheme = "true".equals(Configurator.getProperty(SECURE_CONNECTION_ENABLED).orElse("false"));
-                    URL updateUrl = new UrlBuilder(tzUrl.getUri())
+                    URL updateUrl = new UrlBuilder(tzUrl.get().getUri())
                             .withScheme(Configurator.getProperty(UPDATE_SCHEME_OVERRIDE).orElse(secureScheme ? "https" : null))
                             .withHost(Configurator.getProperty(UPDATE_HOST_OVERRIDE).orElse(null))
                             .withPort(Configurator.getIntProperty(UPDATE_PORT_OVERRIDE).orElse(-1)).toUrl();
@@ -117,9 +118,9 @@ public class TimeZoneUpdater {
 
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(connection.getInputStream());
-                    final VTimeZone updatedVTimeZone = calendar.getComponent(Component.VTIMEZONE);
-                    if (updatedVTimeZone != null) {
-                        return updatedVTimeZone;
+                    final Optional<VTimeZone> updatedVTimeZone = calendar.getComponent(Component.VTIMEZONE);
+                    if (updatedVTimeZone.isPresent()) {
+                        return updatedVTimeZone.get();
                     }
                 } catch (IOException | ParserException | URISyntaxException e) {
                     LoggerFactory.getLogger(TimeZoneUpdater.class).warn("Error updating timezone definition", e);

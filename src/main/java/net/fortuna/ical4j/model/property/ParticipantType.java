@@ -32,12 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.property.immutable.ImmutableParticipantType;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -52,9 +49,6 @@ import java.text.ParseException;
 public class ParticipantType extends Property implements Encodable {
 
     private static final long serialVersionUID = 7753849118575885600L;
-
-    public static final ParticipantType VOTER =
-            new ParticipantType("VOTER");
 
     private String value;
 
@@ -77,14 +71,14 @@ public class ParticipantType extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public ParticipantType(final ParameterList aList, final String aValue) {
-        super(PARTICIPANT_TYPE, aList, new Factory());
-        setValue(aValue);
+        super(PARTICIPANT_TYPE, aList);
+        this.value = aValue;
     }
 
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 
@@ -100,6 +94,11 @@ public class ParticipantType extends Property implements Encodable {
         return ValidationResult.EMPTY;
     }
 
+    @Override
+    protected PropertyFactory<ParticipantType> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<ParticipantType> {
         private static final long serialVersionUID = 1L;
 
@@ -107,12 +106,11 @@ public class ParticipantType extends Property implements Encodable {
             super(PARTICIPANT_TYPE);
         }
 
-        public ParticipantType createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public ParticipantType createProperty(final ParameterList parameters, final String value) {
             final ParticipantType participantType;
 
-            if (parameters.isEmpty() && ParticipantType.VOTER.getValue().equalsIgnoreCase(value)) {
-                participantType = ParticipantType.VOTER;
+            if (ImmutableParticipantType.ACTIVE.getValue().equalsIgnoreCase(value)) {
+                participantType = ImmutableParticipantType.ACTIVE;
             } else {
                 participantType = new ParticipantType(parameters, value);
             }

@@ -39,9 +39,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*;
 
 /**
  * $Id$
@@ -106,59 +104,20 @@ public class Clazz extends Property {
     public static final String VALUE_PRIVATE = "PRIVATE";
     public static final String VALUE_CONFIDENTIAL = "CONFIDENTIAL";
 
-    /**
-     * Constant for public classification.
-     */
-    public static final Clazz PUBLIC = new ImmutableClazz(VALUE_PUBLIC);
-
-    /**
-     * Constant for private classification.
-     */
-    public static final Clazz PRIVATE = new ImmutableClazz(VALUE_PRIVATE);
-
-    /**
-     * Constant for confidential classification.
-     */
-    public static final Clazz CONFIDENTIAL = new ImmutableClazz(VALUE_CONFIDENTIAL);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Clazz.
-     */
-    private static final class ImmutableClazz extends Clazz {
-
-        private static final long serialVersionUID = 5978394762293365042L;
-
-        /**
-         * @param value
-         */
-        private ImmutableClazz(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
     private String value;
 
     /**
      * Default constructor.
      */
     public Clazz() {
-        super(CLASS, new Factory());
+        super(CLASS);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Clazz(final String aValue) {
-        super(CLASS, new Factory());
+        super(CLASS);
         this.value = aValue;
     }
 
@@ -167,7 +126,7 @@ public class Clazz extends Property {
      * @param aValue a value string for this component
      */
     public Clazz(final ParameterList aList, final String aValue) {
-        super(CLASS, aList, new Factory());
+        super(CLASS, aList);
         this.value = aValue;
     }
 
@@ -187,6 +146,11 @@ public class Clazz extends Property {
         return value;
     }
 
+    @Override
+    protected PropertyFactory<Clazz> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Clazz> {
         private static final long serialVersionUID = 1L;
 
@@ -195,10 +159,9 @@ public class Clazz extends Property {
         }
 
         @Override
-        public Clazz createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Clazz createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty()) {
+            if (parameters.getAll().isEmpty()) {
                 switch (value.toUpperCase()) {
                     case VALUE_PUBLIC: return PUBLIC;
                     case VALUE_PRIVATE: return PRIVATE;

@@ -33,9 +33,6 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.parameter.Value;
-
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -47,25 +44,23 @@ import java.text.ParseException;
  */
 public class DateListTest extends TestCase {
 
-    private DateList dateList;
+    private DateList<?> dateList;
     
     private int expectedSize;
 
     /**
      * @param value
-     * @param type
      * @param expectedSize
-     * @throws ParseException
      */
-    public DateListTest(String value, Value type, int expectedSize) throws ParseException {
-        this(new DateList(value, type), expectedSize);
+    public DateListTest(String value, int expectedSize) {
+        this(DateList.parse(value), expectedSize);
     }
 
     /**
      * @param dateList
      * @param expectedSize
      */
-    public DateListTest(DateList dateList, int expectedSize) {
+    public DateListTest(DateList<?> dateList, int expectedSize) {
         super("testSize");
         this.dateList = dateList;
         this.expectedSize = expectedSize;
@@ -75,19 +70,18 @@ public class DateListTest extends TestCase {
      * 
      */
     public void testSize() {
-        assertEquals(expectedSize, dateList.size());
+        assertEquals(expectedSize, dateList.getDates().size());
     }
     
     /**
      * @return
-     * @throws ParseException 
      */
-    public static TestSuite suite() throws ParseException {
+    public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new DateListTest(new DateList(), 0));
-        suite.addTest(new DateListTest(new Date().toString(), Value.DATE, 1));
-        suite.addTest(new DateListTest(new DateTime().toString(), Value.DATE_TIME, 1));
-        suite.addTest(new DateListTest(new DateTime(123).toString() + "," + new DateTime(999).toString(), Value.DATE_TIME, 2));
+        suite.addTest(new DateListTest(new DateList<>(), 0));
+        suite.addTest(new DateListTest(new Date().toString(), 1));
+        suite.addTest(new DateListTest(new DateTime().toString(), 1));
+        suite.addTest(new DateListTest(new DateTime(123).toString() + "," + new DateTime(999).toString(), 2));
         return suite;
     }
 }

@@ -41,10 +41,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -100,17 +98,15 @@ public class Url extends Property {
      * Default constructor.
      */
     public Url() {
-        super(URL, new Factory());
+        super(URL);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Url(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
-        super(URL, aList, new Factory());
+    public Url(final ParameterList aList, final String aValue) {
+        super(URL, aList);
         setValue(aValue);
     }
 
@@ -118,7 +114,7 @@ public class Url extends Property {
      * @param aUri a URI
      */
     public Url(final URI aUri) {
-        super(URL, new Factory());
+        super(URL);
         uri = aUri;
     }
 
@@ -127,7 +123,7 @@ public class Url extends Property {
      * @param aUri  a URI
      */
     public Url(final ParameterList aList, final URI aUri) {
-        super(URL, aList, new Factory());
+        super(URL, aList);
         uri = aUri;
     }
 
@@ -142,8 +138,12 @@ public class Url extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
-        uri = Uris.create(aValue);
+    public final void setValue(final String aValue) {
+        try {
+            uri = Uris.create(aValue);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -166,6 +166,11 @@ public class Url extends Property {
         return PropertyValidator.URL.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Url> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Url> {
         private static final long serialVersionUID = 1L;
 
@@ -174,8 +179,7 @@ public class Url extends Property {
         }
 
         @Override
-        public Url createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Url createProperty(final ParameterList parameters, final String value) {
             return new Url(parameters, value);
         }
 

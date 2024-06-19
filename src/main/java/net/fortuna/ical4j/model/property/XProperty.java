@@ -31,15 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Encodable;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -60,7 +59,7 @@ public class XProperty extends Property implements Encodable {
      * @param name a non-standard property name
      */
     public XProperty(final String name) {
-        super(name, new Factory(name));
+        super(name);
     }
 
     /**
@@ -68,7 +67,7 @@ public class XProperty extends Property implements Encodable {
      * @param aValue a property value
      */
     public XProperty(final String aName, final String aValue) {
-        super(aName, new Factory(aName));
+        super(aName);
         setValue(aValue);
     }
 
@@ -79,7 +78,7 @@ public class XProperty extends Property implements Encodable {
      */
     public XProperty(final String aName, final ParameterList aList,
             final String aValue) {
-        super(aName, aList, new Factory(aName));
+        super(aName, aList);
         setValue(aValue);
     }
 
@@ -117,25 +116,8 @@ public class XProperty extends Property implements Encodable {
         return result;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<XProperty> {
-        private static final long serialVersionUID = 1L;
-
-        private final String name;
-
-        public Factory(String name) {
-            super(name);
-            this.name = name;
-        }
-
-        @Override
-        public XProperty createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new XProperty(name, parameters, value);
-        }
-
-        @Override
-        public XProperty createProperty() {
-            return new XProperty(name);
-        }
+    @Override
+    protected PropertyFactory<XProperty> newFactory() {
+        throw new UnsupportedOperationException("Factory not supported for custom properties");
     }
 }

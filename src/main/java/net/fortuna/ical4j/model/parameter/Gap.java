@@ -38,7 +38,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.TemporalAmountAdapter;
 
-import java.net.URISyntaxException;
 import java.time.temporal.TemporalAmount;
 
 /**
@@ -64,12 +63,12 @@ public class Gap extends Parameter {
     private TemporalAmountAdapter duration;
 
     public Gap(String value) {
-        super(PARAM_NAME, new Factory());
+        super(PARAM_NAME);
         duration = TemporalAmountAdapter.parse(value);
     }
 
     public Gap(TemporalAmount temporalAmount) {
-        super(PARAM_NAME, new Factory());
+        super(PARAM_NAME);
         this.duration = new TemporalAmountAdapter(temporalAmount);
     }
 
@@ -89,7 +88,7 @@ public class Gap extends Parameter {
         }
 
         @Override
-        public Gap createParameter(String value) throws URISyntaxException {
+        public Gap createParameter(String value) {
             return new Gap(value);
         }
     }

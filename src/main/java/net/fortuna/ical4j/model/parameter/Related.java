@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -70,7 +68,7 @@ public class Related extends Parameter implements Encodable {
      * @param aValue a string representation of an alarm trigger relationship
      */
     public Related(final String aValue) {
-        super(RELATED, new Factory());
+        super(RELATED);
         this.value = Strings.unquote(aValue);
 
         // value must be one of finite list..
@@ -95,7 +93,7 @@ public class Related extends Parameter implements Encodable {
         }
 
         @Override
-        public Related createParameter(final String value) throws URISyntaxException {
+        public Related createParameter(final String value) {
             switch (value.toUpperCase()) {
                 case VALUE_END: return END;
                 case VALUE_START: return START;

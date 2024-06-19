@@ -31,14 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <pre>
@@ -81,21 +86,21 @@ public class LocationType extends Property {
 
     private static final long serialVersionUID = -3541686430899510312L;
 
-    private LocationTypeList locationTypes;
+    private List<String> locationTypes;
 
     /**
      * Default constructor.
      */
     public LocationType() {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
-        locationTypes = new LocationTypeList();
+        super(LOCATION_TYPE);
+        locationTypes = new ArrayList<>();
     }
 
     /**
      * @param aValue a value string for this component
      */
     public LocationType(final String aValue) {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
+        super(LOCATION_TYPE);
         setValue(aValue);
     }
 
@@ -104,15 +109,15 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final ParameterList aList, final String aValue) {
-        super(LOCATION_TYPE, aList, new Factory());
+        super(LOCATION_TYPE, aList);
         setValue(aValue);
     }
 
     /**
      * @param cList a list of locationTypes
      */
-    public LocationType(final LocationTypeList cList) {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
+    public LocationType(final List<String> cList) {
+        super(LOCATION_TYPE);
         locationTypes = cList;
     }
 
@@ -120,19 +125,21 @@ public class LocationType extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of locationTypes
      */
-    public LocationType(final ParameterList aList, final LocationTypeList cList) {
-        super(LOCATION_TYPE, aList, new Factory());
+    public LocationType(final ParameterList aList, final List<String> cList) {
+        super(LOCATION_TYPE, aList);
         locationTypes = cList;
     }
 
     public LocationType(net.fortuna.ical4j.model.LocationType... locationTypes) {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
-        this.locationTypes = new LocationTypeList(locationTypes);
+        super(LOCATION_TYPE, new ParameterList());
+        this.locationTypes = Arrays.stream(locationTypes).map(net.fortuna.ical4j.model.LocationType::toString)
+                .collect(Collectors.toList());
     }
 
     public LocationType(ParameterList params, net.fortuna.ical4j.model.LocationType... locationTypes) {
-        super(LOCATION_TYPE, params, new Factory());
-        this.locationTypes = new LocationTypeList(locationTypes);
+        super(LOCATION_TYPE, params);
+        this.locationTypes = Arrays.stream(locationTypes).map(net.fortuna.ical4j.model.LocationType::toString)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -140,13 +147,13 @@ public class LocationType extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        locationTypes = new LocationTypeList(aValue);
+        locationTypes = Collections.singletonList(aValue);
     }
 
     /**
      * @return Returns the locationTypes.
      */
-    public final LocationTypeList getLocationTypes() {
+    public final List<String> getLocationTypes() {
         return locationTypes;
     }
 
@@ -155,12 +162,17 @@ public class LocationType extends Property {
      */
     @Override
     public final String getValue() {
-        return getLocationTypes().toString();
+        return String.join(",", locationTypes);
     }
 
     @Override
     public ValidationResult validate() throws ValidationException {
         return PropertyValidator.LOCATION_TYPE.validate(this);
+    }
+
+    @Override
+    protected PropertyFactory<LocationType> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<LocationType> {
@@ -171,8 +183,7 @@ public class LocationType extends Property {
         }
 
         @Override
-        public LocationType createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public LocationType createProperty(final ParameterList parameters, final String value) {
             return new LocationType(parameters, value);
         }
 

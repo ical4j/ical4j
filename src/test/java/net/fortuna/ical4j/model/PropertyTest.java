@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * $Id$
  *
@@ -114,20 +116,24 @@ public class PropertyTest extends AbstractPropertyTest {
         assertTrue(property.equals(property));
 
         @SuppressWarnings("serial")
-		Property notEqual = new Property("notEqual", null) {
+		Property notEqual = new Property("notEqual", new ParameterList()) {
             @Override
             public String getValue() {
                 return "";
             }
 
             @Override
-            public void setValue(String value) throws IOException,
-                    URISyntaxException, ParseException {
+            public void setValue(String value) {
             }
 
             @Override
             public ValidationResult validate() throws ValidationException {
                 return ValidationResult.EMPTY;
+            }
+
+            @Override
+            protected PropertyFactory<?> newFactory() {
+                return null;
             }
         };
 
@@ -138,14 +144,13 @@ public class PropertyTest extends AbstractPropertyTest {
     /**
      * Test deep copy of properties.
      */
-    public void testCopy() throws IOException, URISyntaxException,
-            ParseException {
+    public void testCopy() throws IOException, URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
 
-        copy.getParameters().add(Value.BOOLEAN);
-        assertFalse(property.equals(copy));
-        assertFalse(copy.equals(property));
+        copy.add(Value.BOOLEAN);
+        assertNotEquals(property, copy);
+        assertNotEquals(copy, property);
     }
 
     /**
@@ -184,7 +189,7 @@ public class PropertyTest extends AbstractPropertyTest {
      * @throws ParseException
      */
     @SuppressWarnings("serial")
-	public void testImmutable() throws IOException, URISyntaxException, ParseException {
+	public void testImmutable() throws IOException, URISyntaxException {
         try {
             property.setValue("");
             fail("UnsupportedOperationException should be thrown");
@@ -193,7 +198,7 @@ public class PropertyTest extends AbstractPropertyTest {
         }
 
         try {
-            property.getParameters().add(new Parameter("name", null) {
+            property.add(new Parameter("name") {
                 @Override
                 public String getValue() {
                     return null;
@@ -212,39 +217,47 @@ public class PropertyTest extends AbstractPropertyTest {
         TestSuite suite = new TestSuite();
 
         @SuppressWarnings("serial")
-		Property property = new Property("name", null) {
+		Property property = new Property("name", new ParameterList()) {
             @Override
             public String getValue() {
                 return "value";
             }
 
             @Override
-            public void setValue(String value) throws IOException,
-                    URISyntaxException, ParseException {
+            public void setValue(String value) {
             }
 
             @Override
             public ValidationResult validate() throws ValidationException {
                 return ValidationResult.EMPTY;
             }
+
+            @Override
+            protected PropertyFactory<?> newFactory() {
+                return null;
+            }
         };
 
         @SuppressWarnings("serial")
-		Property invalidProperty = new Property("name", null) {
+		Property invalidProperty = new Property("name", new ParameterList()) {
             @Override
             public String getValue() {
                 return "value";
             }
 
             @Override
-            public void setValue(String value) throws IOException,
-                    URISyntaxException, ParseException {
+            public void setValue(String value) {
             }
 
             @Override
             public ValidationResult validate() throws ValidationException {
                 return new ValidationResult(new ValidationEntry("Fail",
                         ValidationEntry.Severity.ERROR, getName()));
+            }
+
+            @Override
+            protected PropertyFactory<?> newFactory() {
+                return null;
             }
         };
         suite.addTest(new PropertyTest("testEquals", property));

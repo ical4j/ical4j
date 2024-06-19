@@ -33,11 +33,15 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [May 1 2017]
@@ -115,9 +119,16 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Mike Douglass
  */
-public class Participant extends Component implements ComponentContainer<Component> {
+public class Participant extends Component implements ComponentContainer<Component>, ChangeManagementPropertyAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
+
+    private final Validator<Participant> validator = new ComponentValidator<>(Component.PARTICIPANT,
+            new ValidationRule<>(One, PARTICIPANT_TYPE, UID),
+            new ValidationRule<>(OneOrLess, CALENDAR_ADDRESS, CREATED, DESCRIPTION,
+                    DTSTAMP, GEO, LAST_MODIFIED, PRIORITY, SEQUENCE,
+                    STATUS, SUMMARY, URL)
+    );
 
     /**
      * Default constructor.
@@ -130,7 +141,7 @@ public class Participant extends Component implements ComponentContainer<Compone
      * Constructor.
      * @param properties a list of properties
      */
-    public Participant(final PropertyList<Property> properties) {
+    public Participant(final PropertyList properties) {
         super(PARTICIPANT, properties);
     }
 
@@ -138,7 +149,7 @@ public class Participant extends Component implements ComponentContainer<Compone
      * Constructor.
      * @param properties a list of properties
      */
-    public Participant(final PropertyList<Property> properties, final ComponentList<Component> components) {
+    public Participant(final PropertyList properties, final ComponentList<? extends Component> components) {
         super(PARTICIPANT, properties, components);
     }
 
@@ -153,75 +164,69 @@ public class Participant extends Component implements ComponentContainer<Compone
         return result;
     }
 
+    public <C extends Component> List<C> getComponents() {
+        return ComponentContainer.super.getComponents();
+    }
+
+    /**
+     *
+     * @return Returns the underlying component list.
+     */
     @Override
-    public ComponentList<Component> getComponents() {
+    public ComponentList<Component> getComponentList() {
         //noinspection unchecked
         return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**
      * Returns the optional calendar address property.
      * @return the CALENDAR_ADDRESS property or null if not specified
      */
-    public final CalendarAddress getCalendarAddress() {
+    public final Optional<CalendarAddress> getCalendarAddress() {
         return getProperty(CALENDAR_ADDRESS);
     }
 
     /**
-     * @return the optional creation-time property for an event
-     */
-    public final Created getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
      * @return the optional date-stamp property
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
-    public final DtStamp getDateStamp() {
-        return getProperty(DTSTAMP);
+    @Deprecated
+    public final Optional<DtStamp> getDateStamp() {
+        return getDateTimeStamp();
     }
 
     /**
      * Returns the optional description property.
      * @return the DESCRIPTION property or null if not specified
      */
-    public final Description getDescription() {
+    public final Optional<Description> getDescription() {
         return getProperty(DESCRIPTION);
-    }
-
-    /**
-     * @return the optional last-modified property for an event
-     */
-    public final LastModified getLastModified() {
-        return getProperty(LAST_MODIFIED);
     }
 
     /**
      * Returns the mandatory PARTICIPANT-TYPE property.
      * @return the PARTICIPANT-TYPE property or null if not specified
      */
-    public ParticipantType getParticipantType() {
+    public Optional<ParticipantType> getParticipantType() {
         return getProperty(PARTICIPANT_TYPE);
     }
 
     /**
      * @return the optional priority property for an event
      */
-    public final Priority getPriority() {
+    public final Optional<Priority> getPriority() {
         return getProperty(PRIORITY);
-    }
-
-    /**
-     * @return the optional sequence number property for an event
-     */
-    public final Sequence getSequence() {
-        return getProperty(SEQUENCE);
     }
 
     /**
      * @return the optional status property for an event
      */
-    public final Status getStatus() {
+    public final Optional<Status> getStatus() {
         return getProperty(STATUS);
     }
 
@@ -229,23 +234,28 @@ public class Participant extends Component implements ComponentContainer<Compone
      * Returns the optional summary property.
      * @return the SUMMARY property or null if not specified
      */
-    public final Summary getSummary() {
+    public final Optional<Summary> getSummary() {
         return getProperty(SUMMARY);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Uid getUid() {
-        return getProperty(UID);
     }
 
     /**
      * @return the optional URL property for an event
      */
-    public final Url getUrl() {
+    public final Optional<Url> getUrl() {
         return getProperty(URL);
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+    }
+
+    @Override
+    protected ComponentFactory<Participant> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<Participant> {
@@ -260,13 +270,12 @@ public class Participant extends Component implements ComponentContainer<Compone
         }
 
         @Override
-        public Participant createComponent(PropertyList<Property> properties) {
+        public Participant createComponent(PropertyList properties) {
             return new Participant(properties);
         }
 
         @Override
-        public Participant createComponent(final PropertyList<Property> properties,
-                                           final ComponentList<Component> subComponents) {
+        public Participant createComponent(final PropertyList properties, final ComponentList<?> subComponents) {
             return new Participant(properties, subComponents);
         }
     }

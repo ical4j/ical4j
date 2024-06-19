@@ -87,7 +87,7 @@ public class RequestStatus extends Property {
      * Default constructor.
      */
     public RequestStatus() {
-        super(REQUEST_STATUS, new ParameterList(), new Factory());
+        super(REQUEST_STATUS);
     }
 
     /**
@@ -95,7 +95,7 @@ public class RequestStatus extends Property {
      * @param aValue a value string for this component
      */
     public RequestStatus(final ParameterList aList, final String aValue) {
-        super(REQUEST_STATUS, aList, new Factory());
+        super(REQUEST_STATUS, aList);
         setValue(aValue);
     }
 
@@ -106,7 +106,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final String aStatusCode, final String aDescription,
                          final String data) {
-        super(REQUEST_STATUS, new ParameterList(), new Factory());
+        super(REQUEST_STATUS);
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -120,7 +120,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final ParameterList aList, final String aStatusCode,
                          final String aDescription, final String data) {
-        super(REQUEST_STATUS, aList, new Factory());
+        super(REQUEST_STATUS, aList);
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -152,18 +152,15 @@ public class RequestStatus extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        final StringTokenizer t = new StringTokenizer(aValue, ";");
-
-        if (t.hasMoreTokens()) {
-            statusCode = t.nextToken();
+        String[] values = aValue.split(";");
+        if (values.length > 0) {
+            statusCode = values[0];
         }
-
-        if (t.hasMoreTokens()) {
-            description = t.nextToken();
+        if (values.length > 1) {
+            description = values[1];
         }
-
-        if (t.hasMoreTokens()) {
-            exData = t.nextToken();
+        if (values.length > 2) {
+            exData = values[2];
         }
     }
 
@@ -217,6 +214,11 @@ public class RequestStatus extends Property {
         return PropertyValidator.REQUEST_STATUS.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<RequestStatus> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<RequestStatus> {
         private static final long serialVersionUID = 1L;
 
@@ -225,8 +227,7 @@ public class RequestStatus extends Property {
         }
 
         @Override
-        public RequestStatus createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public RequestStatus createProperty(final ParameterList parameters, final String value) {
             return new RequestStatus(parameters, value);
         }
 

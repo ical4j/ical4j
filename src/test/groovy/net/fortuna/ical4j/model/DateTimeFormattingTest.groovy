@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.model
 
-import java.text.SimpleDateFormat
+
+import java.time.format.DateTimeFormatter
 
 class DateTimeFormattingTest extends GroovyTestCase {
 
 	void testDateTimeFormatting() {
-		def df = new SimpleDateFormat('h:mma', Locale.US)
+		def df = DateTimeFormatter.ofPattern('h:mma', Locale.US)
 		assert '3:00PM' == df.format(new ContentBuilder().dtstart('20090810T150000').date)
 	}
 }

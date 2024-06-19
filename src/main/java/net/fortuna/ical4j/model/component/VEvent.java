@@ -32,24 +32,23 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.validate.*;
 import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
@@ -168,10 +167,10 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * Summary summary = new Summary(&quot;TEST EVENTS THAT HAPPEN 9-5 MON-FRI&quot;);
  *
  * weekdayNineToFiveEvents = new VEvent();
- * weekdayNineToFiveEvents.getProperties().add(rrule);
- * weekdayNineToFiveEvents.getProperties().add(summary);
- * weekdayNineToFiveEvents.getProperties().add(new DtStart(weekday9AM.getTime()));
- * weekdayNineToFiveEvents.getProperties().add(new DtEnd(weekday5PM.getTime()));
+ * weekdayNineToFiveEvents.add(rrule);
+ * weekdayNineToFiveEvents.add(summary);
+ * weekdayNineToFiveEvents.add(new DtStart(weekday9AM.getTime()));
+ * weekdayNineToFiveEvents.add(new DtEnd(weekday5PM.getTime()));
  *
  * // Test Start 04/01/2005, End One month later.
  * // Query Calendar Start and End Dates.
@@ -191,48 +190,57 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent> {
+public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent>,
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
+        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
-    private static final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+    private static final Map<Method, Validator<VEvent>> methodValidators = new HashMap<>();
     static {
-        methodValidators.put(Method.ADD, new VEventValidator(new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, SUMMARY, UID),
-                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
+        methodValidators.put(ADD, new VEventValidator(
+                new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, SUMMARY, UID),
+                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
-                new ValidationRule(None, RECURRENCE_ID, REQUEST_STATUS)));
-        methodValidators.put(Method.CANCEL, new VEventValidator(false, new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
-                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DTSTART, DURATION, GEO,
+                new ValidationRule<>(None, RECURRENCE_ID, REQUEST_STATUS)));
+        methodValidators.put(CANCEL, new VEventValidator(false,
+                new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
+                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DTSTART, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, SUMMARY, TRANSP, URL),
-                new ValidationRule(None, REQUEST_STATUS)));
-        methodValidators.put(Method.COUNTER, new VEventValidator(new ValidationRule(One, DTSTAMP, DTSTART, SEQUENCE, SUMMARY, UID),
-                new ValidationRule(One, true, ORGANIZER),
-                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
+                new ValidationRule<>(None, REQUEST_STATUS)));
+        methodValidators.put(COUNTER, new VEventValidator(
+                new ValidationRule<>(One, DTSTAMP, DTSTART, SEQUENCE, SUMMARY, UID),
+                new ValidationRule<>(One, true, ORGANIZER),
+                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
-        methodValidators.put(Method.DECLINE_COUNTER, new VEventValidator(false, new ValidationRule(One, DTSTAMP, ORGANIZER, UID),
-                new ValidationRule(OneOrLess, RECURRENCE_ID, SEQUENCE),
-                new ValidationRule(None, ATTACH, ATTENDEE, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND,
+        methodValidators.put(DECLINE_COUNTER, new VEventValidator(false,
+                new ValidationRule<>(One, DTSTAMP, ORGANIZER, UID),
+                new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE),
+                new ValidationRule<>(None, ATTACH, ATTENDEE, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND,
                         DTSTART, DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
                         RESOURCES, RRULE, STATUS, SUMMARY, TRANSP, URL)));
-        methodValidators.put(Method.PUBLISH, new VEventValidator(new ValidationRule(One, DTSTART, UID),
-                new ValidationRule(One, true, DTSTAMP, ORGANIZER, SUMMARY),
-                new ValidationRule(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
+        methodValidators.put(PUBLISH, new VEventValidator(
+                new ValidationRule<>(One, DTSTART, UID),
+                new ValidationRule<>(One, true, DTSTAMP, ORGANIZER, SUMMARY),
+                new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
                         DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
-                new ValidationRule(None, true, ATTENDEE),
-                new ValidationRule(None, REQUEST_STATUS)));
-        methodValidators.put(Method.REFRESH, new VEventValidator(false, new ValidationRule(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
-                new ValidationRule(OneOrLess, RECURRENCE_ID),
-                new ValidationRule(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND, DTSTART,
+                new ValidationRule<>(None, true, ATTENDEE),
+                new ValidationRule<>(None, REQUEST_STATUS)));
+        methodValidators.put(REFRESH, new VEventValidator(false,
+                new ValidationRule<>(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
+                new ValidationRule<>(OneOrLess, RECURRENCE_ID),
+                new ValidationRule<>(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND, DTSTART,
                         DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
                         REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, SUMMARY, TRANSP, URL)));
-        methodValidators.put(Method.REPLY, new VEventValidator(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION),
-                new ValidationRule(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
-                new ValidationRule(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
+        methodValidators.put(REPLY, new VEventValidator(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION),
+                new ValidationRule<>(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
+                new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
                         DTSTART, DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, SUMMARY, TRANSP,
                         URL)));
-        methodValidators.put(Method.REQUEST, new VEventValidator(new ValidationRule(OneOrMore, true, ATTENDEE),
-                new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, SUMMARY, UID),
-                new ValidationRule(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
+        methodValidators.put(REQUEST, new VEventValidator(
+                new ValidationRule<>(OneOrMore, true, ATTENDEE),
+                new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SUMMARY, UID),
+                new ValidationRule<>(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
     }
 
@@ -246,7 +254,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     public VEvent(boolean initialise) {
         super(VEVENT);
         if (initialise) {
-            getProperties().add(new DtStamp());
+            add(new DtStamp());
         }
     }
 
@@ -272,10 +280,10 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @param start the start date of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final String summary) {
+    public VEvent(final Temporal start, final String summary) {
         this();
-        getProperties().add(new DtStart(start));
-        getProperties().add(new Summary(summary));
+        add(new DtStart<>(start));
+        add(new Summary(summary));
     }
 
     /**
@@ -284,11 +292,11 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @param end the end date of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final Date end, final String summary) {
+    public VEvent(final Temporal start, final Temporal end, final String summary) {
         this();
-        getProperties().add(new DtStart(start));
-        getProperties().add(new DtEnd(end));
-        getProperties().add(new Summary(summary));
+        add(new DtStart<>(start));
+        add(new DtEnd<>(end));
+        add(new Summary(summary));
     }
 
     /**
@@ -298,26 +306,22 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @param duration the duration of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final TemporalAmount duration, final String summary) {
+    public VEvent(final Temporal start, final TemporalAmount duration, final String summary) {
         this();
-        getProperties().add(new DtStart(start));
-        getProperties().add(new Duration(duration));
-        getProperties().add(new Summary(summary));
-    }
-
-    /**
-     * Returns the list of alarms for this event.
-     * @return a component list
-     */
-    public final ComponentList<VAlarm> getAlarms() {
-        //noinspection unchecked
-        return new ComponentList<>((List<VAlarm>) components.getComponents(VALARM));
+        add(new DtStart<>(start));
+        add(new Duration(duration));
+        add(new Summary(summary));
     }
 
     @Override
-    public ComponentList<Component> getComponents() {
+    public ComponentList<Component> getComponentList() {
         //noinspection unchecked
         return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<Component> components) {
+        this.components = components;
     }
 
     /**
@@ -339,15 +343,15 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 //            ((VAlarm) component).validate(recurse);
 //        }
 
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
-                && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
-                && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
+        final Optional<Status> status = getProperty(Property.STATUS);
+        if (status.isPresent() && !VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
+                && !VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
+                && !VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
             result.getEntries().add(new ValidationEntry("Status property ["
                     + status + "] is not applicable for VEVENT", ValidationEntry.Severity.ERROR, getName()));
         }
 
-        if (getProperty(Property.DTEND) != null) {
+        if (getProperty(Property.DTEND).isPresent()) {
 
             /*
              * The "VEVENT" is also the calendar component used to specify an anniversary or daily reminder within a
@@ -356,25 +360,24 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final DtStart start = getProperty(Property.DTSTART);
-            final DtEnd end = getProperty(Property.DTEND);
+            final Optional<DtStart<Temporal>> start = getProperty(DTSTART);
+            final Optional<DtEnd<Temporal>> end = getProperty(DTEND);
 
-            if (start != null) {
-                final Parameter startValue = start.getParameter(Parameter.VALUE);
-                final Parameter endValue = end.getParameter(Parameter.VALUE);
+            if (start.isPresent()) {
+                final Optional<Parameter> startValue = start.get().getParameter(Parameter.VALUE);
+                final Optional<Parameter> endValue = end.get().getParameter(Parameter.VALUE);
 
                 boolean startEndValueMismatch = false;
-                if (endValue != null) {
-                    if (startValue != null && !endValue.equals(startValue)) {
+                if (endValue.isPresent()) {
+                    if (startValue.isPresent() && !endValue.equals(startValue)) {
                         // invalid..
                         startEndValueMismatch = true;
-                    }
-                    else if (startValue == null && !Value.DATE_TIME.equals(endValue)) {
+                    } else if (!startValue.isPresent() && !Value.DATE_TIME.equals(endValue.get())) {
                         // invalid..
                         startEndValueMismatch = true;
                     }
                 }
-                else if (startValue != null && !Value.DATE_TIME.equals(startValue)) {
+                else if (startValue.isPresent() && !Value.DATE_TIME.equals(startValue.get())) {
                     //invalid..
                     startEndValueMismatch = true;
                 }
@@ -393,57 +396,60 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     }
 
     /**
-     * {@inheritDoc}
+     * Performs method-specific ITIP validation.
+     * @param method the applicable method
+     * @throws ValidationException where the component does not comply with RFC2446
      */
-    @Override
-    protected Validator getValidator(Method method) {
-        return methodValidators.get(method);
+    public ValidationResult validate(Method method) throws ValidationException {
+        final Validator<VEvent> validator = methodValidators.get(method);
+        if (validator != null) {
+            return validator.validate(this);
+        }
+        else {
+            return super.validate(method);
+        }
     }
 
     /**
      * Returns a normalised list of periods representing the consumed time for this event.
-     * @param rangeStart the start of a range
-     * @param rangeEnd the end of a range
+     * @param range the range to check for consumed time
      * @return a normalised list of periods representing consumed time for this event
-     * @see VEvent#getConsumedTime(Date, Date, boolean)
      */
-    public final PeriodList getConsumedTime(final Date rangeStart,
-            final Date rangeEnd) {
-        return getConsumedTime(rangeStart, rangeEnd, true);
+    public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range) {
+        return getConsumedTime(range, true);
     }
 
     /**
      * Returns a list of periods representing the consumed time for this event in the specified range. Note that the
      * returned list may contain a single period for non-recurring components or multiple periods for recurring
      * components. If no time is consumed by this event an empty list is returned.
-     * @param rangeStart the start of the range to check for consumed time
-     * @param rangeEnd the end of the range to check for consumed time
+     * @param range the range to check for consumed time
      * @param normalise indicate whether the returned list of periods should be normalised
      * @return a list of periods representing consumed time for this event
      */
-    public final PeriodList getConsumedTime(final Date rangeStart,
-            final Date rangeEnd, final boolean normalise) {
-        PeriodList periods = new PeriodList();
+    public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range, final boolean normalise) {
+        PeriodList<T> periods;
         // if component is transparent return empty list..
-        if (!Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
+        Optional<Transp> transp = getProperty(TRANSP);
+        if (!transp.isPresent() || !TRANSPARENT.equals(transp.get())) {
 
 //          try {
-          periods = calculateRecurrenceSet(new Period(new DateTime(rangeStart),
-                  new DateTime(rangeEnd)));
+            periods = new PeriodList<>(calculateRecurrenceSet(range));
 //          }
 //          catch (ValidationException ve) {
 //              log.error("Invalid event data", ve);
 //              return periods;
 //          }
 
-          // if periods already specified through recurrence, return..
-          // ..also normalise before returning.
-          if (!periods.isEmpty() && normalise) {
-              periods = periods.normalise();
-          }
+            // if periods already specified through recurrence, return..
+            // ..also normalise before returning.
+            if (!periods.getPeriods().isEmpty() && normalise) {
+                periods = periods.normalise();
+            }
+        } else {
+            periods = new PeriodList<>();
         }
-
-        return periods;
+        return new ArrayList<>(periods.getPeriods());
     }
 
     /**
@@ -451,20 +457,16 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @param date a date on which the occurence should occur
      * @return a single non-recurring event instance for the specified date, or null if the event doesn't
      * occur on the specified date
-     * @throws IOException where an error occurs reading data
-     * @throws URISyntaxException where an invalid URI is encountered
-     * @throws ParseException where an error occurs parsing data
      * @deprecated use {@link RecurrenceSupport#getOccurrences(Period)}
      */
     @Deprecated
-    public final VEvent getOccurrence(final Date date) throws IOException,
-        URISyntaxException, ParseException {
+    public final <T extends Temporal> VEvent getOccurrence(final T date) {
 
-        final PeriodList consumedTime = getConsumedTime(date, date);
-        for (final Period p : consumedTime) {
+        final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
+        for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
                 final VEvent occurrence = this.copy();
-                occurrence.getProperties().add(new RecurrenceId(date));
+                occurrence.add(new RecurrenceId<>(date));
                 return occurrence;
             }
         }
@@ -472,116 +474,31 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     }
 
     /**
-     * @return the optional access classification property for an event
-     */
-    public final Clazz getClassification() {
-        return getProperty(Property.CLASS);
-    }
-
-    /**
-     * @return the optional creation-time property for an event
-     */
-    public final Created getCreated() {
-        return getProperty(Property.CREATED);
-    }
-
-    /**
-     * @return the optional description property for an event
-     */
-    public final Description getDescription() {
-        return getProperty(Property.DESCRIPTION);
-    }
-
-    /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
-    public final DtStart getStartDate() {
-        return getProperty(Property.DTSTART);
-    }
-
-    /**
-     * @return the optional geographic position property for an event
-     */
-    public final Geo getGeographicPos() {
-        return getProperty(Property.GEO);
-    }
-
-    /**
-     * @return the optional last-modified property for an event
-     */
-    public final LastModified getLastModified() {
-        return getProperty(Property.LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional location property for an event
-     */
-    public final Location getLocation() {
-        return getProperty(Property.LOCATION);
-    }
-
-    /**
-     * @return the optional organizer property for an event
-     */
-    public final Organizer getOrganizer() {
-        return getProperty(Property.ORGANIZER);
-    }
-
-    /**
-     * @return the optional priority property for an event
-     */
-    public final Priority getPriority() {
-        return getProperty(Property.PRIORITY);
+    @Deprecated
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
      * @return the optional date-stamp property
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
-    public final DtStamp getDateStamp() {
-        return getProperty(Property.DTSTAMP);
-    }
-
-    /**
-     * @return the optional sequence number property for an event
-     */
-    public final Sequence getSequence() {
-        return getProperty(Property.SEQUENCE);
-    }
-
-    /**
-     * @return the optional status property for an event
-     */
-    public final Status getStatus() {
-        return getProperty(Property.STATUS);
-    }
-
-    /**
-     * @return the optional summary property for an event
-     */
-    public final Summary getSummary() {
-        return getProperty(Property.SUMMARY);
+    @Deprecated
+    public final Optional<DtStamp> getDateStamp() {
+        return getDateTimeStamp();
     }
 
     /**
      * @return the optional time transparency property for an event
+     * @deprecated use {@link DateTimePropertyAccessor#getTimeTransparency()}
      */
-    public final Transp getTransparency() {
-        return getProperty(Property.TRANSP);
-    }
-
-    /**
-     * @return the optional URL property for an event
-     */
-    public final Url getUrl() {
-        return getProperty(Property.URL);
-    }
-
-    /**
-     * @return the optional recurrence identifier property for an event
-     */
-    public final RecurrenceId getRecurrenceId() {
-        return getProperty(Property.RECURRENCE_ID);
+    @Deprecated
+    public final Optional<Transp> getTransparency() {
+        return getTimeTransparency();
     }
 
     /**
@@ -589,7 +506,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * duration.
      * @return a DtEnd instance, or null if one cannot be derived
      */
-    public final DtEnd getEndDate() {
+    public final Optional<DtEnd<?>> getEndDate() {
         return getEndDate(true);
     }
 
@@ -600,46 +517,37 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * not found
      * @return The end for this VEVENT.
      */
-    public final DtEnd getEndDate(final boolean deriveFromDuration) {
-        DtEnd dtEnd = getProperty(Property.DTEND);
+    public final Optional<DtEnd<?>> getEndDate(final boolean deriveFromDuration) {
+        Optional<DtEnd<?>> dtEnd = getProperty(DTEND);
         // No DTEND? No problem, we'll use the DURATION.
-        if (dtEnd == null && deriveFromDuration && getStartDate() != null) {
-            final DtStart dtStart = getStartDate();
-            final Duration vEventDuration;
-            if (getDuration() != null) {
-                vEventDuration = getDuration();
-            } else if (dtStart.getDate() instanceof DateTime) {
-                // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
-                vEventDuration = new Duration(java.time.Duration.ZERO);
-            } else {
-                // If "DTSTART" is a DATE, then the event's duration is one day (see: RFC 5545, 3.6.1 Event Component)
-                vEventDuration = new Duration(java.time.Duration.ofDays(1));
-            }
+        if (!dtEnd.isPresent() && deriveFromDuration) {
+            Optional<DtStart<?>> dtStart = getProperty(DTSTART);
+            if (dtStart.isPresent()) {
+                final Duration vEventDuration;
+                Optional<Duration> duration = getProperty(DURATION);
+                if (duration.isPresent()) {
+                    vEventDuration = getDuration().get();
+                } else if (dtStart.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
+                    // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
+                    vEventDuration = new Duration(java.time.Duration.ZERO);
+                } else {
+                    // If "DTSTART" is a DATE, then the event's duration is one day (see: RFC 5545, 3.6.1 Event Component)
+                    vEventDuration = new Duration(java.time.Duration.ofDays(1));
+                }
 
-            dtEnd = new DtEnd(Dates.getInstance(Date.from(dtStart.getDate().toInstant().plus(vEventDuration.getDuration())),
-                    dtStart.getParameter(Parameter.VALUE)));
-            if (dtStart.isUtc()) {
-                dtEnd.setUtc(true);
-            } else {
-                dtEnd.setTimeZone(dtStart.getTimeZone());
+                Optional<TzId> tzId = dtStart.get().getParameter(Parameter.TZID);
+                DtEnd<?> newdtEnd;
+                if (tzId.isPresent()) {
+                    ParameterList dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
+                    newdtEnd = new DtEnd<>(dtendParams, dtStart.get().getDate().plus(vEventDuration.getDuration()));
+                } else {
+                    newdtEnd = new DtEnd<>(dtStart.get().getDate().plus(vEventDuration.getDuration()));
+                }
+
+                return Optional.of(newdtEnd);
             }
         }
         return dtEnd;
-    }
-
-    /**
-     * @return the optional Duration property
-     */
-    public final Duration getDuration() {
-        return getProperty(Property.DURATION);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Uid getUid() {
-        return getProperty(Property.UID);
     }
 
     /**
@@ -663,6 +571,19 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 .append(getAlarms()).toHashCode();
     }
 
+    @Override
+    protected ComponentFactory<VEvent> newFactory() {
+        return new Factory();
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {
 
         public Factory() {
@@ -675,13 +596,13 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         }
 
         @Override
-        public VEvent createComponent(PropertyList<Property> properties) {
+        public VEvent createComponent(PropertyList properties) {
             return new VEvent(properties);
         }
 
-        @Override
-        public VEvent createComponent(PropertyList properties, ComponentList subComponents) {
-            return new VEvent(properties, subComponents);
+        @Override @SuppressWarnings("unchecked")
+        public VEvent createComponent(PropertyList properties, ComponentList<?> subComponents) {
+            return new VEvent(properties, (ComponentList<VAlarm>) subComponents);
         }
     }
 }

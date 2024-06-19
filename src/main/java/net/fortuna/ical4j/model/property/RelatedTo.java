@@ -39,10 +39,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -99,19 +97,19 @@ public class RelatedTo extends Property implements Encodable {
      * Default constructor.
      */
     public RelatedTo() {
-        super(RELATED_TO, new ParameterList(), new Factory());
+        super(RELATED_TO);
     }
 
     public RelatedTo(URI uri) {
-        super(RELATED_TO, new Factory());
+        super(RELATED_TO);
         this.uri = uri;
     }
 
     /**
      * @param aValue a value string for this component
      */
-    public RelatedTo(final String aValue) throws URISyntaxException {
-        super(RELATED_TO, new ParameterList(), new Factory());
+    public RelatedTo(final String aValue) {
+        super(RELATED_TO);
         setValue(aValue);
     }
 
@@ -119,18 +117,32 @@ public class RelatedTo extends Property implements Encodable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RelatedTo(final ParameterList aList, final String aValue) throws URISyntaxException {
-        super(RELATED_TO, aList, new Factory());
+    public RelatedTo(final ParameterList aList, final String aValue) {
+        super(RELATED_TO, aList);
         setValue(aValue);
+    }
+
+    public RelatedTo(Component component) {
+        super(RELATED_TO);
+        setValue(component.getRequiredProperty(Property.UID).getValue());
+    }
+
+    public RelatedTo(ParameterList parameters, Component component) {
+        super(RELATED_TO, parameters);
+        setValue(component.getRequiredProperty(Property.UID).getValue());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws URISyntaxException {
+    public final void setValue(final String aValue) {
         if (Value.URI.equals(getParameter(Parameter.VALUE))) {
-            this.uri = Uris.create(aValue);
+            try {
+                this.uri = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
             this.value = null;
         } else {
             this.value = aValue;
@@ -158,6 +170,11 @@ public class RelatedTo extends Property implements Encodable {
         return PropertyValidator.RELATED_TO.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<RelatedTo> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<RelatedTo> {
         private static final long serialVersionUID = 1L;
 
@@ -166,8 +183,7 @@ public class RelatedTo extends Property implements Encodable {
         }
 
         @Override
-        public RelatedTo createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public RelatedTo createProperty(final ParameterList parameters, final String value) {
             return new RelatedTo(parameters, value);
         }
 

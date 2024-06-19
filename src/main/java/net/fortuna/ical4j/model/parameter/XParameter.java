@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [15/06/2004]
  *
@@ -56,7 +54,7 @@ public class XParameter extends Parameter implements Encodable {
      * @param aValue parameter value
      */
     public XParameter(final String aName, final String aValue) {
-        super(aName, new Factory(aName));
+        super(aName);
         this.value = Strings.unquote(aValue);
     }
 
@@ -78,8 +76,7 @@ public class XParameter extends Parameter implements Encodable {
         }
 
         @Override
-        public XParameter createParameter(final String value)
-                throws URISyntaxException {
+        public XParameter createParameter(final String value) {
             return new XParameter(name, value);
         }
     }

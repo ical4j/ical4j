@@ -39,9 +39,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
 
 /**
  * $Id$
@@ -58,49 +56,20 @@ public class CalScale extends Property {
 
     public static final String VALUE_GREGORIAN = "GREGORIAN";
 
-    /**
-     * Constant for Gregorian calendar representation.
-     */
-    public static final CalScale GREGORIAN = new ImmutableCalScale(VALUE_GREGORIAN);
-
-    /**
-     * @author Ben Fortuna An immutable instance of CalScale.
-     */
-    private static final class ImmutableCalScale extends CalScale {
-
-        private static final long serialVersionUID = 1750949550694413878L;
-
-        /**
-         * @param value
-         */
-        private ImmutableCalScale(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
     private String value;
 
     /**
      * Default constructor.
      */
     public CalScale() {
-        super(CALSCALE, new Factory());
+        super(CALSCALE);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public CalScale(final String aValue) {
-        super(CALSCALE, new Factory());
+        super(CALSCALE);
         this.value = aValue;
     }
 
@@ -109,7 +78,7 @@ public class CalScale extends Property {
      * @param aValue a value string for this component
      */
     public CalScale(final ParameterList aList, final String aValue) {
-        super(CALSCALE, aList, new Factory());
+        super(CALSCALE, aList);
         this.value = aValue;
     }
 
@@ -137,6 +106,11 @@ public class CalScale extends Property {
         return PropertyValidator.CALSCALE.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<CalScale> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<CalScale> {
         private static final long serialVersionUID = 1L;
 
@@ -145,10 +119,9 @@ public class CalScale extends Property {
         }
 
         @Override
-        public CalScale createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public CalScale createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty() && VALUE_GREGORIAN.equalsIgnoreCase(value)) {
+            if (parameters.getAll().isEmpty() && VALUE_GREGORIAN.equalsIgnoreCase(value)) {
                 return GREGORIAN;
             }
             return new CalScale(parameters, value);

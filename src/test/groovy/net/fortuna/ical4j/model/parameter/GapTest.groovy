@@ -65,7 +65,7 @@ END:VCALENDAR
         Calendar calendar = builder.build(new StringReader(calendarString))
 
         then: 'a valid calendar is realised'
-        Gap gap = calendar?.components[0].properties[1].getParameter('GAP')
+        Gap gap = calendar?.components[0].properties[1].getRequiredParameter('GAP')
         gap.value == 'PT30M'
     }
 }

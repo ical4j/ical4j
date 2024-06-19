@@ -31,20 +31,20 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.DayOfWeek;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
 
@@ -64,10 +64,9 @@ public class CalendarTest {
     @Before
     public void setUp() {
         calendar = new Calendar().withDefaults()
-                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN").getFluentTarget();
-        VEvent vEvent = new VEvent();
-        vEvent.getProperties().add(new Uid("1"));
-        calendar.getComponents().add(vEvent);
+                .withProdId("-//Ben Fortuna//iCal4j 1.0//EN")
+                .withComponent(new VEvent().withProperty(new Uid("1")).getFluentTarget())
+                .getFluentTarget();
     }
 
     @Test
@@ -77,130 +76,83 @@ public class CalendarTest {
     }
 
     @Test
-    public void testValid2() throws ParseException, IOException, URISyntaxException {
-
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-
-        VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
-        TzId tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
-        calendar.getComponents().add(tz);
+    public void testValid2() throws URISyntaxException, ConstraintViolationException {
+        TzId tzParam = new TzId(TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne").getId());
 
         // Add events, etc..
         Calendar copyCalendar = new Calendar(calendar);
-        java.util.Calendar calStart = java.util.Calendar.getInstance();
-        calStart.set(java.util.Calendar.DAY_OF_WEEK, java.util.Calendar.MONDAY);
-        calStart.set(java.util.Calendar.HOUR_OF_DAY, 9);
-        calStart.clear(java.util.Calendar.MINUTE);
-        calStart.clear(java.util.Calendar.SECOND);
 
-        java.util.Calendar calEnd = java.util.Calendar.getInstance();
-        calEnd.setTime(calStart.getTime());
-        calEnd.add(java.util.Calendar.YEAR, 1);
+        ZonedDateTime start = ZonedDateTime.now().with(ChronoField.DAY_OF_WEEK,
+                DayOfWeek.MONDAY.getValue()).withHour(9).withMinute(0).withSecond(0);
 
-        VEvent week1UserA = new VEvent(new Date(calStart.getTime().getTime()),
-                java.time.Duration.ofHours(8), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        ZonedDateTime end = start.plusYears(1);
 
-        Recur week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(new Date(calEnd.getTime().getTime()))
-                .interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
-                .hourList(new NumberList("9")).build();
-        week1UserA.getProperties().add(new RRule(week1UserARecur));
-        week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
+        VEvent week1UserA = new VEvent(start, java.time.Duration.ofHours(8), "Week 1 - User A");
+        week1UserA.getRequiredProperty(Property.DTSTART).add(tzParam).add(Value.DATE);
 
-        calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
-        calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+        WeekDayList monToFri = new WeekDayList(MO, TU, WE, TH, FR);
+        Recur<ZonedDateTime> week1UserARecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();
+        week1UserA.add(new RRule<>(week1UserARecur)).add(new Uid("000001@modularity.net.au"));
 
-        VEvent week2UserB = new VEvent(new Date(calStart.getTime().getTime()),
-                java.time.Duration.ofHours(8), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        start = start.plusWeeks(1);
+        end = end.plusWeeks(1);
 
-        Recur week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(new Date(calEnd.getTime().getTime())).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
-                .hourList(new NumberList("9")).build();
-        week2UserB.getProperties().add(new RRule(week2UserBRecur));
-        week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
+        VEvent week2UserB = new VEvent(start, java.time.Duration.ofHours(8), "Week 2 - User B");
+        week2UserB.getRequiredProperty(Property.DTSTART).add(tzParam).add(Value.DATE);
 
-        calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
-        calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+        Recur<ZonedDateTime> week2UserBRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();
+        week2UserB.add(new RRule<>(week2UserBRecur)).add(new Uid("000002@modularity.net.au"));
 
-        VEvent week3UserC = new VEvent(new Date(calStart.getTime().getTime()),
-                java.time.Duration.ofHours(8), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        start = start.plusWeeks(1);
+        end = end.plusWeeks(1);
 
-        Recur week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(new Date(calEnd.getTime().getTime())).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
-                .hourList(new NumberList("9")).build();
-        week3UserC.getProperties().add(new RRule(week3UserCRecur));
-        week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
+        VEvent week3UserC = new VEvent(start, java.time.Duration.ofHours(8), "Week 3 - User C");
+        week3UserC.getRequiredProperty(Property.DTSTART).add(tzParam);
 
-        copyCalendar.getComponents().add(week1UserA);
-        copyCalendar.getComponents().add(week2UserB);
-        copyCalendar.getComponents().add(week3UserC);
+        Recur<ZonedDateTime> week3UserCRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();
+        week3UserC.add(new RRule<>(week3UserCRecur)).add(new Uid("000003@modularity.net.au"));
+
+        copyCalendar.add(week1UserA).add(week2UserB).add(week3UserC);
 
         // test event date ranges..
         copyCalendar = new Calendar(calendar);
 
-        calStart = java.util.Calendar.getInstance();
-        calStart.set(java.util.Calendar.YEAR, 2006);
-        calStart.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY);
-        calStart.set(java.util.Calendar.DAY_OF_MONTH, 1);
-        calStart.set(java.util.Calendar.HOUR_OF_DAY, 9);
-        calStart.clear(java.util.Calendar.MINUTE);
-        calStart.clear(java.util.Calendar.SECOND);
+        start = ZonedDateTime.now().withYear(2006).withMonth(1).withDayOfMonth(1)
+                .withHour(9).withMinute(0).withSecond(0);
 
-        calEnd = java.util.Calendar.getInstance();
-        calEnd.setTime(calStart.getTime());
-        calEnd.add(java.util.Calendar.YEAR, 1);
+        end = start.plusYears(1);
 
-        week1UserA = new VEvent(new Date(calStart.getTime().getTime()),
-                java.time.Duration.ofHours(8), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week1UserA = new VEvent(start, java.time.Duration.ofHours(8), "Week 1 - User A");
+        week1UserA.getRequiredProperty(Property.DTSTART).add(tzParam);
 
-        week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(new Date(calEnd.getTime().getTime())).interval(3)
-                .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
-                .hourList(new NumberList("9")).build();
-        week1UserA.getProperties().add(new RRule(week1UserARecur));
-        week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
+        week1UserARecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();
+        week1UserA.add(new RRule<>(week1UserARecur)).add(new Uid("000001@modularity.net.au"));
 
-        calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
-        calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+        start = start.plusWeeks(1);
+        end = end.plusWeeks(1);
 
-        week2UserB = new VEvent(new Date(calStart.getTime().getTime()),
-                java.time.Duration.ofHours(8), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week2UserB = new VEvent(start, java.time.Duration.ofHours(8), "Week 2 - User B");
+        week2UserB.getRequiredProperty(Property.DTSTART).add(tzParam);
 
-        week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(new Date(calEnd.getTime().getTime())).interval(3)
-                .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
-                .hourList(new NumberList("9")).build();
-        week2UserB.getProperties().add(new RRule(week2UserBRecur));
-        week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
+        week2UserBRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();
+        week2UserB.add(new RRule<>(week2UserBRecur)).add(new Uid("000002@modularity.net.au"));
 
-        calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
-        calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+        start = start.plusWeeks(1);
+        end = end.plusWeeks(1);
 
-        week3UserC = new VEvent(new Date(calStart.getTime().getTime()),
-                java.time.Duration.ofHours(8), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week3UserC = new VEvent(start, java.time.Duration.ofHours(8), "Week 3 - User C");
+        week3UserC.getRequiredProperty(Property.DTSTART).add(tzParam);
 
-        week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(new Date(calEnd.getTime().getTime())).interval(3)
-                .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
-                .hourList(new NumberList("9")).build();
-        week3UserC.getProperties().add(new RRule(week3UserCRecur));
-        week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
+        week3UserCRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(monToFri).hourList(new NumberList("9")).build();
+        week3UserC.add(new RRule<>(week3UserCRecur)).add(new Uid("000003@modularity.net.au"));
 
-        copyCalendar.getComponents().add(week1UserA);
-        copyCalendar.getComponents().add(week2UserB);
-        copyCalendar.getComponents().add(week3UserC);
+        copyCalendar.add(week1UserA).add(week2UserB).add(week3UserC);
         copyCalendar.validate();
 
     }

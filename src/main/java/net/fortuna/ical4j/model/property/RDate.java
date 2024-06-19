@@ -38,9 +38,10 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * $Id$
@@ -128,29 +129,27 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class RDate extends DateListProperty {
+public class RDate<T extends Temporal> extends DateListProperty<T> {
 
     private static final long serialVersionUID = -3320381650013860193L;
 
-    private PeriodList periods;
+    private PeriodList<T> periods;
 
     /**
      * Default constructor.
      */
     public RDate() {
-        super(RDATE, new Factory());
-        periods = new PeriodList(false, true);
+        super(RDATE);
+        periods = null;
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public RDate(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(RDATE, aList, new Factory());
-        periods = new PeriodList(false, true);
+    public RDate(final ParameterList aList, final String aValue) {
+        super(RDATE, aList, Value.DATE_TIME);
+        periods = null;
         setValue(aValue);
     }
 
@@ -159,9 +158,9 @@ public class RDate extends DateListProperty {
      *
      * @param dates a list of dates
      */
-    public RDate(final DateList dates) {
-        super(RDATE, dates, new Factory());
-        periods = new PeriodList(false, true);
+    public RDate(final DateList<T> dates) {
+        super(RDATE, dates);
+        periods = null;
     }
 
     /**
@@ -170,9 +169,9 @@ public class RDate extends DateListProperty {
      * @param aList a list of parameters for this component
      * @param dates a list of dates
      */
-    public RDate(final ParameterList aList, final DateList dates) {
-        super(RDATE, aList, dates, new Factory());
-        periods = new PeriodList(false, true);
+    public RDate(final ParameterList aList, final DateList<T> dates) {
+        super(RDATE, aList, dates, Value.DATE_TIME);
+        periods = null;
     }
 
     /**
@@ -180,9 +179,9 @@ public class RDate extends DateListProperty {
      *
      * @param periods a list of periods
      */
-    public RDate(final PeriodList periods) {
-        super(RDATE, new DateList(true), new Factory());
-        this.periods = periods;
+    public RDate(final List<Period<T>> periods) {
+        super(RDATE, new DateList<>());
+        this.periods = new PeriodList<>(periods);
     }
 
     /**
@@ -191,9 +190,9 @@ public class RDate extends DateListProperty {
      * @param aList   a list of parameters for this component
      * @param periods a list of periods
      */
-    public RDate(final ParameterList aList, final PeriodList periods) {
-        super(RDATE, aList, new DateList(true), new Factory());
-        this.periods = periods;
+    public RDate(final ParameterList aList, final List<Period<T>> periods) {
+        super(RDATE, aList, new DateList<>(), Value.DATE_TIME);
+        this.periods = new PeriodList<>(periods);
     }
 
     /**
@@ -207,17 +206,21 @@ public class RDate extends DateListProperty {
     /**
      * @return Returns the period list.
      */
-    public final PeriodList getPeriods() {
-        return periods;
+    public final Optional<Set<Period<T>>> getPeriods() {
+        if (periods != null) {
+            return Optional.of(periods.getPeriods());
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws ParseException {
-        if (Value.PERIOD.equals(getParameter(Parameter.VALUE))) {
-            periods = new PeriodList(aValue);
+    public final void setValue(final String aValue) {
+        if (getParameter(Parameter.VALUE).equals(Optional.of(Value.PERIOD))) {
+            periods = PeriodList.parse(aValue);
         } else {
             super.setValue(aValue);
         }
@@ -228,25 +231,18 @@ public class RDate extends DateListProperty {
      */
     @Override
     public final String getValue() {
-        if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
-            return Strings.valueOf(getPeriods());
+        if (periods != null) {
+            return Strings.valueOf(periods);
         }
         return super.getValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public final void setTimeZone(TimeZone timezone) {
-        if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
-            periods.setTimeZone(timezone);
-        } else {
-            super.setTimeZone(timezone);
-        }
+    protected PropertyFactory<RDate<T>> newFactory() {
+        return new Factory<>();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<RDate> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RDate<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -254,14 +250,13 @@ public class RDate extends DateListProperty {
         }
 
         @Override
-        public RDate createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new RDate(parameters, value);
+        public RDate<T> createProperty(final ParameterList parameters, final String value) {
+            return new RDate<>(parameters, value);
         }
 
         @Override
-        public RDate createProperty() {
-            return new RDate();
+        public RDate<T> createProperty() {
+            return new RDate<>();
         }
     }
 

@@ -36,9 +36,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.ZoneOffset;
 
 /**
@@ -60,14 +57,14 @@ public class TzOffsetFrom extends Property {
      * Default constructor.
      */
     public TzOffsetFrom() {
-        super(TZOFFSETFROM, new Factory());
+        super(TZOFFSETFROM);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzOffsetFrom(final String aValue) {
-        super(TZOFFSETFROM, new Factory());
+        super(TZOFFSETFROM);
         setValue(aValue);
     }
 
@@ -76,7 +73,7 @@ public class TzOffsetFrom extends Property {
      * @param aValue a value string for this component
      */
     public TzOffsetFrom(final ParameterList aList, final String aValue) {
-        super(TZOFFSETFROM, aList, new Factory());
+        super(TZOFFSETFROM, aList);
         setValue(aValue);
     }
 
@@ -92,7 +89,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetFrom(final ZoneOffset anOffset) {
-        super(TZOFFSETFROM, new Factory());
+        super(TZOFFSETFROM);
         offset = new ZoneOffsetAdapter(anOffset);
     }
 
@@ -110,7 +107,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetFrom(final ParameterList aList, final ZoneOffset anOffset) {
-        super(TZOFFSETFROM, aList, new Factory());
+        super(TZOFFSETFROM, aList);
         offset = new ZoneOffsetAdapter(anOffset);
     }
 
@@ -152,6 +149,11 @@ public class TzOffsetFrom extends Property {
         return PropertyValidator.TZOFFSETFROM.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<TzOffsetFrom> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetFrom> {
         private static final long serialVersionUID = 1L;
 
@@ -160,8 +162,7 @@ public class TzOffsetFrom extends Property {
         }
 
         @Override
-        public TzOffsetFrom createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public TzOffsetFrom createProperty(final ParameterList parameters, final String value) {
             return new TzOffsetFrom(parameters, value);
         }
 

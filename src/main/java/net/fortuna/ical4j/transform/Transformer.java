@@ -48,11 +48,10 @@ public interface Transformer<T> extends UnaryOperator<T> {
      *
      * @param object a calendar object to transform
      * @return a transformed calendar object
+     * @deprecated use {@link UnaryOperator#apply(Object)}
      */
-    T transform(final T object);
-
-    @Override
-    default T apply(T t) {
-        return transform(t);
+    @Deprecated
+    default T transform(final T object) {
+        return apply(object);
     }
 }

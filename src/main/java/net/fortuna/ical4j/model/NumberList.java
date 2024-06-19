@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Numbers;
+import net.fortuna.ical4j.util.RegEx;
 
 import java.io.Serializable;
 import java.time.temporal.ValueRange;
@@ -49,7 +50,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     
     private static final long serialVersionUID = -1667481795613729889L;
 
-    private final ValueRange valueRange;
+    private final ValueRange range;
 
     private final boolean allowsNegativeValues;
     
@@ -66,7 +67,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @param allowsNegativeValues allow negative values, where abs(value) is within the specified range
      */
     public NumberList(ValueRange valueRange, boolean allowsNegativeValues) {
-        this.valueRange = valueRange;
+        this.range = valueRange;
         this.allowsNegativeValues = allowsNegativeValues;
     }
 
@@ -80,7 +81,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      */
     @Deprecated
     public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
-    	this(ValueRange.of(minValue, maxValue), allowsNegativeValues);
+        this(ValueRange.of(minValue, maxValue), allowsNegativeValues);
     }
 
     /**
@@ -99,7 +100,12 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      */
     public NumberList(final String aString, ValueRange valueRange, boolean allowsNegativeValues) {
         this(valueRange, allowsNegativeValues);
-        addAll(Arrays.stream(aString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
+        addAll(Arrays.stream(aString.split(RegEx.COMMA_DELIMITED)).map(Numbers::parseInt).collect(Collectors.toList()));
+    }
+
+    public NumberList(Collection<Integer> values, ValueRange valueRange, boolean allowsNegativeValues) {
+        this(valueRange, allowsNegativeValues);
+        addAll(values);
     }
 
     /**
@@ -113,11 +119,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     @Deprecated
     public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
     	this(minValue, maxValue, allowsNegativeValues);
-        final StringTokenizer t = new StringTokenizer(aString, ",");
-        while (t.hasMoreTokens()) {
-        	final int value = Numbers.parseInt(t.nextToken());
-            add(value);
-        }
+        addAll(Arrays.stream(aString.split(RegEx.COMMA_DELIMITED)).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
     }
 
     /**
@@ -133,8 +135,9 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
             }
             abs = Math.abs(abs);
         }
-    	if (!valueRange.isValidIntValue(abs)) {
-    		throw new IllegalArgumentException("Value not in range [" + valueRange + "]: " + aNumber);
+        if (!range.isValidIntValue(abs)) {
+    		throw new IllegalArgumentException(
+    		        "Value not in range [" + range + "]: " + aNumber);
     	}
         return super.add(aNumber);
     }
@@ -147,11 +150,11 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
             throw new IllegalArgumentException("Negative value not allowed: " + negativeValue.get());
         }
 
-        Optional<? extends Integer> invalidValue = c.stream().filter(v -> !valueRange.isValidValue(Math.abs(v)))
+        Optional<? extends Integer> invalidValue = c.stream().filter(v -> !range.isValidValue(Math.abs(v)))
                 .findFirst();
         if (invalidValue.isPresent()) {
             throw new IllegalArgumentException(
-                    "Value not in range [" + valueRange + "]: " + invalidValue);
+                    "Value not in range [" + range + "]: " + invalidValue);
         }
         return super.addAll(c);
     }
@@ -161,6 +164,16 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      */
     @Override
     public final String toString() {
-        return stream().map(Object::toString).collect(Collectors.joining(","));
+        return toString(this);
+    }
+
+    public static String toString(List<Integer> list) {
+        return list.stream().map(Object::toString).collect(Collectors.joining(","));
+    }
+
+    public static NumberList parse(String numberString) {
+        NumberList retVal = new NumberList();
+        retVal.addAll(Arrays.stream(numberString.split(RegEx.COMMA_DELIMITED)).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
+        return retVal;
     }
 }

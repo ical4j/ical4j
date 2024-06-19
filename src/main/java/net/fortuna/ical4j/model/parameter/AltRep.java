@@ -56,17 +56,22 @@ public class AltRep extends Parameter implements Encodable {
 
     /**
      * @param aValue a string representation of an alternate text represenation
-     * @throws URISyntaxException when the specified string is not a value (quoted) uri
+     * @throws IllegalArgumentException when the specified string is not a value (quoted) uri
      */
-    public AltRep(final String aValue) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(aValue)));
+    public AltRep(final String aValue) {
+        super(ALTREP);
+        try {
+            this.uri = Uris.create(Strings.unquote(aValue));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
      * @param aUri a URI representing an alternate text representation
      */
     public AltRep(final URI aUri) {
-        super(ALTREP, new Factory());
+        super(ALTREP);
         this.uri = aUri;
     }
 
@@ -93,7 +98,7 @@ public class AltRep extends Parameter implements Encodable {
         }
 
         @Override
-        public AltRep createParameter(final String value) throws URISyntaxException {
+        public AltRep createParameter(final String value) {
             return new AltRep(value);
         }
     }

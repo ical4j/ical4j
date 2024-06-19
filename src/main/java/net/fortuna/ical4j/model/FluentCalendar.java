@@ -34,9 +34,10 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Version;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
  * Provide fluent API support for {@link Calendar}
@@ -46,23 +47,18 @@ public interface FluentCalendar {
     Calendar getFluentTarget();
 
     default FluentCalendar withDefaults() {
-        getFluentTarget().getProperties().add(CalScale.GREGORIAN);
-        getFluentTarget().getProperties().add(Version.VERSION_2_0);
-        return getFluentTarget();
+        return getFluentTarget().add(GREGORIAN).add(VERSION_2_0);
     }
 
     default FluentCalendar withProdId(String prodId) {
-        getFluentTarget().getProperties().add(new ProdId(prodId));
-        return getFluentTarget();
+        return getFluentTarget().add(new ProdId(prodId));
     }
 
     default FluentCalendar withProperty(Property property) {
-        getFluentTarget().getProperties().add(property);
-        return getFluentTarget();
+        return getFluentTarget().add(property);
     }
 
     default FluentCalendar withComponent(CalendarComponent component) {
-        getFluentTarget().getComponents().add(component);
-        return getFluentTarget();
+        return getFluentTarget().add(component);
     }
 }

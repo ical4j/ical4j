@@ -31,14 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * $Id$
@@ -86,7 +83,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class DtStamp extends UtcProperty {
+public class DtStamp extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 7581197869433744070L;
 
@@ -94,35 +91,30 @@ public class DtStamp extends UtcProperty {
      * Default constructor. Initialises the dateTime value to the time of instantiation.
      */
     public DtStamp() {
-        super(DTSTAMP, new Factory());
+        this(Instant.now());
     }
 
     /**
      * @param aValue a string representation of a DTSTAMP value
-     * @throws ParseException if the specified value is not a valid representation
      */
-    public DtStamp(final String aValue) throws ParseException {
+    public DtStamp(final String aValue) {
         this(new ParameterList(), aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStamp(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(DTSTAMP, aList, new Factory());
+    public DtStamp(final ParameterList aList, final String aValue) {
+        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param aDate a date representing a date-time
      */
-    public DtStamp(final DateTime aDate) {
-        super(DTSTAMP, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public DtStamp(final Instant aDate) {
+        super(DTSTAMP, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -130,11 +122,32 @@ public class DtStamp extends UtcProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public DtStamp(final ParameterList aList, final DateTime aDate) {
-        super(DTSTAMP, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public DtStamp(final ParameterList aList, final Instant aDate) {
+        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
+    }
+
+    @Override
+    public int compareTo(Property o) {
+        if (o instanceof DateProperty) {
+            return TemporalComparator.INSTANCE.compare(getDate(), ((DateProperty) o).getDate());
+        }
+        return super.compareTo(o);
+    }
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
+    }
+
+    @Override
+    protected PropertyFactory<DtStamp> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<DtStamp> {
@@ -145,8 +158,7 @@ public class DtStamp extends UtcProperty {
         }
 
         @Override
-        public DtStamp createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public DtStamp createProperty(final ParameterList parameters, final String value) {
             return new DtStamp(parameters, value);
         }
 

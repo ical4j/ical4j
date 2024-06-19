@@ -2101,3 +2101,1259 @@ acceptedBreaks:
     - code: "java.method.removed"
       old: "method boolean net.fortuna.ical4j.data.ContentHandlerContext::isSupressInvalidProperties()"
       justification: "fixed_spelling"
+  "4.0.0-beta3":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.CalendarDateFormat"
+      new: "class net.fortuna.ical4j.model.CalendarDateFormat"
+      justification: "minor_validation_refactoring"
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.model.TemporalAdapter<T extends java.time.temporal.Temporal>"
+      justification: "minor_validation_refactoring"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.Property::<init>(java.lang.String,\
+        \ java.lang.String)"
+      justification: "minor_validation_refactoring"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.Property::<init>(java.lang.String,\
+        \ java.lang.String, net.fortuna.ical4j.model.ParameterList)"
+      justification: "minor_validation_refactoring"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.TemporalAdapter net.fortuna.ical4j.model.TemporalAdapter<T\
+        \ extends java.time.temporal.Temporal>::from(net.fortuna.ical4j.model.Date)"
+      new: "method net.fortuna.ical4j.model.TemporalAdapter<?> net.fortuna.ical4j.model.TemporalAdapter<T\
+        \ extends java.time.temporal.Temporal>::from(net.fortuna.ical4j.model.Date)"
+      justification: "minor_validation_refactoring"
+  "4.0.0-beta4":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.defaultSerializationChanged"
+      old: "class net.fortuna.ical4j.model.Month"
+      new: "class net.fortuna.ical4j.model.Month"
+      justification: "added_method"
+  "4.0.0-beta6":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Recur.Builder net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::rscale(net.fortuna.ical4j.model.Recur.RScale)"
+      new: "method net.fortuna.ical4j.model.Recur.Builder<T> net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::rscale(net.fortuna.ical4j.model.Recur.RScale)"
+      justification: "refined_recur_builder_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Recur.Builder net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::skip(net.fortuna.ical4j.model.Recur.Skip)"
+      new: "method net.fortuna.ical4j.model.Recur.Builder<T> net.fortuna.ical4j.model.Recur.Builder<T\
+        \ extends java.time.temporal.Temporal>::skip(net.fortuna.ical4j.model.Recur.Skip)"
+      justification: "refined_recur_builder_generics"
+  "4.0.0-beta7":
+    org.mnode.ical4j:ical4j:
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.element.noLongerDeprecated"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Due<?>> net.fortuna.ical4j.model.component.VToDo::getDue()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.Due<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getDue()"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Due<?>> net.fortuna.ical4j.model.component.VToDo::getDue()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.Due<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getDue()"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.movedToSuperClass"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.noLongerFinal"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getStartDate()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Due<?>> net.fortuna.ical4j.model.component.VToDo::getDue()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.Due<T>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getDue()"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VEvent"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VJournal::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VJournal"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertyAccessor::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<?>>\
+        \ net.fortuna.ical4j.model.component.VToDo::getRecurrenceId()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.RecurrenceId<T>>\
+        \ net.fortuna.ical4j.model.RelationshipPropertySupport::getRecurrenceId()\
+        \ @ net.fortuna.ical4j.model.component.VToDo"
+      justification: "improved_generics"
+  "4.0.0-beta8":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.AddTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.AddTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.CancelTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.CancelTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.CounterTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.CounterTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.MethodUpdate"
+      new: "class net.fortuna.ical4j.transform.calendar.MethodUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.PublishTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.PublishTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.RefreshTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.RefreshTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.ReplyTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.ReplyTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.RequestTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.RequestTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.Rfc5545Transformer"
+      new: "class net.fortuna.ical4j.transform.calendar.Rfc5545Transformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.AbstractMethodTransfomer"
+      new: "class net.fortuna.ical4j.transform.component.AbstractMethodTransfomer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.AttendeeUpdate"
+      new: "class net.fortuna.ical4j.transform.component.AttendeeUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.ComponentDeclineCounterTransformer"
+      new: "class net.fortuna.ical4j.transform.component.ComponentDeclineCounterTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.ComponentRefreshTransformer"
+      new: "class net.fortuna.ical4j.transform.component.ComponentRefreshTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.OrganizerUpdate"
+      new: "class net.fortuna.ical4j.transform.component.OrganizerUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.SequenceIncrement"
+      new: "class net.fortuna.ical4j.transform.component.SequenceIncrement"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.UidUpdate"
+      new: "class net.fortuna.ical4j.transform.component.UidUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.ByDayRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.ByDayRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.ByHourRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.ByHourRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.ByMinuteRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.ByMinuteRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.ByMonthDayRule<T extends\
+        \ java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.ByMonthDayRule<T extends\
+        \ java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.ByMonthRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.ByMonthRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.BySecondRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.BySecondRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.BySetPosRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.BySetPosRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.ByWeekNoRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.ByWeekNoRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.noLongerImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.ByYearDayRule<T extends\
+        \ java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.ByYearDayRule<T extends\
+        \ java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer"
+      new: "class net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.MethodUpdate"
+      new: "class net.fortuna.ical4j.transform.calendar.MethodUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.calendar.Rfc5545Transformer"
+      new: "class net.fortuna.ical4j.transform.calendar.Rfc5545Transformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.AbstractMethodTransfomer"
+      new: "class net.fortuna.ical4j.transform.component.AbstractMethodTransfomer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.AttendeeUpdate"
+      new: "class net.fortuna.ical4j.transform.component.AttendeeUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.OrganizerUpdate"
+      new: "class net.fortuna.ical4j.transform.component.OrganizerUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.SequenceIncrement"
+      new: "class net.fortuna.ical4j.transform.component.SequenceIncrement"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.component.UidUpdate"
+      new: "class net.fortuna.ical4j.transform.component.UidUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.class.nowImplementsInterface"
+      old: "class net.fortuna.ical4j.transform.recurrence.BySetPosRule<T extends java.time.temporal.Temporal>"
+      new: "class net.fortuna.ical4j.transform.recurrence.BySetPosRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.element.noLongerDeprecated"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar,\
+        \ net.fortuna.ical4j.model.Calendar)"
+      new: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar[])"
+      justification: "support_multiple_calendar_merge"
+    - code: "java.field.removed"
+      old: "field net.fortuna.ical4j.model.property.ParticipantType.VOTER"
+      justification: "redundant_throws"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.addedToInterface"
+      new: "method R java.util.function.Function<T, R>::apply(T) @ net.fortuna.ical4j.transform.Transformer<T>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.addedToInterface"
+      new: "method T net.fortuna.ical4j.transform.Transformer<T>::apply(T)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.ComponentFactoryImpl::createComponent(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList) throws java.net.URISyntaxException"
+      new: "method <T extends net.fortuna.ical4j.model.Component> T net.fortuna.ical4j.model.ComponentFactoryImpl::createComponent(java.lang.String,\
+        \ net.fortuna.ical4j.model.PropertyList)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.ParameterFactoryImpl::createParameter(java.lang.String,\
+        \ java.lang.String) throws java.net.URISyntaxException"
+      new: "method net.fortuna.ical4j.model.Parameter net.fortuna.ical4j.model.ParameterFactoryImpl::createParameter(java.lang.String,\
+        \ java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.CalendarAddress::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.CalendarAddress::<init>(java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.Organizer::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.Organizer::<init>(java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.StructuredData::<init>(java.lang.String)"
+      justification: "clean_up_throws_contract"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(java.lang.String)\
+        \ throws java.net.URISyntaxException"
+      new: "method void net.fortuna.ical4j.model.property.StyledDescription::<init>(java.lang.String)"
+      justification: "redundant_throws"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar,\
+        \ net.fortuna.ical4j.model.Calendar)"
+      new: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.util.Calendars::merge(net.fortuna.ical4j.model.Calendar[])"
+      justification: "support_multiple_calendar_merge"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByDayRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByHourRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByHourRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMinuteRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByMinuteRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMonthDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByMonthDayRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMonthRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByMonthRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.BySecondRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.BySecondRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.BySetPosRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.BySetPosRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByWeekNoRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByWeekNoRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByYearDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(===java.util.List<T>===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.recurrence.ByYearDayRule<T extends java.time.temporal.Temporal>"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.AddTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.AddTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.CancelTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.CancelTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.CounterTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.CounterTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.MethodUpdate::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.MethodUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.PublishTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.PublishTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.RefreshTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.RefreshTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.ReplyTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.ReplyTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.RequestTransformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.RequestTransformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.Rfc5545Transformer::transform(===net.fortuna.ical4j.model.Calendar===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.calendar.Rfc5545Transformer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.AbstractMethodTransfomer::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.AbstractMethodTransfomer"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.AttendeeUpdate::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.AttendeeUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.OrganizerUpdate::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.OrganizerUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.UidUpdate::transform(===net.fortuna.ical4j.model.Component===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.UidUpdate"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.transform.component.SequenceIncrement::transform(===net.fortuna.ical4j.model.component.CalendarComponent===)"
+      new: "parameter T net.fortuna.ical4j.transform.Transformer<T>::transform(===T===)\
+        \ @ net.fortuna.ical4j.transform.component.SequenceIncrement"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByHourRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMinuteRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMonthDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByMonthRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.BySecondRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.BySetPosRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByWeekNoRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method java.util.List<T> net.fortuna.ical4j.transform.recurrence.ByYearDayRule<T\
+        \ extends java.time.temporal.Temporal>::transform(java.util.List<T>)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.AbstractMethodTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.AddTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.CancelTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.CounterTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.MethodUpdate::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.PublishTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.RefreshTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.ReplyTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.RequestTransformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Calendar net.fortuna.ical4j.transform.calendar.Rfc5545Transformer::transform(net.fortuna.ical4j.model.Calendar)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.AbstractMethodTransfomer::transform(net.fortuna.ical4j.model.Component)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.AttendeeUpdate::transform(net.fortuna.ical4j.model.Component)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.OrganizerUpdate::transform(net.fortuna.ical4j.model.Component)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.transform.component.UidUpdate::transform(net.fortuna.ical4j.model.Component)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.model.component.CalendarComponent net.fortuna.ical4j.transform.component.SequenceIncrement::transform(net.fortuna.ical4j.model.component.CalendarComponent)"
+      justification: "added_support_for_functional_transforms"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::add(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::remove(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.Calendar"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.Calendar"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VAvailability"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VAvailability"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentContainer<T> net.fortuna.ical4j.model.ComponentContainer<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T) @ net.fortuna.ical4j.model.component.VTimeZone"
+      new: "method <T extends net.fortuna.ical4j.model.ComponentContainer<C extends\
+        \ net.fortuna.ical4j.model.Component>> T net.fortuna.ical4j.model.ComponentContainer<C\
+        \ extends net.fortuna.ical4j.model.Component>::replace(C) @ net.fortuna.ical4j.model.component.VTimeZone"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::add(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::remove(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::removeAll(java.lang.String[])"
+      justification: "improve_generics_for_method_chaining"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.PropertyContainer net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      new: "method <T extends net.fortuna.ical4j.model.PropertyContainer> T net.fortuna.ical4j.model.PropertyContainer::replace(net.fortuna.ical4j.model.Property)"
+      justification: "improve_generics_for_method_chaining"
+  "4.0.0-rc2":
+    org.mnode.ical4j:ical4j:
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.method.removed"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.Uid> net.fortuna.ical4j.model.RelationshipPropertyAccessor::getUid()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.DescriptivePropertyAccessor::addAttachment(byte[])"
+      justification: "removed_modifier_methods_from_accessors"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.DescriptivePropertyAccessor::setCategories(java.lang.String[])"
+      justification: "removed_modifier_methods_from_accessors"
+    - code: "java.method.removed"
+      old: "method void net.fortuna.ical4j.model.DescriptivePropertyAccessor::setSummary(java.lang.String)"
+      justification: "removed_modifier_methods_from_accessors"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getEndDate()"
+      justification: "use_accessor_interface_for_consistency"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtStart<?>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtStart<T>>\
+        \ net.fortuna.ical4j.model.component.VFreeBusy::getStartDate()"
+      justification: "use_accessor_interface_for_consistency"
+  "4.0.0-rc3":
+    org.mnode.ical4j:ical4j:
+    - code: "java.annotation.added"
+      old: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.String===)"
+      new: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.field.typeChanged"
+      old: "field net.fortuna.ical4j.filter.expression.StringExpression.value"
+      new: "field net.fortuna.ical4j.filter.expression.StringExpression.value"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ java.util.List<net.fortuna.ical4j.filter.FilterTarget.Attribute>, ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ java.util.List<net.fortuna.ical4j.filter.FilterTarget.Attribute>, ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.String===)"
+      new: "parameter void net.fortuna.ical4j.filter.expression.StringExpression::<init>(===java.lang.Object===)"
+      justification: "improved_filter_literal_support"
+  "4.0.0-rc4":
+    org.mnode.ical4j:ical4j:
+    - code: "java.annotation.removed"
+      old: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>()"
+      new: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>(java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.noLongerStatic"
+      old: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object, java.lang.String)"
+      new: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object, java.lang.String)"
+      new: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>()"
+      new: "method void net.fortuna.ical4j.model.property.XPropertyFactory::<init>(java.lang.Object)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.Object===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::contains(java.lang.String,\
+        \ ===java.lang.String===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.Object===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::equalTo(java.lang.String,\
+        \ ===java.lang.String===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThan(java.lang.String,\
+        \ ===java.time.temporal.Temporal===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThan(java.lang.String,\
+        \ ===java.util.function.Supplier<java.time.temporal.Temporal>===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThanEqual(java.lang.String,\
+        \ ===java.time.temporal.Temporal===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::greaterThanEqual(java.lang.String,\
+        \ ===java.util.function.Supplier<java.time.temporal.Temporal>===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThan(java.lang.String,\
+        \ ===java.time.temporal.Temporal===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThan(java.lang.String,\
+        \ ===java.lang.Number===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThanEqual(java.lang.String,\
+        \ ===java.lang.String===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::lessThanEqual(java.lang.String,\
+        \ ===java.lang.Number===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.Object===)"
+      new: "parameter net.fortuna.ical4j.filter.FilterExpression net.fortuna.ical4j.filter.FilterExpression::matches(java.lang.String,\
+        \ ===java.lang.String===)"
+      justification: "improved_xproperty_support"
+    - code: "java.method.visibilityReduced"
+      old: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object, java.lang.String)"
+      new: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
+        \ java.lang.Object)"
+      justification: "improved_xproperty_support"

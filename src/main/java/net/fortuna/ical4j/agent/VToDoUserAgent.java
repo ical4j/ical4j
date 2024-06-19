@@ -2,11 +2,12 @@ package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VToDo;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.transform.RequestTransformer;
+import net.fortuna.ical4j.transform.calendar.RequestTransformer;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
 public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
@@ -34,7 +35,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar publish(VToDo... component) {
-        return validate((wrap(Method.PUBLISH, component)));
+        return validate((wrap(PUBLISH, component)));
     }
 
     /**
@@ -89,12 +90,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar request(VToDo... component) {
-        return validate((wrap(Method.REQUEST, component)));
+        return validate((wrap(REQUEST, component)));
     }
 
     @Override
     public Calendar delegate(Calendar request) {
-        return validate(delegateTransformer.transform(request));
+        return validate(delegateTransformer.apply(request));
     }
 
     /**
@@ -128,7 +129,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        return validate(transform(Method.REPLY, request));
+        return validate(transform(REPLY, request));
     }
 
     /**
@@ -157,7 +158,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar add(VToDo component) {
-        return validate(wrap(Method.ADD, component));
+        return validate(wrap(ADD, component));
     }
 
     /**
@@ -201,7 +202,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar cancel(VToDo... component) {
-        return validate(wrap(Method.CANCEL, component));
+        return validate(wrap(CANCEL, component));
     }
 
     /**
@@ -228,7 +229,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar refresh(VToDo component) {
-        return validate(wrap(Method.REFRESH, component));
+        return validate(wrap(REFRESH, component));
     }
 
     /**
@@ -254,7 +255,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar counter(Calendar request) {
-        return validate(transform(Method.COUNTER, request));
+        return validate(transform(COUNTER, request));
     }
 
     /**
@@ -270,6 +271,6 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
      */
     @Override
     public Calendar declineCounter(Calendar counter) {
-        return validate(transform(Method.DECLINE_COUNTER, counter));
+        return validate(transform(DECLINE_COUNTER, counter));
     }
 }

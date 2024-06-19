@@ -36,9 +36,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.List;
 
 /**
  * $Id$
@@ -101,7 +99,7 @@ public class Categories extends Property {
      * Default constructor.
      */
     public Categories() {
-        super(CATEGORIES, new ParameterList(), new Factory());
+        super(CATEGORIES);
         categories = new TextList();
     }
 
@@ -109,8 +107,8 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final String aValue) {
-        super(CATEGORIES, new ParameterList(), new Factory());
-        setValue(aValue);
+        super(CATEGORIES);
+        categories = new TextList(aValue);
     }
 
     /**
@@ -118,15 +116,15 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final ParameterList aList, final String aValue) {
-        super(CATEGORIES, aList, new Factory());
-        setValue(aValue);
+        super(CATEGORIES, aList);
+        categories = new TextList(aValue);
     }
 
     /**
      * @param cList a list of categories
      */
     public Categories(final TextList cList) {
-        super(CATEGORIES, new ParameterList(), new Factory());
+        super(CATEGORIES);
         categories = cList;
     }
 
@@ -134,32 +132,45 @@ public class Categories extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of categories
      */
-    public Categories(final ParameterList aList, final TextList cList) {
-        super(CATEGORIES, aList, new Factory());
+    public Categories(final ParameterList aList, TextList cList) {
+        super(CATEGORIES, aList);
         categories = cList;
+    }
+
+    public void addCategory(String category) {
+        this.categories = categories.add(category);
+    }
+
+    public void removeCategory(String category) {
+        this.categories = categories.remove(category);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         categories = new TextList(aValue);
     }
 
     /**
      * @return Returns the categories.
      */
-    public final TextList getCategories() {
-        return categories;
+    public List<String> getCategories() {
+        return categories.getTexts();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final String getValue() {
-        return getCategories().toString();
+    public String getValue() {
+        return categories.toString();
+    }
+
+    @Override
+    protected PropertyFactory<Categories> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Categories> {
@@ -170,8 +181,7 @@ public class Categories extends Property {
         }
 
         @Override
-        public Categories createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Categories createProperty(final ParameterList parameters, final String value) {
             return new Categories(parameters, value);
         }
 

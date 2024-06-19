@@ -35,13 +35,12 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -52,41 +51,44 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class ExDate extends DateListProperty {
-
-    private static final long serialVersionUID = 2635730172243974463L;
+public class ExDate<T extends Temporal> extends DateListProperty<T> {
 
     /**
      * Default constructor.
      */
     public ExDate() {
-        super(EXDATE, new Factory());
+        super(EXDATE);
+    }
+
+    /**
+     * @param aValue a value string for this component
+     */
+    public ExDate(final String aValue) {
+        this(new ParameterList(), aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public ExDate(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(EXDATE, aList, new Factory());
+    public ExDate(final ParameterList aList, final String aValue) {
+        super(EXDATE, aList, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param dList a list of dates
      */
-    public ExDate(final DateList dList) {
-        super(EXDATE, dList, new Factory());
+    public ExDate(final DateList<T> dList) {
+        super(EXDATE, dList);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param dList a list of dates
      */
-    public ExDate(final ParameterList aList, final DateList dList) {
-        super(EXDATE, aList, dList, new Factory());
+    public ExDate(final ParameterList aList, final DateList<T> dList) {
+        super(EXDATE, aList, dList, Value.DATE_TIME);
     }
 
     /**
@@ -97,22 +99,25 @@ public class ExDate extends DateListProperty {
         return PropertyValidator.EXDATE.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<ExDate> {
-        private static final long serialVersionUID = 1L;
+    @Override
+    protected PropertyFactory<ExDate<T>> newFactory() {
+        return new Factory<>();
+    }
+
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<ExDate<T>> {
 
         public Factory() {
             super(EXDATE);
         }
 
         @Override
-        public ExDate createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new ExDate(parameters, value);
+        public ExDate<T> createProperty(final ParameterList parameters, final String value) {
+            return new ExDate<>(parameters, value);
         }
 
         @Override
-        public ExDate createProperty() {
-            return new ExDate();
+        public ExDate<T> createProperty() {
+            return new ExDate<>();
         }
     }
 

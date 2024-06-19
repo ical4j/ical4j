@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
@@ -98,7 +101,7 @@ public class Available extends Component {
      *
      * @param properties a list of properties
      */
-    public Available(final PropertyList<Property> properties) {
+    public Available(final PropertyList properties) {
         super(AVAILABLE, properties);
     }
 
@@ -112,6 +115,11 @@ public class Available extends Component {
             results = results.merge(validateProperties());
         }
         return results;
+    }
+
+    @Override
+    protected ComponentFactory<Available> newFactory() {
+        return new Factory();
     }
 
     /**

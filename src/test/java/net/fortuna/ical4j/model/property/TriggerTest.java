@@ -34,13 +34,15 @@ package net.fortuna.ical4j.model.property;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 /**
@@ -79,9 +81,9 @@ public class TriggerTest extends PropertyTest {
      * @throws ParseException
      */
     public void testSetValue() throws ParseException {
-        trigger.setValue(new DateTime(new Date(0).getTime()).toString());
+        trigger.setValue(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString(ZoneOffset.UTC));
 
-        log.info(new DateTime(new Date(0).getTime()).toString());
+        log.info(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString());
         log.info(trigger.toString());
 
 //        trigger.setValue(DurationFormat.getInstance().format(5000));
@@ -98,23 +100,21 @@ public class TriggerTest extends PropertyTest {
     public void testTriggerDuration() {
         assertNotNull(trigger.getDuration());
         assertNull(trigger.getDate());
-        assertNull(trigger.getDateTime());
     }
 
     /**
      * Unit test on a date-time trigger.
      */
-    public void testTriggerDateTime() throws ValidationException {
+    public void testTriggerDateTime() {
         assertNull(trigger.getDuration());
         assertNotNull(trigger.getDate());
-        assertNotNull(trigger.getDateTime());
         ValidationResult result = trigger.validate();
         assertFalse(result.hasErrors());
 
-        trigger.getParameters().add(Value.DURATION);
+        trigger.add(Value.DURATION);
         assertValidationError(trigger);
     }
-    
+
     /**
      * @return
      */
@@ -126,9 +126,13 @@ public class TriggerTest extends PropertyTest {
     	trigger = new Trigger(java.time.Duration.ofDays(1));
     	suite.addTest(new TriggerTest("testTriggerDuration", trigger));
         
-    	trigger = new Trigger(new DateTime(new Date()));
+    	trigger = new Trigger(Instant.now());
     	suite.addTest(new TriggerTest("testTriggerDateTime", trigger));
-        
+
+//    	trigger = new Trigger(Instant.now());
+//    	trigger.replace(Value.DURATION);
+//    	suite.addTest(new TriggerTest("testTriggerDateTimeInvalid", trigger));
+
     	return suite;
     }
 }

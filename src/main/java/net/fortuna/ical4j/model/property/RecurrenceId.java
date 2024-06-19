@@ -36,9 +36,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -126,59 +124,30 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class RecurrenceId extends DateProperty {
+public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = 4456883817126011006L;
 
-    /**
-     * Default constructor.
-     */
     public RecurrenceId() {
-        super(RECURRENCE_ID, new Factory());
-        setDate(new DateTime());
-    }
-
-    /**
-     * Creates a new RECURRENCE_ID property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public RecurrenceId(TimeZone timezone) {
-        super(RECURRENCE_ID, timezone, new Factory());
+        super(RECURRENCE_ID);
     }
 
     /**
      * Creates a new instance initialised with the parsed value.
      *
      * @param value the RECURRENCE_ID value string to parse
-     * @throws ParseException where the specified string is not a valid RECURRENCE_ID value representation
      */
-    public RecurrenceId(final String value) throws ParseException {
-        super(RECURRENCE_ID, new Factory());
-        setValue(value);
-    }
-
-    /**
-     * Creates a new RECURRENCE_ID property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a RECURRENCE_ID value
-     * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public RecurrenceId(String value, TimeZone timezone) throws ParseException {
-        super(RECURRENCE_ID, timezone, new Factory());
+    public RecurrenceId(final String value) {
+        super(RECURRENCE_ID);
         setValue(value);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public RecurrenceId(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(RECURRENCE_ID, aList, new Factory());
+    public RecurrenceId(final ParameterList aList, final String aValue) {
+        super(RECURRENCE_ID, aList);
         setValue(aValue);
     }
 
@@ -187,8 +156,8 @@ public class RecurrenceId extends DateProperty {
      *
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final Date aDate) {
-        super(RECURRENCE_ID, new Factory());
+    public RecurrenceId(final T aDate) {
+        super(RECURRENCE_ID);
         setDate(aDate);
     }
 
@@ -198,8 +167,8 @@ public class RecurrenceId extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final ParameterList aList, final Date aDate) {
-        super(RECURRENCE_ID, aList, new Factory());
+    public RecurrenceId(final ParameterList aList, final T aDate) {
+        super(RECURRENCE_ID, aList);
         setDate(aDate);
     }
 
@@ -213,7 +182,12 @@ public class RecurrenceId extends DateProperty {
         return result;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<RecurrenceId> {
+    @Override
+    protected PropertyFactory<RecurrenceId<T>> newFactory() {
+        return new Factory<>();
+    }
+
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RecurrenceId<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -221,14 +195,13 @@ public class RecurrenceId extends DateProperty {
         }
 
         @Override
-        public RecurrenceId createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new RecurrenceId(parameters, value);
+        public RecurrenceId<T> createProperty(final ParameterList parameters, final String value) {
+            return new RecurrenceId<>(parameters, value);
         }
 
         @Override
-        public RecurrenceId createProperty() {
-            return new RecurrenceId();
+        public RecurrenceId<T> createProperty() {
+            return new RecurrenceId<>();
         }
     }
 

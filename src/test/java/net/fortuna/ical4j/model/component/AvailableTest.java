@@ -33,7 +33,8 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
@@ -41,6 +42,9 @@ import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import java.net.SocketException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -62,20 +66,21 @@ public class AvailableTest extends ComponentTest {
      * @return
      * @throws SocketException 
      */
-    public static TestSuite suite() throws SocketException {
+    public static TestSuite suite() {
         TestSuite suite = new TestSuite();
 
-        Available a = new Available();
-        suite.addTest(new AvailableTest("testIsNotCalendarComponent", a));
-        suite.addTest(new AvailableTest("testValidationException", a));
-        
+        Available available = new Available();
+        suite.addTest(new AvailableTest("testIsNotCalendarComponent", available));
+        suite.addTest(new AvailableTest("testValidationException", available));
+
+        ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
         UidGenerator g = new RandomUidGenerator();
-        a = new Available();
-        a.getProperties().add(g.generateUid());
-        a.getProperties().add(new DtStart(new DateTime()));
-        a.getProperties().add(new DtStamp());
-        a.getProperties().add(new Duration(java.time.Period.ofWeeks(1)));
-        suite.addTest(new AvailableTest("testValidation", a));
+
+        available = new Available().withProperty(g.generateUid())
+                .withProperty(new DtStart<>(tzParams, ZonedDateTime.now()))
+                .withProperty(new DtStamp()).withProperty(new Duration(java.time.Period.ofWeeks(1))).getFluentTarget();
+
+        suite.addTest(new AvailableTest("testValidation", available));
         return suite;
     }
 }

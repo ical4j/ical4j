@@ -2,10 +2,16 @@ package net.fortuna.ical4j.agent
 
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
-import net.fortuna.ical4j.model.property.*
+import net.fortuna.ical4j.model.property.Organizer
+import net.fortuna.ical4j.model.property.ProdId
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.HIGH
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.LOW
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0
 
 class VToDoUserAgentTest extends Specification {
 
@@ -22,29 +28,31 @@ class VToDoUserAgentTest extends Specification {
         def vtodo = builder.vtodo {
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
+            duration 'P1D'
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             summary 'Task 1'
-            priority(Priority.HIGH)
+            priority(HIGH)
         }
 
         def vtodo2 = builder.vtodo {
             dtstamp()
             dtstart '20090811', parameters: parameters { value 'DATE' }
+            duration 'P1D'
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             summary 'Task 2'
-            priority(Priority.LOW)
+            priority(LOW)
         }
 
         when: 'the events are published'
         def calendar = userAgent.publish(vtodo, vtodo2)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getProperty(Property.METHOD) == Method.PUBLISH
+        calendar.getRequiredProperty(Property.METHOD) == PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE) }
+        calendar.getComponents().each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {
@@ -53,49 +61,52 @@ class VToDoUserAgentTest extends Specification {
             uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
+            duration 'P1D'
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             attendee 'mailto:org@example.com'
             summary 'Task 1'
-            priority(Priority.HIGH)
+            priority(HIGH)
         }
 
         def vtodo2 = builder.vtodo {
             uid '1'
             dtstamp()
             dtstart '20090811', parameters: parameters { value 'DATE' }
+            duration 'P1D'
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             attendee 'mailto:org@example.com'
             summary 'Task 2'
-            priority(Priority.LOW)
+            priority(LOW)
         }
 
         when: 'the events are published'
         def calendar = userAgent.request(vtodo, vtodo2)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getProperty(Property.METHOD) == Method.REQUEST
+        calendar.getRequiredProperty(Property.METHOD) == REQUEST
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE) }
+        calendar.getComponents().each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Delegate"() {
         given: 'a todo request'
         def request = builder.calendar {
             prodid(prodId)
-            version(Version.VERSION_2_0)
-            method(Method.REQUEST)
+            version(VERSION_2_0)
+            method(REQUEST)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
+                duration 'P1D'
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
                 organizer 'mailto:org@example.com'
                 summary 'Task 1'
-                priority(Priority.HIGH)
+                priority(HIGH)
             }
         }
 
@@ -103,18 +114,19 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.delegate(request)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getProperty(Property.METHOD) == Method.REQUEST
+        calendar.getRequiredProperty(Property.METHOD) == REQUEST
     }
 
     def "Reply"() {
         given: 'an event request'
         def request = builder.calendar {
             prodid(prodId)
-            version(Version.VERSION_2_0)
-            method(Method.REQUEST)
+            version(VERSION_2_0)
+            method(REQUEST)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
+                duration 'P1D'
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
@@ -126,7 +138,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
-        calendar.getProperty(Property.METHOD) == Method.REPLY
+        calendar.getRequiredProperty(Property.METHOD) == REPLY
     }
 
     def "Add"() {
@@ -134,17 +146,18 @@ class VToDoUserAgentTest extends Specification {
         def vtodo = builder.vtodo {
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
+            duration 'P1D'
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             summary 'Task 1'
-            priority(Priority.HIGH)
+            priority(HIGH)
         }
 
         when: 'a todo recurrence is added'
         def calendar = userAgent.add(vtodo)
 
         then: 'the calendar object contains method = ADD'
-        calendar.getProperty(Property.METHOD) == Method.ADD
+        calendar.getRequiredProperty(Property.METHOD) == ADD
     }
 
     def "Cancel"() {
@@ -152,6 +165,7 @@ class VToDoUserAgentTest extends Specification {
         def vtodo = builder.vtodo {
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
+            duration 'P1D'
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
@@ -160,7 +174,7 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.cancel(vtodo)
 
         then: 'the calendar object contains method = CANCEL'
-        calendar.getProperty(Property.METHOD) == Method.CANCEL
+        calendar.getRequiredProperty(Property.METHOD) == CANCEL
     }
 
     def "Refresh"() {
@@ -175,24 +189,25 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.refresh(vtodo)
 
         then: 'the calendar object contains method = REFRESH'
-        calendar.getProperty(Property.METHOD) == Method.REFRESH
+        calendar.getRequiredProperty(Property.METHOD) == REFRESH
     }
 
     def "Counter"() {
         given: 'a todo request'
         def request = builder.calendar {
             prodid(prodId)
-            version(Version.VERSION_2_0)
-            method(Method.REQUEST)
+            version(VERSION_2_0)
+            method(REQUEST)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
+                duration 'P1D'
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
                 organizer 'mailto:org@example.com'
                 summary 'Task 1'
-                priority(Priority.HIGH)
+                priority(HIGH)
             }
         }
 
@@ -200,18 +215,19 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.counter(request)
 
         then: 'the calendar object contains method = COUNTER'
-        calendar.getProperty(Property.METHOD) == Method.COUNTER
+        calendar.getRequiredProperty(Property.METHOD) == COUNTER
     }
 
     def "DeclineCounter"() {
         given: 'a todo counter'
         def counter = builder.calendar {
             prodid(prodId)
-            version(Version.VERSION_2_0)
-            method(Method.COUNTER)
+            version(VERSION_2_0)
+            method(COUNTER)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
+                duration 'P1D'
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
@@ -223,6 +239,6 @@ class VToDoUserAgentTest extends Specification {
         def calendar = userAgent.declineCounter(counter)
 
         then: 'the calendar object contains method = DECLINECOUNTER'
-        calendar.getProperty(Property.METHOD) == Method.DECLINE_COUNTER
+        calendar.getRequiredProperty(Property.METHOD) == DECLINE_COUNTER
     }
 }

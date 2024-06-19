@@ -75,7 +75,7 @@ public class Region extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Region(final ParameterList aList, final String aValue) {
-        super(REGION, aList, new Factory());
+        super(REGION, aList);
         setValue(aValue);
     }
 
@@ -100,6 +100,11 @@ public class Region extends Property implements Encodable {
         return PropertyValidator.REGION.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Region> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Region> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +113,7 @@ public class Region extends Property implements Encodable {
         }
 
         @Override
-        public Region createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Region createProperty(final ParameterList parameters, final String value) {
             return new Region(parameters, value);
         }
 

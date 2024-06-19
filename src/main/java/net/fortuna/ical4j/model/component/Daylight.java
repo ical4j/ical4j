@@ -85,6 +85,11 @@ public class Daylight extends Observance {
         super(DAYLIGHT, properties);
     }
 
+    @Override
+    protected ComponentFactory<Daylight> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<Daylight> {
 
         public Factory() {

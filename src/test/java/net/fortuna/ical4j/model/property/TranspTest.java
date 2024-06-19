@@ -31,10 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
+
+import java.text.ParseException;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
 
 /**
  * $Id$
@@ -67,17 +70,17 @@ public class TranspTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new TranspTest(Transp.OPAQUE, "OPAQUE"));
-        suite.addTest(new TranspTest(Transp.TRANSPARENT, "TRANSPARENT"));
+        suite.addTest(new TranspTest(OPAQUE, "OPAQUE"));
+        suite.addTest(new TranspTest(TRANSPARENT, "TRANSPARENT"));
         
-        suite.addTest(new TranspTest("testValidation",Transp.OPAQUE));
-        suite.addTest(new TranspTest("testValidation",Transp.TRANSPARENT));
+        suite.addTest(new TranspTest("testValidation", OPAQUE));
+        suite.addTest(new TranspTest("testValidation", TRANSPARENT));
         
-        suite.addTest(new TranspTest("testEquals",Transp.OPAQUE));
-        suite.addTest(new TranspTest("testEquals",Transp.TRANSPARENT));
+        suite.addTest(new TranspTest("testEquals", OPAQUE));
+        suite.addTest(new TranspTest("testEquals", TRANSPARENT));
         
-        suite.addTest(new TranspTest("testImmutable",Transp.OPAQUE));
-        suite.addTest(new TranspTest("testImmutable",Transp.TRANSPARENT));
+        suite.addTest(new TranspTest("testImmutable", OPAQUE));
+        suite.addTest(new TranspTest("testImmutable", TRANSPARENT));
         return suite;
     }
 

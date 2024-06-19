@@ -59,14 +59,14 @@ public class TzName extends Property implements Encodable {
      * Default constructor.
      */
     public TzName() {
-        super(TZNAME, new ParameterList(), new Factory());
+        super(TZNAME);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzName(final String aValue) {
-        super(TZNAME, new ParameterList(), new Factory());
+        super(TZNAME);
         setValue(aValue);
     }
 
@@ -75,7 +75,7 @@ public class TzName extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public TzName(final ParameterList aList, final String aValue) {
-        super(TZNAME, aList, new Factory());
+        super(TZNAME, aList);
         setValue(aValue);
     }
 
@@ -100,6 +100,11 @@ public class TzName extends Property implements Encodable {
         return PropertyValidator.TZNAME.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<TzName> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<TzName> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +113,7 @@ public class TzName extends Property implements Encodable {
         }
 
         @Override
-        public TzName createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public TzName createProperty(final ParameterList parameters, final String value) {
             return new TzName(parameters, value);
         }
 

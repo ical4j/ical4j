@@ -32,10 +32,9 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -44,10 +43,14 @@ import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -107,9 +110,9 @@ import java.text.ParseException;
  * 
  * <pre><code>
  * Calendar calendar = new Calendar();
- * calendar.getProperties().add(new ProdId(&quot;-//Ben Fortuna//iCal4j 1.0//EN&quot;));
- * calendar.getProperties().add(Version.VERSION_2_0);
- * calendar.getProperties().add(CalScale.GREGORIAN);
+ * calendar.add(new ProdId(&quot;-//Ben Fortuna//iCal4j 1.0//EN&quot;));
+ * calendar.add(Version.VERSION_2_0);
+ * calendar.add(CalScale.GREGORIAN);
  * 
  * // Add events, etc..
  * </code></pre>
@@ -120,6 +123,35 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     FluentCalendar {
 
     private static final long serialVersionUID = -1654118204678581940L;
+
+    /**
+     * Smart merging of properties that identifies whether to add or replace existing properties.
+     */
+    public static final BiFunction<Calendar, List<Property>, Calendar> MERGE_PROPERTIES = (c, list) -> {
+        if (list != null && !list.isEmpty()) {
+            list.forEach(p -> {
+                switch (p.getName()) {
+                    case Property.VERSION:
+                    case Property.METHOD:
+                    case Property.PRODID:
+                        c.replace(p.copy());
+                        break;
+                    default:
+                        c.add(p.copy());
+                }
+            });
+        };
+        return c;
+    };
+
+    public static final BiFunction<Calendar, List<CalendarComponent>, Calendar> MERGE_COMPONENTS = (c, list) -> {
+        list.forEach(component -> {
+            if (!c.getComponents().contains(component)) {
+                c.add(component.copy());
+            }
+        });
+        return c;
+    };
 
     /**
      * Begin token.
@@ -136,9 +168,9 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     public static final String END = "END";
 
-    private final PropertyList<Property> properties;
+    private PropertyList properties;
 
-    private final ComponentList<CalendarComponent> components;
+    private ComponentList<CalendarComponent> components;
 
     private final Validator<Calendar> validator;
 
@@ -146,15 +178,15 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * Default constructor.
      */
     public Calendar() {
-        this(new PropertyList<>(), new ComponentList<>());
+        this(new PropertyList(), new ComponentList<>());
     }
 
     /**
      * Constructs a new calendar with no properties and the specified components.
      * @param components a list of components to add to the calendar
      */
-    public Calendar(final ComponentList<CalendarComponent> components) {
-        this(new PropertyList<>(), components);
+    public Calendar(final ComponentList<? extends CalendarComponent> components) {
+        this(new PropertyList(), components);
     }
 
     /**
@@ -162,7 +194,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @param properties a list of initial calendar properties
      * @param components a list of initial calendar components
      */
-    public Calendar(PropertyList<Property> properties, ComponentList<CalendarComponent> components) {
+    public Calendar(PropertyList properties, ComponentList<? extends CalendarComponent> components) {
         this(properties, components, AbstractCalendarValidatorFactory.getInstance().newInstance());
     }
 
@@ -172,21 +204,18 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      * @param c a list of components
      * @param validator used to ensure the validity of the calendar instance
      */
-    public Calendar(PropertyList<Property> p, ComponentList<CalendarComponent> c, Validator<Calendar> validator) {
+    public Calendar(PropertyList p, ComponentList<? extends CalendarComponent> c, Validator<Calendar> validator) {
         this.properties = p;
-        this.components = c;
+        this.components = new ComponentList<>(c.getAll());
         this.validator = validator;
     }
 
     /**
-     * Creates a deep copy of the specified calendar.
+     * Creates a shallow copy of the specified calendar.
      * @param c the calendar to copy
-     * @throws IOException where an error occurs reading calendar data
-     * @throws ParseException where calendar parsing fails
-     * @throws URISyntaxException where an invalid URI string is encountered
      */
-    public Calendar(Calendar c) throws ParseException, IOException, URISyntaxException {
-        this(new PropertyList<>(c.getProperties()), new ComponentList<>(c.getComponents()));
+    public Calendar(Calendar c) {
+        this(c.properties, c.components);
     }
 
     /**
@@ -203,18 +232,38 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
         return this;
     }
 
-    /**
-     * @return Returns the components.
-     */
-    public final ComponentList<CalendarComponent> getComponents() {
-        return components;
+    public <C extends CalendarComponent> List<C> getComponents() {
+        return ComponentContainer.super.getComponents();
     }
 
     /**
-     * @return Returns the properties.
+     * @return Returns the underlying component list.
      */
-    public final PropertyList<Property> getProperties() {
+    @Override
+    public final ComponentList<CalendarComponent> getComponentList() {
+        return components;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<CalendarComponent> components) {
+        this.components = components;
+    }
+
+    public <T extends Property> List<T> getProperties() {
+        return PropertyContainer.super.getProperties();
+    }
+
+    /**
+     * @return Returns the underlying property list.
+     */
+    @Override
+    public final PropertyList getPropertyList() {
         return properties;
+    }
+
+    @Override
+    public void setPropertyList(PropertyList properties) {
+        this.properties = properties;
     }
 
     /**
@@ -257,42 +306,173 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     private ValidationResult validateComponents() throws ValidationException {
         ValidationResult result = new ValidationResult();
-        for (Component component : getComponents()) {
-            result = result.merge(component.validate());
+        Optional<Method> method = getProperty(Property.METHOD);
+        if (method.isPresent()) {
+            for (CalendarComponent c : getComponents()) {
+                result = result.merge(c.validate(method.get()));
+            }
+        } else {
+            for (CalendarComponent c : getComponents()) {
+                result = result.merge(c.validate());
+            }
         }
         return result;
     }
 
     /**
+     * Creates a deep copy of the calendar.
+     * @return a new calendar instance that protects against mutation of the source calendar
+     */
+    public final Calendar copy() {
+        return new Calendar(
+                new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                    .map(c -> (CalendarComponent) c.copy()).collect(Collectors.toList())));
+    }
+
+    /**
+     * Merge all properties and components from the specified calendar with this instance.
+     * Note that the merge process is not very sophisticated, and may result in invalid calendar
+     * data (e.g. multiple properties of a type that should only be specified once).
+     * @param c2 the second calendar to merge
+     * @return a Calendar instance containing all properties and components from both of the specified calendars
+     */
+    public Calendar merge(final Calendar c2) {
+        Calendar copy = copy();
+        copy.with(MERGE_PROPERTIES, c2.getProperties());
+        copy.with(MERGE_COMPONENTS, c2.getComponents());
+        return copy;
+    }
+
+    /**
+     * Splits a calendar object into distinct calendar objects for unique identifiers (UID).
+     * @return an array of calendar objects
+     */
+    public Calendar[] split() {
+        // if calendar contains one component or less, or is composed entirely of timezone
+        // definitions, return the original calendar unmodified..
+        if (getComponents().size() <= 1
+                || getComponents(Component.VTIMEZONE).size() == getComponents().size()) {
+            return new Calendar[] {this};
+        }
+
+        final List<VTimeZone> timezoneList = getComponents(Component.VTIMEZONE);
+        final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<>(
+                timezoneList, Property.TZID);
+
+        final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
+        for (final CalendarComponent c : getComponents()) {
+            if (c instanceof VTimeZone) {
+                continue;
+            }
+
+            final Optional<Uid> uid = c.getProperty(Property.UID);
+            if (uid.isPresent()) {
+                Calendar uidCal = calendars.get(uid.get());
+                if (uidCal == null) {
+                    // remove METHOD property for split calendars..
+                    PropertyList splitProps = (PropertyList) getPropertyList().removeAll(Property.METHOD);
+                    uidCal = new Calendar(splitProps, new ComponentList<>());
+                    calendars.put(uid.get(), uidCal);
+                }
+
+                for (final Property p : c.getProperties()) {
+                    final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
+                    if (tzid.isPresent()) {
+                        final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
+                        if (!uidCal.getComponents().contains(timezone)) {
+                            uidCal.add(timezone);
+                        }
+                    }
+                }
+                uidCal.add(c);
+            }
+        }
+        return calendars.values().toArray(Calendar[]::new);
+    }
+
+    /**
+     * Returns a unique identifier as specified by components in the calendar instance.
+     * @return the UID property
+     * @throws ConstraintViolationException if zero or more than one unique identifier(s) is
+     * found in the specified calendar
+     */
+    public Uid getUid() throws ConstraintViolationException {
+        Uid uid = null;
+        for (final Component c : components.getAll()) {
+            for (final Property foundUid : c.getProperties(Property.UID)) {
+                if (uid != null && !uid.equals(foundUid)) {
+                    throw new ConstraintViolationException("More than one UID found in calendar");
+                }
+                uid = (Uid) foundUid;
+            }
+        }
+        if (uid == null) {
+            throw new ConstraintViolationException("Calendar must specify a single unique identifier (UID)");
+        }
+        return uid;
+    }
+
+    /**
      * Returns the mandatory prodid property.
      * @return the PRODID property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final ProdId getProductId() {
+    @Deprecated
+    public final Optional<ProdId> getProductId() {
         return getProperty(Property.PRODID);
     }
 
     /**
      * Returns the mandatory version property.
      * @return the VERSION property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final Version getVersion() {
+    @Deprecated
+    public final Optional<Version> getVersion() {
         return getProperty(Property.VERSION);
     }
 
     /**
      * Returns the optional calscale property.
      * @return the CALSCALE property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final CalScale getCalendarScale() {
+    @Deprecated
+    public final Optional<CalScale> getCalendarScale() {
         return getProperty(Property.CALSCALE);
     }
 
     /**
      * Returns the optional method property.
      * @return the METHOD property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final Method getMethod() {
+    @Deprecated
+    public final Optional<Method> getMethod() {
         return getProperty(Property.METHOD);
+    }
+
+    /**
+     * Returns an appropriate MIME Content-Type for the calendar object instance.
+     * @param charset an optional encoding
+     * @return a content type string
+     */
+    public String getContentType(Charset charset) {
+        final StringBuilder b = new StringBuilder("text/calendar");
+
+        final Optional<Method> method = getProperty(Property.METHOD);
+        if (method.isPresent()) {
+            b.append("; method=");
+            b.append(method.get().getValue());
+        }
+
+        if (charset != null) {
+            b.append("; charset=");
+            b.append(charset);
+        }
+        return b.toString();
     }
 
     /**

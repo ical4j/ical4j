@@ -59,14 +59,14 @@ public class Comment extends Property implements Encodable {
      * Default constructor.
      */
     public Comment() {
-        super(COMMENT, new ParameterList(), new Factory());
+        super(COMMENT);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Comment(final String aValue) {
-        super(COMMENT, new ParameterList(), new Factory());
+        super(COMMENT);
         setValue(aValue);
     }
 
@@ -75,7 +75,7 @@ public class Comment extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Comment(final ParameterList aList, final String aValue) {
-        super(COMMENT, aList, new Factory());
+        super(COMMENT, aList);
         setValue(aValue);
     }
 
@@ -100,6 +100,11 @@ public class Comment extends Property implements Encodable {
         return PropertyValidator.COMMENT.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Comment> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Comment> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +113,7 @@ public class Comment extends Property implements Encodable {
         }
 
         @Override
-        public Comment createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Comment createProperty(final ParameterList parameters, final String value) {
             return new Comment(parameters, value);
         }
 

@@ -1,16 +1,53 @@
 package net.fortuna.ical4j.model;
 
-import java.util.List;
+import java.util.function.BiFunction;
 
-public interface ComponentContainer<T extends Component> {
+public interface ComponentContainer<C extends Component> extends ComponentListAccessor<C> {
 
-    ComponentList<T> getComponents();
+    void setComponentList(ComponentList<C> components);
 
-    default <C extends T> List<C> getComponents(final String... name) {
-        return getComponents().getComponents(name);
+    /**
+     * Add a subcomponent to this component.
+     * @param component the subcomponent to add
+     * @return a reference to this component to support method chaining
+     */
+    default <T extends ComponentContainer<C>> T add(C component) {
+        setComponentList((ComponentList<C>) getComponentList().add(component));
+        return (T) this;
     }
 
-    default <C extends T> C getComponent(final String name) {
-        return (C) getComponents().getComponent(name);
+    /**
+     * Remove a subcomponent from this component.
+     * @param component the subcomponent to remove
+     * @return a reference to this component to support method chaining
+     */
+    default <T extends ComponentContainer<C>> T remove(C component) {
+        setComponentList((ComponentList<C>)  getComponentList().remove(component));
+        return (T) this;
+    }
+
+    /**
+     * Add a subcomponent to this component whilst removing all other subcomponents with the same component name.
+     * @param component the subcomponent to add
+     * @return a reference to the component to support method chaining
+     */
+    default <T extends ComponentContainer<C>> T replace(C component) {
+        setComponentList((ComponentList<C>)  getComponentList().replace(component));
+        return (T) this;
+    }
+
+    /**
+     * A functional method used to apply a component to a container in an undefined way.
+     *
+     * For example, a null check can be introduced as follows:
+     *
+     *  container.with((container, component) -> if (component != null) container.add(component); return container;)
+     * @param f
+     * @param c
+     * @return
+     * @param <T>
+     */
+    default <T extends ComponentContainer<C>> T with(BiFunction<T, C, T> f, C c) {
+        return f.apply((T) this, c);
     }
 }

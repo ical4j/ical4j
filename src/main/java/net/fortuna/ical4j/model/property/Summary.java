@@ -105,14 +105,14 @@ public class Summary extends Property implements Encodable {
      * Default constructor.
      */
     public Summary() {
-        super(SUMMARY, new ParameterList(), new Factory());
+        super(SUMMARY);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Summary(final String aValue) {
-        super(SUMMARY, new ParameterList(), new Factory());
+        super(SUMMARY);
         setValue(aValue);
     }
 
@@ -121,7 +121,7 @@ public class Summary extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Summary(final ParameterList aList, final String aValue) {
-        super(SUMMARY, aList, new Factory());
+        super(SUMMARY, aList);
         setValue(aValue);
     }
 
@@ -146,6 +146,11 @@ public class Summary extends Property implements Encodable {
         return PropertyValidator.SUMMARY.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Summary> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Summary> {
         private static final long serialVersionUID = 1L;
 
@@ -154,8 +159,7 @@ public class Summary extends Property implements Encodable {
         }
 
         @Override
-        public Summary createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Summary createProperty(final ParameterList parameters, final String value) {
             return new Summary(parameters, value);
         }
 

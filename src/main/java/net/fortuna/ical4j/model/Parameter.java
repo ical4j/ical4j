@@ -35,17 +35,13 @@ import net.fortuna.ical4j.util.Strings;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
-import java.net.URISyntaxException;
 import java.util.Comparator;
 
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
  * iCalendar parameters.
- * <p/>
- * Note that subclasses must provide a reference to the factory used to create the
- * parameter to support parameter cloning (copy). If no factory is specified an
- * {@link UnsupportedOperationException} will be thrown by the {@link #copy()} method.
  *
  * @author Ben Fortuna
  *         <p/>
@@ -222,15 +218,15 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
 
     private final String name;
 
-    private final ParameterFactory factory;
-
     /**
      * @param aName   the parameter identifier
-     * @param factory the factory used to create the parameter
      */
-    public Parameter(final String aName, ParameterFactory factory) {
+    public Parameter(final String aName) {
         this.name = aName;
-        this.factory = factory;
+    }
+
+    public Parameter(@NotNull Enum<?> name) {
+        this(name.toString());
     }
 
     /**
@@ -240,18 +236,20 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         b.append(getName());
-        b.append('=');
-        String value;
-        if (this instanceof Encodable) {
-            try {
-                value = ParameterCodec.INSTANCE.encode(getValue());
-            } catch (EncoderException e) {
+        if (getValue() != null) {
+            b.append('=');
+            String value;
+            if (this instanceof Encodable) {
+                try {
+                    value = ParameterCodec.INSTANCE.encode(getValue());
+                } catch (EncoderException e) {
+                    value = getValue();
+                }
+            } else {
                 value = getValue();
             }
-        } else {
-            value = getValue();
+            b.append(Strings.valueOf(value));
         }
-        b.append(Strings.valueOf(value));
         return b.toString();
     }
 
@@ -284,19 +282,6 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
         // as parameter name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
                 getValue()).toHashCode();
-    }
-
-    /**
-     * Deep copy of parameter.
-     *
-     * @return new parameter
-     * @throws URISyntaxException where an invalid URI is encountered
-     */
-    public <T extends Parameter> T copy() throws URISyntaxException {
-        if (factory == null) {
-            throw new UnsupportedOperationException("No factory specified");
-        }
-        return (T) factory.createParameter(getValue());
     }
 
     @Override

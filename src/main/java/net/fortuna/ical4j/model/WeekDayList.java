@@ -31,12 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.RegEx;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -73,23 +73,8 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * @param aString a string representation of a day list
      */
     public WeekDayList(final String aString) {
-        this(aString, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY));
-    }
-
-    /**
-     * Parse a weekday list from a string.
-     * @param aString a string representation of a day list
-     * @param stripWhitespace remove any whitespace from the string tokens before parsing
-     */
-    public WeekDayList(final String aString, boolean stripWhitespace) {
-        final StringTokenizer t = new StringTokenizer(aString, ",");
-        while (t.hasMoreTokens()) {
-            if (stripWhitespace) {
-                add(new WeekDay(t.nextToken().replaceAll(" ", "")));
-            } else {
-                add(new WeekDay(t.nextToken()));
-            }
-        }
+        addAll(Arrays.stream(aString.split(RegEx.COMMA_DELIMITED)).filter(s -> !s.isEmpty())
+                .map(WeekDay::new).collect(Collectors.toList()));
     }
 
     /**
@@ -97,6 +82,10 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      */
     @Override
     public final String toString() {
-        return stream().map(WeekDay::toString).collect(Collectors.joining(","));
+        return toString(this);
+    }
+
+    public static String toString(List<WeekDay> list) {
+        return list.stream().map(WeekDay::toString).collect(Collectors.joining(","));
     }
 }

@@ -39,10 +39,15 @@ import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -57,6 +62,8 @@ import java.util.List;
 public class TimeZone extends java.util.TimeZone {
 
     private static final long serialVersionUID = -5620979316746547234L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TimeZone.class);
 
     private final VTimeZone vTimeZone;
     private final int rawOffset;
@@ -75,8 +82,12 @@ public class TimeZone extends java.util.TimeZone {
 
     public TimeZone(final VTimeZone vTimeZone, boolean negativeDstSupported) {
         this.vTimeZone = vTimeZone;
-        final TzId tzId = vTimeZone.getProperty(Property.TZID);
-        setID(tzId.getValue());
+        final Optional<TzId> tzId = vTimeZone.getProperty(Property.TZID);
+        if (tzId.isPresent()) {
+            setID(tzId.get().getValue());
+        } else {
+            throw new IllegalArgumentException("Invalid timezone argument");
+        }
         this.rawOffset = getRawOffset(vTimeZone);
         this.negativeDstSupported = negativeDstSupported;
     }
@@ -97,18 +108,11 @@ public class TimeZone extends java.util.TimeZone {
         final int second = ms / 1000;
         ms -= second * 1000;
 
-        final Calendar cal = Calendar.getInstance();
-        cal.clear();    // don't retain current date/time, it may disturb the calculation
-
-        // set date and time
-        cal.set(Calendar.ERA, era);
-        cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-        cal.set(year, month, dayOfMonth, hour, minute, second);
-        cal.set(Calendar.MILLISECOND, ms);
-
-        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
+        // convert zero-based month of old API to new API by adding 1..
+        OffsetDateTime date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
+        final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
-            final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
+            final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
             return (int) (offset.getOffset().getTotalSeconds() * 1000L);
         }
         return 0;
@@ -119,9 +123,9 @@ public class TimeZone extends java.util.TimeZone {
      */
     @Override
     public int getOffset(long date) {
-        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
+        final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
-            final TzOffsetTo offsetTo = observance.getProperty(Property.TZOFFSETTO);
+            final TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
             if ((offsetTo.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
                 return getRawOffset();
             } else {
@@ -132,8 +136,8 @@ public class TimeZone extends java.util.TimeZone {
     }
 
     private boolean isNegativeOffset(Observance observance) {
-        final TzOffsetTo offsetTo = observance.getProperty(Property.TZOFFSETTO);
-        final TzOffsetFrom offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+        final TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
+        final TzOffsetFrom offsetFrom = observance.getRequiredProperty(Property.TZOFFSETFROM);
         return offsetFrom.getOffset().compareTo(offsetTo.getOffset()) < 0;
     }
 
@@ -156,7 +160,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     @Override
     public final boolean inDaylightTime(final Date date) {
-        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
+        final Observance observance = vTimeZone.getApplicableObservance(date.toInstant());
         return (observance instanceof Daylight && (!negativeDstSupported || !isNegativeOffset(observance)));
     }
 
@@ -173,7 +177,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     @Override
     public final boolean useDaylightTime() {
-        final List<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
+        final List<Observance> daylights = vTimeZone.getComponents(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
 
@@ -186,10 +190,10 @@ public class TimeZone extends java.util.TimeZone {
 
     private static int getRawOffset(VTimeZone vt) {
 
-        List<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
+        List<Observance> seasonalTimes = vt.getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
         if (seasonalTimes.isEmpty()) {
-            seasonalTimes = vt.getObservances().getComponents(Observance.DAYLIGHT);
+            seasonalTimes = vt.getComponents(Observance.DAYLIGHT);
             if (seasonalTimes.isEmpty()) {
                 return 0;
             }
@@ -198,14 +202,13 @@ public class TimeZone extends java.util.TimeZone {
         if (seasonalTimes.size() > 1) {
             // per java spec and when dealing with historical time,
             // rawoffset is the raw offset at the current date
-            final DateTime now = new DateTime();
-            Date latestOnset = null;
+            OffsetDateTime latestOnset = null;
             for (Observance seasonalTime : seasonalTimes) {
-                Date onset = seasonalTime.getLatestOnset(now);
+                OffsetDateTime onset = seasonalTime.getLatestOnset(Instant.now());
                 if (onset == null) {
                     continue;
                 }
-                if (latestOnset == null || onset.after(latestOnset)) {
+                if (latestOnset == null || onset.isAfter(latestOnset)) {
                     latestOnset = onset;
                     latestSeasonalTime = seasonalTime;
                 }
@@ -214,14 +217,14 @@ public class TimeZone extends java.util.TimeZone {
             latestSeasonalTime = seasonalTimes.get(0);
         }
         if (latestSeasonalTime instanceof Daylight) {
-            final TzOffsetFrom offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
-            if (offsetFrom != null) {
-                return (int) (offsetFrom.getOffset().getTotalSeconds() * 1000L);
+            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
+            if (offsetFrom.isPresent()) {
+                return (int) (offsetFrom.get().getOffset().getTotalSeconds() * 1000L);
             }
         } else if (latestSeasonalTime instanceof Standard) {
-            final TzOffsetTo offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
-            if (offsetTo != null) {
-                return (int) (offsetTo.getOffset().getTotalSeconds() * 1000L);
+            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
+            if (offsetTo.isPresent()) {
+                return (int) (offsetTo.get().getOffset().getTotalSeconds() * 1000L);
             }
         }
         return 0;

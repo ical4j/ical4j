@@ -31,11 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.RegEx;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,9 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar location types.
  * 
  * @author Ben Fortuna
+ * @deprecated replaced with standard Java collections.
  */
+@Deprecated
 public class LocationTypeList implements Serializable, Iterable<String> {
 
     private static final long serialVersionUID = -9181735547604179160L;
@@ -66,12 +69,8 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      *            a string representation of a list of categories
      */
     public LocationTypeList(final String aValue) {
-        locationTypes = new CopyOnWriteArrayList<String>();
-
-        final StringTokenizer t = new StringTokenizer(aValue, ",");
-        while (t.hasMoreTokens()) {
-            locationTypes.add(t.nextToken());
-        }
+        locationTypes = new CopyOnWriteArrayList<>();
+        locationTypes.addAll(Arrays.asList(aValue.split(RegEx.COMMA_DELIMITED)));
     }
 
     public LocationTypeList(LocationType... locationTypes) {
@@ -84,7 +83,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      */
     @Override
     public final String toString() {
-        return locationTypes.stream().collect(Collectors.joining(","));
+        return String.join(",", locationTypes);
     }
 
     /**

@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -104,7 +104,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class DtStart extends DateProperty {
+public class DtStart<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = -5707097476081111815L;
 
@@ -112,48 +112,25 @@ public class DtStart extends DateProperty {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtStart() {
-        super(DTSTART, new Factory());
-    }
-
-    /**
-     * Creates a new DTSTART property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public DtStart(TimeZone timezone) {
-        super(DTSTART, timezone, new Factory());
+        super(DTSTART);
     }
 
     /**
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
+     * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStart(final String aValue) throws ParseException {
-        super(DTSTART, new Factory());
+    public DtStart(final String aValue) {
+        super(DTSTART);
         setValue(aValue);
-    }
-
-    /**
-     * Creates a new DTSTART property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a DTSTART value
-     * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public DtStart(String value, TimeZone timezone) throws ParseException {
-        super(DTSTART, timezone, new Factory());
-        setValue(value);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
+     * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStart(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(DTSTART, aList, new Factory());
+    public DtStart(final ParameterList aList, final String aValue) {
+        super(DTSTART, aList);
         setValue(aValue);
     }
 
@@ -162,8 +139,8 @@ public class DtStart extends DateProperty {
      *
      * @param aDate a date
      */
-    public DtStart(final Date aDate) {
-        super(DTSTART, new Factory());
+    public DtStart(final T aDate) {
+        super(DTSTART);
         setDate(aDate);
     }
 
@@ -172,11 +149,12 @@ public class DtStart extends DateProperty {
      *
      * @param time the time of the DtStart
      * @param utc  specifies whether time is UTC
+     *
+     * @deprecated UTC time is now specified via the generic type (i.e. {@link java.time.Instant})
      */
-    public DtStart(final Date time, final boolean utc) {
-        super(DTSTART, new Factory());
-        setDate(time);
-        setUtc(utc);
+    @Deprecated
+    public DtStart(final T time, final boolean utc) {
+        this(time);
     }
 
     /**
@@ -185,12 +163,17 @@ public class DtStart extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtStart(final ParameterList aList, final Date aDate) {
-        super(DTSTART, aList, new Factory());
+    public DtStart(final ParameterList aList, final T aDate) {
+        super(DTSTART, aList);
         setDate(aDate);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<DtStart> {
+    @Override
+    protected PropertyFactory<DtStart<T>> newFactory() {
+        return new Factory<>();
+    }
+
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<DtStart<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -198,14 +181,13 @@ public class DtStart extends DateProperty {
         }
 
         @Override
-        public DtStart createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new DtStart(parameters, value);
+        public DtStart<T> createProperty(final ParameterList parameters, final String value) {
+            return new DtStart<>(parameters, value);
         }
 
         @Override
-        public DtStart createProperty() {
-            return new DtStart();
+        public DtStart<T> createProperty() {
+            return new DtStart<>();
         }
     }
 

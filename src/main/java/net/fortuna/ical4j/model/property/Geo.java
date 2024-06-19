@@ -40,10 +40,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -153,7 +150,7 @@ public class Geo extends Property {
      * Default constructor.
      */
     public Geo() {
-        super(GEO, new Factory());
+        super(GEO);
         latitude = BigDecimal.valueOf(0);
         longitude = BigDecimal.valueOf(0);
     }
@@ -164,7 +161,7 @@ public class Geo extends Property {
      * @param value a geo value
      */
     public Geo(final String value) {
-        super(GEO, new Factory());
+        super(GEO);
         setValue(value);
     }
 
@@ -173,7 +170,7 @@ public class Geo extends Property {
      * @param aValue a value string for this component
      */
     public Geo(final ParameterList aList, final String aValue) {
-        super(GEO, aList, new Factory());
+        super(GEO, aList);
         setValue(aValue);
     }
 
@@ -182,7 +179,7 @@ public class Geo extends Property {
      * @param longitude a longitudinal value
      */
     public Geo(final BigDecimal latitude, final BigDecimal longitude) {
-        super(GEO, new Factory());
+        super(GEO);
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -194,7 +191,7 @@ public class Geo extends Property {
      */
     public Geo(final ParameterList aList, final BigDecimal latitude,
                final BigDecimal longitude) {
-        super(GEO, aList, new Factory());
+        super(GEO, aList);
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -257,6 +254,11 @@ public class Geo extends Property {
         this.longitude = longitude;
     }
 
+    @Override
+    protected PropertyFactory<Geo> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Geo> {
         private static final long serialVersionUID = 1L;
 
@@ -265,8 +267,7 @@ public class Geo extends Property {
         }
 
         @Override
-        public Geo createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Geo createProperty(final ParameterList parameters, final String value) {
             return new Geo(parameters, value);
         }
 

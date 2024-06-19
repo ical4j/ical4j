@@ -59,14 +59,14 @@ public class Description extends Property implements Encodable {
      * Default constructor.
      */
     public Description() {
-        super(DESCRIPTION, new ParameterList(), new Factory());
+        super(DESCRIPTION);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Description(final String aValue) {
-        super(DESCRIPTION, new ParameterList(), new Factory());
+        super(DESCRIPTION);
         setValue(aValue);
     }
 
@@ -75,7 +75,7 @@ public class Description extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Description(final ParameterList aList, final String aValue) {
-        super(DESCRIPTION, aList, new Factory());
+        super(DESCRIPTION, aList);
         setValue(aValue);
     }
 
@@ -100,6 +100,11 @@ public class Description extends Property implements Encodable {
         return PropertyValidator.DESCRIPTION.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Description> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Description> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +113,7 @@ public class Description extends Property implements Encodable {
         }
 
         @Override
-        public Description createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Description createProperty(final ParameterList parameters, final String value) {
             return new Description(parameters, value);
         }
 

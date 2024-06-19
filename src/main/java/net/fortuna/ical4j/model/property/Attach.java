@@ -48,11 +48,11 @@ import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -100,17 +100,15 @@ public class Attach extends Property {
      * Default constructor.
      */
     public Attach() {
-        super(ATTACH, new Factory());
+        super(ATTACH);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified string is not a valid uri
      */
-    public Attach(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
-        super(ATTACH, aList, new Factory());
+    public Attach(final ParameterList aList, final String aValue) {
+        super(ATTACH, aList);
         setValue(aValue);
     }
 
@@ -118,11 +116,7 @@ public class Attach extends Property {
      * @param data binary data
      */
     public Attach(final byte[] data) {
-        super(ATTACH, new Factory());
-        // add required parameters..
-        getParameters().add(Encoding.BASE64);
-        getParameters().add(Value.BINARY);
-        this.binary = data;
+        this(new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY)), data);
     }
 
     /**
@@ -130,16 +124,18 @@ public class Attach extends Property {
      * @param data  binary data
      */
     public Attach(final ParameterList aList, final byte[] data) {
-        super(ATTACH, aList, new Factory());
+        super(ATTACH, aList);
         this.binary = data;
+        this.uri = null;
     }
 
     /**
      * @param aUri a URI
      */
     public Attach(final URI aUri) {
-        super(ATTACH, new Factory());
+        super(ATTACH);
         this.uri = aUri;
+        this.binary = null;
     }
 
     /**
@@ -147,8 +143,9 @@ public class Attach extends Property {
      * @param aUri  a URI
      */
     public Attach(final ParameterList aList, final URI aUri) {
-        super(ATTACH, aList, new Factory());
+        super(ATTACH, aList);
         this.uri = aUri;
+        this.binary = null;
     }
 
     /**
@@ -183,20 +180,18 @@ public class Attach extends Property {
      * location to binary data and is stored as such.
      *
      * @param aValue a string encoded binary or URI value
-     * @throws URISyntaxException where the specified value is not a valid URI
      */
     @Override
-    public final void setValue(final String aValue) throws
-            URISyntaxException {
+    public final void setValue(final String aValue) {
 
         // determine if ATTACH is a URI or an embedded
         // binary..
-        if (getParameter(Parameter.ENCODING) != null) {
+        Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
+        if (encoding.isPresent()) {
             // binary = Base64.decode(aValue);
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(
-                                getParameter(Parameter.ENCODING));
+                        .createBinaryDecoder(encoding.get());
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -208,7 +203,11 @@ public class Attach extends Property {
         }
         // assume URI..
         else {
-            uri = Uris.create(aValue);
+            try {
+                uri = Uris.create(aValue);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
     }
 
@@ -222,9 +221,9 @@ public class Attach extends Property {
         } else if (getBinary() != null) {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
+                Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
                 final BinaryEncoder encoder = EncoderFactory.getInstance()
-                        .createBinaryEncoder(
-                                getParameter(Parameter.ENCODING));
+                        .createBinaryEncoder(encoding.get());
                 return new String(encoder.encode(getBinary()));
             } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -252,6 +251,11 @@ public class Attach extends Property {
         this.binary = null;
     }
 
+    @Override
+    protected PropertyFactory<Attach> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Attach> {
         private static final long serialVersionUID = 1L;
 
@@ -260,8 +264,7 @@ public class Attach extends Property {
         }
 
         @Override
-        public Attach createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Attach createProperty(final ParameterList parameters, final String value) {
             return new Attach(parameters, value);
         }
 
@@ -270,5 +273,4 @@ public class Attach extends Property {
             return new Attach();
         }
     }
-
 }

@@ -33,10 +33,14 @@ package net.fortuna.ical4j.model
 
 
 import net.fortuna.ical4j.model.property.LastModified
+import net.fortuna.ical4j.model.property.Source
+import net.fortuna.ical4j.model.property.XProperty
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.validate.ValidationException
 import spock.lang.Shared
 import spock.lang.Specification
+
+import java.time.Instant
 
 /**
  * @author fortuna
@@ -120,7 +124,7 @@ class ContentBuilderSpec extends Specification {
 			prodid '-//Ben Fortuna//iCal4j 1.0//EN'
 			version '2.0'
 			uid new RandomUidGenerator().generateUid()
-			lastmodified new LastModified(new DateTime())
+			lastmodified new LastModified(Instant.now())
 			url 'https://example.com/calendar.ics'
 			refreshinterval('P1W') {
 				value 'DURATION'
@@ -141,6 +145,7 @@ class ContentBuilderSpec extends Specification {
 				uid '1'
 				dtstamp()
 				dtstart '20090810', parameters: parameters { value 'DATE' }
+				duration 'P1D'
 				action 'DISPLAY'
 				attach'http://example.com/attachment', parameters: parameters { value 'URI' }
 			}
@@ -151,5 +156,17 @@ class ContentBuilderSpec extends Specification {
 
 		then: 'no exception is thrown'
 		notThrown(ValidationException)
+	}
+
+	def 'test build non-standard/experimental props'() {
+		expect:
+		def property = builder."$propertyName"('https://example.com/test.ics')
+		assert property.class == expectedType && property as String == expectedString
+
+		where:
+		propertyName	| expectedType	| expectedString
+		'experimental'	| XProperty		| 'experimental:https://example.com/test.ics\r\n'
+		'X-FACTOR'		| XProperty		| 'X-FACTOR:https://example.com/test.ics\r\n'
+		'source'		| Source		| 'SOURCE:https://example.com/test.ics\r\n'
 	}
 }

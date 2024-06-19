@@ -60,14 +60,14 @@ public class Country extends Property implements Encodable {
      * Default constructor.
      */
     public Country() {
-        super(COUNTRY, new ParameterList(), new Factory());
+        super(COUNTRY);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Country(final String aValue) {
-        super(COUNTRY, new ParameterList(), new Factory());
+        super(COUNTRY);
         setValue(aValue);
     }
 
@@ -76,7 +76,7 @@ public class Country extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Country(final ParameterList aList, final String aValue) {
-        super(COUNTRY, aList, new Factory());
+        super(COUNTRY, aList);
         setValue(aValue);
     }
 
@@ -96,6 +96,11 @@ public class Country extends Property implements Encodable {
         return value;
     }
 
+    @Override
+    protected PropertyFactory<Country> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Country> {
         private static final long serialVersionUID = 1L;
 
@@ -104,8 +109,7 @@ public class Country extends Property implements Encodable {
         }
 
         @Override
-        public Country createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Country createProperty(final ParameterList parameters, final String value) {
             return new Country(parameters, value);
         }
 

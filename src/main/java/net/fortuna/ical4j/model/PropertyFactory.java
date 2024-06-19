@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * A factory for creating iCalendar properties.
@@ -56,14 +53,22 @@ public interface PropertyFactory<T extends Property> extends Serializable {
     T createProperty();
 
     /**
+     * Creates a property instance with no parameters.
+     * @param value the property value
+     * @return a new property instance
+     * @throws IllegalArgumentException some properties may throw this exception when parsing the property value
+     */
+    default T createProperty(String value) {
+        return createProperty(new ParameterList(), value);
+    }
+
+    /**
      * @param parameters a list of property parameters
      * @param value      a property value
      * @return a new instance of the specified property
-     * @throws IOException        where an unexpected error occurs reading data
-     * @throws URISyntaxException where data contains an invalid URI
-     * @throws ParseException     where data is unable to be parsed correctly
+     * @throws IllegalArgumentException where data contains an invalid URI
      */
-    T createProperty(ParameterList parameters, String value) throws IOException, URISyntaxException, ParseException;
+    T createProperty(ParameterList parameters, String value);
 
     boolean supports(String name);
 }

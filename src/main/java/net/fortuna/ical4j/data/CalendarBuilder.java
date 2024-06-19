@@ -122,14 +122,17 @@ public class CalendarBuilder {
     public CalendarBuilder(CalendarParser parser, PropertyFactoryRegistry propertyFactoryRegistry,
                            ParameterFactoryRegistry parameterFactoryRegistry, TimeZoneRegistry tzRegistry) {
 
-        this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactoryRegistry)
-                        .withPropertyFactorySupplier(propertyFactoryRegistry), tzRegistry);
+        this.parser = parser;
+        this.tzRegistry = tzRegistry;
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry,
+                new ContentHandlerContext().withParameterFactorySupplier(parameterFactoryRegistry)
+                        .withPropertyFactorySupplier(propertyFactoryRegistry));
     }
 
     /**
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
-     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser, ContentHandlerContext, TimeZoneRegistry)}
+     * @deprecated use {@link CalendarBuilder#CalendarBuilder(CalendarParser,ContentHandlerContext, TimeZoneRegistry)}
      */
     @Deprecated
     public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
@@ -137,9 +140,12 @@ public class CalendarBuilder {
                            Supplier<List<ComponentFactory<?>>> componentFactorySupplier,
                            TimeZoneRegistry tzRegistry) {
 
-        this(parser, new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
+        this.parser = parser;
+        this.tzRegistry = tzRegistry;
+        this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry,
+                new ContentHandlerContext().withParameterFactorySupplier(parameterFactorySupplier)
                 .withPropertyFactorySupplier(propertyFactorySupplier)
-                .withComponentFactorySupplier(componentFactorySupplier), tzRegistry);
+                .withComponentFactorySupplier(componentFactorySupplier));
     }
 
     /**

@@ -32,13 +32,12 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.VResource;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.List;
 
 /**
  * $Id$
@@ -59,8 +58,13 @@ public class Resources extends Property {
      * Default constructor.
      */
     public Resources() {
-        super(RESOURCES, new ParameterList(), new Factory());
+        super(RESOURCES);
         resources = new TextList();
+    }
+
+    public Resources(VResource resource) {
+        super(RESOURCES);
+        resources = new TextList(resource.getRequiredProperty(Property.NAME).getValue());
     }
 
     /**
@@ -68,32 +72,32 @@ public class Resources extends Property {
      * @param aValue a value string for this component
      */
     public Resources(final ParameterList aList, final String aValue) {
-        super(RESOURCES, aList, new Factory());
+        super(RESOURCES, aList);
         setValue(aValue);
     }
 
     /**
      * @param rList a list of resources
      */
-    public Resources(final TextList rList) {
-        super(RESOURCES, new ParameterList(), new Factory());
-        resources = rList;
+    public Resources(final List<String> rList) {
+        super(RESOURCES);
+        resources = new TextList(rList);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param rList a list of resources
      */
-    public Resources(final ParameterList aList, final TextList rList) {
-        super(RESOURCES, aList, new Factory());
-        resources = rList;
+    public Resources(final ParameterList aList, final List<String> rList) {
+        super(RESOURCES, aList);
+        resources = new TextList(rList);
     }
 
     /**
      * @return Returns the resources.
      */
-    public final TextList getResources() {
-        return resources;
+    public final List<String> getResources() {
+        return resources.getTexts();
     }
 
     /**
@@ -109,12 +113,17 @@ public class Resources extends Property {
      */
     @Override
     public final String getValue() {
-        return getResources().toString();
+        return resources.toString();
     }
 
     @Override
     public ValidationResult validate() throws ValidationException {
         return PropertyValidator.RESOURCES.validate(this);
+    }
+
+    @Override
+    protected PropertyFactory<Resources> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Resources> {
@@ -125,8 +134,7 @@ public class Resources extends Property {
         }
 
         @Override
-        public Resources createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Resources createProperty(final ParameterList parameters, final String value) {
             return new Resources(parameters, value);
         }
 

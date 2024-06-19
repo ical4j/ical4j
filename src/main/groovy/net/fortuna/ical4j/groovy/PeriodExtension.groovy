@@ -34,6 +34,8 @@ package net.fortuna.ical4j.groovy
 import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.model.PeriodList
 
+import java.time.Duration
+
 class PeriodExtension {
 	static Period plus(Period self, Period period) {
 		self.add(period)
@@ -41,5 +43,13 @@ class PeriodExtension {
 	
 	static PeriodList minus(Period self, Period period) {
 		self.subtract(period)
+	}
+
+	static java.time.Period negative(java.time.Period self) {
+		self.negated()
+	}
+
+	static Duration negative(Duration self) {
+		self.negated()
 	}
 }

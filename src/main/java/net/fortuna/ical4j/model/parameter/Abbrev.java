@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -57,7 +55,7 @@ public class Abbrev extends Parameter implements Encodable {
      * @param aValue a string abbreviation
      */
     public Abbrev(final String aValue) {
-        super(ABBREV, new Factory());
+        super(ABBREV);
         this.value = Strings.unquote(aValue);
     }
 
@@ -77,7 +75,7 @@ public class Abbrev extends Parameter implements Encodable {
         }
 
         @Override
-        public Abbrev createParameter(final String value) throws URISyntaxException {
+        public Abbrev createParameter(final String value) {
             return new Abbrev(value);
         }
     }

@@ -39,8 +39,10 @@ import net.fortuna.ical4j.model.property.RecurrenceId;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public interface RecurrenceSupport<T extends CalendarComponent> extends PropertyContainer {
 
@@ -60,15 +62,15 @@ public interface RecurrenceSupport<T extends CalendarComponent> extends Property
      * @param period a range to calculate recurrences for
      * @return a list of periods
      */
-    PeriodList calculateRecurrenceSet(final Period period);
+    <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<T> period);
 
-    default List<T> getOccurrences(Period period) throws ParseException, IOException, URISyntaxException {
+    default List<T> getOccurrences(Period<Temporal> period) throws ParseException, IOException, URISyntaxException {
         List<T> occurrences = new ArrayList<>();
 
-        PeriodList periods = RecurrenceSupport.this.calculateRecurrenceSet(period);
-        for (Period p : periods) {
+        Set<Period<Temporal>> periods = RecurrenceSupport.this.calculateRecurrenceSet(period);
+        for (Period<Temporal> p : periods) {
             final T occurrence = this.copy();
-            occurrence.getProperties().add(new RecurrenceId(p.getStart()));
+            occurrence.add(new RecurrenceId<>(p.getStart()));
             occurrences.add(occurrence);
         }
 

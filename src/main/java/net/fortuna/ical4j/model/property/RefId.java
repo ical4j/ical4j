@@ -40,10 +40,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * <pre>
  *     Purpose:
@@ -74,16 +70,16 @@ public class RefId extends Property {
     private String value;
 
     public RefId() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
     }
 
     public RefId(String value) {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
         this.value = value;
     }
 
     public RefId(ParameterList aList, String value) {
-        super(PROPERTY_NAME, aList, new Factory());
+        super(PROPERTY_NAME, aList);
         setValue(value);
     }
 
@@ -110,8 +106,7 @@ public class RefId extends Property {
         }
 
         @Override
-        public RefId createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public RefId createProperty(final ParameterList parameters, final String value) {
             return new RefId(parameters, value);
         }
 
@@ -119,5 +114,10 @@ public class RefId extends Property {
         public RefId createProperty() {
             return new RefId();
         }
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return new Factory();
     }
 }

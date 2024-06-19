@@ -32,14 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.Recur.Frequency;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.validate.RecurValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -60,19 +56,17 @@ public class ExRule extends Property {
      * Default constructor.
      */
     public ExRule() {
-        super(EXRULE, new Factory());
+        super(EXRULE);
         recur = new Recur(Frequency.DAILY, 1);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence
      * @see Recur#Recur(String)
      */
-    public ExRule(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(EXRULE, aList, new Factory());
+    public ExRule(final ParameterList aList, final String aValue) {
+        super(EXRULE, aList);
         setValue(aValue);
     }
 
@@ -80,7 +74,7 @@ public class ExRule extends Property {
      * @param aRecur a recurrence
      */
     public ExRule(final Recur aRecur) {
-        super(EXRULE, new Factory());
+        super(EXRULE);
         recur = aRecur;
     }
 
@@ -89,7 +83,7 @@ public class ExRule extends Property {
      * @param aRecur a recurrence
      */
     public ExRule(final ParameterList aList, final Recur aRecur) {
-        super(EXRULE, aList, new Factory());
+        super(EXRULE, aList);
         recur = aRecur;
     }
 
@@ -104,7 +98,7 @@ public class ExRule extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws ParseException {
+    public final void setValue(final String aValue) {
         recur = new Recur(aValue);
     }
 
@@ -128,6 +122,11 @@ public class ExRule extends Property {
         return new RecurValidator().validate(recur);
     }
 
+    @Override
+    protected PropertyFactory<ExRule> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<ExRule> {
         private static final long serialVersionUID = 1L;
 
@@ -136,8 +135,7 @@ public class ExRule extends Property {
         }
 
         @Override
-        public ExRule createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public ExRule createProperty(final ParameterList parameters, final String value) {
             return new ExRule(parameters, value);
         }
 

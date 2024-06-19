@@ -36,9 +36,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.ZoneOffset;
 
 /**
@@ -60,14 +57,14 @@ public class TzOffsetTo extends Property {
      * Default constructor.
      */
     public TzOffsetTo() {
-        super(TZOFFSETTO, new Factory());
+        super(TZOFFSETTO);
     }
 
     /**
      * @param value an offset value
      */
     public TzOffsetTo(String value) {
-        super(TZOFFSETTO, new Factory());
+        super(TZOFFSETTO);
         setValue(value);
     }
 
@@ -76,7 +73,7 @@ public class TzOffsetTo extends Property {
      * @param aValue a value string for this component
      */
     public TzOffsetTo(final ParameterList aList, final String aValue) {
-        super(TZOFFSETTO, aList, new Factory());
+        super(TZOFFSETTO, aList);
         setValue(aValue);
     }
 
@@ -92,7 +89,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final ZoneOffset anOffset) {
-        super(TZOFFSETTO, new Factory());
+        super(TZOFFSETTO);
         offset = new ZoneOffsetAdapter(anOffset);
     }
 
@@ -110,7 +107,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final ParameterList aList, final ZoneOffset anOffset) {
-        super(TZOFFSETTO, aList, new Factory());
+        super(TZOFFSETTO, aList);
         offset = new ZoneOffsetAdapter(anOffset);
     }
 
@@ -152,6 +149,11 @@ public class TzOffsetTo extends Property {
         return PropertyValidator.TZOFFSETTO.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<TzOffsetTo> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetTo> {
         private static final long serialVersionUID = 1L;
 
@@ -160,8 +162,7 @@ public class TzOffsetTo extends Property {
         }
 
         @Override
-        public TzOffsetTo createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public TzOffsetTo createProperty(final ParameterList parameters, final String value) {
             return new TzOffsetTo(parameters, value);
         }
 

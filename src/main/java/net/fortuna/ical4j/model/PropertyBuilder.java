@@ -1,12 +1,14 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.property.DateListProperty;
+import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.UtcProperty;
 import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.codec.DecoderException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,9 +22,15 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private String name;
 
+    private String prefix;
+
     private String value;
 
-    private final ParameterList parameters = new ParameterList();
+    private final List<Parameter> parameters = new ArrayList<>();
+
+    private TimeZoneRegistry timeZoneRegistry;
+
+    private ZoneId defaultTimeZone;
 
     public PropertyBuilder() {
         this(new ArrayList<>());
@@ -46,7 +54,13 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public PropertyBuilder name(String name) {
-        this.name = name;
+        String[] nameParts = name.split("\\.");
+        if (nameParts.length > 1) {
+            this.prefix = String.join(".", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
+            this.name = nameParts[nameParts.length-1];
+        } else {
+            this.name = name;
+        }
         return this;
     }
 
@@ -65,7 +79,17 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return this;
     }
 
-    public Property build() throws ParseException, IOException, URISyntaxException {
+    public PropertyBuilder timeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        this.timeZoneRegistry = timeZoneRegistry;
+        return this;
+    }
+
+    public PropertyBuilder defaultTimeZone(ZoneId defaultTimeZone) {
+        this.defaultTimeZone = defaultTimeZone;
+        return this;
+    }
+
+    public Property build() {
         Property property = null;
         String decodedValue;
         try {
@@ -76,15 +100,29 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
         for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {
-                property = factory.createProperty(parameters, value);
+                property = factory.createProperty(new ParameterList(parameters), value);
+                if (property instanceof DateProperty) {
+                    DateProperty<?> dateProp = (DateProperty<?>) property;
+                    // don't set timezone on UTC-formatted properties..
+                    if (!(dateProp instanceof UtcProperty)) {
+                        dateProp.setTimeZoneRegistry(timeZoneRegistry);
+                        dateProp.setDefaultTimeZone(defaultTimeZone);
+                        property.setValue(value);
+                    }
+                } else if (property instanceof DateListProperty) {
+                    DateListProperty<?> dateListProperty = (DateListProperty<?>) property;
+                    dateListProperty.setTimeZoneRegistry(timeZoneRegistry);
+                    dateListProperty.setDefaultTimeZone(defaultTimeZone);
+                    property.setValue(value);
+                }
             }
         }
 
         if (property == null) {
             if (isExperimentalName(name)) {
-                property = new XProperty(name, parameters, value);
+                property = new XProperty(name, new ParameterList(parameters), value);
             } else if (allowIllegalNames()) {
-                property = new XProperty(name, parameters, value);
+                property = new XProperty(name, new ParameterList(parameters), value);
             } else {
                 throw new IllegalArgumentException("Illegal property [" + name + "]");
             }
@@ -92,6 +130,10 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
         if (property instanceof Encodable) {
             property.setValue(decodedValue);
+        }
+
+        if (prefix != null) {
+            property.setPrefix(prefix);
         }
 
         return property;

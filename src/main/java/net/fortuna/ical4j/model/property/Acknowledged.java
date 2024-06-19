@@ -7,14 +7,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * 
@@ -66,47 +63,35 @@ import java.text.ParseException;
 
    ACKNOWLEDGED:20090604T084500Z
  */
-public class Acknowledged extends UtcProperty{
+public class Acknowledged extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 596619479148598528L;
 
     public Acknowledged() {
-        this(new Factory());
-    }
-
-    private Acknowledged(PropertyFactory<Acknowledged> factory) {
-        super(ACKNOWLEDGED, factory);
+        this(Instant.now());
     }
 
     /**
      * @param aValue a string representation of a DTSTAMP value
-     * @throws ParseException if the specified value is not a valid representation
      */
-    public Acknowledged(final String aValue) throws ParseException {
+    public Acknowledged(final String aValue) {
         this(new ParameterList(), aValue);
     }
     
     /**
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Acknowledged(final ParameterList aList, final String aValue) throws ParseException {
-        this(aList, aValue, new Factory());
-    }
-
-    private Acknowledged(final ParameterList aList, final String aValue, PropertyFactory<Acknowledged> factory) throws ParseException {
-        super(ACKNOWLEDGED, aList, factory);
+    public Acknowledged(final ParameterList aList, final String aValue) {
+        super(ACKNOWLEDGED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
     /**
      * @param aDate a date representing a date-time 
      */
-    public Acknowledged(final DateTime aDate) {
-        super(ACKNOWLEDGED, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public Acknowledged(final Instant aDate) {
+        super(ACKNOWLEDGED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -114,13 +99,26 @@ public class Acknowledged extends UtcProperty{
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public Acknowledged(final ParameterList aList, final DateTime aDate) {
-        super(ACKNOWLEDGED, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
+    public Acknowledged(final ParameterList aList, final Instant aDate) {
+        super(ACKNOWLEDGED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
-    
+
+    @Override
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
+    }
+
+    @Override
+    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+        UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
+    }
+
+    @Override
+    protected PropertyFactory<Acknowledged> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Acknowledged> {
         private static final long serialVersionUID = 1L;
 
@@ -129,14 +127,13 @@ public class Acknowledged extends UtcProperty{
         }
 
         @Override
-        public Acknowledged createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Acknowledged(parameters, value, this);
+        public Acknowledged createProperty(final ParameterList parameters, final String value) {
+            return new Acknowledged(parameters, value);
         }
 
         @Override
         public Acknowledged createProperty() {
-            return new Acknowledged(this);
+            return new Acknowledged();
         }
     }
 }

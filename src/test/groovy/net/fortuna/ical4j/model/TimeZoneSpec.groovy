@@ -43,6 +43,7 @@ import spock.lang.Unroll
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.stream.Collectors
 
 @Slf4j
 class TimeZoneSpec extends Specification {
@@ -54,12 +55,23 @@ class TimeZoneSpec extends Specification {
 		expect: 'specified date is in daylight time'
 		def tz = tzRegistry.getTimeZone(timezone)
 		tz.inDaylightTime(new DateTime(date)) == inDaylightTime
-		
+
 		where:
 		date				| timezone					| inDaylightTime
 		'20110328T110000'	| 'America/Los_Angeles'		| true
+		'20231214T170000'	| 'America/Los_Angeles'		| false
 		'20110328T110000'	| 'Australia/Melbourne'		| true
 		'20110231T110000'	| 'Europe/London'		    | false
+		'20231115T083000'	| 'America/Sao_Paulo'		| false
+	}
+
+	def 'test temporal adapter parsing uses correct timezone'() {
+		when: 'parsing a string using a global zone id'
+		def instance = TemporalAdapter.parse('20231214T170000',
+				ZoneId.of('America/Los_Angeles'))
+
+		then: 'correct timezone in resulting instance'
+		instance.getTemporal().getZone() == ZoneId.of('America/Los_Angeles')
 	}
 	
 	def 'verify string representation'() {
@@ -113,6 +125,7 @@ class TimeZoneSpec extends Specification {
                 1, 2014, [0, 6, 11], 31..30, java.util.Calendar.SUNDAY, 36000000].combinations()
     }
 
+	@Unroll("#tzid")
     def 'verify valid timezone ids'() {
         expect: 'the specified id translates to a timezone instance'
         def tz = tzRegistry.getTimeZone(tzid)
@@ -182,10 +195,10 @@ class TimeZoneSpec extends Specification {
 
 		and: 'a timezone constructed from the definition'
 		def iCalFromGoogle = new CalendarBuilder().build(new StringReader(vtzFromGoogle))
-		VTimeZone dublinFromGoogle = iCalFromGoogle.getComponent(Component.VTIMEZONE)
+		Optional<VTimeZone> dublinFromGoogle = iCalFromGoogle.getComponent(Component.VTIMEZONE)
 
 		when: 'a date-time is calculated with the timezone'
-		def dt = new DateTime("20210108T151500", new TimeZone(dublinFromGoogle))
+		def dt = new DateTime("20210108T151500", new TimeZone(dublinFromGoogle.get()))
 
 		then: 'result is as expected'
 		"20210108T151500" == dt.toString()
@@ -199,12 +212,15 @@ class TimeZoneSpec extends Specification {
 		System.setProperty('net.fortuna.ical4j.timezone.update.enabled', 'false')
 
 		expect: 'tz alias resolves to a timezone'
-		tzRegistry.getTimeZone(alias)
+		TimeZoneRegistry.getGlobalZoneId(alias)
 
 		cleanup:
 		System.clearProperty('net.fortuna.ical4j.timezone.update.enabled')
 
 		where:
-		alias << ZoneId.getAvailableZoneIds()
+		alias << getClass().getResourceAsStream('/net/fortuna/ical4j/model/tz.alias').readLines().stream()
+				.filter(line -> !line.empty && !line.contains('#')).map {
+			line -> line.split('\\s*=\\s*')[0]
+		}.collect(Collectors.toList())
 	}
 }

@@ -32,15 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.Recur.Frequency;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.RecurValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -51,47 +49,47 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class RRule extends Property {
+public class RRule<T extends Temporal> extends Property {
 
     private static final long serialVersionUID = -9188265089143001164L;
 
-    private Recur recur;
+    private Recur<T> recur;
 
     /**
      * Default constructor.
      */
     public RRule() {
-        super(RRULE, new Factory());
-        recur = new Recur(Frequency.DAILY, 1);
+        super(RRULE);
+    }
+
+    public RRule(Frequency frequency) {
+        super(RRULE);
+        recur = new Recur<>(frequency);
     }
 
     /**
      * @param value a rule string
-     * @throws ParseException where the if the UNTIL part of the recurrence string is an invalid date representation
-     * @throws IllegalArgumentException where the recurrence string contains an unrecognised token
      */
-    public RRule(String value) throws ParseException {
-        super(RRULE, new Factory());
+    public RRule(String value) {
+        super(RRULE);
         setValue(value);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence
      * @see Recur#Recur(String)
      */
-    public RRule(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(RRULE, aList, new Factory());
+    public RRule(final ParameterList aList, final String aValue) {
+        super(RRULE, aList);
         setValue(aValue);
     }
 
     /**
      * @param aRecur a recurrence value
      */
-    public RRule(final Recur aRecur) {
-        super(RRULE, new Factory());
+    public RRule(final Recur<T> aRecur) {
+        super(RRULE);
         recur = aRecur;
     }
 
@@ -99,15 +97,15 @@ public class RRule extends Property {
      * @param aList  a list of parameters for this component
      * @param aRecur a recurrence value
      */
-    public RRule(final ParameterList aList, final Recur aRecur) {
-        super(RRULE, aList, new Factory());
+    public RRule(final ParameterList aList, final Recur<T> aRecur) {
+        super(RRULE, aList);
         recur = aRecur;
     }
 
     /**
      * @return Returns the recur.
      */
-    public final Recur getRecur() {
+    public final Recur<T> getRecur() {
         return recur;
     }
 
@@ -119,8 +117,8 @@ public class RRule extends Property {
      * {@inheritDoc}
      */
     @Override
-    public final void setValue(final String aValue) throws ParseException {
-        recur = new Recur(aValue);
+    public void setValue(final String aValue) {
+        recur = new Recur<>(aValue);
     }
 
     /**
@@ -138,7 +136,12 @@ public class RRule extends Property {
         return result;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<RRule> {
+    @Override
+    protected PropertyFactory<RRule<T>> newFactory() {
+        return new Factory<>();
+    }
+
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RRule<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -146,15 +149,13 @@ public class RRule extends Property {
         }
 
         @Override
-        public RRule createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new RRule(parameters, value);
+        public RRule<T> createProperty(final ParameterList parameters, final String value) {
+            return new RRule<>(parameters, value);
         }
 
         @Override
-        public RRule createProperty() {
-            return new RRule();
+        public RRule<T> createProperty() {
+            return new RRule<>();
         }
     }
-
 }

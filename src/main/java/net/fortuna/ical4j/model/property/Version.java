@@ -39,9 +39,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
  * $Id$
@@ -51,7 +49,7 @@ import java.text.ParseException;
  * Defines a VERSION iCalendar property. When creating a new calendar you should always add a version property with
  * value "2.0". There is actually a constant defined in the Version class for this. e.g:
  * <code>    Calendar calendar = new Calendar();</code>
- * <code>    calendar.getProperties().add(Version.VERSION_2_0);</code>
+ * <code>    calendar.add(Version.VERSION_2_0);</code>
  *
  * @author Ben Fortuna
  */
@@ -61,41 +59,6 @@ public class Version extends Property {
 
     public static final String VALUE_2_0 = "2.0";
 
-    /**
-     * iCalendar version 2.0.
-     */
-    public static final Version VERSION_2_0 = new ImmutableVersion(VALUE_2_0);
-
-    /**
-     * @author Ben Fortuna An immutable instance of Version.
-     */
-    private static final class ImmutableVersion extends Version {
-
-        private static final long serialVersionUID = -5040679357859594835L;
-
-        private ImmutableVersion(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        @Override
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public void setMaxVersion(final String maxVersion) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        @Override
-        public void setMinVersion(final String minVersion) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
     private String minVersion;
 
     private String maxVersion;
@@ -104,7 +67,7 @@ public class Version extends Property {
      * Default constructor.
      */
     public Version() {
-        super(VERSION, new Factory());
+        super(VERSION);
     }
 
     /**
@@ -112,7 +75,7 @@ public class Version extends Property {
      * @param aValue a value string for this component
      */
     public Version(final ParameterList aList, final String aValue) {
-        super(VERSION, aList, new Factory());
+        super(VERSION, aList);
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
@@ -126,7 +89,7 @@ public class Version extends Property {
      * @param maxVersion a string representation of the maximum version
      */
     public Version(final String minVersion, final String maxVersion) {
-        super(VERSION, new Factory());
+        super(VERSION);
         this.minVersion = minVersion;
         this.maxVersion = maxVersion;
     }
@@ -138,7 +101,7 @@ public class Version extends Property {
      */
     public Version(final ParameterList aList, final String aVersion1,
                    final String aVersion2) {
-        super(VERSION, aList, new Factory());
+        super(VERSION, aList);
         minVersion = aVersion1;
         maxVersion = aVersion2;
     }
@@ -207,6 +170,11 @@ public class Version extends Property {
         return PropertyValidator.VERSION.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Version> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Version> {
         private static final long serialVersionUID = 1L;
 
@@ -215,10 +183,9 @@ public class Version extends Property {
         }
 
         @Override
-        public Version createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Version createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.isEmpty() && VALUE_2_0.equals(value)) {
+            if (parameters.getAll().isEmpty() && VALUE_2_0.equals(value)) {
                 return VERSION_2_0;
             }
             return new Version(parameters, value);

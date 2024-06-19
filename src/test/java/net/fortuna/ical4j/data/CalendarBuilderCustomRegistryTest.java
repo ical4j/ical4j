@@ -39,7 +39,7 @@ import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Strings;
 
 import java.io.StringReader;
-import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * $Id: CalendarBuilderCustomRegistryTest.java [Nov 16, 2009]
@@ -70,8 +70,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         private String value;
 
-        public ScheduleStatus(String aValue, ParameterFactory factory) {
-            super(SCHEDULE_STATUS, factory);
+        public ScheduleStatus(String aValue) {
+            super(SCHEDULE_STATUS);
             value = Strings.unquote(aValue);
         }
 
@@ -92,8 +92,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
         // try to build with a regular builder
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
-        assertTrue(cal.getComponent(Component.VEVENT).getProperty(Property.ATTENDEE)
-                .getParameter(SCHEDULE_STATUS) instanceof XParameter);
+        assertTrue(cal.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.ATTENDEE)
+                .getRequiredParameter(SCHEDULE_STATUS) instanceof XParameter);
 
         // try to build with a custom parameter factory
         final ParameterFactoryRegistry paramFactory = new ParameterFactoryRegistry();
@@ -107,8 +107,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
                 }
 
                 @Override
-                public Parameter createParameter(final String value) throws URISyntaxException {
-                    return new ScheduleStatus(value, this);
+                public Parameter createParameter(final String value) {
+                    return new ScheduleStatus(value);
                 }
             });
         builder = new CalendarBuilder(
@@ -119,8 +119,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
 
-        VEvent event = (VEvent)cal.getComponent(Component.VEVENT);
-        VEvent eventBis = (VEvent)event.copy();
-        assertEquals(eventBis, event);
+        List<VEvent> event = cal.getComponents(Component.VEVENT);
+        VEvent eventBis = event.get(0).copy();
+        assertEquals(eventBis, event.get(0));
     }
 }

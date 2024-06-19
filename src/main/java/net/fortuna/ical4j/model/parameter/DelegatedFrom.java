@@ -37,7 +37,10 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -50,29 +53,34 @@ public class DelegatedFrom extends Parameter {
 
     private static final long serialVersionUID = -795956139235258568L;
 
-    private final AddressList delegators;
+    private final List<URI> delegators;
 
     /**
      * @param aValue a string representation of Delegators
-     * @throws URISyntaxException when the specified string is not a valid list of cal-addresses
+     * @throws IllegalArgumentException when the specified string is not a valid list of cal-addresses
      */
-    public DelegatedFrom(final String aValue) throws URISyntaxException {
-        this(new AddressList(Strings.unquote(aValue)));
+    public DelegatedFrom(final String aValue) {
+        super(DELEGATED_FROM);
+        try {
+            delegators = new AddressList(Strings.unquote(aValue)).getAddresses();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
      * @param aList a list of addresses
      */
-    public DelegatedFrom(final AddressList aList) {
-        super(DELEGATED_FROM, new Factory());
+    public DelegatedFrom(final List<URI> aList) {
+        super(DELEGATED_FROM);
         delegators = aList;
     }
 
     /**
      * @return Returns the delegators addresses.
      */
-    public final AddressList getDelegators() {
-        return delegators;
+    public final List<URI> getDelegators() {
+        return new ArrayList<>(delegators);
     }
 
     /**
@@ -80,7 +88,7 @@ public class DelegatedFrom extends Parameter {
      */
     @Override
     public final String getValue() {
-        return getDelegators().toString();
+        return AddressList.toString(delegators);
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<DelegatedFrom> {
@@ -91,7 +99,7 @@ public class DelegatedFrom extends Parameter {
         }
 
         @Override
-        public DelegatedFrom createParameter(final String value) throws URISyntaxException {
+        public DelegatedFrom createParameter(final String value) {
             return new DelegatedFrom(value);
         }
     }

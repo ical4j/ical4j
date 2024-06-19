@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id$ [18-Apr-2004]
  * <p/>
@@ -91,7 +89,7 @@ public class CuType extends Parameter implements Encodable {
      * @param aValue a string representation of a Calendar User Type
      */
     public CuType(final String aValue) {
-        super(CUTYPE, new Factory());
+        super(CUTYPE);
         this.value = Strings.unquote(aValue);
     }
 
@@ -111,7 +109,7 @@ public class CuType extends Parameter implements Encodable {
         }
 
         @Override
-        public CuType createParameter(final String value) throws URISyntaxException {
+        public CuType createParameter(final String value) {
             switch (value.toUpperCase()) {
                 case VALUE_INDIVIDUAL: return INDIVIDUAL;
                 case VALUE_GROUP: return GROUP;

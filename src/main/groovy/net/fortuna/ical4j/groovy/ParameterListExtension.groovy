@@ -6,12 +6,10 @@ import net.fortuna.ical4j.model.ParameterList
 class ParameterListExtension {
     
     static ParameterList leftShift(ParameterList self, Parameter parameter) {
-        self.add(parameter)
-        self
+        (ParameterList) self.add(parameter)
     }
 
     static ParameterList leftShift(ParameterList self, ParameterList list) {
-        list.each {self.add(it)}
-        self
+        (ParameterList) self.addAll(list.all)
     }
 }

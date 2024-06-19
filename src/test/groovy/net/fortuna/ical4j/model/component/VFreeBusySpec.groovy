@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
+import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.ContentBuilder
 import spock.lang.Specification
 
@@ -40,7 +41,7 @@ class VFreeBusySpec extends Specification {
 	
 	def 'verify freebusy result'() {
 		setup:
-		def calendar = builder.calendar {
+		Calendar calendar = builder.calendar {
             prodid('-//Ben Fortuna//iCal4j 1.0//EN')
             version('2.0')
             vevent {
@@ -53,12 +54,14 @@ class VFreeBusySpec extends Specification {
 		
 		expect:
 		VFreeBusy request = builder.vfreebusy {
+			uid('1')
+			dtstamp()
 			dtstart(periodStart)
 			dtend(periodEnd)
 			duration(dur)
 		}
 		
-		VFreeBusy result = [request, calendar.components]
+		VFreeBusy result = [request, calendar.getComponents()]
 		println result
 		
 		where:

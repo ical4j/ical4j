@@ -32,8 +32,10 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VFreeBusy
-import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.model.parameter.XParameter
 import net.fortuna.ical4j.util.RandomUidGenerator
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0
 
 /**
  * $Id$
@@ -60,8 +62,8 @@ public class ContentBuilderTest extends GroovyTestCase {
         }
         calendar.validate()
         
-        assert calendar.properties.size() == 2
-        assert calendar.components.size() == 1
+        assert calendar.getProperties().size() == 2
+        assert calendar.getComponents().size() == 1
         
         println(calendar)
     }
@@ -81,11 +83,11 @@ public class ContentBuilderTest extends GroovyTestCase {
         def builder = new ContentBuilder()
         
         def request = new VFreeBusy(builder.vfreebusy() {
-            dtstart('20080101', parameters: parameters() {
-                value('DATE')})
-            dtend('20100101', parameters: parameters() {
-                value('DATE')})
-        }, new ComponentList())
+            uid('1')
+            dtstamp()
+            dtstart('20080101T000000Z')
+            dtend('20100101T000000Z')
+        }, [])
         
         def vfreebusy1 = builder.vfreebusy(request)
         
@@ -117,10 +119,10 @@ public class ContentBuilderTest extends GroovyTestCase {
     
     void testBuildVersion() {
         def version = new ContentBuilder().version(value: '2.0')
-        assert version == Version.VERSION_2_0
+        assert version == VERSION_2_0
         
         version = new ContentBuilder().version('2.0')
-        assert version.is(Version.VERSION_2_0)
+        assert version.is(VERSION_2_0)
     }
     
     void testBuildAbbrev() {
@@ -150,15 +152,12 @@ public class ContentBuilderTest extends GroovyTestCase {
     }
     
     void testBuildXProperty() {
-        def xproperty = new ContentBuilder().xproperty('test')
-        assert xproperty.name == 'test'
-        
-        xproperty = new ContentBuilder().xproperty(name: 'test')
-        assert xproperty.name == 'test'
+        def xproperty = new ContentBuilder().experimental('test')
+        assert xproperty.name == 'experimental' && xproperty.value == 'test'
     }
     
     void testBuildXParameter() {
-        def xparameter = new ContentBuilder().xparameter('test')
+        XParameter xparameter = new ContentBuilder().xparameter('test')
         assert xparameter.name == 'test'
         
         xparameter = new ContentBuilder().xparameter(name: 'test')

@@ -1,0 +1,60 @@
+name: Publish snapshots
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'feature/jsr-310-localdate'
+
+permissions: read-all
+
+jobs:
+  gradle:
+    name: Test with Java ${{ matrix.jdk }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jdk: [ '11', '17', '21' ] # removed JDK due to plugin errors
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up JDK ${{ matrix.jdk }}
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: ${{ matrix.jdk }}
+        cache: 'gradle'
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+
+    - name: Execute Gradle build
+      run: ./gradlew check -x test --console=plain --warning-mode all
+
+  publish:
+    name: Publish Artifact
+    needs: gradle
+    if: ${{ needs.gradle.result == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Execute Gradle build
+        run: ./gradlew build -x test publish
+        env:
+          GPR_USERNAME: benfortuna
+          GPR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

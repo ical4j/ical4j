@@ -19,11 +19,16 @@ public class Conference extends Property {
     private String value;
 
     public Conference() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
+    }
+
+    public Conference(String value) {
+        super(PROPERTY_NAME);
+        setValue(value);
     }
 
     public Conference(ParameterList params, String value) {
-        super(PROPERTY_NAME, params, new Factory());
+        super(PROPERTY_NAME, params);
         setValue(value);
     }
 
@@ -40,6 +45,11 @@ public class Conference extends Property {
     @Override
     public String getValue() {
         return value;
+    }
+
+    @Override
+    protected PropertyFactory<Conference> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Conference> {

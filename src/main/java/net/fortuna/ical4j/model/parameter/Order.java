@@ -35,8 +35,6 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
-import java.net.URISyntaxException;
-
 /**
  * $Id: Rsvp.java,v 1.16 2010/03/06 12:57:25 fortuna Exp $ [18-Apr-2004]
  *
@@ -60,7 +58,7 @@ public class Order extends Parameter {
      * @param aValue an Integer value
      */
     public Order(final Integer aValue) {
-        super(ORDER, new Factory());
+        super(ORDER);
         this.order = aValue;
     }
 
@@ -85,7 +83,7 @@ public class Order extends Parameter {
           super(ORDER);
         }
     
-        public Order createParameter(final String value) throws URISyntaxException {
+        public Order createParameter(final String value) {
             return new Order(value);
         }
     }

@@ -32,14 +32,11 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id $ [Apr 5, 2004]
@@ -90,12 +87,15 @@ import net.fortuna.ical4j.validate.Validator;
  *
  * @author Ben Fortuna
  * @author Mike Douglass
+ *
+ * @deprecated see {@link VLocation} as a replacement.
  */
+@Deprecated
 public class VVenue extends CalendarComponent {
 
 	private static final long serialVersionUID = 4502423035501438515L;
 
-	/**
+    /**
      * Default constructor.
      */
     public VVenue() {
@@ -122,13 +122,9 @@ public class VVenue extends CalendarComponent {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected Validator getValidator(Method method) {
-        // No method validation required.. 
-        return EMPTY_VALIDATOR;
+    protected ComponentFactory<VVenue> newFactory() {
+        return new Factory();
     }
 
     /**
@@ -148,11 +144,6 @@ public class VVenue extends CalendarComponent {
         @Override
         public VVenue createComponent(PropertyList properties) {
             return new VVenue(properties);
-        }
-
-        @Override
-        public VVenue createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VVENUE));
         }
     }
 }

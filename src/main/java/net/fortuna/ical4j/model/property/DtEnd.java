@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -106,7 +106,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class DtEnd extends DateProperty {
+public class DtEnd<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = 8107416684717228297L;
 
@@ -114,50 +114,25 @@ public class DtEnd extends DateProperty {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtEnd() {
-        super(DTEND, new Factory());
-    }
-
-    /**
-     * Creates a new DTEND property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public DtEnd(TimeZone timezone) {
-        super(DTEND, timezone, new Factory());
+        super(DTEND);
     }
 
     /**
      * Creates a new instance initialised with the parsed value.
      *
      * @param value the DTEND value string to parse
-     * @throws ParseException where the specified string is not a valid DTEND value representation
      */
-    public DtEnd(final String value) throws ParseException {
-        super(DTEND, new Factory());
-        setValue(value);
-    }
-
-    /**
-     * Creates a new DTEND property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a DTEND value
-     * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public DtEnd(String value, TimeZone timezone) throws ParseException {
-        super(DTEND, timezone, new Factory());
+    public DtEnd(final String value) {
+        super(DTEND);
         setValue(value);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid date/date-time representation
      */
-    public DtEnd(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(DTEND, aList, new Factory());
+    public DtEnd(final ParameterList aList, final String aValue) {
+        super(DTEND, aList);
         setValue(aValue);
     }
 
@@ -166,8 +141,8 @@ public class DtEnd extends DateProperty {
      *
      * @param aDate a date
      */
-    public DtEnd(final Date aDate) {
-        super(DTEND, new Factory());
+    public DtEnd(final T aDate) {
+        super(DTEND);
         setDate(aDate);
     }
 
@@ -176,11 +151,11 @@ public class DtEnd extends DateProperty {
      *
      * @param time the time of the DtEnd
      * @param utc  specifies whether time is UTC
+     * @deprecated UTC time is now specified via the generic type (i.e. {@link java.time.Instant})
      */
-    public DtEnd(final Date time, final boolean utc) {
-        super(DTEND, new Factory());
-        setDate(time);
-        setUtc(utc);
+    @Deprecated
+    public DtEnd(final T time, final boolean utc) {
+        this(time);
     }
 
     /**
@@ -189,12 +164,17 @@ public class DtEnd extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtEnd(final ParameterList aList, final Date aDate) {
-        super(DTEND, aList, new Factory());
+    public DtEnd(final ParameterList aList, final T aDate) {
+        super(DTEND, aList);
         setDate(aDate);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<DtEnd> {
+    @Override
+    protected PropertyFactory<DtEnd<T>> newFactory() {
+        return new Factory<>();
+    }
+
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<DtEnd<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -202,14 +182,13 @@ public class DtEnd extends DateProperty {
         }
 
         @Override
-        public DtEnd createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new DtEnd(parameters, value);
+        public DtEnd<T> createProperty(final ParameterList parameters, final String value) {
+            return new DtEnd<>(parameters, value);
         }
 
         @Override
-        public DtEnd createProperty() {
-            return new DtEnd();
+        public DtEnd<T> createProperty() {
+            return new DtEnd<>();
         }
     }
 

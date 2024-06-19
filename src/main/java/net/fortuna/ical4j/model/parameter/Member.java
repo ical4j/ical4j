@@ -37,7 +37,10 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -50,29 +53,34 @@ public class Member extends Parameter {
 
     private static final long serialVersionUID = 287348849443687499L;
 
-    private final AddressList groups;
+    private final List<URI> groups;
 
     /**
      * @param aValue a string representation of a group or list membership
-     * @throws URISyntaxException when the specified string is not a valid list of (quoted) cal-addresses
+     * @throws IllegalArgumentException when the specified string is not a valid list of (quoted) cal-addresses
      */
-    public Member(final String aValue) throws URISyntaxException {
-        this(new AddressList(Strings.unquote(aValue)));
+    public Member(final String aValue) {
+        super(MEMBER);
+        try {
+            groups = new AddressList(Strings.unquote(aValue)).getAddresses();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
      * @param aList a list of groups
      */
-    public Member(final AddressList aList) {
-        super(MEMBER, new Factory());
+    public Member(final List<URI> aList) {
+        super(MEMBER);
         groups = aList;
     }
 
     /**
      * @return Returns the group addresses.
      */
-    public final AddressList getGroups() {
-        return groups;
+    public final List<URI> getGroups() {
+        return new ArrayList<>(groups);
     }
 
     /**
@@ -80,7 +88,7 @@ public class Member extends Parameter {
      */
     @Override
     public final String getValue() {
-        return getGroups().toString();
+        return AddressList.toString(groups);
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<Member> {
@@ -91,9 +99,8 @@ public class Member extends Parameter {
         }
 
         @Override
-        public Member createParameter(final String value) throws URISyntaxException {
+        public Member createParameter(final String value) {
             return new Member(value);
         }
     }
-
 }

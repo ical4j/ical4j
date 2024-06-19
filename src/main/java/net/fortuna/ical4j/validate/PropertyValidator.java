@@ -36,11 +36,20 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.immutable.ImmutableAction;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Parameter.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.AUDIO;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
@@ -53,13 +62,13 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 public final class PropertyValidator<T extends Property> extends AbstractValidator<T> {
 
     private static final ValidationRule<Property> DATE_OR_DATETIME_VALUE = new ValidationRule<>(None, prop -> {
-        Value v = prop.getParameter(VALUE);
-        return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v));
+        Optional<Value> v = prop.getParameter(VALUE);
+        return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get()));
     }, "MUST be specified as a DATE or DATE-TIME:", VALUE);
 
     private static final ValidationRule<Property> BINARY_VALUE = new ValidationRule<>(None, prop -> {
-        Value v = prop.getParameter(VALUE);
-        return !(v == null || Value.BINARY.equals(v));
+        Optional<Value> v = prop.getParameter(VALUE);
+        return !(!v.isPresent() || Value.BINARY.equals(v.get()));
     }, "MUST be specified as a BINARY:", VALUE);
 
     /**
@@ -75,7 +84,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        TZID=America/New_York:19980119T020000
      * </pre>
      */
-    public static final PropertyRuleSet<DateProperty> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
+    public static final PropertyRuleSet<DateProperty<?>> DATE_PROP_RULE_SET = new PropertyRuleSet<>(
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID), DATE_OR_DATETIME_VALUE);
 
     /**
@@ -93,7 +102,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *       properties whose time values are specified in UTC.
      * </pre>
      */
-    public static final PropertyRuleSet<UtcProperty> UTC_PROP_RULE_SET = new PropertyRuleSet<>(
+    public static final PropertyRuleSet<Property> UTC_PROP_RULE_SET = new PropertyRuleSet<>(
             new ValidationRule<>(None, Parameter.TZID),
             new ValidationRule<>(ValueMatch, ".+Z$"));
 
@@ -112,8 +121,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Action> ACTION = new PropertyValidator<>(Property.ACTION,
-            new ValidationRule<>(ValueMatch, String.join("|", Action.AUDIO.getValue(),
-                    Action.DISPLAY.getValue(), Action.EMAIL.getValue(), "X-[A-Z]+")));
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", AUDIO.getValue(),
+                    ImmutableAction.DISPLAY.getValue(), ImmutableAction.EMAIL.getValue(), "X-[A-Z]+")));
 
 
     /**
@@ -189,6 +198,10 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
             new ValidationRule<>(OneOrLess, CUTYPE, MEMBER, ROLE, PARTSTAT,
                     RSVP, DELEGATED_TO, DELEGATED_FROM, SENT_BY, CN, DIR, LANGUAGE, SCHEDULE_AGENT, SCHEDULE_STATUS));
 
+    public static final Validator<BusyType> BUSY_TYPE = new PropertyValidator<>(Property.BUSYTYPE,
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", BusyType.VALUE_BUSY,
+                    BusyType.VALUE_BUSY_TENTATIVE, BusyType.VALUE_BUSY_UNAVAILABLE)));
+
     /**
      * <pre>
      *        Format Definition:  This property is defined by the following
@@ -202,7 +215,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<CalScale> CALSCALE = new PropertyValidator<>(Property.CALSCALE,
-            new ValidationRule<>(ValueMatch, CalScale.GREGORIAN.getValue()));
+            new ValidationRule<>(ValueMatch, "(?i)" + GREGORIAN.getValue()));
 
     /**
      * <pre>
@@ -245,8 +258,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Clazz> CLAZZ = new PropertyValidator<>(Property.CLASS,
-            new ValidationRule<>(ValueMatch, String.join("|", Clazz.PUBLIC.getValue(), Clazz.PRIVATE.getValue(),
-                    Clazz.CONFIDENTIAL.getValue())));
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", PUBLIC.getValue(), PRIVATE.getValue(),
+                    CONFIDENTIAL.getValue())));
 
     /**
      * <pre>
@@ -376,7 +389,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<DtEnd> DTEND = new PropertyValidator<>(Property.DTEND,
+    public static final Validator<DtEnd<?>> DTEND = new PropertyValidator<>(Property.DTEND,
             Collections.singletonList(DATE_PROP_RULE_SET));
 
     /**
@@ -417,7 +430,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<DtStart> DTSTART = new PropertyValidator<>(Property.DTSTART,
+    public static final Validator<DtStart<?>> DTSTART = new PropertyValidator<>(Property.DTSTART,
             Collections.singletonList(DATE_PROP_RULE_SET));
 
     /**
@@ -446,7 +459,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<Due> DUE = new PropertyValidator<>(Property.DUE,
+    public static final Validator<Due<?>> DUE = new PropertyValidator<>(Property.DUE,
             Collections.singletonList(DATE_PROP_RULE_SET));
 
     /**
@@ -489,7 +502,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<ExDate> EXDATE = new PropertyValidator<>(Property.EXDATE,
+    public static final Validator<ExDate<?>> EXDATE = new PropertyValidator<>(Property.EXDATE,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
             DATE_OR_DATETIME_VALUE);
 
@@ -589,7 +602,10 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        metvalue   = iana-token
      * </pre>
      */
-    public static final Validator<Method> METHOD = new PropertyValidator<>(Property.METHOD);
+    public static final Validator<Method> METHOD = new PropertyValidator<>(Property.METHOD,
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", Method.VALUE_PUBLISH,
+                    Method.VALUE_REQUEST, Method.VALUE_REPLY, Method.VALUE_ADD, Method.VALUE_CANCEL,
+                    Method.VALUE_COUNTER, Method.VALUE_DECLINECOUNTER, Method.VALUE_REFRESH)));
 
     /**
      * <pre>
@@ -690,11 +706,12 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<RDate> RDATE = new PropertyValidator<>(Property.RDATE,
+    public static final Validator<RDate<?>> RDATE = new PropertyValidator<>(Property.RDATE,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
             new ValidationRule<>(None, rdate -> {
-                Value v = rdate.getParameter(VALUE);
-                return !(v == null || Value.DATE.equals(v) || Value.DATE_TIME.equals(v) || Value.PERIOD.equals(v));
+                Optional<Value> v = rdate.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get())
+                        || Value.PERIOD.equals(v.get()));
             }, VALUE));
 
     /**
@@ -723,7 +740,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      *        ;Value MUST match value type
      * </pre>
      */
-    public static final Validator<RecurrenceId> RECURRENCE_ID = new PropertyValidator<>(Property.RECURRENCE_ID,
+    public static final Validator<RecurrenceId<?>> RECURRENCE_ID = new PropertyValidator<>(Property.RECURRENCE_ID,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID, RANGE),
             DATE_OR_DATETIME_VALUE);
 
@@ -888,11 +905,11 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Status> STATUS = new PropertyValidator<>(Property.STATUS,
-        new ValidationRule<>(ValueMatch, String.join("|", Status.VEVENT_TENTATIVE.getValue(),
-                Status.VEVENT_CONFIRMED.getValue(), Status.VEVENT_CANCELLED.getValue(),
-                Status.VTODO_NEEDS_ACTION.getValue(), Status.VTODO_COMPLETED.getValue(),
-                Status.VTODO_IN_PROCESS.getValue(), Status.VTODO_CANCELLED.getValue(),
-                Status.VJOURNAL_DRAFT.getValue(), Status.VJOURNAL_FINAL.getValue(), Status.VJOURNAL_CANCELLED.getValue())));
+        new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", VEVENT_TENTATIVE.getValue(),
+                VEVENT_CONFIRMED.getValue(), VEVENT_CANCELLED.getValue(),
+                VTODO_NEEDS_ACTION.getValue(), VTODO_COMPLETED.getValue(),
+                VTODO_IN_PROCESS.getValue(), VTODO_CANCELLED.getValue(),
+                VJOURNAL_DRAFT.getValue(), VJOURNAL_FINAL.getValue(), VJOURNAL_CANCELLED.getValue())));
 
     public static final Validator<StructuredData> STRUCTURED_DATA = new PropertyValidator<>(Property.STRUCTURED_DATA,
             new ValidationRule<>(OneOrLess, FMTTYPE, SCHEMA));
@@ -954,8 +971,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Transp> TRANSP = new PropertyValidator<>(Property.TRANSP,
-            new ValidationRule<>(ValueMatch, String.join("|", Transp.OPAQUE.getValue(),
-                    Transp.TRANSPARENT.getValue())));
+            new ValidationRule<>(ValueMatch, "(?i)" + String.join("|", OPAQUE.getValue(),
+                    TRANSPARENT.getValue())));
 
     /**
      * <pre>
@@ -983,8 +1000,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
             new ValidationRule<>(One, Parameter.VALUE),
             new ValidationRule<>(None, Parameter.RELATED),
             new ValidationRule<>(None, trigger -> {
-                Value v = trigger.getParameter(VALUE);
-                return !(v == null || Value.DATE_TIME.equals(v));
+                Optional<Value> v = trigger.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DATE_TIME.equals(v.get()));
             }, "MUST be specified as a UTC-formatted DATE-TIME:", VALUE));
 
     /**
@@ -1013,8 +1030,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     public static final Validator<Trigger> TRIGGER_REL = new PropertyValidator<>(Property.TRIGGER,
             new ValidationRule<>(OneOrLess, Parameter.VALUE, Parameter.RELATED),
             new ValidationRule<>(None, trigger -> {
-                Value v = trigger.getParameter(VALUE);
-                return !(v == null || Value.DURATION.equals(v));
+                Optional<Value> v = trigger.getParameter(VALUE);
+                return !(!v.isPresent() || Value.DURATION.equals(v.get()));
             }, "MUST be specified as a DURATION:", VALUE));
 
     /**
@@ -1139,7 +1156,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      * </pre>
      */
     public static final Validator<Version> VERSION = new PropertyValidator<>(Property.VERSION,
-            new ValidationRule<>(ValueMatch, Version.VERSION_2_0.getValue()));
+            new ValidationRule<>(ValueMatch, "(?i)" + VERSION_2_0.getValue()));
 
     @SafeVarargs
     public PropertyValidator(String context, ValidationRule<? super T>... rules) {
@@ -1147,6 +1164,6 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     }
 
     public PropertyValidator(String context, List<PropertyRuleSet<? super T>> rulesets) {
-        super(context, rulesets.toArray(new PropertyRuleSet[0]));
+        super(context, rulesets.toArray(PropertyRuleSet[]::new));
     }
 }

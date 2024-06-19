@@ -31,13 +31,10 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Encodable;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
+import java.time.ZoneId;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -60,10 +57,33 @@ public class TzId extends Parameter implements Encodable {
      * @param aValue a string representation of a time zone identifier
      */
     public TzId(final String aValue) {
-        super(TZID, new Factory());
+        super(TZID);
         // parameter values may be quoted if they contain characters in the
         // set [:;,]..
         this.value = Strings.unquote(aValue);
+    }
+
+    /**
+     * Provides a {@link ZoneId} representation of this instance. If created with a local timezone registry the
+     * returned value will provide the corresponding globally unique value.
+     *
+     * @return a zone id represented by this instance
+     */
+    public ZoneId toZoneId() {
+        return toZoneId(null);
+    }
+
+    /**
+     *
+     * @param timeZoneRegistry
+     * @return
+     */
+    public ZoneId toZoneId(TimeZoneRegistry timeZoneRegistry) {
+        if (timeZoneRegistry != null && !timeZoneRegistry.getZoneRules().isEmpty()) {
+            return timeZoneRegistry.getZoneId(getValue());
+        } else {
+            return TimeZoneRegistry.getGlobalZoneId(getValue());
+        }
     }
 
     /**
@@ -82,9 +102,8 @@ public class TzId extends Parameter implements Encodable {
         }
 
         @Override
-        public TzId createParameter(final String value) throws URISyntaxException {
+        public TzId createParameter(final String value) {
             return new TzId(Strings.unescape(value));
         }
     }
-
 }

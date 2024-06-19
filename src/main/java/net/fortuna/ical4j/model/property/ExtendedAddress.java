@@ -35,10 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -59,14 +55,14 @@ public class ExtendedAddress extends Property implements Encodable {
      * Default constructor.
      */
     public ExtendedAddress() {
-        super(EXTENDED_ADDRESS, new Factory());
+        super(EXTENDED_ADDRESS);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public ExtendedAddress(final String aValue) {
-        super(EXTENDED_ADDRESS, new Factory());
+        super(EXTENDED_ADDRESS);
         setValue(aValue);
     }
 
@@ -75,7 +71,7 @@ public class ExtendedAddress extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public ExtendedAddress(final ParameterList aList, final String aValue) {
-        super(EXTENDED_ADDRESS, aList, new Factory());
+        super(EXTENDED_ADDRESS, aList);
         setValue(aValue);
     }
 
@@ -100,6 +96,11 @@ public class ExtendedAddress extends Property implements Encodable {
         return ValidationResult.EMPTY;
     }
 
+    @Override
+    protected PropertyFactory<ExtendedAddress> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<ExtendedAddress> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +109,7 @@ public class ExtendedAddress extends Property implements Encodable {
         }
 
         @Override
-        public ExtendedAddress createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public ExtendedAddress createProperty(final ParameterList parameters, final String value) {
             return new ExtendedAddress(parameters, value);
         }
 

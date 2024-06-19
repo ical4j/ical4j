@@ -48,7 +48,10 @@ import java.util.Date;
  * precision is used in constructor arguments, or that <code>Object.equals()</code>
  * is overridden to ensure equality checking is consistent with the type.
  * @author Ben Fortuna
+ *
+ * @deprecated Replaced with new Java Date/Time API implementation
  */
+@Deprecated
 public abstract class Iso8601 extends Date {
     
     /**

@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.parameter.Value
+
 import spock.lang.Specification
 
 class ModelSerializationSpec extends Specification {
@@ -68,7 +68,7 @@ class ModelSerializationSpec extends Specification {
 	            }
 	        },
 		
-			new DateList(Value.DATE)
+			new DateList()
 		]
 	}
 }

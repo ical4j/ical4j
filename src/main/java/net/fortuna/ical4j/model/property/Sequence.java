@@ -144,7 +144,7 @@ public class Sequence extends Property {
      * Default constructor.
      */
     public Sequence() {
-        super(SEQUENCE, new Factory());
+        super(SEQUENCE);
         sequenceNo = 0;
     }
 
@@ -152,7 +152,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final String aValue) {
-        super(SEQUENCE, new Factory());
+        super(SEQUENCE);
         setValue(aValue);
     }
 
@@ -161,7 +161,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final ParameterList aList, final String aValue) {
-        super(SEQUENCE, aList, new Factory());
+        super(SEQUENCE, aList);
         setValue(aValue);
     }
 
@@ -169,7 +169,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final int aSequenceNo) {
-        super(SEQUENCE, new Factory());
+        super(SEQUENCE);
         sequenceNo = aSequenceNo;
     }
 
@@ -178,7 +178,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final ParameterList aList, final int aSequenceNo) {
-        super(SEQUENCE, aList, new Factory());
+        super(SEQUENCE, aList);
         sequenceNo = aSequenceNo;
     }
 
@@ -220,6 +220,11 @@ public class Sequence extends Property {
         return super.compareTo(o);
     }
 
+    @Override
+    protected PropertyFactory<Sequence> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Sequence> {
         private static final long serialVersionUID = 1L;
 
@@ -228,8 +233,7 @@ public class Sequence extends Property {
         }
 
         @Override
-        public Sequence createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Sequence createProperty(final ParameterList parameters, final String value) {
             return new Sequence(parameters, value);
         }
 

@@ -36,10 +36,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -126,14 +122,14 @@ public class Uid extends Property implements Encodable {
      * Default constructor.
      */
     public Uid() {
-        super(UID, new Factory());
+        super(UID);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Uid(final String aValue) {
-        super(UID, new Factory());
+        super(UID);
         setValue(aValue);
     }
 
@@ -142,7 +138,7 @@ public class Uid extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Uid(final ParameterList aList, final String aValue) {
-        super(UID, aList, new Factory());
+        super(UID, aList);
         setValue(aValue);
     }
 
@@ -167,6 +163,11 @@ public class Uid extends Property implements Encodable {
         return PropertyValidator.UID.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Uid> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Uid> {
         private static final long serialVersionUID = 1L;
 
@@ -175,8 +176,7 @@ public class Uid extends Property implements Encodable {
         }
 
         @Override
-        public Uid createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Uid createProperty(final ParameterList parameters, final String value) {
             return new Uid(parameters, value);
         }
 

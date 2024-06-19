@@ -54,11 +54,7 @@ public class IndexedComponentList<T extends Component> {
         final Map<String, List<T>> indexedComponents = new HashMap<>();
         for (final T component : list) {
             for (final Property property : component.getProperties(propertyName)) {
-                List<T> components = indexedComponents.get(property.getValue());
-                if (components == null) {
-                    components = new ArrayList<>();
-                    indexedComponents.put(property.getValue(), components);
-                }
+                List<T> components = indexedComponents.computeIfAbsent(property.getValue(), k -> new ArrayList<>());
                 components.add(component);
             }
         }
@@ -76,7 +72,7 @@ public class IndexedComponentList<T extends Component> {
     public List<T> getComponents(final String propertyValue) {
         List<T> components = index.get(propertyValue);
         if (components == null) {
-            components = Collections.EMPTY_LIST;
+            components = Collections.emptyList();
         }
         return components;
     }

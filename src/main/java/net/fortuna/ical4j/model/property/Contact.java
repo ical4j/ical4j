@@ -32,13 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.Participant;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -59,14 +56,14 @@ public class Contact extends Property implements Encodable {
      * Default constructor.
      */
     public Contact() {
-        super(CONTACT, new ParameterList(), new Factory());
+        super(CONTACT);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Contact(final String aValue) {
-        super(CONTACT, new ParameterList(), new Factory());
+        super(CONTACT);
         setValue(aValue);
     }
 
@@ -75,8 +72,18 @@ public class Contact extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Contact(final ParameterList aList, final String aValue) {
-        super(CONTACT, aList, new Factory());
+        super(CONTACT, aList);
         setValue(aValue);
+    }
+
+    public Contact(Participant participant) {
+        super(CONTACT);
+        setValue(participant.getRequiredProperty(Property.NAME).getValue());
+    }
+
+    public Contact(ParameterList parameters, Participant participant) {
+        super(CONTACT, parameters);
+        setValue(participant.getRequiredProperty(Property.NAME).getValue());
     }
 
     /**
@@ -100,6 +107,11 @@ public class Contact extends Property implements Encodable {
         return PropertyValidator.CONTACT.validate(this);
     }
 
+    @Override
+    protected PropertyFactory<Contact> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Contact> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +120,7 @@ public class Contact extends Property implements Encodable {
         }
 
         @Override
-        public Contact createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Contact createProperty(final ParameterList parameters, final String value) {
             return new Contact(parameters, value);
         }
 

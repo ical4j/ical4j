@@ -42,8 +42,14 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -122,7 +128,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private static final Validator itipValidator = new VTimeZoneValidator();
+    private static final Validator<VTimeZone> itipValidator = new VTimeZoneValidator();
 
     /**
      * Default constructor.
@@ -144,7 +150,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * @param observances a list of type components
      */
     public VTimeZone(final ComponentList<Observance> observances) {
-        super(VTIMEZONE);
+        this(new PropertyList(), observances);
     }
 
     /**
@@ -168,26 +174,32 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected Validator getValidator(Method method) {
-        return itipValidator;
+    public ValidationResult validate(Method method) throws ValidationException {
+        return itipValidator.validate(this);
     }
 
     /**
      * @return Returns the types.
      */
-    public final ComponentList<Observance> getObservances() {
+    public final List<Observance> getObservances() {
         //noinspection unchecked
-        return new ComponentList<>((List<Observance>)components.getComponents(
-                Observance.STANDARD, Observance.DAYLIGHT));
+        return (List<Observance>) components.get(Observance.STANDARD, Observance.DAYLIGHT);
+    }
+
+    /**
+     *
+     * @return Returns the underlying component list.
+     */
+    @Override
+    public ComponentList<Observance> getComponentList() {
+        //noinspection unchecked
+        return (ComponentList<Observance>) components;
     }
 
     @Override
-    public ComponentList<Observance> getComponents() {
-        return getObservances();
+    public void setComponentList(ComponentList<Observance> components) {
+        this.components = components;
     }
 
     /**
@@ -196,13 +208,23 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * @return the latest applicable timezone observance for the specified date or null if there are no applicable
      * observances
      */
-    public final Observance getApplicableObservance(final Date date) {
+    public final Observance getApplicableObservance(final Temporal date) {
+        return getApplicableObservance(date, getObservances());
+    }
+
+    /**
+     * Returns the latest applicable timezone observance for the specified date.
+     * @param date the latest possible date for a timezone observance onset
+     * @param observances a list of observances to choose from
+     * @return the latest applicable timezone observance for the specified date or null if there are no applicable
+     * observances
+     */
+    public static Observance getApplicableObservance(final Temporal date, List<Observance> observances) {
         Observance latestObservance = null;
-        Date latestOnset = null;
-        for (final Observance observance : getObservances()) {
-            final Date onset = observance.getLatestOnset(date);
-            if (latestOnset == null
-                    || (onset != null && onset.after(latestOnset))) {
+        OffsetDateTime latestOnset = null;
+        for (final Observance observance : observances) {
+            final OffsetDateTime onset = observance.getLatestOnset(date);
+            if (latestOnset == null || (onset != null && onset.isAfter(latestOnset))) {
                 latestOnset = onset;
                 latestObservance = observance;
             }
@@ -212,23 +234,37 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
 
     /**
      * @return the mandatory timezone identifier property
+     * @deprecated use {@link VTimeZone#getProperty(String)}
      */
-    public final TzId getTimeZoneId() {
-        return getProperty(Property.TZID);
+    @Deprecated
+    public final Optional<TzId> getTimeZoneId() {
+        return getProperty(TZID);
     }
 
     /**
      * @return the optional last-modified property
+     * @deprecated use {@link VTimeZone#getProperty(String)}
      */
-    public final LastModified getLastModified() {
-        return getProperty(Property.LAST_MODIFIED);
+    @Deprecated
+    public final Optional<LastModified> getLastModified() {
+        return getProperty(LAST_MODIFIED);
     }
 
     /**
      * @return the optional timezone url property
+     * @deprecated use {@link VTimeZone#getProperty(String)}
      */
-    public final TzUrl getTimeZoneUrl() {
-        return getProperty(Property.TZURL);
+    @Deprecated
+    public final Optional<TzUrl> getTimeZoneUrl() {
+        return getProperty(TZURL);
+    }
+
+    @Override
+    public <T extends Component> T copy() {
+        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }
 
     /**
@@ -253,6 +289,11 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
                 .append(getObservances()).toHashCode();
     }
 
+    @Override
+    protected ComponentFactory<VTimeZone> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<VTimeZone> {
 
         public Factory() {
@@ -269,9 +310,9 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
             return new VTimeZone(properties);
         }
 
-        @Override
-        public VTimeZone createComponent(PropertyList properties, ComponentList subComponents) {
-            return new VTimeZone(properties, subComponents);
+        @Override @SuppressWarnings("unchecked")
+        public VTimeZone createComponent(PropertyList properties, ComponentList<?> subComponents) {
+            return new VTimeZone(properties, (ComponentList<Observance>) subComponents);
         }
     }
 }

@@ -41,9 +41,6 @@ import net.fortuna.ical4j.filter.expression.TargetExpression;
 import net.fortuna.ical4j.filter.expression.UnaryExpression;
 import net.fortuna.ical4j.model.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
@@ -140,11 +137,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
             spec.value("");
         }
         operand.getAttributes().forEach(a -> spec.parameter(parameter(a)));
-        try {
-            return spec.build();
-        } catch (ParseException | IOException | URISyntaxException e) {
-            throw new IllegalArgumentException(e);
-        }
+        return spec.build();
     }
 
     /**
@@ -161,11 +154,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
             spec.value("");
         }
         operand.getAttributes().forEach(a -> spec.parameter(parameter(a)));
-        try {
-            return spec.build();
-        } catch (ParseException | IOException | URISyntaxException e) {
-            throw new IllegalArgumentException(e);
-        }
+        return spec.build();
     }
 
     /**
@@ -204,12 +193,8 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
     }
 
     protected Parameter parameter(FilterTarget.Attribute a) {
-        try {
-            return new ParameterBuilder(parameterFactorySupplier.get())
-                    .name(a.getName()).value(a.getValue()).build();
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(e);
-        }
+        return new ParameterBuilder(parameterFactorySupplier.get())
+                .name(a.getName()).value(a.getValue()).build();
     }
 
     /**
@@ -219,10 +204,6 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return a parameter instance
      */
     protected Parameter parameter(String name, String value) {
-        try {
-            return new ParameterBuilder(parameterFactorySupplier.get()).name(name).value(value).build();
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(e);
-        }
+        return new ParameterBuilder(parameterFactorySupplier.get()).name(name).value(value).build();
     }
 }

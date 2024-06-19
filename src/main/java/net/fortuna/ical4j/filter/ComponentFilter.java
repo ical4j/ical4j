@@ -74,6 +74,8 @@ public class ComponentFilter<T extends Component> extends AbstractFilter<T> {
                 return new PropertyContainsRule<>(property(expression), literal(expression));
             case matches:
                 return new PropertyMatchesRule<>(property(expression), literal(expression));
+            case startsWith:
+                return new PropertyStartsWithRule<>(property(expression), literal(expression));
         }
         throw new IllegalArgumentException("Not a valid filter");
     }

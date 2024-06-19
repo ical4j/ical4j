@@ -87,7 +87,7 @@ public class ParameterTest extends TestCase {
 		TestSuite suite = new TestSuite();
 		
 		@SuppressWarnings("serial")
-		Parameter p = new Parameter("name", null) {
+		Parameter p = new Parameter("name") {
 			@Override
 			public String getValue() {
 				return "value";

@@ -33,8 +33,9 @@ package net.fortuna.ical4j.filter.predicate;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
 
+import java.time.temporal.Temporal;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -45,15 +46,15 @@ import java.util.function.Predicate;
  * A rule that matches any component that occurs in the specified time period.
  * @author Ben Fortuna
  */
-public class PeriodRule<T extends Component> implements Predicate<T> {
+public class PeriodRule<C extends Component, T extends Temporal> implements Predicate<C> {
 
-    private final Period period;
+    private final Period<T> period;
 
     /**
      * Constructs a new instance using the specified period.
      * @param period a period instance to match on
      */
-    public PeriodRule(final Period period) {
+    public PeriodRule(final Period<T> period) {
         this.period = period;
     }
 
@@ -81,7 +82,7 @@ public class PeriodRule<T extends Component> implements Predicate<T> {
         */
         
 //        try {
-        final PeriodList recurrenceSet = component.calculateRecurrenceSet(period);
+        final Set<Period<T>> recurrenceSet = component.calculateRecurrenceSet(period);
         return (!recurrenceSet.isEmpty());
 //        }
 //        catch (ValidationException ve) {

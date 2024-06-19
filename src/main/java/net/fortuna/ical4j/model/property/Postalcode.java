@@ -35,10 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -59,14 +55,14 @@ public class Postalcode extends Property implements Encodable {
      * Default constructor.
      */
     public Postalcode() {
-        super(POSTALCODE, new Factory());
+        super(POSTALCODE);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Postalcode(final String aValue) {
-        super(POSTALCODE, new Factory());
+        super(POSTALCODE);
         setValue(aValue);
     }
 
@@ -75,7 +71,7 @@ public class Postalcode extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public Postalcode(final ParameterList aList, final String aValue) {
-        super(POSTALCODE, aList, new Factory());
+        super(POSTALCODE, aList);
         setValue(aValue);
     }
 
@@ -100,6 +96,11 @@ public class Postalcode extends Property implements Encodable {
         return ValidationResult.EMPTY;
     }
 
+    @Override
+    protected PropertyFactory<Postalcode> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Postalcode> {
         private static final long serialVersionUID = 1L;
 
@@ -108,8 +109,7 @@ public class Postalcode extends Property implements Encodable {
         }
 
         @Override
-        public Postalcode createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Postalcode createProperty(final ParameterList parameters, final String value) {
             return new Postalcode(parameters, value);
         }
 

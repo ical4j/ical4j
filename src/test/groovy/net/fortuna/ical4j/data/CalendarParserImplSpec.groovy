@@ -40,14 +40,14 @@ import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING
 import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_UNFOLDING
 
 class CalendarParserImplSpec extends Specification {
-	
+
 	def 'verify parsing of VEVENT properties'() {
 		setup:
 		String input = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\n$contentLines\r\nEND:VEVENT\r\nEND:VCALENDAR"
 		
 		expect:
 		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
-		assert calendar.components[0].properties[0] as String == expectedProperty
+		assert calendar.getComponents()[0].properties[0] as String == expectedProperty
 		
 		where:
 		contentLines																								| expectedProperty
@@ -60,7 +60,7 @@ class CalendarParserImplSpec extends Specification {
 		
 		expect:
 		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
-		assert calendar.properties[0] as String == expectedProperty
+		assert calendar.getProperties()[0] as String == expectedProperty
 		
 		where:
 		contentLines																																			| expectedProperty
@@ -99,7 +99,7 @@ class CalendarParserImplSpec extends Specification {
 
 		expect:
 		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
-		assert calendar.components[0].properties.size() == 24
+		assert calendar.getComponents()[0].properties.size() == 24
 
 		cleanup:
 		compatibilityHints.each {

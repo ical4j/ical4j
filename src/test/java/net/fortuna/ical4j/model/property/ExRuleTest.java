@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 
 import java.text.ParseException;
 
@@ -66,7 +67,7 @@ public class ExRuleTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        ExRule rule = new ExRule(new Recur.Builder().frequency(Recur.Frequency.DAILY).count(1).build());
+        ExRule rule = new ExRule(new Recur.Builder().frequency(Frequency.DAILY).count(1).build());
         suite.addTest(new ExRuleTest(rule, "FREQ=DAILY;COUNT=1"));
         suite.addTest(new ExRuleTest("testValidation", rule));
         suite.addTest(new ExRuleTest("testEquals", rule));
