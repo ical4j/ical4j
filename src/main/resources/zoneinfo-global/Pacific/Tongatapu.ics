@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2023d//EN
+PRODID:-//tzurl.org//NONSGML Olson 2024a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2023d/Pacific/Tongatapu
-LAST-MODIFIED:20231222T233359Z
+TZID:/tzurl.org/2024a/Pacific/Tongatapu
+LAST-MODIFIED:20240422T053452Z
 TZURL:https://www.tzurl.org/zoneinfo-global/Pacific/Tongatapu
 X-LIC-LOCATION:Pacific/Tongatapu
 X-PROLEPTIC-TZNAME:LMT
