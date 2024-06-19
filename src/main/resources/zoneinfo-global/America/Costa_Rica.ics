@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2023d//EN
+PRODID:-//tzurl.org//NONSGML Olson 2024a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2023d/America/Costa_Rica
-LAST-MODIFIED:20231222T233400Z
+TZID:/tzurl.org/2024a/America/Costa_Rica
+LAST-MODIFIED:20240422T053452Z
 TZURL:https://www.tzurl.org/zoneinfo-global/America/Costa_Rica
 X-LIC-LOCATION:America/Costa_Rica
 X-PROLEPTIC-TZNAME:LMT
