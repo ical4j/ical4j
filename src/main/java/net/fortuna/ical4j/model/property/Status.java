@@ -262,7 +262,7 @@ public class Status extends Property {
                 throws IOException, URISyntaxException, ParseException {
 
             if (parameters.isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_TENTATIVE: return VEVENT_TENTATIVE;
                     case VALUE_CONFIRMED: return VEVENT_CONFIRMED;
                     case VALUE_CANCELLED: return VEVENT_CANCELLED;

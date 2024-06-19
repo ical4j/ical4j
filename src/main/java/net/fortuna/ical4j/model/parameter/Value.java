@@ -178,7 +178,7 @@ public class Value extends Parameter implements Encodable {
 
         @Override
         public Value createParameter(final String value) throws URISyntaxException {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_BINARY: return BINARY;
                 case VALUE_BOOLEAN: return BOOLEAN;
                 case VALUE_DATE: return DATE;

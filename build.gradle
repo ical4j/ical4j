@@ -70,6 +70,8 @@ dependencies {
         exclude group: 'commons-collections', module: 'commons-collections'
     }
 
+    compileOnly "org.jetbrains:annotations:24.1.0"
+
     // optional timezone caching..
     jcacheTimezoneCacheImplementation 'javax.cache:cache-api:1.1.1'
 

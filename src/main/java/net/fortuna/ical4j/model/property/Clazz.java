@@ -199,7 +199,7 @@ public class Clazz extends Property {
                 throws IOException, URISyntaxException, ParseException {
 
             if (parameters.isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_PUBLIC: return PUBLIC;
                     case VALUE_PRIVATE: return PRIVATE;
                     case VALUE_CONFIDENTIAL: return CONFIDENTIAL;

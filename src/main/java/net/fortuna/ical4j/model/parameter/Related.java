@@ -96,7 +96,7 @@ public class Related extends Parameter implements Encodable {
 
         @Override
         public Related createParameter(final String value) throws URISyntaxException {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_END: return END;
                 case VALUE_START: return START;
             }

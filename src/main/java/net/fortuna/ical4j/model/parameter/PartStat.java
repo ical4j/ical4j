@@ -126,7 +126,7 @@ public class PartStat extends Parameter implements Encodable {
 
         @Override
         public PartStat createParameter(final String value) throws URISyntaxException {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_ACCEPTED: return ACCEPTED;
                 case VALUE_COMPLETED: return COMPLETED;
                 case VALUE_DECLINED: return DECLINED;

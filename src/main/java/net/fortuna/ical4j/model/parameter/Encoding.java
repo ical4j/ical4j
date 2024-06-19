@@ -153,7 +153,7 @@ public class Encoding extends Parameter implements Encodable {
 
         @Override
         public Encoding createParameter(final String value) throws URISyntaxException {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_BASE64: return BASE64;
                 case VALUE_BINARY: return BINARY;
                 case VALUE_EIGHT_BIT: return EIGHT_BIT;

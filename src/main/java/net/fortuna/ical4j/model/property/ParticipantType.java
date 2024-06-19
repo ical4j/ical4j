@@ -111,8 +111,7 @@ public class ParticipantType extends Property implements Encodable {
                 throws IOException, URISyntaxException, ParseException {
             final ParticipantType participantType;
 
-            if (ParticipantType.VOTER
-                    .getValue().equals(value)) {
+            if (parameters.isEmpty() && ParticipantType.VOTER.getValue().equalsIgnoreCase(value)) {
                 participantType = ParticipantType.VOTER;
             } else {
                 participantType = new ParticipantType(parameters, value);

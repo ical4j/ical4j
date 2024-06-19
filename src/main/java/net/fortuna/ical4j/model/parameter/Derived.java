@@ -100,7 +100,7 @@ public class Derived extends Parameter {
         }
     
         public Derived createParameter(final String value) throws URISyntaxException {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_TRUE: return TRUE;
                 case VALUE_FALSE: return FALSE;
             }

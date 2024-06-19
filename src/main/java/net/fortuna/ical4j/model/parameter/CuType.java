@@ -112,7 +112,7 @@ public class CuType extends Parameter implements Encodable {
 
         @Override
         public CuType createParameter(final String value) throws URISyntaxException {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_INDIVIDUAL: return INDIVIDUAL;
                 case VALUE_GROUP: return GROUP;
                 case VALUE_RESOURCE: return RESOURCE;
