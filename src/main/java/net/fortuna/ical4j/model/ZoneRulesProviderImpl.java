@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import java.lang.ref.WeakReference;
 import java.time.zone.ZoneRules;
 import java.time.zone.ZoneRulesProvider;
 import java.util.NavigableMap;
@@ -9,24 +10,28 @@ import java.util.TreeMap;
 
 public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
-    private final TimeZoneRegistry timeZoneRegistry;
+    // A weak reference should be sufficient as only properties
+    // with a registry reference will use this custom provider..
+    private final WeakReference<TimeZoneRegistry> timeZoneRegistry;
 
     public ZoneRulesProviderImpl(TimeZoneRegistry timeZoneRegistry) {
         Objects.requireNonNull(timeZoneRegistry, "timeZoneRegistry");
-        this.timeZoneRegistry = timeZoneRegistry;
+        this.timeZoneRegistry = new WeakReference<>(timeZoneRegistry);
     }
 
     @Override
     protected Set<String> provideZoneIds() {
-        return timeZoneRegistry.getZoneRules().keySet();
+        return Objects.requireNonNull(timeZoneRegistry.get()).getZoneRules().keySet();
     }
 
     @Override
     protected ZoneRules provideRules(String zoneId, boolean forCaching) {
         ZoneRules retVal = null;
         // don't allow caching of rules due to potential for dynamically loaded definitions..
-        if (timeZoneRegistry.getZoneRules().containsKey(zoneId)) {
-            retVal = timeZoneRegistry.getZoneRules().get(zoneId);
+        if (!forCaching) {
+            if (Objects.requireNonNull(timeZoneRegistry.get()).getZoneRules().containsKey(zoneId)) {
+                retVal = Objects.requireNonNull(timeZoneRegistry.get()).getZoneRules().get(zoneId);
+            }
         }
         return retVal;
     }
@@ -34,8 +39,8 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
     @Override
     protected NavigableMap<String, ZoneRules> provideVersions(String zoneId) {
         NavigableMap<String, ZoneRules> retVal = new TreeMap<>();
-        if (timeZoneRegistry.getZoneRules().containsKey(zoneId)) {
-            retVal.put(zoneId, timeZoneRegistry.getZoneRules().get(zoneId));
+        if (Objects.requireNonNull(timeZoneRegistry.get()).getZoneRules().containsKey(zoneId)) {
+            retVal.put(zoneId, Objects.requireNonNull(timeZoneRegistry.get()).getZoneRules().get(zoneId));
         }
         return retVal;
     }
