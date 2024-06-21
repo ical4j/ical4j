@@ -36,4 +36,11 @@ module ical4j.core {
     exports net.fortuna.ical4j.transform.recurrence;
 
 //    provides java.time.zone.ZoneRulesProvider with net.fortuna.ical4j.model.DefaultZoneRulesProvider;
+
+    uses net.fortuna.ical4j.model.ComponentFactory;
+    uses net.fortuna.ical4j.model.ParameterFactory;
+    uses net.fortuna.ical4j.model.PropertyFactory;
+    uses net.fortuna.ical4j.transform.component.Rfc5545ComponentRule;
+    uses net.fortuna.ical4j.transform.property.Rfc5545PropertyRule;
+    uses net.fortuna.ical4j.validate.CalendarValidatorFactory;
 }
