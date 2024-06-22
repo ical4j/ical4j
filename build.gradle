@@ -13,6 +13,9 @@ plugins {
     id 'org.javamodularity.moduleplugin' version '1.8.14'
 }
 
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
 repositories {
     mavenCentral()
 }
@@ -22,10 +25,6 @@ jar {
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
-    }
-
     withJavadocJar()
     withSourcesJar()
 
