@@ -13,9 +13,6 @@ plugins {
     id 'org.javamodularity.moduleplugin' version '1.8.14'
 }
 
-sourceCompatibility = 11
-targetCompatibility = 11
-
 repositories {
     mavenCentral()
 }
@@ -25,6 +22,10 @@ jar {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+
     withJavadocJar()
     withSourcesJar()
 
@@ -85,11 +86,12 @@ dependencies {
     // A CachingProvider is required for TimeZoneCacheTest.groovy
     testImplementation "org.cache2k:cache2k-jcache:$jcacheVersion"
 
-    // junit
-    testImplementation "org.junit.vintage:junit-vintage-engine:$junitVintageVersion"
-
     // groovy-test
     testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
+
+    // test dependencies
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVintageVersion"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // spock
     testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
@@ -98,12 +100,6 @@ dependencies {
     // testcontainers
     testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
             "org.testcontainers:spock:$testcontainersVersion"
-}
-
-compileTestJava {
-    moduleOptions {
-        compileOnClasspath = true
-    }
 }
 
 test {
