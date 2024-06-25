@@ -4,8 +4,8 @@ on:
   push:
     tags:
       - "ical4j-*"
-    tags-ignore:
-      - "ical4j-*-pre"
+      - "!ical4j-*-pre"
+      - "!ical4j-3.x-maintenance"
 
 jobs:
   build:
