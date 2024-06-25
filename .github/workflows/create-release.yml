@@ -4,8 +4,7 @@ on:
   push:
     tags:
       - "ical4j-*"
-    tags-ignore:
-      - "ical4j-*-pre"
+      - "!ical4j-*-pre"
 
 jobs:
   build:
