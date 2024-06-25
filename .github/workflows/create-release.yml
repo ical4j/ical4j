@@ -11,9 +11,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Generate changelog
-        run: make changelog
+#      - name: Generate changelog
+#        run: make changelog
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          body_path: CHANGELOG.md
+          generate_release_notes: true
+#          body_path: CHANGELOG.md
