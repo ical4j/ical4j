@@ -407,7 +407,7 @@ class RecurSpec extends Specification {
         def until = TemporalAdapter.parse('20050307').temporal;
 
         Recur recurDaily = builder.frequency(Frequency.DAILY).until(until)
-                .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+                .dayList(MO, TU, WE, TH, FR)
                 .interval(1).weekStartDay(MO).build();
 
         then: 'result is as expected'
@@ -433,7 +433,7 @@ class RecurSpec extends Specification {
     def 'test BYDAY with MINUTELY precision'() {
         given: 'a recurrence rule'
         Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
-                .dayList(new WeekDayList(MO)).hourList(new NumberList('16'))
+                .dayList(MO).hourList(16)
                 .minuteList(new NumberList('37,38'))
                 .until((LocalDateTime) TemporalAdapter.parse('20220519T165900').temporal).build()
 
@@ -448,7 +448,7 @@ class RecurSpec extends Specification {
     def 'test getdates as stream'() {
         given: 'a recurrence rule'
         Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
-                .dayList(new WeekDayList(MO)).hourList(new NumberList('16'))
+                .dayList(MO).hourList(16)
                 .minuteList(new NumberList('37,38'))
                 .until((LocalDateTime) TemporalAdapter.parse('20220519T165900').temporal).build()
 
@@ -476,7 +476,7 @@ class RecurSpec extends Specification {
     def 'test getdates as stream for a large date range'() {
         given: 'a recurrence rule'
         Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
-                .dayList(new WeekDayList(MO)).hourList(new NumberList('16'))
+                .dayList(MO).hourList(16)
                 .minuteList(new NumberList('37,38'))
                 .until((LocalDateTime) TemporalAdapter.parse('20520519T165900').temporal).build()
 

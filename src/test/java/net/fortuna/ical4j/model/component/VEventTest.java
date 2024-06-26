@@ -397,7 +397,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
      */
     public void testGetConsumedTimeByCount() {
         Recur recur = new Recur.Builder().frequency(Frequency.WEEKLY).count(3)
-            .interval(1).dayList(new WeekDayList(SU)).build();
+            .interval(1).dayList(SU).build();
         log.info(recur.toString());
 
         ZonedDateTime start = ZonedDateTime.now().withDayOfMonth(8);
@@ -536,19 +536,19 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 
         // 9:00AM to 5:00PM Rule using weekly
         Recur<ZonedDateTime> recurWeekly = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY).until(until)
-            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .dayList(MO, TU, WE, TH, FR)
             .interval(1).weekStartDay(MO).build();
         RRule<ZonedDateTime> rruleWeekly = new RRule<>(recurWeekly);
 
         // 9:00AM to 5:00PM Rule using daily frequency
         Recur<ZonedDateTime> recurDaily = new Recur.Builder<ZonedDateTime>().frequency(Frequency.DAILY).until(until)
-            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .dayList(MO, TU, WE, TH, FR)
             .interval(1).weekStartDay(MO).build();
         RRule<ZonedDateTime> rruleDaily = new RRule<>(recurDaily);
 
         // 9:00AM to 5:00PM Rule using monthly frequency
         Recur<ZonedDateTime> recurMonthly = new Recur.Builder<ZonedDateTime>().frequency(Frequency.MONTHLY).until(until)
-            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .dayList(MO, TU, WE, TH, FR)
             .interval(1).weekStartDay(MO).build();
         RRule<ZonedDateTime> rruleMonthly = new RRule<>(recurMonthly);
 

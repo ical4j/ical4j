@@ -50,7 +50,7 @@ class ByDayRuleTest extends Specification {
 
         // recurency
         Recur recur = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15).hourList(numberList(13, 17))
-                .dayList(new WeekDayList(WE)).build();
+                .dayList(WE).build();
         e1.add(new RRule(recur));
 
         //exrules

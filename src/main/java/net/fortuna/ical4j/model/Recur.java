@@ -1138,9 +1138,17 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
+        public Builder<T> secondList(Integer...seconds) {
+            return secondList(Arrays.asList(seconds));
+        }
+
         public Builder<T> secondList(List<Integer> secondList) {
             this.secondList = secondList;
             return this;
+        }
+
+        public Builder<T> minuteList(Integer...minutes) {
+            return minuteList(Arrays.asList(minutes));
         }
 
         public Builder<T> minuteList(List<Integer> minuteList) {
@@ -1148,9 +1156,17 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
+        public Builder<T> hourList(Integer...hours) {
+            return hourList(Arrays.asList(hours));
+        }
+
         public Builder<T> hourList(List<Integer> hourList) {
             this.hourList = hourList;
             return this;
+        }
+
+        public Builder<T> dayList(WeekDay...days) {
+            return dayList(new WeekDayList(days));
         }
 
         public Builder<T> dayList(List<WeekDay> dayList) {
@@ -1158,9 +1174,17 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
+        public Builder<T> monthDayList(Integer...monthDays) {
+            return monthDayList(Arrays.asList(monthDays));
+        }
+
         public Builder<T> monthDayList(List<Integer> monthDayList) {
             this.monthDayList = monthDayList;
             return this;
+        }
+
+        public Builder<T> yearDayList(Integer...yearDays) {
+            return yearDayList(Arrays.asList(yearDays));
         }
 
         public Builder<T> yearDayList(List<Integer> yearDayList) {
@@ -1168,14 +1192,26 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
+        public Builder<T> weekNoList(Integer...weekNos) {
+            return weekNoList(Arrays.asList(weekNos));
+        }
+
         public Builder<T> weekNoList(List<Integer> weekNoList) {
             this.weekNoList = weekNoList;
             return this;
         }
 
+        public Builder<T> monthList(Month...months) {
+            return monthList(Arrays.asList(months));
+        }
+
         public Builder<T> monthList(List<Month> monthList) {
             this.monthList = monthList;
             return this;
+        }
+
+        public Builder<T> setPosList(Integer...setPos) {
+            return setPosList(Arrays.asList(setPos));
         }
 
         public Builder<T> setPosList(List<Integer> setPosList) {
