@@ -195,6 +195,19 @@ public class CalendarDateFormat implements Serializable {
         }
     }
 
+    public static class OffsetDateTimeTemporalQuery implements TemporalQuery<OffsetDateTime>, Serializable {
+        @Override
+        public OffsetDateTime queryFrom(TemporalAccessor temporal) {
+            return OffsetDateTime.from(temporal);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            return obj != null && getClass() == obj.getClass();
+        }
+    }
+
     public static class InstantTemporalQuery implements TemporalQuery<Instant>, Serializable {
         @Override
         public Instant queryFrom(TemporalAccessor temporal) {
@@ -218,13 +231,13 @@ public class CalendarDateFormat implements Serializable {
             "yyyyMMdd'T'HHmmss'Z'", new InstantTemporalQuery());
 
     public static final CalendarDateFormat RELAXED_DATE_TIME_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd'T'HHmmss[X]", new InstantTemporalQuery(), new LocalDateTimeTemporalQuery());
+            "yyyyMMdd'T'HHmmss[X]", new OffsetDateTimeTemporalQuery(), new LocalDateTimeTemporalQuery());
 
     /**
      * A formatter capable of parsing to multiple temporal types based on the input string.
      */
     public static final CalendarDateFormat DEFAULT_PARSE_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd['T'HHmmss[X]]", new InstantTemporalQuery(), new LocalDateTimeTemporalQuery(),
+            "yyyyMMdd['T'HHmmss[X]]", new OffsetDateTimeTemporalQuery(), new LocalDateTimeTemporalQuery(),
             new LocalDateTemporalQuery());
 
     private final String pattern;

@@ -31,11 +31,13 @@
  */
 package net.fortuna.ical4j.model.component
 
+import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.ContentBuilder
+import net.fortuna.ical4j.model.Period
 import spock.lang.Specification
 
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.*
+import java.time.temporal.ChronoUnit
 
 class VEventSpec extends Specification {
 	
@@ -98,5 +100,33 @@ DTEND;TZID=America\/Sao_Paulo:20231115T093000\r
 SUMMARY:Metting\r
 END:VEVENT\r
 /
+	}
+
+	def 'test recurrence calculation'() {
+		given: 'a calendar definition'
+		def caldef = '''BEGIN:VCALENDAR\r
+PRODID:Test\r
+VERSION:2.0\r
+DESCRIPTION:\r
+BEGIN:VEVENT\r
+DTSTAMP:20230627T162831Z\r
+DTSTART:20240626T220000Z\r
+RRULE:FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=SU;BYHOUR=4;BYMINUTE=0;BYSECOND=0\r
+TZID:Europe/Brussels\r
+SUMMARY:\r
+UID:e413d780-14f6-11ee-b3ec-8db540d255bf\r
+END:VEVENT\r
+END:VCALENDAR\r\n'''
+
+		when: 'calculating recurrences for a given period'
+		def cal = new CalendarBuilder().build(new StringReader(caldef))
+		def event = cal.getComponent('VEVENT')
+		def period = new Period(OffsetDateTime.of(LocalDate.of(2024, 6, 28).atStartOfDay(),
+				ZoneOffset.UTC), ChronoUnit.MILLENNIA.duration)
+
+		def recurrenceSet = event.orElseThrow().calculateRecurrenceSet(period)
+
+		then: 'the result matches expected'
+		recurrenceSet as String == '[20240630T040000Z/PT0S, 20240901T040000Z/PT0S, 20240908T040000Z/PT0S, 20240915T040000Z/PT0S]'
 	}
 }
