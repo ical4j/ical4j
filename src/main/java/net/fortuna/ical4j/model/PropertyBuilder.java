@@ -91,6 +91,12 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public Property build() {
+
+        // remove TZID parameters for FORM #2 dates..
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            parameters.removeIf(p -> "UTC".equals(p.getValue()));
+        }
+
         Property property = null;
         String decodedValue;
         try {
@@ -109,15 +115,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
                         dateProp.setTimeZoneRegistry(timeZoneRegistry);
                         dateProp.setDefaultTimeZone(defaultTimeZone);
                         property.setValue(value);
-                    }
-
-                    // remove TZID parameters for FORM #2 dates..
-                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                        dateProp.getParameters(Parameter.TZID).forEach(p -> {
-                            if ("UTC".equals(p.getValue())) {
-                                dateProp.remove(p);
-                            }
-                        });
                     }
                 } else if (property instanceof DateListProperty) {
                     DateListProperty<?> dateListProperty = (DateListProperty<?>) property;
