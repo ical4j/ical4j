@@ -112,9 +112,12 @@ public class PropertyBuilder extends AbstractContentBuilder {
                     }
 
                     // remove TZID parameters for FORM #2 dates..
-                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
-                            && dateProp.isUtc()) {
-                        dateProp.removeAll(Parameter.TZID);
+                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                        dateProp.getParameters(Parameter.TZID).forEach(p -> {
+                            if ("UTC".equals(p.getValue())) {
+                                dateProp.remove(p);
+                            }
+                        });
                     }
                 } else if (property instanceof DateListProperty) {
                     DateListProperty<?> dateListProperty = (DateListProperty<?>) property;
