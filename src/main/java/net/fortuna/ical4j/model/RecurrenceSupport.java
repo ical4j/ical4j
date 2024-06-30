@@ -62,7 +62,7 @@ public interface RecurrenceSupport<T extends CalendarComponent> extends Property
      * @param period a range to calculate recurrences for
      * @return a list of periods
      */
-    <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<T> period);
+    <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period);
 
     default List<T> getOccurrences(Period<Temporal> period) throws ParseException, IOException, URISyntaxException {
         List<T> occurrences = new ArrayList<>();

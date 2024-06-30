@@ -725,7 +725,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param period the period of returned recurrence dates
      * @return a list of dates
      */
-    public final List<T> getDates(final T seed, final Period<T> period) {
+    public final List<T> getDates(final T seed, final Period<? extends Temporal> period) {
         return getDates(seed, period.getStart(), period.getEnd(), -1);
     }
 
@@ -741,7 +741,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param periodEnd   the end of the period
      * @return a list of dates represented by this recur instance
      */
-    public final List<T> getDates(final T seed, final T periodStart, final T periodEnd) {
+    public final List<T> getDates(final T seed, final Temporal periodStart, final Temporal periodEnd) {
         return getDates(seed, periodStart, periodEnd, -1);
     }
 
@@ -759,7 +759,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *                    worth extra may be returned. Less than 0 means no limit
      * @return a list of dates represented by this recur instance
      */
-    public final List<T> getDates(final T seed, final T periodStart, final T periodEnd, final int maxCount) {
+    public final List<T> getDates(final T seed, final Temporal periodStart, final Temporal periodEnd, final int maxCount) {
 
         final List<T> dates = getDatesAsStream(seed, periodStart, periodEnd, maxCount).collect(Collectors.toList());
 
@@ -772,7 +772,8 @@ public class Recur<T extends Temporal> implements Serializable {
         return dates;
     }
 
-    public final Stream<T> getDatesAsStream(final T seed, final T periodStart, final T periodEnd, int maxCount) {
+    public final Stream<T> getDatesAsStream(final T seed, final Temporal periodStart, final Temporal periodEnd,
+                                            int maxCount) {
         Spliterator<T> spliterator = new DateSpliterator(seed, periodStart, periodEnd, maxCount);
         return StreamSupport.stream(spliterator, false);
     }
@@ -1273,8 +1274,8 @@ public class Recur<T extends Temporal> implements Serializable {
     private class DateSpliterator extends Spliterators.AbstractSpliterator<T> {
 
         final T seed;
-        final T periodStart;
-        final T periodEnd;
+        final Temporal periodStart;
+        final Temporal periodEnd;
         final int maxCount;
 
         final List<T> dates;
@@ -1289,7 +1290,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
         int noCandidateIncrementCount = 0;
 
-        public DateSpliterator(T seed, T periodStart, T periodEnd, int maxCount) {
+        public DateSpliterator(T seed, Temporal periodStart, Temporal periodEnd, int maxCount) {
             super(maxCount, 0);
             this.seed = seed;
             this.periodStart = periodStart;

@@ -82,7 +82,7 @@ public class ZoneRulesBuilder {
             if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.getOffset())) {
                 DtStart<LocalDateTime> start = observance.getRequiredProperty("DTSTART");
                 observance.calculateRecurrenceSet(new Period<>(start.getDate(), LocalDateTime.now())).forEach( p -> {
-                    transitions.add(ZoneOffsetTransition.of(p.getStart(),
+                    transitions.add(ZoneOffsetTransition.of((LocalDateTime) p.getStart(),
                             offsetFrom.get().getOffset(), offsetTo.getOffset()));
                 });
             }

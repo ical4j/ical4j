@@ -304,19 +304,19 @@ public abstract class Component extends Content implements Serializable, Propert
      * @param period a range that defines the boundary for calculations
      * @return a list of periods representing component occurrences within the specified boundary
      */
-    public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<T> period) {
+    public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period) {
 
         final Set<Period<T>> recurrenceSet = new TreeSet<>();
 
         final Optional<DtStart<T>> start = getProperty(Property.DTSTART);
         Optional<DateProperty<T>> end = getProperty(Property.DTEND);
-        if (!end.isPresent()) {
+        if (end.isEmpty()) {
             end = getProperty(Property.DUE);
         }
         Optional<Duration> duration = getProperty(Property.DURATION);
 
         // if no start date specified return empty list..
-        if (!start.isPresent()) {
+        if (start.isEmpty()) {
             return Collections.emptySet();
         }
 
@@ -324,9 +324,9 @@ public abstract class Component extends Content implements Serializable, Propert
         // periods from the end date..
         TemporalAmount rDuration;
         // if no end or duration specified, end date equals start date..
-        if (!end.isPresent() && !duration.isPresent()) {
+        if (end.isEmpty() && duration.isEmpty()) {
             rDuration = java.time.Duration.ZERO;
-        } else if (!duration.isPresent()) {
+        } else if (duration.isEmpty()) {
             rDuration = TemporalAmountAdapter.between(start.get().getDate(), end.get().getDate()).getDuration();
         } else {
             rDuration = duration.get().getDuration();
@@ -347,7 +347,7 @@ public abstract class Component extends Content implements Serializable, Propert
 
         // allow for recurrence rules that start prior to the specified period
         // but still intersect with it..
-        final T startMinusDuration = (T) period.getStart().minus(rDuration);
+        final Temporal startMinusDuration = period.getStart().minus(rDuration);
 
         final T seed = start.get().getDate();
 
