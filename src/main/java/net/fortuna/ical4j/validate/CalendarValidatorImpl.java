@@ -22,7 +22,8 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
     private final PropertyContainerRuleSet<Calendar> rules;
 
-    public CalendarValidatorImpl(ValidationRule... rules) {
+    @SafeVarargs
+    public CalendarValidatorImpl(ValidationRule<Calendar>... rules) {
         this.rules = new PropertyContainerRuleSet<>(rules);
 
         Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class,
