@@ -5,8 +5,7 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.parameter.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.transform.component.Rfc5545ComponentRule;
-import net.fortuna.ical4j.transform.property.Rfc5545PropertyRule;
+import net.fortuna.ical4j.transform.compliance.*;
 import net.fortuna.ical4j.validate.CalendarValidatorFactory;
 
 import java.time.zone.ZoneRulesProvider;
@@ -43,10 +42,11 @@ module ical4j.core {
     exports net.fortuna.ical4j.agent;
     exports net.fortuna.ical4j.data;
     exports net.fortuna.ical4j.transform;
-    exports net.fortuna.ical4j.transform.property;
+//    exports net.fortuna.ical4j.transform.property;
     exports net.fortuna.ical4j.transform.component;
     exports net.fortuna.ical4j.transform.calendar;
     exports net.fortuna.ical4j.transform.recurrence;
+    exports net.fortuna.ical4j.transform.compliance;
 
     provides ZoneRulesProvider with DefaultZoneRulesProvider;
 
@@ -79,20 +79,20 @@ module ical4j.core {
             CalendarAddress.Factory, LocationType.Factory, ParticipantType.Factory, ResourceType.Factory,
             StructuredData.Factory, StyledDescription.Factory;
 
-    provides Rfc5545ComponentRule with net.fortuna.ical4j.transform.component.VAlarmRule,
-            net.fortuna.ical4j.transform.component.VEventRule;
+    provides Rfc5545ComponentRule with VAlarmRule,
+            VEventRule;
 
-    provides Rfc5545PropertyRule with net.fortuna.ical4j.transform.property.DatePropertyRule,
-            net.fortuna.ical4j.transform.property.DateListPropertyRule,
-            net.fortuna.ical4j.transform.property.TzIdRule,
-            net.fortuna.ical4j.transform.property.AttendeePropertyRule;
+    provides Rfc5545PropertyRule with DatePropertyRule,
+            DateListPropertyRule,
+            TzIdRule,
+            AttendeePropertyRule;
 
     provides CalendarValidatorFactory with net.fortuna.ical4j.validate.DefaultCalendarValidatorFactory;
 
     uses net.fortuna.ical4j.model.ComponentFactory;
     uses net.fortuna.ical4j.model.ParameterFactory;
     uses net.fortuna.ical4j.model.PropertyFactory;
-    uses net.fortuna.ical4j.transform.component.Rfc5545ComponentRule;
-    uses net.fortuna.ical4j.transform.property.Rfc5545PropertyRule;
+    uses Rfc5545ComponentRule;
+    uses Rfc5545PropertyRule;
     uses net.fortuna.ical4j.validate.CalendarValidatorFactory;
 }

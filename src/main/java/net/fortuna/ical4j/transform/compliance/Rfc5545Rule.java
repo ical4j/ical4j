@@ -31,15 +31,36 @@
  *
  */
 
-package net.fortuna.ical4j.transform.rfc5545
+package net.fortuna.ical4j.transform.compliance;
 
-import net.fortuna.ical4j.transform.property.TzHelper
-import spock.lang.Specification
+import java.util.function.UnaryOperator;
 
-class TzHelperTest extends Specification {
+/**
+ * Incarnation of a RFC5545 rule.
+ * 
+ * @author daniel grigore
+ * @author corneliu dobrota
+ *
+ * @param <T>
+ *            type of the element this rule can be applied to
+ */
+public interface Rfc5545Rule<T> extends UnaryOperator<T> {
 
-    def 'test retrieval of msTimezone alias'() {
-        expect:
-        TzHelper.getCorrectedTimeZoneIdFrom('W. Europe Standard Time') == 'Europe/Vienna'
+    /**
+     * Applies this rule to the specified element.
+     * 
+     * @param element
+     * @deprecated use {@link UnaryOperator#apply(Object)}
+     */
+    @Deprecated
+    default void applyTo(T element) {
+        apply(element);
     }
+
+    /**
+     * Gets the class of the elements this rule can be applied to.
+     * 
+     * @return the class of the elements this rule can be applied to
+     */
+    Class<T> getSupportedType();
 }
