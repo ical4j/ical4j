@@ -2141,6 +2141,10 @@ acceptedBreaks:
       old: "interface net.fortuna.ical4j.transform.property.Rfc5545PropertyRule<T\
         \ extends net.fortuna.ical4j.model.Property>"
       justification: "refactored_compliance_transformations"
+    - code: "java.method.addedToInterface"
+      new: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::removeIf(java.util.function.Predicate<T>)"
+      justification: "added_predicate_removal"
   "4.0.0-beta3":
     org.mnode.ical4j:ical4j:
     - code: "java.class.defaultSerializationChanged"
