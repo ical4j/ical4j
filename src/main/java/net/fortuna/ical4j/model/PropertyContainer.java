@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 public interface PropertyContainer extends PropertyListAccessor {
     BiFunction<PropertyContainer, Property, PropertyContainer> ADD_IF_NOT_PRESENT = (c, p) -> {
@@ -52,6 +53,16 @@ public interface PropertyContainer extends PropertyListAccessor {
      */
     default <T extends PropertyContainer> T removeAll(String... name) {
         setPropertyList((PropertyList) getPropertyList().removeAll(name));
+        return (T) this;
+    }
+
+    /**
+     * Remove all properties matching the specified filter.
+     * @param filter a filter predicate for matching
+     * @return a reference to the container to support method chaining
+     */
+    default <T extends PropertyContainer> T removeIf(Predicate<Property> filter) {
+        setPropertyList((PropertyList) getPropertyList().removeIf(filter));
         return (T) this;
     }
 

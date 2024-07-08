@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +25,8 @@ public interface ContentCollection<T extends Content> extends Serializable {
     ContentCollection<T> remove(T content);
 
     ContentCollection<T> removeAll(String... name);
+
+    ContentCollection<T> removeIf(Predicate<T> filter);
 
     ContentCollection<T> replace(T content);
 

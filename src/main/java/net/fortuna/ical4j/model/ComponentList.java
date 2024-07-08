@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -90,8 +91,13 @@ public class ComponentList<T extends Component> implements ContentCollection<T>,
     @Override
     public ContentCollection<T> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
+        return removeIf(c -> names.contains(c.getName()));
+    }
+
+    @Override
+    public ContentCollection<T> removeIf(Predicate<T> filter) {
         List<T> copy = new ArrayList<>(components);
-        if (copy.removeIf(c -> names.contains(c.getName()))) {
+        if (copy.removeIf(filter)) {
             return new ComponentList<>(copy);
         } else {
             return this;
