@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.validate;
 
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentContainer;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyContainer;
@@ -82,7 +81,7 @@ public interface Validator<T> extends Serializable {
      * @deprecated use {@link ComponentContainerRuleSet#apply(String, ComponentContainer)}
      */
     @Deprecated
-    default List<ValidationEntry> apply(ValidationRule<ComponentContainer<? extends Component>> rule, String context, ComponentContainer<?> target) {
+    default List<ValidationEntry> apply(ValidationRule rule, String context, ComponentContainer<?> target) {
         return new ComponentContainerRuleSet(rule).apply(context, target);
     }
 
@@ -95,7 +94,7 @@ public interface Validator<T> extends Serializable {
      * @deprecated use {@link PropertyContainerRuleSet#apply(String, PropertyContainer)}
      */
     @Deprecated
-    default List<ValidationEntry> apply(ValidationRule<?> rule, String context, PropertyContainer target) {
+    default List<ValidationEntry> apply(ValidationRule rule, String context, PropertyContainer target) {
         return new PropertyContainerRuleSet<>(rule).apply(context, target);
     }
 
@@ -107,7 +106,7 @@ public interface Validator<T> extends Serializable {
      * @deprecated use {@link PropertyRuleSet#apply(String, Property)}
      */
     @Deprecated
-    default List<ValidationEntry> apply(ValidationRule<?> rule, Property target) {
+    default List<ValidationEntry> apply(ValidationRule rule, Property target) {
         return new PropertyRuleSet<>(rule).apply(target.getName(), target);
     }
 }
