@@ -40,7 +40,7 @@ public class FilterExpressionParser {
     };
 
     private static final Terminals TERMS = Terminals.operators(OPERATORS)
-            .words(Scanners.IDENTIFIER).caseInsensitiveKeywords(Arrays.asList(KEYWORDS))
+            .words(Scanners.IDENTIFIER).caseInsensitiveKeywords(List.of(KEYWORDS))
             .keywords(FUNCTION_NAMES).build();
 
     private static final Parser<?> TOKENIZER = Parsers.or(
