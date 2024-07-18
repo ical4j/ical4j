@@ -34,11 +34,12 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.UidGenerator;
 
 import java.net.URI;
 import java.time.temporal.Temporal;
+import java.util.Comparator;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 /**
  * A collection of functions used to modify date-time properties in a target property container.
@@ -46,8 +47,16 @@ import java.util.function.BiFunction;
  */
 public interface RelationshipPropertyModifiers {
 
-    BiFunction<PropertyContainer, URI, PropertyContainer> ATTENDEE = (c, p) -> {
-        if (p != null) c.add(new Attendee(p)); return c;
+    /**
+     * Check for attendee with same value and replace if exists, otherwise add.
+     */
+    BiFunction<PropertyContainer, Attendee, PropertyContainer> ATTENDEE = (c, p) -> {
+        if (p != null) {
+            c.removeIf(p1 -> Comparator.comparing(Property::getName).thenComparing(Property::getValue)
+                    .compare(p1, p) == 0);
+            c.add(p);
+        }
+        return c;
     };
 
     BiFunction<PropertyContainer, String, PropertyContainer> CONTACT = (c, p) -> {
@@ -82,8 +91,8 @@ public interface RelationshipPropertyModifiers {
         if (p != null) c.replace(p); return c;
     };
 
-    BiFunction<PropertyContainer, UidGenerator, PropertyContainer> UIDGEN = (c, p) -> {
-        if (p != null) c.replace(c.getProperty(Property.UID).orElse(p.generateUid())); return c;
+    BiFunction<PropertyContainer, Supplier<Uid>, PropertyContainer> UIDGEN = (c, p) -> {
+        if (p != null) c.replace(c.getProperty(Property.UID).orElse(p.get())); return c;
     };
 
     BiFunction<PropertyContainer, Link, PropertyContainer> LINK = (c, p) -> {
