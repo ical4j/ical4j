@@ -32,8 +32,10 @@
 package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.component.ComponentRefreshTransformer;
-import net.fortuna.ical4j.util.UidGenerator;
+
+import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REFRESH;
 
@@ -49,7 +51,7 @@ public class RefreshTransformer extends AbstractMethodTransformer {
 
     private final ComponentRefreshTransformer componentMethodTransformer;
 
-    public RefreshTransformer(UidGenerator uidGenerator) {
+    public RefreshTransformer(Supplier<Uid> uidGenerator) {
         super(REFRESH, uidGenerator, true, false);
         this.componentMethodTransformer = new ComponentRefreshTransformer();
     }

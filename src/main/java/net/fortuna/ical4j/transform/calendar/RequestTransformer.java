@@ -34,7 +34,9 @@ package net.fortuna.ical4j.transform.calendar;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.model.property.Uid;
+
+import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
@@ -56,7 +58,7 @@ public class RequestTransformer extends AbstractMethodTransformer {
      *
      * @param uidGenerator
      */
-    public RequestTransformer(UidGenerator uidGenerator) {
+    public RequestTransformer(Supplier<Uid> uidGenerator) {
         super(REQUEST, uidGenerator, true, false);
         this.organizer = null;
     }
@@ -67,7 +69,7 @@ public class RequestTransformer extends AbstractMethodTransformer {
      * @param organizer
      * @param uidGenerator
      */
-    public RequestTransformer(Organizer organizer, UidGenerator uidGenerator) {
+    public RequestTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
         super(REQUEST, uidGenerator, true, true);
         this.organizer = organizer;
     }

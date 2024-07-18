@@ -34,9 +34,10 @@ package net.fortuna.ical4j.transform.calendar;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.model.property.Uid;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
@@ -51,7 +52,7 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUES
  */
 public class CounterTransformer extends AbstractMethodTransformer {
 
-    public CounterTransformer(UidGenerator uidGenerator) {
+    public CounterTransformer(Supplier<Uid> uidGenerator) {
         super(COUNTER, uidGenerator, true, false);
     }
 

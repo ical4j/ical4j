@@ -36,10 +36,11 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.component.ComponentDeclineCounterTransformer;
-import net.fortuna.ical4j.util.UidGenerator;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER;
@@ -59,7 +60,7 @@ public class DeclineCounterTransformer extends AbstractMethodTransformer {
 
     private final ComponentDeclineCounterTransformer componentMethodTransformer;
 
-    public DeclineCounterTransformer(Organizer organizer, UidGenerator uidGenerator) {
+    public DeclineCounterTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
         super(DECLINE_COUNTER, uidGenerator, true, false);
         this.organizer = organizer;
         this.componentMethodTransformer = new ComponentDeclineCounterTransformer();
