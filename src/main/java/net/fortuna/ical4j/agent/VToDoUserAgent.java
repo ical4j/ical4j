@@ -4,8 +4,10 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.calendar.RequestTransformer;
-import net.fortuna.ical4j.util.UidGenerator;
+
+import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
@@ -13,7 +15,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
     private final RequestTransformer delegateTransformer;
 
-    public VToDoUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
+    public VToDoUserAgent(ProdId prodId, Organizer organizer, Supplier<Uid> uidGenerator) {
         super(prodId, organizer, uidGenerator);
         delegateTransformer = new RequestTransformer(uidGenerator);
     }
