@@ -31,47 +31,31 @@
  *
  */
 
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.transform.compliance;
 
-import net.fortuna.ical4j.model.property.Created;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.LastModified;
-import net.fortuna.ical4j.model.property.Sequence;
-
-import java.time.Instant;
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.UnaryOperator;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.property.DateProperty;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * 
+ * @author daniel grigore
+ * @author corneliu dobrota
  */
-public interface ChangeManagementPropertyModifiers {
+public class DatePropertyRule implements Rfc5545PropertyRule<DateProperty> {
 
-    BiFunction<PropertyContainer, Instant, PropertyContainer> CREATED = (c, p) -> {
-        if (p != null) c.replace(new Created(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Instant, PropertyContainer> DTSTAMP = (c, p) -> {
-        if (p != null) c.replace(new DtStamp(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Instant, PropertyContainer> LAST_MODIFIED = (c, p) -> {
-        if (p != null) c.replace(new LastModified(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Integer, PropertyContainer> SEQUENCE = (c, p) -> {
-        if (p != null) c.replace(new Sequence(p)); return c;
-    };
-
-    UnaryOperator<PropertyContainer> SEQUENCE_INCREMENT = (p) -> {
-        Optional<Sequence> sequence = p.getProperty(Property.SEQUENCE);
-        if (sequence.isPresent()) {
-            SEQUENCE.apply(p, sequence.get().getSequenceNo() + 1);
-        } else {
-            SEQUENCE.apply(p, 0);
+    @Override
+    public DateProperty apply(DateProperty element) {
+        TzHelper.correctTzParameterFrom(element);
+        if (!element.isUtc() || element.getParameter(Parameter.TZID).isEmpty()) {
+            return element;
         }
-        return p;
-    };
+        element.getParameters().removeIf(p -> p.getName().equals(Parameter.TZID));
+        return element;
+    }
+
+    @Override
+    public Class<DateProperty> getSupportedType() {
+        return DateProperty.class;
+    }
+
 }

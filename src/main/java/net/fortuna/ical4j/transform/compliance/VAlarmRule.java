@@ -31,47 +31,37 @@
  *
  */
 
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.transform.compliance;
 
-import net.fortuna.ical4j.model.property.Created;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.LastModified;
-import net.fortuna.ical4j.model.property.Sequence;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.component.VAlarm;
+import net.fortuna.ical4j.model.property.Action;
+import net.fortuna.ical4j.model.property.Description;
 
-import java.time.Instant;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.UnaryOperator;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * 
+ * 
+ * @author daniel grigore
+ * @author corneliu dobrota
  */
-public interface ChangeManagementPropertyModifiers {
+public class VAlarmRule implements Rfc5545ComponentRule<VAlarm> {
 
-    BiFunction<PropertyContainer, Instant, PropertyContainer> CREATED = (c, p) -> {
-        if (p != null) c.replace(new Created(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Instant, PropertyContainer> DTSTAMP = (c, p) -> {
-        if (p != null) c.replace(new DtStamp(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Instant, PropertyContainer> LAST_MODIFIED = (c, p) -> {
-        if (p != null) c.replace(new LastModified(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Integer, PropertyContainer> SEQUENCE = (c, p) -> {
-        if (p != null) c.replace(new Sequence(p)); return c;
-    };
-
-    UnaryOperator<PropertyContainer> SEQUENCE_INCREMENT = (p) -> {
-        Optional<Sequence> sequence = p.getProperty(Property.SEQUENCE);
-        if (sequence.isPresent()) {
-            SEQUENCE.apply(p, sequence.get().getSequenceNo() + 1);
-        } else {
-            SEQUENCE.apply(p, 0);
+    @Override
+    public VAlarm apply(VAlarm element) {
+        Optional<Action> action = element.getProperty(Property.ACTION);
+        Optional<Description> description = element.getProperty(Property.DESCRIPTION);
+        if (!action.isPresent() || !"DISPLAY".equals(action.get().getValue()) || description.isPresent()
+                && description.get().getValue() != null) {
+            return element;
         }
-        return p;
-    };
+        element.add(new Description("display"));
+        return element;
+    }
+
+    @Override
+    public Class<VAlarm> getSupportedType() {
+        return VAlarm.class;
+    }
 }

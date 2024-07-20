@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.UtcProperty;
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.codec.DecoderException;
 
 import java.time.ZoneId;
@@ -90,6 +91,12 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public Property build() {
+
+        // remove TZID parameters for FORM #2 dates..
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            parameters.removeIf(p -> "UTC".equals(p.getValue()));
+        }
+
         Property property = null;
         String decodedValue;
         try {

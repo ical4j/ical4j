@@ -9,7 +9,10 @@ import java.util.Optional;
 
 /**
  * Created by fortuna on 19/07/2017.
+ * @deprecated use {@link net.fortuna.ical4j.model.ChangeManagementPropertyModifiers#SEQUENCE_INCREMENT}
+ * instead.
  */
+@Deprecated
 public class SequenceIncrement implements Transformer<CalendarComponent> {
 
     @Override

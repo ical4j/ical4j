@@ -231,8 +231,8 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
 
         // add recurrence..
         Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.YEARLY).count(20)
-                .monthList(new MonthList("1")).monthDayList(new NumberList("26"))
-                .hourList(new NumberList("9")).minuteList(new NumberList("30")).build();
+                .monthList(new MonthList("1")).monthDayList(26)
+                .hourList(9).minuteList(30).build();
         event.add(new RRule<>(recur));
 
         if (log.isDebugEnabled()) {

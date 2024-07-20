@@ -31,47 +31,47 @@
  *
  */
 
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.transform.compliance;
 
-import net.fortuna.ical4j.model.property.Created;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.LastModified;
-import net.fortuna.ical4j.model.property.Sequence;
+import net.fortuna.ical4j.model.property.Attendee;
+import org.apache.commons.lang3.StringUtils;
 
-import java.time.Instant;
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.UnaryOperator;
+import java.net.URI;
 
-/**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
- */
-public interface ChangeManagementPropertyModifiers {
+public class AttendeePropertyRule implements Rfc5545PropertyRule<Attendee> {
 
-    BiFunction<PropertyContainer, Instant, PropertyContainer> CREATED = (c, p) -> {
-        if (p != null) c.replace(new Created(p)); return c;
-    };
+    private static final String MAILTO = "mailto";
+    private static final String APOSTROPHE = "'";
+    private static final int MIN_LENGTH = 3;
 
-    BiFunction<PropertyContainer, Instant, PropertyContainer> DTSTAMP = (c, p) -> {
-        if (p != null) c.replace(new DtStamp(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Instant, PropertyContainer> LAST_MODIFIED = (c, p) -> {
-        if (p != null) c.replace(new LastModified(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Integer, PropertyContainer> SEQUENCE = (c, p) -> {
-        if (p != null) c.replace(new Sequence(p)); return c;
-    };
-
-    UnaryOperator<PropertyContainer> SEQUENCE_INCREMENT = (p) -> {
-        Optional<Sequence> sequence = p.getProperty(Property.SEQUENCE);
-        if (sequence.isPresent()) {
-            SEQUENCE.apply(p, sequence.get().getSequenceNo() + 1);
-        } else {
-            SEQUENCE.apply(p, 0);
+    @Override
+    public Attendee apply(Attendee element) {
+        if (element == null) {
+            return element;
         }
-        return p;
-    };
+        URI calAddress = element.getCalAddress();
+        if (calAddress == null) {
+            return element;
+        }
+        String scheme = calAddress.getScheme();
+        if (scheme != null && StringUtils.startsWithIgnoreCase(scheme, MAILTO)) {
+            String part = calAddress.getSchemeSpecificPart();
+            if (part != null && part.length() >= MIN_LENGTH && StringUtils.startsWith(part, APOSTROPHE)
+                    && StringUtils.endsWith(part, APOSTROPHE)) {
+                String newPart = part.substring(1, part.length() - 1);
+                safelySetNewValue(element, newPart);
+            }
+        }
+        return element;
+    }
+
+    private static void safelySetNewValue(Attendee element, String newPart) {
+        element.setValue(MAILTO + ":" + newPart);
+    }
+
+    @Override
+    public Class<Attendee> getSupportedType() {
+        return Attendee.class;
+    }
+
 }

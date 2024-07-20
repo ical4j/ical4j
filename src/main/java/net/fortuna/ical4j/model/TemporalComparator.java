@@ -50,15 +50,28 @@ public class TemporalComparator implements Comparator<Temporal> {
             Instant i1 = (Instant) o1;
             if (o2 instanceof Instant) {
                 return compare(i1, (Instant) o2);
+            } else if (o2 instanceof OffsetDateTime) {
+                return compare(i1, (OffsetDateTime) o2);
             } else if (o2 instanceof LocalDateTime) {
                 return compare(i1, (LocalDateTime) o2);
             } else if (o2 instanceof LocalDate) {
                 return compare(i1, (LocalDate) o2);
             }
+        } else if (o1 instanceof OffsetDateTime) {
+            OffsetDateTime l1 = (OffsetDateTime) o1;
+            if (o2 instanceof Instant) {
+                return compare(l1, (Instant) o2);
+            } else if (o2 instanceof LocalDateTime) {
+                return compare(l1, (LocalDateTime) o2);
+            } else if (o2 instanceof LocalDate) {
+                return compare(l1, (LocalDate) o2);
+            }
         } else if (o1 instanceof LocalDateTime) {
             LocalDateTime l1 = (LocalDateTime) o1;
             if (o2 instanceof Instant) {
                 return compare(l1, (Instant) o2);
+            } else if (o2 instanceof OffsetDateTime) {
+                return compare(l1, (OffsetDateTime) o2);
             } else if (o2 instanceof LocalDateTime) {
                 return compare(l1, (LocalDateTime) o2);
             } else if (o2 instanceof LocalDate) {
@@ -68,6 +81,8 @@ public class TemporalComparator implements Comparator<Temporal> {
             LocalDate l1 = (LocalDate) o1;
             if (o2 instanceof Instant) {
                 return compare(l1, (Instant) o2);
+            } else if (o2 instanceof OffsetDateTime) {
+                return compare(l1, (OffsetDateTime) o2);
             } else if (o2 instanceof LocalDateTime) {
                 return compare(l1, (LocalDateTime) o2);
             } else if (o2 instanceof LocalDate) {
@@ -80,6 +95,10 @@ public class TemporalComparator implements Comparator<Temporal> {
     }
 
     public int compare(Instant o1, Instant o2) {
+        return o1.compareTo(o2);
+    }
+
+    public int compare(OffsetDateTime o1, OffsetDateTime o2) {
         return o1.compareTo(o2);
     }
 
@@ -99,11 +118,35 @@ public class TemporalComparator implements Comparator<Temporal> {
         return ZonedDateTime.of(o1, defaultZoneId).toInstant().compareTo(o2);
     }
 
+    public int compare(Instant o1, OffsetDateTime o2) {
+        return o1.compareTo(o2.toInstant());
+    }
+
+    public int compare(OffsetDateTime o1, Instant o2) {
+        return o1.toInstant().compareTo(o2);
+    }
+
+    public int compare(OffsetDateTime o1, LocalDateTime o2) {
+        return o1.compareTo(OffsetDateTime.of(o2, defaultZoneId.getRules().getOffset(o2)));
+    }
+
+    public int compare(LocalDateTime o1, OffsetDateTime o2) {
+        return OffsetDateTime.of(o1, defaultZoneId.getRules().getOffset(o1)).compareTo(o2);
+    }
+
     public int compare(Instant o1, LocalDate o2) {
         return compare(o1, o2.atStartOfDay());
     }
 
     public int compare(LocalDate o1, Instant o2) {
+        return compare(o1.atStartOfDay(), o2);
+    }
+
+    public int compare(OffsetDateTime o1, LocalDate o2) {
+        return compare(o1, o2.atStartOfDay());
+    }
+
+    public int compare(LocalDate o1, OffsetDateTime o2) {
         return compare(o1.atStartOfDay(), o2);
     }
 

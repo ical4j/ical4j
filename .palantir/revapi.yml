@@ -2101,6 +2101,50 @@ acceptedBreaks:
     - code: "java.method.removed"
       old: "method boolean net.fortuna.ical4j.data.ContentHandlerContext::isSupressInvalidProperties()"
       justification: "fixed_spelling"
+  "4.0.0":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.RuleManager"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.calendar.Rfc5545Transformer"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.component.VAlarmRule"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.component.VEventRule"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.property.AttendeePropertyRule"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.property.DateListPropertyRule"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.property.DatePropertyRule"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.property.TzHelper"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "class net.fortuna.ical4j.transform.property.TzIdRule"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "interface net.fortuna.ical4j.transform.Rfc5545Rule<T extends java.lang.Object>"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "interface net.fortuna.ical4j.transform.component.Rfc5545ComponentRule<T\
+        \ extends net.fortuna.ical4j.model.Component>"
+      justification: "refactored_compliance_transformations"
+    - code: "java.class.removed"
+      old: "interface net.fortuna.ical4j.transform.property.Rfc5545PropertyRule<T\
+        \ extends net.fortuna.ical4j.model.Property>"
+      justification: "refactored_compliance_transformations"
+    - code: "java.method.addedToInterface"
+      new: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::removeIf(java.util.function.Predicate<T>)"
+      justification: "added_predicate_removal"
   "4.0.0-beta3":
     org.mnode.ical4j:ical4j:
     - code: "java.class.defaultSerializationChanged"
@@ -3357,3 +3401,94 @@ acceptedBreaks:
       new: "method java.lang.Object net.fortuna.ical4j.model.property.XPropertyFactory::newInstance(java.lang.Object,\
         \ java.lang.Object)"
       justification: "improved_xproperty_support"
+  "4.0.1":
+    org.mnode.ical4j:ical4j:
+    - code: "java.class.noLongerInheritsFromClass"
+      old: "class net.fortuna.ical4j.model.component.VAlarm"
+      new: "class net.fortuna.ical4j.model.component.VAlarm"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.agent.AbstractUserAgent<T extends net.fortuna.ical4j.model.component.CalendarComponent>::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.agent.AbstractUserAgent<T extends net.fortuna.ical4j.model.component.CalendarComponent>::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.agent.VEventUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.agent.VEventUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.agent.VFreeBusyUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.agent.VFreeBusyUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.agent.VJournalUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.agent.VJournalUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.agent.VToDoUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.agent.VToDoUserAgent::<init>(net.fortuna.ical4j.model.property.ProdId,\
+        \ net.fortuna.ical4j.model.property.Organizer, ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.AddTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.AddTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.CancelTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.CancelTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.CounterTransformer::<init>(===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.CounterTransformer::<init>(===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.DeclineCounterTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.PublishTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===net.fortuna.ical4j.util.UidGenerator===, boolean)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.PublishTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===,\
+        \ boolean)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.RefreshTransformer::<init>(===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.RefreshTransformer::<init>(===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.ReplyTransformer::<init>(===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.ReplyTransformer::<init>(===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.ReplyTransformer::<init>(===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.ReplyTransformer::<init>(===net.fortuna.ical4j.model.property.Attendee===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.RequestTransformer::<init>(===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.RequestTransformer::<init>(===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.transform.calendar.RequestTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===net.fortuna.ical4j.util.UidGenerator===)"
+      new: "parameter void net.fortuna.ical4j.transform.calendar.RequestTransformer::<init>(net.fortuna.ical4j.model.property.Organizer,\
+        \ ===java.util.function.Supplier<net.fortuna.ical4j.model.property.Uid>===)"
+      justification: "support_any_uid_supplier_impl"
+    - code: "java.method.removed"
+      old: "method <C extends net.fortuna.ical4j.model.Component> java.util.List<C>\
+        \ net.fortuna.ical4j.model.component.Participant::getComponents()"
+      justification: "support_any_uid_supplier_impl"

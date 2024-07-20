@@ -224,7 +224,11 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
                 return ((LocalDate) temporal).atStartOfDay().atZone(zoneId);
             }
         } else if (isUtc(temporal)) {
-            return ((Instant) temporal).atZone(zoneId);
+            if (temporal instanceof Instant) {
+                return ((Instant) temporal).atZone(zoneId);
+            } else {
+                return ((OffsetDateTime) temporal).atZoneSameInstant(zoneId);
+            }
         } else {
             return ZonedDateTime.from(temporal);
         }
@@ -317,11 +321,18 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     /**
      * Indicates whether the temporal type represents a UTC date/time value.
+     *
+     * A temporal is defined as UTC if it matches any of the following:
+     *  - does not have associated zone information (e.g. Instant or OffsetDateTime)
+     *  - where offset is supported the offset must be zero
+     *
      * @return true if the temporal type is in UTC time, otherwise false
      */
     public static boolean isUtc(Temporal date) {
         return ChronoField.INSTANT_SECONDS.isSupportedBy(date) &&
-                !ChronoField.OFFSET_SECONDS.isSupportedBy(date);
+                (!ChronoField.OFFSET_SECONDS.isSupportedBy(date) ||
+                        date.get(ChronoField.OFFSET_SECONDS) == 0 &&
+                                !ChronoZonedDateTime.class.isAssignableFrom(date.getClass()));
     }
 
     /**

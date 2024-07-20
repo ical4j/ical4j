@@ -22,8 +22,8 @@ class ParticipantFactoryTest extends Specification {
 
         then: 'result is as expected'
         participant.getProperties('uid')[0].value == '1'
-        participant.components.size() == 2
-        participant.components[0].propertyList.uid[0].value == '11'
-        participant.components[1].propertyList.uid[0].value == '12'
+        participant.getComponents().size() == 2
+        participant.getComponents()[0].propertyList.uid[0].value == '11'
+        participant.getComponents()[1].propertyList.uid[0].value == '12'
     }
 }

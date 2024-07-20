@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -90,7 +89,7 @@ public class Filter<T> {
      * @see Filter#MATCH_ANY
      */
     public Filter(Predicate<T>[] rules, final int type) {
-        this.rules = Arrays.asList(rules);
+        this.rules = List.of(rules);
         this.type = type;
     }
 
@@ -158,7 +157,7 @@ public class Filter<T> {
      */
     @SuppressWarnings("unchecked")
     public final T[] filter(final T[] objects) {
-        final Collection<T> filtered = filter(Arrays.asList(objects));
+        final Collection<T> filtered = filter(List.of(objects));
         try {
             return filtered.toArray((T[]) Array.newInstance(objects
                     .getClass(), filtered.size()));
@@ -181,6 +180,6 @@ public class Filter<T> {
      * @param rules The rules to set.
      */
     public final void setRules(final Predicate<T>[] rules) {
-        this.rules = Arrays.asList(rules);
+        this.rules = List.of(rules);
     }
 }

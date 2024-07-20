@@ -31,47 +31,27 @@
  *
  */
 
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.transform.compliance;
 
-import net.fortuna.ical4j.model.property.Created;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.LastModified;
-import net.fortuna.ical4j.model.property.Sequence;
-
-import java.time.Instant;
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.UnaryOperator;
+import net.fortuna.ical4j.model.property.DateListProperty;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * 
+ * @author corneliu dobrota
+ * @author daniel grigore
+ *
  */
-public interface ChangeManagementPropertyModifiers {
+public class DateListPropertyRule implements Rfc5545PropertyRule<DateListProperty> {
 
-    BiFunction<PropertyContainer, Instant, PropertyContainer> CREATED = (c, p) -> {
-        if (p != null) c.replace(new Created(p)); return c;
-    };
+    @Override
+    public DateListProperty apply(DateListProperty element) {
+        TzHelper.correctTzParameterFrom(element);
+        return element;
+    }
 
-    BiFunction<PropertyContainer, Instant, PropertyContainer> DTSTAMP = (c, p) -> {
-        if (p != null) c.replace(new DtStamp(p)); return c;
-    };
+    @Override
+    public Class<DateListProperty> getSupportedType() {
+        return DateListProperty.class;
+    }
 
-    BiFunction<PropertyContainer, Instant, PropertyContainer> LAST_MODIFIED = (c, p) -> {
-        if (p != null) c.replace(new LastModified(p)); return c;
-    };
-
-    BiFunction<PropertyContainer, Integer, PropertyContainer> SEQUENCE = (c, p) -> {
-        if (p != null) c.replace(new Sequence(p)); return c;
-    };
-
-    UnaryOperator<PropertyContainer> SEQUENCE_INCREMENT = (p) -> {
-        Optional<Sequence> sequence = p.getProperty(Property.SEQUENCE);
-        if (sequence.isPresent()) {
-            SEQUENCE.apply(p, sequence.get().getSequenceNo() + 1);
-        } else {
-            SEQUENCE.apply(p, 0);
-        }
-        return p;
-    };
 }

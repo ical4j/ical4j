@@ -6,14 +6,15 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.calendar.*;
 import net.fortuna.ical4j.util.Calendars;
-import net.fortuna.ical4j.util.UidGenerator;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -28,7 +29,7 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     private final Map<Method, UnaryOperator<Calendar>> methodTransformers;
 
-    public AbstractUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
+    public AbstractUserAgent(ProdId prodId, Organizer organizer, Supplier<Uid> uidGenerator) {
         this.prodId = prodId;
 
         methodTransformers = new HashMap<>();
@@ -44,7 +45,7 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     @SafeVarargs
     protected final Calendar wrap(Method method, T... component) {
-        PropertyList props = new PropertyList(Arrays.asList(prodId, VERSION_2_0));
+        PropertyList props = new PropertyList(List.of(prodId, VERSION_2_0));
         Calendar calendar = Calendars.wrap(props, component);
         return transform(method, calendar);
     }

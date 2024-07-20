@@ -193,7 +193,8 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Ben Fortuna
  */
-public class VAlarm extends CalendarComponent implements ComponentContainer<Component>, DescriptivePropertyAccessor {
+public class VAlarm extends Component implements ComponentContainer<Component>, DescriptivePropertyAccessor,
+    LocationsAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
