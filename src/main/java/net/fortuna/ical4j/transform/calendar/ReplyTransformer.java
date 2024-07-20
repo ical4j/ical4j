@@ -33,13 +33,12 @@ package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Uid;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
-import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ATTENDEE;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REPLY;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
 
@@ -53,11 +52,8 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUES
  */
 public class ReplyTransformer extends AbstractMethodTransformer {
 
-    private final Attendee attendee;
-
-    public ReplyTransformer(Attendee attendee) {
-        super(REPLY, null, true, false);
-        this.attendee = attendee;
+    public ReplyTransformer(Supplier<Uid> uidGenerator) {
+        super(REPLY, uidGenerator, true, false);
     }
 
     @Override
@@ -65,9 +61,6 @@ public class ReplyTransformer extends AbstractMethodTransformer {
         Optional<Method> method = object.getProperty(Property.METHOD);
         if (method.isEmpty() || !REQUEST.equals(method.get())) {
             throw new IllegalArgumentException("Expecting REQUEST method in source");
-        }
-        for (CalendarComponent component : object.getComponents()) {
-            component.with(ATTENDEE, attendee);
         }
         return super.apply(object);
     }

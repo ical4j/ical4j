@@ -37,7 +37,7 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         methodTransformers.put(REQUEST, new RequestTransformer(organizer, uidGenerator));
         methodTransformers.put(ADD, new AddTransformer(organizer, uidGenerator));
         methodTransformers.put(CANCEL, new CancelTransformer(organizer, uidGenerator));
-//        methodTransformers.put(REPLY, new ReplyTransformer(uidGenerator));
+        methodTransformers.put(REPLY, new ReplyTransformer(uidGenerator));
         methodTransformers.put(REFRESH, new RefreshTransformer(uidGenerator));
         methodTransformers.put(COUNTER, new CounterTransformer(uidGenerator));
         methodTransformers.put(DECLINE_COUNTER, new DeclineCounterTransformer(organizer, uidGenerator));
