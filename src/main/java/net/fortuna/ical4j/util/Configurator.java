@@ -51,11 +51,14 @@ import java.util.Properties;
  */
 public final class Configurator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Configurator.class);
+    private static final Logger LOG;
 
-    private static final Properties CONFIG = new Properties();
+    private static final Properties CONFIG;
 
     static {
+        CONFIG = new Properties();
+        LOG = LoggerFactory.getLogger(Configurator.class);
+
         try (InputStream in = ResourceLoader.getResourceAsStream("ical4j.properties")) {
             CONFIG.load(in);
         } catch (IOException | NullPointerException e) {
