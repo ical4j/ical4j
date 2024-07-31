@@ -72,8 +72,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     static {
         // load default tz aliases..
         for (String aliasResource : Arrays.asList("net/fortuna/ical4j/model/tz.alias",
-                "net/fortuna/ical4j/transform/rfc5545/msTimezoneNames",
-                "net/fortuna/ical4j/transform/rfc5545/msTimezoneIds")) {
+                "net/fortuna/ical4j/transform/compliance/msTimezoneNames",
+                "net/fortuna/ical4j/transform/compliance/msTimezoneIds")) {
 
             try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream(aliasResource)) {
                 ALIASES.load(aliasInputStream);
