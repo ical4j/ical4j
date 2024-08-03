@@ -35,7 +35,6 @@ package net.fortuna.ical4j.transform.compliance;
 
 import net.fortuna.ical4j.model.ChangeManagementPropertyModifiers;
 import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
@@ -58,9 +57,9 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
 
     @Override
     public VEvent apply(VEvent element) {
-        Optional<DtStart<?>> start = element.getProperty(Property.DTSTART);
-        Optional<DtEnd<Temporal>> end = element.getProperty(Property.DTEND);
-        Optional<Duration> duration = element.getProperty(Property.DURATION);
+        Optional<DtStart<Temporal>> start = element.getDateTimeStart();
+        Optional<DtEnd<Temporal>> end = element.getDateTimeEnd();
+        Optional<Duration> duration = element.getDuration();
         
         /*
          *     ; Either 'dtend' or 'duration' MAY appear in

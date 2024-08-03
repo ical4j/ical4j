@@ -321,7 +321,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         // ensure the request is valid..
         request.validate();
 
-        final Optional<Duration> duration = request.getProperty(DURATION);
+        final Optional<Duration> duration = request.getDuration();
 
         // 4.8.2.4 Date/Time Start:
         //
@@ -487,8 +487,8 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         ValidationResult result = ComponentValidator.VFREEBUSY.validate(this);
 
-        final Optional<DtStart<?>> dtStart = getProperty(Property.DTSTART);
-        final Optional<DtEnd<?>> dtEnd = getProperty(Property.DTEND);
+        final Optional<DtStart<Temporal>> dtStart = getDateTimeStart();
+        final Optional<DtEnd<Temporal>> dtEnd = getDateTimeEnd();
         if (dtStart.isPresent() && dtEnd.isPresent()
                 && TemporalAdapter.isBefore(dtStart.get().getDate(), dtEnd.get().getDate())) {
             result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND

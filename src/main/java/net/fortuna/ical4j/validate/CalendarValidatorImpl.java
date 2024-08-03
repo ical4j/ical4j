@@ -37,7 +37,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
-            Optional<Version> version = target.getProperty(Property.VERSION);
+            Optional<Version> version = target.getVersion();
             if (version.isPresent() && !VERSION_2_0.equals(version.get())) {
                 result.getEntries().add(new ValidationEntry("Unsupported Version: " + version.get().getValue(),
                         ValidationEntry.Severity.ERROR, Calendar.VCALENDAR));
@@ -61,7 +61,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         }
 
         // validate method..
-        final Optional<Method> method = target.getProperty(Property.METHOD);
+        final Optional<Method> method = target.getMethod();
         if (method.isPresent()) {
             result = result.merge(new ITIPValidator().validate(target));
 

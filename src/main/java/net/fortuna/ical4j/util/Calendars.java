@@ -145,7 +145,7 @@ public final class Calendars {
                 continue;
             }
             
-            final Optional<Uid> uid = c.getProperty(Property.UID);
+            final Optional<Uid> uid = c.getUid();
             if (uid.isPresent()) {
                 Calendar uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
@@ -205,7 +205,7 @@ public final class Calendars {
     public static String getContentType(Calendar calendar, Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
         
-        final Optional<Method> method = calendar.getProperty(Property.METHOD);
+        final Optional<Method> method = calendar.getMethod();
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());

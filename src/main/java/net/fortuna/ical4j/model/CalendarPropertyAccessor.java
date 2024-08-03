@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023, Ben Fortuna
+ *  Copyright (c) 2024, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,27 +31,46 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.component.VEvent
-import spock.lang.Specification
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
 
-class RecurrenceSupportTest extends Specification {
+import java.util.Optional;
 
-    def 'test get occurrences for recurring event'() {
-        given: 'a recurring event'
-        VEvent event = new ContentBuilder().vevent {
-            summary('a recurring event')
-            dtstart('20230101T010000')
-            dtend('20230101T020000')
-            rrule('FREQ=WEEKLY;INTERVAL=2;BYDAY=SU')
-        }
+public interface CalendarPropertyAccessor extends PropertyContainer {
 
-        expect: 'calculated occurrences match expected'
-        event.getOccurrences(Period.parse(period)).collect { it.getRecurrenceId().get().value} == expectedOccurrences
+    /**
+     * Returns the mandatory prodid property.
+     * @return the PRODID property, or null if property doesn't exist
+     */
+    default Optional<ProdId> getProductId() {
+        return getProperty(Property.PRODID);
+    }
 
-        where:
-        period                  | expectedOccurrences
-        '20230101T010000/P3W'   | ['20230101T010000', '20230115T010000']
+    /**
+     * Returns the mandatory version property.
+     * @return the VERSION property, or null if property doesn't exist
+     */
+    default Optional<Version> getVersion() {
+        return getProperty(Property.VERSION);
+    }
+
+    /**
+     * Returns the optional calscale property.
+     * @return the CALSCALE property, or null if property doesn't exist
+     */
+    default Optional<CalScale> getCalendarScale() {
+        return getProperty(Property.CALSCALE);
+    }
+
+    /**
+     * Returns the optional method property.
+     * @return the METHOD property, or null if property doesn't exist
+     */
+    default Optional<Method> getMethod() {
+        return getProperty(Property.METHOD);
     }
 }

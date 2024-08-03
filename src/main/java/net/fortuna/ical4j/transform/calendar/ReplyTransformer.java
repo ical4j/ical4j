@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Uid;
 
@@ -58,7 +57,7 @@ public class ReplyTransformer extends AbstractMethodTransformer {
 
     @Override
     public Calendar apply(Calendar object) {
-        Optional<Method> method = object.getProperty(Property.METHOD);
+        Optional<Method> method = object.getMethod();
         if (method.isEmpty() || !REQUEST.equals(method.get())) {
             throw new IllegalArgumentException("Expecting REQUEST method in source");
         }

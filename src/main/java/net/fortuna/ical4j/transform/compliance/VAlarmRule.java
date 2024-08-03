@@ -34,7 +34,6 @@
 package net.fortuna.ical4j.transform.compliance;
 
 import net.fortuna.ical4j.model.DescriptivePropertyModifiers;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Description;
@@ -51,9 +50,9 @@ public class VAlarmRule implements Rfc5545ComponentRule<VAlarm> {
 
     @Override
     public VAlarm apply(VAlarm element) {
-        Optional<Action> action = element.getProperty(Property.ACTION);
-        Optional<Description> description = element.getProperty(Property.DESCRIPTION);
-        if (!action.isPresent() || !"DISPLAY".equals(action.get().getValue()) || description.isPresent()
+        Optional<Action> action = element.getAction();
+        Optional<Description> description = element.getDescription();
+        if (action.isEmpty() || !"DISPLAY".equals(action.get().getValue()) || description.isPresent()
                 && description.get().getValue() != null) {
             return element;
         }

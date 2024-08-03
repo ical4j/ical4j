@@ -307,7 +307,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
      */
     public void testFbType() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        Optional<FreeBusy> fb = result.getFreeBusyTime();
         assertTrue(fb.isPresent()
                 && fb.get().getParameter(Parameter.FBTYPE).equals(Optional.of(expectedFbType)));
     }
@@ -318,7 +318,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
 //    @Ignore("Recurrences with FREQ=WEEKLY not compatible with Instant temporal type currently")
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        Optional<FreeBusy> fb = result.getFreeBusyTime();
         if (expectedIntervalCount > 0) {
             assertTrue(fb.isPresent());
             assertEquals(expectedIntervalCount, fb.get().getIntervals().size());
@@ -333,7 +333,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
 //    @Ignore("Recurrences with FREQ=WEEKLY not compatible with Instant temporal type currently")
     public void testFreeBusyPeriods() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        Optional<FreeBusy> fb = result.getFreeBusyTime();
         assertTrue(fb.isPresent());
         assertEquals(expectedIntervals, fb.get().getIntervals());
     }

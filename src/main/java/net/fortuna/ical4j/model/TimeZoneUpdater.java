@@ -106,7 +106,7 @@ public class TimeZoneUpdater {
      */
     public VTimeZone updateDefinition(VTimeZone vTimeZone) {
         if (isEnabled() && vTimeZone != null) {
-            final Optional<TzUrl> tzUrl = vTimeZone.getProperty(Property.TZURL);
+            final Optional<TzUrl> tzUrl = vTimeZone.getTimeZoneUrl();
             if (tzUrl.isPresent()) {
                 try {
                     boolean secureScheme = "true".equals(Configurator.getProperty(SECURE_CONNECTION_ENABLED).orElse("false"));
