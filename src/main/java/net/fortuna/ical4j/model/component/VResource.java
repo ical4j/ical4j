@@ -150,7 +150,7 @@ public class VResource extends Component {
      * @return the optional geo property for a vresource
      */
     public final Optional<Geo> getGeo() {
-        return getProperty(LAST_MODIFIED);
+        return getProperty(GEO);
     }
 
     /**
