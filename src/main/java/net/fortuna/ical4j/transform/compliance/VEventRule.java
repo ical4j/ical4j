@@ -33,18 +33,18 @@
 
 package net.fortuna.ical4j.transform.compliance;
 
+import net.fortuna.ical4j.model.ChangeManagementPropertyModifiers;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 
+import java.time.Instant;
 import java.time.Period;
 import java.time.temporal.Temporal;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -87,9 +87,8 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
             }
         }
         
-        List<?> dtStamps = element.getProperties(Property.DTSTAMP);
-        if (dtStamps.isEmpty()) {
-            element.add(new DtStamp());
+        if (element.getDateTimeStamp().isEmpty()) {
+            element.with(ChangeManagementPropertyModifiers.DTSTAMP, Instant.now());
         }     
         return element;
     }

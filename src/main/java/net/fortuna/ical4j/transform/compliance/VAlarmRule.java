@@ -33,6 +33,7 @@
 
 package net.fortuna.ical4j.transform.compliance;
 
+import net.fortuna.ical4j.model.DescriptivePropertyModifiers;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.property.Action;
@@ -56,7 +57,7 @@ public class VAlarmRule implements Rfc5545ComponentRule<VAlarm> {
                 && description.get().getValue() != null) {
             return element;
         }
-        element.add(new Description("display"));
+        element.with(DescriptivePropertyModifiers.DESCRIPTION, "display");
         return element;
     }
 
