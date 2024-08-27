@@ -352,7 +352,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     @Override
     public <T extends Component> T copy() {
         return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                        .map(Property::copy).collect(Collectors.toList())),
+                        .map(Property::<Property>copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
                         .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }

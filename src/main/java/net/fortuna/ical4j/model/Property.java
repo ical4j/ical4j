@@ -59,7 +59,7 @@ import java.util.Optional;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content implements Comparable<Property>, FluentProperty {
+public abstract class Property extends Content implements Prototype<Property>, Comparable<Property>, FluentProperty {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -652,11 +652,11 @@ public abstract class Property extends Content implements Comparable<Property>, 
      *
      * @return the copy of the property
      */
-    public final Property copy() {
+    public final <T extends Property> T copy() {
         if (getName().toUpperCase().startsWith("X-")) {
-            return new XProperty(getName(), new ParameterList(getParameters()), getValue());
+            return (T) new XProperty(getName(), new ParameterList(getParameters()), getValue());
         }
-        return newFactory().createProperty(parameters, getValue());
+        return (T) newFactory().createProperty(parameters, getValue());
     }
 
     @Override

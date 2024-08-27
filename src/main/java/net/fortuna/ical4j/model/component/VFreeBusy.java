@@ -593,7 +593,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
     @Override
     public <T extends Component> T copy() {
         return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                        .map(Property::copy).collect(Collectors.toList())),
+                        .map(Property::<Property>copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
                         .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }

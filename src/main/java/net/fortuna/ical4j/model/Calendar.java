@@ -120,7 +120,7 @@ import java.util.stream.Collectors;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent>,
+public class Calendar implements Prototype<Calendar>, Serializable, PropertyContainer, ComponentContainer<CalendarComponent>,
     FluentCalendar, CalendarPropertyAccessor {
 
     private static final long serialVersionUID = -1654118204678581940L;
@@ -332,7 +332,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public final Calendar copy() {
         return new Calendar(
                 new PropertyList(getProperties().parallelStream()
-                        .map(Property::copy).collect(Collectors.toList())),
+                        .map(Property::<Property>copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
                     .map(c -> (CalendarComponent) c.copy()).collect(Collectors.toList())));
     }
