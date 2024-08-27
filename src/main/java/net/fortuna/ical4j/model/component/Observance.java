@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ConstraintViolationException;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.TemporalAdapter;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.TimeZones;
 import net.fortuna.ical4j.validate.ComponentValidator;
@@ -49,7 +46,10 @@ import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -61,7 +61,7 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Ben Fortuna
  */
-public abstract class Observance extends Component {
+public abstract class Observance extends Component implements TimeZonePropertyAccessor {
 
     /**
      *
@@ -251,38 +251,5 @@ public abstract class Observance extends Component {
             int insertionIndex = -index - 1;
             return onsetsDates[insertionIndex - 1];
         }
-    }
-
-    /**
-     * Returns the mandatory dtstart property.
-     *
-     * @return the DTSTART property or null if not specified
-     * @deprecated use {@link Observance#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<DtStart<LocalDateTime>> getStartDate() {
-        return getProperty(DTSTART);
-    }
-
-    /**
-     * Returns the mandatory tzoffsetfrom property.
-     *
-     * @return the TZOFFSETFROM property or null if not specified
-     * @deprecated use {@link Observance#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<TzOffsetFrom> getOffsetFrom() {
-        return getProperty(TZOFFSETFROM);
-    }
-
-    /**
-     * Returns the mandatory tzoffsetto property.
-     *
-     * @return the TZOFFSETTO property or null if not specified
-     * @deprecated use {@link Observance#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<TzOffsetTo> getOffsetTo() {
-        return getProperty(TZOFFSETTO);
     }
 }

@@ -31,14 +31,13 @@
  */
 package net.fortuna.ical4j.model
 
-
+import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.transform.recurrence.Frequency
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.*
 import java.time.temporal.ChronoField
 import java.util.stream.Collectors
 
@@ -493,5 +492,24 @@ class RecurSpec extends Specification {
  20520318T163700, 20520318T163800, 20520325T163700, 20520325T163800, 20520401T163700, 20520401T163800,
  20520408T163700, 20520408T163800, 20520415T163700, 20520415T163800, 20520422T163700, 20520422T163800,
  20520429T163700, 20520429T163800, 20520506T163700, 20520506T163800, 20520513T163700, 20520513T163800''').dates
+    }
+
+    def 'test getdates across a DST-change'() {
+        given: 'a recurrence rule'
+        ZoneId zoneId = ZoneId.of("America/Los_Angeles");
+        Recur<ZonedDateTime> rrule = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=FR,SA,SU,MO");
+
+        and: 'a period that crosses a tz change boundary (DST -> STD)'
+        ZonedDateTime seed = ZonedDateTime.of(2000, 2, 1, 0, 59, 0, 0, zoneId);
+        Period <ZonedDateTime> period = new Period<>(
+                Instant.parse("2019-10-20T20:00:00Z").atZone(zoneId),
+                Instant.parse("2019-11-10T00:00:00Z").atZone(zoneId)
+        );
+
+        when: 'dates are calculated for the period'
+        List<ZonedDateTime> list = rrule.getDates(seed, period);
+
+        then: 'result matched expected'
+        ZonedDateTime.of(2019, 11, 3, 0, 59, 0, 0, zoneId).equals(list.get(7));
     }
 }

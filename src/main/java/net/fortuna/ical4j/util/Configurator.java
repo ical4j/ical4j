@@ -51,14 +51,25 @@ import java.util.Properties;
  */
 public final class Configurator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Configurator.class);
+    private static final Logger LOG;
 
-    private static final Properties CONFIG = new Properties();
+    private static final Properties CONFIG;
 
     static {
+        CONFIG = new Properties();
+
+        boolean isLoaded;
         try (InputStream in = ResourceLoader.getResourceAsStream("ical4j.properties")) {
             CONFIG.load(in);
+            isLoaded = true;
         } catch (IOException | NullPointerException e) {
+            // defer logging until properties are loaded to avoid potential
+            // reference to uninitialized config
+            isLoaded = false;
+        }
+
+        LOG = LoggerFactory.getLogger(Configurator.class);
+        if (!isLoaded) {
             LOG.info("ical4j.properties not found.");
         }
     }

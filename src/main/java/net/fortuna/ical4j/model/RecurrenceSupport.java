@@ -44,9 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public interface RecurrenceSupport<T extends CalendarComponent> extends PropertyContainer {
-
-    <C extends Component> C copy() throws ParseException, IOException, URISyntaxException;
+public interface RecurrenceSupport<T extends CalendarComponent> extends PropertyContainer, Prototype<Component> {
 
     /**
      * Calculates the recurrence set for this component using the specified period.

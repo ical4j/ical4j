@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023, Ben Fortuna
+ *  Copyright (c) 2024, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,27 +31,53 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.component.VEvent
-import spock.lang.Specification
+import net.fortuna.ical4j.model.property.*;
 
-class RecurrenceSupportTest extends Specification {
+import java.time.LocalDateTime;
+import java.util.Optional;
 
-    def 'test get occurrences for recurring event'() {
-        given: 'a recurring event'
-        VEvent event = new ContentBuilder().vevent {
-            summary('a recurring event')
-            dtstart('20230101T010000')
-            dtend('20230101T020000')
-            rrule('FREQ=WEEKLY;INTERVAL=2;BYDAY=SU')
-        }
+import static net.fortuna.ical4j.model.Property.*;
 
-        expect: 'calculated occurrences match expected'
-        event.getOccurrences(Period.parse(period)).collect { it.getRecurrenceId().get().value} == expectedOccurrences
+public interface TimeZonePropertyAccessor extends PropertyContainer {
 
-        where:
-        period                  | expectedOccurrences
-        '20230101T010000/P3W'   | ['20230101T010000', '20230115T010000']
+
+    /**
+     * @return the mandatory timezone identifier property
+     */
+    default Optional<TzId> getTimeZoneId() {
+        return getProperty(TZID);
+    }
+
+    /**
+     * @return the optional last-modified property
+     */
+    default Optional<LastModified> getLastModified() {
+        return getProperty(LAST_MODIFIED);
+    }
+
+    /**
+     * @return the optional timezone url property
+     */
+    default Optional<TzUrl> getTimeZoneUrl() {
+        return getProperty(TZURL);
+    }
+
+    default Optional<TzOffsetFrom> getTimeZoneOffsetFrom() {
+        return getProperty(TZOFFSETFROM);
+    }
+
+    default Optional<TzOffsetTo> getTimeZoneOffsetTo() {
+        return getProperty(TZOFFSETTO);
+    }
+
+    /**
+     * Returns the mandatory dtstart property.
+     *
+     * @return the DTSTART property or null if not specified
+     */
+    default Optional<DtStart<LocalDateTime>> getStartDate() {
+        return getProperty(DTSTART);
     }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023, Ben Fortuna
+ *  Copyright (c) 2024, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,27 +31,9 @@
  *
  */
 
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.component.VEvent
-import spock.lang.Specification
+public interface Prototype<T> {
 
-class RecurrenceSupportTest extends Specification {
-
-    def 'test get occurrences for recurring event'() {
-        given: 'a recurring event'
-        VEvent event = new ContentBuilder().vevent {
-            summary('a recurring event')
-            dtstart('20230101T010000')
-            dtend('20230101T020000')
-            rrule('FREQ=WEEKLY;INTERVAL=2;BYDAY=SU')
-        }
-
-        expect: 'calculated occurrences match expected'
-        event.getOccurrences(Period.parse(period)).collect { it.getRecurrenceId().get().value} == expectedOccurrences
-
-        where:
-        period                  | expectedOccurrences
-        '20230101T010000/P3W'   | ['20230101T010000', '20230115T010000']
-    }
+    <R extends T> R copy();
 }

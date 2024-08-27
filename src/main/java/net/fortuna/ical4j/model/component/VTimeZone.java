@@ -32,10 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.TzId;
-import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
@@ -46,10 +43,7 @@ import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -124,7 +118,8 @@ import static net.fortuna.ical4j.model.Property.*;
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent implements ComponentContainer<Observance> {
+public class VTimeZone extends CalendarComponent implements ComponentContainer<Observance>,
+    TimeZonePropertyAccessor {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
@@ -232,37 +227,10 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
         return latestObservance;
     }
 
-    /**
-     * @return the mandatory timezone identifier property
-     * @deprecated use {@link VTimeZone#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<TzId> getTimeZoneId() {
-        return getProperty(TZID);
-    }
-
-    /**
-     * @return the optional last-modified property
-     * @deprecated use {@link VTimeZone#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional timezone url property
-     * @deprecated use {@link VTimeZone#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<TzUrl> getTimeZoneUrl() {
-        return getProperty(TZURL);
-    }
-
     @Override
     public <T extends Component> T copy() {
         return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                        .map(Property::copy).collect(Collectors.toList())),
+                        .map(Property::<Property>copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
                         .map(c -> (T) c.copy()).collect(Collectors.toList())));
     }

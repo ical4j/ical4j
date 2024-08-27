@@ -149,7 +149,7 @@ public class VLocation extends Component {
      * @return the optional geo property for a vlocation
      */
     public final Optional<Geo> getGeo() {
-        return getProperty(LAST_MODIFIED);
+        return getProperty(GEO);
     }
 
     /**

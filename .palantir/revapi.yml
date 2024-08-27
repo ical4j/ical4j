@@ -3492,3 +3492,82 @@ acceptedBreaks:
       old: "method <C extends net.fortuna.ical4j.model.Component> java.util.List<C>\
         \ net.fortuna.ical4j.model.component.Participant::getComponents()"
       justification: "support_any_uid_supplier_impl"
+  "4.0.2":
+    org.mnode.ical4j:ical4j:
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
+      justification: "property_accessor_refactoring"
+    - code: "java.generics.elementNowParameterized"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate(boolean)"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate(boolean)"
+      justification: "property_accessor_refactoring"
+    - code: "java.generics.elementNowParameterized"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
+      new: "method <T extends net.fortuna.ical4j.model.Property> T net.fortuna.ical4j.model.Property::copy()"
+      justification: "property_accessor_refactoring"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
+      justification: "property_accessor_refactoring"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate(boolean)"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate(boolean)"
+      justification: "property_accessor_refactoring"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
+      new: "method <T extends net.fortuna.ical4j.model.Property> T net.fortuna.ical4j.model.Property::copy()"
+      justification: "property_accessor_refactoring"
+    - code: "java.generics.formalTypeParameterChanged"
+      old: "method <C extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.RecurrenceSupport<T\
+        \ extends net.fortuna.ical4j.model.component.CalendarComponent>::copy() throws\
+        \ java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <R extends T extends java.lang.Object> R net.fortuna.ical4j.model.Prototype<T>::copy()\
+        \ @ net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.component.CalendarComponent>"
+      justification: "property_accessor_refactoring"
+    - code: "java.method.exception.checkedRemoved"
+      old: "method <C extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.RecurrenceSupport<T\
+        \ extends net.fortuna.ical4j.model.component.CalendarComponent>::copy() throws\
+        \ java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <R extends T extends java.lang.Object> R net.fortuna.ical4j.model.Prototype<T>::copy()\
+        \ @ net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.component.CalendarComponent>"
+      justification: "property_accessor_refactoring"
+    - code: "java.method.movedToSuperClass"
+      old: "method <C extends net.fortuna.ical4j.model.Component> C net.fortuna.ical4j.model.RecurrenceSupport<T\
+        \ extends net.fortuna.ical4j.model.component.CalendarComponent>::copy() throws\
+        \ java.text.ParseException, java.io.IOException, java.net.URISyntaxException"
+      new: "method <R extends T extends java.lang.Object> R net.fortuna.ical4j.model.Prototype<T>::copy()\
+        \ @ net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.component.CalendarComponent>"
+      justification: "property_accessor_refactoring"
+    - code: "java.method.removed"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.TzOffsetFrom>\
+        \ net.fortuna.ical4j.model.component.Observance::getOffsetFrom()"
+      justification: "property_accessor_refactoring"
+    - code: "java.method.removed"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.TzOffsetTo>\
+        \ net.fortuna.ical4j.model.component.Observance::getOffsetTo()"
+      justification: "property_accessor_refactoring"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
+      justification: "property_accessor_refactoring"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate(boolean)"
+      new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
+        \ net.fortuna.ical4j.model.component.VEvent::getEndDate(boolean)"
+      justification: "property_accessor_refactoring"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
+      new: "method <T extends net.fortuna.ical4j.model.Property> T net.fortuna.ical4j.model.Property::copy()"
+      justification: "property_accessor_refactoring"

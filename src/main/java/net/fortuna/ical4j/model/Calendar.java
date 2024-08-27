@@ -34,7 +34,8 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -119,8 +120,8 @@ import java.util.stream.Collectors;
  * 
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable, PropertyContainer, ComponentContainer<CalendarComponent>,
-    FluentCalendar {
+public class Calendar implements Prototype<Calendar>, Serializable, PropertyContainer, ComponentContainer<CalendarComponent>,
+    FluentCalendar, CalendarPropertyAccessor {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -249,8 +250,13 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
         this.components = components;
     }
 
+    /**
+     * Explicitly override due to conflict with groovy implicit method..
+     * @return
+     * @param <T>
+     */
     public <T extends Property> List<T> getProperties() {
-        return PropertyContainer.super.getProperties();
+        return CalendarPropertyAccessor.super.getProperties();
     }
 
     /**
@@ -306,7 +312,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
      */
     private ValidationResult validateComponents() throws ValidationException {
         ValidationResult result = new ValidationResult();
-        Optional<Method> method = getProperty(Property.METHOD);
+        Optional<Method> method = getMethod();
         if (method.isPresent()) {
             for (CalendarComponent c : getComponents()) {
                 result = result.merge(c.validate(method.get()));
@@ -326,7 +332,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public final Calendar copy() {
         return new Calendar(
                 new PropertyList(getProperties().parallelStream()
-                        .map(Property::copy).collect(Collectors.toList())),
+                        .map(Property::<Property>copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
                     .map(c -> (CalendarComponent) c.copy()).collect(Collectors.toList())));
     }
@@ -367,7 +373,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
                 continue;
             }
 
-            final Optional<Uid> uid = c.getProperty(Property.UID);
+            final Optional<Uid> uid = c.getUid();
             if (uid.isPresent()) {
                 Calendar uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
@@ -415,46 +421,6 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     }
 
     /**
-     * Returns the mandatory prodid property.
-     * @return the PRODID property, or null if property doesn't exist
-     * @deprecated use {@link Calendar#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<ProdId> getProductId() {
-        return getProperty(Property.PRODID);
-    }
-
-    /**
-     * Returns the mandatory version property.
-     * @return the VERSION property, or null if property doesn't exist
-     * @deprecated use {@link Calendar#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Version> getVersion() {
-        return getProperty(Property.VERSION);
-    }
-
-    /**
-     * Returns the optional calscale property.
-     * @return the CALSCALE property, or null if property doesn't exist
-     * @deprecated use {@link Calendar#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<CalScale> getCalendarScale() {
-        return getProperty(Property.CALSCALE);
-    }
-
-    /**
-     * Returns the optional method property.
-     * @return the METHOD property, or null if property doesn't exist
-     * @deprecated use {@link Calendar#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Method> getMethod() {
-        return getProperty(Property.METHOD);
-    }
-
-    /**
      * Returns an appropriate MIME Content-Type for the calendar object instance.
      * @param charset an optional encoding
      * @return a content type string
@@ -462,7 +428,7 @@ public class Calendar implements Serializable, PropertyContainer, ComponentConta
     public String getContentType(Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
 
-        final Optional<Method> method = getProperty(Property.METHOD);
+        final Optional<Method> method = getMethod();
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());

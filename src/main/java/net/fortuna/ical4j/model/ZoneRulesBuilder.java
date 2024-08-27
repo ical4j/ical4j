@@ -51,7 +51,7 @@ public class ZoneRulesBuilder {
 
         for (Standard observance : sorted) {
             // ignore transitions that have no effect..
-            Optional<TzOffsetFrom> offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+            Optional<TzOffsetFrom> offsetFrom = observance.getTimeZoneOffsetFrom();
             TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
             DtStart<LocalDateTime> start = observance.getRequiredProperty("DTSTART");
 
@@ -75,7 +75,7 @@ public class ZoneRulesBuilder {
         List<ZoneOffsetTransition> transitions = new ArrayList<>();
 
         for (Observance observance : observances) {
-            Optional<TzOffsetFrom> offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+            Optional<TzOffsetFrom> offsetFrom = observance.getTimeZoneOffsetFrom();
             TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
 
             // ignore transitions that have no effect..
