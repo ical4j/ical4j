@@ -8,4 +8,4 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/common/release.yml@main
+    uses: ./.github/workflows/common/release.yml

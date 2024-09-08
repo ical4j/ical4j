@@ -9,7 +9,7 @@ permissions: read-all
 
 jobs:
   test:
-    uses: ./.github/workflows/common/test.yml@main
+    uses: ./.github/workflows/common/test.yml
 
   publish:
     name: Publish Artifact
