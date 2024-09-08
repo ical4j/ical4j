@@ -13,7 +13,7 @@ jobs:
 
   publish:
     name: Publish Artifact
-    needs: gradle
+    needs: test
     if: ${{ needs.gradle.result == 'success' }}
     runs-on: ubuntu-latest
 
