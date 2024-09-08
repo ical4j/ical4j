@@ -8,14 +8,4 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-#      - name: Generate changelog
-#        run: make changelog
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
-#          body_path: CHANGELOG.md
+    uses: ./.github/workflows/common/release.yml@main
