@@ -47,16 +47,16 @@ public class ConstantsTest extends TestCase {
     public void testForPropertyConstant() {
         Property origProp = AUDIO;
         Property resProp = Constants.forProperty(origProp);
-        assertTrue("forPropertyConstant", resProp == AUDIO);
+        assertSame("forPropertyConstant", resProp, AUDIO);
 
         origProp = new Action(AUDIO.getValue());
         resProp = Constants.forProperty(origProp);
-        assertTrue("forPropertyConstant", resProp == AUDIO);
+        assertSame("forPropertyConstant", resProp, AUDIO);
     }
 
     public void testForPropertyNotConstant() {
         Property origProp = new Action("custom");
         Property resProp = Constants.forProperty(origProp);
-        assertTrue("forPropertyNotConstant", resProp == origProp);
+        assertSame("forPropertyNotConstant", resProp, origProp);
     }
 }

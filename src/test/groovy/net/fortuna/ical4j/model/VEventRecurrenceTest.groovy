@@ -67,7 +67,7 @@ class VEventRecurrenceTest extends GroovyTestCase {
 			rrule('FREQ=WEEKLY;WKST=MO;INTERVAL=3;BYDAY=MO,TU,SA')
 			exdate('20101129,20101204', parameters: parameters() { value('DATE') })
 		}
-		def expectedStr = ['20101113/P1D', '20101130/P1D', '20101220/P1D', '20101221/P1D', '20101225/P1D'];
+		def expectedStr = ['20101113/P1D', '20101130/P1D', '20101220/P1D', '20101221/P1D', '20101225/P1D']
 		def expected = expectedStr.collect {Period.parse(it) } as Set
 
 		def actual = event.calculateRecurrenceSet(Period.parse('20101101/20110101'))

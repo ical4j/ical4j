@@ -56,21 +56,20 @@ public class RegexTestHarness {
         while (true) {
 
             Pattern pattern =
-                    Pattern.compile(console.readLine("%nEnter your regex: ", new Object[]{}));
+                    Pattern.compile(console.readLine("%nEnter your regex: "));
 
             Matcher matcher =
-                    pattern.matcher(console.readLine("Enter input string to search: ", new Object[]{}));
+                    pattern.matcher(console.readLine("Enter input string to search: "));
 
             boolean found = false;
             while (matcher.find()) {
                 console.format("I found the text \"%s\" starting at " +
                                 "index %d and ending at index %d.%n",
-                        new Object[]{matcher.group(), Integer.valueOf(matcher.start()), Integer.valueOf(matcher.end())}
-                );
+                        matcher.group(), Integer.valueOf(matcher.start()), Integer.valueOf(matcher.end()));
                 found = true;
             }
             if (!found) {
-                console.format("No match found.%n", new Object[]{});
+                console.format("No match found.%n");
             }
         }
     }

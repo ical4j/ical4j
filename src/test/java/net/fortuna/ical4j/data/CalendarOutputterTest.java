@@ -53,9 +53,9 @@ import java.io.*;
 @Ignore
 public class CalendarOutputterTest extends TestCase {
 
-    private static Logger log = LoggerFactory.getLogger(CalendarOutputterTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CalendarOutputterTest.class);
 
-    private String filename;
+    private final String filename;
 
     /**
      * @param method

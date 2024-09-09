@@ -66,7 +66,7 @@ import java.util.TimeZone;
  */
 public class PeriodRuleTest extends FilterTest<CalendarComponent> {
 
-    private static Logger LOG = LoggerFactory.getLogger(PeriodRuleTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PeriodRuleTest.class);
 
     /**
      * @param testMethod

@@ -45,9 +45,9 @@ import org.slf4j.LoggerFactory;
  */
 public class VTimeZoneTest extends ComponentTest {
 
-    private Logger log = LoggerFactory.getLogger(VTimeZoneTest.class);
+    private final Logger log = LoggerFactory.getLogger(VTimeZoneTest.class);
 
-    private VTimeZone tz;
+    private final VTimeZone tz;
 
     /**
      * @param testMethod

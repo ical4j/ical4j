@@ -100,7 +100,7 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
             this.name = name;
         }
 
-        protected void limitApparitionsNumberIn(Component component){
+        private void limitApparitionsNumberIn(Component component){
             List<Property> propertyList = component.getProperties(name);
 
             if(propertyList.size() <= maxApparitionNumber){

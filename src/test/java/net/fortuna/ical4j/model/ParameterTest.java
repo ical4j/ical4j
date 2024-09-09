@@ -42,11 +42,11 @@ import junit.framework.TestSuite;
  */
 public class ParameterTest extends TestCase {
 
-	private Parameter parameter;
+	private final Parameter parameter;
 	
-	private String expectedName;
+	private final String expectedName;
 	
-	private String expectedValue;
+	private final String expectedValue;
 	
 	/**
 	 * @param parameter

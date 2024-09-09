@@ -44,9 +44,9 @@ import junit.framework.TestSuite;
  */
 public class DateListTest extends TestCase {
 
-    private DateList<?> dateList;
+    private final DateList<?> dateList;
     
-    private int expectedSize;
+    private final int expectedSize;
 
     /**
      * @param value
@@ -81,7 +81,7 @@ public class DateListTest extends TestCase {
         suite.addTest(new DateListTest(new DateList<>(), 0));
         suite.addTest(new DateListTest(new Date().toString(), 1));
         suite.addTest(new DateListTest(new DateTime().toString(), 1));
-        suite.addTest(new DateListTest(new DateTime(123).toString() + "," + new DateTime(999).toString(), 2));
+        suite.addTest(new DateListTest(new DateTime(123) + "," + new DateTime(999), 2));
         return suite;
     }
 }

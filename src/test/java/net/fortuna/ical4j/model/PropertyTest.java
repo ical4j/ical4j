@@ -54,7 +54,7 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class PropertyTest extends AbstractPropertyTest {
 
-    private Property property;
+    private final Property property;
 
     private String expectedValue;
 
@@ -113,7 +113,7 @@ public class PropertyTest extends AbstractPropertyTest {
      * Test equality of properties.
      */
     public void testEquals() {
-        assertTrue(property.equals(property));
+        assertEquals(property, property);
 
         @SuppressWarnings("serial")
 		Property notEqual = new Property("notEqual", new ParameterList()) {
@@ -137,8 +137,8 @@ public class PropertyTest extends AbstractPropertyTest {
             }
         };
 
-        assertFalse("Properties are equal", property.equals(notEqual));
-        assertFalse("Properties are equal", notEqual.equals(property));
+        assertNotEquals("Properties are equal", property, notEqual);
+        assertNotEquals("Properties are equal", notEqual, property);
     }
 
     /**

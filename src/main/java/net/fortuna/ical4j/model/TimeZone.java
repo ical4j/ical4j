@@ -47,6 +47,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -238,7 +239,7 @@ public class TimeZone extends java.util.TimeZone {
         TimeZone timeZone = (TimeZone) o;
 
         return rawOffset == timeZone.rawOffset
-                && !(vTimeZone != null ? !vTimeZone.equals(timeZone.vTimeZone) : timeZone.vTimeZone != null);
+                && Objects.equals(vTimeZone, timeZone.vTimeZone);
     }
 
     @Override

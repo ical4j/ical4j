@@ -44,7 +44,7 @@ public class TextListTest extends TestCase {
 
     private static final String VALUE_RESOURCE_LIST = "projector,laptop,pulpit";
     
-    private TextList resources;
+    private final TextList resources;
     
     private int expectedSize;
     

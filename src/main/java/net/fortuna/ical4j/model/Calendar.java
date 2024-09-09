@@ -141,7 +141,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
                         c.add(p.copy());
                 }
             });
-        };
+        }
         return c;
     };
 

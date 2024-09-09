@@ -46,7 +46,7 @@ import java.util.Calendar;
  */
 public class WeekDayTest extends TestCase {
 
-    private Logger log = LoggerFactory.getLogger(WeekDayTest.class);
+    private final Logger log = LoggerFactory.getLogger(WeekDayTest.class);
 
     public void testGetWeekDay() {
         Calendar cal = Calendar.getInstance();

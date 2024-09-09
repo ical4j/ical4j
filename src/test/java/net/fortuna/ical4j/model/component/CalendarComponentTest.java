@@ -52,7 +52,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
 
     private static final Logger LOG = LoggerFactory.getLogger(CalendarComponentTest.class);
 
-    private CalendarComponent component;
+    private final CalendarComponent component;
 
     /**
      * @param testMethod

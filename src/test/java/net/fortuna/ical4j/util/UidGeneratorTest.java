@@ -37,6 +37,8 @@ import net.fortuna.ical4j.model.property.Uid;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * $Id$
  *
@@ -90,7 +92,7 @@ public class UidGeneratorTest extends TestCase {
             Uid uid = uids.get(i);
             for (int j = 0; j < uids.size(); j++) {
                 if (j != i) {
-                    assertFalse(uid.equals(uids.get(j)));
+                    assertNotEquals(uid, uids.get(j));
                 }
             }
         }

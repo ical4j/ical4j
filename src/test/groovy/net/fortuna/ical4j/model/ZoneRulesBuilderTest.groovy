@@ -24,7 +24,7 @@ class ZoneRulesBuilderTest extends Specification {
         and:
         Instant localInstant = localDate.toInstant(expectedOffset)
         zonerules.isDaylightSavings(localInstant) == java.util.TimeZone.getTimeZone(tzId)
-                .inDaylightTime(java.util.Date.from(localInstant));
+                .inDaylightTime(java.util.Date.from(localInstant))
 
         where:
         tzId                    | dayOfYear     | expectedOffset

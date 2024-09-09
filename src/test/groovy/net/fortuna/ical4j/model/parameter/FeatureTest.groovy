@@ -16,7 +16,7 @@ class FeatureTest extends AbstractBuilderTest {
                 .withPropertyFactorySupplier(new ServiceLoaderPropertyFactorySupplier())
                 .withComponentFactorySupplier(new ServiceLoaderComponentFactorySupplier())
         builder = new CalendarBuilder(CalendarParserFactory.getInstance().get(),
-                contentHandlerContext, TimeZoneRegistryFactory.getInstance().createRegistry());
+                contentHandlerContext, TimeZoneRegistryFactory.getInstance().createRegistry())
     }
 
     def 'assert value stored correctly'() {

@@ -44,7 +44,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -206,11 +205,10 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
         final List<RRule<OffsetDateTime>> rrules = getProperties(RRULE);
         for (RRule<OffsetDateTime> rrule : rrules) {
             // include future onsets to determine onset period..
-            onsetLimit = offsetDate.plus(10, ChronoUnit.YEARS);
+            onsetLimit = offsetDate.plusYears(10);
             final List<OffsetDateTime> recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit);
             for (final Temporal recurDate : recurrenceDates) {
-                final OffsetDateTime rruleOnset = OffsetDateTime.from(recurDate).plus(
-                        offsetFrom.getOffset().getTotalSeconds(), ChronoUnit.SECONDS);
+                final OffsetDateTime rruleOnset = OffsetDateTime.from(recurDate).plusSeconds(offsetFrom.getOffset().getTotalSeconds());
                 if (!rruleOnset.isAfter(offsetDate) && rruleOnset.isAfter(onset)) {
                     onset = rruleOnset;
                 }

@@ -53,7 +53,7 @@ import java.net.URISyntaxException;
  */
 public class OrganizerTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(OrganizerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrganizerTest.class);
 
     @Override
     protected void setUp() throws Exception {

@@ -53,7 +53,7 @@ import java.util.Optional;
  */
 public class IndexedComponentListTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(IndexedComponentListTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndexedComponentListTest.class);
 
     private Calendar calendar;
 

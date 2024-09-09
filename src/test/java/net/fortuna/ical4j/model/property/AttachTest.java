@@ -61,7 +61,7 @@ import java.util.List;
  */
 public class AttachTest extends TestCase {
 
-    private Logger log = LoggerFactory.getLogger(AttachTest.class);
+    private final Logger log = LoggerFactory.getLogger(AttachTest.class);
 
     private Attach attach;
 

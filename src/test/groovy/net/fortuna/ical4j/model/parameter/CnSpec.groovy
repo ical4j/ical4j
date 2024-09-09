@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.parameter
 
-import spock.lang.Specification;
+import spock.lang.Specification
 
 class CnSpec extends Specification {
 	

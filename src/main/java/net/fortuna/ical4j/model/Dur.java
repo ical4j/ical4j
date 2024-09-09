@@ -232,7 +232,7 @@ public class Dur implements Comparable<Dur>, Serializable {
         int nYears = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
         while (nYears > 0) {
             startCal.add(Calendar.DATE, DAYS_PER_YEAR * nYears);
-            dur += DAYS_PER_YEAR * nYears;
+            dur += (long) DAYS_PER_YEAR * nYears;
             nYears = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
         }
 

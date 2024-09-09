@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class PeriodListTest extends TestCase {
 
-    private Logger log = LoggerFactory.getLogger(PeriodListTest.class);
+    private final Logger log = LoggerFactory.getLogger(PeriodListTest.class);
 
     private PeriodList<LocalDate> periodList;
 

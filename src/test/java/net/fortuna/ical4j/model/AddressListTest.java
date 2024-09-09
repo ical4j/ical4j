@@ -47,13 +47,13 @@ import java.net.URISyntaxException;
  */
 public class AddressListTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(AddressListTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AddressListTest.class);
     
-    private String value;
+    private final String value;
     
-    private int expectedSize;
+    private final int expectedSize;
     
-    private String[] compatibilityHints;
+    private final String[] compatibilityHints;
     
     /**
      * @param testMethod

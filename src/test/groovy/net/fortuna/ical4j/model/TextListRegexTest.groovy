@@ -30,9 +30,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package net.fortuna.ical4j.model
-
-import groovy.util.GroovyTestCase;
-
 /**
  * @author fortuna
  *

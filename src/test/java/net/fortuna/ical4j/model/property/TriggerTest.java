@@ -55,9 +55,9 @@ import java.util.Date;
  */
 public class TriggerTest extends PropertyTest {
 
-    private Logger log = LoggerFactory.getLogger(TriggerTest.class);
+    private final Logger log = LoggerFactory.getLogger(TriggerTest.class);
 
-    private Trigger trigger;
+    private final Trigger trigger;
     
     /**
 	 * @param property

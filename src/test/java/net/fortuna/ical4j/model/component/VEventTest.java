@@ -75,7 +75,7 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 
-    private static Logger log = LoggerFactory.getLogger(VEventTest.class);
+    private static final Logger log = LoggerFactory.getLogger(VEventTest.class);
 
     private VEvent event;
 
@@ -163,7 +163,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         log.info("Resource: " + resourceString);
 
         if (log.isDebugEnabled()) {
-            log.debug("Calendar:\n=========\n" + calendar.toString());
+            log.debug("Calendar:\n=========\n" + calendar);
         }
         return calendar;
     }
@@ -389,7 +389,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         LocalDate latest = LocalDate.now().plusYears(1);
 
         List<Period<LocalDate>> pl = vev.get(0).getConsumedTime(new Period<>(start, latest));
-        assertTrue(!pl.isEmpty());
+        assertFalse(pl.isEmpty());
     }
 
     /**
@@ -502,7 +502,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
      */
     public void testCalculateRecurrenceSetNotEmpty() {
         Set<Period<T>> recurrenceSet = event.calculateRecurrenceSet(period);
-        assertTrue(!recurrenceSet.isEmpty());
+        assertFalse(recurrenceSet.isEmpty());
     }
 
     /**
@@ -584,9 +584,9 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         TestSuite suite = new TestSuite();
 
         //testCalculateRecurrenceSet..
-        ZonedDateTime periodStart = (ZonedDateTime) TemporalAdapter.parse("20050101T000000",
+        ZonedDateTime periodStart = TemporalAdapter.parse("20050101T000000",
                 ZoneId.systemDefault()).getTemporal();
-        ZonedDateTime periodEnd = (ZonedDateTime) TemporalAdapter.parse("20051231T235959",
+        ZonedDateTime periodEnd = TemporalAdapter.parse("20051231T235959",
                 ZoneId.systemDefault()).getTemporal();
         Period<ZonedDateTime> period = new Period<>(periodStart, periodEnd);
         suite.addTest(new VEventTest<>("testCalculateRecurrenceSetNotEmpty", weekdayNineToFiveEvents, period));
