@@ -384,7 +384,7 @@ public abstract class Component extends Content implements Prototype<Component>,
 
         // subtract exception rules..
         List<Property> exRules = getProperties(Property.EXRULE);
-        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(seed,
+        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule<T>) e).getRecur().getDates(seed,
                 period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));
