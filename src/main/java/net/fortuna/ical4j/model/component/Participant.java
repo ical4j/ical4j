@@ -157,7 +157,7 @@ public class Participant extends Component implements ComponentContainer<Compone
      * {@inheritDoc}
      */
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.PARTICIPANT.validate(this);
+        var result = ComponentValidator.PARTICIPANT.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }

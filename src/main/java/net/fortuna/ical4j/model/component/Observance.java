@@ -37,7 +37,6 @@ import net.fortuna.ical4j.util.TimeZones;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
@@ -121,7 +120,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.OBSERVANCE_ITIP.validate(this);
+        var result = ComponentValidator.OBSERVANCE_ITIP.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -144,7 +143,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
 
         TzOffsetFrom offsetFrom = getRequiredProperty(TZOFFSETFROM);
 
-        OffsetDateTime offsetDate = LocalDateTime.ofInstant(Instant.from(date), ZoneOffset.UTC).atOffset(
+        var offsetDate = LocalDateTime.ofInstant(Instant.from(date), ZoneOffset.UTC).atOffset(
                 offsetTo.getOffset());
 
         // get first onset without applying TZFROM offset as this may lead to a day boundary
@@ -160,7 +159,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
                     initialOnset = LocalDate.from(dtStart.getDate()).atStartOfDay().atOffset(offsetFrom.getOffset());
                 }
             } catch (ConstraintViolationException e) {
-                Logger log = LoggerFactory.getLogger(Observance.class);
+                var log = LoggerFactory.getLogger(Observance.class);
                 log.warn("Unexpected error calculating initial onset - applying default", e);
                 initialOnset = LocalDateTime.ofEpochSecond(0,0,
                         offsetFrom.getOffset()).atOffset(offsetFrom.getOffset());
@@ -178,7 +177,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
             return getCachedOnset(offsetDate);
         }
 
-        OffsetDateTime onset = initialOnset;
+        var onset = initialOnset;
 
         // collect all onsets for the purposes of caching..
         final List<OffsetDateTime> cacheableOnsets = new ArrayList<>();
@@ -188,8 +187,8 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
         final List<RDate<LocalDateTime>> rdates = getProperties(RDATE);
         for (RDate<LocalDateTime> rdate : rdates) {
             List<LocalDateTime> rdateDates = rdate.getDates();
-            for (final LocalDateTime rdateDate : rdateDates) {
-                final OffsetDateTime rdateOnset = OffsetDateTime.from(rdateDate.atOffset(offsetFrom.getOffset()));
+            for (final var rdateDate : rdateDates) {
+                final var rdateOnset = OffsetDateTime.from(rdateDate.atOffset(offsetFrom.getOffset()));
                 if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
                     onset = rdateOnset;
                 }
@@ -208,7 +207,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
             onsetLimit = offsetDate.plusYears(10);
             final List<OffsetDateTime> recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit);
             for (final Temporal recurDate : recurrenceDates) {
-                final OffsetDateTime rruleOnset = OffsetDateTime.from(recurDate).plusSeconds(offsetFrom.getOffset().getTotalSeconds());
+                final var rruleOnset = OffsetDateTime.from(recurDate).plusSeconds(offsetFrom.getOffset().getTotalSeconds());
                 if (!rruleOnset.isAfter(offsetDate) && rruleOnset.isAfter(onset)) {
                     onset = rruleOnset;
                 }

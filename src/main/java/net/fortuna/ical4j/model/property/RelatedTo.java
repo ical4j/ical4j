@@ -41,6 +41,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -137,7 +138,7 @@ public class RelatedTo extends Property implements Encodable {
      */
     @Override
     public final void setValue(final String aValue) {
-        if (Value.URI.equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
             try {
                 this.uri = Uris.create(aValue);
             } catch (URISyntaxException e) {
@@ -159,7 +160,7 @@ public class RelatedTo extends Property implements Encodable {
      */
     @Override
     public final String getValue() {
-        if (Value.URI.equals(getParameter(Parameter.VALUE))) {
+        if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
             return Uris.decode(Strings.valueOf(getUri()));
         }
         return value;

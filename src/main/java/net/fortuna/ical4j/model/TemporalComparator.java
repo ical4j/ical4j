@@ -47,7 +47,7 @@ public class TemporalComparator implements Comparator<Temporal> {
     @Override
     public int compare(Temporal o1, Temporal o2) {
         if (o1 instanceof Instant) {
-            Instant i1 = (Instant) o1;
+            var i1 = (Instant) o1;
             if (o2 instanceof Instant) {
                 return compare(i1, (Instant) o2);
             } else if (o2 instanceof OffsetDateTime) {
@@ -58,7 +58,7 @@ public class TemporalComparator implements Comparator<Temporal> {
                 return compare(i1, (LocalDate) o2);
             }
         } else if (o1 instanceof OffsetDateTime) {
-            OffsetDateTime l1 = (OffsetDateTime) o1;
+            var l1 = (OffsetDateTime) o1;
             if (o2 instanceof Instant) {
                 return compare(l1, (Instant) o2);
             } else if (o2 instanceof LocalDateTime) {
@@ -67,7 +67,7 @@ public class TemporalComparator implements Comparator<Temporal> {
                 return compare(l1, (LocalDate) o2);
             }
         } else if (o1 instanceof LocalDateTime) {
-            LocalDateTime l1 = (LocalDateTime) o1;
+            var l1 = (LocalDateTime) o1;
             if (o2 instanceof Instant) {
                 return compare(l1, (Instant) o2);
             } else if (o2 instanceof OffsetDateTime) {
@@ -78,7 +78,7 @@ public class TemporalComparator implements Comparator<Temporal> {
                 return compare(l1, (LocalDate) o2);
             }
         } else if (o1 instanceof LocalDate) {
-            LocalDate l1 = (LocalDate) o1;
+            var l1 = (LocalDate) o1;
             if (o2 instanceof Instant) {
                 return compare(l1, (Instant) o2);
             } else if (o2 instanceof OffsetDateTime) {

@@ -110,7 +110,7 @@ public class Available extends Component {
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult results =  ComponentValidator.AVAILABLE.validate(this);
+        var results =  ComponentValidator.AVAILABLE.validate(this);
         if (recurse) {
             results = results.merge(validateProperties());
         }

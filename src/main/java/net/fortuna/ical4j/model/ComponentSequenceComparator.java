@@ -19,15 +19,15 @@ public class ComponentSequenceComparator implements Comparator<Component> {
     public int compare(Component o1, Component o2) {
         int retVal = 0;
 
-        Sequence defaultSequence = new Sequence(0);
-        Sequence sequence1 = (Sequence) o1.getProperty(Property.SEQUENCE).orElse(defaultSequence);
-        Sequence sequence2 = (Sequence) o2.getProperty(Property.SEQUENCE).orElse(defaultSequence);
+        var defaultSequence = new Sequence(0);
+        var sequence1 = (Sequence) o1.getProperty(Property.SEQUENCE).orElse(defaultSequence);
+        var sequence2 = (Sequence) o2.getProperty(Property.SEQUENCE).orElse(defaultSequence);
 
         retVal = sequence1.compareTo(sequence2);
         if (retVal == 0) {
-            DtStamp defaultDtStamp = new DtStamp(Instant.EPOCH);
-            DtStamp dtStamp1 = (DtStamp) o1.getProperty(Property.DTSTAMP).orElse(defaultDtStamp);
-            DtStamp dtStamp2 = (DtStamp) o2.getProperty(Property.DTSTAMP).orElse(defaultDtStamp);
+            var defaultDtStamp = new DtStamp(Instant.EPOCH);
+            var dtStamp1 = (DtStamp) o1.getProperty(Property.DTSTAMP).orElse(defaultDtStamp);
+            var dtStamp2 = (DtStamp) o2.getProperty(Property.DTSTAMP).orElse(defaultDtStamp);
 
             retVal = dtStamp1.compareTo(dtStamp2);
         }

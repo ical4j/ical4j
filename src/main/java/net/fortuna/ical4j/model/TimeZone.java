@@ -110,8 +110,8 @@ public class TimeZone extends java.util.TimeZone {
         ms -= second * 1000;
 
         // convert zero-based month of old API to new API by adding 1..
-        OffsetDateTime date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
-        final Observance observance = vTimeZone.getApplicableObservance(date);
+        var date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
+        final var observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
             final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
             return (int) (offset.getOffset().getTotalSeconds() * 1000L);
@@ -124,7 +124,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     @Override
     public int getOffset(long date) {
-        final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
+        final var observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
             final TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
             if ((offsetTo.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
@@ -161,7 +161,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     @Override
     public final boolean inDaylightTime(final Date date) {
-        final Observance observance = vTimeZone.getApplicableObservance(date.toInstant());
+        final var observance = vTimeZone.getApplicableObservance(date.toInstant());
         return (observance instanceof Daylight && (!negativeDstSupported || !isNegativeOffset(observance)));
     }
 
@@ -204,8 +204,8 @@ public class TimeZone extends java.util.TimeZone {
             // per java spec and when dealing with historical time,
             // rawoffset is the raw offset at the current date
             OffsetDateTime latestOnset = null;
-            for (Observance seasonalTime : seasonalTimes) {
-                OffsetDateTime onset = seasonalTime.getLatestOnset(Instant.now());
+            for (var seasonalTime : seasonalTimes) {
+                var onset = seasonalTime.getLatestOnset(Instant.now());
                 if (onset == null) {
                     continue;
                 }
@@ -236,7 +236,7 @@ public class TimeZone extends java.util.TimeZone {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TimeZone timeZone = (TimeZone) o;
+        var timeZone = (TimeZone) o;
 
         return rawOffset == timeZone.rawOffset
                 && Objects.equals(vTimeZone, timeZone.vTimeZone);

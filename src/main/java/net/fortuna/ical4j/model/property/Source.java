@@ -59,8 +59,7 @@ public class Source extends Property {
 
         @Override
         public Source createProperty(ParameterList parameters, String value) {
-            Source property = new Source(parameters, value);
-            return property;
+            return new Source(parameters, value);
         }
     }
 }

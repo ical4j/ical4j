@@ -224,10 +224,10 @@ public class Geo extends Property {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid GEO string");
         }
-        final String latitudeString = matcher.group(1);
+        final var latitudeString = matcher.group(1);
         latitude = new BigDecimal(latitudeString);
 
-        final String longitudeString = matcher.group(2);
+        final var longitudeString = matcher.group(2);
         longitude = new BigDecimal(longitudeString);
     }
 

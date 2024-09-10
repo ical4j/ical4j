@@ -286,7 +286,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
      * @throws ValidationException where the calendar is not in a valid state
      */
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = validator.validate(this);
+        var result = validator.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
             result = result.merge(validateComponents());
@@ -299,7 +299,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
      * @throws ValidationException where any of the calendar properties is not in a valid state
      */
     private ValidationResult validateProperties() throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
         for (final Property property : getProperties()) {
             result = result.merge(property.validate());
         }
@@ -311,14 +311,14 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
      * @throws ValidationException where any of the calendar components is not in a valid state
      */
     private ValidationResult validateComponents() throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
         Optional<Method> method = getMethod();
         if (method.isPresent()) {
-            for (CalendarComponent c : getComponents()) {
+            for (var c : getComponents()) {
                 result = result.merge(c.validate(method.get()));
             }
         } else {
-            for (CalendarComponent c : getComponents()) {
+            for (var c : getComponents()) {
                 result = result.merge(c.validate());
             }
         }
@@ -368,14 +368,14 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
                 timezoneList, Property.TZID);
 
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
-        for (final CalendarComponent c : getComponents()) {
+        for (final var c : getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
             }
 
             final Optional<Uid> uid = c.getUid();
             if (uid.isPresent()) {
-                Calendar uidCal = calendars.get(uid.get());
+                var uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
                     // remove METHOD property for split calendars..
                     PropertyList splitProps = (PropertyList) getPropertyList().removeAll(Property.METHOD);
@@ -383,7 +383,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
                     calendars.put(uid.get(), uidCal);
                 }
 
-                for (final Property p : c.getProperties()) {
+                for (final var p : c.getProperties()) {
                     final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
@@ -406,8 +406,8 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
      */
     public Uid getUid() throws ConstraintViolationException {
         Uid uid = null;
-        for (final Component c : components.getAll()) {
-            for (final Property foundUid : c.getProperties(Property.UID)) {
+        for (final var c : components.getAll()) {
+            for (final var foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }
@@ -426,7 +426,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
      * @return a content type string
      */
     public String getContentType(Charset charset) {
-        final StringBuilder b = new StringBuilder("text/calendar");
+        final var b = new StringBuilder("text/calendar");
 
         final Optional<Method> method = getMethod();
         if (method.isPresent()) {
@@ -447,7 +447,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
     @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Calendar) {
-            final Calendar calendar = (Calendar) arg0;
+            final var calendar = (Calendar) arg0;
             return new EqualsBuilder().append(getProperties(), calendar.getProperties())
                 .append(components, calendar.components).isEquals();
         }

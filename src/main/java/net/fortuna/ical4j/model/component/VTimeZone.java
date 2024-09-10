@@ -162,7 +162,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = new VTimeZoneValidator().validate(this);
+        var result = new VTimeZoneValidator().validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -217,8 +217,8 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
     public static Observance getApplicableObservance(final Temporal date, List<Observance> observances) {
         Observance latestObservance = null;
         OffsetDateTime latestOnset = null;
-        for (final Observance observance : observances) {
-            final OffsetDateTime onset = observance.getLatestOnset(date);
+        for (final var observance : observances) {
+            final var onset = observance.getLatestOnset(date);
             if (latestOnset == null || (onset != null && onset.isAfter(latestOnset))) {
                 latestOnset = onset;
                 latestObservance = observance;

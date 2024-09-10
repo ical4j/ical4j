@@ -157,7 +157,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      */
     public VJournal(final Temporal start, final String summary) {
         this();
-        add(new DtStart(start));
+        add(new DtStart<>(start));
         add(new Summary(summary));
     }
 
@@ -166,7 +166,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VJOURNAL.validate(this);
+        var result = ComponentValidator.VJOURNAL.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }

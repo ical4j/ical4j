@@ -32,14 +32,12 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Strings;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -71,7 +69,7 @@ public class TextList implements Serializable {
     public TextList(final String aValue) {
         List<String> values = new ArrayList<>();
 
-        final Matcher matcher = PATTERN.matcher(aValue);
+        final var matcher = PATTERN.matcher(aValue);
         while (matcher.find()){
             values.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
         }

@@ -109,7 +109,7 @@ public class RRule<T extends Temporal> extends Property {
         return recur;
     }
 
-    public void setRecur(Recur recur) {
+    public void setRecur(Recur<T> recur) {
         this.recur = recur;
     }
 
@@ -131,9 +131,8 @@ public class RRule<T extends Temporal> extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = new RecurValidator().validate(recur).merge(
+        return new RecurValidator().validate(recur).merge(
                 PropertyValidator.RRULE.validate(this));
-        return result;
     }
 
     @Override

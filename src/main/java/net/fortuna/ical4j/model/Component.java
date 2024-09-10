@@ -241,8 +241,8 @@ public abstract class Component extends Content implements Prototype<Component>,
      * @throws ValidationException where any of the component properties is not in a valid state
      */
     protected ValidationResult validateProperties() throws ValidationException {
-        ValidationResult result = new ValidationResult();
-        for (final Property property : getProperties()) {
+        var result = new ValidationResult();
+        for (final var property : getProperties()) {
             result = result.merge(property.validate());
         }
         return result;
@@ -254,7 +254,7 @@ public abstract class Component extends Content implements Prototype<Component>,
     @Override
 	public boolean equals(final Object arg0) {
         if (arg0 instanceof Component) {
-            final Component c = (Component) arg0;
+            final var c = (Component) arg0;
             return new EqualsBuilder().append(getName(), c.getName())
                     .append(getProperties(), c.getProperties()).isEquals();
         }
@@ -334,7 +334,7 @@ public abstract class Component extends Content implements Prototype<Component>,
 
         // add recurrence dates..
         List<Property> rDates = getProperties(Property.RDATE);
-        for (Property p : rDates) {
+        for (var p : rDates) {
             Optional<Value> value = p.getParameter(Parameter.VALUE);
             if (value.equals(Optional.of(Value.PERIOD))) {
                 recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).parallelStream()
@@ -347,7 +347,7 @@ public abstract class Component extends Content implements Prototype<Component>,
 
         // allow for recurrence rules that start prior to the specified period
         // but still intersect with it..
-        final Temporal startMinusDuration = period.getStart().minus(rDuration);
+        final var startMinusDuration = period.getStart().minus(rDuration);
 
         final T seed = start.get().getDate();
 

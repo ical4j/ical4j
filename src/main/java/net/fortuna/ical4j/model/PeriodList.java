@@ -171,8 +171,8 @@ public class PeriodList<T extends Temporal> implements Serializable {
                 period = prevPeriod;
                 normalised = true;
             } else if (prevPeriod != null) {
-                Interval prevInterval = prevPeriod.toInterval();
-                Interval periodInterval = period.toInterval();
+                var prevInterval = prevPeriod.toInterval();
+                var periodInterval = period.toInterval();
                 if (prevInterval.encloses(periodInterval)) {
                     // ignore periods contained by other periods..
                     period = prevPeriod;
@@ -270,7 +270,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     }
 
     public List<Interval> toIntervalList() {
-        return periods.stream().map(p -> p.toInterval()).collect(Collectors.toList());
+        return periods.stream().map(Period::toInterval).collect(Collectors.toList());
     }
 
     @Override

@@ -329,7 +329,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VEVENT.validate(this);
+        var result = ComponentValidator.VEVENT.validate(this);
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
 //        while (iterator.hasNext()) {
@@ -538,7 +538,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 Optional<TzId> tzId = dtStart.get().getParameter(Parameter.TZID);
                 DtEnd<T> newdtEnd;
                 if (tzId.isPresent()) {
-                    ParameterList dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
+                    var dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
                     newdtEnd = new DtEnd<>(dtendParams, (T) dtStart.get().getDate().plus(vEventDuration.getDuration()));
                 } else {
                     newdtEnd = new DtEnd<>((T) dtStart.get().getDate().plus(vEventDuration.getDuration()));

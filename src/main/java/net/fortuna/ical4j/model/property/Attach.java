@@ -41,8 +41,6 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import org.apache.commons.codec.BinaryDecoder;
-import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
@@ -190,7 +188,7 @@ public class Attach extends Property {
         if (encoding.isPresent()) {
             // binary = Base64.decode(aValue);
             try {
-                final BinaryDecoder decoder = DecoderFactory.getInstance()
+                final var decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(encoding.get());
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
@@ -222,7 +220,7 @@ public class Attach extends Property {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
                 Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
-                final BinaryEncoder encoder = EncoderFactory.getInstance()
+                final var encoder = EncoderFactory.getInstance()
                         .createBinaryEncoder(encoding.get());
                 return new String(encoder.encode(getBinary()));
             } catch (UnsupportedEncodingException | EncoderException uee) {

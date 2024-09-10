@@ -63,8 +63,7 @@ public class RefreshInterval extends Property {
 
         @Override
         public RefreshInterval createProperty(ParameterList parameters, String value) {
-            RefreshInterval property = new RefreshInterval(parameters, value);
-            return property;
+            return new RefreshInterval(parameters, value);
         }
     }
 }
