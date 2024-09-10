@@ -85,7 +85,7 @@ public class ValidationEntry implements Comparable<ValidationEntry> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ValidationEntry that = (ValidationEntry) o;
+        var that = (ValidationEntry) o;
         return Objects.equals(message, that.message) && severity == that.severity && Objects.equals(context, that.context);
     }
 

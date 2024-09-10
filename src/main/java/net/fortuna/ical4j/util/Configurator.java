@@ -35,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -59,7 +58,7 @@ public final class Configurator {
         CONFIG = new Properties();
 
         boolean isLoaded;
-        try (InputStream in = ResourceLoader.getResourceAsStream("ical4j.properties")) {
+        try (var in = ResourceLoader.getResourceAsStream("ical4j.properties")) {
             CONFIG.load(in);
             isLoaded = true;
         } catch (IOException | NullPointerException e) {
@@ -85,7 +84,7 @@ public final class Configurator {
      * @return true if the specified compatibility hint is enabled, otherwise false
      */
     public static Optional<String> getProperty(final String key) {
-        String property = CONFIG.getProperty(key);
+        var property = CONFIG.getProperty(key);
         if (property == null) {
             property = System.getProperty(key);
         }

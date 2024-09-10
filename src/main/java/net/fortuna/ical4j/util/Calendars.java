@@ -83,7 +83,7 @@ public final class Calendars {
      * @throws ParserException occurs when the data in the specified URL is invalid
      */
     public static Calendar load(final URL url) throws IOException, ParserException {
-        final CalendarBuilder builder = new CalendarBuilder();
+        final var builder = new CalendarBuilder();
         return builder.build(url.openStream());
     }
 
@@ -98,7 +98,7 @@ public final class Calendars {
         if (calendars.length > 1) {
             // merge last two..
             calendars[calendars.length - 2] = calendars[calendars.length - 2].merge(calendars[calendars.length - 1]);
-            Calendar[] sub = Arrays.copyOf(calendars, calendars.length - 1);
+            var sub = Arrays.copyOf(calendars, calendars.length - 1);
             return merge(sub);
         } else {
             return calendars[0];
@@ -140,17 +140,17 @@ public final class Calendars {
         		timezoneList, Property.TZID);
         
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
-        for (final CalendarComponent c : calendar.getComponents()) {
+        for (final var c : calendar.getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
             }
             
             final Optional<Uid> uid = c.getUid();
             if (uid.isPresent()) {
-                Calendar uidCal = calendars.get(uid.get());
+                var uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
                     // remove METHOD property for split calendars..
-                    PropertyList splitProps = (PropertyList) calendar.getPropertyList().removeAll(Property.METHOD);
+                    var splitProps = (PropertyList) calendar.getPropertyList().removeAll(Property.METHOD);
                     uidCal = new Calendar(splitProps, new ComponentList<>());
                     calendars.put(uid.get(), uidCal);
                 }
@@ -158,7 +158,7 @@ public final class Calendars {
                 for (final Property p : c.getProperties()) {
                     final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
-                        final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
+                        final var timezone = timezones.getComponent(tzid.get().getValue());
                         if (!uidCal.getComponents().contains(timezone)) {
                             uidCal.add(timezone);
                         }
@@ -180,8 +180,8 @@ public final class Calendars {
     @Deprecated
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
-        for (final Component c : calendar.getComponents()) {
-            for (final Property foundUid : c.getProperties(Property.UID)) {
+        for (final var c : calendar.getComponents()) {
+            for (final var foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }
@@ -203,7 +203,7 @@ public final class Calendars {
      */
     @Deprecated
     public static String getContentType(Calendar calendar, Charset charset) {
-        final StringBuilder b = new StringBuilder("text/calendar");
+        final var b = new StringBuilder("text/calendar");
         
         final Optional<Method> method = calendar.getMethod();
         if (method.isPresent()) {

@@ -33,12 +33,11 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
 
         final List<T> setPosDates = new ArrayList<>();
         final int size = dates.size();
-        for (final Integer setPos : setPosList) {
-            final int pos = setPos;
-            if (pos > 0 && pos <= size) {
-                setPosDates.add(dates.get(pos - 1));
-            } else if (pos < 0 && pos >= -size) {
-                setPosDates.add(dates.get(size + pos));
+        for (final int setPos : setPosList) {
+            if (setPos > 0 && setPos <= size) {
+                setPosDates.add(dates.get(setPos - 1));
+            } else if (setPos < 0 && setPos >= -size) {
+                setPosDates.add(dates.get(size + setPos));
             }
         }
         return setPosDates;

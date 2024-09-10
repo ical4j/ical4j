@@ -51,7 +51,7 @@ public class UnaryExpression implements FilterExpression {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UnaryExpression that = (UnaryExpression) o;
+        var that = (UnaryExpression) o;
         return operator == that.operator && operand.equals(that.operand);
     }
 

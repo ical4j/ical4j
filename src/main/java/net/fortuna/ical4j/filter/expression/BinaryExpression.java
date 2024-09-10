@@ -54,7 +54,7 @@ public class BinaryExpression implements FilterExpression {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BinaryExpression that = (BinaryExpression) o;
+        var that = (BinaryExpression) o;
         return left.equals(that.left) && operator == that.operator && right.equals(that.right);
     }
 

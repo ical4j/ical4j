@@ -58,7 +58,7 @@ public class TargetExpression implements FilterExpression {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TargetExpression that = (TargetExpression) o;
+        var that = (TargetExpression) o;
         return value.equals(that.value);
     }
 

@@ -115,10 +115,10 @@ public class DefaultContentHandler implements ContentHandler {
                 getComponentBuilder();
 
         if (parent != null) {
-            Component subComponent = componentBuilder.build();
+            var subComponent = componentBuilder.build();
             parent.subComponent(subComponent);
         } else {
-            CalendarComponent component = componentBuilder.build();
+            var component = componentBuilder.build();
             calendarComponents.add(component);
             if (component instanceof VTimeZone && tzRegistry != null) {
                 // register the timezone for use with iCalendar objects..
@@ -173,7 +173,7 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void parameter(String name, String value) {
         if (propertyBuilder != null) {
-            Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
+            var parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
                     .name(name).value(value).build();
 
             if (parameter instanceof TzId) {

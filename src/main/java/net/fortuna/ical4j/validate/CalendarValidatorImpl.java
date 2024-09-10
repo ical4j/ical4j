@@ -2,7 +2,6 @@ package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -33,7 +32,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
     @Override
     public ValidationResult validate(Calendar target) throws ValidationException {
-        ValidationResult result = new ValidationResult(rules.apply(Calendar.VCALENDAR, target));
+        var result = new ValidationResult(rules.apply(Calendar.VCALENDAR, target));
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
@@ -51,7 +50,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         }
 
         // validate properties..
-        for (final Property property : target.getProperties()) {
+        for (final var property : target.getProperties()) {
             boolean isCalendarProperty = calendarProperties.stream().filter(calProp -> calProp.isInstance(property)) != null;
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
@@ -66,7 +65,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
             result = result.merge(new ITIPValidator().validate(target));
 
             // perform ITIP validation on components..
-            for (CalendarComponent component : target.getComponents()) {
+            for (var component : target.getComponents()) {
                 component.validate(method.get());
             }
         }

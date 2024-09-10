@@ -11,7 +11,6 @@ import org.jparsec.*;
 import java.time.*;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalAmount;
 import java.time.temporal.WeekFields;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -88,65 +87,65 @@ public class FilterExpressionParser {
     static {
         FUNCTIONS.put("now", (Function<String, Temporal>) s -> {
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return Instant.now().plus(temporalAmount);
             }
             return Instant.now();
         });
         FUNCTIONS.put("startOfDay", (Function<String, Temporal>) s -> {
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return LocalDate.now().atStartOfDay().plus(temporalAmount);
             }
             return LocalDate.now().atStartOfDay();
         });
         FUNCTIONS.put("endOfDay", (Function<String, Temporal>) s -> {
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return LocalDate.now().atTime(23, 59).plus(temporalAmount);
             }
             return LocalDate.now().atTime(23, 59);
         });
         FUNCTIONS.put("startOfWeek", (Function<String, Temporal>) s -> {
-            DayOfWeek first = WeekFields.ISO.getFirstDayOfWeek();
+            var first = WeekFields.ISO.getFirstDayOfWeek();
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return LocalDate.now().with(TemporalAdjusters.previousOrSame(first)).plus(temporalAmount);
             }
             return LocalDate.now().with(TemporalAdjusters.previousOrSame(first));
         });
         FUNCTIONS.put("endOfWeek", (Function<String, Temporal>) s -> {
-            DayOfWeek last = DayOfWeek.of(WeekFields.ISO.getMinimalDaysInFirstWeek());
+            var last = DayOfWeek.of(WeekFields.ISO.getMinimalDaysInFirstWeek());
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return LocalDate.now().with(TemporalAdjusters.nextOrSame(last)).plus(temporalAmount);
             }
             return LocalDate.now().with(TemporalAdjusters.nextOrSame(last));
         });
         FUNCTIONS.put("startOfMonth", (Function<String, Temporal>) s -> {
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return YearMonth.now().atDay(1).atStartOfDay().plus(temporalAmount);
             }
             return YearMonth.now().atDay(1).atStartOfDay();
         });
         FUNCTIONS.put("endOfMonth", (Function<String, Temporal>) s -> {
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return YearMonth.now().atEndOfMonth().atTime(23, 59).plus(temporalAmount);
             }
             return YearMonth.now().atEndOfMonth().atTime(23, 59);
         });
         FUNCTIONS.put("startOfYear", (Function<String, Temporal>) s -> {
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return Year.now().atMonth(1).atDay(1).atStartOfDay().plus(temporalAmount);
             }
             return Year.now().atMonth(1).atDay(1).atStartOfDay();
         });
         FUNCTIONS.put("endOfYear", (Function<String, Temporal>) s -> {
             if (!s.isEmpty()) {
-                TemporalAmount temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
+                var temporalAmount = TemporalAmountAdapter.parse(s).getDuration();
                 return Year.now().atMonth(12).atEndOfMonth().atTime(23, 59).plus(temporalAmount);
             }
             return Year.now().atMonth(12).atEndOfMonth().atTime(23, 59);
@@ -155,35 +154,35 @@ public class FilterExpressionParser {
 
     public FilterExpression parse(String filterExpression) {
         FilterExpression expression = null;
-        for (String part : filterExpression.split("\\s*and\\s*")) {
+        for (var part : filterExpression.split("\\s*and\\s*")) {
             if (part.matches("[\\w-]+\\s*>=\\s*\\w+")) {
-                String[] greaterThanEqual = part.split("\\s*>=\\s*");
+                var greaterThanEqual = part.split("\\s*>=\\s*");
                 expression = FilterExpression.greaterThanEqual(greaterThanEqual[0], resolveValue(greaterThanEqual[1]));
             } else if (part.matches("[\\w-]+\\s*<=\\s*\\w+")) {
-                String[] lessThanEqual = part.split("\\s*<=\\s*");
+                var lessThanEqual = part.split("\\s*<=\\s*");
                 expression = FilterExpression.lessThanEqual(lessThanEqual[0], resolveValue(lessThanEqual[1]));
             } else if (part.matches("[\\w-]+\\s*=\\s*[^<>=]+")) {
-                String[] equalTo = part.split("\\s*=\\s*");
+                var equalTo = part.split("\\s*=\\s*");
                 expression = FilterExpression.equalTo(equalTo[0], (String) resolveValue(equalTo[1]));
             } else if (part.matches("[\\w-]+\\s*>\\s*\\w+")) {
-                String[] greaterThan = part.split("\\s*>\\s*");
+                var greaterThan = part.split("\\s*>\\s*");
                 expression = FilterExpression.greaterThan(greaterThan[0], (Integer) resolveValue(greaterThan[1]));
             } else if (part.matches("[\\w-]+\\s*<\\s*\\w+")) {
-                String[] lessThan = part.split("\\s*<\\s*");
+                var lessThan = part.split("\\s*<\\s*");
                 expression = FilterExpression.lessThan(lessThan[0], resolveValue(lessThan[1]));
             } else if (part.matches("[\\w-]+\\s+in\\s+\\[[^<>=]+]")) {
-                String[] in = part.split("\\s*in\\s*");
+                var in = part.split("\\s*in\\s*");
                 List<String> items = Arrays.asList(in[1].replaceAll("[\\[\\]]", "")
                         .split("\\[?\\s*,\\s*]?"));
                 expression = FilterExpression.in(in[0], items);
             } else if (part.matches("[\\w-]+\\s+contains\\s+\".+\"")) {
-                String[] contains = part.split("\\s*contains\\s*");
+                var contains = part.split("\\s*contains\\s*");
                 expression = FilterExpression.contains(contains[0], contains[1].replaceAll("^\"?|\"?$", ""));
             } else if (part.matches("[\\w-]+\\s+exists")) {
-                String[] exists = part.split("\\s*exists");
+                var exists = part.split("\\s*exists");
                 expression = FilterExpression.exists(exists[0]);
             } else if (part.matches("[\\w-]+\\s+not exists")) {
-                String[] notExists = part.split("\\s*not exists");
+                var notExists = part.split("\\s*not exists");
                 expression = FilterExpression.notExists(notExists[0]);
             } else {
                 throw new IllegalArgumentException("Invalid filter expression: " + filterExpression);

@@ -65,7 +65,7 @@ public class RandomUidGenerator implements UidGenerator {
     @Override
     public Uid generateUid() {
         if (secure) {
-            byte[] buffer = new byte[20];
+            var buffer = new byte[20];
             random.nextBytes(buffer);
             return new Uid(encoder.encodeToString(buffer));
         } else {

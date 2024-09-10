@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
 
@@ -76,7 +75,7 @@ public class RequestTransformer extends AbstractMethodTransformer {
 
     @Override
     public Calendar apply(Calendar object) {
-        for (CalendarComponent component : object.getComponents()) {
+        for (var component : object.getComponents()) {
             component.with(ORGANIZER, organizer);
         }
         return super.apply(object);
