@@ -102,19 +102,19 @@ public class TimeZone extends java.util.TimeZone {
 
         // calculate time of day
         int ms = milliseconds;
-        final int hour = ms / 3600000;
-        ms -= hour * 3600000;
-        final int minute = ms / 60000;
-        ms -= minute * 60000;
-        final int second = ms / 1000;
-        ms -= second * 1000;
+        final int hour = ms / 3_600_000;
+        ms -= hour * 3_600_000;
+        final int minute = ms / 60_000;
+        ms -= minute * 60_000;
+        final int second = ms / 1_000;
+        ms -= second * 1_000;
 
         // convert zero-based month of old API to new API by adding 1..
-        var date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
+        var date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1_000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
         final var observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
             final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
-            return (int) (offset.getOffset().getTotalSeconds() * 1000L);
+            return (int) (offset.getOffset().getTotalSeconds() * 1_000L);
         }
         return 0;
     }
@@ -127,10 +127,10 @@ public class TimeZone extends java.util.TimeZone {
         final var observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
             final TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
-            if ((offsetTo.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
+            if ((offsetTo.getOffset().getTotalSeconds() * 1_000L) < getRawOffset()) {
                 return getRawOffset();
             } else {
-                return (int) (offsetTo.getOffset().getTotalSeconds() * 1000L);
+                return (int) (offsetTo.getOffset().getTotalSeconds() * 1_000L);
             }
         }
         return 0;
@@ -220,12 +220,12 @@ public class TimeZone extends java.util.TimeZone {
         if (latestSeasonalTime instanceof Daylight) {
             final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getTimeZoneOffsetFrom();
             if (offsetFrom.isPresent()) {
-                return (int) (offsetFrom.get().getOffset().getTotalSeconds() * 1000L);
+                return (int) (offsetFrom.get().getOffset().getTotalSeconds() * 1_000L);
             }
         } else if (latestSeasonalTime instanceof Standard) {
             final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getTimeZoneOffsetTo();
             if (offsetTo.isPresent()) {
-                return (int) (offsetTo.get().getOffset().getTotalSeconds() * 1000L);
+                return (int) (offsetTo.get().getOffset().getTotalSeconds() * 1_000L);
             }
         }
         return 0;

@@ -180,8 +180,8 @@ public class TemporalAmountAdapter implements Serializable {
     public static TemporalAmountAdapter fromDateRange(Date start, Date end) {
         TemporalAmount duration;
         long durationMillis = end.getTime() - start.getTime();
-        if (durationMillis % (24 * 60 * 60 * 1000) == 0) {
-            duration = java.time.Period.ofDays((int) (durationMillis / (24 * 60 * 60 * 1000)));
+        if (durationMillis % (24 * 60 * 60 * 1_000) == 0) {
+            duration = java.time.Period.ofDays((int) (durationMillis / (24 * 60 * 60 * 1_000)));
         } else {
             duration = java.time.Duration.ofMillis(durationMillis);
         }

@@ -98,7 +98,7 @@ public class TimeZoneLoader {
 
         var zoneId = ZoneId.of(javaTz.getID(), ZoneId.SHORT_IDS);
 
-        int rawTimeZoneOffsetInSeconds = javaTz.getRawOffset() / 1000;
+        int rawTimeZoneOffsetInSeconds = javaTz.getRawOffset() / 1_000;
 
         var timezone = new VTimeZone();
 

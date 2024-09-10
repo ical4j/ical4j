@@ -274,7 +274,7 @@ public class Recur<T extends Temporal> implements Serializable {
     private static final int maxIncrementCount;
 
     static {
-        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
+        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1_000);
     }
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
