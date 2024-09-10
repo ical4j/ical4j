@@ -3495,6 +3495,10 @@ acceptedBreaks:
   "4.0.2":
     org.mnode.ical4j:ical4j:
     - code: "java.generics.elementNowParameterized"
+      old: "class net.fortuna.ical4j.model.property.ExRule"
+      new: "class net.fortuna.ical4j.model.property.ExRule<T extends java.time.temporal.Temporal>"
+      justification: "exrule_added_generics"
+    - code: "java.generics.elementNowParameterized"
       old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
         \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
       new: "method <T extends java.time.temporal.Temporal> java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<T>>\
@@ -3510,6 +3514,10 @@ acceptedBreaks:
       old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
       new: "method <T extends net.fortuna.ical4j.model.Property> T net.fortuna.ical4j.model.Property::copy()"
       justification: "property_accessor_refactoring"
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "class net.fortuna.ical4j.model.property.ExRule"
+      new: "class net.fortuna.ical4j.model.property.ExRule<T extends java.time.temporal.Temporal>"
+      justification: "exrule_added_generics"
     - code: "java.generics.formalTypeParameterAdded"
       old: "method java.util.Optional<net.fortuna.ical4j.model.property.DtEnd<?>>\
         \ net.fortuna.ical4j.model.component.VEvent::getEndDate()"
@@ -3571,3 +3579,8 @@ acceptedBreaks:
       old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
       new: "method <T extends net.fortuna.ical4j.model.Property> T net.fortuna.ical4j.model.Property::copy()"
       justification: "property_accessor_refactoring"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.Recur net.fortuna.ical4j.model.property.ExRule::getRecur()"
+      new: "method net.fortuna.ical4j.model.Recur<T> net.fortuna.ical4j.model.property.ExRule<T\
+        \ extends java.time.temporal.Temporal>::getRecur()"
+      justification: "exrule_added_generics"
