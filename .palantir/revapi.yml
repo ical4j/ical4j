@@ -3576,6 +3576,12 @@ acceptedBreaks:
         \ net.fortuna.ical4j.model.component.VEvent::getEndDate(boolean)"
       justification: "property_accessor_refactoring"
     - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ComponentBuilder<net.fortuna.ical4j.model.component.CalendarComponent>\
+        \ net.fortuna.ical4j.data.DefaultContentHandler::getComponentBuilder()"
+      new: "method net.fortuna.ical4j.model.ComponentBuilder<net.fortuna.ical4j.model.Component>\
+        \ net.fortuna.ical4j.data.DefaultContentHandler::getComponentBuilder()"
+      justification: "component_builder_fixed_generics"
+    - code: "java.method.returnTypeTypeParametersChanged"
       old: "method net.fortuna.ical4j.model.Property net.fortuna.ical4j.model.Property::copy()"
       new: "method <T extends net.fortuna.ical4j.model.Property> T net.fortuna.ical4j.model.Property::copy()"
       justification: "property_accessor_refactoring"
