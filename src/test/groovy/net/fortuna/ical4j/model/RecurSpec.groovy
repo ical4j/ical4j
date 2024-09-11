@@ -304,7 +304,8 @@ class RecurSpec extends Specification {
 
         where:
         rule								| start			| end			| expected
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110109', '20110123']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110102'	| '20110201'	| ['20110102', '20110116', '20110130']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20101226'	| '20110201'	| ['20101226', '20110109', '20110123']
     }
 
     @Unroll
