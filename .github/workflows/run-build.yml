@@ -3,7 +3,7 @@
 
 name: Java CI with Gradle
 
-on: [push]
+on: [push, pull_request]
 
 permissions: read-all
 
