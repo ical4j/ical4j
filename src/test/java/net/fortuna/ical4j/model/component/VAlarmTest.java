@@ -71,17 +71,17 @@ public class VAlarmTest extends ComponentTest {
     public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
         
-        VAlarm alarm = new VAlarm().withProperty(new Trigger(Instant.now())).getFluentTarget();
+        var alarm = (VAlarm) new VAlarm().withProperty(new Trigger(Instant.now())).getFluentTarget();
         
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
 
-        alarm = alarm.copy();
+        alarm = (VAlarm) alarm.copy();
         alarm.add(DISPLAY).add(new Description("Testing display"));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
-        alarm = new VAlarm(java.time.Duration.ofHours(2))
+        alarm = (VAlarm) new VAlarm(java.time.Duration.ofHours(2))
             .withProperty(DISPLAY)
             .withProperty(new Description("Testing display")).getFluentTarget();
         
@@ -89,16 +89,16 @@ public class VAlarmTest extends ComponentTest {
         alarm.add(duration);
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
         
-        alarm = alarm.copy();
+        alarm = (VAlarm) alarm.copy();
         alarm.add(new Repeat(2));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
-        alarm = alarm.copy();
+        alarm = (VAlarm) alarm.copy();
         alarm.remove(duration);
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
         
         //testValidationEmail..
-        alarm = new VAlarm(java.time.Duration.ofDays(-2))
+        alarm = (VAlarm) new VAlarm(java.time.Duration.ofDays(-2))
                 .withProperty(EMAIL)
                 .withProperty(new Attendee("mailto:john_doe@example.com"))
                 .withProperty(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
@@ -106,7 +106,7 @@ public class VAlarmTest extends ComponentTest {
                     + "to the weekly managers meeting (MGR-LIST). Attached is a " 
                     + "pointer the document template for the agenda file.")).getFluentTarget();
 
-        Attach attachment = new Attach(new URI("http://example.com/templates/agenda.doc"))
+        var attachment = new Attach(new URI("http://example.com/templates/agenda.doc"))
                 .withParameter(new FmtType("application/msword")).getFluentTarget();
         alarm.add(attachment);
         suite.addTest(new VAlarmTest("testValidation", alarm));

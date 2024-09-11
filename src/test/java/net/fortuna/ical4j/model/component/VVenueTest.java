@@ -62,13 +62,13 @@ public class VVenueTest extends ComponentTest {
     public static TestSuite suite() throws SocketException {
         TestSuite suite = new TestSuite();
 
-        VVenue vv = new VVenue();
+        var vv = new VVenue();
         suite.addTest(new VVenueTest("testIsCalendarComponent", vv));
         suite.addTest(new VVenueTest("testValidationException", vv));
         
         UidGenerator g = new RandomUidGenerator();
-        vv = new VVenue().withProperty(g.generateUid()).getFluentTarget();
-        suite.addTest(new VVenueTest("testValidation", vv));
+        var vv2 = (VVenue) new VVenue().withProperty(g.generateUid()).getFluentTarget();
+        suite.addTest(new VVenueTest("testValidation", vv2));
         
         return suite;
     }

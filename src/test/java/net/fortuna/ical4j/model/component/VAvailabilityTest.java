@@ -65,18 +65,18 @@ public class VAvailabilityTest extends ComponentTest {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
 
-        VAvailability a = new VAvailability();
+        var a = new VAvailability();
         suite.addTest(new VAvailabilityTest("testIsCalendarComponent", a));
         suite.addTest(new VAvailabilityTest("testValidationException", a));
         
         UidGenerator g = new RandomUidGenerator();
-        a = new VAvailability().withProperty(g.generateUid())
+        var a2 = (VAvailability) new VAvailability().withProperty(g.generateUid())
                 .withProperty(new DtStart<>(ZonedDateTime.now())
                         .withParameter(new TzId(ZoneId.systemDefault().getId()))
                         .getFluentTarget())
                 .getFluentTarget();
 
-        suite.addTest(new VAvailabilityTest("testValidation", a));
+        suite.addTest(new VAvailabilityTest("testValidation", a2));
         
         return suite;
     }

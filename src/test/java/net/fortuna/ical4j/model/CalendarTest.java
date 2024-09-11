@@ -65,7 +65,7 @@ public class CalendarTest {
     public void setUp() {
         calendar = new Calendar().withDefaults()
                 .withProdId("-//Ben Fortuna//iCal4j 1.0//EN")
-                .withComponent(new VEvent().withProperty(new Uid("1")).getFluentTarget())
+                .withComponent(new VEvent().add(new Uid("1")))
                 .getFluentTarget();
     }
 

@@ -95,7 +95,7 @@ public class CategoriesTest extends PropertyTest {
         Categories cat2 = new Categories("test2");
         Categories cat3 = new Categories("test1,test2,test 1\\,2\\,3");
 
-        VEvent event = new VEvent().withProperty(cat1).withProperty(cat2).withProperty(cat3).getFluentTarget();
+        var event = (VEvent) new VEvent().withProperty(cat1).withProperty(cat2).withProperty(cat3).getFluentTarget();
 
         Calendar calendar = new Calendar(new ComponentList<>(Collections.singletonList(event)));
 

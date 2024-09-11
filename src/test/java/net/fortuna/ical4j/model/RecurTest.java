@@ -666,8 +666,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
 //        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
 
         start = ZonedDateTime.now(TimeZoneRegistry.getGlobalZoneId("America/Los_Angeles")).withSecond(0);
-        DtStart<ZonedDateTime> dtStart = new DtStart<>(start)
-                .withParameter(new TzId(start.getZone().getId())).getFluentTarget();
+        DtStart<ZonedDateTime> dtStart = new DtStart<>(start).add(new TzId(start.getZone().getId()));
         end = start.plusMonths(2);
         DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(end);
 

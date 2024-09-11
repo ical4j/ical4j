@@ -67,12 +67,12 @@ public class VToDoTest<T extends Temporal> extends CalendarComponentTest<T> {
 
         // iCalendar validation
         suite.addTest(new VToDoTest<>("testValidationException", td));
-        VToDo validTd = new VToDo().withProperty(new Uid("12")).getFluentTarget();
+        var validTd = (VToDo) new VToDo().withProperty(new Uid("12")).getFluentTarget();
         suite.addTest(new VToDoTest<>("testValidation", validTd));
 
         // iTIP REPLY validation
         suite.addTest(new VToDoTest<>("testReplyValidationException", new VToDo()));
-        VToDo replyTd = new VToDo().withProperty(new Attendee("mailto:jane@example.com"))
+        var replyTd = (VToDo) new VToDo().withProperty(new Attendee("mailto:jane@example.com"))
                 .withProperty(new Organizer("mailto:joe@example.com"))
                 .withProperty(new Uid("12")).getFluentTarget();
         suite.addTest(new VToDoTest<>("testReplyValidation", replyTd));
