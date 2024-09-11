@@ -43,23 +43,23 @@ class ByDayRuleTest extends Specification {
 
     def 'test limit with FREQ=MINUTELY'() {
         given: 'a calendar definition'
-        TemporalAdapter<LocalDateTime> dateTime = TemporalAdapter.parse("20210104T130000");
-        VEvent e1 = new VEvent(dateTime.temporal, "even");
-        UidGenerator ug = new RandomUidGenerator();
-        e1.add(ug.generateUid());
+        TemporalAdapter<LocalDateTime> dateTime = TemporalAdapter.parse("20210104T130000")
+        VEvent e1 = new VEvent(dateTime.temporal, "even")
+        UidGenerator ug = new RandomUidGenerator()
+        e1.add(ug.generateUid())
 
         // recurency
         Recur recur = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15).hourList(numberList(13, 17))
-                .dayList(WE).build();
-        e1.add(new RRule(recur));
+                .dayList(WE).build()
+        e1.add(new RRule(recur))
 
         //exrules
-        final NumberList hourExList = new NumberList('16');
+        final NumberList hourExList = new NumberList('16')
         Recur recurEx = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15).hourList(hourExList)
-                .minuteList(numberList(30, 60)).build();
+                .minuteList(numberList(30, 60)).build()
 
         Recur recurEx2 = new Recur.Builder().frequency(Frequency.MINUTELY).interval(15)
-                .hourList(numberList(13, 14)).minuteList(numberList(0, 30)).build();
+                .hourList(numberList(13, 14)).minuteList(numberList(0, 30)).build()
 
         Calendar calendar = new Calendar().withDefaults()
                 .withProperty(new ExRule(recurEx))
@@ -67,27 +67,27 @@ class ByDayRuleTest extends Specification {
                 .withComponent(new VEvent(dateTime.temporal, "even")
                         .withProperty(new RandomUidGenerator().generateUid())
                         .getFluentTarget())
-                .getFluentTarget();
+                .getFluentTarget()
 
-        System.out.println(calendar);
+        System.out.println(calendar)
 
         expect: 'dates are calculated successfully'
-        System.out.println("--------------------------------------------------");
-        TemporalAdapter<LocalDateTime> from = TemporalAdapter.parse("20200101T070000");
+        System.out.println("--------------------------------------------------")
+        TemporalAdapter<LocalDateTime> from = TemporalAdapter.parse("20200101T070000")
         TemporalAdapter<LocalDateTime> to = TemporalAdapter.parse("20210107T070000")
 
-        Period period = new Period(from.temporal, to.temporal);
+        Period period = new Period(from.temporal, to.temporal)
         for (Component c : calendar.getComponents(Component.VEVENT)) {
-            PeriodList<LocalDateTime> list = c.calculateRecurrenceSet(period);
+            PeriodList<LocalDateTime> list = c.calculateRecurrenceSet(period)
             for (Period<LocalDateTime> p : list.periods) {
-                System.out.println(p);
+                System.out.println(p)
             }
         }
     }
 
     private static NumberList numberList(int startInclusive, int endExclusive) {
-        final NumberList integers = new NumberList();
-        IntStream.range(startInclusive, endExclusive).forEach(integers::add);
-        return integers;
+        final NumberList integers = new NumberList()
+        IntStream.range(startInclusive, endExclusive).forEach(integers::add)
+        return integers
     }
 }

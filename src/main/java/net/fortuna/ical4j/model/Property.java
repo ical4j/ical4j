@@ -454,7 +454,7 @@ public abstract class Property extends Content implements Prototype<Property>, C
      */
     @Override
     public String toString() {
-        final StringBuilder buffer = new StringBuilder();
+        final var buffer = new StringBuilder();
         if (prefix != null && !prefix.isEmpty()) {
             buffer.append(prefix);
             buffer.append('.');
@@ -623,7 +623,7 @@ public abstract class Property extends Content implements Prototype<Property>, C
     @Override
     public boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
-            final Property p = (Property) arg0;
+            final var p = (Property) arg0;
             return getName().equals(p.getName())
                     && new EqualsBuilder().append(getValue(), p.getValue()).append(parameters,
                     p.parameters).append(prefix, p.prefix).isEquals();

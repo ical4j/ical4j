@@ -138,7 +138,7 @@ public class Version extends Property {
      */
     @Override
     public final String getValue() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         if (getMinVersion() != null) {
             b.append(getMinVersion());
             if (getMaxVersion() != null) {

@@ -244,7 +244,7 @@ public class Trigger extends DateProperty<Instant> implements UtcProperty {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = super.validate();
+        var result = super.validate();
         if (Optional.of(Value.DATE_TIME).equals(getParameter(Parameter.VALUE))) {
             result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));
         } else {

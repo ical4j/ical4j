@@ -61,9 +61,9 @@ import java.util.function.Predicate;
  */
 public class FilterTest<T extends Component> extends TestCase {
 
-    private Filter<T> filter;
+    private final Filter<T> filter;
     
-    private Collection<T> collection;
+    private final Collection<T> collection;
     
     private int expectedFilteredSize;
     

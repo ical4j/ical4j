@@ -74,7 +74,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         if (temporal instanceof ZonedDateTime && !isFloating(temporal) && !isUtc(temporal)) {
             //XXX: assume zone id is global for now.. this may need to be resolved via the
             // timezone registry in future..
-            ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
+            var zoneId = ((ZonedDateTime) temporal).getZone();
             this.tzId = new TzId(zoneId.getId());
         } else {
             this.tzId = null;
@@ -296,7 +296,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     public static TemporalAdapter<?> from(Date date) {
         Temporal temporal;
         if (date instanceof DateTime) {
-            DateTime dateTime = (DateTime) date;
+            var dateTime = (DateTime) date;
             if (dateTime.isUtc()) {
                 temporal = date.toInstant();
             } else if (dateTime.getTimeZone() == null) {

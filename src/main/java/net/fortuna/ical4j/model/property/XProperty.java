@@ -103,7 +103,7 @@ public class XProperty extends Property implements Encodable {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                 && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
             

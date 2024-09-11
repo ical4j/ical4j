@@ -59,8 +59,7 @@ public class Color extends Property {
 
         @Override
         public Color createProperty(ParameterList parameters, String value) {
-            Color property = new Color(parameters, value);
-            return property;
+            return new Color(parameters, value);
         }
     }
 }

@@ -56,7 +56,7 @@ public class BooleanExpression implements LiteralExpression<Boolean> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BooleanExpression that = (BooleanExpression) o;
+        var that = (BooleanExpression) o;
         return Objects.equals(value, that.value);
     }
 

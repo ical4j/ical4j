@@ -31,12 +31,12 @@
  */
 package net.fortuna.ical4j.data;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * $Id$
@@ -50,7 +50,7 @@ public class UnfoldingReaderTest extends TestCase {
 
     private static final int BUFFER_SIZE = 1024;
     
-    private UnfoldingReader reader;
+    private final UnfoldingReader reader;
     
     /**
      * @param input

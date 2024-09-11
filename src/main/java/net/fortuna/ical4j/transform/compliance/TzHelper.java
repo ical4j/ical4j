@@ -70,11 +70,11 @@ public class TzHelper {
     }
 
     private static void initMsTimezones() {
-        try (Scanner scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE))) {
+        try (var scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE))) {
             while (scanner.hasNext()) {
-                String[] arr = scanner.nextLine().split("=");
-                String standardTzId = arr[1];
-                String[] displayNameAndMsTzId = arr[0].split(";");
+                var arr = scanner.nextLine().split("=");
+                var standardTzId = arr[1];
+                var displayNameAndMsTzId = arr[0].split(";");
                 MS_TIMEZONE_NAMES.put(displayNameAndMsTzId[0], standardTzId);
                 MS_TIMEZONE_IDS.put(displayNameAndMsTzId[1], standardTzId);
             }
@@ -86,7 +86,7 @@ public class TzHelper {
 
     static void correctTzParameterFrom(Property property) {
         if (!property.getParameter(Parameter.TZID).isPresent()) {
-            String newTimezoneId = getCorrectedTimezoneFromTzParameter(property);
+            var newTimezoneId = getCorrectedTimezoneFromTzParameter(property);
             correctTzParameter(property, newTimezoneId);
         }
     }
@@ -97,7 +97,7 @@ public class TzHelper {
             return;
         }
         if (property.getParameter(Parameter.TZID).isPresent()) {
-            String newTimezone = getCorrectedTimezoneFromTzParameter(property);
+            var newTimezone = getCorrectedTimezoneFromTzParameter(property);
             correctTzParameter(property, newTimezone);
         }
     }
@@ -111,12 +111,12 @@ public class TzHelper {
 
     private static String getCorrectedTimezoneFromTzParameter(Property property) {
         Optional<TzId> tzId = property.getParameter(Parameter.TZID);
-        String tzIdValue = tzId.get().getValue();
+        var tzIdValue = tzId.get().getValue();
         return getCorrectedTimeZoneIdFrom(tzIdValue);
     }
 
     static void correctTzValueOf(net.fortuna.ical4j.model.property.TzId tzProperty) {
-        String validTimezone = getCorrectedTimeZoneIdFrom(tzProperty.getValue());
+        var validTimezone = getCorrectedTimeZoneIdFrom(tzProperty.getValue());
         if (validTimezone != null) {
             tzProperty.setValue(validTimezone);
         }
@@ -138,7 +138,7 @@ public class TzHelper {
             if (TIMEZONE_REGISTRY.getTimeZone(value) != null) {
                 return TIMEZONE_REGISTRY.getTimeZone(value).getID();
             }
-            String nameCandidate = MS_TIMEZONE_NAMES.get(value);
+            var nameCandidate = MS_TIMEZONE_NAMES.get(value);
             if (nameCandidate != null) {
                 return TIMEZONE_REGISTRY.getTimeZone(nameCandidate) != null
                         ? TIMEZONE_REGISTRY.getTimeZone(nameCandidate).getID() : nameCandidate;

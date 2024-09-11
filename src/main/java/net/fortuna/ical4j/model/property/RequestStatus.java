@@ -39,11 +39,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.StringTokenizer;
-
 /**
  * $Id$
  * <p/>
@@ -152,7 +147,7 @@ public class RequestStatus extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        String[] values = aValue.split(";");
+        var values = aValue.split(";");
         if (values.length > 0) {
             statusCode = values[0];
         }
@@ -169,20 +164,18 @@ public class RequestStatus extends Property {
      */
     @Override
     public final String getValue() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
 
         if ((getStatusCode() != null)) {
             b.append(getStatusCode());
         }
 
         if ((getDescription() != null)) {
-            b.append(';');
-            b.append(getDescription());
+            b.append(';').append(getDescription());
         }
 
         if ((getExData() != null)) {
-            b.append(';');
-            b.append(getExData());
+            b.append(';').append(getExData());
         }
 
         return b.toString();

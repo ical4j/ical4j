@@ -76,7 +76,7 @@ class DateListTestSpec extends Specification {
         timeZoneRegistry.register(timeZone)
 
         and: 'registered zone rules provider'
-        ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(timeZoneRegistry));
+        ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(timeZoneRegistry))
 
         and: 'corresponding tzid parameter'
         net.fortuna.ical4j.model.parameter.TzId tzIdParam = new net.fortuna.ical4j.model.parameter.TzId('Europe/Atlantis')

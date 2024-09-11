@@ -58,7 +58,7 @@ public class FmtType extends Parameter implements Encodable {
     public FmtType(final String aValue) {
         super(FMTTYPE);
         try {
-            String[] components = Strings.unquote(aValue).split("/");
+            var components = Strings.unquote(aValue).split("/");
             this.type = components[0];
             this.subtype = components[1];
         } catch (ArrayIndexOutOfBoundsException e) {

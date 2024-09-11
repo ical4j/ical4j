@@ -36,8 +36,6 @@ package net.fortuna.ical4j.transform.compliance;
 import net.fortuna.ical4j.model.property.Attendee;
 import org.apache.commons.lang3.StringUtils;
 
-import java.net.URI;
-
 public class AttendeePropertyRule implements Rfc5545PropertyRule<Attendee> {
 
     private static final String MAILTO = "mailto";
@@ -49,16 +47,16 @@ public class AttendeePropertyRule implements Rfc5545PropertyRule<Attendee> {
         if (element == null) {
             return element;
         }
-        URI calAddress = element.getCalAddress();
+        var calAddress = element.getCalAddress();
         if (calAddress == null) {
             return element;
         }
-        String scheme = calAddress.getScheme();
+        var scheme = calAddress.getScheme();
         if (scheme != null && StringUtils.startsWithIgnoreCase(scheme, MAILTO)) {
-            String part = calAddress.getSchemeSpecificPart();
+            var part = calAddress.getSchemeSpecificPart();
             if (part != null && part.length() >= MIN_LENGTH && StringUtils.startsWith(part, APOSTROPHE)
                     && StringUtils.endsWith(part, APOSTROPHE)) {
-                String newPart = part.substring(1, part.length() - 1);
+                var newPart = part.substring(1, part.length() - 1);
                 safelySetNewValue(element, newPart);
             }
         }

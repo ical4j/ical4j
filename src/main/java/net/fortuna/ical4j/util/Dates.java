@@ -58,27 +58,27 @@ public final class Dates {
     /**
      * Number of milliseconds in one second.
      */
-    public static final long MILLIS_PER_SECOND = 1000;
+    public static final long MILLIS_PER_SECOND = 1_000;
 
     /**
      * Number of milliseconds in one minute.
      */
-    public static final long MILLIS_PER_MINUTE = 60000;
+    public static final long MILLIS_PER_MINUTE = 60_000;
 
     /**
      * Number of milliseconds in one hour.
      */
-    public static final long MILLIS_PER_HOUR = 3600000;
+    public static final long MILLIS_PER_HOUR = 3_600_000;
 
     /**
      * Number of milliseconds in one day.
      */
-    public static final long MILLIS_PER_DAY = 86400000;
+    public static final long MILLIS_PER_DAY = 86_400_000;
 
     /**
      * Number of milliseconds in one week.
      */
-    public static final long MILLIS_PER_WEEK = 604800000;
+    public static final long MILLIS_PER_WEEK = 604_800_000;
     
     /**
      * Number of days in one week.

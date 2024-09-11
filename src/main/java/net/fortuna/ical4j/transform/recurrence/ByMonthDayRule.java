@@ -76,7 +76,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible month days..
-            final YearMonth yearMonth = YearMonth.of(getYear(date), getMonth(date).getMonthOfYear());
+            final var yearMonth = YearMonth.of(getYear(date), getMonth(date).getMonthOfYear());
             for (final int monthDay : monthDayList) {
                 if (Month.of(getMonth(date).getMonthOfYear()).maxLength() < Math.abs(monthDay)) {
                     if (log.isTraceEnabled()) {
@@ -101,7 +101,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                 } else {
                     if (-yearMonth.lengthOfMonth() > monthDay) {
                         if (skip == Recur.Skip.BACKWARD) {
-                            Temporal adjustedDate = date.minus(1, ChronoUnit.MONTHS);
+                            var adjustedDate = date.minus(1, ChronoUnit.MONTHS);
                             candidate = withTemporalField((T) adjustedDate, DAY_OF_MONTH, YearMonth.from(adjustedDate).lengthOfMonth());
                         } else if (skip == Recur.Skip.FORWARD) {
                             candidate = withTemporalField(date, DAY_OF_MONTH, -yearMonth.lengthOfMonth());

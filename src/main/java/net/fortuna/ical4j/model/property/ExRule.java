@@ -37,6 +37,8 @@ import net.fortuna.ical4j.validate.RecurValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
+import java.time.temporal.Temporal;
+
 /**
  * $Id$
  * <p/>
@@ -46,18 +48,18 @@ import net.fortuna.ical4j.validate.ValidationResult;
  *
  * @author benf
  */
-public class ExRule extends Property {
+public class ExRule<T extends Temporal> extends Property {
 
     private static final long serialVersionUID = -9171193801247139294L;
 
-    private Recur recur;
+    private Recur<T> recur;
 
     /**
      * Default constructor.
      */
     public ExRule() {
         super(EXRULE);
-        recur = new Recur(Frequency.DAILY, 1);
+        recur = new Recur<>(Frequency.DAILY, 1);
     }
 
     /**
@@ -73,7 +75,7 @@ public class ExRule extends Property {
     /**
      * @param aRecur a recurrence
      */
-    public ExRule(final Recur aRecur) {
+    public ExRule(final Recur<T> aRecur) {
         super(EXRULE);
         recur = aRecur;
     }
@@ -82,7 +84,7 @@ public class ExRule extends Property {
      * @param aList  a list of parameters for this component
      * @param aRecur a recurrence
      */
-    public ExRule(final ParameterList aList, final Recur aRecur) {
+    public ExRule(final ParameterList aList, final Recur<T> aRecur) {
         super(EXRULE, aList);
         recur = aRecur;
     }
@@ -90,7 +92,7 @@ public class ExRule extends Property {
     /**
      * @return Returns the recur.
      */
-    public final Recur getRecur() {
+    public final Recur<T> getRecur() {
         return recur;
     }
 
@@ -99,7 +101,7 @@ public class ExRule extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        recur = new Recur(aValue);
+        recur = new Recur<>(aValue);
     }
 
     /**
@@ -113,7 +115,7 @@ public class ExRule extends Property {
     /**
      * @param recur The recur to set.
      */
-    public final void setRecur(final Recur recur) {
+    public final void setRecur(final Recur<T> recur) {
         this.recur = recur;
     }
 

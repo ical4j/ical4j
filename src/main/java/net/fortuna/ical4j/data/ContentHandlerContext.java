@@ -24,7 +24,7 @@ public class ContentHandlerContext {
     private boolean suppressInvalidProperties;
 
     public ContentHandlerContext withParameterFactorySupplier(Supplier<List<ParameterFactory<?>>> parameterFactorySupplier) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
@@ -34,7 +34,7 @@ public class ContentHandlerContext {
     }
 
     public ContentHandlerContext withPropertyFactorySupplier(Supplier<List<PropertyFactory<?>>> propertyFactorySupplier) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
@@ -44,7 +44,7 @@ public class ContentHandlerContext {
     }
 
     public ContentHandlerContext withComponentFactorySupplier(Supplier<List<ComponentFactory<?>>> componentFactorySupplier) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = componentFactorySupplier;
@@ -54,7 +54,7 @@ public class ContentHandlerContext {
     }
 
     public ContentHandlerContext withIgnoredPropertyNames(List<String> ignoredPropertyNames) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
@@ -64,7 +64,7 @@ public class ContentHandlerContext {
     }
 
     public ContentHandlerContext withSupressInvalidProperties(boolean supressInvalidProperties) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;

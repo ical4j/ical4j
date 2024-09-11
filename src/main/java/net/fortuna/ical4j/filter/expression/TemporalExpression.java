@@ -58,7 +58,7 @@ public class TemporalExpression implements LiteralExpression<Temporal> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TemporalExpression that = (TemporalExpression) o;
+        var that = (TemporalExpression) o;
         return value.equals(that.value);
     }
 

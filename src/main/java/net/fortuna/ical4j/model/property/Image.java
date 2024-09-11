@@ -59,8 +59,7 @@ public class Image extends Property {
 
         @Override
         public Image createProperty(ParameterList parameters, String value) {
-            Image property = new Image(parameters, value);
-            return property;
+            return new Image(parameters, value);
         }
     }
 }

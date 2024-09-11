@@ -60,7 +60,7 @@ public class Gap extends Parameter {
 
     private static final String PARAM_NAME = "GAP";
 
-    private TemporalAmountAdapter duration;
+    private final TemporalAmountAdapter duration;
 
     public Gap(String value) {
         super(PARAM_NAME);

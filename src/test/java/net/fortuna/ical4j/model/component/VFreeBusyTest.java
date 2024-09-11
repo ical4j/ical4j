@@ -62,7 +62,7 @@ import java.util.Optional;
  */
 public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> {
 
-    private static Logger log = LoggerFactory.getLogger(VFreeBusyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(VFreeBusyTest.class);
 
     private TimeZoneRegistry registry;
 
@@ -183,7 +183,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         VFreeBusy fb = new VFreeBusy(request, components.getAll());
 
         if (log.isDebugEnabled()) {
-            log.debug("\n==\n" + fb.toString());
+            log.debug("\n==\n" + fb);
         }
     }
 
@@ -205,7 +205,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         VFreeBusy fb = new VFreeBusy(requestBusy, calendar.getComponents());
 
         if (log.isDebugEnabled()) {
-            log.debug("\n==\n" + fb.toString());
+            log.debug("\n==\n" + fb);
         }
 
         // request all free time between 1970 and now of duration 2 hours or
@@ -216,7 +216,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         VFreeBusy fb2 = new VFreeBusy(requestFree, calendar.getComponents());
 
         if (log.isDebugEnabled()) {
-            log.debug("\n==\n" + fb2.toString());
+            log.debug("\n==\n" + fb2);
         }
     }
 
@@ -236,7 +236,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         event.add(new RRule<>(recur));
 
         if (log.isDebugEnabled()) {
-            log.debug("\n==\n" + event.toString());
+            log.debug("\n==\n" + event);
         }
 
         VFreeBusy request = new VFreeBusy(eventStart.toInstant(), Instant.now());
@@ -245,7 +245,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         VFreeBusy fb = new VFreeBusy(request, components.getAll());
 
         if (log.isDebugEnabled()) {
-            log.debug("\n==\n" + fb.toString());
+            log.debug("\n==\n" + fb);
         }
     }
 
@@ -264,7 +264,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         ComponentList<CalendarComponent> components = new ComponentList<>(Arrays.asList(event, event2));
         VFreeBusy fb = new VFreeBusy(request, components.getAll());
 
-        log.debug("\n==\n" + fb.toString());
+        log.debug("\n==\n" + fb);
     }
 
     public final void testAngelites() {
@@ -283,23 +283,23 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
         VFreeBusy getBusy = new VFreeBusy(dtstart, dtend);
         VFreeBusy requestFree = new VFreeBusy(dtstart, dtend, java.time.Period.ofDays(30));
 
-        log.debug("GET BUSY: \n" + getBusy.toString());
-        log.debug("REQUEST FREE: \n" + requestFree.toString());
+        log.debug("GET BUSY: \n" + getBusy);
+        log.debug("REQUEST FREE: \n" + requestFree);
 
         Calendar FreeBusyTest2 = new Calendar();
 
         VFreeBusy replyBusy = new VFreeBusy(getBusy, freeBusyTest.getComponents());
         VFreeBusy replyFree = new VFreeBusy(requestFree, freeBusyTest.getComponents());
 
-        log.debug("REPLY BUSY: \n" + replyBusy.toString());
-        log.debug("REPLY FREE: \n" + replyFree.toString());
+        log.debug("REPLY BUSY: \n" + replyBusy);
+        log.debug("REPLY FREE: \n" + replyFree);
 
         FreeBusyTest2.add(replyBusy);
         VFreeBusy replyBusy2 = new VFreeBusy(getBusy, FreeBusyTest2.getComponents());
         VFreeBusy replyFree2 = new VFreeBusy(requestFree, FreeBusyTest2.getComponents());
 
-        log.debug("REPLY BUSY2: \n" + replyBusy2.toString());
-        log.debug("REPLY FREE2: \n" + replyFree2.toString());
+        log.debug("REPLY BUSY2: \n" + replyBusy2);
+        log.debug("REPLY FREE2: \n" + replyFree2);
     }
 
     /**

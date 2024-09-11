@@ -403,11 +403,11 @@ class RecurSpec extends Specification {
         Recur.Builder builder = []
 
         when: 'populated'
-        def until = TemporalAdapter.parse('20050307').temporal;
+        def until = TemporalAdapter.parse('20050307').temporal
 
         Recur recurDaily = builder.frequency(Frequency.DAILY).until(until)
                 .dayList(MO, TU, WE, TH, FR)
-                .interval(1).weekStartDay(MO).build();
+                .interval(1).weekStartDay(MO).build()
 
         then: 'result is as expected'
         recurDaily as String == "FREQ=DAILY;WKST=MO;UNTIL=20050307;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR"
@@ -462,7 +462,7 @@ class RecurSpec extends Specification {
 
     def 'test unlike temporals'() {
         given: 'a date-time recurrence with date precision in UNTIL field'
-        Recur<LocalDateTime> recur = new Recur<>("FREQ=YEARLY;INTERVAL=2;UNTIL=20230101");
+        Recur<LocalDateTime> recur = new Recur<>("FREQ=YEARLY;INTERVAL=2;UNTIL=20230101")
 
         expect: 'dates are returned correctly'
         recur.getDates(LocalDate.of(2020, 1, 1).atStartOfDay(),
@@ -496,20 +496,20 @@ class RecurSpec extends Specification {
 
     def 'test getdates across a DST-change'() {
         given: 'a recurrence rule'
-        ZoneId zoneId = ZoneId.of("America/Los_Angeles");
-        Recur<ZonedDateTime> rrule = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=FR,SA,SU,MO");
+        ZoneId zoneId = ZoneId.of("America/Los_Angeles")
+        Recur<ZonedDateTime> rrule = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=FR,SA,SU,MO")
 
         and: 'a period that crosses a tz change boundary (DST -> STD)'
-        ZonedDateTime seed = ZonedDateTime.of(2000, 2, 1, 0, 59, 0, 0, zoneId);
+        ZonedDateTime seed = ZonedDateTime.of(2000, 2, 1, 0, 59, 0, 0, zoneId)
         Period <ZonedDateTime> period = new Period<>(
                 Instant.parse("2019-10-20T20:00:00Z").atZone(zoneId),
                 Instant.parse("2019-11-10T00:00:00Z").atZone(zoneId)
-        );
+        )
 
         when: 'dates are calculated for the period'
-        List<ZonedDateTime> list = rrule.getDates(seed, period);
+        List<ZonedDateTime> list = rrule.getDates(seed, period)
 
         then: 'result matched expected'
-        ZonedDateTime.of(2019, 11, 3, 0, 59, 0, 0, zoneId).equals(list.get(7));
+        ZonedDateTime.of(2019, 11, 3, 0, 59, 0, 0, zoneId).equals(list.get(7))
     }
 }

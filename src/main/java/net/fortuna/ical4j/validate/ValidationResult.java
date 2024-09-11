@@ -81,7 +81,7 @@ public final class ValidationResult {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ValidationResult that = (ValidationResult) o;
+        var that = (ValidationResult) o;
         return Objects.equals(entries, that.entries);
     }
 

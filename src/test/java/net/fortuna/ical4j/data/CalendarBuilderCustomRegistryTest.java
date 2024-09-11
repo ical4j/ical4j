@@ -68,7 +68,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
     @SuppressWarnings("serial")
 	private static class ScheduleStatus extends Parameter {
 
-        private String value;
+        private final String value;
 
         public ScheduleStatus(String aValue) {
             super(SCHEDULE_STATUS);

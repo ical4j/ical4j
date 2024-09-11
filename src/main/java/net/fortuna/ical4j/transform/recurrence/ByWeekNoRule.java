@@ -44,7 +44,7 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
         final List<T> weekNoDates = new ArrayList<>();
         for (final T date : dates) {
             final int numWeeksInYear = (int) weekFields.weekOfWeekBasedYear().rangeRefinedBy(date).getMaximum();
-            for (final Integer weekNo : weekNoList) {
+            for (final int weekNo : weekNoList) {
                 if (weekNo == 0 || weekNo < -numWeeksInYear || weekNo > numWeeksInYear) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid week of year: " + weekNo);

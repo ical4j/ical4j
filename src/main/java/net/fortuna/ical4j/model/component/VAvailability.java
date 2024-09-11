@@ -154,7 +154,7 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VAVAILABILITY.validate(this);
+        var result = ComponentValidator.VAVAILABILITY.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }

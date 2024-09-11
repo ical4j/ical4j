@@ -56,7 +56,7 @@ import java.net.URISyntaxException;
  */
 public class AttendeeTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(AttendeeTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AttendeeTest.class);
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()

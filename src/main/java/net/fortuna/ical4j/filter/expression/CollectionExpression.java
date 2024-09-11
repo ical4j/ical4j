@@ -52,7 +52,7 @@ public class CollectionExpression implements LiteralExpression<Collection<?>> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CollectionExpression that = (CollectionExpression) o;
+        var that = (CollectionExpression) o;
         return value.equals(that.value);
     }
 

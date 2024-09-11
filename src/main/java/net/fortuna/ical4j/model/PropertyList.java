@@ -152,7 +152,7 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PropertyList that = (PropertyList) o;
+        var that = (PropertyList) o;
         return Objects.equals(properties, that.properties);
     }
 

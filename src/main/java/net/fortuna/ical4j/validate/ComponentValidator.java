@@ -164,7 +164,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
 
     @Override
     public ValidationResult validate(T target) throws ValidationException {
-        ValidationResult result = super.validate(target);
+        var result = super.validate(target);
         result.getEntries().addAll(target.getProperties().stream().map(p -> p.validate().getEntries())
                 .flatMap(Collection::stream).collect(Collectors.toSet()));
         return result;

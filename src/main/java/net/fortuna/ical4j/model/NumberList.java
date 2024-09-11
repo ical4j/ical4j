@@ -172,7 +172,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     }
 
     public static NumberList parse(String numberString) {
-        NumberList retVal = new NumberList();
+        var retVal = new NumberList();
         retVal.addAll(Arrays.stream(numberString.split(RegEx.COMMA_DELIMITED)).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
         return retVal;
     }

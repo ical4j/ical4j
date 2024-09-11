@@ -71,14 +71,14 @@ public class ValidationReport {
 
     private void outputHtml(ValidationResult result, Writer out) throws IOException {
         out.write("<ol>");
-        for (ValidationEntry entry : result.getEntries()) {
+        for (var entry : result.getEntries()) {
             out.write(String.format("<li>%s: %s - %s</li>\n", entry.getContext(), entry.getSeverity(), entry.getMessage()));
         }
         out.write("</ol>");
     }
 
     private void outputText(ValidationResult result, Writer out) throws IOException {
-        for (ValidationEntry entry : result.getEntries()) {
+        for (var entry : result.getEntries()) {
             out.write(String.format("- %s: %s - %s\n", entry.getSeverity(), entry.getContext(), entry.getMessage()));
         }
     }

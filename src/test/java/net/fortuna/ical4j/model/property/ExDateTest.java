@@ -61,7 +61,7 @@ import static org.junit.Assert.*;
  */
 public class ExDateTest {
 
-    private static Logger LOG = LoggerFactory.getLogger(ExDateTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExDateTest.class);
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()

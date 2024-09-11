@@ -33,7 +33,6 @@ package net.fortuna.ical4j.transform.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
@@ -69,10 +68,10 @@ public class DeclineCounterTransformer extends AbstractMethodTransformer {
     @Override
     public Calendar apply(Calendar object) {
         Optional<Method> method = object.getProperty(Property.METHOD);
-        if (!method.isPresent() || !COUNTER.equals(method.get())) {
+        if (method.isEmpty() || !COUNTER.equals(method.get())) {
             throw new IllegalArgumentException("Expecting COUNTER method in source");
         }
-        for (CalendarComponent component : object.getComponents()) {
+        for (var component : object.getComponents()) {
             component.with(ORGANIZER, organizer);
             componentMethodTransformer.apply(component);
         }

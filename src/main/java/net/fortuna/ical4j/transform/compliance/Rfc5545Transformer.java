@@ -49,7 +49,7 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
 
         conformPropertiesToRfc5545(object.getProperties());
 
-        for(Component component : object.getComponents()){
+        for (var component : object.getComponents()) {
             CountableProperties.removeExceededPropertiesForComponent(component);
 
             //each component
@@ -58,13 +58,13 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
             //each component property
             conformPropertiesToRfc5545(component.getProperties());
 
-            for(java.lang.reflect.Method m : component.getClass().getDeclaredMethods()){
+            for (var m : component.getClass().getDeclaredMethods()) {
                 if(ComponentList.class.isAssignableFrom(m.getReturnType()) &&
                         m.getName().startsWith("get")){
 
                     try {
                         ComponentList<Component> components = (ComponentList<Component>) m.invoke(component);
-                        for(Component c : components.getAll()){
+                        for (var c : components.getAll()) {
                             //each inner component
                             conformComponentToRfc5545(c);
 
@@ -81,7 +81,7 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
     }
 
     private static void conformPropertiesToRfc5545(List<Property> properties) {
-        for (Property property : properties) {
+        for (var property : properties) {
             RuleManager.applyTo(property);
         }
     }
@@ -100,7 +100,7 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
             this.name = name;
         }
 
-        protected void limitApparitionsNumberIn(Component component){
+        private void limitApparitionsNumberIn(Component component){
             List<Property> propertyList = component.getProperties(name);
 
             if(propertyList.size() <= maxApparitionNumber){
@@ -112,7 +112,7 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
         }
 
         private static void removeExceededPropertiesForComponent(Component component){
-            for(CountableProperties cp: values()){
+            for (var cp: values()) {
                 cp.limitApparitionsNumberIn(component);
             }
         }

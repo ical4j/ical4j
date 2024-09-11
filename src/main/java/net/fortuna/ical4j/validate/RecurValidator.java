@@ -85,7 +85,7 @@ public class RecurValidator implements Validator<Recur> {
 
     @Override
     public ValidationResult validate(Recur target) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
         switch (target.getFrequency()) {
             case SECONDLY:
                 if (!target.getWeekNoList().isEmpty()) {

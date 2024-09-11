@@ -100,7 +100,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         calendar = builder.build(in);
         assertNotNull("Calendar is null", calendar);
         List<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
-        assertTrue("VEVENT not found", comps.size() == 1);
+        assertEquals("VEVENT not found", 1, comps.size());
         VEvent vevent = (VEvent) comps.get(0);
 
         DtStart<?> dtstart = vevent.getRequiredProperty(Property.DTSTART);

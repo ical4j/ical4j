@@ -274,7 +274,7 @@ public class Recur<T extends Temporal> implements Serializable {
     private static final int maxIncrementCount;
 
     static {
-        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
+        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1_000);
     }
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
@@ -339,10 +339,10 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param experimentalTokensAllowed allow unrecognised tokens in the recurrence
      */
     public Recur(final String aValue, boolean experimentalTokensAllowed) {
-        Chronology chronology = Chronology.ofLocale(Locale.getDefault());
+        var chronology = Chronology.ofLocale(Locale.getDefault());
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
         while (tokens.hasNext()) {
-            final String token = tokens.next();
+            final var token = tokens.next();
             if (FREQ.equals(token)) {
                 frequency = Frequency.valueOf(nextToken(tokens, token));
             } else if (SKIP.equals(token)) {
@@ -607,100 +607,53 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Override
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         if (rscale != null) {
-            b.append(RSCALE);
-            b.append('=');
-            b.append(rscale);
-            b.append(';');
+            b.append(RSCALE).append('=').append(rscale).append(';');
         }
-        b.append(FREQ);
-        b.append('=');
-        b.append(frequency);
+        b.append(FREQ).append('=').append(frequency);
         if (weekStartDay != null) {
-            b.append(';');
-            b.append(WKST);
-            b.append('=');
-            b.append(weekStartDay);
+            b.append(';').append(WKST).append('=').append(weekStartDay);
         }
         if (until != null) {
-            b.append(';');
-            b.append(UNTIL);
-            b.append('=');
-            // Note: date-time representations should always be in UTC time.
-            b.append(until);
+            // Note: UNTIL should always be in UTC time.
+            b.append(';').append(UNTIL).append('=').append(until);
         }
         if (count != null) {
-            b.append(';');
-            b.append(COUNT);
-            b.append('=');
-            b.append(count);
+            b.append(';').append(COUNT).append('=').append(count);
         }
         if (interval != null) {
-            b.append(';');
-            b.append(INTERVAL);
-            b.append('=');
-            b.append(interval);
+            b.append(';').append(INTERVAL).append('=').append(interval);
         }
         if (!monthList.isEmpty()) {
-            b.append(';');
-            b.append(BYMONTH);
-            b.append('=');
-            b.append(monthList);
+            b.append(';').append(BYMONTH).append('=').append(monthList);
         }
         if (!weekNoList.isEmpty()) {
-            b.append(';');
-            b.append(BYWEEKNO);
-            b.append('=');
-            b.append(NumberList.toString(weekNoList));
+            b.append(';').append(BYWEEKNO).append('=').append(NumberList.toString(weekNoList));
         }
         if (!yearDayList.isEmpty()) {
-            b.append(';');
-            b.append(BYYEARDAY);
-            b.append('=');
-            b.append(NumberList.toString(yearDayList));
+            b.append(';').append(BYYEARDAY).append('=').append(NumberList.toString(yearDayList));
         }
         if (!monthDayList.isEmpty()) {
-            b.append(';');
-            b.append(BYMONTHDAY);
-            b.append('=');
-            b.append(NumberList.toString(monthDayList));
+            b.append(';').append(BYMONTHDAY).append('=').append(NumberList.toString(monthDayList));
         }
         if (!dayList.isEmpty()) {
-            b.append(';');
-            b.append(BYDAY);
-            b.append('=');
-            b.append(WeekDayList.toString(dayList));
+            b.append(';').append(BYDAY).append('=').append(WeekDayList.toString(dayList));
         }
         if (!hourList.isEmpty()) {
-            b.append(';');
-            b.append(BYHOUR);
-            b.append('=');
-            b.append(NumberList.toString(hourList));
+            b.append(';').append(BYHOUR).append('=').append(NumberList.toString(hourList));
         }
         if (!minuteList.isEmpty()) {
-            b.append(';');
-            b.append(BYMINUTE);
-            b.append('=');
-            b.append(NumberList.toString(minuteList));
+            b.append(';').append(BYMINUTE).append('=').append(NumberList.toString(minuteList));
         }
         if (!secondList.isEmpty()) {
-            b.append(';');
-            b.append(BYSECOND);
-            b.append('=');
-            b.append(NumberList.toString(secondList));
+            b.append(';').append(BYSECOND).append('=').append(NumberList.toString(secondList));
         }
         if (!setPosList.isEmpty()) {
-            b.append(';');
-            b.append(BYSETPOS);
-            b.append('=');
-            b.append(NumberList.toString(setPosList));
+            b.append(';').append(BYSETPOS).append('=').append(NumberList.toString(setPosList));
         }
         if (skip != null) {
-            b.append(';');
-            b.append(SKIP);
-            b.append('=');
-            b.append(skip);
+            b.append(';').append(SKIP).append('=').append(skip);
         }
         return b.toString();
     }
@@ -1226,7 +1179,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         public Recur<T> build() {
-            Chronology chronology = rscale != null ? Chronology.of(rscale.getChronology())
+            var chronology = rscale != null ? Chronology.of(rscale.getChronology())
                     : Chronology.ofLocale(Locale.getDefault());
 
             Recur<T> recur = new Recur<>();

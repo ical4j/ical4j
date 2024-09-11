@@ -55,7 +55,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public PropertyBuilder name(String name) {
-        String[] nameParts = name.split("\\.");
+        var nameParts = name.split("\\.");
         if (nameParts.length > 1) {
             this.prefix = String.join(".", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
             this.name = nameParts[nameParts.length-1];

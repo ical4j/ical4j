@@ -20,9 +20,9 @@ public class MapTimeZoneCache implements TimeZoneCache {
 
     @Override
     public boolean putIfAbsent(String id, VTimeZone timeZone) {
-        VTimeZone v = mapCache.get(id);
+        var v = mapCache.get(id);
         if (v == null) {
-            v = mapCache.put(id, timeZone);
+            mapCache.put(id, timeZone);
             return true;
         } else {
             return false;

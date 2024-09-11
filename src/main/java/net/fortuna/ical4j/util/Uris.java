@@ -122,7 +122,7 @@ public final class Uris {
         }
         catch (URISyntaxException use) {
             if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                String encoded = encode(s);
+                var encoded = encode(s);
                 int index = encoded.indexOf(':');
                 if (index != -1 && index < encoded.length() -1) {
                     try {

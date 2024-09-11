@@ -147,7 +147,7 @@ public class WeekDay implements Serializable {
      */
     @Override
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         if (getOffset() != 0) {
             b.append(getOffset());
         }
@@ -210,7 +210,7 @@ public class WeekDay implements Serializable {
      * @return a weekday instance representing the specified calendar
      */
     public static WeekDay getNegativeMonthlyOffset(final Calendar cal) {
-        Calendar calClone = (Calendar) cal.clone();
+        var calClone = (Calendar) cal.clone();
 		int delta = -1;
 		do {
 			calClone.add(Calendar.DAY_OF_YEAR, 7);
@@ -219,7 +219,7 @@ public class WeekDay implements Serializable {
 			}else {
 				break;
 			}
-		}while(delta>-5);
+		} while(delta>-5);
 		
 		return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), delta);
     }
@@ -291,7 +291,7 @@ public class WeekDay implements Serializable {
         if (!(arg0 instanceof WeekDay)) {
             return false;
         }
-        final WeekDay wd = (WeekDay) arg0;
+        final var wd = (WeekDay) arg0;
         return Objects.equals(wd.getDay(), getDay())
             && wd.getOffset() == getOffset();
     }

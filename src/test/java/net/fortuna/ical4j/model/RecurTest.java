@@ -66,7 +66,7 @@ import static net.fortuna.ical4j.transform.recurrence.Frequency.WEEKLY;
  */
 public class RecurTest<T extends Temporal> extends TestCase {
 
-    private static Logger log = LoggerFactory.getLogger(RecurTest.class);
+    private static final Logger log = LoggerFactory.getLogger(RecurTest.class);
 
     private static final Locale testLocale = Locale.US;
 
@@ -249,7 +249,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         // assertTrue("Date list exceeds expected count", dates.size() <= expectedCount);
     }
     
-    private static TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
+    private static final TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     public void testGetDatesMaxTime() {
         long t0 = System.currentTimeMillis();

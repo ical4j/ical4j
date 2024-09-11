@@ -45,9 +45,9 @@ import org.slf4j.LoggerFactory;
  */
 public class NumberListTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(NumberListTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NumberListTest.class);
 
-    private NumberList numberList;
+    private final NumberList numberList;
 
     private int expectedSize;
 

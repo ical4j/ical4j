@@ -56,7 +56,7 @@ import java.util.Collections;
  */
 public class DtEndTest extends PropertyTest {
 
-    private static Logger log = LoggerFactory.getLogger(DtEndTest.class);
+    private static final Logger log = LoggerFactory.getLogger(DtEndTest.class);
 
     /**
      * @param testMethod

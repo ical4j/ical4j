@@ -250,7 +250,7 @@ public class VAlarm extends Component implements ComponentContainer<Component>, 
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
 
         if (getAction().isPresent()) {
             switch (getAction().get().getValue()) {

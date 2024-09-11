@@ -36,7 +36,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
         object.with(METHOD, method);
 
         Optional<Uid> uid = Optional.empty();
-        for (CalendarComponent component : object.getComponents()) {
+        for (var component : object.getComponents()) {
             component.with(UIDGEN, uidGenerator);
             if (uid.isEmpty()) {
                 uid = component.getProperty(Property.UID);
