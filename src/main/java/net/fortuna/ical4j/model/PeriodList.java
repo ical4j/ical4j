@@ -86,8 +86,9 @@ public class PeriodList<T extends Temporal> implements Serializable {
     }
 
     public PeriodList(Interval[] intervals) {
-        this(Arrays.stream(intervals).map(i -> new Period<>((T) i.getStart(), (T) i.getEnd())).collect(Collectors.toList()),
-                CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        //noinspection unchecked
+        this(Arrays.stream(intervals).map(i -> new Period<>((T) i.getStart(), (T) i.getEnd()))
+                        .collect(Collectors.toList()), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
 
     /**

@@ -157,10 +157,10 @@ public class FilterExpressionParser {
         for (var part : filterExpression.split("\\s*and\\s*")) {
             if (part.matches("[\\w-]+\\s*>=\\s*\\w+")) {
                 var greaterThanEqual = part.split("\\s*>=\\s*");
-                expression = FilterExpression.greaterThanEqual(greaterThanEqual[0], resolveValue(greaterThanEqual[1]));
+                expression = FilterExpression.greaterThanEqual(greaterThanEqual[0], (Temporal) resolveValue(greaterThanEqual[1]));
             } else if (part.matches("[\\w-]+\\s*<=\\s*\\w+")) {
                 var lessThanEqual = part.split("\\s*<=\\s*");
-                expression = FilterExpression.lessThanEqual(lessThanEqual[0], resolveValue(lessThanEqual[1]));
+                expression = FilterExpression.lessThanEqual(lessThanEqual[0], (String) resolveValue(lessThanEqual[1]));
             } else if (part.matches("[\\w-]+\\s*=\\s*[^<>=]+")) {
                 var equalTo = part.split("\\s*=\\s*");
                 expression = FilterExpression.equalTo(equalTo[0], (String) resolveValue(equalTo[1]));
@@ -169,7 +169,7 @@ public class FilterExpressionParser {
                 expression = FilterExpression.greaterThan(greaterThan[0], (Integer) resolveValue(greaterThan[1]));
             } else if (part.matches("[\\w-]+\\s*<\\s*\\w+")) {
                 var lessThan = part.split("\\s*<\\s*");
-                expression = FilterExpression.lessThan(lessThan[0], resolveValue(lessThan[1]));
+                expression = FilterExpression.lessThan(lessThan[0], (Temporal) resolveValue(lessThan[1]));
             } else if (part.matches("[\\w-]+\\s+in\\s+\\[[^<>=]+]")) {
                 var in = part.split("\\s*in\\s*");
                 List<String> items = Arrays.asList(in[1].replaceAll("[\\[\\]]", "")
@@ -191,15 +191,15 @@ public class FilterExpressionParser {
         return expression;
     }
 
-    private <T> T resolveValue(String valueString) {
+    private Object resolveValue(String valueString) {
         if (valueString.matches("\\w+\\(.*\\)")
                 && FUNCTIONS.containsKey(valueString.replaceAll("\\(.*\\)", ""))) {
-            return (T) FUNCTIONS.get(valueString.replaceAll("\\(.*\\)", ""))
+            return FUNCTIONS.get(valueString.replaceAll("\\(.*\\)", ""))
                     .apply(valueString.split("\\(|\\)")[1]);
         } else if (valueString.matches("\\d+")) {
-            return (T) Integer.valueOf(valueString);
+            return Integer.valueOf(valueString);
         } else {
-            return (T) valueString;
+            return valueString;
         }
     }
 

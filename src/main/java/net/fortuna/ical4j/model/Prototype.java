@@ -35,5 +35,5 @@ package net.fortuna.ical4j.model;
 
 public interface Prototype<T> {
 
-    <R extends T> R copy();
+    T copy();
 }

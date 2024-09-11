@@ -148,7 +148,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
     public static final BiFunction<Calendar, List<CalendarComponent>, Calendar> MERGE_COMPONENTS = (c, list) -> {
         list.forEach(component -> {
             if (!c.getComponents().contains(component)) {
-                c.add(component.copy());
+                c.add((CalendarComponent) component.copy());
             }
         });
         return c;

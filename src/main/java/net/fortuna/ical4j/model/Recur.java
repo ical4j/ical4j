@@ -805,6 +805,7 @@ public class Recur<T extends Temporal> implements Serializable {
     private T increment(final T cal) {
         // initialise interval..
         final int calInterval = Math.max(getInterval(), 1);
+        //noinspection unchecked
         return (T) cal.plus(calInterval, calIncField);
     }
 

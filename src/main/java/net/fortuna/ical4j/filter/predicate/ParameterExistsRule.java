@@ -50,7 +50,7 @@ public class ParameterExistsRule implements Predicate<Property> {
 
     @Override
     public boolean test(Property t) {
-        return new ParameterEqualToRule(new ParameterExists(specification)).test(t);
+        return new ParameterEqualToRule<>(new ParameterExists(specification)).test(t);
     }
 
     /**

@@ -485,8 +485,8 @@ public abstract class Property extends Content implements Prototype<Property>, C
     }
 
     @Override
-    public <P extends Property> P getFluentTarget() {
-        return (P) this;
+    public Property getFluentTarget() {
+        return this;
     }
 
     /**
@@ -652,11 +652,11 @@ public abstract class Property extends Content implements Prototype<Property>, C
      *
      * @return the copy of the property
      */
-    public final <T extends Property> T copy() {
+    public final Property copy() {
         if (getName().toUpperCase().startsWith("X-")) {
-            return (T) new XProperty(getName(), new ParameterList(getParameters()), getValue());
+            return new XProperty(getName(), new ParameterList(getParameters()), getValue());
         }
-        return (T) newFactory().createProperty(parameters, getValue());
+        return newFactory().createProperty(parameters, getValue());
     }
 
     @Override

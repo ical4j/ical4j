@@ -195,6 +195,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         Objects.requireNonNull(dateFormat, "dateFormat");
         this.start = start;
         this.duration = duration;
+        //noinspection unchecked
         this.end = (T) start.plus(duration.getDuration());
         this.dateFormat = dateFormat;
     }
@@ -240,6 +241,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
                 throw e;
             }
         }
+        //noinspection unchecked
         return (T) end;
     }
     

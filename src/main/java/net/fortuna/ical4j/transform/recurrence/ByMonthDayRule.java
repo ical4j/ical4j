@@ -80,7 +80,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
             for (final int monthDay : monthDayList) {
                 if (Month.of(getMonth(date).getMonthOfYear()).maxLength() < Math.abs(monthDay)) {
                     if (log.isTraceEnabled()) {
-                        log.trace("Invalid day of month: " + monthDay);
+                        log.trace("Invalid day of month: {}", monthDay);
                     }
                     continue;
                 }
@@ -91,6 +91,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                         if (skip == Recur.Skip.BACKWARD) {
                             candidate = withTemporalField(date, DAY_OF_MONTH, yearMonth.lengthOfMonth());
                         } else if (skip == Recur.Skip.FORWARD) {
+                            //noinspection unchecked
                             candidate = withTemporalField((T) date.plus(1, ChronoUnit.MONTHS), DAY_OF_MONTH, 1);
                         } else {
                             continue;

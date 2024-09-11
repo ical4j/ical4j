@@ -465,7 +465,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
-                final VEvent occurrence = this.copy();
+                final VEvent occurrence = (VEvent) this.copy();
                 occurrence.add(new RecurrenceId<>(date));
                 return occurrence;
             }
@@ -539,8 +539,10 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 DtEnd<T> newdtEnd;
                 if (tzId.isPresent()) {
                     var dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
+                    //noinspection unchecked
                     newdtEnd = new DtEnd<>(dtendParams, (T) dtStart.get().getDate().plus(vEventDuration.getDuration()));
                 } else {
+                    //noinspection unchecked
                     newdtEnd = new DtEnd<>((T) dtStart.get().getDate().plus(vEventDuration.getDuration()));
                 }
 
@@ -577,11 +579,11 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     }
 
     @Override
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                        .map(Property::<Property>copy).collect(Collectors.toList())),
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Prototype::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+                        .map(Prototype::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {

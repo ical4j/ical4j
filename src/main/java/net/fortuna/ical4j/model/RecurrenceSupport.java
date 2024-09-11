@@ -67,7 +67,8 @@ public interface RecurrenceSupport<T extends CalendarComponent> extends Property
 
         Set<Period<Temporal>> periods = RecurrenceSupport.this.calculateRecurrenceSet(period);
         for (Period<Temporal> p : periods) {
-            final T occurrence = this.copy();
+            //noinspection unchecked
+            final T occurrence = (T) this.copy();
             occurrence.add(new RecurrenceId<>(p.getStart()));
             occurrences.add(occurrence);
         }

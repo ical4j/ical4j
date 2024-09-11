@@ -193,8 +193,8 @@ public abstract class Component extends Content implements Prototype<Component>,
     }
 
     @Override
-    public <C extends Component> C getFluentTarget() {
-        return (C) this;
+    public Component getFluentTarget() {
+        return this;
     }
 
     /**
@@ -280,9 +280,9 @@ public abstract class Component extends Content implements Prototype<Component>,
      * Create a (deep) copy of this component.
      * @return the component copy
      */
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                .map(Property::<Property>copy).collect(Collectors.toList())));
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                .map(Prototype::copy).collect(Collectors.toList())));
     }
 
     /**
