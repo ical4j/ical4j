@@ -61,14 +61,14 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  */
 public final class PropertyValidator<T extends Property> extends AbstractValidator<T> {
 
-    private static final ValidationRule<Property> DATE_OR_DATETIME_VALUE = new ValidationRule<>(None, prop -> {
+    private static final ValidationRule<Property> DATE_OR_DATETIME_VALUE = new ValidationRule<>(prop -> {
         Optional<Value> v = prop.getParameter(VALUE);
-        return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get()));
+        return !(v.isEmpty() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get()));
     }, "MUST be specified as a DATE or DATE-TIME:", VALUE);
 
-    private static final ValidationRule<Property> BINARY_VALUE = new ValidationRule<>(None, prop -> {
+    private static final ValidationRule<Property> BINARY_VALUE = new ValidationRule<>(prop -> {
         Optional<Value> v = prop.getParameter(VALUE);
-        return !(!v.isPresent() || Value.BINARY.equals(v.get()));
+        return !(v.isEmpty() || Value.BINARY.equals(v.get()));
     }, "MUST be specified as a BINARY:", VALUE);
 
     /**
@@ -163,8 +163,8 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     public static final Validator<Attach> ATTACH_BIN = new PropertyValidator<>(Property.ATTACH,
             new ValidationRule<>(OneOrLess, FMTTYPE),
             new ValidationRule<>(One, VALUE, ENCODING),
-            new ValidationRule<>(One, attach -> Encoding.BASE64.equals(attach.getParameter(ENCODING)),
-                    "ENCODING=BASE64 for binary attachments",ENCODING),
+            new ValidationRule<>(attach -> !Optional.of(Encoding.BASE64).equals(attach.getParameter(ENCODING)),
+                    "ENCODING=BASE64 for binary attachments", ENCODING),
             BINARY_VALUE);
 
     /**
@@ -708,9 +708,9 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      */
     public static final Validator<RDate<?>> RDATE = new PropertyValidator<>(Property.RDATE,
             new ValidationRule<>(OneOrLess, VALUE, Parameter.TZID),
-            new ValidationRule<>(None, rdate -> {
+            new ValidationRule<>(rdate -> {
                 Optional<Value> v = rdate.getParameter(VALUE);
-                return !(!v.isPresent() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get())
+                return !(v.isEmpty() || Value.DATE.equals(v.get()) || Value.DATE_TIME.equals(v.get())
                         || Value.PERIOD.equals(v.get()));
             }, VALUE));
 
@@ -922,7 +922,7 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
 
     public static final Validator<Xml> XML_BIN = new PropertyValidator<>(Property.XML,
             new ValidationRule<>(One, VALUE, ENCODING),
-            new ValidationRule<>(One, xml -> Encoding.BASE64.equals(xml.getParameter(ENCODING)),
+            new ValidationRule<>(xml -> !Optional.of(Encoding.BASE64).equals(xml.getParameter(ENCODING)),
                     "ENCODING=BASE64 for binary attachments", ENCODING),
             BINARY_VALUE);
 
@@ -999,9 +999,9 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
     public static final Validator<Trigger> TRIGGER_ABS = new PropertyValidator<>(Property.TRIGGER,
             new ValidationRule<>(One, Parameter.VALUE),
             new ValidationRule<>(None, Parameter.RELATED),
-            new ValidationRule<>(None, trigger -> {
+            new ValidationRule<>(trigger -> {
                 Optional<Value> v = trigger.getParameter(VALUE);
-                return !(!v.isPresent() || Value.DATE_TIME.equals(v.get()));
+                return !(v.isEmpty() || Value.DATE_TIME.equals(v.get()));
             }, "MUST be specified as a UTC-formatted DATE-TIME:", VALUE));
 
     /**
@@ -1029,9 +1029,9 @@ public final class PropertyValidator<T extends Property> extends AbstractValidat
      */
     public static final Validator<Trigger> TRIGGER_REL = new PropertyValidator<>(Property.TRIGGER,
             new ValidationRule<>(OneOrLess, Parameter.VALUE, Parameter.RELATED),
-            new ValidationRule<>(None, trigger -> {
+            new ValidationRule<>(trigger -> {
                 Optional<Value> v = trigger.getParameter(VALUE);
-                return !(!v.isPresent() || Value.DURATION.equals(v.get()));
+                return !(v.isEmpty() || Value.DURATION.equals(v.get()));
             }, "MUST be specified as a DURATION:", VALUE));
 
     /**
