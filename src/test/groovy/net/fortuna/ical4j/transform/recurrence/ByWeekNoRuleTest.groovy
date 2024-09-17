@@ -5,11 +5,13 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import static Frequency.DAILY
 import static Frequency.YEARLY
+import static DayOfWeek.SATURDAY
 
 class ByWeekNoRuleTest extends Specification {
 
@@ -40,7 +42,20 @@ class ByWeekNoRuleTest extends Specification {
 
         where:
         byWeekNoPart     | dates                                   | expectedResult
-        // due to ISO 8601 definition '2011-01-01' is in the 52nd week of 2010..
-        '2,52,53'       | ['20110101']  | ['20110108', '20111224', '20111231']
+        '1,51,52'       | ['20110108']  | ['20110108', '20111224', '20111231']
+    }
+
+    @Unroll
+    def 'verify transformations by week number (yearly) with WKST=SA'() {
+        given: 'a BYWEEKNO rule'
+        ByWeekNoRule rule = [new NumberList(byWeekNoPart), YEARLY, SATURDAY]
+
+        expect: 'the rule transforms the dates correctly'
+        rule.apply(dates.collect {LocalDate.parse(it, dateFormat)}) == expectedResult.collect { LocalDate.parse(it, dateFormat) }
+
+        where:
+        byWeekNoPart     | dates                                   | expectedResult
+        // '20111231' is in week 1 of the next year instead
+        '2,52'       | ['20110108']  | ['20110108', '20111224']
     }
 }
