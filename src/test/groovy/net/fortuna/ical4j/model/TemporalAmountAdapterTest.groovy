@@ -96,12 +96,24 @@ class TemporalAmountAdapterTest extends Specification {
 
     @Unroll
     def 'verify duration plus time operations: #duration'() {
+        setup: 'Override default timezone for test consistency'
+        def originalTimezone = TimeZone.default
+        TimeZone.default = TimeZone.getTimeZone(tz)
+
         expect: 'derived end time value equals expected'
         TemporalAmountAdapter.from(new Dur(duration)).getTime(new DateTime(start)) == new DateTime(expectedEnd)
 
+        cleanup:
+        TimeZone.default = originalTimezone
+
         where:
-        duration	| start				| expectedEnd
-        'P1D' | '20110326T110000' | '20110327T110000'
+        duration | start             | expectedEnd       | tz
+        'P1D'    | '20110326T110000' | '20110327T110000' | 'Australia/Melbourne'
+        // Because the night of 20110326 is the rollover between CET and CEST
+        // in Europe/Amsterdam, the current implementation of `getTime` arrives
+        // at 12:00 the next day rather than 11:00.
+        // This is arguably incorrect, but perhaps OK for a deprecated method:
+        'P1D'    | '20110326T110000' | '20110327T120000' | 'Europe/Amsterdam'
     }
 
     @Unroll

@@ -224,7 +224,7 @@ public class TemporalAmountAdapter implements Serializable {
      * Returns a date representing the end of this duration from the specified start date.
      * @param start the date to start the duration
      * @return the end of the duration as a date
-     * @deprecated use <code>Instant.from(getDuration().addTo(start))</code>, where start is a {@link Temporal}
+     * @deprecated use <code>getDuration().addTo(start)</code>, where start is a {@link Temporal}
      */
     @Deprecated
     public final Date getTime(final Date start) {
