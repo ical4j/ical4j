@@ -35,9 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DateTimePropertyValidators;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
@@ -148,7 +148,7 @@ public class Transp extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.TRANSP.validate(this);
+        return DateTimePropertyValidators.TRANSP.validate(this);
     }
 
     @Override

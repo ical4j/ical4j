@@ -36,9 +36,9 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*;
 
@@ -211,7 +211,7 @@ public class Priority extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.PRIORITY.validate(this);
+        return DescriptivePropertyValidators.PRIORITY.validate(this);
     }
 
     @Override

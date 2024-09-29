@@ -35,9 +35,9 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.RelationshipPropertyValidators;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -168,7 +168,7 @@ public class RelatedTo extends Property implements Encodable {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.RELATED_TO.validate(this);
+        return RelationshipPropertyValidators.RELATED_TO.validate(this);
     }
 
     @Override

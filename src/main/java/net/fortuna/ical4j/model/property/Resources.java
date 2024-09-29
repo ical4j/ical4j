@@ -33,9 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VResource;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 
 import java.util.List;
 
@@ -118,7 +118,7 @@ public class Resources extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.RESOURCES.validate(this);
+        return DescriptivePropertyValidators.RESOURCES.validate(this);
     }
 
     @Override

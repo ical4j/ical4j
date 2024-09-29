@@ -35,9 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.CalendarPropertyValidators;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
@@ -107,7 +107,7 @@ public class Method extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.METHOD.validate(this);
+        return CalendarPropertyValidators.METHOD.validate(this);
     }
 
     @Override

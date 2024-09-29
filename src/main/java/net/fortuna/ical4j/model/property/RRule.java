@@ -33,10 +33,10 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.RecurValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.RecurrencePropertyValidators;
 
 import java.time.temporal.Temporal;
 
@@ -132,7 +132,7 @@ public class RRule<T extends Temporal> extends Property {
     @Override
     public ValidationResult validate() throws ValidationException {
         return new RecurValidator().validate(recur).merge(
-                PropertyValidator.RRULE.validate(this));
+                RecurrencePropertyValidators.RRULE.validate(this));
     }
 
     @Override
