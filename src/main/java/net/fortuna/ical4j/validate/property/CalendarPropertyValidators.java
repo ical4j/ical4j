@@ -115,5 +115,5 @@ public interface CalendarPropertyValidators {
      * </pre>
      */
     Validator<ProdId> PROD_ID = new PropertyValidator<>(Property.PRODID,
-            new ValidationRule<>(ValueMatch, "\\w+"));
+            new ValidationRule<>(ValueMatch, ".+"));
 }
