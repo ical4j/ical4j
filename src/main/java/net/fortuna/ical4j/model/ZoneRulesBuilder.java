@@ -83,7 +83,11 @@ public class ZoneRulesBuilder {
             // ignore transitions that have no effect..
             if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.getOffset())) {
                 DtStart<LocalDateTime> start = observance.getRequiredProperty("DTSTART");
-                observance.calculateRecurrenceSet(new Period<>(start.getDate(), LocalDateTime.now())).forEach( p -> {
+                LocalDateTime periodEnd = LocalDateTime.now();
+                if (periodEnd.isBefore(start.getDate())) {
+                    periodEnd = start.getDate().plusYears(5);
+                }
+                observance.calculateRecurrenceSet(new Period<>(start.getDate(), periodEnd)).forEach( p -> {
                     transitions.add(ZoneOffsetTransition.of((LocalDateTime) p.getStart(),
                             offsetFrom.get().getOffset(), offsetTo.getOffset()));
                 });

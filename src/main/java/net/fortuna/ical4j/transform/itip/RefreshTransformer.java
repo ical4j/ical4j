@@ -29,16 +29,15 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.transform.calendar;
+package net.fortuna.ical4j.transform.itip;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.Uid;
 
 import java.util.function.Supplier;
 
-import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.CANCEL;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REFRESH;
 
 /**
  * $Id$
@@ -48,20 +47,16 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.CANCEL
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class CancelTransformer extends AbstractMethodTransformer {
+public class RefreshTransformer extends AbstractMethodTransformer {
 
-    private final Organizer organizer;
-
-    public CancelTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
-        super(CANCEL, uidGenerator, true, true);
-        this.organizer = organizer;
+    public RefreshTransformer(Supplier<Uid> uidGenerator) {
+        super(REFRESH, uidGenerator, true, false);
     }
 
     @Override
     public Calendar apply(Calendar object) {
-        for (var component : object.getComponents()) {
-            component.with(ORGANIZER, organizer);
-        }
+        // remove properties not applicable for METHOD=REFRESH..
+        object.getComponents().forEach(c -> c.removeAll(Property.DTSTART, Property.DTEND, Property.DURATION));
         return super.apply(object);
     }
 }

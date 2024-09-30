@@ -34,9 +34,9 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.RecurrencePropertyValidators;
 
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -200,7 +200,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.RDATE.validate(this);
+        return RecurrencePropertyValidators.RDATE.validate(this);
     }
 
     /**

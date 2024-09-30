@@ -122,6 +122,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
                     dateListProperty.setDefaultTimeZone(defaultTimeZone);
                     property.setValue(value);
                 }
+                break;
             }
         }
 

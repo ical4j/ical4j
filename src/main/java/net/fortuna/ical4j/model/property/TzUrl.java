@@ -37,9 +37,9 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.TimeZonePropertyValidators;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -163,7 +163,7 @@ public class TzUrl extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.TZURL.validate(this);
+        return TimeZonePropertyValidators.TZURL.validate(this);
     }
 
     @Override

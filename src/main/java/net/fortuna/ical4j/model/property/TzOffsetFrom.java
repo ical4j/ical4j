@@ -32,9 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.TimeZonePropertyValidators;
 
 import java.time.ZoneOffset;
 
@@ -146,7 +146,7 @@ public class TzOffsetFrom extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.TZOFFSETFROM.validate(this);
+        return TimeZonePropertyValidators.TZOFFSETFROM.validate(this);
     }
 
     @Override

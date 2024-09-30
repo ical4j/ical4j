@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2012-2024, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -30,22 +30,55 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+package net.fortuna.ical4j.transform.itip;
 
-package net.fortuna.ical4j.validate.property;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.Uid;
 
-import net.fortuna.ical4j.model.property.Trigger;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import java.util.function.Supplier;
+
+import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
 
 /**
- * @deprecated see {@link AlarmPropertyValidators#TRIGGER_ABS}
+ * $Id$
+ *
+ * Created: 26/09/2004
+ *
+ * Transforms a calendar for publishing.
+ * @author benfortuna
  */
-@Deprecated
-public class TriggerValidator implements Validator<Trigger> {
+public class RequestTransformer extends AbstractMethodTransformer {
+
+    private final Organizer organizer;
+
+    /**
+     * Support delegating mode by not specifying an organizer.
+     *
+     * @param uidGenerator
+     */
+    public RequestTransformer(Supplier<Uid> uidGenerator) {
+        super(REQUEST, uidGenerator, true, false);
+        this.organizer = null;
+    }
+
+    /**
+     * If organizer is not specified, delegation mode is assumed.
+     *
+     * @param organizer
+     * @param uidGenerator
+     */
+    public RequestTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
+        super(REQUEST, uidGenerator, true, true);
+        this.organizer = organizer;
+    }
 
     @Override
-    public ValidationResult validate(Trigger target) throws ValidationException {
-        return target.validate();
+    public Calendar apply(Calendar object) {
+        for (var component : object.getComponents()) {
+            component.with(ORGANIZER, organizer);
+        }
+        return super.apply(object);
     }
 }

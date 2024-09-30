@@ -5,7 +5,7 @@ import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.transform.calendar.RequestTransformer;
+import net.fortuna.ical4j.transform.itip.RequestTransformer;
 
 import java.util.function.Supplier;
 

@@ -29,15 +29,20 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.transform.calendar;
+package net.fortuna.ical4j.transform.itip;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.transform.component.ComponentRefreshTransformer;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REFRESH;
+import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.DECLINE_COUNTER;
 
 /**
  * $Id$
@@ -47,18 +52,26 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REFRES
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class RefreshTransformer extends AbstractMethodTransformer {
+public class DeclineCounterTransformer extends AbstractMethodTransformer {
 
-    private final ComponentRefreshTransformer componentMethodTransformer;
+    private final Organizer organizer;
 
-    public RefreshTransformer(Supplier<Uid> uidGenerator) {
-        super(REFRESH, uidGenerator, true, false);
-        this.componentMethodTransformer = new ComponentRefreshTransformer();
+    public DeclineCounterTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
+        super(DECLINE_COUNTER, uidGenerator, true, false);
+        this.organizer = organizer;
     }
 
     @Override
     public Calendar apply(Calendar object) {
-        object.getComponents().forEach(componentMethodTransformer::apply);
+        Optional<Method> method = object.getProperty(Property.METHOD);
+        if (method.isEmpty() || !COUNTER.equals(method.get())) {
+            throw new IllegalArgumentException("Expecting COUNTER method in source");
+        }
+        for (var component : object.getComponents()) {
+            component.with(ORGANIZER, organizer);
+            // remove properties not applicable for METHOD=REFRESH..
+            component.removeAll(Property.DTSTART, Property.DTEND, Property.DURATION);
+        }
         return super.apply(object);
     }
 }

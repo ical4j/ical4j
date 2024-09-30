@@ -3,6 +3,7 @@ package net.fortuna.ical4j.transform.component;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.transform.Transformer;
 
+@Deprecated
 public abstract class AbstractMethodTransfomer implements Transformer<Component> {
 
     @Override

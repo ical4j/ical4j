@@ -32,9 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.CalendarPropertyValidators;
 
 /**
  * $Id$
@@ -93,7 +93,7 @@ public class ProdId extends Property implements Encodable {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.PROD_ID.validate(this);
+        return CalendarPropertyValidators.PROD_ID.validate(this);
     }
 
     @Override

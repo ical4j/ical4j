@@ -125,11 +125,11 @@ public class ExRule<T extends Temporal> extends Property {
     }
 
     @Override
-    protected PropertyFactory<ExRule> newFactory() {
-        return new Factory();
+    protected PropertyFactory<ExRule<T>> newFactory() {
+        return new Factory<>();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<ExRule> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<ExRule<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
@@ -137,13 +137,13 @@ public class ExRule<T extends Temporal> extends Property {
         }
 
         @Override
-        public ExRule createProperty(final ParameterList parameters, final String value) {
-            return new ExRule(parameters, value);
+        public ExRule<T> createProperty(final ParameterList parameters, final String value) {
+            return new ExRule<>(parameters, value);
         }
 
         @Override
-        public ExRule createProperty() {
-            return new ExRule();
+        public ExRule<T> createProperty() {
+            return new ExRule<>();
         }
     }
 

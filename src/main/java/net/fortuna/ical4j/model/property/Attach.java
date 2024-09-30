@@ -38,9 +38,9 @@ import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.EncoderFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
@@ -83,7 +83,7 @@ import java.util.Optional;
  *          specified multiple times within an iCalendar object.
  * </pre>
  *
- * @see net.fortuna.ical4j.validate.PropertyValidator#ATTACH_URI
+ * @see DescriptivePropertyValidators#ATTACH_URI
  * @author benf
  */
 public class Attach extends Property {
@@ -151,10 +151,10 @@ public class Attach extends Property {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
-            return PropertyValidator.ATTACH_BIN.validate(this);
+        if (Optional.of(Value.BINARY).equals(getParameter(Parameter.VALUE))) {
+            return DescriptivePropertyValidators.ATTACH_BIN.validate(this);
         }
-        return PropertyValidator.ATTACH_URI.validate(this);
+        return DescriptivePropertyValidators.ATTACH_URI.validate(this);
     }
 
     /**

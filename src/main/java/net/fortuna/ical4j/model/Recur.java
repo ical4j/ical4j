@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.chrono.Chronology;
 import java.time.temporal.*;
 import java.util.*;
@@ -600,6 +602,10 @@ public class Recur<T extends Temporal> implements Serializable {
     @Deprecated
     public final void setWeekStartDay(final WeekDay weekStartDay) {
         this.weekStartDay = weekStartDay;
+        if (frequency != null) {
+            // May have to update calIncField
+            validateFrequency();
+        }
     }
 
     /**
@@ -923,11 +929,60 @@ public class Recur<T extends Temporal> implements Serializable {
         } else if (Frequency.MONTHLY.equals(getFrequency())) {
             calIncField = ChronoUnit.MONTHS;
         } else if (Frequency.YEARLY.equals(getFrequency())) {
-            calIncField = ChronoUnit.YEARS;
+            if (getWeekNoList().isEmpty()) {
+                calIncField = ChronoUnit.YEARS;
+            } else {
+                calIncField = weekBasedYears(WeekDay.getDayOfWeek(getWeekStartDay()));
+            }
         } else {
             throw new IllegalArgumentException("Invalid FREQ rule part '"
                     + frequency + "' in recurrence rule");
         }
+    }
+
+    private static TemporalUnit weekBasedYears(DayOfWeek weekStartDay) {
+        WeekFields weekFields;
+        if (weekStartDay == null) {
+            weekFields = WeekFields.of(DayOfWeek.MONDAY, 4);
+        } else {
+            weekFields = WeekFields.of(weekStartDay, 4);
+        }
+        return new TemporalUnit() {
+            @Override
+            public long between(Temporal one, Temporal other) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public <R extends Temporal> R addTo(R one, long other) {
+                TemporalField field = weekFields.weekBasedYear();
+                long newValue = one.get(field) + other;
+                // 'one.with(field, newValue)' would be neater here, but 'with' does not work for
+                // ZonedDateTime as WeekFields' field.adjustInto returns a LocalDate,
+                // so we need to manually 'adjustInto' and use the result as TemporalAdjuster:
+                Temporal result = field.adjustInto(one, newValue);
+                if (TemporalAdjuster.class.isAssignableFrom(result.getClass())) {
+                    return (R) one.with((TemporalAdjuster) result);
+                } else {
+                    return (R) one;
+                }
+            }
+            @Override
+            public boolean isTimeBased() {
+                return false;
+            }
+            @Override
+            public boolean isDateBased() {
+                return true;
+            }
+            @Override
+            public boolean isDurationEstimated() {
+                return true;
+            }
+            @Override
+            public Duration getDuration() {
+                return WeekFields.WEEK_BASED_YEARS.getDuration();
+            }
+        };
     }
 
     /**

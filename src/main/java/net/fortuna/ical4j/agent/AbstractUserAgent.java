@@ -7,7 +7,7 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.transform.calendar.*;
+import net.fortuna.ical4j.transform.itip.*;
 import net.fortuna.ical4j.util.Calendars;
 
 import java.util.HashMap;
