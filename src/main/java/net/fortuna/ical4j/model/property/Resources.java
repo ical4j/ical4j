@@ -96,8 +96,8 @@ public class Resources extends Property {
     /**
      * @return Returns the resources.
      */
-    public final List<String> getResources() {
-        return resources.getTexts();
+    public final TextList getResources() {
+        return resources;
     }
 
     /**

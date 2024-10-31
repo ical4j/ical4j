@@ -36,8 +36,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 
-import java.util.List;
-
 /**
  * $Id$
  * <p/>
@@ -156,8 +154,8 @@ public class Categories extends Property {
     /**
      * @return Returns the categories.
      */
-    public List<String> getCategories() {
-        return categories.getTexts();
+    public TextList getCategories() {
+        return categories;
     }
 
     /**
