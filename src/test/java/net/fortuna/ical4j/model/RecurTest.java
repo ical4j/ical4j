@@ -66,7 +66,7 @@ import static net.fortuna.ical4j.transform.recurrence.Frequency.WEEKLY;
  */
 public class RecurTest<T extends Temporal> extends TestCase {
 
-    private static Logger log = LoggerFactory.getLogger(RecurTest.class);
+    private static final Logger log = LoggerFactory.getLogger(RecurTest.class);
 
     private static final Locale testLocale = Locale.US;
 
@@ -249,7 +249,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         // assertTrue("Date list exceeds expected count", dates.size() <= expectedCount);
     }
     
-    private static TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
+    private static final TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     public void testGetDatesMaxTime() {
         long t0 = System.currentTimeMillis();
@@ -361,8 +361,8 @@ public class RecurTest<T extends Temporal> extends TestCase {
          *     BYMINUTE=30
          */
         Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.YEARLY).count(-1).interval(2)
-                .monthList(new MonthList("1")).dayList(new WeekDayList(SU))
-                .hourList(new NumberList("8,9")).minuteList(new NumberList("30")).build();
+                .monthList(new MonthList("1")).dayList(SU)
+                .hourList(new NumberList("8,9")).minuteList(30).build();
 
         ZonedDateTime seed = ZonedDateTime.of(1997, 2, 5,
                 8, 30, 0, 0, ZoneId.systemDefault());
@@ -458,8 +458,8 @@ public class RecurTest<T extends Temporal> extends TestCase {
      */
     public final void testSetPosProcessing() {
         Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.MONTHLY).count(-1)
-                .dayList(new WeekDayList(MO, TU, WE, TH, FR))
-                .setPosList(new NumberList("-1")).build();
+                .dayList(MO, TU, WE, TH, FR)
+                .setPosList(-1).build();
         log.debug(recur.toString());
 
         ZonedDateTime start = ZonedDateTime.now();
@@ -484,22 +484,22 @@ public class RecurTest<T extends Temporal> extends TestCase {
         
         // FREQ=MONTHLY;INTERVAL=1;COUNT=4;BYMONTHDAY=2
         Recur<T> recur = new Recur.Builder<T>().frequency(Frequency.MONTHLY).count(4).interval(1)
-                .monthDayList(new NumberList("2")).build();
+                .monthDayList(2).build();
         assertEquals("FREQ=MONTHLY;INTERVAL=1;COUNT=4;BYMONTHDAY=2", recur.toString());
 
         // FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=2MO
         recur = new Recur.Builder<T>().frequency(Frequency.MONTHLY).count(4).interval(2)
-                .dayList(new WeekDayList(new WeekDay(MO, 2))).build();
+                .dayList(new WeekDay(MO, 2)).build();
         assertEquals("FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=2MO", recur.toString());
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYMONTHDAY=3
         recur = new Recur.Builder<T>().frequency(Frequency.YEARLY).count(4)
-                .monthList(new MonthList("2")).monthDayList(new NumberList("3")).build();
+                .monthList(new MonthList("2")).monthDayList(3).build();
         assertEquals("FREQ=YEARLY;COUNT=4;BYMONTH=2;BYMONTHDAY=3", recur.toString());
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYDAY=2SU
         recur = new Recur.Builder<T>().frequency(Frequency.YEARLY).count(4)
-                .monthList(new MonthList("2")).dayList(new WeekDayList(new WeekDay(SU, 2))).build();
+                .monthList(new MonthList("2")).dayList(new WeekDay(SU, 2)).build();
         assertEquals("FREQ=YEARLY;COUNT=4;BYMONTH=2;BYDAY=2SU", recur.toString());
     }
 
@@ -567,7 +567,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         log.debug(everySecondDayUntil.getDates(start, end).toString());
 
         Recur<ZonedDateTime> everySecondMonday = new Recur.Builder<ZonedDateTime>().frequency(WEEKLY).until(end)
-                .interval(2).dayList(new WeekDayList(MO)).build();
+                .interval(2).dayList(MO).build();
         log.debug(everySecondMonday.toString());
 
         List<ZonedDateTime> dates = everySecondMonday.getDates(start, end);
@@ -598,7 +598,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         
         // Test BYDAY rules..
         Recur<ZonedDateTime> weekDays = new Recur.Builder<ZonedDateTime>().frequency(DAILY).count(10).interval(1)
-                .dayList(new WeekDayList(MO, TU, WE, TH, FR)).build();
+                .dayList(MO, TU, WE, TH, FR).build();
         log.debug(weekDays.toString());
         
         start = ZonedDateTime.of(2022, 8, 18, 11, 3, 0, 0, ZoneId.systemDefault());
@@ -628,7 +628,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
          * </pre>
          */
         Recur<ZonedDateTime> everyTuesdayThursday = new Recur.Builder<ZonedDateTime>().frequency(WEEKLY).count(10)
-            .dayList(new WeekDayList(TU, TH)).build();
+            .dayList(TU, TH).build();
         log.debug(everyTuesdayThursday.toString());
 
         start = ZonedDateTime.now().withYear(1997).withMonth(9).withHour(9).withMinute(0).withSecond(0);
@@ -666,8 +666,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
 //        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
 
         start = ZonedDateTime.now(TimeZoneRegistry.getGlobalZoneId("America/Los_Angeles")).withSecond(0);
-        DtStart<ZonedDateTime> dtStart = new DtStart<>(start)
-                .withParameter(new TzId(start.getZone().getId())).getFluentTarget();
+        DtStart<ZonedDateTime> dtStart = new DtStart<>(start).add(new TzId(start.getZone().getId()));
         end = start.plusMonths(2);
         DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(end);
 

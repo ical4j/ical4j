@@ -115,7 +115,7 @@ public class RelType extends Parameter implements Encodable {
 
         @Override
         public RelType createParameter(final String value) {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_CHILD: return CHILD;
                 case VALUE_PARENT: return PARENT;
                 case VALUE_SIBLING: return SIBLING;

@@ -32,9 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DateTimePropertyValidators;
 import org.threeten.extra.Interval;
 
 import java.util.ArrayList;
@@ -158,7 +158,7 @@ public class FreeBusy extends Property {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.FREEBUSY.validate(this);
+        return DateTimePropertyValidators.FREEBUSY.validate(this);
     }
 
     /**
@@ -181,7 +181,7 @@ public class FreeBusy extends Property {
      */
     @Override
     public final String getValue() {
-        return new PeriodList<>(intervals.toArray(new Interval[0])).toString();
+        return new PeriodList<>(intervals.toArray(Interval[]::new)).toString();
     }
 
     @Override

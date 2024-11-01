@@ -89,7 +89,7 @@ public class ScheduleAgent extends Parameter implements Encodable {
 
         @Override
         public ScheduleAgent createParameter(final String value) {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_CLIENT: return CLIENT;
                 case VALUE_NONE: return NONE;
                 case VALUE_SERVER: return SERVER;

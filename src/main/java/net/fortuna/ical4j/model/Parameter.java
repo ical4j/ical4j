@@ -234,7 +234,7 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
      */
     @Override
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         b.append(getName());
         if (getValue() != null) {
             b.append('=');
@@ -267,7 +267,7 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
     @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
-            final Parameter p = (Parameter) arg0;
+            final var p = (Parameter) arg0;
             return new EqualsBuilder().append(getName(), p.getName())
                     .append(getValue(), p.getValue()).isEquals();
         }

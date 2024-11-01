@@ -13,6 +13,7 @@ public interface ComponentContainer<C extends Component> extends ComponentListAc
      */
     default <T extends ComponentContainer<C>> T add(C component) {
         setComponentList((ComponentList<C>) getComponentList().add(component));
+        //noinspection unchecked
         return (T) this;
     }
 
@@ -23,6 +24,7 @@ public interface ComponentContainer<C extends Component> extends ComponentListAc
      */
     default <T extends ComponentContainer<C>> T remove(C component) {
         setComponentList((ComponentList<C>)  getComponentList().remove(component));
+        //noinspection unchecked
         return (T) this;
     }
 
@@ -33,6 +35,7 @@ public interface ComponentContainer<C extends Component> extends ComponentListAc
      */
     default <T extends ComponentContainer<C>> T replace(C component) {
         setComponentList((ComponentList<C>)  getComponentList().replace(component));
+        //noinspection unchecked
         return (T) this;
     }
 

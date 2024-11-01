@@ -193,7 +193,8 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Ben Fortuna
  */
-public class VAlarm extends CalendarComponent implements ComponentContainer<Component>, DescriptivePropertyAccessor {
+public class VAlarm extends Component implements ComponentContainer<Component>, DescriptivePropertyAccessor,
+    LocationsAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -249,7 +250,7 @@ public class VAlarm extends CalendarComponent implements ComponentContainer<Comp
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
 
         if (getAction().isPresent()) {
             switch (getAction().get().getValue()) {
@@ -329,11 +330,11 @@ public class VAlarm extends CalendarComponent implements ComponentContainer<Comp
     }
 
     @Override
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {

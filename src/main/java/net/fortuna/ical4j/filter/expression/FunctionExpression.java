@@ -53,7 +53,7 @@ public class FunctionExpression implements LiteralExpression<Function<String, Te
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FunctionExpression that = (FunctionExpression) o;
+        var that = (FunctionExpression) o;
         return Objects.equals(value, that.value);
     }
 

@@ -64,10 +64,10 @@ public class PropertyRuleSet<T extends Property> extends AbstractValidationRuleS
                         matches = matches(rule.getInstances(), s -> target.getParameters(s).size() > 1);
                         break;
                     case OneOrMore:
-                        matches = matches(rule.getInstances(), s -> target.getParameters(s).size() < 1);
+                        matches = matches(rule.getInstances(), s -> target.getParameters(s).isEmpty());
                         break;
                     case OneExclusive:
-                        if (rule.getInstances().stream().anyMatch(s -> target.getParameters(s).size() > 0
+                        if (rule.getInstances().stream().anyMatch(s -> !target.getParameters(s).isEmpty()
                                 && target.getParameters(s).size() != total)) {
                             matches = rule.getInstances();
                         }
@@ -82,7 +82,7 @@ public class PropertyRuleSet<T extends Property> extends AbstractValidationRuleS
                         break;
                 }
                 if (!matches.isEmpty()) {
-                    results.add(new ValidationEntry(rule, target.getName(), matches.toArray(new String[0])));
+                    results.add(new ValidationEntry(rule, target.getName(), matches.toArray(String[]::new)));
                 }
             }
         }

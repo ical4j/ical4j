@@ -33,9 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.AlarmPropertyValidators;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
@@ -244,11 +244,11 @@ public class Trigger extends DateProperty<Instant> implements UtcProperty {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = super.validate();
+        var result = super.validate();
         if (Optional.of(Value.DATE_TIME).equals(getParameter(Parameter.VALUE))) {
-            result = result.merge(PropertyValidator.TRIGGER_ABS.validate(this));
+            result = result.merge(AlarmPropertyValidators.TRIGGER_ABS.validate(this));
         } else {
-            result = result.merge(PropertyValidator.TRIGGER_REL.validate(this));
+            result = result.merge(AlarmPropertyValidators.TRIGGER_REL.validate(this));
         }
         return result;
     }

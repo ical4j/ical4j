@@ -50,7 +50,7 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSI
  */
 public class VersionTest extends PropertyTest {
 
-    private Version version;
+    private final Version version;
     
     /**
      * @param property

@@ -50,7 +50,7 @@ public abstract class AbstractValidator<T> implements Validator<T> {
 
     @Override
     public ValidationResult validate(T target) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
         for (AbstractValidationRuleSet<? super T> ruleSet : ruleSets) {
             result.getEntries().addAll(ruleSet.apply(context, target));
         }

@@ -31,16 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.util.TimeZone;
-import java.util.Date;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import net.fortuna.ical4j.model.CalendarDateFormatFactory;
-
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * $Id$ [06-Apr-2004]
@@ -52,13 +50,13 @@ public class CalendarDateFormatFactoryTest extends TestCase {
     
     private static final boolean LENIENT = true;
 
-    private String pattern;
+    private final String pattern;
     
-    private boolean lenient;
+    private final boolean lenient;
     
-    private java.util.TimeZone[] timeZones;
+    private final java.util.TimeZone[] timeZones;
     
-    private String[] values;
+    private final String[] values;
 
     /**
      * @param testMethod

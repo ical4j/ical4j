@@ -44,9 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public interface RecurrenceSupport<T extends CalendarComponent> extends PropertyContainer {
-
-    <C extends Component> C copy() throws ParseException, IOException, URISyntaxException;
+public interface RecurrenceSupport<T extends CalendarComponent> extends PropertyContainer, Prototype<Component> {
 
     /**
      * Calculates the recurrence set for this component using the specified period.
@@ -62,14 +60,15 @@ public interface RecurrenceSupport<T extends CalendarComponent> extends Property
      * @param period a range to calculate recurrences for
      * @return a list of periods
      */
-    <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<T> period);
+    <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period);
 
     default List<T> getOccurrences(Period<Temporal> period) throws ParseException, IOException, URISyntaxException {
         List<T> occurrences = new ArrayList<>();
 
         Set<Period<Temporal>> periods = RecurrenceSupport.this.calculateRecurrenceSet(period);
         for (Period<Temporal> p : periods) {
-            final T occurrence = this.copy();
+            //noinspection unchecked
+            final T occurrence = (T) this.copy();
             occurrence.add(new RecurrenceId<>(p.getStart()));
             occurrences.add(occurrence);
         }

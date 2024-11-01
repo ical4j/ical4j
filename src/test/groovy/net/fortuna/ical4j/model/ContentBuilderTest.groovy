@@ -45,7 +45,7 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSI
  * @author fortuna
  *
  */
-public class ContentBuilderTest extends GroovyTestCase {
+class ContentBuilderTest extends GroovyTestCase {
 
     void testBuildCalendar() {
         def builder = new ContentBuilder()

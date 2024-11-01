@@ -40,7 +40,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -250,13 +249,13 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VTODO.validate(this);
+        var result = ComponentValidator.VTODO.validate(this);
         // validate that getAlarms() only contains VAlarm components
-        for (VAlarm component : getAlarms()) {
+        for (var component : getAlarms()) {
             component.validate(recurse);
         }
 
-        final Optional<Status> status = getProperty(Property.STATUS);
+        final Optional<Status> status = getStatus();
         if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
                 && !VTODO_COMPLETED.equals(status.get())
                 && !VTODO_IN_PROCESS.equals(status.get())
@@ -351,11 +350,11 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     }
 
     @Override
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VToDo> {

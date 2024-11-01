@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model
 
 import spock.lang.Specification
-import spock.lang.Unroll;
+import spock.lang.Unroll
 
 class UtcOffsetSpec extends Specification {
 

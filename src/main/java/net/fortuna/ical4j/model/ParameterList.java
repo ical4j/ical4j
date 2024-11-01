@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -88,8 +89,13 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
     @Override
     public ContentCollection<Parameter> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
+        return removeIf(p -> names.contains(p.getName()));
+    }
+
+    @Override
+    public ContentCollection<Parameter> removeIf(Predicate<Parameter> filter) {
         List<Parameter> copy = new ArrayList<>(parameters);
-        if (copy.removeIf(p -> names.contains(p.getName()))) {
+        if (copy.removeIf(filter)) {
             return new ParameterList(copy);
         } else {
             return this;
@@ -142,15 +148,14 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
      */
     @Deprecated
     public final ParameterList getParameters(final String name) {
-        final ParameterList list = new ParameterList(get(name));
-        return list;
+        return new ParameterList(get(name));
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ParameterList that = (ParameterList) o;
+        var that = (ParameterList) o;
         return Objects.equals(parameters, that.parameters);
     }
 

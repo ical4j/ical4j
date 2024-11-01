@@ -53,7 +53,7 @@ public class StringExpression implements LiteralExpression<String> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StringExpression that = (StringExpression) o;
+        var that = (StringExpression) o;
         return value.equals(that.value);
     }
 

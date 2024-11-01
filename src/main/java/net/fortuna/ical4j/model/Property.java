@@ -59,7 +59,7 @@ import java.util.Optional;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content implements Comparable<Property>, FluentProperty {
+public abstract class Property extends Content implements Prototype<Property>, Comparable<Property>, FluentProperty {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -454,7 +454,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     @Override
     public String toString() {
-        final StringBuilder buffer = new StringBuilder();
+        final var buffer = new StringBuilder();
         if (prefix != null && !prefix.isEmpty()) {
             buffer.append(prefix);
             buffer.append('.');
@@ -485,8 +485,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
     }
 
     @Override
-    public <P extends Property> P getFluentTarget() {
-        return (P) this;
+    public Property getFluentTarget() {
+        return this;
     }
 
     /**
@@ -623,7 +623,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     @Override
     public boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
-            final Property p = (Property) arg0;
+            final var p = (Property) arg0;
             return getName().equals(p.getName())
                     && new EqualsBuilder().append(getValue(), p.getValue()).append(parameters,
                     p.parameters).append(prefix, p.prefix).isEquals();

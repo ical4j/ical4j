@@ -12,8 +12,8 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Support adapter for {@link java.time.temporal.TemporalAmount} representation in iCalendar format.
@@ -45,7 +45,7 @@ public class TemporalAmountAdapter implements Serializable {
         } else {
             retVal = durationToString((Duration) duration, seed);
         }
-        return  retVal;
+        return retVal;
     }
 
     /**
@@ -57,7 +57,7 @@ public class TemporalAmountAdapter implements Serializable {
      */
     private String periodToString(Period period, Temporal seed) {
         String retVal;
-        Temporal adjustedSeed = seed.plus(period);
+        var adjustedSeed = seed.plus(period);
         if (period.getYears() != 0) {
             long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format(Locale.US, "P%dW", weeks);
@@ -87,15 +87,15 @@ public class TemporalAmountAdapter implements Serializable {
      */
     private String durationToString(Duration duration, Temporal seed) {
         String retVal = null;
-        Duration absDuration = duration.abs();
-        Temporal adjustedSeed = seed.plus(absDuration);
+        var absDuration = duration.abs();
+        var adjustedSeed = seed.plus(absDuration);
         long days = 0;
         if (duration.getSeconds() != 0) {
             days = seed.until(adjustedSeed, ChronoUnit.DAYS);
         }
 
         if (days != 0) {
-            Duration durationMinusDays = absDuration.minusDays(days);
+            var durationMinusDays = absDuration.minusDays(days);
             if (durationMinusDays.getSeconds() != 0) {
                 adjustedSeed = seed.plus(durationMinusDays);
                 long hours = seed.until(adjustedSeed, ChronoUnit.HOURS);
@@ -141,7 +141,7 @@ public class TemporalAmountAdapter implements Serializable {
         if (duration instanceof Duration) {
             return (Duration) duration;
         } else {
-            Temporal seed = LocalDateTime.now();
+            var seed = LocalDateTime.now();
             long days = seed.until(seed.plus(duration), ChronoUnit.DAYS);
             return Duration.ofDays(days);
         }
@@ -152,7 +152,7 @@ public class TemporalAmountAdapter implements Serializable {
     }
 
     public static TemporalAmountAdapter parse(String value, boolean lenient) {
-        TemporalAmount retVal = null;
+        TemporalAmount retVal;
         if (Arrays.asList("P", "PT").contains(value) && lenient) {
             retVal = Period.ZERO;
         }
@@ -180,8 +180,8 @@ public class TemporalAmountAdapter implements Serializable {
     public static TemporalAmountAdapter fromDateRange(Date start, Date end) {
         TemporalAmount duration;
         long durationMillis = end.getTime() - start.getTime();
-        if (durationMillis % (24 * 60 * 60 * 1000) == 0) {
-            duration = java.time.Period.ofDays((int) (durationMillis / (24 * 60 * 60 * 1000)));
+        if (durationMillis % (24 * 60 * 60 * 1_000) == 0) {
+            duration = java.time.Period.ofDays((int) (durationMillis / (24 * 60 * 60 * 1_000)));
         } else {
             duration = java.time.Duration.ofMillis(durationMillis);
         }
@@ -192,13 +192,13 @@ public class TemporalAmountAdapter implements Serializable {
     public static TemporalAmountAdapter from(Dur dur) {
         TemporalAmount duration;
         if (dur.getWeeks() > 0) {
-            Period p = Period.ofWeeks(dur.getWeeks());
+            var p = Period.ofWeeks(dur.getWeeks());
             if (dur.isNegative()) {
                 p = p.negated();
             }
             duration = p;
         } else {
-            Duration d = Duration.ofDays(dur.getDays())
+            var d = Duration.ofDays(dur.getDays())
                     .plusHours(dur.getHours())
                     .plusMinutes(dur.getMinutes())
                     .plusSeconds(dur.getSeconds());
@@ -224,7 +224,7 @@ public class TemporalAmountAdapter implements Serializable {
      * Returns a date representing the end of this duration from the specified start date.
      * @param start the date to start the duration
      * @return the end of the duration as a date
-     * @deprecated use <code>Instant.from(getDuration().addTo(start))</code>, where start is a {@link Temporal}
+     * @deprecated use <code>getDuration().addTo(start)</code>, where start is a {@link Temporal}
      */
     @Deprecated
     public final Date getTime(final Date start) {
@@ -237,7 +237,7 @@ public class TemporalAmountAdapter implements Serializable {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        TemporalAmountAdapter that = (TemporalAmountAdapter) o;
+        var that = (TemporalAmountAdapter) o;
 
         return new EqualsBuilder()
                 .append(duration, that.duration)

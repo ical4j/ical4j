@@ -106,7 +106,7 @@ public class Rsvp extends Parameter implements Encodable {
 
         @Override
         public Rsvp createParameter(final String value) {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_FALSE: return FALSE;
                 case VALUE_TRUE: return TRUE;
             }

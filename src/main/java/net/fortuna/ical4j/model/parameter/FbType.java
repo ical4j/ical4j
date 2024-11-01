@@ -105,7 +105,7 @@ public class FbType extends Parameter implements Encodable {
 
         @Override
         public FbType createParameter(final String value) {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_BUSY: return BUSY;
                 case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;
                 case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;

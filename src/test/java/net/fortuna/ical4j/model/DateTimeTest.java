@@ -53,9 +53,9 @@ import java.util.Calendar;
  */
 public class DateTimeTest extends TestCase {
 
-    private Logger log = LoggerFactory.getLogger(DateTimeTest.class);
+    private final Logger log = LoggerFactory.getLogger(DateTimeTest.class);
 
-    private static TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    private static final TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     private DateTime dateTime;
 

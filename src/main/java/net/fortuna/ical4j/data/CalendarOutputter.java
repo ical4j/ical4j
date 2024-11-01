@@ -33,7 +33,6 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -95,13 +94,13 @@ public class CalendarOutputter extends AbstractOutputter {
     public final void output(final Calendar calendar, final Writer out)
             throws IOException, ValidationException {
         if (isValidating()) {
-            ValidationResult result = calendar.validate();
+            var result = calendar.validate();
             if (result.hasErrors()) {
                 LoggerFactory.getLogger(CalendarOutputter.class).warn("One ore more components have errors: {}", result);
             }
         }
 
-        try (FoldingWriter writer = new FoldingWriter(out, foldLength)) {
+        try (var writer = new FoldingWriter(out, foldLength)) {
             writer.write(calendar.toString());
         }
     }

@@ -59,7 +59,7 @@ public class ConcurrencyTest extends TestCase {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
-                    try(FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics");) {
+                    try(FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics")) {
                         Calendar calendar = new CalendarBuilder().build(fis);
                         Calendar cal = new Calendar(calendar);
                         size.addAndGet(cal.getComponents().size());
@@ -76,7 +76,7 @@ public class ConcurrencyTest extends TestCase {
 
     public void testConcurrencySingleInstanceOfCalendar() throws Exception {
         final Calendar calendar;
-        try(FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics");) {
+        try(FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics")) {
             calendar = new CalendarBuilder().build(fis);
         } catch (IOException | ParserException e) {
             throw new RuntimeException(e.getMessage(), e);

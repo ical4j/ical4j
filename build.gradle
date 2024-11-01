@@ -13,8 +13,8 @@ plugins {
     id 'org.javamodularity.moduleplugin' version '1.8.14'
 }
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
@@ -60,6 +60,8 @@ dependencies {
 //        exclude group: 'commons-collections', module: 'commons-collections'
 //    }
 
+    compileOnly "org.jetbrains:annotations:24.1.0"
+
     // optional timezone caching..
     jcacheTimezoneCacheImplementation 'javax.cache:cache-api:1.1.1', 'org.jetbrains:annotations:23.0.0'
 
@@ -83,25 +85,22 @@ dependencies {
     // A CachingProvider is required for TimeZoneCacheTest.groovy
     testImplementation "org.cache2k:cache2k-jcache:$jcacheVersion"
 
-    // junit
-    testImplementation "org.junit.vintage:junit-vintage-engine:$junitVintageVersion"
-
     // groovy-test
     testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
+
+    // test dependencies
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVintageVersion"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // spock
     testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
             "org.spockframework:spock-core"
 
+    testImplementation "org.hamcrest:hamcrest-core:$hamcrestVersion"
+
     // testcontainers
     testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
             "org.testcontainers:spock:$testcontainersVersion"
-}
-
-compileTestJava {
-    moduleOptions {
-        compileOnClasspath = true
-    }
 }
 
 test {
@@ -113,7 +112,7 @@ test {
 
     finalizedBy jacocoTestCoverageVerification, jacocoTestReport // Ensure Jacoco is run after tests have completed
 
-    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
+//    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
 }
 
 jacocoTestCoverageVerification {
@@ -156,7 +155,7 @@ scmVersion {
     branchVersionCreator = ['master': 'simple']
     branchVersionCreator = ['ical4j-1.x-maintenance': 'simple']
     branchVersionCreator = ['ical4j-2.x-maintenance': 'simple']
-    branchVersionCreator = ['feature/jsr-310-localdate': 'simple']
+    branchVersionCreator = ['ical4j-3.x-maintenance': 'simple']
     nextVersion {
         suffix = 'pre'
         separator = '-'

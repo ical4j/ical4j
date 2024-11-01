@@ -38,7 +38,7 @@ package net.fortuna.ical4j.model;
  */
 public interface FluentProperty {
 
-    <P extends Property> P getFluentTarget();
+    Property getFluentTarget();
 
     default FluentProperty withParameter(Parameter parameter) {
         return getFluentTarget().add(parameter);

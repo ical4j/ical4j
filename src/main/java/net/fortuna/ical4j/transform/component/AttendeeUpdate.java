@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.transform.component;
 
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.RelationshipPropertyModifiers;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.transform.Transformer;
 
@@ -21,6 +22,7 @@ public class AttendeeUpdate implements Transformer<Component> {
 
     @Override
     public Component apply(Component object) {
-        return object.replace(attendee);
+        object.with(RelationshipPropertyModifiers.ATTENDEE, attendee);
+        return object;
     }
 }

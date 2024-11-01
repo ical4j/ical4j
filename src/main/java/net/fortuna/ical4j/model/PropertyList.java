@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -89,8 +90,13 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
     @Override
     public ContentCollection<Property> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
+        return removeIf(p -> names.contains(p.getName()));
+    }
+
+    @Override
+    public ContentCollection<Property> removeIf(Predicate<Property> filter) {
         List<Property> copy = new ArrayList<>(properties);
-        if (copy.removeIf(p -> names.contains(p.getName()))) {
+        if (copy.removeIf(filter)) {
             return new PropertyList(copy);
         } else {
             return this;
@@ -146,7 +152,7 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PropertyList that = (PropertyList) o;
+        var that = (PropertyList) o;
         return Objects.equals(properties, that.properties);
     }
 

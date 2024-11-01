@@ -35,9 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.CalendarPropertyValidators;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
 
@@ -103,7 +103,7 @@ public class CalScale extends Property {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.CALSCALE.validate(this);
+        return CalendarPropertyValidators.CALSCALE.validate(this);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class CalScale extends Property {
         @Override
         public CalScale createProperty(final ParameterList parameters, final String value) {
 
-            if (parameters.getAll().isEmpty() && VALUE_GREGORIAN.equals(value)) {
+            if (parameters.getAll().isEmpty() && VALUE_GREGORIAN.equalsIgnoreCase(value)) {
                 return GREGORIAN;
             }
             return new CalScale(parameters, value);

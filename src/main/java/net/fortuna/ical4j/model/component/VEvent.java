@@ -329,7 +329,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VEVENT.validate(this);
+        var result = ComponentValidator.VEVENT.validate(this);
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
 //        while (iterator.hasNext()) {
@@ -343,7 +343,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 //            ((VAlarm) component).validate(recurse);
 //        }
 
-        final Optional<Status> status = getProperty(Property.STATUS);
+        final Optional<Status> status = getStatus();
         if (status.isPresent() && !VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
                 && !VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
                 && !VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
@@ -351,7 +351,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                     + status + "] is not applicable for VEVENT", ValidationEntry.Severity.ERROR, getName()));
         }
 
-        if (getProperty(Property.DTEND).isPresent()) {
+        if (getDateTimeEnd().isPresent()) {
 
             /*
              * The "VEVENT" is also the calendar component used to specify an anniversary or daily reminder within a
@@ -360,8 +360,8 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final Optional<DtStart<Temporal>> start = getProperty(DTSTART);
-            final Optional<DtEnd<Temporal>> end = getProperty(DTEND);
+            final Optional<DtStart<Temporal>> start = getDateTimeStart();
+            final Optional<DtEnd<Temporal>> end = getDateTimeEnd();
 
             if (start.isPresent()) {
                 final Optional<Parameter> startValue = start.get().getParameter(Parameter.VALUE);
@@ -430,8 +430,8 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range, final boolean normalise) {
         PeriodList<T> periods;
         // if component is transparent return empty list..
-        Optional<Transp> transp = getProperty(TRANSP);
-        if (!transp.isPresent() || !TRANSPARENT.equals(transp.get())) {
+        Optional<Transp> transp = getTimeTransparency();
+        if (transp.isEmpty() || !TRANSPARENT.equals(transp.get())) {
 
 //          try {
             periods = new PeriodList<>(calculateRecurrenceSet(range));
@@ -465,7 +465,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
-                final VEvent occurrence = this.copy();
+                final VEvent occurrence = (VEvent) this.copy();
                 occurrence.add(new RecurrenceId<>(date));
                 return occurrence;
             }
@@ -506,7 +506,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * duration.
      * @return a DtEnd instance, or null if one cannot be derived
      */
-    public final Optional<DtEnd<?>> getEndDate() {
+    public final <T extends Temporal> Optional<DtEnd<T>> getEndDate() {
         return getEndDate(true);
     }
 
@@ -517,16 +517,16 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * not found
      * @return The end for this VEVENT.
      */
-    public final Optional<DtEnd<?>> getEndDate(final boolean deriveFromDuration) {
-        Optional<DtEnd<?>> dtEnd = getProperty(DTEND);
+    public final <T extends Temporal> Optional<DtEnd<T>> getEndDate(final boolean deriveFromDuration) {
+        Optional<DtEnd<T>> dtEnd = getDateTimeEnd();
         // No DTEND? No problem, we'll use the DURATION.
-        if (!dtEnd.isPresent() && deriveFromDuration) {
-            Optional<DtStart<?>> dtStart = getProperty(DTSTART);
+        if (dtEnd.isEmpty() && deriveFromDuration) {
+            Optional<DtStart<T>> dtStart = getDateTimeStart();
             if (dtStart.isPresent()) {
                 final Duration vEventDuration;
-                Optional<Duration> duration = getProperty(DURATION);
+                Optional<Duration> duration = getDuration();
                 if (duration.isPresent()) {
-                    vEventDuration = getDuration().get();
+                    vEventDuration = duration.get();
                 } else if (dtStart.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
                     // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
                     vEventDuration = new Duration(java.time.Duration.ZERO);
@@ -536,12 +536,14 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 }
 
                 Optional<TzId> tzId = dtStart.get().getParameter(Parameter.TZID);
-                DtEnd<?> newdtEnd;
+                DtEnd<T> newdtEnd;
                 if (tzId.isPresent()) {
-                    ParameterList dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
-                    newdtEnd = new DtEnd<>(dtendParams, dtStart.get().getDate().plus(vEventDuration.getDuration()));
+                    var dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
+                    //noinspection unchecked
+                    newdtEnd = new DtEnd<>(dtendParams, (T) dtStart.get().getDate().plus(vEventDuration.getDuration()));
                 } else {
-                    newdtEnd = new DtEnd<>(dtStart.get().getDate().plus(vEventDuration.getDuration()));
+                    //noinspection unchecked
+                    newdtEnd = new DtEnd<>((T) dtStart.get().getDate().plus(vEventDuration.getDuration()));
                 }
 
                 return Optional.of(newdtEnd);
@@ -577,11 +579,11 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     }
 
     @Override
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                        .map(Property::copy).collect(Collectors.toList())),
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Prototype::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+                        .map(Prototype::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {

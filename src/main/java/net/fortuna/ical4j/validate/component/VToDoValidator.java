@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.validate.component;
 
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.validate.*;
@@ -34,7 +33,7 @@ public class VToDoValidator extends ComponentValidator<VToDo> {
     public ValidationResult validate(VToDo target) throws ValidationException {
         ValidationResult result = ComponentValidator.VTODO.validate(target);
 
-        final Optional<Status> status = target.getProperty(Property.STATUS);
+        final Optional<Status> status = target.getStatus();
         if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
                 && !VTODO_COMPLETED.equals(status.get())
                 && !VTODO_IN_PROCESS.equals(status.get())

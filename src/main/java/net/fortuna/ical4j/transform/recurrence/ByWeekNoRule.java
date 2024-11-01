@@ -30,9 +30,17 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
         super(frequency);
         this.weekNoList = weekNoList;
         if (firstDayOfWeek != null) {
-            weekFields = WeekFields.of(firstDayOfWeek, 1);
+            // RFC5545 3.3.10
+            // Week number one of the calendar year
+            // is the first week that contains at least four (4) days in that
+            // calendar year.
+            weekFields = WeekFields.of(firstDayOfWeek, 4);
         } else {
-            weekFields = WeekFields.of(Locale.getDefault());
+            // RFC5545 3.3.10
+            // This (WKST) is also significant when
+            // in a YEARLY "RRULE" when a BYWEEKNO rule part is specified.  The
+            // default value is MO.
+            weekFields = WeekFields.of(DayOfWeek.MONDAY, 4);
         }
     }
 
@@ -44,7 +52,7 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
         final List<T> weekNoDates = new ArrayList<>();
         for (final T date : dates) {
             final int numWeeksInYear = (int) weekFields.weekOfWeekBasedYear().rangeRefinedBy(date).getMaximum();
-            for (final Integer weekNo : weekNoList) {
+            for (final int weekNo : weekNoList) {
                 if (weekNo == 0 || weekNo < -numWeeksInYear || weekNo > numWeeksInYear) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid week of year: " + weekNo);

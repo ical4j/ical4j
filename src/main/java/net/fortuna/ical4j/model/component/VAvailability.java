@@ -154,7 +154,7 @@ public class VAvailability extends CalendarComponent implements ComponentContain
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VAVAILABILITY.validate(this);
+        var result = ComponentValidator.VAVAILABILITY.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -167,11 +167,11 @@ public class VAvailability extends CalendarComponent implements ComponentContain
     }
 
     @Override
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     /**

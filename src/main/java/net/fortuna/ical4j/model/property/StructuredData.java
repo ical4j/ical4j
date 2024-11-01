@@ -41,11 +41,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.schema.SchemaValidatorFactory;
-import org.apache.commons.codec.BinaryDecoder;
-import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
@@ -118,14 +115,14 @@ public class StructuredData extends Property implements Encodable {
         if (!getParameters(Parameter.ENCODING).isEmpty()) {
             // binary = Base64.decode(aValue);
             try {
-                final BinaryDecoder decoder = DecoderFactory.getInstance()
+                final var decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(getRequiredParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
+                var log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
             } catch (DecoderException de) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
+                var log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error decoding binary data", de);
             }
         } else if (Value.URI.equals(getRequiredParameter(Parameter.VALUE))) {
@@ -159,7 +156,7 @@ public class StructuredData extends Property implements Encodable {
                 return uri.toString();
             } else if (Value.BINARY.equals(valueParam.get())) {
                 try {
-                    BinaryEncoder encoder = EncoderFactory.getInstance().createBinaryEncoder(getRequiredParameter(Parameter.ENCODING));
+                    var encoder = EncoderFactory.getInstance().createBinaryEncoder(getRequiredParameter(Parameter.ENCODING));
                     return new String(encoder.encode(binary));
                 } catch (UnsupportedEncodingException | EncoderException e) {
                     throw new RuntimeException(e);
@@ -171,7 +168,7 @@ public class StructuredData extends Property implements Encodable {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = PropertyValidator.STRUCTURED_DATA.validate(this);
+        var result = PropertyValidator.STRUCTURED_DATA.validate(this);
 
         result = result.merge(SchemaValidatorFactory.newInstance(getRequiredParameter(SCHEMA)).validate(this));
         return result;

@@ -35,7 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -119,7 +118,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author Mike Douglass
  */
-public class Participant extends Component implements ComponentContainer<Component>, ChangeManagementPropertyAccessor {
+public class Participant extends Component implements ComponentContainer<Component>, ChangeManagementPropertyAccessor,
+    LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -157,15 +157,11 @@ public class Participant extends Component implements ComponentContainer<Compone
      * {@inheritDoc}
      */
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.PARTICIPANT.validate(this);
+        var result = ComponentValidator.PARTICIPANT.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
         return result;
-    }
-
-    public <C extends Component> List<C> getComponents() {
-        return ComponentContainer.super.getComponents();
     }
 
     /**
@@ -246,11 +242,11 @@ public class Participant extends Component implements ComponentContainer<Compone
     }
 
     @Override
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     @Override

@@ -94,7 +94,7 @@ class TimeZoneSpec extends Specification {
     def 'test timezone getoffset issue: #tzid'() {
         setup: 'create date with ical4j timezone'
 //        final DateFormat format1 = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-        TimeZone tz1 = tzRegistry.getTimeZone(tzid);
+        TimeZone tz1 = tzRegistry.getTimeZone(tzid)
 //        format1.setTimeZone(tz1);
 //        java.util.Date date1 = format1.parse("20140302T080000");
 //        java.util.Calendar c1 = java.util.Calendar.getInstance(TimeZones.getUtcTimeZone());
@@ -102,7 +102,7 @@ class TimeZoneSpec extends Specification {
 
         and: 'create date with java timezeone'
 //        final DateFormat format2 = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-        java.util.TimeZone tz2 = java.util.TimeZone.getTimeZone(tzid);
+        java.util.TimeZone tz2 = java.util.TimeZone.getTimeZone(tzid)
 //        format2.setTimeZone(tz2);
 //        java.util.Date date2 = format2.parse("20140302T080000");
 //        java.util.Calendar c2 = java.util.Calendar.getInstance(TimeZones.getUtcTimeZone());

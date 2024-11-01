@@ -33,7 +33,7 @@ class TemporalAdapterTest extends Specification {
         dateString              | expectedType
         '20150504'              | LocalDate
         '20150504T120000'       | LocalDateTime
-        '20150504T120000Z'      | Instant
+        '20150504T120000Z'      | OffsetDateTime
     }
 
     def 'verify zoned date string parsing'() {
@@ -42,12 +42,16 @@ class TemporalAdapterTest extends Specification {
         parsed.temporal.zone == expectedZone
 
         and:
+        parsed.temporal.class.isAssignableFrom(expectedType)
+
+        and:
         parsed.toString(expectedZone) == dateString
 
         where:
         dateString              | expectedType      | expectedZone
         '20150504T120000'       | ZonedDateTime     | ZoneId.systemDefault()
         '20150504T120000'       | ZonedDateTime     | ZoneId.of("Australia/Melbourne")
+        '20150504T120000'       | ZonedDateTime     | ZoneId.of('UTC')
     }
 
     def 'verify invalid date string parsing'() {

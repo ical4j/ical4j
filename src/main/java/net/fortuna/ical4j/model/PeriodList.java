@@ -86,8 +86,9 @@ public class PeriodList<T extends Temporal> implements Serializable {
     }
 
     public PeriodList(Interval[] intervals) {
-        this(Arrays.stream(intervals).map(i -> new Period<>((T) i.getStart(), (T) i.getEnd())).collect(Collectors.toList()),
-                CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        //noinspection unchecked
+        this(Arrays.stream(intervals).map(i -> new Period<>((T) i.getStart(), (T) i.getEnd()))
+                        .collect(Collectors.toList()), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
 
     /**
@@ -171,8 +172,8 @@ public class PeriodList<T extends Temporal> implements Serializable {
                 period = prevPeriod;
                 normalised = true;
             } else if (prevPeriod != null) {
-                Interval prevInterval = prevPeriod.toInterval();
-                Interval periodInterval = period.toInterval();
+                var prevInterval = prevPeriod.toInterval();
+                var periodInterval = period.toInterval();
                 if (prevInterval.encloses(periodInterval)) {
                     // ignore periods contained by other periods..
                     period = prevPeriod;
@@ -270,7 +271,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     }
 
     public List<Interval> toIntervalList() {
-        return periods.stream().map(p -> p.toInterval()).collect(Collectors.toList());
+        return periods.stream().map(Period::toInterval).collect(Collectors.toList());
     }
 
     @Override

@@ -134,7 +134,7 @@ public class ComponentGroup<C extends Component> implements ComponentContainer<C
      *
      * @see Component#calculateRecurrenceSet(Period)
      */
-    public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
+    public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period) {
         // Use set to exclude duplicates..
         Set<Period<T>> periods = new HashSet<>();
         List<Component> overrides = new ArrayList<>();
@@ -153,7 +153,7 @@ public class ComponentGroup<C extends Component> implements ComponentContainer<C
             finalPeriods.removeIf(p -> p.getStart().equals(recurrenceId.getDate()));
             component.calculateRecurrenceSet(period).stream()
                     .filter(p -> p.getStart().equals(recurrenceId.getDate()))
-                    .forEach(finalPeriods::add);
+                    .forEach(p -> finalPeriods.add((Period<T>) p));
         });
 
         // Natural sort of final list..

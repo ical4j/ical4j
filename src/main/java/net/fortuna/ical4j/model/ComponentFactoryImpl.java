@@ -47,7 +47,7 @@ import java.util.ServiceLoader;
  * @author Ben Fortuna
  */
 @Deprecated
-public final class ComponentFactoryImpl extends AbstractContentFactory<ComponentFactory> {
+public final class ComponentFactoryImpl extends AbstractContentFactory<ComponentFactory<?>> {
 
     /**
      * Constructor made private to prevent instantiation.
@@ -58,7 +58,7 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
     }
 
     @Override
-    protected boolean factorySupports(ComponentFactory factory, String key) {
+    protected boolean factorySupports(ComponentFactory<?> factory, String key) {
         return factory.supports(key);
     }
 
@@ -66,9 +66,9 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      * @param name a component name
      * @return a new component instance of the specified type
      */
-    public <T extends Component> T createComponent(final String name) {
+    public Component createComponent(final String name) {
         Component component;
-        ComponentFactory factory = getFactory(name);
+        ComponentFactory<?> factory = getFactory(name);
         if (factory != null) {
             component = factory.createComponent();
         } else if (isExperimentalName(name)) {
@@ -78,7 +78,7 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
         } else {
             throw new IllegalArgumentException("Unsupported component [" + name + "]");
         }
-        return (T) component;
+        return component;
     }
 
     /**
@@ -88,10 +88,9 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      * @param properties a list of component properties
      * @return a component
      */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T createComponent(final String name, final PropertyList properties) {
+    public Component createComponent(final String name, final PropertyList properties) {
         Component component;
-        ComponentFactory factory = getFactory(name);
+        ComponentFactory<?> factory = getFactory(name);
         if (factory != null) {
             component = factory.createComponent(properties);
         } else if (isExperimentalName(name)) {
@@ -101,7 +100,7 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
         } else {
             throw new IllegalArgumentException("Unsupported component [" + name + "]");
         }
-        return (T) component;
+        return component;
     }
 
     /**
@@ -112,17 +111,16 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      * @param components a list of sub-components (namely standard/daylight timezones)
      * @return a component
      */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T createComponent(final String name, final PropertyList properties,
+    public Component createComponent(final String name, final PropertyList properties,
                                                    final ComponentList<? extends Component> components) {
         Component component;
-        ComponentFactory factory = getFactory(name);
+        ComponentFactory<?> factory = getFactory(name);
         if (factory != null) {
             component = factory.createComponent(properties, components);
         } else {
             throw new IllegalArgumentException("Unsupported component [" + name + "]");
         }
-        return (T) component;
+        return component;
     }
 
     /**

@@ -56,11 +56,11 @@ import java.time.DateTimeException;
  */
 public class CalendarBuilderTest extends TestCase {
 
-    private static Logger log = LoggerFactory.getLogger(CalendarBuilderTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CalendarBuilderTest.class);
 
-    private String filename;
+    private final String filename;
 
-    private FileInputStream fin;
+    private final FileInputStream fin;
 
     /**
      * Constructor.

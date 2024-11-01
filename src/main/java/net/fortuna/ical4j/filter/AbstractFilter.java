@@ -119,7 +119,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected List<Comparable<Property>> properties(BinaryExpression expression) {
-        FilterTarget operand = target(expression);
+        var operand = target(expression);
         Collection<String> literal = literal(expression);
         return literal.stream().map(l -> property(operand, l)).collect(Collectors.toList());
     }
@@ -130,7 +130,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Property property(FilterTarget operand) {
-        PropertyBuilder spec = new PropertyBuilder(propertyFactorySupplier.get()).name(operand.getName());
+        var spec = new PropertyBuilder(propertyFactorySupplier.get()).name(operand.getName());
         if (operand.getValue().isPresent()) {
             spec.value(operand.getValue().get());
         } else {
@@ -147,7 +147,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Property property(FilterTarget operand, String value) {
-        PropertyBuilder spec = new PropertyBuilder(propertyFactorySupplier.get()).name(operand.getName());
+        var spec = new PropertyBuilder(propertyFactorySupplier.get()).name(operand.getName());
         if (value != null) {
             spec.value(value);
         } else {
@@ -163,7 +163,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @return
      */
     protected Parameter parameter(UnaryExpression expression) {
-        FilterTarget specification = target(expression);
+        var specification = target(expression);
         if (specification.getValue().isPresent()) {
             return parameter(specification.getName(), specification.getValue().get());
         } else {
@@ -187,7 +187,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      */
     protected List<Comparable<Parameter>> parameters(BinaryExpression expression) {
         // only applicable for operand expressions..
-        FilterTarget specification = target(expression);
+        var specification = target(expression);
         Collection<String> literal = literal(expression);
         return literal.stream().map(l -> parameter(specification.getName(), l)).collect(Collectors.toList());
     }

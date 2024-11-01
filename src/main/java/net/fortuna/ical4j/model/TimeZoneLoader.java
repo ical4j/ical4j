@@ -3,7 +3,6 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.Daylight;
-import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
@@ -14,16 +13,12 @@ import org.apache.commons.lang3.Validate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.time.Month;
 import java.time.Period;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.time.zone.ZoneOffsetTransition;
-import java.time.zone.ZoneOffsetTransitionRule;
 import java.util.TimeZone;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,11 +74,11 @@ public class TimeZoneLoader {
     public VTimeZone loadVTimeZone(String id) throws IOException, ParserException {
         Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
         if (!cache.containsId(id)) {
-            final URL resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
+            final var resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
             if (resource != null) {
-                try (InputStream in = resource.openStream()) {
-                    final CalendarBuilder builder = new CalendarBuilder();
-                    final Calendar calendar = builder.build(in);
+                try (var in = resource.openStream()) {
+                    final var builder = new CalendarBuilder();
+                    final var calendar = builder.build(in);
                     final Optional<VTimeZone> vTimeZone = calendar.getComponent(Component.VTIMEZONE);
                     // load any available updates for the timezone.. can be explicitly disabled via configuration
                     vTimeZone.ifPresent(timeZone -> cache.putIfAbsent(id, zoneUpdater.updateDefinition(timeZone)));
@@ -99,13 +94,13 @@ public class TimeZoneLoader {
         if (!TIMEZONE_DEFINITIONS.contains(timezoneId)) {
             return null;
         }
-        TimeZone javaTz = TimeZone.getTimeZone(timezoneId);
+        var javaTz = TimeZone.getTimeZone(timezoneId);
 
-        ZoneId zoneId = ZoneId.of(javaTz.getID(), ZoneId.SHORT_IDS);
+        var zoneId = ZoneId.of(javaTz.getID(), ZoneId.SHORT_IDS);
 
-        int rawTimeZoneOffsetInSeconds = javaTz.getRawOffset() / 1000;
+        int rawTimeZoneOffsetInSeconds = javaTz.getRawOffset() / 1_000;
 
-        VTimeZone timezone = new VTimeZone();
+        var timezone = new VTimeZone();
 
         timezone.add(new TzId(timezoneId));
 
@@ -128,16 +123,16 @@ public class TimeZoneLoader {
                     Comparator.comparing(ZoneOffsetTransition::getDateTimeBefore));
         }
 
-        LocalDateTime startDate = LocalDateTime.now(zoneId);
+        var startDate = LocalDateTime.now(zoneId);
 
-        for (ZoneOffsetTransitionRule transitionRule : zoneId.getRules().getTransitionRules()) {
+        for (var transitionRule : zoneId.getRules().getTransitionRules()) {
             int transitionRuleMonthValue = transitionRule.getMonth().getValue();
-            DayOfWeek transitionRuleDayOfWeek = transitionRule.getDayOfWeek();
-            LocalDateTime ldt = LocalDateTime.now(zoneId)
+            var transitionRuleDayOfWeek = transitionRule.getDayOfWeek();
+            var ldt = LocalDateTime.now(zoneId)
                     .with(TemporalAdjusters.firstInMonth(transitionRuleDayOfWeek))
                     .withMonth(transitionRuleMonthValue)
                     .with(transitionRule.getLocalTime());
-            Month month = ldt.getMonth();
+            var month = ldt.getMonth();
 
             TreeSet<Integer> allDaysOfWeek = new TreeSet<Integer>();
 
@@ -145,7 +140,7 @@ public class TimeZoneLoader {
                 allDaysOfWeek.add(ldt.getDayOfMonth());
             } while ((ldt = ldt.plus(Period.ofWeeks(1))).getMonth() == month);
 
-            Integer dayOfMonth = allDaysOfWeek.ceiling(transitionRule.getDayOfMonthIndicator());
+            var dayOfMonth = allDaysOfWeek.ceiling(transitionRule.getDayOfMonthIndicator());
             if (dayOfMonth == null) {
                 dayOfMonth = allDaysOfWeek.last();
             }
@@ -157,13 +152,13 @@ public class TimeZoneLoader {
 
             weekdayIndexInMonth = weekdayIndexInMonth >= 3 ? weekdayIndexInMonth - allDaysOfWeek.size() : weekdayIndexInMonth;
 
-            String rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
+            var rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
 
-            TzOffsetFrom offsetFrom = new TzOffsetFrom(transitionRule.getOffsetBefore());
-            TzOffsetTo offsetTo = new TzOffsetTo(transitionRule.getOffsetAfter());
-            RRule rrule = new RRule(rruleText);
+            var offsetFrom = new TzOffsetFrom(transitionRule.getOffsetBefore());
+            var offsetTo = new TzOffsetTo(transitionRule.getOffsetAfter());
+            RRule<?> rrule = new RRule<>(rruleText);
 
-            Observance observance = (transitionRule.getOffsetAfter().getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
+            var observance = (transitionRule.getOffsetAfter().getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
 
             observance.add(offsetFrom);
             observance.add(offsetTo);
@@ -179,8 +174,8 @@ public class TimeZoneLoader {
     private static void addTransitions(ZoneId zoneId, VTimeZone result, int rawTimeZoneOffsetInSeconds) {
         Map<ZoneOffsetKey, Set<ZoneOffsetTransition>> zoneTransitionsByOffsets = new HashMap<ZoneOffsetKey, Set<ZoneOffsetTransition>>();
 
-        for (ZoneOffsetTransition zoneTransitionRule : zoneId.getRules().getTransitions()) {
-            ZoneOffsetKey offfsetKey = ZoneOffsetKey.of(zoneTransitionRule.getOffsetBefore(), zoneTransitionRule.getOffsetAfter());
+        for (var zoneTransitionRule : zoneId.getRules().getTransitions()) {
+            var offfsetKey = ZoneOffsetKey.of(zoneTransitionRule.getOffsetBefore(), zoneTransitionRule.getOffsetAfter());
 
             Set<ZoneOffsetTransition> transitionRulesForOffset = zoneTransitionsByOffsets.computeIfAbsent(offfsetKey, k -> new HashSet<ZoneOffsetTransition>(1));
             transitionRulesForOffset.add(zoneTransitionRule);
@@ -189,20 +184,20 @@ public class TimeZoneLoader {
 
         for (Map.Entry<ZoneOffsetKey, Set<ZoneOffsetTransition>> e : zoneTransitionsByOffsets.entrySet()) {
 
-            Observance observance = (e.getKey().offsetAfter.getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
+            var observance = (e.getKey().offsetAfter.getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
 
-            LocalDateTime start = Collections.min(e.getValue()).getDateTimeBefore();
+            var start = Collections.min(e.getValue()).getDateTimeBefore();
 
-            DtStart dtStart = new DtStart(start.format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
-            TzOffsetFrom offsetFrom = new TzOffsetFrom(e.getKey().offsetBefore);
-            TzOffsetTo offsetTo = new TzOffsetTo(e.getKey().offsetAfter);
+            DtStart<?> dtStart = new DtStart<>(start.format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
+            var offsetFrom = new TzOffsetFrom(e.getKey().offsetBefore);
+            var offsetTo = new TzOffsetTo(e.getKey().offsetAfter);
 
             observance.add(dtStart);
             observance.add(offsetFrom);
             observance.add(offsetTo);
 
-            for (ZoneOffsetTransition transition : e.getValue()) {
-                RDate rDate = new RDate(new ParameterList(),
+            for (var transition : e.getValue()) {
+                RDate<?> rDate = new RDate<>(new ParameterList(),
                         transition.getDateTimeBefore().format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
                 observance.add(rDate);
             }
@@ -222,7 +217,7 @@ public class TimeZoneLoader {
     }
 
     public static TimeZoneLoader getInstance(String resourcePrefix) {
-        TimeZoneLoader loader = LOADER_MAP.get(resourcePrefix);
+        var loader = LOADER_MAP.get(resourcePrefix);
         if (loader == null) {
             LOADER_MAP.put(resourcePrefix, new TimeZoneLoader(resourcePrefix));
         }
@@ -246,7 +241,7 @@ public class TimeZoneLoader {
             if (!(obj instanceof ZoneOffsetKey)) {
                 return false;
             }
-            ZoneOffsetKey otherZoneOffsetKey = (ZoneOffsetKey) obj;
+            var otherZoneOffsetKey = (ZoneOffsetKey) obj;
             return Objects.equals(this.offsetBefore, otherZoneOffsetKey.offsetBefore) && Objects.equals(this.offsetAfter, otherZoneOffsetKey.offsetAfter);
         }
 

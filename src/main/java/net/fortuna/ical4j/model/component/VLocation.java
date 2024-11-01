@@ -130,7 +130,7 @@ public class VLocation extends Component {
      * {@inheritDoc}
      */
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VLOCATION.validate(this);
+        var result = ComponentValidator.VLOCATION.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -149,7 +149,7 @@ public class VLocation extends Component {
      * @return the optional geo property for a vlocation
      */
     public final Optional<Geo> getGeo() {
-        return getProperty(LAST_MODIFIED);
+        return getProperty(GEO);
     }
 
     /**

@@ -67,7 +67,7 @@ public class ByMonthRule<T extends Temporal> extends AbstractDateExpansionRule<T
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible months..
-            for (Month month : monthList) {
+            for (var month : monthList) {
                 T candidate;
                 if (month.isLeapMonth()) {
                     if (skip == Recur.Skip.BACKWARD) {

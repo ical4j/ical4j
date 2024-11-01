@@ -157,7 +157,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      */
     public VJournal(final Temporal start, final String summary) {
         this();
-        add(new DtStart(start));
+        add(new DtStart<>(start));
         add(new Summary(summary));
     }
 
@@ -166,7 +166,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VJOURNAL.validate(this);
+        var result = ComponentValidator.VJOURNAL.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -229,11 +229,11 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
     }
 
     @Override
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(c -> (T) c.copy()).collect(Collectors.toList())));
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     /**

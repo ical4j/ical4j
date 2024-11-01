@@ -69,10 +69,10 @@ public class ParticipantTest extends ComponentTest {
         suite.addTest(new ParticipantTest("testValidationException", p));
         
         final UidGenerator g = new RandomUidGenerator();
-        p = new Participant().withProperty(g.generateUid())
+        var p2 = (Participant) new Participant().withProperty(g.generateUid())
                 .withProperty(ImmutableParticipantType.ACTIVE)
                 .withProperty(new DtStamp()).getFluentTarget();
-        suite.addTest(new ParticipantTest("testValidation", p));
+        suite.addTest(new ParticipantTest("testValidation", p2));
         return suite;
     }
 }

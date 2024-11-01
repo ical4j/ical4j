@@ -86,7 +86,7 @@ standard.
 
 ### System requirements
 
- - Version 4.x - Java 8 or later
+ - Version 4.x - Java 11 or later
  - Version 3.x - Java 8 or later
  - Version 2.x - Java 7 or later
 

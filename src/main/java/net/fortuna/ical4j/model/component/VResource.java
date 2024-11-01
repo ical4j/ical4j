@@ -131,7 +131,7 @@ public class VResource extends Component {
      * {@inheritDoc}
      */
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VRESOURCE.validate(this);
+        var result = ComponentValidator.VRESOURCE.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -150,7 +150,7 @@ public class VResource extends Component {
      * @return the optional geo property for a vresource
      */
     public final Optional<Geo> getGeo() {
-        return getProperty(LAST_MODIFIED);
+        return getProperty(GEO);
     }
 
     /**

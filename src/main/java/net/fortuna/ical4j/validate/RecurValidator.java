@@ -81,11 +81,11 @@ import net.fortuna.ical4j.model.Recur;
  *                special expand for YEARLY.
  * </pre>
  */
-public class RecurValidator implements Validator<Recur> {
+public class RecurValidator implements Validator<Recur<?>> {
 
     @Override
-    public ValidationResult validate(Recur target) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+    public ValidationResult validate(Recur<?> target) throws ValidationException {
+        var result = new ValidationResult();
         switch (target.getFrequency()) {
             case SECONDLY:
                 if (!target.getWeekNoList().isEmpty()) {

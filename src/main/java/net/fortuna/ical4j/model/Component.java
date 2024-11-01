@@ -55,8 +55,8 @@ import static net.fortuna.ical4j.model.Property.UID;
  *
  * @author Ben Fortuna
  */
-public abstract class Component extends Content implements Serializable, PropertyContainer, FluentComponent,
-        Comparable<Component> {
+public abstract class Component extends Content implements Prototype<Component>, Serializable,
+        PropertyContainer, FluentComponent, Comparable<Component> {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -193,8 +193,8 @@ public abstract class Component extends Content implements Serializable, Propert
     }
 
     @Override
-    public <C extends Component> C getFluentTarget() {
-        return (C) this;
+    public Component getFluentTarget() {
+        return this;
     }
 
     /**
@@ -241,8 +241,8 @@ public abstract class Component extends Content implements Serializable, Propert
      * @throws ValidationException where any of the component properties is not in a valid state
      */
     protected ValidationResult validateProperties() throws ValidationException {
-        ValidationResult result = new ValidationResult();
-        for (final Property property : getProperties()) {
+        var result = new ValidationResult();
+        for (final var property : getProperties()) {
             result = result.merge(property.validate());
         }
         return result;
@@ -254,7 +254,7 @@ public abstract class Component extends Content implements Serializable, Propert
     @Override
 	public boolean equals(final Object arg0) {
         if (arg0 instanceof Component) {
-            final Component c = (Component) arg0;
+            final var c = (Component) arg0;
             return new EqualsBuilder().append(getName(), c.getName())
                     .append(getProperties(), c.getProperties()).isEquals();
         }
@@ -280,9 +280,9 @@ public abstract class Component extends Content implements Serializable, Propert
      * Create a (deep) copy of this component.
      * @return the component copy
      */
-    public <T extends Component> T copy() {
-        return (T) newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                .map(Property::copy).collect(Collectors.toList())));
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                .map(Prototype::copy).collect(Collectors.toList())));
     }
 
     /**
@@ -304,19 +304,19 @@ public abstract class Component extends Content implements Serializable, Propert
      * @param period a range that defines the boundary for calculations
      * @return a list of periods representing component occurrences within the specified boundary
      */
-    public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<T> period) {
+    public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period) {
 
         final Set<Period<T>> recurrenceSet = new TreeSet<>();
 
         final Optional<DtStart<T>> start = getProperty(Property.DTSTART);
         Optional<DateProperty<T>> end = getProperty(Property.DTEND);
-        if (!end.isPresent()) {
+        if (end.isEmpty()) {
             end = getProperty(Property.DUE);
         }
         Optional<Duration> duration = getProperty(Property.DURATION);
 
         // if no start date specified return empty list..
-        if (!start.isPresent()) {
+        if (start.isEmpty()) {
             return Collections.emptySet();
         }
 
@@ -324,9 +324,9 @@ public abstract class Component extends Content implements Serializable, Propert
         // periods from the end date..
         TemporalAmount rDuration;
         // if no end or duration specified, end date equals start date..
-        if (!end.isPresent() && !duration.isPresent()) {
+        if (end.isEmpty() && duration.isEmpty()) {
             rDuration = java.time.Duration.ZERO;
-        } else if (!duration.isPresent()) {
+        } else if (duration.isEmpty()) {
             rDuration = TemporalAmountAdapter.between(start.get().getDate(), end.get().getDate()).getDuration();
         } else {
             rDuration = duration.get().getDuration();
@@ -334,7 +334,7 @@ public abstract class Component extends Content implements Serializable, Propert
 
         // add recurrence dates..
         List<Property> rDates = getProperties(Property.RDATE);
-        for (Property p : rDates) {
+        for (var p : rDates) {
             Optional<Value> value = p.getParameter(Parameter.VALUE);
             if (value.equals(Optional.of(Value.PERIOD))) {
                 recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).parallelStream()
@@ -347,7 +347,7 @@ public abstract class Component extends Content implements Serializable, Propert
 
         // allow for recurrence rules that start prior to the specified period
         // but still intersect with it..
-        final T startMinusDuration = (T) period.getStart().minus(rDuration);
+        final var startMinusDuration = period.getStart().minus(rDuration);
 
         final T seed = start.get().getDate();
 
@@ -384,7 +384,7 @@ public abstract class Component extends Content implements Serializable, Propert
 
         // subtract exception rules..
         List<Property> exRules = getProperties(Property.EXRULE);
-        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(seed,
+        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule<T>) e).getRecur().getDates(seed,
                 period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));

@@ -151,6 +151,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         if (date != null) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
             if (tzId.isPresent() && shouldApplyTimezone()) {
+                //xxx: type T should always be ZonedDateTime where TZID parameter is specified..
                 return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
             } else {
                 return date.getTemporal();

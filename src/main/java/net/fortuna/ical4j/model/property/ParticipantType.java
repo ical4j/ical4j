@@ -109,7 +109,7 @@ public class ParticipantType extends Property implements Encodable {
         public ParticipantType createProperty(final ParameterList parameters, final String value) {
             final ParticipantType participantType;
 
-            if (ImmutableParticipantType.ACTIVE.getValue().equals(value)) {
+            if (ImmutableParticipantType.ACTIVE.getValue().equalsIgnoreCase(value)) {
                 participantType = ImmutableParticipantType.ACTIVE;
             } else {
                 participantType = new ParticipantType(parameters, value);
