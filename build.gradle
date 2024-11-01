@@ -96,6 +96,8 @@ dependencies {
     testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
             "org.spockframework:spock-core"
 
+    testImplementation "org.hamcrest:hamcrest-core:$hamcrestVersion"
+
     // testcontainers
     testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
             "org.testcontainers:spock:$testcontainersVersion"

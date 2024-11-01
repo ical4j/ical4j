@@ -36,9 +36,9 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.RecurrencePropertyValidators;
 
 import java.time.temporal.Temporal;
 
@@ -96,7 +96,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.EXDATE.validate(this);
+        return RecurrencePropertyValidators.EXDATE.validate(this);
     }
 
     @Override

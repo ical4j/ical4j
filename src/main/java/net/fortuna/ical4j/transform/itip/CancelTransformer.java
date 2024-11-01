@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.transform.calendar;
+package net.fortuna.ical4j.transform.itip;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.property.Organizer;
@@ -38,7 +38,7 @@ import net.fortuna.ical4j.model.property.Uid;
 import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.ADD;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.CANCEL;
 
 /**
  * $Id$
@@ -48,12 +48,12 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.ADD;
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class AddTransformer extends AbstractMethodTransformer {
+public class CancelTransformer extends AbstractMethodTransformer {
 
     private final Organizer organizer;
 
-    public AddTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
-        super(ADD, uidGenerator, true, true);
+    public CancelTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
+        super(CANCEL, uidGenerator, true, true);
         this.organizer = organizer;
     }
 

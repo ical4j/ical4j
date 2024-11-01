@@ -32,11 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-
-import java.util.List;
+import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 
 /**
  * $Id$
@@ -156,8 +154,8 @@ public class Categories extends Property {
     /**
      * @return Returns the categories.
      */
-    public List<String> getCategories() {
-        return categories.getTexts();
+    public TextList getCategories() {
+        return categories;
     }
 
     /**
@@ -193,6 +191,6 @@ public class Categories extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.CATEGORIES.validate(this);
+        return DescriptivePropertyValidators.CATEGORIES.validate(this);
     }
 }

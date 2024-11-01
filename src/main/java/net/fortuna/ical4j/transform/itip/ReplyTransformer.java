@@ -29,16 +29,17 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.transform.calendar;
+package net.fortuna.ical4j.transform.itip;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Uid;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
-import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REPLY;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
 
 /**
  * $Id$
@@ -48,19 +49,17 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLIS
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class PublishTransformer extends AbstractMethodTransformer {
+public class ReplyTransformer extends AbstractMethodTransformer {
 
-    private final Organizer organizer;
-
-    public PublishTransformer(Organizer organizer, Supplier<Uid> uidGenerator, boolean incrementSequence) {
-        super(PUBLISH, uidGenerator, false, incrementSequence);
-        this.organizer = organizer;
+    public ReplyTransformer(Supplier<Uid> uidGenerator) {
+        super(REPLY, uidGenerator, true, false);
     }
 
     @Override
     public Calendar apply(Calendar object) {
-        for (var component : object.getComponents()) {
-            component.with(ORGANIZER, organizer);
+        Optional<Method> method = object.getMethod();
+        if (method.isEmpty() || !REQUEST.equals(method.get())) {
+            throw new IllegalArgumentException("Expecting REQUEST method in source");
         }
         return super.apply(object);
     }

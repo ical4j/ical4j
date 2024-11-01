@@ -59,7 +59,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
             new ValidationRule<>(OneOrLess, CREATED, LAST_MODIFIED, RECURRENCE_ID, RRULE, SUMMARY),
             new ValidationRule<>(OneExclusive, DTEND, DURATION),
-            new ValidationRule<>(None, (Predicate<Available> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
+            new ValidationRule<>((Predicate<Available> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
                     .anyMatch(p -> p.getParameters().contains(Value.DATE)),
                     "VAVAILABILITY components and AVAILABLE sub-components MUST be DATE-TIME values",
                     DTSTART, DTEND));
@@ -74,7 +74,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART,
                     DTSTAMP, LAST_MODIFIED, ORGANIZER, RECURRENCE_ID, SEQUENCE,
                     STATUS, SUMMARY, UID, URL),
-            new ValidationRule<>(None, (Predicate<VAvailability> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
+            new ValidationRule<>((Predicate<VAvailability> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
                     .anyMatch(p -> p.getParameters().contains(Value.DATE)),
                     "VAVAILABILITY components and AVAILABLE sub-components MUST be DATE-TIME values",
                     DTSTART, DTEND));
@@ -89,7 +89,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(One, true, UID, DTSTAMP),
             new ValidationRule<>(OneOrLess, CONTACT, DTSTART, DTEND, DURATION, DTSTAMP, ORGANIZER, UID, URL),
             new ValidationRule<>(None, RRULE, EXRULE, RDATE, EXDATE),
-            new ValidationRule<>(None, (Predicate<VFreeBusy> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
+            new ValidationRule<>((Predicate<VFreeBusy> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
                     .anyMatch(p -> !((DateProperty<?>) p).isUtc()),
                     "VFREEBUSY date properties MUST be in UTC time",
                     DTSTART, DTEND));
@@ -98,7 +98,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
             new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
             new ValidationRule<>(OneExclusive, DTEND, DURATION),
-            new ValidationRule<>(None, (Predicate<VJournal> & Serializable) a -> a.getProperties(STATUS).stream()
+            new ValidationRule<>((Predicate<VJournal> & Serializable) a -> a.getProperties(STATUS).stream()
                     .anyMatch(p -> !(VJOURNAL_DRAFT.equals(p) || VJOURNAL_FINAL.equals(p)
                             || VJOURNAL_CANCELLED.equals(p))),
                     "STATUS value not applicable for VJOURNAL", STATUS));

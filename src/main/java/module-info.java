@@ -44,7 +44,7 @@ module ical4j.core {
     exports net.fortuna.ical4j.transform;
 //    exports net.fortuna.ical4j.transform.property;
     exports net.fortuna.ical4j.transform.component;
-    exports net.fortuna.ical4j.transform.calendar;
+    exports net.fortuna.ical4j.transform.itip;
     exports net.fortuna.ical4j.transform.recurrence;
     exports net.fortuna.ical4j.transform.compliance;
 

@@ -34,10 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.Strings;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -53,13 +50,13 @@ public class TextList implements Serializable {
 
     private static final Pattern PATTERN = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
 
-	private final List<String> texts;
+	private final Set<String> texts;
 
     /**
      * Default constructor.
      */
     public TextList() {
-        texts = Collections.emptyList();
+        texts = Collections.emptySet();
     }
 
     /**
@@ -68,23 +65,22 @@ public class TextList implements Serializable {
      */
     public TextList(final String aValue) {
         List<String> values = new ArrayList<>();
-
         final var matcher = PATTERN.matcher(aValue);
         while (matcher.find()){
             values.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
         }
-        texts = Collections.unmodifiableList(values);
+        texts = Set.copyOf(values);
     }
 
     public TextList(List<String> texts) {
-        this.texts = Collections.unmodifiableList(texts);
+        this.texts = Set.copyOf(texts);
     }
 
     /**
      * @param textValues an array of text values
      */
     public TextList(String...textValues) {
-        texts = Collections.unmodifiableList(Arrays.asList(textValues));
+        texts = Set.copyOf(Arrays.asList(textValues));
     }
     
     /**
@@ -122,7 +118,7 @@ public class TextList implements Serializable {
         }
     }
 
-    public List<String> getTexts() {
+    public Set<String> getTexts() {
         return texts;
     }
 }

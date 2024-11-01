@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.transform.calendar;
+package net.fortuna.ical4j.transform.itip;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.property.Organizer;
@@ -38,7 +38,7 @@ import net.fortuna.ical4j.model.property.Uid;
 import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.RelationshipPropertyModifiers.ORGANIZER;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.ADD;
 
 /**
  * $Id$
@@ -48,28 +48,12 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUES
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class RequestTransformer extends AbstractMethodTransformer {
+public class AddTransformer extends AbstractMethodTransformer {
 
     private final Organizer organizer;
 
-    /**
-     * Support delegating mode by not specifying an organizer.
-     *
-     * @param uidGenerator
-     */
-    public RequestTransformer(Supplier<Uid> uidGenerator) {
-        super(REQUEST, uidGenerator, true, false);
-        this.organizer = null;
-    }
-
-    /**
-     * If organizer is not specified, delegation mode is assumed.
-     *
-     * @param organizer
-     * @param uidGenerator
-     */
-    public RequestTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
-        super(REQUEST, uidGenerator, true, true);
+    public AddTransformer(Organizer organizer, Supplier<Uid> uidGenerator) {
+        super(ADD, uidGenerator, true, true);
         this.organizer = organizer;
     }
 

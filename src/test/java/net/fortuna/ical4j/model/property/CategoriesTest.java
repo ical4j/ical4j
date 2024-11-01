@@ -113,7 +113,7 @@ public class CategoriesTest extends PropertyTest {
         assertEquals(cat1, categories.get(0));
         assertEquals(cat2, categories.get(1));
         assertEquals(cat3, categories.get(2));
-        assertEquals(3, cat3.getCategories().size());
+        assertEquals(3, cat3.getCategories().getTexts().size());
     }
 
     /**
@@ -122,7 +122,7 @@ public class CategoriesTest extends PropertyTest {
     public void testCommaEscapingCount() throws ValidationException, IOException,
             ParserException {
 
-        assertEquals(expectedCategories, value.getCategories().size());
+        assertEquals(expectedCategories, value.getCategories().getTexts().size());
     }
 
     /**
