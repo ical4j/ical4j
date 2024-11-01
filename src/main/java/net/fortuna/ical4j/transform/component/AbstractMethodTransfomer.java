@@ -3,10 +3,11 @@ package net.fortuna.ical4j.transform.component;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.transform.Transformer;
 
+@Deprecated
 public abstract class AbstractMethodTransfomer implements Transformer<Component> {
 
     @Override
-    public Component transform(Component object) {
+    public Component apply(Component object) {
         removeProperties(object);
         return object;
     }

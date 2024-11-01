@@ -61,7 +61,7 @@ import java.util.List;
  */
 public class AttachTest extends TestCase {
 
-    private Logger log = LoggerFactory.getLogger(AttachTest.class);
+    private final Logger log = LoggerFactory.getLogger(AttachTest.class);
 
     private Attach attach;
 
@@ -95,7 +95,7 @@ public class AttachTest extends TestCase {
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent().withProperty(start).withProperty(summary).withProperty(attach)
+        var christmas = (VEvent) new VEvent().withProperty(start).withProperty(summary).withProperty(attach)
                 .withProperty(new Uid("000001@modularity.net.au")).getFluentTarget();
 
         Calendar calendar = new Calendar().withDefaults()

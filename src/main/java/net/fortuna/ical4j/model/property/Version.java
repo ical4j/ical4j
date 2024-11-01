@@ -35,9 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.CalendarPropertyValidators;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
@@ -138,7 +138,7 @@ public class Version extends Property {
      */
     @Override
     public final String getValue() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         if (getMinVersion() != null) {
             b.append(getMinVersion());
             if (getMaxVersion() != null) {
@@ -167,7 +167,7 @@ public class Version extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.VERSION.validate(this);
+        return CalendarPropertyValidators.VERSION.validate(this);
     }
 
     @Override

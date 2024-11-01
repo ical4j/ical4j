@@ -144,7 +144,7 @@ public class CalendarParserImpl implements CalendarParser {
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
 
-        final StreamTokenizer tokeniser = new StreamTokenizer(in);
+        final var tokeniser = new StreamTokenizer(in);
         try {
             tokeniser.resetSyntax();
             tokeniser.wordChars(WORD_CHAR_START, WORD_CHAR_END);
@@ -247,10 +247,10 @@ public class CalendarParserImpl implements CalendarParser {
                            final ContentHandler handler) throws IOException, ParserException,
                 URISyntaxException {
 
-            final String name = tokeniser.sval;
+            final var name = tokeniser.sval;
             // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
+            if (log.isTraceEnabled()) {
+                log.trace(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
             }
 
             handler.startProperty(name);
@@ -264,7 +264,7 @@ public class CalendarParserImpl implements CalendarParser {
             // assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
             // String value = tokeniser.sval;
-            final StringBuilder value = new StringBuilder();
+            final var value = new StringBuilder();
 
             // assertToken(tokeniser,StreamTokenizer.TT_EOL);
 
@@ -330,16 +330,16 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-            final String paramName = tokeniser.sval;
+            final var paramName = tokeniser.sval;
 
             // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug("Parameter [" + paramName + "]");
+            if (log.isTraceEnabled()) {
+                log.trace("Parameter [{}]", paramName);
             }
 
             assertToken(tokeniser, in, '=');
 
-            final StringBuilder paramValue = new StringBuilder();
+            final var paramValue = new StringBuilder();
 
             // preserve quote chars..
             if (nextToken(tokeniser, in) == '"') {
@@ -417,7 +417,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-            final String name = tokeniser.sval;
+            final var name = tokeniser.sval;
 
             handler.startComponent(name);
 
@@ -467,8 +467,8 @@ public class CalendarParserImpl implements CalendarParser {
             throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.ttype), getLineNumber(tokeniser, in));
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("[" + token + "]");
+        if (log.isTraceEnabled()) {
+            log.trace("[{}]", token);
         }
         return ntok;
     }
@@ -523,8 +523,8 @@ public class CalendarParserImpl implements CalendarParser {
             throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("[" + token + "]");
+        if (log.isTraceEnabled()) {
+            log.trace("[{}]", token);
         }
         return ntok;
     }

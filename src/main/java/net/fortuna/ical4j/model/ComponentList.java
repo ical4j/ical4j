@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +43,8 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar components.
  * @author Ben Fortuna
  */
-public class ComponentList<T extends Component> implements ContentCollection<T> {
+public class ComponentList<T extends Component> implements ContentCollection<T>,
+        Comparable<ComponentList<? extends Component>> {
 
     private final List<T> components;
 
@@ -61,14 +65,14 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     }
 
     @Override
-    public ContentCollection<T> add(T content) {
+    public ContentCollection<T> add(@NotNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.add(content);
         return new ComponentList<>(copy);
     }
 
     @Override
-    public ContentCollection<T> addAll(Collection<T> content) {
+    public ContentCollection<T> addAll(@NotNull Collection<T> content) {
         List<T> copy = new ArrayList<>(components);
         copy.addAll(content);
         return new ComponentList<>(copy);
@@ -87,8 +91,13 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     @Override
     public ContentCollection<T> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
+        return removeIf(c -> names.contains(c.getName()));
+    }
+
+    @Override
+    public ContentCollection<T> removeIf(Predicate<T> filter) {
         List<T> copy = new ArrayList<>(components);
-        if (copy.removeIf(c -> names.contains(c.getName()))) {
+        if (copy.removeIf(filter)) {
             return new ComponentList<>(copy);
         } else {
             return this;
@@ -96,7 +105,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     }
 
     @Override
-    public ContentCollection<T> replace(T content) {
+    public ContentCollection<T> replace(@NotNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.removeIf(c -> c.getName().equals(content.getName()));
         copy.add(content);
@@ -133,7 +142,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
      * @param name name of components to return
      * @return a list of components with the matching name
      *
-     * @deprecated use {@link ComponentList#get(String)}
+     * @deprecated use {@link ContentCollection#get(String...)}
      */
     @Deprecated
 	public final <C extends T> List<C> getComponents(final String... name) {
@@ -151,5 +160,22 @@ public class ComponentList<T extends Component> implements ContentCollection<T> 
     @Override
     public int hashCode() {
         return Objects.hash(components);
+    }
+
+    @Override
+    public int compareTo(ComponentList<? extends Component> o) {
+        // test for equality
+        if (components.equals(o.components)) {
+            return 0;
+        }
+        // then test for size..
+        int retval = components.size() - o.components.size();
+        if (retval != 0) {
+            return retval;
+        } else {
+            // compare individual params..
+            return components.stream().filter(o.components::contains)
+                    .mapToInt(c -> c.compareTo(o.components.get(o.components.indexOf(c)))).sum();
+        }
     }
 }

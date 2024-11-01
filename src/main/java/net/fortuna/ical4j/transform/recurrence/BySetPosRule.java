@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
 
-    private static final Comparator<Temporal> ONSET_COMPARATOR = new TemporalComparator();
+    private static final Comparator<Temporal> ONSET_COMPARATOR = TemporalComparator.INSTANCE;
 
     private final List<Integer> setPosList;
 
@@ -23,7 +23,7 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         // return if no SETPOS rules specified..
         if (setPosList.isEmpty() || dates.isEmpty()) {
             return dates;
@@ -33,12 +33,11 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
 
         final List<T> setPosDates = new ArrayList<>();
         final int size = dates.size();
-        for (final Integer setPos : setPosList) {
-            final int pos = setPos;
-            if (pos > 0 && pos <= size) {
-                setPosDates.add(dates.get(pos - 1));
-            } else if (pos < 0 && pos >= -size) {
-                setPosDates.add(dates.get(size + pos));
+        for (final int setPos : setPosList) {
+            if (setPos > 0 && setPos <= size) {
+                setPosDates.add(dates.get(setPos - 1));
+            } else if (setPos < 0 && setPos >= -size) {
+                setPosDates.add(dates.get(size + setPos));
             }
         }
         return setPosDates;

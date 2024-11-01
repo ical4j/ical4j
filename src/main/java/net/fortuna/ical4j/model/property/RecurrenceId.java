@@ -31,10 +31,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.RelationshipPropertyValidators;
 
 import java.time.temporal.Temporal;
 
@@ -177,8 +179,8 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = super.validate();
-        result = result.merge(PropertyValidator.RECURRENCE_ID.validate(this));
+        var result = super.validate();
+        result = result.merge(RelationshipPropertyValidators.RECURRENCE_ID.validate(this));
         return result;
     }
 

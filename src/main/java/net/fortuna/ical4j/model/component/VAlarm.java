@@ -31,18 +31,16 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
 
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -195,7 +193,8 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Ben Fortuna
  */
-public class VAlarm extends CalendarComponent {
+public class VAlarm extends Component implements ComponentContainer<Component>, DescriptivePropertyAccessor,
+    LocationsAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -233,11 +232,25 @@ public class VAlarm extends CalendarComponent {
     }
 
     /**
+     *
+     * @return Returns the underlying component list.
+     */
+    @Override
+    public ComponentList<Component> getComponentList() {
+        return (ComponentList<Component>) components;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<Component> components) {
+        this.components = components;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
 
         if (getAction().isPresent()) {
             switch (getAction().get().getValue()) {
@@ -304,36 +317,24 @@ public class VAlarm extends CalendarComponent {
     /**
      * Returns the optional attachment property.
      * @return the ATTACH property or null if not specified
-     * @deprecated use {@link VAlarm#getProperty(String)}
+     * @deprecated use {@link DescriptivePropertyAccessor#getAttachments()}
      */
     @Deprecated
     public final Optional<Attach> getAttachment() {
         return getProperty(ATTACH);
     }
 
-    /**
-     * Returns the optional description property.
-     * @return the DESCRIPTION property or null if not specified
-     * @deprecated use {@link VAlarm#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Description> getDescription() {
-        return getProperty(DESCRIPTION);
-    }
-
-    /**
-     * Returns the optional summary property.
-     * @return the SUMMARY property or null if not specified
-     * @deprecated use {@link VAlarm#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Summary> getSummary() {
-        return getProperty(SUMMARY);
-    }
-
     @Override
     protected ComponentFactory<VAlarm> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {

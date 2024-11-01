@@ -55,8 +55,18 @@ public class Proximity extends Property {
         super(PROXIMITY);
     }
 
+    public Proximity(String value) {
+        super(PROXIMITY);
+        this.value = value;
+    }
+
     public Proximity(ParameterList aList) {
         super(PROXIMITY, aList);
+    }
+
+    public Proximity(ParameterList aList, String value) {
+        super(PROXIMITY, aList);
+        this.value = value;
     }
 
     @Override

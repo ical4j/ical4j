@@ -41,7 +41,9 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.stream.Collectors
 
 @Slf4j
 class TimeZoneSpec extends Specification {
@@ -53,12 +55,23 @@ class TimeZoneSpec extends Specification {
 		expect: 'specified date is in daylight time'
 		def tz = tzRegistry.getTimeZone(timezone)
 		tz.inDaylightTime(new DateTime(date)) == inDaylightTime
-		
+
 		where:
 		date				| timezone					| inDaylightTime
 		'20110328T110000'	| 'America/Los_Angeles'		| true
+		'20231214T170000'	| 'America/Los_Angeles'		| false
 		'20110328T110000'	| 'Australia/Melbourne'		| true
 		'20110231T110000'	| 'Europe/London'		    | false
+		'20231115T083000'	| 'America/Sao_Paulo'		| false
+	}
+
+	def 'test temporal adapter parsing uses correct timezone'() {
+		when: 'parsing a string using a global zone id'
+		def instance = TemporalAdapter.parse('20231214T170000',
+				ZoneId.of('America/Los_Angeles'))
+
+		then: 'correct timezone in resulting instance'
+		instance.getTemporal().getZone() == ZoneId.of('America/Los_Angeles')
 	}
 	
 	def 'verify string representation'() {
@@ -81,7 +94,7 @@ class TimeZoneSpec extends Specification {
     def 'test timezone getoffset issue: #tzid'() {
         setup: 'create date with ical4j timezone'
 //        final DateFormat format1 = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-        TimeZone tz1 = tzRegistry.getTimeZone(tzid);
+        TimeZone tz1 = tzRegistry.getTimeZone(tzid)
 //        format1.setTimeZone(tz1);
 //        java.util.Date date1 = format1.parse("20140302T080000");
 //        java.util.Calendar c1 = java.util.Calendar.getInstance(TimeZones.getUtcTimeZone());
@@ -89,7 +102,7 @@ class TimeZoneSpec extends Specification {
 
         and: 'create date with java timezeone'
 //        final DateFormat format2 = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-        java.util.TimeZone tz2 = java.util.TimeZone.getTimeZone(tzid);
+        java.util.TimeZone tz2 = java.util.TimeZone.getTimeZone(tzid)
 //        format2.setTimeZone(tz2);
 //        java.util.Date date2 = format2.parse("20140302T080000");
 //        java.util.Calendar c2 = java.util.Calendar.getInstance(TimeZones.getUtcTimeZone());
@@ -192,5 +205,22 @@ class TimeZoneSpec extends Specification {
 
 		cleanup:
 		CompatibilityHints.clearHintEnabled('net.fortuna.ical4j.timezone.offset.negative_dst_supported')
+	}
+
+	def 'test tz aliases resolve correctly'() {
+		setup:
+		System.setProperty('net.fortuna.ical4j.timezone.update.enabled', 'false')
+
+		expect: 'tz alias resolves to a timezone'
+		TimeZoneRegistry.getGlobalZoneId(alias)
+
+		cleanup:
+		System.clearProperty('net.fortuna.ical4j.timezone.update.enabled')
+
+		where:
+		alias << getClass().getResourceAsStream('/net/fortuna/ical4j/model/tz.alias').readLines().stream()
+				.filter(line -> !line.empty && !line.contains('#')).map {
+			line -> line.split('\\s*=\\s*')[0]
+		}.collect(Collectors.toList())
 	}
 }

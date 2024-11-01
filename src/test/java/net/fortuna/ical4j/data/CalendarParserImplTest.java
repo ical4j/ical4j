@@ -54,9 +54,9 @@ public class CalendarParserImplTest extends TestCase {
 
     private static final Logger LOG = LoggerFactory.getLogger(CalendarParserImplTest.class);
 
-    private URL resource;
+    private final URL resource;
 
-    private int expectedErrorLineNo;
+    private final int expectedErrorLineNo;
 
     /**
      * @param resouces a calendar resource

@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UtcOffsetTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(UtcOffsetTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UtcOffsetTest.class);
 
     /**
      * Unit tests for offset parsing.

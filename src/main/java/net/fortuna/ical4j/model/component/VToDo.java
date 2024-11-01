@@ -39,7 +39,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -113,7 +117,9 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent implements ComponentContainer<Component> {
+public class VToDo extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VToDo>,
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
+        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = -269658210065896668L;
 
@@ -192,7 +198,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     public VToDo(final Temporal start, final String summary) {
         this();
-        add(new DtStart(start));
+        add(new DtStart<>(start));
         add(new Summary(summary));
     }
 
@@ -204,8 +210,8 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     public VToDo(final Temporal start, final Temporal due, final String summary) {
         this();
-        add(new DtStart(start));
-        add(new Due(due));
+        add(new DtStart<>(start));
+        add(new Due<>(due));
         add(new Summary(summary));
     }
 
@@ -218,29 +224,9 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     public VToDo(final Temporal start, final TemporalAmount duration, final String summary) {
         this();
-        add(new DtStart(start));
+        add(new DtStart<>(start));
         add(new Duration(duration));
         add(new Summary(summary));
-    }
-
-    /**
-     * Returns the list of alarms for this todo.
-     * @return a component list
-     */
-    public final List<VAlarm> getAlarms() {
-        return getComponents(Component.VALARM);
-    }
-
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
     }
 
     /**
@@ -249,6 +235,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 
@@ -262,13 +249,13 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VTODO.validate(this);
+        var result = ComponentValidator.VTODO.validate(this);
         // validate that getAlarms() only contains VAlarm components
-        for (VAlarm component : getAlarms()) {
+        for (var component : getAlarms()) {
             component.validate(recurse);
         }
 
-        final Optional<Status> status = getProperty(Property.STATUS);
+        final Optional<Status> status = getStatus();
         if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
                 && !VTODO_COMPLETED.equals(status.get())
                 && !VTODO_IN_PROCESS.equals(status.get())
@@ -300,185 +287,40 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     }
 
     /**
-     * @return the optional access classification property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Clazz> getClassification() {
-        return getProperty(CLASS);
-    }
-
-    /**
      * @return the optional date completed property
-     * @deprecated use {@link VToDo#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeCompleted()}
      */
     @Deprecated
     public final Optional<Completed> getDateCompleted() {
-        return getProperty(COMPLETED);
-    }
-
-    /**
-     * @return the optional creation-time property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Created> getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
-     * @return the optional description property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Description> getDescription() {
-        return getProperty(DESCRIPTION);
+        return getDateTimeCompleted();
     }
 
     /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
-     * @deprecated use {@link VToDo#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
     @Deprecated
-    public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(DTSTART);
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
-     * @return the optional geographic position property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Geo> getGeographicPos() {
-        return getProperty(GEO);
-    }
-
-    /**
-     * @return the optional last-modified property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional location property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Location> getLocation() {
-        return getProperty(LOCATION);
-    }
-
-    /**
-     * @return the optional organizer property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Organizer> getOrganizer() {
-        return getProperty(ORGANIZER);
-    }
-
-    /**
-     * @return the optional percentage complete property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<PercentComplete> getPercentComplete() {
-        return getProperty(PERCENT_COMPLETE);
-    }
-
-    /**
-     * @return the optional priority property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Priority> getPriority() {
-        return getProperty(PRIORITY);
-    }
-
-    /**
-     * @return the optional date-stamp property
-     * @deprecated use {@link VToDo#getProperty(String)}
+     * @return the date-stamp property
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(DTSTAMP);
-    }
-
-    /**
-     * @return the optional sequence number property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Sequence> getSequence() {
-        return getProperty(SEQUENCE);
-    }
-
-    /**
-     * @return the optional status property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Status> getStatus() {
-        return getProperty(STATUS);
-    }
-
-    /**
-     * @return the optional summary property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Summary> getSummary() {
-        return getProperty(SUMMARY);
-    }
-
-    /**
-     * @return the optional URL property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Url> getUrl() {
-        return getProperty(URL);
-    }
-
-    /**
-     * @return the optional recurrence identifier property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<RecurrenceId<?>> getRecurrenceId() {
-        return getProperty(RECURRENCE_ID);
-    }
-
-    /**
-     * @return the optional Duration property
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Duration> getDuration() {
-        return getProperty(DURATION);
+        return getDateTimeStamp();
     }
 
     /**
      * @return the optional due property
-     * @deprecated use {@link VToDo#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeDue()}
      */
     @Deprecated
-    public final Optional<Due<?>> getDue() {
-        return getProperty(DUE);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     * @deprecated use {@link VToDo#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
+    public final <T extends Temporal> Optional<Due<T>> getDue() {
+        return getDateTimeDue();
     }
 
     /**
@@ -505,6 +347,14 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     @Override
     protected ComponentFactory<VToDo> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VToDo> {

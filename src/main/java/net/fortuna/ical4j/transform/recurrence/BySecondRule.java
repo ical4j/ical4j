@@ -22,7 +22,7 @@ public class BySecondRule<T extends Temporal> extends AbstractDateExpansionRule<
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         if (secondList.isEmpty()) {
             return dates;
         }

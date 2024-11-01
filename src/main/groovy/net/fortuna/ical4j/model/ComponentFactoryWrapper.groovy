@@ -1,9 +1,5 @@
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.ComponentFactory
-import net.fortuna.ical4j.model.Property
-import net.fortuna.ical4j.model.PropertyList
-
 class ComponentFactoryWrapper extends AbstractFactory {
 
     Class componentClass
@@ -18,7 +14,7 @@ class ComponentFactoryWrapper extends AbstractFactory {
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, componentClass)) {
-            return value
+            return value.copy()
         }
         List<Property> properties = (List<Property>) attributes.remove('properties')
         if (properties == null) {

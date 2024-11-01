@@ -83,37 +83,26 @@ public final class Calendars {
      * @throws ParserException occurs when the data in the specified URL is invalid
      */
     public static Calendar load(final URL url) throws IOException, ParserException {
-        final CalendarBuilder builder = new CalendarBuilder();
+        final var builder = new CalendarBuilder();
         return builder.build(url.openStream());
     }
 
     /**
-     * Merge all properties and components from two specified calendars into one instance.
+     * Merge all properties and components from multiple calendars into one instance.
      * Note that the merge process is not very sophisticated, and may result in invalid calendar
      * data (e.g. multiple properties of a type that should only be specified once).
-     * @param c1 the first calendar to merge
-     * @param c2 the second calendar to merge
-     * @return a Calendar instance containing all properties and components from both of the specified calendars
-     * @deprecated @see {@link Calendar#merge(Calendar)}
+     * @param calendars zero or more calendars to merge
+     * @return a Calendar instance containing all properties and components from the specified calendars
      */
-    @Deprecated
-    public static Calendar merge(final Calendar c1, final Calendar c2) {
-        List<Property> mergedProperties = new ArrayList<>();
-        List<CalendarComponent> mergedComponents = new ArrayList<>();
-        mergedProperties.addAll(c1.getProperties());
-        for (final Property p : c2.getProperties()) {
-            if (!mergedProperties.contains(p)) {
-                mergedProperties.add(p);
-            }
+    public static Calendar merge(Calendar...calendars) {
+        if (calendars.length > 1) {
+            // merge last two..
+            calendars[calendars.length - 2] = calendars[calendars.length - 2].merge(calendars[calendars.length - 1]);
+            var sub = Arrays.copyOf(calendars, calendars.length - 1);
+            return merge(sub);
+        } else {
+            return calendars[0];
         }
-        mergedComponents.addAll(c1.getComponents());
-        for (final CalendarComponent c : c2.getComponents()) {
-            if (!mergedComponents.contains(c)) {
-                mergedComponents.add(c);
-            }
-        }
-        return new Calendar(new PropertyList(mergedProperties),
-                new ComponentList<>(mergedComponents));
     }
 
     /**
@@ -151,17 +140,17 @@ public final class Calendars {
         		timezoneList, Property.TZID);
         
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
-        for (final CalendarComponent c : calendar.getComponents()) {
+        for (final var c : calendar.getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
             }
             
-            final Optional<Uid> uid = c.getProperty(Property.UID);
+            final Optional<Uid> uid = c.getUid();
             if (uid.isPresent()) {
-                Calendar uidCal = calendars.get(uid.get());
+                var uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
                     // remove METHOD property for split calendars..
-                    PropertyList splitProps = (PropertyList) calendar.getPropertyList().removeAll(Property.METHOD);
+                    var splitProps = (PropertyList) calendar.getPropertyList().removeAll(Property.METHOD);
                     uidCal = new Calendar(splitProps, new ComponentList<>());
                     calendars.put(uid.get(), uidCal);
                 }
@@ -169,7 +158,7 @@ public final class Calendars {
                 for (final Property p : c.getProperties()) {
                     final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
-                        final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
+                        final var timezone = timezones.getComponent(tzid.get().getValue());
                         if (!uidCal.getComponents().contains(timezone)) {
                             uidCal.add(timezone);
                         }
@@ -178,7 +167,7 @@ public final class Calendars {
                 uidCal.add(c);
             }
         }
-        return calendars.values().toArray(new Calendar[0]);
+        return calendars.values().toArray(Calendar[]::new);
     }
     
     /**
@@ -191,8 +180,8 @@ public final class Calendars {
     @Deprecated
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
-        for (final Component c : calendar.getComponents()) {
-            for (final Property foundUid : c.getProperties(Property.UID)) {
+        for (final var c : calendar.getComponents()) {
+            for (final var foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }
@@ -214,9 +203,9 @@ public final class Calendars {
      */
     @Deprecated
     public static String getContentType(Calendar calendar, Charset charset) {
-        final StringBuilder b = new StringBuilder("text/calendar");
+        final var b = new StringBuilder("text/calendar");
         
-        final Optional<Method> method = calendar.getProperty(Property.METHOD);
+        final Optional<Method> method = calendar.getMethod();
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());

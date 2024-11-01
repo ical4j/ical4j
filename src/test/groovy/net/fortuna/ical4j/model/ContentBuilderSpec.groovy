@@ -33,6 +33,8 @@ package net.fortuna.ical4j.model
 
 
 import net.fortuna.ical4j.model.property.LastModified
+import net.fortuna.ical4j.model.property.Source
+import net.fortuna.ical4j.model.property.XProperty
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.validate.ValidationException
 import spock.lang.Shared
@@ -154,5 +156,17 @@ class ContentBuilderSpec extends Specification {
 
 		then: 'no exception is thrown'
 		notThrown(ValidationException)
+	}
+
+	def 'test build non-standard/experimental props'() {
+		expect:
+		def property = builder."$propertyName"('https://example.com/test.ics')
+		assert property.class == expectedType && property as String == expectedString
+
+		where:
+		propertyName	| expectedType	| expectedString
+		'experimental'	| XProperty		| 'experimental:https://example.com/test.ics\r\n'
+		'X-FACTOR'		| XProperty		| 'X-FACTOR:https://example.com/test.ics\r\n'
+		'source'		| Source		| 'SOURCE:https://example.com/test.ics\r\n'
 	}
 }

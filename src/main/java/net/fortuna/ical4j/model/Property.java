@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -58,7 +59,7 @@ import java.util.Optional;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content implements Comparable<Property>, FluentProperty {
+public abstract class Property extends Content implements Prototype<Property>, Comparable<Property>, FluentProperty {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -394,6 +395,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
     public static final String TZID_ALIAS_OF = "TZID-ALIAS-OF";
 
+    public static final String XML = "XML";
+
     private final String name;
 
     /**
@@ -412,12 +415,21 @@ public abstract class Property extends Content implements Comparable<Property>, 
         this(aName, new ParameterList());
     }
 
+    protected Property(@NotNull Enum<?> name) {
+        this(name.toString(), new ParameterList());
+    }
+
     /**
      * @param aName   a property identifier
      * @param aList   a list of initial parameters
      */
     protected Property(final String aName, final ParameterList aList) {
         this.name = aName;
+        this.parameters = aList;
+    }
+
+    protected Property(@NotNull Enum<?> name, final ParameterList aList) {
+        this.name = name.toString();
         this.parameters = aList;
     }
 
@@ -442,7 +454,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     @Override
     public String toString() {
-        final StringBuilder buffer = new StringBuilder();
+        final var buffer = new StringBuilder();
         if (prefix != null && !prefix.isEmpty()) {
             buffer.append(prefix);
             buffer.append('.');
@@ -473,8 +485,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
     }
 
     @Override
-    public <P extends Property> P getFluentTarget() {
-        return (P) this;
+    public Property getFluentTarget() {
+        return this;
     }
 
     /**
@@ -572,6 +584,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
         return parameters.getFirst(name);
     }
 
+    public final <P extends Parameter> Optional<P> getParameter(@NotNull Enum<?> name) {
+        return getParameter(name.toString());
+    }
+
     /**
      * Retrieve a single required parameter.
      * @param name
@@ -580,6 +596,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     public final <P extends Parameter> P getRequiredParameter(final String name) {
         return parameters.getRequired(name);
+    }
+
+    public final <P extends Parameter> P getRequiredParameter(@NotNull Enum<?> name) {
+        return getRequiredParameter(name.toString());
     }
 
     /**
@@ -603,10 +623,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
     @Override
     public boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
-            final Property p = (Property) arg0;
+            final var p = (Property) arg0;
             return getName().equals(p.getName())
                     && new EqualsBuilder().append(getValue(), p.getValue()).append(parameters,
-                    p.parameters).isEquals();
+                    p.parameters).append(prefix, p.prefix).isEquals();
         }
         return super.equals(arg0);
     }
@@ -618,7 +638,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
-                getValue()).append(parameters).toHashCode();
+                getValue()).append(parameters).append(getPrefix()).toHashCode();
     }
 
     /**
@@ -633,6 +653,9 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @return the copy of the property
      */
     public final Property copy() {
+        if (getName().toUpperCase().startsWith("X-")) {
+            return new XProperty(getName(), new ParameterList(getParameters()), getValue());
+        }
         return newFactory().createProperty(parameters, getValue());
     }
 
@@ -644,6 +667,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
         return Comparator.comparing(Property::getName)
                 .thenComparing(Property::getValue)
                 .thenComparing(Property::getParameterList)
+                .thenComparing(Property::getPrefix, Comparator.nullsFirst(Comparator.naturalOrder()))
                 .compare(this, o);
     }
 }

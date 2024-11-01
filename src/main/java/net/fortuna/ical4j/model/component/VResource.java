@@ -32,7 +32,10 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Geo;
+import net.fortuna.ical4j.model.property.Name;
+import net.fortuna.ical4j.model.property.ResourceType;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
@@ -128,7 +131,7 @@ public class VResource extends Component {
      * {@inheritDoc}
      */
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VRESOURCE.validate(this);
+        var result = ComponentValidator.VRESOURCE.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -147,7 +150,7 @@ public class VResource extends Component {
      * @return the optional geo property for a vresource
      */
     public final Optional<Geo> getGeo() {
-        return getProperty(LAST_MODIFIED);
+        return getProperty(GEO);
     }
 
     /**
@@ -163,14 +166,6 @@ public class VResource extends Component {
      */
     public final Optional<Name> getNameProp() {
         return getProperty(NAME);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
     }
 
     /**

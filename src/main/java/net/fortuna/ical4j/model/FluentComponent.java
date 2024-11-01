@@ -38,10 +38,9 @@ package net.fortuna.ical4j.model;
  */
 public interface FluentComponent {
 
-    <C extends Component> C getFluentTarget();
+    Component getFluentTarget();
 
     default FluentComponent withProperty(Property property) {
-        getFluentTarget().add(property);
-        return getFluentTarget();
+        return getFluentTarget().add(property);
     }
 }

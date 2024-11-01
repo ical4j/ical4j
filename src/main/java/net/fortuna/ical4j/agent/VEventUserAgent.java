@@ -4,8 +4,10 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.transform.calendar.RequestTransformer;
-import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.transform.itip.RequestTransformer;
+
+import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
@@ -13,7 +15,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
     private final RequestTransformer delegateTransformer;
 
-    public VEventUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
+    public VEventUserAgent(ProdId prodId, Organizer organizer, Supplier<Uid> uidGenerator) {
         super(prodId, organizer, uidGenerator);
         delegateTransformer = new RequestTransformer(uidGenerator);
     }
@@ -35,9 +37,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar publish(VEvent... component) {
-        Calendar published = wrap(PUBLISH, component);
-        published.validate();
-        return published;
+        return validate(wrap(PUBLISH, component));
     }
 
     /**
@@ -90,16 +90,12 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar request(VEvent... component) {
-        Calendar request = wrap(REQUEST, component);
-        request.validate();
-        return request;
+        return validate(wrap(REQUEST, component));
     }
 
     @Override
     public Calendar delegate(Calendar request) {
-        Calendar delegated = delegateTransformer.transform(request.copy());
-        delegated.validate();
-        return delegated;
+        return validate(delegateTransformer.apply(request.copy()));
     }
 
     /**
@@ -145,9 +141,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        Calendar reply = transform(REPLY, request.copy());
-        reply.validate();
-        return reply;
+        return validate(transform(REPLY, request.copy()));
     }
 
     /**
@@ -173,9 +167,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar add(VEvent component) {
-        Calendar add = wrap(ADD, component);
-        add.validate();
-        return add;
+        return validate(wrap(ADD, component));
     }
 
     /**
@@ -216,9 +208,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar cancel(VEvent... component) {
-        Calendar cancel = wrap(CANCEL, component);
-        cancel.validate();
-        return cancel;
+        return validate(wrap(CANCEL, component));
     }
 
     /**
@@ -236,10 +226,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar refresh(VEvent component) {
-        Calendar refresh = wrap(REFRESH, component.copy());
-//        componentTransformers.get(Method.REFRESH).transform(refresh.getComponents());
-        refresh.validate();
-        return refresh;
+        return validate(wrap(REFRESH, (VEvent) component.copy()));
     }
 
     /**
@@ -265,9 +252,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar counter(Calendar request) {
-        Calendar counter = transform(COUNTER, request.copy());
-        counter.validate();
-        return counter;
+        return validate(transform(COUNTER, request.copy()));
     }
 
     /**
@@ -283,8 +268,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar declineCounter(Calendar counter) {
-        Calendar declineCounter = transform(DECLINE_COUNTER, counter.copy());
-        declineCounter.validate();
-        return declineCounter;
+        return validate(transform(DECLINE_COUNTER, counter.copy()));
     }
 }

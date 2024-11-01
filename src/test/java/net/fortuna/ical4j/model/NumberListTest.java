@@ -45,9 +45,9 @@ import org.slf4j.LoggerFactory;
  */
 public class NumberListTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(NumberListTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NumberListTest.class);
 
-    private NumberList numberList;
+    private final NumberList numberList;
 
     private int expectedSize;
 
@@ -129,8 +129,8 @@ public class NumberListTest extends TestCase {
         suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), "0,2,5,-2,-4,-5,3"));
         suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3", 0, 5, true), "0,2,5,-2,-4,-5,3"));
 
-        suite.addTest(new NumberListTest(new NumberList(0, 1, false), new Integer(0), new Integer(-1)));
-        suite.addTest(new NumberListTest(new NumberList("1", 0, 1, true), new Integer(0), new Integer(2)));
+        suite.addTest(new NumberListTest(new NumberList(0, 1, false), 0, -1));
+        suite.addTest(new NumberListTest(new NumberList("1", 0, 1, true), 0, 2));
 
         return suite;
     }

@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.filter.predicate.PropertyEqualToRule;
+import net.fortuna.ical4j.filter.predicate.PropertyExistsRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 
@@ -29,27 +30,76 @@ import java.util.stream.Collectors;
  *
  * Created by fortuna on 20/07/2017.
  */
-public class ComponentGroup<C extends Component> implements ComponentListAccessor<C> {
+public class ComponentGroup<C extends Component> implements ComponentContainer<C> {
 
-    private final ComponentList<C> componentList;
+    private ComponentList<C> componentList;
+
+    private final Predicate<C> componentPredicate;
+
+    /**
+     * Construct a component group filtered on {@link Uid}. Note that this will exclude any recurrence instances
+     * as specified by the presence of a {@link RecurrenceId} property.
+     *
+     * @param uid the UID to filter on
+     */
+    public ComponentGroup(Uid uid) {
+        this(new ArrayList<>(), uid);
+    }
+
+    /**
+     * Construct a component group filtered on a specific recurrence of a {@link Uid}. Note that this will
+     * only include revisions of a single recurrence instance
+     * as specified by the {@link RecurrenceId} property.
+     *
+     * @param uid the UID to filter on
+     */
+    public ComponentGroup(Uid uid, RecurrenceId<?> recurrenceId) {
+        this(new ArrayList<>(), uid, recurrenceId);
+    }
 
     public ComponentGroup(List<C> components, Uid uid) {
-        this(components, uid, null);
+        this(new ComponentList<>(components), uid);
+    }
+
+    public ComponentGroup(ComponentList<C> components, Uid uid) {
+        this.componentPredicate = new PropertyEqualToRule<C>(uid)
+                .and(new PropertyExistsRule<>(new RecurrenceId<>()).negate());
+        this.componentList = components;
     }
 
     public ComponentGroup(List<C> components, Uid uid, RecurrenceId<?> recurrenceId) {
-        Predicate<C> componentPredicate;
-        if (recurrenceId != null) {
-            componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
-        } else {
-            componentPredicate = new PropertyEqualToRule<>(uid);
-        }
-        this.componentList = new ComponentList<>(components.stream().filter(componentPredicate).collect(Collectors.toList()));
+        this(new ComponentList<>(components), uid, recurrenceId);
+    }
+
+    public ComponentGroup(ComponentList<C> components, Uid uid, RecurrenceId<?> recurrenceId) {
+        this.componentPredicate = new PropertyEqualToRule<C>(uid).and(new PropertyEqualToRule<>(recurrenceId));
+        this.componentList = components;
     }
 
     @Override
     public ComponentList<C> getComponentList() {
         return componentList;
+    }
+
+    @Override
+    public void setComponentList(ComponentList<C> components) {
+        this.componentList = components;
+    }
+
+    @Override
+    public <T extends ComponentContainer<C>> T add(C component) {
+        if (!componentPredicate.test(component)) {
+            throw new IllegalArgumentException("Incompatible component");
+        }
+        return ComponentContainer.super.add(component);
+    }
+
+    @Override
+    public <T extends ComponentContainer<C>> T replace(C component) {
+        if (!componentPredicate.test(component)) {
+            throw new IllegalArgumentException("Incompatible component");
+        }
+        return ComponentContainer.super.replace(component);
     }
 
     /**
@@ -59,7 +109,7 @@ public class ComponentGroup<C extends Component> implements ComponentListAccesso
      * @return
      */
     public List<C> getRevisions() {
-        return getComponents();
+        return getComponents().stream().filter(componentPredicate).collect(Collectors.toList());
     }
 
     /**
@@ -84,7 +134,7 @@ public class ComponentGroup<C extends Component> implements ComponentListAccesso
      *
      * @see Component#calculateRecurrenceSet(Period)
      */
-    public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
+    public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period) {
         // Use set to exclude duplicates..
         Set<Period<T>> periods = new HashSet<>();
         List<Component> overrides = new ArrayList<>();
@@ -103,7 +153,7 @@ public class ComponentGroup<C extends Component> implements ComponentListAccesso
             finalPeriods.removeIf(p -> p.getStart().equals(recurrenceId.getDate()));
             component.calculateRecurrenceSet(period).stream()
                     .filter(p -> p.getStart().equals(recurrenceId.getDate()))
-                    .forEach(finalPeriods::add);
+                    .forEach(p -> finalPeriods.add((Period<T>) p));
         });
 
         // Natural sort of final list..

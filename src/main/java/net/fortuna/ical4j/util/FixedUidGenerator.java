@@ -73,7 +73,7 @@ public class FixedUidGenerator implements UidGenerator {
 
     @Override
     public Uid generateUid() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         b.append(uniqueTimestamp());
         b.append('-');
         b.append(pid);

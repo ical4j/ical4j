@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractPropertyTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(AbstractPropertyTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractPropertyTest.class);
 
     /**
      *
@@ -73,7 +73,6 @@ public abstract class AbstractPropertyTest extends TestCase {
             assertTrue(result.hasErrors());
         } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
-            return;
         }
     }
 }

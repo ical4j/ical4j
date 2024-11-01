@@ -41,29 +41,29 @@ class PeriodSpec extends Specification {
 			marchToMay , marchToApril, aprToMay, janToMay, junToDec
 
 	def setupSpec() {
-		ZonedDateTime past = ZonedDateTime.now().withYear(1980).withMonth(1).withDayOfMonth(23);
-		ZonedDateTime future = past.withYear(2022).withMonth(2);
-		ZonedDateTime begin1994 = future.withYear(1994).withMonth(1).withDayOfMonth(1);
-		ZonedDateTime end1994 = begin1994.withMonth(12).withDayOfMonth(31);
-		ZonedDateTime mar1994 = end1994.withMonth(3).withDayOfMonth(4);
-		ZonedDateTime apr1994 = mar1994.withMonth(4).withDayOfMonth(12);
-		ZonedDateTime may1994 = apr1994.withMonth(5).withDayOfMonth(19);
-		ZonedDateTime jun1994 = may1994.withMonth(6).withDayOfMonth(22);
-		ZonedDateTime jul1994 = jun1994.withMonth(7).withDayOfMonth(29);
+		ZonedDateTime past = ZonedDateTime.now().withYear(1980).withMonth(1).withDayOfMonth(23)
+		ZonedDateTime future = past.withYear(2022).withMonth(2)
+		ZonedDateTime begin1994 = future.withYear(1994).withMonth(1).withDayOfMonth(1)
+		ZonedDateTime end1994 = begin1994.withMonth(12).withDayOfMonth(31)
+		ZonedDateTime mar1994 = end1994.withMonth(3).withDayOfMonth(4)
+		ZonedDateTime apr1994 = mar1994.withMonth(4).withDayOfMonth(12)
+		ZonedDateTime may1994 = apr1994.withMonth(5).withDayOfMonth(19)
+		ZonedDateTime jun1994 = may1994.withMonth(6).withDayOfMonth(22)
+		ZonedDateTime jul1994 = jun1994.withMonth(7).withDayOfMonth(29)
 
-		year1994 = new Period<>(begin1994, end1994);
-		monthMarch = new Period<>(mar1994, apr1994);
-		monthApril = new Period<>(apr1994, may1994);
-		monthMay = new Period<>(may1994, jun1994);
-		firstHalf = new Period<>(begin1994, jun1994);
-		lastHalf = new Period<>(may1994, end1994);
-		winter = new Period<>(begin1994, apr1994);
-		spring = new Period<>(apr1994, jul1994);
-		marchToMay = new Period<>(mar1994, jun1994);
-		marchToApril = new Period<>(mar1994, may1994);
-		aprToMay = new Period<>(apr1994, jun1994);
-		janToMay = new Period<>(begin1994, may1994);
-		junToDec = new Period<>(jun1994, end1994);
+		year1994 = new Period<>(begin1994, end1994)
+		monthMarch = new Period<>(mar1994, apr1994)
+		monthApril = new Period<>(apr1994, may1994)
+		monthMay = new Period<>(may1994, jun1994)
+		firstHalf = new Period<>(begin1994, jun1994)
+		lastHalf = new Period<>(may1994, end1994)
+		winter = new Period<>(begin1994, apr1994)
+		spring = new Period<>(apr1994, jul1994)
+		marchToMay = new Period<>(mar1994, jun1994)
+		marchToApril = new Period<>(mar1994, may1994)
+		aprToMay = new Period<>(apr1994, jun1994)
+		janToMay = new Period<>(begin1994, may1994)
+		junToDec = new Period<>(jun1994, end1994)
 	}
 	
 	def 'extension module test: plus'() {

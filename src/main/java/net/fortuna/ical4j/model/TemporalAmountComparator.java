@@ -22,7 +22,8 @@ public class TemporalAmountComparator implements Comparator<TemporalAmount> {
                 }
             }
         } else if (o1 instanceof Period && o2 instanceof Period) {
-            Period p1 = (Period) o1, p2 = (Period) o2;
+            var p1 = (Period) o1;
+            var p2 = (Period) o2;
             if (p1.isNegative() != p2.isNegative()) {
                 if (p1.isNegative()) {
                     result = Integer.MIN_VALUE;

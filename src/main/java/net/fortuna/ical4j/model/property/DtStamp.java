@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -106,7 +107,10 @@ public class DtStamp extends DateProperty<Instant> implements UtcProperty {
      * @param aValue a value string for this component
      */
     public DtStamp(final ParameterList aList, final String aValue) {
-        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
+        super(DTSTAMP, aList,
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING) ?
+                        CalendarDateFormat.RELAXED_DATE_TIME_FORMAT :
+                        CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
@@ -114,7 +118,10 @@ public class DtStamp extends DateProperty<Instant> implements UtcProperty {
      * @param aDate a date representing a date-time
      */
     public DtStamp(final Instant aDate) {
-        super(DTSTAMP, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
+        super(DTSTAMP,
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING) ?
+                        CalendarDateFormat.RELAXED_DATE_TIME_FORMAT :
+                        CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -123,14 +130,17 @@ public class DtStamp extends DateProperty<Instant> implements UtcProperty {
      * @param aDate a date representing a date-time
      */
     public DtStamp(final ParameterList aList, final Instant aDate) {
-        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
+        super(DTSTAMP, aList,
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING) ?
+                        CalendarDateFormat.RELAXED_DATE_TIME_FORMAT :
+                        CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
     @Override
     public int compareTo(Property o) {
         if (o instanceof DateProperty) {
-            return new TemporalComparator().compare(getDate(), ((DateProperty) o).getDate());
+            return TemporalComparator.INSTANCE.compare(getDate(), ((DateProperty) o).getDate());
         }
         return super.compareTo(o);
     }

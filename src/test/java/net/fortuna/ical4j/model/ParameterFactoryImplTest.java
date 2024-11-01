@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ParameterFactoryImplTest extends TestCase {
 
-    private Logger log = LoggerFactory.getLogger(ParameterFactoryImplTest.class);
+    private final Logger log = LoggerFactory.getLogger(ParameterFactoryImplTest.class);
 
     @Override
     protected void tearDown() throws Exception {

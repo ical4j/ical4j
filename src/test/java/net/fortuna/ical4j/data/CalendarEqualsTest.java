@@ -51,9 +51,9 @@ import java.io.IOException;
  */
 public class CalendarEqualsTest extends TestCase {
 
-    private File file;
+    private final File file;
     
-    private boolean valid;
+    private final boolean valid;
     
     /**
      * @param file
@@ -166,7 +166,7 @@ public class CalendarEqualsTest extends TestCase {
         
         File[] testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
         for (File testFile : testFiles) {
-            suite.addTest(new CalendarEqualsTest((File) testFile, true));
+            suite.addTest(new CalendarEqualsTest(testFile, true));
         }
         return suite;
     }

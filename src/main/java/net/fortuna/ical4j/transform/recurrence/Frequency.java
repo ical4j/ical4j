@@ -19,7 +19,7 @@ package net.fortuna.ical4j.transform.recurrence;
  *       interval of a year or more.
  * </pre>
  *
- * See https://tools.ietf.org/html/rfc5545#section-3.3.10 for more details.
+ * See <a href="https://tools.ietf.org/html/rfc5545#section-3.3.10">rfc5545</a> for more details.
  */
 public enum Frequency {
     SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY

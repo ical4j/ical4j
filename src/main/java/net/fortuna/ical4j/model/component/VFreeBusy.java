@@ -203,7 +203,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component> {
+public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component>, ParticipantsAccessor,
+    LocationsAccessor, ResourcesAccessor, DateTimePropertyAccessor {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
@@ -320,7 +321,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         // ensure the request is valid..
         request.validate();
 
-        final Optional<Duration> duration = request.getProperty(DURATION);
+        final Optional<Duration> duration = request.getDuration();
 
         // 4.8.2.4 Date/Time Start:
         //
@@ -337,8 +338,8 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         //    time than the value of the "DTSTART" property.
         add(new DtEnd<>(end.getDate()));
 
-        final Instant fbStart = Instant.from(start.getDate());
-        final Instant fbEnd = Instant.from(end.getDate());
+        final var fbStart = Instant.from(start.getDate());
+        final var fbEnd = Instant.from(end.getDate());
         FreeBusy fb;
 
         if (duration.isPresent()) {
@@ -435,20 +436,20 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
 
         public FreeBusy build() {
             final List<Interval> periods = getConsumedTime(components, new Period<>(start, end));
-            final Interval interval = Interval.of(start, end);
+            final var interval = Interval.of(start, end);
             // Add final consumed time to avoid special-case end-of-list processing
             periods.add(Interval.of(end, end));
-            Instant lastPeriodEnd = start;
+            var lastPeriodEnd = start;
 
             List<Interval> freePeriods = new ArrayList<>();
             // where no time is consumed set the last period end as the range start..
-            for (final Interval period : periods) {
+            for (final var period : periods) {
                 // check if period outside bounds.. or period intersects with the end of the range..
                 if (interval.encloses(period) || (interval.overlaps(period)
                                 && Instant.from(period.getStart()).isAfter(Instant.from(interval.getStart())))) {
 
                     // calculate duration between this period start and last period end..
-                    final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
+                    final var freeDuration = new Duration(lastPeriodEnd, period.getStart());
                     if (new TemporalAmountComparator().compare(freeDuration.getDuration(), duration) >= 0) {
                         freePeriods.add(Interval.of(lastPeriodEnd, (java.time.Duration) freeDuration.getDuration()));
                     }
@@ -458,9 +459,8 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
                     lastPeriodEnd = Instant.from(period.getEnd());
                 }
             }
-            ParameterList fbParams = new ParameterList(Collections.singletonList(FbType.FREE));
-            final FreeBusy fb = new FreeBusy(fbParams, freePeriods);
-            return fb;
+            var fbParams = new ParameterList(Collections.singletonList(FbType.FREE));
+            return new FreeBusy(fbParams, freePeriods);
         }
     }
 
@@ -484,10 +484,10 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VFREEBUSY.validate(this);
+        var result = ComponentValidator.VFREEBUSY.validate(this);
 
-        final Optional<DtStart<?>> dtStart = getProperty(Property.DTSTART);
-        final Optional<DtEnd<?>> dtEnd = getProperty(Property.DTEND);
+        final Optional<DtStart<Temporal>> dtStart = getDateTimeStart();
+        final Optional<DtEnd<Temporal>> dtEnd = getDateTimeEnd();
         if (dtStart.isPresent() && dtEnd.isPresent()
                 && TemporalAdapter.isBefore(dtStart.get().getDate(), dtEnd.get().getDate())) {
             result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
@@ -515,24 +515,13 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         }
     }
 
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
-    }
-
     /**
      *
      * @return Returns the underlying component list.
      */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 
@@ -552,29 +541,20 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
 
     /**
      * @return the DTSTART propery or null if not specified
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
     @Deprecated
-    public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(DTSTART);
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
      * @return the DTEND property or null if not specified
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeEnd()}
      */
     @Deprecated
-    public final Optional<DtEnd<?>> getEndDate() {
-        return getProperty(DTEND);
-    }
-
-    /**
-     * @return the DURATION property or null if not specified
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Duration> getDuration() {
-        return getProperty(DURATION);
+    public final <T extends Temporal> Optional<DtEnd<T>> getEndDate() {
+        return getDateTimeEnd();
     }
 
     /**
@@ -604,19 +584,17 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         return getProperty(URL);
     }
 
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     * @deprecated use {@link VFreeBusy#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
-    }
-
     @Override
     protected ComponentFactory<VFreeBusy> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     /**

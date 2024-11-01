@@ -63,13 +63,10 @@ public interface TimeZoneRegistry {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        Optional<Map.Entry<String, String>> zoneId = ZONE_IDS.entrySet().stream().filter(entry ->
-                entry.getValue().equals(tzId)).findFirst();
-        if (zoneId.isPresent()) {
-            return ZoneId.of(zoneId.get().getKey());
-        } else {
-            return ZoneId.of(tzId, ZONE_ALIASES);
-        }
+        ZoneId zoneId = ZoneId.of(tzId, ZONE_ALIASES);
+        Optional<Map.Entry<String, String>> lookup = ZONE_IDS.entrySet().stream().filter(entry ->
+                entry.getValue().equals(zoneId.getId())).findFirst();
+        return lookup.map(mapping -> ZoneId.of(mapping.getKey())).orElse(zoneId);
     }
 
     /**

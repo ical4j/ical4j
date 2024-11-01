@@ -102,4 +102,17 @@ class ComponentGroupTest extends Specification {
         then: 'the instance override is removed from the recurrence set'
         recurrences.size() == event.calculateRecurrenceSet(period).size() - 1
     }
+
+    def 'assert component list is unchanged when no mutation occurs'() {
+        given: 'a component list instance'
+        ComponentList<VEvent> componentList = []
+
+        expect: 'the underlying component list is the same'
+        ComponentGroup componentGroup = [componentList, uid]
+        componentGroup.componentList === componentList
+
+        and: 'after mutation the list is different'
+        componentGroup.add(event)
+        componentGroup.componentList != componentList
+    }
 }

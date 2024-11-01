@@ -67,9 +67,8 @@ public class CalendarAddress extends Property {
 
     /**
      * @param aValue a value string for this property
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public CalendarAddress(final String aValue) throws URISyntaxException {
+    public CalendarAddress(final String aValue) {
         super(CALENDAR_ADDRESS);
         setValue(aValue);
     }
@@ -77,7 +76,6 @@ public class CalendarAddress extends Property {
     /**
      * @param aList  a list of parameters for this property
      * @param aValue a value string for this property
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public CalendarAddress(final ParameterList aList, final String aValue) {
         super(CALENDAR_ADDRESS, aList);

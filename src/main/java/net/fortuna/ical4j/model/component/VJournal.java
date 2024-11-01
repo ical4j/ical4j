@@ -32,14 +32,17 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.Temporal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -104,7 +107,9 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VJournal extends CalendarComponent implements ComponentContainer<Component> {
+public class VJournal extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VJournal>,
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
+        RelationshipPropertyAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
@@ -152,7 +157,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      */
     public VJournal(final Temporal start, final String summary) {
         this();
-        add(new DtStart(start));
+        add(new DtStart<>(start));
         add(new Summary(summary));
     }
 
@@ -161,7 +166,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VJOURNAL.validate(this);
+        var result = ComponentValidator.VJOURNAL.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -184,24 +189,13 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
         }
     }
 
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
-    }
-
     /**
      *
      * @return Returns the underlying component list.
      */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 
@@ -211,127 +205,35 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
     }
 
     /**
-     * @return the optional access classification property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Clazz> getClassification() {
-        return getProperty(CLASS);
-    }
-
-    /**
-     * @return the optional creation-time property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Created> getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
-     * @return the optional description property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Description> getDescription() {
-        return getProperty(DESCRIPTION);
-    }
-
-    /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
-     * @deprecated use {@link VJournal#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
     @Deprecated
-    public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(DTSTART);
-    }
-
-    /**
-     * @return the optional last-modified property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional organizer property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Organizer> getOrganizer() {
-        return getProperty(ORGANIZER);
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
      * @return the optional date-stamp property
-     * @deprecated use {@link VJournal#getProperty(String)}
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(DTSTAMP);
-    }
-
-    /**
-     * @return the optional sequence number property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Sequence> getSequence() {
-        return getProperty(SEQUENCE);
-    }
-
-    /**
-     * @return the optional status property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Status> getStatus() {
-        return getProperty(STATUS);
-    }
-
-    /**
-     * @return the optional summary property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Summary> getSummary() {
-        return getProperty(SUMMARY);
-    }
-
-    /**
-     * @return the optional URL property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Url> getUrl() {
-        return getProperty(URL);
-    }
-
-    /**
-     * @return the optional recurrence identifier property for a journal entry
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<RecurrenceId<?>> getRecurrenceId() {
-        return getProperty(RECURRENCE_ID);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     * @deprecated use {@link VJournal#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
+        return getDateTimeStamp();
     }
 
     @Override
     protected ComponentFactory<VJournal> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     /**

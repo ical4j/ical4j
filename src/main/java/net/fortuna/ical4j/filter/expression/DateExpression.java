@@ -59,7 +59,7 @@ public class DateExpression implements LiteralExpression<Date> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DateExpression that = (DateExpression) o;
+        var that = (DateExpression) o;
         return value.equals(that.value);
     }
 

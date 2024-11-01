@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.RegEx;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
@@ -73,7 +74,7 @@ public class AddressList implements Serializable {
 
     public AddressList(final String aValue, boolean allowInvalidAddress) throws URISyntaxException {
         List<URI> values = new ArrayList<>();
-        for (String a : aValue.split(",")) {
+        for (String a : aValue.split(RegEx.COMMA_DELIMITED)) {
             try {
                 values.add(new URI(Uris.encode(Strings.unquote(a))));
             } catch (URISyntaxException use) {

@@ -66,15 +66,15 @@ public class TimeZoneTest extends TestCase {
 
     private static final long GMT_MINUS_1030 = -630 * 60 * 1000;
 
-    private static final long GMT_MINUS_103126 = GMT_MINUS_1030 - (1 * 60 * 1000) - (26 * 1000);
+    private static final long GMT_MINUS_103126 = GMT_MINUS_1030 - (60 * 1000) - (26 * 1000);
 
-    private static Logger LOG = LoggerFactory.getLogger(TimeZoneTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TimeZoneTest.class);
 
     private TimeZoneRegistry registry;
 
     private java.util.TimeZone tz;
 
-    private TimeZone timezone;
+    private final TimeZone timezone;
 
     private String expectedTimezoneId;
 

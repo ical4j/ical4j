@@ -121,7 +121,7 @@ public class Action extends Property {
         public Action createProperty(final ParameterList parameters, final String value) {
 
             if (parameters.getAll().isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_AUDIO: return AUDIO;
                     case VALUE_DISPLAY: return DISPLAY;
                     case VALUE_EMAIL: return EMAIL;

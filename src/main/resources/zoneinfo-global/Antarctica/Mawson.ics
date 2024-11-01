@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
+PRODID:-//tzurl.org//NONSGML Olson 2024a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022f/Antarctica/Mawson
-LAST-MODIFIED:20221105T024527Z
+TZID:/tzurl.org/2024a/Antarctica/Mawson
+LAST-MODIFIED:20240422T053452Z
 TZURL:https://www.tzurl.org/zoneinfo-global/Antarctica/Mawson
 X-LIC-LOCATION:Antarctica/Mawson
 X-PROLEPTIC-TZNAME:-00

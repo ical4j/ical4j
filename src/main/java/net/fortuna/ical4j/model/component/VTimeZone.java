@@ -32,10 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.TzId;
-import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
@@ -46,9 +43,7 @@ import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-
-import static net.fortuna.ical4j.model.Property.*;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -123,7 +118,8 @@ import static net.fortuna.ical4j.model.Property.*;
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent implements ComponentContainer<Observance> {
+public class VTimeZone extends CalendarComponent implements ComponentContainer<Observance>,
+    TimeZonePropertyAccessor {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
@@ -166,7 +162,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = new VTimeZoneValidator().validate(this);
+        var result = new VTimeZoneValidator().validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -182,7 +178,8 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      * @return Returns the types.
      */
     public final List<Observance> getObservances() {
-        return getComponents();
+        //noinspection unchecked
+        return (List<Observance>) components.get(Observance.STANDARD, Observance.DAYLIGHT);
     }
 
     /**
@@ -191,6 +188,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
      */
     @Override
     public ComponentList<Observance> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Observance>) components;
     }
 
@@ -219,8 +217,8 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
     public static Observance getApplicableObservance(final Temporal date, List<Observance> observances) {
         Observance latestObservance = null;
         OffsetDateTime latestOnset = null;
-        for (final Observance observance : observances) {
-            final OffsetDateTime onset = observance.getLatestOnset(date);
+        for (final var observance : observances) {
+            final var onset = observance.getLatestOnset(date);
             if (latestOnset == null || (onset != null && onset.isAfter(latestOnset))) {
                 latestOnset = onset;
                 latestObservance = observance;
@@ -229,31 +227,12 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
         return latestObservance;
     }
 
-    /**
-     * @return the mandatory timezone identifier property
-     * @deprecated use {@link VTimeZone#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<TzId> getTimeZoneId() {
-        return getProperty(TZID);
-    }
-
-    /**
-     * @return the optional last-modified property
-     * @deprecated use {@link VTimeZone#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional timezone url property
-     * @deprecated use {@link VTimeZone#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<TzUrl> getTimeZoneUrl() {
-        return getProperty(TZURL);
+    @Override
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     /**

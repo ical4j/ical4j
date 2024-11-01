@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.model.property.Contact
 import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Ignore
@@ -53,5 +54,19 @@ class PropertyBuilderTest extends Specification {
 
         then: 'resulting property is initialised accordingly'
         p.value == '[{"DisplayName":"Microsoft Teams Meeting", "LocationCode":"013454"}]'
+    }
+
+    def 'test build property with a prefix'() {
+        given: 'a property builder instance'
+        PropertyBuilder builder = [Arrays.asList(new Contact.Factory())]
+
+        and: 'builder is initialised'
+        builder.name('work.contact').value('mailto:work@example.com')
+
+        when: 'build method called'
+        Property p = builder.build()
+
+        then: 'resulting property is initialised accordingly'
+        p.class == Contact && p.prefix == 'work' && p.value == 'mailto:work@example.com'
     }
 }

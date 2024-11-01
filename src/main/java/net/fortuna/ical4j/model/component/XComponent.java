@@ -37,7 +37,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id$
@@ -73,7 +72,7 @@ public class XComponent extends CalendarComponent {
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = new ValidationResult();
+        var result = new ValidationResult();
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                 && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
 

@@ -4,13 +4,15 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.model.property.Uid;
+
+import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
 public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
 
-    public VFreeBusyUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
+    public VFreeBusyUserAgent(ProdId prodId, Organizer organizer, Supplier<Uid> uidGenerator) {
         super(prodId, organizer, uidGenerator);
     }
 
@@ -40,9 +42,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar publish(VFreeBusy... component) {
-        Calendar published = wrap(PUBLISH, component);
-        published.validate();
-        return published;
+        return validate(wrap(PUBLISH, component));
     }
 
     /**
@@ -66,9 +66,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar request(VFreeBusy... component) {
-        Calendar request = wrap(REQUEST, component);
-        request.validate();
-        return request;
+        return validate(wrap(REQUEST, component));
     }
 
     /**
@@ -95,9 +93,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        Calendar reply = transform(REPLY, request);
-        reply.validate();
-        return reply;
+        return validate(transform(REPLY, request));
     }
 
     /**

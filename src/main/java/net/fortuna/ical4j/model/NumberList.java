@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Numbers;
+import net.fortuna.ical4j.util.RegEx;
 
 import java.io.Serializable;
 import java.time.temporal.ValueRange;
@@ -99,7 +100,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      */
     public NumberList(final String aString, ValueRange valueRange, boolean allowsNegativeValues) {
         this(valueRange, allowsNegativeValues);
-        addAll(Arrays.stream(aString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
+        addAll(Arrays.stream(aString.split(RegEx.COMMA_DELIMITED)).map(Numbers::parseInt).collect(Collectors.toList()));
     }
 
     public NumberList(Collection<Integer> values, ValueRange valueRange, boolean allowsNegativeValues) {
@@ -118,7 +119,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     @Deprecated
     public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
     	this(minValue, maxValue, allowsNegativeValues);
-        addAll(Arrays.stream(aString.split(",")).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
+        addAll(Arrays.stream(aString.split(RegEx.COMMA_DELIMITED)).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
     }
 
     /**
@@ -171,8 +172,8 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     }
 
     public static NumberList parse(String numberString) {
-        NumberList retVal = new NumberList();
-        retVal.addAll(Arrays.stream(numberString.split(",")).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
+        var retVal = new NumberList();
+        retVal.addAll(Arrays.stream(numberString.split(RegEx.COMMA_DELIMITED)).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
         return retVal;
     }
 }

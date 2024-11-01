@@ -4,10 +4,12 @@ import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.UtcProperty;
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.codec.DecoderException;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +22,8 @@ public class PropertyBuilder extends AbstractContentBuilder {
     private final List<PropertyFactory<?>> factories;
 
     private String name;
+
+    private String prefix;
 
     private String value;
 
@@ -51,9 +55,18 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public PropertyBuilder name(String name) {
-        // property names are case-insensitive, but convert to upper case to simplify further processing
-        this.name = name.toUpperCase();
+        var nameParts = name.split("\\.");
+        if (nameParts.length > 1) {
+            this.prefix = String.join(".", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
+            this.name = nameParts[nameParts.length-1];
+        } else {
+            this.name = name;
+        }
         return this;
+    }
+
+    public boolean hasName(String name) {
+        return name.equalsIgnoreCase(this.name);
     }
 
     public PropertyBuilder value(String value) {
@@ -78,6 +91,12 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public Property build() {
+
+        // remove TZID parameters for FORM #2 dates..
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            parameters.removeIf(p -> "UTC".equals(p.getValue()));
+        }
+
         Property property = null;
         String decodedValue;
         try {
@@ -103,6 +122,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
                     dateListProperty.setDefaultTimeZone(defaultTimeZone);
                     property.setValue(value);
                 }
+                break;
             }
         }
 
@@ -118,6 +138,10 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
         if (property instanceof Encodable) {
             property.setValue(decodedValue);
+        }
+
+        if (prefix != null) {
+            property.setPrefix(prefix);
         }
 
         return property;

@@ -45,7 +45,7 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSI
  * @author fortuna
  *
  */
-public class ContentBuilderTest extends GroovyTestCase {
+class ContentBuilderTest extends GroovyTestCase {
 
     void testBuildCalendar() {
         def builder = new ContentBuilder()
@@ -152,11 +152,8 @@ public class ContentBuilderTest extends GroovyTestCase {
     }
     
     void testBuildXProperty() {
-        def xproperty = new ContentBuilder().xproperty('test')
-        assert xproperty.name == 'test'
-        
-        xproperty = new ContentBuilder().xproperty(name: 'test')
-        assert xproperty.name == 'test'
+        def xproperty = new ContentBuilder().experimental('test')
+        assert xproperty.name == 'experimental' && xproperty.value == 'test'
     }
     
     void testBuildXParameter() {

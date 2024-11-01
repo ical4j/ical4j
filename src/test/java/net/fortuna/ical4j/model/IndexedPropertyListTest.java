@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IndexedPropertyListTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(IndexedPropertyListTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndexedPropertyListTest.class);
 
     private Calendar calendar;
 

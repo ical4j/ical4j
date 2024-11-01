@@ -40,6 +40,29 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
+/**
+ * <pre>
+ *     Purpose:
+ *     This property value acts as a key for associated iCalendar entities.
+ * Value type:
+ *     TEXT
+ * Property Parameters:
+ *     Non-standard parameters can be specified on this property.
+ * Conformance:
+ *     This property can be specified zero or more times in any iCalendar component.
+ * Description:
+ *     The value of this property is free-form text that creates an identifier for associated components. All components that use the same REFID value are associated through that value and can be located or retrieved as a group. For example, all of the events in a travel itinerary would have the same REFID value, so as to be grouped together.
+ * Format Definition:
+ *
+ *     This property is defined by the following notation:
+ *
+ *   refid      = "REFID" refidparam ":" text CRLF
+ *
+ *
+ *   refidparam      = *(";" other-param)
+ * </pre>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9253.html#name-refid">rfc9253</a>
+ */
 public class RefId extends Property {
 
     private static final String PROPERTY_NAME = "REFID";
@@ -48,6 +71,11 @@ public class RefId extends Property {
 
     public RefId() {
         super(PROPERTY_NAME);
+    }
+
+    public RefId(String value) {
+        super(PROPERTY_NAME);
+        this.value = value;
     }
 
     public RefId(ParameterList aList, String value) {
@@ -67,7 +95,7 @@ public class RefId extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return null;
+        return ValidationResult.EMPTY;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<RefId> {

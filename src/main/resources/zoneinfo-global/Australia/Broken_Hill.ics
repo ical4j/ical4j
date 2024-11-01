@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
+PRODID:-//tzurl.org//NONSGML Olson 2024a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022f/Australia/Broken_Hill
-LAST-MODIFIED:20221105T024527Z
+TZID:/tzurl.org/2024a/Australia/Broken_Hill
+LAST-MODIFIED:20240422T053452Z
 TZURL:https://www.tzurl.org/zoneinfo-global/Australia/Broken_Hill
 X-LIC-LOCATION:Australia/Broken_Hill
 X-PROLEPTIC-TZNAME:LMT

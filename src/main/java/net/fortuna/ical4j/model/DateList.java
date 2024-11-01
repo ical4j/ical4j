@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.util.RegEx;
 
 import java.io.Serializable;
 import java.time.ZoneId;
@@ -62,7 +63,7 @@ public class DateList<T extends Temporal> implements Serializable {
      * Default constructor.
      */
     public DateList() {
-        this(Collections.emptyList());
+        this.dates = Collections.emptyList();
     }
 
     /**
@@ -72,6 +73,10 @@ public class DateList<T extends Temporal> implements Serializable {
      */
     public DateList(final T...dates) {
         this.dates = Arrays.stream(dates).map(TemporalAdapter::new).collect(Collectors.toList());
+    }
+
+    public DateList(Collection<T> dates) {
+        this.dates = dates.stream().map(TemporalAdapter::new).collect(Collectors.toList());
     }
 
     public DateList(TimeZoneRegistry timeZoneRegistry, T...dates) {
@@ -95,7 +100,7 @@ public class DateList<T extends Temporal> implements Serializable {
             return emptyList();
         }
 
-        List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(","))
+        List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
                 .parallel().map(TemporalAdapter::parse)
                 .collect(Collectors.toList());
 
@@ -107,7 +112,7 @@ public class DateList<T extends Temporal> implements Serializable {
             return emptyList();
         }
 
-        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
                 .parallel().map(s -> TemporalAdapter.parse(s, zoneId))
                 .collect(Collectors.toList());
         return new DateList<>(dates);
@@ -118,7 +123,7 @@ public class DateList<T extends Temporal> implements Serializable {
             return emptyList();
         }
 
-        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(RegEx.COMMA_DELIMITED))
                 .parallel().map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
                 .collect(Collectors.toList());
         return new DateList<>(dates);

@@ -21,39 +21,55 @@ public class ContentHandlerContext {
 
     private List<String> ignoredPropertyNames = Collections.emptyList();
 
+    private boolean suppressInvalidProperties;
+
     public ContentHandlerContext withParameterFactorySupplier(Supplier<List<ParameterFactory<?>>> parameterFactorySupplier) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
         return context;
     }
 
     public ContentHandlerContext withPropertyFactorySupplier(Supplier<List<PropertyFactory<?>>> propertyFactorySupplier) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
         return context;
     }
 
     public ContentHandlerContext withComponentFactorySupplier(Supplier<List<ComponentFactory<?>>> componentFactorySupplier) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
         return context;
     }
 
     public ContentHandlerContext withIgnoredPropertyNames(List<String> ignoredPropertyNames) {
-        ContentHandlerContext context = new ContentHandlerContext();
+        var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = ignoredPropertyNames;
+        context.suppressInvalidProperties = this.suppressInvalidProperties;
+        return context;
+    }
+
+    public ContentHandlerContext withSupressInvalidProperties(boolean supressInvalidProperties) {
+        var context = new ContentHandlerContext();
+        context.parameterFactorySupplier = this.parameterFactorySupplier;
+        context.propertyFactorySupplier = this.propertyFactorySupplier;
+        context.componentFactorySupplier = this.componentFactorySupplier;
+        context.ignoredPropertyNames = this.ignoredPropertyNames;
+        context.suppressInvalidProperties = supressInvalidProperties;
         return context;
     }
 
@@ -71,5 +87,9 @@ public class ContentHandlerContext {
 
     public List<String> getIgnoredPropertyNames() {
         return ignoredPropertyNames;
+    }
+
+    public boolean isSuppressInvalidProperties() {
+        return suppressInvalidProperties;
     }
 }

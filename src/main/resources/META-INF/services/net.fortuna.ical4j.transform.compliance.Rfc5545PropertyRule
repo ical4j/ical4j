@@ -1,0 +1,4 @@
+net.fortuna.ical4j.transform.compliance.DatePropertyRule
+net.fortuna.ical4j.transform.compliance.DateListPropertyRule
+net.fortuna.ical4j.transform.compliance.TzIdRule
+net.fortuna.ical4j.transform.compliance.AttendeePropertyRule

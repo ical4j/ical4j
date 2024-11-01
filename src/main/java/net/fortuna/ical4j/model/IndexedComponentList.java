@@ -52,8 +52,8 @@ public class IndexedComponentList<T extends Component> {
      */
     public IndexedComponentList(final List<T> list, final String propertyName) {
         final Map<String, List<T>> indexedComponents = new HashMap<>();
-        for (final T component : list) {
-            for (final Property property : component.getProperties(propertyName)) {
+        for (final var component : list) {
+            for (final var property : component.getProperties(propertyName)) {
                 List<T> components = indexedComponents.computeIfAbsent(property.getValue(), k -> new ArrayList<>());
                 components.add(component);
             }

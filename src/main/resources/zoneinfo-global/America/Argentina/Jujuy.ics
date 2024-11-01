@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2022f//EN
+PRODID:-//tzurl.org//NONSGML Olson 2024a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2022f/America/Argentina/Jujuy
-LAST-MODIFIED:20221105T024528Z
+TZID:/tzurl.org/2024a/America/Argentina/Jujuy
+LAST-MODIFIED:20240422T053452Z
 TZURL:https://www.tzurl.org/zoneinfo-global/America/Argentina/Jujuy
 X-LIC-LOCATION:America/Argentina/Jujuy
 X-PROLEPTIC-TZNAME:LMT

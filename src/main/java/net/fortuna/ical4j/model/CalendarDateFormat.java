@@ -195,7 +195,20 @@ public class CalendarDateFormat implements Serializable {
         }
     }
 
-    public static class ZuluTemporalQuery implements TemporalQuery<ZonedDateTime>, Serializable {
+    public static class OffsetDateTimeTemporalQuery implements TemporalQuery<OffsetDateTime>, Serializable {
+        @Override
+        public OffsetDateTime queryFrom(TemporalAccessor temporal) {
+            return OffsetDateTime.from(temporal);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            return obj != null && getClass() == obj.getClass();
+        }
+    }
+
+    public static class InstantTemporalQuery implements TemporalQuery<Instant>, Serializable {
         @Override
         public ZonedDateTime queryFrom(TemporalAccessor temporal) {
             return ZonedDateTime.from(temporal);
@@ -218,13 +231,13 @@ public class CalendarDateFormat implements Serializable {
             "yyyyMMdd'T'HHmmss'Z'", new ZuluTemporalQuery());
 
     public static final CalendarDateFormat RELAXED_DATE_TIME_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd'T'HHmmss[X]", new ZuluTemporalQuery(), new LocalDateTimeTemporalQuery());
+            "yyyyMMdd'T'HHmmss[X]", new OffsetDateTimeTemporalQuery(), new LocalDateTimeTemporalQuery());
 
     /**
      * A formatter capable of parsing to multiple temporal types based on the input string.
      */
     public static final CalendarDateFormat DEFAULT_PARSE_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd['T'HHmmss[X]]", new ZuluTemporalQuery(), new LocalDateTimeTemporalQuery(),
+            "yyyyMMdd['T'HHmmss[X]]", new OffsetDateTimeTemporalQuery(), new LocalDateTimeTemporalQuery(),
             new LocalDateTemporalQuery());
 
     private final String pattern;
@@ -284,7 +297,7 @@ public class CalendarDateFormat implements Serializable {
     }
 
     public ZonedDateTime parse(String dateString, ZoneId zoneId) {
-        return getFormatter().withZone(zoneId).parse(dateString, ZonedDateTime::from);
+        return ZonedDateTime.parse(dateString, getFormatter().withZone(zoneId));
     }
 
     public String format(TemporalAccessor date) {
@@ -313,9 +326,9 @@ public class CalendarDateFormat implements Serializable {
      * @return a date format instance applicable to the given temporal value
      */
     public static CalendarDateFormat from(Temporal temporal) {
-        if (temporal instanceof Instant) {
+        if (TemporalAdapter.isUtc(temporal)) {
             return UTC_DATE_TIME_FORMAT;
-        } else if (temporal instanceof LocalDate) {
+        } else if (!TemporalAdapter.isDateTimePrecision(temporal)) {
             return DATE_FORMAT;
         } else {
             return FLOATING_DATE_TIME_FORMAT;

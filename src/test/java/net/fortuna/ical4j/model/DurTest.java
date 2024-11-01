@@ -54,7 +54,7 @@ import java.util.TimeZone;
  */
 public class DurTest extends TestCase {
 
-    private Dur duration;
+    private final Dur duration;
     
     private Dur duration2;
     

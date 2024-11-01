@@ -57,13 +57,13 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         if (dayList.isEmpty()) {
             return dates;
         }
         final List<T> weekDayDates = new ArrayList<>();
 
-        Function<T, List<T>> transformer = null;
+        Function<T, List<T>> transformer;
         switch (getFrequency()) {
             case WEEKLY: transformer = new WeeklyExpansionFilter(); break;
             case MONTHLY: transformer = new MonthlyExpansionFilter(); break;
@@ -113,7 +113,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
-            Month month = Month.of(getMonth(date).getMonthOfYear());
+            var month = Month.of(getMonth(date).getMonthOfYear());
             boolean leapYear = Year.isLeap(getYear(date));
             // construct a list of possible month days..
             for (int i = 1; i <= month.length(leapYear); i++) {

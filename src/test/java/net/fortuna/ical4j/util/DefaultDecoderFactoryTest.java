@@ -52,9 +52,9 @@ import java.io.UnsupportedEncodingException;
  */
 public class DefaultDecoderFactoryTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(DefaultDecoderFactoryTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultDecoderFactoryTest.class);
 
-    private DefaultDecoderFactory factory = new DefaultDecoderFactory();
+    private final DefaultDecoderFactory factory = new DefaultDecoderFactory();
 
     /**
      * Test creation of binary decoder.
@@ -102,7 +102,7 @@ public class DefaultDecoderFactoryTest extends TestCase {
 
         String encoded = "=C3=A0 la maison";
 
-        String decoded = (String) decoder.decode(encoded);
+        String decoded = decoder.decode(encoded);
 
         assertNotNull(decoded);
 

@@ -23,7 +23,7 @@ class ByMonthRuleTest extends Specification {
         ByMonthRule rule = [new MonthList(byMonthPart), frequency]
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expectedResult
+        rule.apply(dates) == expectedResult
 
         where:
         byMonthPart | frequency | dates                                                         | expectedResult
@@ -39,7 +39,7 @@ class ByMonthRuleTest extends Specification {
         ByMonthRule rule = [new MonthList(byMonthPart), frequency]
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expectedResult
+        rule.apply(dates) == expectedResult
 
         where:
         byMonthPart | frequency | dates                             | expectedResult
@@ -61,7 +61,7 @@ class ByMonthRuleTest extends Specification {
         def dateList = dates.collect {TemporalAdapter.parse(it).temporal}
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dateList).collect { d -> new TemporalAdapter<>(d) as String} == expectedResult
+        rule.apply(dateList).collect { d -> new TemporalAdapter<>(d) as String} == expectedResult
 
         where:
         byMonthPart | frequency | dates         | expectedResult
@@ -76,7 +76,7 @@ class ByMonthRuleTest extends Specification {
         def dateList = dates.collect {TemporalAdapter.parse(it).temporal}
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dateList).collect { d -> new TemporalAdapter<>(d) as String} == expectedResult
+        rule.apply(dateList).collect { d -> new TemporalAdapter<>(d) as String} == expectedResult
 
         where:
         byMonthPart | frequency | dates         | expectedResult

@@ -35,8 +35,8 @@ import net.fortuna.ical4j.util.Strings;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
-import java.net.URISyntaxException;
 import java.util.Comparator;
 
 /**
@@ -225,25 +225,31 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
         this.name = aName;
     }
 
+    public Parameter(@NotNull Enum<?> name) {
+        this(name.toString());
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         b.append(getName());
-        b.append('=');
-        String value;
-        if (this instanceof Encodable) {
-            try {
-                value = ParameterCodec.INSTANCE.encode(getValue());
-            } catch (EncoderException e) {
+        if (getValue() != null) {
+            b.append('=');
+            String value;
+            if (this instanceof Encodable) {
+                try {
+                    value = ParameterCodec.INSTANCE.encode(getValue());
+                } catch (EncoderException e) {
+                    value = getValue();
+                }
+            } else {
                 value = getValue();
             }
-        } else {
-            value = getValue();
+            b.append(Strings.valueOf(value));
         }
-        b.append(Strings.valueOf(value));
         return b.toString();
     }
 
@@ -261,7 +267,7 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
     @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
-            final Parameter p = (Parameter) arg0;
+            final var p = (Parameter) arg0;
             return new EqualsBuilder().append(getName(), p.getName())
                     .append(getValue(), p.getValue()).isEquals();
         }

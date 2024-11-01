@@ -32,24 +32,17 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.ResourceLoader;
 import org.apache.commons.lang3.Validate;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -73,21 +66,28 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final Properties ALIASES = new Properties();
 
     static {
-        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias")) {
-            ALIASES.load(aliasInputStream);
-        } catch (IOException ioe) {
-            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
-                    "Error loading timezone aliases: " + ioe.getMessage());
+        // load default tz aliases..
+        for (var aliasResource : Arrays.asList("net/fortuna/ical4j/model/tz.alias",
+                "net/fortuna/ical4j/transform/compliance/msTimezoneNames",
+                "net/fortuna/ical4j/transform/compliance/msTimezoneIds")) {
+
+            try (var aliasInputStream = ResourceLoader.getResourceAsStream(aliasResource)) {
+                ALIASES.load(aliasInputStream);
+            } catch (IOException | NullPointerException e) {
+                LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                        "Error loading timezone aliases: {}", e.getMessage());
+            }
         }
 
-        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias")) {
-        	ALIASES.load(aliasInputStream);
+        // load custom tz aliases..
+        try (var aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias")) {
+            ALIASES.load(aliasInputStream);
         } catch (IOException | NullPointerException e) {
             LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
-        			"Error loading custom timezone aliases: " + e.getMessage());
+                    "No custom timezone aliases: {}", e.getMessage());
         }
 
-        for (String alias : ALIASES.stringPropertyNames()) {
+        for (var alias : ALIASES.stringPropertyNames()) {
             TimeZoneRegistry.ZONE_ALIASES.put(alias, ALIASES.getProperty(alias));
         }
 
@@ -146,7 +146,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 // load any available updates for the timezone..
                 timezones.put(timezone.getID(), new TimeZone(timeZoneLoader.loadVTimeZone(timezone.getID())));
             } catch (IOException | ParserException e) {
-                Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
+                var log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                 log.warn("Error occurred loading VTimeZone", e);
             }
         } else {
@@ -154,9 +154,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         }
 
         // use latest timezone definition to build zone rules..
-        ZoneRules newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
+        var newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
                 .build();
-        String globalId = "ical4j~" + UUID.randomUUID();
+        var globalId = "ical4j~" + UUID.randomUUID();
         zoneIds.put(globalId, timezone.getID());
         zoneRules.put(globalId, newZoneRules);
     }
@@ -174,7 +174,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      */
     @Override
     public final TimeZone getTimeZone(final String id) {
-        TimeZone timezone = timezones.get(id);
+        var timezone = timezones.get(id);
         if (timezone == null) {
             /* A blank TZID is only invalid if it is not declared under the
              * TZID property in the BEGIN:TIMEZONE section. */
@@ -182,7 +182,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             timezone = DEFAULT_TIMEZONES.get(id);
             if (timezone == null) {
                 // if timezone not found with identifier, try loading an alias..
-                final String alias = ALIASES.getProperty(id);
+                final var alias = ALIASES.getProperty(id);
                 if (alias != null) {
                     return getTimeZone(alias);
                 } else {
@@ -191,7 +191,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                         timezone = DEFAULT_TIMEZONES.get(id);
                         if (timezone == null) {
                             try {
-                                final VTimeZone vTimeZone = timeZoneLoader.loadVTimeZone(id);
+                                final var vTimeZone = timeZoneLoader.loadVTimeZone(id);
                                 if (vTimeZone != null) {
                                     timezone = new TimeZone(vTimeZone);
                                     DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
@@ -200,13 +200,13 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                                     }
                                 } else if (lenientTzResolution) {
                                     // strip global part of id and match on default tz..
-                                    Matcher matcher = TZ_ID_SUFFIX.matcher(id);
+                                    var matcher = TZ_ID_SUFFIX.matcher(id);
                                     if (matcher.find()) {
                                         return getTimeZone(matcher.group());
                                     }
                                 }
                             } catch (IOException | ParserException e) {
-                                Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
+                                var log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                                 log.warn("Error occurred loading VTimeZone", e);
                             }
                         }

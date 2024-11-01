@@ -106,18 +106,18 @@ public class TimeZoneUpdater {
      */
     public VTimeZone updateDefinition(VTimeZone vTimeZone) {
         if (isEnabled() && vTimeZone != null) {
-            final Optional<TzUrl> tzUrl = vTimeZone.getProperty(Property.TZURL);
+            final Optional<TzUrl> tzUrl = vTimeZone.getTimeZoneUrl();
             if (tzUrl.isPresent()) {
                 try {
                     boolean secureScheme = "true".equals(Configurator.getProperty(SECURE_CONNECTION_ENABLED).orElse("false"));
-                    URL updateUrl = new UrlBuilder(tzUrl.get().getUri())
+                    var updateUrl = new UrlBuilder(tzUrl.get().getUri())
                             .withScheme(Configurator.getProperty(UPDATE_SCHEME_OVERRIDE).orElse(secureScheme ? "https" : null))
                             .withHost(Configurator.getProperty(UPDATE_HOST_OVERRIDE).orElse(null))
                             .withPort(Configurator.getIntProperty(UPDATE_PORT_OVERRIDE).orElse(-1)).toUrl();
-                    URLConnection connection = openConnection(updateUrl);
+                    var connection = openConnection(updateUrl);
 
-                    final CalendarBuilder builder = new CalendarBuilder();
-                    final Calendar calendar = builder.build(connection.getInputStream());
+                    final var builder = new CalendarBuilder();
+                    final var calendar = builder.build(connection.getInputStream());
                     final Optional<VTimeZone> updatedVTimeZone = calendar.getComponent(Component.VTIMEZONE);
                     if (updatedVTimeZone.isPresent()) {
                         return updatedVTimeZone.get();
@@ -160,7 +160,7 @@ public class TimeZoneUpdater {
         }
 
         URL toUrl() throws MalformedURLException, URISyntaxException {
-            URI uri = base;
+            var uri = base;
             if (scheme != null) {
                 uri = new URI(scheme, uri.getUserInfo(), uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(),
                         uri.getFragment());

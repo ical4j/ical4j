@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
 
     public DefaultZoneRulesProvider(TimeZoneLoader timeZoneLoader, Map<String, String> zoneIdMap) {
         this.zoneLoader = timeZoneLoader;
-        for (String id : zoneLoader.getAvailableIDs()) {
+        for (var id : zoneLoader.getAvailableIDs()) {
             zoneIdMap.put("ical4j~" + UUID.randomUUID(), id);
         }
         this.zoneRulesMap = new ConcurrentHashMap<>();
@@ -52,8 +51,8 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
             retVal = zoneRulesMap.get(zoneId);
         } else {
             try {
-                String localZoneId = TimeZoneRegistry.ZONE_IDS.get(zoneId);
-                VTimeZone vTimeZone = zoneLoader.loadVTimeZone(localZoneId);
+                var localZoneId = TimeZoneRegistry.ZONE_IDS.get(zoneId);
+                var vTimeZone = zoneLoader.loadVTimeZone(localZoneId);
                 retVal = new ZoneRulesBuilder().vTimeZone(vTimeZone).build();
                 zoneRulesMap.put(zoneId, retVal);
             } catch (IOException | ParserException e) {

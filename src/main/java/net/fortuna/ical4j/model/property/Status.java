@@ -35,9 +35,9 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 
@@ -180,7 +180,7 @@ public class Status extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.STATUS.validate(this);
+        return DescriptivePropertyValidators.STATUS.validate(this);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class Status extends Property {
         public Status createProperty(final ParameterList parameters, final String value) {
 
             if (parameters.getAll().isEmpty()) {
-                switch (value) {
+                switch (value.toUpperCase()) {
                     case VALUE_TENTATIVE: return VEVENT_TENTATIVE;
                     case VALUE_CONFIRMED: return VEVENT_CONFIRMED;
                     case VALUE_CANCELLED: return VEVENT_CANCELLED;

@@ -108,7 +108,7 @@ import java.util.*;
  */
 public class Period<T extends Temporal> implements Comparable<Period<T>>, Serializable {
 
-    private static final TemporalComparator DATE_RANGE_COMPARATOR = new TemporalComparator();
+    private static final TemporalComparator DATE_RANGE_COMPARATOR = TemporalComparator.INSTANCE;
 
     private final T start;
 
@@ -195,6 +195,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         Objects.requireNonNull(dateFormat, "dateFormat");
         this.start = start;
         this.duration = duration;
+        //noinspection unchecked
         this.end = (T) start.plus(duration.getDuration());
         this.dateFormat = dateFormat;
     }
@@ -234,17 +235,18 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
             end = TemporalAdapter.parse(value.substring(value.indexOf('/') + 1)).getTemporal();
         } catch (DateTimeParseException e) {
             if (resolve) {
-                final TemporalAmount duration = parseDuration(value).getDuration();
+                final var duration = parseDuration(value).getDuration();
                 end = parseStartDate(value).plus(duration);
             } else {
                 throw e;
             }
         }
+        //noinspection unchecked
         return (T) end;
     }
     
     private static TemporalAmountAdapter parseDuration(String value) {
-        String durationString = value.substring(value.indexOf('/') + 1);
+        var durationString = value.substring(value.indexOf('/') + 1);
         return TemporalAmountAdapter.parse(durationString);
     }
 
@@ -255,10 +257,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return the duration of this period in milliseconds.
      */
     public final TemporalAmount getDuration() {
-        if (duration == null) {
-            return TemporalAmountAdapter.from(start, end).getDuration();
-        }
-        return duration.getDuration();
+        return Objects.requireNonNullElseGet(duration, () -> TemporalAmountAdapter.from(start, end)).getDuration();
     }
 
     /**
@@ -298,7 +297,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public final boolean includes(final Temporal date) {
         Objects.requireNonNull(date, "date");
-        Instant dateInstant = (date instanceof LocalDateTime) ? ((LocalDateTime) date)
+        var dateInstant = (date instanceof LocalDateTime) ? ((LocalDateTime) date)
                 .toInstant(ZoneOffset.from(ZonedDateTime.now())) : Instant.from(date);
         return start.equals(date) || end.equals(date)
                 || toInterval().encloses(Interval.of(dateInstant, Duration.ZERO));
@@ -322,8 +321,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
             newPeriodStart = getStart();
             newPeriodEnd = getEnd();
         } else {
-            Interval thisInterval = TemporalAdapter.isFloating(getStart()) ? toInterval(TimeZones.getDefault().toZoneId()) : toInterval();
-            Interval thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(TimeZones.getDefault().toZoneId()) : period.toInterval();
+            var thisInterval = TemporalAdapter.isFloating(getStart()) ? toInterval(TimeZones.getDefault().toZoneId()) : toInterval();
+            var thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(TimeZones.getDefault().toZoneId()) : period.toInterval();
 
             if (thisInterval.getStart().isBefore(thatInterval.getStart())) {
                 newPeriodStart = getStart();
@@ -358,16 +357,16 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     public final PeriodList<T> subtract(final Period<T> period) {
         if (period.equals(this)) {
             return new PeriodList<>(dateFormat);
-        } else if (!period.intersects(this) || start instanceof LocalDate) {
+        } else if (!period.intersects(this) || !TemporalAdapter.isDateTimePrecision(start)) {
             return new PeriodList<>(Collections.singletonList(this), dateFormat);
         }
         return subtractInterval(period);
     }
 
     private PeriodList<T> subtractInterval(Period<T> period) {
-        Interval thisInterval = TemporalAdapter.isFloating(getStart())
+        var thisInterval = TemporalAdapter.isFloating(getStart())
                 ? toInterval(TimeZones.getDefault().toZoneId()) : toInterval();
-        Interval thatInterval = TemporalAdapter.isFloating(getStart())
+        var thatInterval = TemporalAdapter.isFloating(getStart())
                 ? period.toInterval(TimeZones.getDefault().toZoneId()) : period.toInterval();
         
         if (thatInterval.encloses(thisInterval)) {
@@ -405,7 +404,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return true if this period consumes no time, otherwise false
      */
     public final boolean isEmpty() {
-        if (start instanceof LocalDate) {
+        if (!TemporalAdapter.isDateTimePrecision(start)) {
             return start.equals(end);
         }
         return toInterval().isEmpty();
@@ -424,7 +423,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     }
 
     String toString(CalendarDateFormat dateFormat) {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         b.append(dateFormat.format(getStart()));
         b.append('/');
         if (duration == null) {
@@ -445,7 +444,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     }
 
     String toString(CalendarDateFormat dateFormat, ZoneId zoneId) {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         b.append(dateFormat.format(getStart(), zoneId));
         b.append('/');
         if (duration == null) {
@@ -464,8 +463,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public boolean intersects(Period<?> other) {
         Objects.requireNonNull(other, "other");
-        Interval thisInterval = toInterval();
-        Interval thatInterval = other.toInterval();
+        var thisInterval = toInterval();
+        var thatInterval = other.toInterval();
         return thisInterval.overlaps(thatInterval);
     }
 
@@ -482,7 +481,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
             return Interval.of((Instant) start, (Instant) end);
         } else {
             // calculate zone offset based on current applicable rules
-            ZoneOffset zoneOffset = zoneId.getRules().getOffset(Instant.now());
+            var zoneOffset = zoneId.getRules().getOffset(Instant.now());
             if (duration != null) {
                 return Interval.of(LocalDateTime.from(start).toInstant(zoneOffset), duration.toDuration());
             } else {

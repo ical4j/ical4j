@@ -76,11 +76,11 @@ public class AvailableTest extends ComponentTest {
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
         UidGenerator g = new RandomUidGenerator();
 
-        available = new Available().withProperty(g.generateUid())
-                .withProperty(new DtStart<>(tzParams, ZonedDateTime.now()))
-                .withProperty(new DtStamp()).withProperty(new Duration(java.time.Period.ofWeeks(1))).getFluentTarget();
+        var available2 = (Available) new Available().add(g.generateUid())
+                .add(new DtStart<>(tzParams, ZonedDateTime.now()))
+                .add(new DtStamp()).add(new Duration(java.time.Period.ofWeeks(1)));
 
-        suite.addTest(new AvailableTest("testValidation", available));
+        suite.addTest(new AvailableTest("testValidation", available2));
         return suite;
     }
 }

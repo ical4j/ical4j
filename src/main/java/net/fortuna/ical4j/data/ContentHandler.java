@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.data;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 /**
  * <pre>
@@ -77,8 +76,6 @@ public interface ContentHandler {
     /**
      * Triggers the handling of a property value.
      * @param value a property value
-     * @throws URISyntaxException where the property value is not a valid URI for applicable properties
-     * @throws IOException where data cannot be read for applicable properties
      */
     void propertyValue(String value);
 

@@ -48,14 +48,30 @@ public class FmtType extends Parameter implements Encodable {
 
     private static final long serialVersionUID = -8764966004966855480L;
 
-    private final String value;
+    private final String type;
+
+    private final String subtype;
 
     /**
      * @param aValue a string representation of a format type
      */
     public FmtType(final String aValue) {
         super(FMTTYPE);
-        this.value = Strings.unquote(aValue);
+        try {
+            var components = Strings.unquote(aValue).split("/");
+            this.type = components[0];
+            this.subtype = components[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getSubtype() {
+        return subtype;
     }
 
     /**
@@ -63,7 +79,7 @@ public class FmtType extends Parameter implements Encodable {
      */
     @Override
     public final String getValue() {
-        return value;
+        return type + '/' + subtype;
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<FmtType> {

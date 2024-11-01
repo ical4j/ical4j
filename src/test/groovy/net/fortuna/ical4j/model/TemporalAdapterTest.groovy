@@ -12,15 +12,16 @@ class TemporalAdapterTest extends Specification {
         new TemporalAdapter(temporal) as String == expectedValue
 
         where:
-        temporal                       | expectedValue
+        temporal                                                        | expectedValue
 
-        LocalDate.of(2001, 04, 03)     | '20010403'
-
-        LocalDateTime.of(2001, 04, 03, 11, 00) | '20010403T110000'
-
-        LocalDateTime.of(2001, 04, 03, 11, 00).toInstant(ZoneOffset.UTC) | '20010403T110000Z'
-
-        LocalDateTime.of(2001, 04, 03, 11, 00) | '20010403T110000'
+        LocalDate.of(2001, 04, 03)                                      | '20010403'
+        LocalDateTime.of(2001, 04, 03, 11, 00)                          | '20010403T110000'
+        LocalDateTime.of(2001, 04, 03, 11, 00).toInstant(ZoneOffset.UTC)| '20010403T110000Z'
+        LocalDateTime.of(2001, 04, 03, 11, 00)                          | '20010403T110000'
+        ZonedDateTime.of(LocalDateTime.of(2022, 12, 16, 18, 0, 0),
+                ZoneId.of("Europe/Warsaw"))                             | '20221216T180000'
+        ZonedDateTime.of(2023, 11, 15, 8, 30, 0, 0,
+                ZoneId.of("America/Sao_Paulo"))                         | '20231115T083000'
     }
 
     def 'verify date string parsing'() {
@@ -32,7 +33,7 @@ class TemporalAdapterTest extends Specification {
         dateString              | expectedType
         '20150504'              | LocalDate
         '20150504T120000'       | LocalDateTime
-        '20150504T120000Z'      | ZonedDateTime
+        '20150504T120000Z'      | OffsetDateTime
     }
 
     def 'verify zoned date string parsing'() {
@@ -41,12 +42,16 @@ class TemporalAdapterTest extends Specification {
         parsed.temporal.zone == expectedZone
 
         and:
+        parsed.temporal.class.isAssignableFrom(expectedType)
+
+        and:
         parsed.toString(expectedZone) == dateString
 
         where:
         dateString              | expectedType      | expectedZone
         '20150504T120000'       | ZonedDateTime     | ZoneId.systemDefault()
         '20150504T120000'       | ZonedDateTime     | ZoneId.of("Australia/Melbourne")
+        '20150504T120000'       | ZonedDateTime     | ZoneId.of('UTC')
     }
 
     def 'verify invalid date string parsing'() {

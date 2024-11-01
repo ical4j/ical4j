@@ -101,7 +101,7 @@ public class Range extends Parameter implements Encodable {
 
         @Override
         public Range createParameter(final String value) {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_THISANDFUTURE: return THISANDFUTURE;
                 case VALUE_THISANDPRIOR: return THISANDPRIOR;
             }

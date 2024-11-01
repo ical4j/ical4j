@@ -200,7 +200,7 @@ public class HCalendarParser implements CalendarParser {
 
     private void parse(InputSource in, ContentHandler handler) throws IOException, ParserException {
         try {
-            Document d = BUILDER_FACTORY.newDocumentBuilder().parse(in);
+            var d = BUILDER_FACTORY.newDocumentBuilder().parse(in);
             buildCalendar(d, handler);
         } catch (ParserConfigurationException e) {
             throw new CalendarException(e);
@@ -230,10 +230,10 @@ public class HCalendarParser implements CalendarParser {
     }
 
     private static List<Element> findElements(XPathExpression expr, Object context) throws ParserException {
-        NodeList nodes = findNodes(expr, context);
+        var nodes = findNodes(expr, context);
         List<Element> elements = new ArrayList<Element>();
         for (int i = 0; i < nodes.getLength(); i++) {
-            Node n = nodes.item(i);
+            var n = nodes.item(i);
             if (n instanceof Element)
                 elements.add((Element) n);
         }
@@ -241,7 +241,7 @@ public class HCalendarParser implements CalendarParser {
     }
 
     private static Element findElement(XPathExpression expr, Object context) throws ParserException {
-        Node n = findNode(expr, context);
+        var n = findNode(expr, context);
         if ((!(n instanceof Element)))
             return null;
         return (Element) n;
@@ -287,13 +287,13 @@ public class HCalendarParser implements CalendarParser {
         handler.propertyValue(VERSION_2_0.getValue());
         handler.endProperty(Property.VERSION);
 
-        Element method = findElement(XPATH_METHOD, d);
+        var method = findElement(XPATH_METHOD, d);
         if (method != null) {
             buildProperty(method, Property.METHOD, handler);
         }
 
         List<Element> vevents = findElements(XPATH_VEVENTS, d);
-        for (Element vevent : vevents) {
+        for (var vevent : vevents) {
             buildEvent(vevent, handler);
         }
 
@@ -316,7 +316,7 @@ public class HCalendarParser implements CalendarParser {
         buildProperty(findElement(XPATH_UID, element), Property.UID, handler);
         buildProperty(findElement(XPATH_DTSTAMP, element), Property.DTSTAMP, handler);
         List<Element> categories = findElements(XPATH_CATEGORY, element);
-        for (Element category : categories) {
+        for (var category : categories) {
             buildProperty(category, Property.CATEGORIES, handler);
         }
         buildProperty(findElement(XPATH_LOCATION, element), Property.LOCATION, handler);
@@ -326,7 +326,7 @@ public class HCalendarParser implements CalendarParser {
         buildProperty(findElement(XPATH_STATUS, element), Property.STATUS, handler);
         buildProperty(findElement(XPATH_CLASS, element), Property.CLASS, handler);
         List<Element> attendees = findElements(XPATH_ATTENDEE, element);
-        for (Element attendee : attendees) {
+        for (var attendee : attendees) {
             buildProperty(attendee, Property.ATTENDEE, handler);
         }
         buildProperty(findElement(XPATH_CONTACT, element), Property.CONTACT, handler);
@@ -344,8 +344,8 @@ public class HCalendarParser implements CalendarParser {
         if (LOG.isDebugEnabled())
             LOG.debug("Building property " + propName);
 
-        String className = className(propName);
-        String elementName = element.getLocalName().toLowerCase();
+        var className = className(propName);
+        var elementName = element.getLocalName().toLowerCase();
 
         String value;
         if (elementName.equals("abbr")) {
@@ -409,7 +409,7 @@ public class HCalendarParser implements CalendarParser {
         // hCalendar-formatted date (RFC 3339) to an iCalendar-formatted date
         if (isDateProperty(propName)) {
             try {
-                Date date = icalDate(value);
+                var date = icalDate(value);
                 value = date.toString();
 
                 if (!(date instanceof DateTime))
@@ -420,7 +420,7 @@ public class HCalendarParser implements CalendarParser {
         }
 
         if (isTextProperty(propName)) {
-            String lang = element.getAttributeNS(XMLConstants.XML_NS_URI, "lang");
+            var lang = element.getAttributeNS(XMLConstants.XML_NS_URI, "lang");
             if (!StringUtils.isBlank(lang))
                 handler.parameter(Parameter.LANGUAGE, lang);
         }
@@ -509,7 +509,7 @@ public class HCalendarParser implements CalendarParser {
             normalized = original;
         }
 
-        DateTime dt = new DateTime(HCAL_DATE_TIME_FORMAT.parse(normalized));
+        var dt = new DateTime(HCAL_DATE_TIME_FORMAT.parse(normalized));
 
         // hCalendar does not specify a representation for timezone ids
         // or any other sort of timezone information. the best it does is

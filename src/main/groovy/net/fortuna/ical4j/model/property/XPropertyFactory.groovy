@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
+
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -42,37 +42,32 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-class XPropertyFactory extends AbstractFactory{
+class XPropertyFactory extends AbstractPropertyFactory {
 
-    @Override
-    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        def instance
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XProperty.class)) {
-            instance = (XProperty) value
-        }
-        else {
-            String propertyName = attributes.remove('name')
-            if (propertyName == null) {
-                propertyName = value
-            }
-            String propertyValue = attributes.remove('value')
-            def parameters = attributes.remove('parameters')
-            if (parameters == null) {
-                parameters = []
-            }
-            instance = newInstance(propertyName, parameters, propertyValue)
-        }
-        return instance
-    }
-    
-    static Object newInstance(def name, def parameters, String value) {
-        return new XProperty(name, new ParameterList((List) parameters), value)
+    final def propertyName
+
+    XPropertyFactory(propertyName) {
+        this.propertyName = propertyName
     }
 
     @Override
-    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof Parameter) {
-            parent.add(child)
+    Object newInstance(FactoryBuilderSupport builder, name, value, Map attributes) throws InstantiationException,
+            IllegalAccessException {
+        def property
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XProperty)) {
+            property = value.copy()
+        } else if (attributes['value']) {
+            property = super.newInstance(builder, name, attributes.remove('value'), attributes)
+        } else {
+            property = super.newInstance(builder, name, value, attributes)
         }
+        return property
+    }
+
+    @Override
+    protected Object newInstance(parameters, value) {
+        def property = new XProperty(propertyName, new ParameterList((List) parameters), value)
+        property.prefix = propertyPrefix
+        return property
     }
 }

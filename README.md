@@ -58,7 +58,6 @@
 4. [References][References]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
-6. [Limitations - CUA compatibility, etc.][Limitations]
 7. [Development - Guide for contributing to the iCalj project][Development]
     - [Building with Gradle]
     - [Redistribution]
@@ -74,7 +73,7 @@ standard.
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
 
- - You will find examples of how to use iCal4j in [the official website](https://www.ical4j.org/examples/overview/)
+ - You will find examples of how to use iCal4j in [the official website](https://www.ical4j.org/examples/)
  and throughout the [API documentation](https://ical4j.github.io/docs/ical4j/api).
 
  - Detailed descriptions of changes included in each release may be found
@@ -87,7 +86,7 @@ standard.
 
 ### System requirements
 
- - Version 4.x - Java 8 or later
+ - Version 4.x - Java 11 or later
  - Version 3.x - Java 8 or later
  - Version 2.x - Java 7 or later
 
@@ -304,12 +303,7 @@ Microsoft Outlook also appears to provide quoted TZID parameter values, as follo
 #### Lotus Notes compatibility
 
     ical4j.compatibility.notes={true|false}
- 
 
-## Limitations
-
-
- 
 ## Development
 
 ### Building with Gradle

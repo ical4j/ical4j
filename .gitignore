@@ -11,4 +11,4 @@ zones.tab
 .settings/
 out/
 **/zoneinfo/**/index.html
-**/zoneinfo/**/tz.availableIds
+**/zoneinfo-global/**/index.html

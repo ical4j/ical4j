@@ -119,6 +119,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     public final List<T> getDates() {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
+            //xxx: type T should always be ZonedDateTime where TZID parameter is specified..
             return dates.getDates().stream().map(date -> (T) TemporalAdapter.toLocalTime(
                     date, tzId.get().toZoneId(timeZoneRegistry))).collect(Collectors.toList());
         } else {

@@ -2,8 +2,11 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Constants;
+import org.slf4j.LoggerFactory;
 
 import java.time.zone.ZoneRulesProvider;
 import java.util.ArrayList;
@@ -25,7 +28,7 @@ public class DefaultContentHandler implements ContentHandler {
     /**
      * The current component builders.
      */
-    protected final LinkedList<ComponentBuilder<CalendarComponent>> components = new LinkedList<>();
+    protected final LinkedList<ComponentBuilder<Component>> components = new LinkedList<>();
 
     protected List<Property> calendarProperties;
 
@@ -62,8 +65,8 @@ public class DefaultContentHandler implements ContentHandler {
         this.context = context;
     }
 
-    public ComponentBuilder<CalendarComponent> getComponentBuilder() {
-        if (components.size() == 0) {
+    public ComponentBuilder<Component> getComponentBuilder() {
+        if (components.isEmpty()) {
             return null;
         }
         return components.peek();
@@ -93,7 +96,7 @@ public class DefaultContentHandler implements ContentHandler {
             throw new RuntimeException("Components nested too deep");
         }
 
-        ComponentBuilder<CalendarComponent> componentBuilder = new ComponentBuilder<>(
+        ComponentBuilder<Component> componentBuilder = new ComponentBuilder<>(
                 context.getComponentFactorySupplier().get());
         componentBuilder.name(name);
         components.push(componentBuilder);
@@ -103,19 +106,19 @@ public class DefaultContentHandler implements ContentHandler {
     public void endComponent(String name) {
         assertComponent(getComponentBuilder());
 
-        final ComponentBuilder<CalendarComponent> componentBuilder =
+        final ComponentBuilder<Component> componentBuilder =
                 getComponentBuilder();
 
         DefaultContentHandler.this.endComponent();
 
-        final ComponentBuilder<CalendarComponent> parent =
+        final ComponentBuilder<Component> parent =
                 getComponentBuilder();
 
         if (parent != null) {
-            Component subComponent = componentBuilder.build();
+            var subComponent = componentBuilder.build();
             parent.subComponent(subComponent);
         } else {
-            CalendarComponent component = componentBuilder.build();
+            CalendarComponent component = (CalendarComponent) componentBuilder.build();
             calendarComponents.add(component);
             if (component instanceof VTimeZone && tzRegistry != null) {
                 // register the timezone for use with iCalendar objects..
@@ -145,7 +148,17 @@ public class DefaultContentHandler implements ContentHandler {
     public void endProperty(String name) {
         if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
             assertProperty(propertyBuilder);
-            Property property = propertyBuilder.build();
+            Property property;
+            try {
+                property = propertyBuilder.build();
+            } catch (RuntimeException e) {
+                if (context.isSuppressInvalidProperties()) {
+                    LoggerFactory.getLogger(DefaultContentHandler.class).warn("Suppressing invalid property", e);
+                    return;
+                } else {
+                    throw  e;
+                }
+            }
 
             // replace with a constant instance if applicable..
             property = Constants.forProperty(property);
@@ -160,9 +173,17 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void parameter(String name, String value) {
         if (propertyBuilder != null) {
-            Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
+            var parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
                     .name(name).value(value).build();
 
+            if (parameter instanceof TzId) {
+                if (getComponentBuilder() != null && (getComponentBuilder().hasName(Observance.STANDARD)
+                        || getComponentBuilder().hasName(Observance.DAYLIGHT))
+                        && propertyBuilder.hasName(Property.DTSTART)) {
+                    // we don't allow TZID parameter in VTIMEZONE definitions as it causes StackOverflowError..
+                    return;
+                }
+            }
             propertyBuilder.parameter(parameter);
         }
     }

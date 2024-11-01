@@ -48,4 +48,13 @@ class PropertyCodecTest extends Specification {
         '\r\n'                                          | '\\n'
         'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
     }
+
+    def 'verify Dquote escaping'() {
+        expect:
+        PropertyCodec.INSTANCE.encode(value) == encodedValue
+
+        where:
+        value            | encodedValue
+        'Test \"quote\"' | 'Test \"quote\"'
+    }
 }

@@ -39,6 +39,10 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
         return this;
     }
 
+    public boolean hasName(String name) {
+        return name.equals(this.name);
+    }
+
     public ComponentBuilder<?> property(Property property) {
         properties.add(property);
         return this;

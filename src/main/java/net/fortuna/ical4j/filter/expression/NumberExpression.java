@@ -55,7 +55,7 @@ public class NumberExpression implements LiteralExpression<Number> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NumberExpression that = (NumberExpression) o;
+        var that = (NumberExpression) o;
         return value.equals(that.value);
     }
 

@@ -49,7 +49,16 @@ class ContentBuilder extends FactoryBuilderSupport {
     ContentBuilder(boolean init = true) {
         super(init)
     }
-    
+
+    @Override
+    protected Factory resolveFactory(Object name, Map attributes, Object value) {
+        def factory = super.resolveFactory(name, attributes, value)
+        if (!factory) {
+            factory = new XPropertyFactory(name)
+        }
+        factory
+    }
+
     def registerCalendarAndCollections() {
         registerFactory('calendar', new CalendarFactory())
         registerFactory('parameters', new ParameterListFactory())
@@ -131,7 +140,6 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('uid', new DefaultPropertyFactory(klass: Uid))
         registerFactory('url', new DefaultPropertyFactory(klass: Url))
         registerFactory('version', new PropertyFactoryWrapper(Version, new Version.Factory()))
-        registerFactory('xproperty', new XPropertyFactory())
 
         // RFC7986
         registerFactory('color', new PropertyFactoryWrapper(Color, new Color.Factory()))
@@ -140,6 +148,20 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('refreshinterval', new PropertyFactoryWrapper(RefreshInterval, new RefreshInterval.Factory()))
         registerFactory('source', new PropertyFactoryWrapper(Source, new Source.Factory()))
 
+        //RFC9073
+        registerFactory('locationtype', new PropertyFactoryWrapper(net.fortuna.ical4j.model.property.LocationType,
+                new net.fortuna.ical4j.model.property.LocationType.Factory()))
+        registerFactory('participanttype', new PropertyFactoryWrapper(ParticipantType,
+                new ParticipantType.Factory()))
+        registerFactory('resourcetype', new PropertyFactoryWrapper(ResourceType, new ResourceType.Factory()))
+        registerFactory('calendaraddress', new PropertyFactoryWrapper(CalendarAddress,
+                new CalendarAddress.Factory()))
+        registerFactory('styleddescription', new PropertyFactoryWrapper(StyledDescription,
+                new StyledDescription.Factory()))
+        registerFactory('structureddata', new PropertyFactoryWrapper(StructuredData,
+                new StructuredData.Factory()))
+
+        //RFC9253
         registerFactory('concept', new PropertyFactoryWrapper(Concept, new Concept.Factory()))
         registerFactory('link', new PropertyFactoryWrapper(Link, new Link.Factory()))
         registerFactory('refid', new PropertyFactoryWrapper(RefId, new RefId.Factory()))

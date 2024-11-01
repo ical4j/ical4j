@@ -4,10 +4,13 @@ import net.fortuna.ical4j.filter.expression.BinaryExpression;
 import net.fortuna.ical4j.filter.expression.UnaryExpression;
 import net.fortuna.ical4j.filter.predicate.*;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * ComponentFilter produces predicates for lambda-style filtering of {@link Component iCalendar components}.
@@ -22,6 +25,13 @@ import java.util.function.Predicate;
  * </pre>
  */
 public class ComponentFilter<T extends Component> extends AbstractFilter<T> {
+
+    public ComponentFilter() {
+    }
+
+    public ComponentFilter(Supplier<List<PropertyFactory<?>>> propertyFactorySupplier, Supplier<List<ParameterFactory<?>>> parameterFactorySupplier) {
+        super(propertyFactorySupplier, parameterFactorySupplier);
+    }
 
     public Predicate<T> predicate(UnaryExpression expression) {
         switch (expression.operator) {
@@ -64,6 +74,8 @@ public class ComponentFilter<T extends Component> extends AbstractFilter<T> {
                 return new PropertyContainsRule<>(property(expression), literal(expression));
             case matches:
                 return new PropertyMatchesRule<>(property(expression), literal(expression));
+            case startsWith:
+                return new PropertyStartsWithRule<>(property(expression), literal(expression));
         }
         throw new IllegalArgumentException("Not a valid filter");
     }

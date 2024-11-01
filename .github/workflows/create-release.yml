@@ -1,0 +1,11 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - "ical4j-*"
+      - "!ical4j-*-pre"
+
+jobs:
+  build:
+    uses: ./.github/workflows/release.yml

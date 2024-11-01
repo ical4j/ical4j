@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.transform;
 
+import java.util.function.UnaryOperator;
+
 /**
  * $Id$
  *
@@ -39,13 +41,17 @@ package net.fortuna.ical4j.transform;
  * Base class of calendar transformations.
  * @author benfortuna
  */
-public interface Transformer<T> {
+public interface Transformer<T> extends UnaryOperator<T> {
 
     /**
      * Transforms the specified calendar object according to the implementation of this method.
      *
      * @param object a calendar object to transform
      * @return a transformed calendar object
+     * @deprecated use {@link UnaryOperator#apply(Object)}
      */
-    T transform(final T object);
+    @Deprecated
+    default T transform(final T object) {
+        return apply(object);
+    }
 }

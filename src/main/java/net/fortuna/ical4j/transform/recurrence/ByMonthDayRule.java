@@ -45,7 +45,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
     }
 
     @Override
-    public List<T> transform(List<T> dates) {
+    public List<T> apply(List<T> dates) {
         if (monthDayList.isEmpty()) {
             return dates;
         }
@@ -76,11 +76,11 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible month days..
-            final YearMonth yearMonth = YearMonth.of(getYear(date), getMonth(date).getMonthOfYear());
+            final var yearMonth = YearMonth.of(getYear(date), getMonth(date).getMonthOfYear());
             for (final int monthDay : monthDayList) {
                 if (Month.of(getMonth(date).getMonthOfYear()).maxLength() < Math.abs(monthDay)) {
                     if (log.isTraceEnabled()) {
-                        log.trace("Invalid day of month: " + monthDay);
+                        log.trace("Invalid day of month: {}", monthDay);
                     }
                     continue;
                 }
@@ -91,6 +91,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                         if (skip == Recur.Skip.BACKWARD) {
                             candidate = withTemporalField(date, DAY_OF_MONTH, yearMonth.lengthOfMonth());
                         } else if (skip == Recur.Skip.FORWARD) {
+                            //noinspection unchecked
                             candidate = withTemporalField((T) date.plus(1, ChronoUnit.MONTHS), DAY_OF_MONTH, 1);
                         } else {
                             continue;
@@ -101,7 +102,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                 } else {
                     if (-yearMonth.lengthOfMonth() > monthDay) {
                         if (skip == Recur.Skip.BACKWARD) {
-                            Temporal adjustedDate = date.minus(1, ChronoUnit.MONTHS);
+                            var adjustedDate = date.minus(1, ChronoUnit.MONTHS);
                             candidate = withTemporalField((T) adjustedDate, DAY_OF_MONTH, YearMonth.from(adjustedDate).lengthOfMonth());
                         } else if (skip == Recur.Skip.FORWARD) {
                             candidate = withTemporalField(date, DAY_OF_MONTH, -yearMonth.lengthOfMonth());

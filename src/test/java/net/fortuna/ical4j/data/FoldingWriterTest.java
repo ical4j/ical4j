@@ -50,7 +50,7 @@ import java.io.StringWriter;
  */
 public class FoldingWriterTest extends TestCase {
 
-    private static Logger LOG = LoggerFactory.getLogger(FoldingWriterTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FoldingWriterTest.class);
 
     /**
      * Test writing a line equal to fold length.

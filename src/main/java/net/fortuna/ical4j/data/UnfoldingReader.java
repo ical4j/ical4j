@@ -153,7 +153,7 @@ public class UnfoldingReader extends PushbackReader {
     public final int read() throws IOException {
         final int c = super.read();
         boolean doUnfold = false;
-        for (char[] pattern : patterns) {
+        for (var pattern : patterns) {
             if (c == pattern[0]) {
                 doUnfold = true;
                 break;
@@ -177,7 +177,7 @@ public class UnfoldingReader extends PushbackReader {
     public int read(final char[] cbuf, final int off, final int len) throws IOException {
         final int read = super.read(cbuf, off, len);
         boolean doUnfold = false;
-        for (char[] pattern : patterns) {
+        for (var pattern : patterns) {
             if (read > 0 && cbuf[0] == pattern[0]) {
                 doUnfold = true;
                 break;

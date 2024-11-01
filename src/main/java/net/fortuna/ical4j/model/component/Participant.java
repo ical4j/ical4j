@@ -35,8 +35,8 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.*;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
@@ -118,7 +118,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author Mike Douglass
  */
-public class Participant extends Component implements ComponentContainer<Component> {
+public class Participant extends Component implements ComponentContainer<Component>, ChangeManagementPropertyAccessor,
+    LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -156,15 +157,11 @@ public class Participant extends Component implements ComponentContainer<Compone
      * {@inheritDoc}
      */
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.PARTICIPANT.validate(this);
+        var result = ComponentValidator.PARTICIPANT.validate(this);
         if (recurse) {
             result = result.merge(validateProperties());
         }
         return result;
-    }
-
-    public <C extends Component> List<C> getComponents() {
-        return ComponentContainer.super.getComponents();
     }
 
     /**
@@ -173,6 +170,7 @@ public class Participant extends Component implements ComponentContainer<Compone
      */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 
@@ -190,17 +188,12 @@ public class Participant extends Component implements ComponentContainer<Compone
     }
 
     /**
-     * @return the optional creation-time property for an event
-     */
-    public final Optional<Created> getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
      * @return the optional date-stamp property
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
+    @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(DTSTAMP);
+        return getDateTimeStamp();
     }
 
     /**
@@ -209,13 +202,6 @@ public class Participant extends Component implements ComponentContainer<Compone
      */
     public final Optional<Description> getDescription() {
         return getProperty(DESCRIPTION);
-    }
-
-    /**
-     * @return the optional last-modified property for an event
-     */
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
     }
 
     /**
@@ -234,13 +220,6 @@ public class Participant extends Component implements ComponentContainer<Compone
     }
 
     /**
-     * @return the optional sequence number property for an event
-     */
-    public final Optional<Sequence> getSequence() {
-        return getProperty(SEQUENCE);
-    }
-
-    /**
      * @return the optional status property for an event
      */
     public final Optional<Status> getStatus() {
@@ -256,18 +235,18 @@ public class Participant extends Component implements ComponentContainer<Compone
     }
 
     /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
-    }
-
-    /**
      * @return the optional URL property for an event
      */
     public final Optional<Url> getUrl() {
         return getProperty(URL);
+    }
+
+    @Override
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     @Override

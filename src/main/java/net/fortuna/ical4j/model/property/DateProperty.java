@@ -42,6 +42,8 @@ import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.util.Optional;
@@ -103,6 +105,14 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         this.defaultValueParam = defaultValueParam;
     }
 
+    public DateProperty(final Enum<?> name, final ParameterList parameters, CalendarDateFormat parseFormat,
+                        Value defaultValueParam) {
+
+        super(name, parameters);
+        this.parseFormat = parseFormat;
+        this.defaultValueParam = defaultValueParam;
+    }
+
     /**
      * @param name the property name
      */
@@ -111,6 +121,18 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     }
 
     public DateProperty(final String name, CalendarDateFormat parseFormat, Value defaultValueParam) {
+        super(name);
+        this.parseFormat = parseFormat;
+        this.defaultValueParam = defaultValueParam;
+    }
+
+    /**
+     *
+     * @param name an enum representing a property name
+     * @param parseFormat
+     * @param defaultValueParam
+     */
+    public DateProperty(final Enum<?> name, CalendarDateFormat parseFormat, Value defaultValueParam) {
         super(name);
         this.parseFormat = parseFormat;
         this.defaultValueParam = defaultValueParam;
@@ -129,6 +151,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         if (date != null) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
             if (tzId.isPresent() && shouldApplyTimezone()) {
+                //xxx: type T should always be ZonedDateTime where TZID parameter is specified..
                 return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
             } else {
                 return date.getTemporal();
@@ -147,6 +170,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public void setDate(T date) {
         if (date != null) {
             this.date = new TemporalAdapter<>(date, timeZoneRegistry);
+            refreshParameters();
         } else {
             this.date = null;
         }
@@ -199,6 +223,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent() && shouldApplyTimezone()) {
             return date.toString(tzId.get().toZoneId(timeZoneRegistry));
+        } else if (this instanceof UtcProperty) {
+            return date.toString(ZoneOffset.UTC);
         } else {
             return Strings.valueOf(date);
         }
@@ -206,6 +232,37 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
+    }
+
+    /**
+     * Sometimes following a value update the {@link Value} and {@link TzId} parameters should be
+     * updated to reflect the new value. This method will examine the current value and modify these
+     * parameters accordingly.
+     */
+    public void refreshParameters() {
+        T temporal = date.getTemporal();
+        if (!TemporalAdapter.isDateTimePrecision(temporal)) {
+            if (Value.DATE.equals(defaultValueParam)) {
+                removeAll(VALUE);
+            } else {
+                replace(Value.DATE);
+            }
+            removeAll(Parameter.TZID);
+        } else if (temporal instanceof ZonedDateTime) {
+            if (Value.DATE_TIME.equals(defaultValueParam)) {
+                removeAll(VALUE);
+            } else {
+                replace(Value.DATE_TIME);
+            }
+
+            // update TZID param
+            if (TemporalAdapter.isUtc(temporal)) {
+                removeAll(TZID);
+            } else {
+                ZoneId zoneId = ((ZonedDateTime) temporal).getZone();
+                replace(new TzId(zoneId.getId()));
+            }
+        }
     }
 
     /**
@@ -250,7 +307,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @Override
     public int compareTo(Property o) {
         if (o instanceof DateProperty) {
-            return new TemporalComparator().compare(getDate(), ((DateProperty) o).getDate());
+            return TemporalComparator.INSTANCE.compare(getDate(), ((DateProperty<?>) o).getDate());
         }
         return super.compareTo(o);
     }

@@ -32,21 +32,25 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DecoderFactory;
+import net.fortuna.ical4j.util.EncoderFactory;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.schema.SchemaValidatorFactory;
-import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.DecoderException;
-import org.slf4j.Logger;
+import org.apache.commons.codec.EncoderException;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Parameter.SCHEMA;
 
@@ -64,7 +68,9 @@ public class StructuredData extends Property implements Encodable {
     private static final long serialVersionUID = 7287564228220558361L;
 
     private String value;
+
     private URI uri;
+
     private byte[] binary;
 
     /**
@@ -77,7 +83,7 @@ public class StructuredData extends Property implements Encodable {
     /**
      * @param aValue a value string for this component
      */
-    public StructuredData(final String aValue) throws URISyntaxException {
+    public StructuredData(final String aValue) {
         super(STRUCTURED_DATA, new ParameterList());
         setValue(aValue);
     }
@@ -91,6 +97,16 @@ public class StructuredData extends Property implements Encodable {
         setValue(aValue);
     }
 
+    public StructuredData(URI uri) {
+        super(STRUCTURED_DATA, new ParameterList(Collections.singletonList(Value.URI)));
+        this.uri = uri;
+    }
+
+    public StructuredData(byte[] binary) {
+        super(STRUCTURED_DATA, new ParameterList(Arrays.asList(Value.BINARY, Encoding.BASE64)));
+        this.binary = binary;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -99,14 +115,14 @@ public class StructuredData extends Property implements Encodable {
         if (!getParameters(Parameter.ENCODING).isEmpty()) {
             // binary = Base64.decode(aValue);
             try {
-                final BinaryDecoder decoder = DecoderFactory.getInstance()
+                final var decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(getRequiredParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
+                var log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
             } catch (DecoderException de) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
+                var log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error decoding binary data", de);
             }
         } else if (Value.URI.equals(getRequiredParameter(Parameter.VALUE))) {
@@ -122,16 +138,37 @@ public class StructuredData extends Property implements Encodable {
         }
     }
 
+    public URI getUri() {
+        return uri;
+    }
+
+    public byte[] getBinary() {
+        return binary;
+    }
+
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
+        Optional<Value> valueParam = getParameter(Parameter.VALUE);
+        if (valueParam.isPresent()) {
+            if (Value.URI.equals(valueParam.get())) {
+                return uri.toString();
+            } else if (Value.BINARY.equals(valueParam.get())) {
+                try {
+                    var encoder = EncoderFactory.getInstance().createBinaryEncoder(getRequiredParameter(Parameter.ENCODING));
+                    return new String(encoder.encode(binary));
+                } catch (UnsupportedEncodingException | EncoderException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         return value;
     }
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        ValidationResult result = PropertyValidator.STRUCTURED_DATA.validate(this);
+        var result = PropertyValidator.STRUCTURED_DATA.validate(this);
 
         result = result.merge(SchemaValidatorFactory.newInstance(getRequiredParameter(SCHEMA)).validate(this));
         return result;

@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.time.ZoneOffset;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -22,19 +23,17 @@ public class ZoneOffsetAdapter implements Serializable {
 
     @Override
     public String toString() {
-        String retVal = "";
-        if (offset != null) {
-            int hours = Math.abs(offset.getTotalSeconds()) / (60 * 60);
-            if (offset.getTotalSeconds() < 0) {
-                hours = -hours;
-            }
-            int minutes = Math.abs(offset.getTotalSeconds()) % (60 * 60) / 60;
-            int seconds = Math.abs(offset.getTotalSeconds()) % (60 * 60) % 60;
-            if (seconds > 0) {
-                retVal = String.format("%+03d%02d%02d", hours, minutes, seconds);
-            } else {
-                retVal = String.format("%+03d%02d", hours, minutes);
-            }
+        var retVal = "";
+        int hours = Math.abs(offset.getTotalSeconds()) / (60 * 60);
+        if (offset.getTotalSeconds() < 0) {
+            hours = -hours;
+        }
+        int minutes = Math.abs(offset.getTotalSeconds()) % (60 * 60) / 60;
+        int seconds = Math.abs(offset.getTotalSeconds()) % (60 * 60) % 60;
+        if (seconds > 0) {
+            retVal = String.format(Locale.US, "%+03d%02d%02d", hours, minutes, seconds);
+        } else {
+            retVal = String.format(Locale.US, "%+03d%02d", hours, minutes);
         }
         return retVal;
     }

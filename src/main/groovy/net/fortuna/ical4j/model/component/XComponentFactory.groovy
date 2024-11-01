@@ -44,7 +44,7 @@ class XComponentFactory extends AbstractFactory {
      Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          def component
          if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XComponent.class)) {
-             component = (XComponent) value
+             component = (XComponent) value.copy()
          }
          else {
              def componentName = attributes.remove('name')

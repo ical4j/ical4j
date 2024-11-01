@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +43,7 @@ import java.util.stream.Collectors;
  * Accessor implementation for a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList implements ContentCollection<Property> {
+public class PropertyList implements ContentCollection<Property>, Comparable<PropertyList> {
 
     private final List<Property> properties;
 
@@ -56,19 +59,19 @@ public class PropertyList implements ContentCollection<Property> {
      * @param properties a property list
      */
     
-    public PropertyList(List<Property> properties) {
+    public PropertyList(@NotNull List<Property> properties) {
         this.properties = Collections.unmodifiableList(properties);
     }
 
     @Override
-    public ContentCollection<Property> add(Property content) {
+    public ContentCollection<Property> add(@NotNull Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.add(content);
         return new PropertyList(copy);
     }
 
     @Override
-    public ContentCollection<Property> addAll(Collection<Property> content) {
+    public ContentCollection<Property> addAll(@NotNull Collection<Property> content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.addAll(content);
         return new PropertyList(copy);
@@ -87,8 +90,13 @@ public class PropertyList implements ContentCollection<Property> {
     @Override
     public ContentCollection<Property> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
+        return removeIf(p -> names.contains(p.getName()));
+    }
+
+    @Override
+    public ContentCollection<Property> removeIf(Predicate<Property> filter) {
         List<Property> copy = new ArrayList<>(properties);
-        if (copy.removeIf(p -> names.contains(p.getName()))) {
+        if (copy.removeIf(filter)) {
             return new PropertyList(copy);
         } else {
             return this;
@@ -96,7 +104,7 @@ public class PropertyList implements ContentCollection<Property> {
     }
 
     @Override
-    public ContentCollection<Property> replace(Property content) {
+    public ContentCollection<Property> replace(@NotNull Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.removeIf(p -> p.getName().equals(content.getName()));
         copy.add(content);
@@ -144,7 +152,7 @@ public class PropertyList implements ContentCollection<Property> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PropertyList that = (PropertyList) o;
+        var that = (PropertyList) o;
         return Objects.equals(properties, that.properties);
     }
 
@@ -152,4 +160,22 @@ public class PropertyList implements ContentCollection<Property> {
     public int hashCode() {
         return Objects.hash(properties);
     }
+
+    @Override
+    public int compareTo(PropertyList o) {
+        // test for equality
+        if (properties.equals(o.properties)) {
+            return 0;
+        }
+        // then test for size..
+        int retval = properties.size() - o.properties.size();
+        if (retval != 0) {
+            return retval;
+        } else {
+            // compare individual params..
+            return properties.stream().filter(o.properties::contains)
+                    .mapToInt(p -> p.compareTo(o.properties.get(o.properties.indexOf(p)))).sum();
+        }
+    }
+
 }

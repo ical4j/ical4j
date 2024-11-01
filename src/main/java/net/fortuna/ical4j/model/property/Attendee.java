@@ -35,11 +35,12 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.component.Participant;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.RelationshipPropertyValidators;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -78,7 +79,6 @@ public class Attendee extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Attendee(final ParameterList aList, final String aValue) {
         super(ATTENDEE, aList);
@@ -103,6 +103,30 @@ public class Attendee extends Property {
     }
 
     /**
+     * Construct an attendee from a participant. The expectation is that the participant is schedulable (i.e.
+     * has a calendar address) and an exception will be thrown where this is not the case.
+     *
+     * @param participant a schedulable participant
+     */
+    public Attendee(Participant participant) {
+        super(ATTENDEE);
+        CalendarAddress calAddressProp = participant.getRequiredProperty(Property.CALENDAR_ADDRESS);
+        calAddress = calAddressProp.getCalAddress();
+    }
+
+    /**
+     * Construct an attendee from a participant. The expectation is that the participant is schedulable (i.e.
+     * has a calendar address) and an exception will be thrown where this is not the case.
+     *
+     * @param participant a schedulable participant
+     */
+    public Attendee(ParameterList parameters, Participant participant) {
+        super(ATTENDEE, parameters);
+        CalendarAddress calAddressProp = participant.getRequiredProperty(Property.CALENDAR_ADDRESS);
+        calAddress = calAddressProp.getCalAddress();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -119,7 +143,7 @@ public class Attendee extends Property {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.ATTENDEE.validate(this);
+        return RelationshipPropertyValidators.ATTENDEE.validate(this);
     }
 
     /**

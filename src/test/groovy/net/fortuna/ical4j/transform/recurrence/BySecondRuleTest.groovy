@@ -20,7 +20,7 @@ class BySecondRuleTest extends Specification {
         BySecondRule rule = [new NumberList(rulePart), frequency]
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dates) == expectedResult
+        rule.apply(dates) == expectedResult
 
         where:
         rulePart | frequency       | dates                              | expectedResult

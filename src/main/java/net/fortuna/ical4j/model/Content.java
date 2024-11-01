@@ -71,7 +71,7 @@ public abstract class Content implements Serializable {
         }
 
         public final boolean supports(String name) {
-            return supportedNames.contains(name);
+            return supportedNames.contains(name.toUpperCase());
         }
     }
 }

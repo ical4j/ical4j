@@ -36,11 +36,42 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 
 /**
- * $Id$
- * <p/>
- * Created: [Apr 6, 2004]
- * <p/>
- * Defines a RESOURCE-TYPE iCalendar component property.
+ * <pre>
+ *      Property Name:
+ *     RESOURCE-TYPE
+ * Purpose:
+ *     This property specifies the type of resource.
+ * Value Type:
+ *     The value type for this property is TEXT. The allowable values are defined below.
+ * Format Definition:
+ *
+ *     This property is defined by the following notation:
+ *
+ * restypeprop   = "RESOURCE-TYPE" restypeparam ":"
+ *                 restypevalue CRLF
+ *
+ * restypevalue  = ("ROOM"
+ *                / "PROJECTOR"
+ *                / "REMOTE-CONFERENCE-AUDIO"
+ *                / "REMOTE-CONFERENCE-VIDEO"
+ *                / iana-token)     ; Other IANA-registered
+ *                ; values
+ *
+ * restypeparam   = *(";" other-param)
+ *
+ * Description:
+ *
+ *     This property MAY be specified in "VRESOURCE" components and provides a way to differentiate multiple resources.
+ * The registered values are described below. New resource types SHOULD be registered in the manner laid down in this specification.
+ * ROOM:
+ *     A room for the event/meeting.
+ * PROJECTOR:
+ *     Projection equipment.
+ * REMOTE-CONFERENCE-AUDIO:
+ *     Audio remote conferencing facilities.
+ * REMOTE-CONFERENCE-VIDEO:
+ *     Video remote conferencing facilities.
+ * </pre>
  *
  * @author benf
  * @author Mike Douglass
@@ -92,7 +123,7 @@ public class ResourceType extends Property implements Encodable {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) {
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 

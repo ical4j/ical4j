@@ -43,6 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -189,7 +190,9 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent implements ComponentContainer<Component> {
+public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent>,
+        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
+        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -310,32 +313,9 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         add(new Summary(summary));
     }
 
-    /**
-     * Returns the list of alarms for this event.
-     * @return a component list
-     */
-    public final List<VAlarm> getAlarms() {
-        return getComponents();
-    }
-
-    public final List<Participant> getParticipants() {
-        return getComponents(Component.PARTICIPANT);
-    }
-
-    public final List<VLocation> getLocations() {
-        return getComponents(Component.VLOCATION);
-    }
-
-    public final List<VResource> getResources() {
-        return getComponents(Component.VRESOURCE);
-    }
-
-    /**
-     *
-     * @return Returns the underlying component list.
-     */
     @Override
     public ComponentList<Component> getComponentList() {
+        //noinspection unchecked
         return (ComponentList<Component>) components;
     }
 
@@ -349,7 +329,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        ValidationResult result = ComponentValidator.VEVENT.validate(this);
+        var result = ComponentValidator.VEVENT.validate(this);
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
 //        while (iterator.hasNext()) {
@@ -363,7 +343,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
 //            ((VAlarm) component).validate(recurse);
 //        }
 
-        final Optional<Status> status = getProperty(Property.STATUS);
+        final Optional<Status> status = getStatus();
         if (status.isPresent() && !VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
                 && !VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
                 && !VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
@@ -371,7 +351,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                     + status + "] is not applicable for VEVENT", ValidationEntry.Severity.ERROR, getName()));
         }
 
-        if (getProperty(Property.DTEND).isPresent()) {
+        if (getDateTimeEnd().isPresent()) {
 
             /*
              * The "VEVENT" is also the calendar component used to specify an anniversary or daily reminder within a
@@ -380,8 +360,8 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final Optional<DtStart<Temporal>> start = getProperty(DTSTART);
-            final Optional<DtEnd<Temporal>> end = getProperty(DTEND);
+            final Optional<DtStart<Temporal>> start = getDateTimeStart();
+            final Optional<DtEnd<Temporal>> end = getDateTimeEnd();
 
             if (start.isPresent()) {
                 final Optional<Parameter> startValue = start.get().getParameter(Parameter.VALUE);
@@ -450,8 +430,8 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range, final boolean normalise) {
         PeriodList<T> periods;
         // if component is transparent return empty list..
-        Optional<Transp> transp = getProperty(TRANSP);
-        if (!transp.isPresent() || !TRANSPARENT.equals(transp.get())) {
+        Optional<Transp> transp = getTimeTransparency();
+        if (transp.isEmpty() || !TRANSPARENT.equals(transp.get())) {
 
 //          try {
             periods = new PeriodList<>(calculateRecurrenceSet(range));
@@ -477,13 +457,15 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * @param date a date on which the occurence should occur
      * @return a single non-recurring event instance for the specified date, or null if the event doesn't
      * occur on the specified date
+     * @deprecated use {@link RecurrenceSupport#getOccurrences(Period)}
      */
+    @Deprecated
     public final <T extends Temporal> VEvent getOccurrence(final T date) {
 
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
-                final VEvent occurrence = this.copy();
+                final VEvent occurrence = (VEvent) this.copy();
                 occurrence.add(new RecurrenceId<>(date));
                 return occurrence;
             }
@@ -492,148 +474,31 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     }
 
     /**
-     * @return the optional access classification property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Clazz> getClassification() {
-        return getProperty(CLASS);
-    }
-
-    /**
-     * @return the optional creation-time property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Created> getCreated() {
-        return getProperty(CREATED);
-    }
-
-    /**
-     * @return the optional description property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Description> getDescription() {
-        return getProperty(DESCRIPTION);
-    }
-
-    /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
-     * @deprecated use {@link VEvent#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getDateTimeStart()}
      */
     @Deprecated
-    public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(DTSTART);
-    }
-
-    /**
-     * @return the optional geographic position property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Geo> getGeographicPos() {
-        return getProperty(GEO);
-    }
-
-    /**
-     * @return the optional last-modified property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional location property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Location> getLocation() {
-        return getProperty(LOCATION);
-    }
-
-    /**
-     * @return the optional organizer property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Organizer> getOrganizer() {
-        return getProperty(ORGANIZER);
-    }
-
-    /**
-     * @return the optional priority property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Priority> getPriority() {
-        return getProperty(PRIORITY);
+    public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
+        return getDateTimeStart();
     }
 
     /**
      * @return the optional date-stamp property
-     * @deprecated use {@link VEvent#getProperty(String)}
+     * @deprecated use {@link ChangeManagementPropertyAccessor#getDateTimeStamp()}
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(DTSTAMP);
-    }
-
-    /**
-     * @return the optional sequence number property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Sequence> getSequence() {
-        return getProperty(SEQUENCE);
-    }
-
-    /**
-     * @return the optional status property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Status> getStatus() {
-        return getProperty(STATUS);
-    }
-
-    /**
-     * @return the optional summary property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Summary> getSummary() {
-        return getProperty(SUMMARY);
+        return getDateTimeStamp();
     }
 
     /**
      * @return the optional time transparency property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
+     * @deprecated use {@link DateTimePropertyAccessor#getTimeTransparency()}
      */
     @Deprecated
     public final Optional<Transp> getTransparency() {
-        return getProperty(TRANSP);
-    }
-
-    /**
-     * @return the optional URL property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Url> getUrl() {
-        return getProperty(URL);
-    }
-
-    /**
-     * @return the optional recurrence identifier property for an event
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<RecurrenceId<?>> getRecurrenceId() {
-        return getProperty(RECURRENCE_ID);
+        return getTimeTransparency();
     }
 
     /**
@@ -641,7 +506,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * duration.
      * @return a DtEnd instance, or null if one cannot be derived
      */
-    public final Optional<DtEnd<?>> getEndDate() {
+    public final <T extends Temporal> Optional<DtEnd<T>> getEndDate() {
         return getEndDate(true);
     }
 
@@ -652,16 +517,16 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
      * not found
      * @return The end for this VEVENT.
      */
-    public final Optional<DtEnd<?>> getEndDate(final boolean deriveFromDuration) {
-        Optional<DtEnd<?>> dtEnd = getProperty(DTEND);
+    public final <T extends Temporal> Optional<DtEnd<T>> getEndDate(final boolean deriveFromDuration) {
+        Optional<DtEnd<T>> dtEnd = getDateTimeEnd();
         // No DTEND? No problem, we'll use the DURATION.
-        if (!dtEnd.isPresent() && deriveFromDuration) {
-            Optional<DtStart<?>> dtStart = getProperty(DTSTART);
+        if (dtEnd.isEmpty() && deriveFromDuration) {
+            Optional<DtStart<T>> dtStart = getDateTimeStart();
             if (dtStart.isPresent()) {
                 final Duration vEventDuration;
-                Optional<Duration> duration = getProperty(DURATION);
+                Optional<Duration> duration = getDuration();
                 if (duration.isPresent()) {
-                    vEventDuration = getDuration().get();
+                    vEventDuration = duration.get();
                 } else if (dtStart.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
                     // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
                     vEventDuration = new Duration(java.time.Duration.ZERO);
@@ -671,37 +536,20 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                 }
 
                 Optional<TzId> tzId = dtStart.get().getParameter(Parameter.TZID);
-                DtEnd<?> newdtEnd;
+                DtEnd<T> newdtEnd;
                 if (tzId.isPresent()) {
-                    ParameterList dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
-                    newdtEnd = new DtEnd<>(dtendParams, dtStart.get().getDate().plus(vEventDuration.getDuration()));
+                    var dtendParams = new ParameterList(Collections.singletonList(tzId.get()));
+                    //noinspection unchecked
+                    newdtEnd = new DtEnd<>(dtendParams, (T) dtStart.get().getDate().plus(vEventDuration.getDuration()));
                 } else {
-                    newdtEnd = new DtEnd<>(dtStart.get().getDate().plus(vEventDuration.getDuration()));
+                    //noinspection unchecked
+                    newdtEnd = new DtEnd<>((T) dtStart.get().getDate().plus(vEventDuration.getDuration()));
                 }
 
                 return Optional.of(newdtEnd);
             }
         }
         return dtEnd;
-    }
-
-    /**
-     * @return the optional Duration property
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Duration> getDuration() {
-        return getProperty(DURATION);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     * @deprecated use {@link VEvent#getProperty(String)}
-     */
-    @Deprecated
-    public final Optional<Uid> getUid() {
-        return getProperty(UID);
     }
 
     /**
@@ -728,6 +576,14 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     @Override
     protected ComponentFactory<VEvent> newFactory() {
         return new Factory();
+    }
+
+    @Override
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Prototype::copy).collect(Collectors.toList())),
+                new ComponentList<>(getComponents().parallelStream()
+                        .map(Prototype::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {

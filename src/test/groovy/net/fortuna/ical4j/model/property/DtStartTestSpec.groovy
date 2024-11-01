@@ -35,8 +35,8 @@ package net.fortuna.ical4j.model.property
 
 import spock.lang.Specification
 
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.*
+import java.time.temporal.Temporal
 
 class DtStartTestSpec extends Specification {
 
@@ -55,4 +55,40 @@ class DtStartTestSpec extends Specification {
         dtstart.date.zone.id == 'Asia/Singapore'
     }
 
+    def 'test dtstart string rep'() {
+        expect: 'dtstart string matches expected'
+        new DtStart<>(date) as String == expectedString
+
+        where:
+        date                                                | expectedString
+        LocalDate.of(2023, 11, 10)                          | 'DTSTART;VALUE=DATE:20231110\r\n'
+        LocalDateTime.of(2023, 11, 10, 1, 1, 1)             | 'DTSTART:20231110T010101\r\n'
+        LocalDateTime.of(2023, 11, 10, 1, 1, 1)
+                .atZone(ZoneId.of('Australia/Melbourne'))   | 'DTSTART;TZID=Australia/Melbourne:20231110T010101\r\n'
+        LocalDateTime.of(2023, 11, 10, 1, 1, 1)
+                .toInstant(ZoneOffset.UTC)                  | 'DTSTART:20231110T010101Z\r\n'
+        ZonedDateTime.of(2023, 11, 15, 8, 30, 0, 0,
+                ZoneId.of("America/Sao_Paulo"))             | 'DTSTART;TZID=America/Sao_Paulo:20231115T083000\r\n'
+        ZonedDateTime.of(2023, 5, 15, 8, 30, 0, 0,
+                ZoneId.of("Europe/London"))                 | 'DTSTART;TZID=Europe/London:20230515T083000\r\n'
+        ZonedDateTime.of(2023, 12, 14, 17, 0, 0, 0,
+                ZoneId.of("America/Los_Angeles"))           | 'DTSTART;TZID=America/Los_Angeles:20231214T170000\r\n'
+        ZonedDateTime.of(2023, 12, 14, 17, 0, 0, 0,
+                ZoneId.of("America/Toronto"))           | 'DTSTART;TZID=America/Toronto:20231214T170000\r\n'
+    }
+
+    def 'test factory creation'() {
+        given: 'a factory'
+        DtStart.Factory<LocalDate> factory = []
+
+        expect: 'result matches expected'
+        DtStart<Temporal> dtstart = factory.createProperty(date)
+        dtstart.refreshParameters()
+        dtstart as String == expectedValue
+
+        where:
+        date                | expectedValue
+        '00011225'          | 'DTSTART;VALUE=DATE:00011225\r\n'
+        '00011225T013000'   | 'DTSTART:00011225T013000\r\n'
+    }
 }

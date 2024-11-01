@@ -2,7 +2,6 @@ package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -22,7 +21,8 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
     private final PropertyContainerRuleSet<Calendar> rules;
 
-    public CalendarValidatorImpl(ValidationRule... rules) {
+    @SafeVarargs
+    public CalendarValidatorImpl(ValidationRule<Calendar>... rules) {
         this.rules = new PropertyContainerRuleSet<>(rules);
 
         Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class,
@@ -32,11 +32,11 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
     @Override
     public ValidationResult validate(Calendar target) throws ValidationException {
-        ValidationResult result = new ValidationResult(rules.apply(Calendar.VCALENDAR, target));
+        var result = new ValidationResult(rules.apply(Calendar.VCALENDAR, target));
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
-            Optional<Version> version = target.getProperty(Property.VERSION);
+            Optional<Version> version = target.getVersion();
             if (version.isPresent() && !VERSION_2_0.equals(version.get())) {
                 result.getEntries().add(new ValidationEntry("Unsupported Version: " + version.get().getValue(),
                         ValidationEntry.Severity.ERROR, Calendar.VCALENDAR));
@@ -50,7 +50,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         }
 
         // validate properties..
-        for (final Property property : target.getProperties()) {
+        for (final var property : target.getProperties()) {
             boolean isCalendarProperty = calendarProperties.stream().filter(calProp -> calProp.isInstance(property)) != null;
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
@@ -60,12 +60,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         }
 
         // validate method..
-        final Optional<Method> method = target.getProperty(Property.METHOD);
+        final Optional<Method> method = target.getMethod();
         if (method.isPresent()) {
             result = result.merge(new ITIPValidator().validate(target));
 
             // perform ITIP validation on components..
-            for (CalendarComponent component : target.getComponents()) {
+            for (var component : target.getComponents()) {
                 component.validate(method.get());
             }
         }

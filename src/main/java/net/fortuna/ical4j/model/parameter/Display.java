@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.util.RegEx;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,10 +70,10 @@ public class Display extends Parameter implements Encodable {
 
     public Display(String value) {
         super(PARAMETER_NAME);
-        String[] valueStrings = value.split(",");
-        for (String valueString : valueStrings) {
+        var valueStrings = value.split(RegEx.COMMA_DELIMITED);
+        for (var valueString : valueStrings) {
             try {
-                Value.valueOf(valueString);
+                Value.valueOf(valueString.toUpperCase());
             } catch (IllegalArgumentException iae) {
                 if (!valueString.startsWith(Parameter.EXPERIMENTAL_PREFIX)) {
                     throw iae;

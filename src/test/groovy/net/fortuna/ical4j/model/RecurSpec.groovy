@@ -31,13 +31,14 @@
  */
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.transform.recurrence.Frequency
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.*
+import java.time.temporal.ChronoField
 import java.util.stream.Collectors
 
 import static java.lang.String.format
@@ -137,11 +138,13 @@ class RecurSpec extends Specification {
 
         where:
         rule          | wkst | start      | end        || expected
-        '2,52,53'     | 'MO' | '20110101' | '20131231' || ['20110108', '20111224', '20120107', '20121222', '20121229', '20130112', '20131228']
+        '1,52'        | 'MO' | '20110108' | '20131231' || ['20110108', '20111231', '20120107', '20121229', '20130105', '20131228']
         // If WKST is Wed, then we'll have 53 weeks in 2011.
-        '2,52,53'     | 'WE' | '20110101' | '20131231' || ['20110108', '20111224', '20120107', '20121222', '20130105', '20131221', '20131228']
-        '-2,-52,-53'  | 'MO' | '20110101' | '20131231' || ['20110101', '20111217', '20111231', '20120107', '20121222', '20130105', '20131221']
-        '-2,-52,-53'  | 'WE' | '20110101' | '20131231' || ['20110101', '20111217', '20111231', '20121215', '20121229', '20130105', '20131221']
+        '1,52,53'     | 'WE' | '20110101' | '20131231' || ['20110101', '20111224', '20111231', '20120107', '20121229', '20130105', '20131228']
+        '2,52,53'     | 'WE' | '20110108' | '20131231' || ['20110108', '20111224', '20111231', '20120114', '20121229', '20130112', '20131228']
+        '-52,-1'      | 'MO' | '20110108' | '20131231' || ['20110108', '20111231', '20120107', '20121229', '20130105', '20131228']
+        '-53,-2,-1'   | 'WE' | '20110101' | '20131231' || ['20110101', '20111224', '20111231', '20121222', '20121229', '20131221', '20131228']
+        '-52,-2,-1'  | 'WE' | '20110108' | '20131231' || ['20110108', '20111224', '20111231', '20120107', '20121222', '20121229', '20130105', '20131221', '20131228']
     }
 
     @Unroll
@@ -160,9 +163,9 @@ class RecurSpec extends Specification {
 
         where:
         rule          | wkst | byday   | start      | end        || expected
-        '2,52,53'     | 'MO' | 'MO,TH' | '20110101' | '20131231' || ['20110103', '20110106', '20111219', '20111222', '20120102', '20120105', '20121217', '20121220', '20121224', '20121227', '20130107', '20130110', '20131223', '20131226']
+        '2,52,53'     | 'MO' | 'MO,TH' | '20110110' | '20131231' || ['20110110', '20110113', '20111226', '20111229', '20120109', '20120112', '20121224', '20121227', '20130107', '20130110', '20131223', '20131226']
         // If WKST is Wed, then we'll have 53 weeks in 2011.
-        '2,52,53'     | 'WE' | 'MO,TH' | '20110101' | '20131231' || ['20110106', '20110110', '20111222', '20111226', '20120105', '20120109', '20121220', '20121224', '20130103', '20130107', '20131219', '20131223', '20131226', '20131230']
+        '2,52,53'     | 'WE' | 'TH,MO' | '20110106' | '20131231' || ['20110106', '20110110', '20111222', '20111226', '20111229', '20120102', '20120112', '20120116', '20121227', '20121231', '20130110', '20130114', '20131226', '20131230']
     }
 
     @Unroll
@@ -286,7 +289,9 @@ class RecurSpec extends Specification {
         'Europe/Berlin'			| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
         'America/Phoenix'		| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
         'America/St_Johns'		| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
-        'Africa/Johannesburg'	| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
+        'Africa/Johannesburg'	        | 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
+        // Example from RFC5545 section 3.8.5.3
+        'America/New_York'              | 'FREQ=YEARLY;BYWEEKNO=20;BYDAY=MO'                            | '19970512T090000'     | '20000512T090000'     | ['19970512T090000', '19980511T090000', '19990517T090000']
     }
 
     @Unroll
@@ -305,7 +310,8 @@ class RecurSpec extends Specification {
 
         where:
         rule								| start			| end			| expected
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110109', '20110123']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110102'	| '20110201'	| ['20110102', '20110116', '20110130']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20101226'	| '20110201'	| ['20101226', '20110109', '20110123']
     }
 
     @Unroll
@@ -404,11 +410,11 @@ class RecurSpec extends Specification {
         Recur.Builder builder = []
 
         when: 'populated'
-        def until = TemporalAdapter.parse('20050307').temporal;
+        def until = TemporalAdapter.parse('20050307').temporal
 
         Recur recurDaily = builder.frequency(Frequency.DAILY).until(until)
-                .dayList(new WeekDayList(MO, TU, WE, TH, FR))
-                .interval(1).weekStartDay(MO).build();
+                .dayList(MO, TU, WE, TH, FR)
+                .interval(1).weekStartDay(MO).build()
 
         then: 'result is as expected'
         recurDaily as String == "FREQ=DAILY;WKST=MO;UNTIL=20050307;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR"
@@ -433,7 +439,7 @@ class RecurSpec extends Specification {
     def 'test BYDAY with MINUTELY precision'() {
         given: 'a recurrence rule'
         Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
-                .dayList(new WeekDayList(MO)).hourList(new NumberList('16'))
+                .dayList(MO).hourList(16)
                 .minuteList(new NumberList('37,38'))
                 .until((LocalDateTime) TemporalAdapter.parse('20220519T165900').temporal).build()
 
@@ -448,7 +454,7 @@ class RecurSpec extends Specification {
     def 'test getdates as stream'() {
         given: 'a recurrence rule'
         Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
-                .dayList(new WeekDayList(MO)).hourList(new NumberList('16'))
+                .dayList(MO).hourList(16)
                 .minuteList(new NumberList('37,38'))
                 .until((LocalDateTime) TemporalAdapter.parse('20220519T165900').temporal).build()
 
@@ -463,7 +469,7 @@ class RecurSpec extends Specification {
 
     def 'test unlike temporals'() {
         given: 'a date-time recurrence with date precision in UNTIL field'
-        Recur<LocalDateTime> recur = new Recur<>("FREQ=YEARLY;INTERVAL=2;UNTIL=20230101");
+        Recur<LocalDateTime> recur = new Recur<>("FREQ=YEARLY;INTERVAL=2;UNTIL=20230101")
 
         expect: 'dates are returned correctly'
         recur.getDates(LocalDate.of(2020, 1, 1).atStartOfDay(),
@@ -471,5 +477,46 @@ class RecurSpec extends Specification {
                 LocalDate.of(2025, 1, 1).atStartOfDay()) == [
                     LocalDate.of(2020, 1, 1).atStartOfDay(),
                     LocalDate.of(2022, 1, 1).atStartOfDay()]
+    }
+
+    def 'test getdates as stream for a large date range'() {
+        given: 'a recurrence rule'
+        Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.DAILY).interval(1)
+                .dayList(MO).hourList(16)
+                .minuteList(new NumberList('37,38'))
+                .until((LocalDateTime) TemporalAdapter.parse('20520519T165900').temporal).build()
+
+        when: 'dates are generated for a period'
+        def dates = recur.getDatesAsStream((LocalDateTime) TemporalAdapter.parse('20220505T143700').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20220505T143700').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20520519T145900').temporal, -1).filter { it.get(ChronoField.YEAR) > 2051 }.collect(Collectors.toList())
+
+        then: 'result matches expected'
+        dates == DateList.parse('''20520101T163700, 20520101T163800, 20520108T163700, 20520108T163800,
+ 20520115T163700, 20520115T163800, 20520122T163700, 20520122T163800, 20520129T163700, 20520129T163800,
+ 20520205T163700, 20520205T163800, 20520212T163700, 20520212T163800, 20520219T163700, 20520219T163800,
+ 20520226T163700, 20520226T163800, 20520304T163700, 20520304T163800, 20520311T163700, 20520311T163800,
+ 20520318T163700, 20520318T163800, 20520325T163700, 20520325T163800, 20520401T163700, 20520401T163800,
+ 20520408T163700, 20520408T163800, 20520415T163700, 20520415T163800, 20520422T163700, 20520422T163800,
+ 20520429T163700, 20520429T163800, 20520506T163700, 20520506T163800, 20520513T163700, 20520513T163800''').dates
+    }
+
+    def 'test getdates across a DST-change'() {
+        given: 'a recurrence rule'
+        ZoneId zoneId = ZoneId.of("America/Los_Angeles")
+        Recur<ZonedDateTime> rrule = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=FR,SA,SU,MO")
+
+        and: 'a period that crosses a tz change boundary (DST -> STD)'
+        ZonedDateTime seed = ZonedDateTime.of(2000, 2, 1, 0, 59, 0, 0, zoneId)
+        Period <ZonedDateTime> period = new Period<>(
+                Instant.parse("2019-10-20T20:00:00Z").atZone(zoneId),
+                Instant.parse("2019-11-10T00:00:00Z").atZone(zoneId)
+        )
+
+        when: 'dates are calculated for the period'
+        List<ZonedDateTime> list = rrule.getDates(seed, period)
+
+        then: 'result matched expected'
+        ZonedDateTime.of(2019, 11, 3, 0, 59, 0, 0, zoneId).equals(list.get(7))
     }
 }

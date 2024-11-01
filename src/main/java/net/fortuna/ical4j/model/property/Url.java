@@ -37,9 +37,9 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.RelationshipPropertyValidators;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -104,7 +104,6 @@ public class Url extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Url(final ParameterList aList, final String aValue) {
         super(URL, aList);
@@ -164,7 +163,7 @@ public class Url extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.URL.validate(this);
+        return RelationshipPropertyValidators.URL.validate(this);
     }
 
     @Override

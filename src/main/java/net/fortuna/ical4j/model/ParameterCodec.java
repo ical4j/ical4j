@@ -52,7 +52,7 @@ public class ParameterCodec implements StringEncoder, StringDecoder {
     @Override
     public String decode(String source) throws DecoderException {
         if (source != null) {
-            String decoded = ENCODED_CARET_EX.matcher(
+            var decoded = ENCODED_CARET_EX.matcher(
                     ENCODED_NEWLINE_EX.matcher(
                             ENCODED_QUOTE_EX.matcher(source).replaceAll("\"")
                     ).replaceAll("\n")
@@ -82,7 +82,7 @@ public class ParameterCodec implements StringEncoder, StringDecoder {
     public String encode(String source) throws EncoderException {
         if (source != null) {
             // order is significant here as we don't want to double-encode carets..
-            String encoded = QUOTE_EX.matcher(
+            var encoded = QUOTE_EX.matcher(
                     NEWLINE_EX.matcher(
                             CARET_EX.matcher(source).replaceAll(ENCODED_CARET)
                     ).replaceAll(ENCODED_NEWLINE)

@@ -31,12 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.TimeZones;
+
+import java.text.ParseException;
+import java.util.Calendar;
 
 /**
  * $Id$
@@ -48,7 +48,7 @@ import net.fortuna.ical4j.util.TimeZones;
  */
 public class DateTest extends TestCase {
 
-    private Date date;
+    private final Date date;
 
     private java.util.Date date2;
     
@@ -102,7 +102,7 @@ public class DateTest extends TestCase {
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        suite.addTest(new DateTest(new Date(0l), "19700101"));
+        suite.addTest(new DateTest(new Date(0L), "19700101"));
 
         Calendar cal = Calendar.getInstance(TimeZones.getDateTimeZone());
         cal.clear();

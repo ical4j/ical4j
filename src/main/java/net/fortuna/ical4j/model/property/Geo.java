@@ -36,9 +36,9 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
@@ -224,10 +224,10 @@ public class Geo extends Property {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid GEO string");
         }
-        final String latitudeString = matcher.group(1);
+        final var latitudeString = matcher.group(1);
         latitude = new BigDecimal(latitudeString);
 
-        final String longitudeString = matcher.group(2);
+        final var longitudeString = matcher.group(2);
         longitude = new BigDecimal(longitudeString);
     }
 
@@ -279,6 +279,6 @@ public class Geo extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return PropertyValidator.GEO.validate(this);
+        return DescriptivePropertyValidators.GEO.validate(this);
     }
 }

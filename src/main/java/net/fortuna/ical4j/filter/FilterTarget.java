@@ -33,6 +33,8 @@
 
 package net.fortuna.ical4j.filter;
 
+import net.fortuna.ical4j.util.RegEx;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -51,8 +53,10 @@ public class FilterTarget {
     }
 
     public FilterTarget(String spec, List<Attribute> attributes) {
-        this.name = spec.split(":")[0].replace("_", "-");
-        this.value = Optional.ofNullable(spec.split(":").length > 1 ? spec.split(":")[1] : null);
+        this.name = spec.split(RegEx.COLON_DELIMITED)[0].replace("_", "-");
+
+        var split = spec.split(RegEx.COLON_DELIMITED);
+        this.value = Optional.ofNullable(split.length > 1 ? split[1] : null);
         this.attributes = attributes;
     }
 
@@ -72,13 +76,22 @@ public class FilterTarget {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FilterTarget that = (FilterTarget) o;
+        var that = (FilterTarget) o;
         return name.equals(that.name) && Objects.equals(value, that.value) && Objects.equals(attributes, that.attributes);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(name, value, attributes);
+    }
+
+    @Override
+    public String toString() {
+        return "FilterTarget{" +
+                "name='" + name + '\'' +
+                ", value=" + value +
+                ", attributes=" + attributes +
+                '}';
     }
 
     public static class Attribute {
@@ -108,7 +121,7 @@ public class FilterTarget {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Attribute attribute = (Attribute) o;
+            var attribute = (Attribute) o;
             return name.equals(attribute.name) && Objects.equals(value, attribute.value);
         }
 
@@ -118,9 +131,17 @@ public class FilterTarget {
         }
 
         public static Attribute parse(String string) {
-            String name = string.split(":")[0];
-            String value = string.contains(":") ? string.split(":")[1] : null;
+            var name = string.split(RegEx.COLON_DELIMITED)[0];
+            var value = string.contains(":") ? string.split(RegEx.COLON_DELIMITED)[1] : null;
             return new Attribute(name, value);
+        }
+
+        @Override
+        public String toString() {
+            return "Attribute{" +
+                    "name='" + name + '\'' +
+                    ", value='" + value + '\'' +
+                    '}';
         }
     }
 }

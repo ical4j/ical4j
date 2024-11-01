@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.RegEx;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.*;
@@ -86,8 +86,9 @@ public class PeriodList<T extends Temporal> implements Serializable {
     }
 
     public PeriodList(Interval[] intervals) {
-        this(Arrays.stream(intervals).map(i -> new Period<>((T) i.getStart(), (T) i.getEnd())).collect(Collectors.toList()),
-                CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        //noinspection unchecked
+        this(Arrays.stream(intervals).map(i -> new Period<>((T) i.getStart(), (T) i.getEnd()))
+                        .collect(Collectors.toList()), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
 
     /**
@@ -104,7 +105,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> PeriodList<T> parse(final String aValue, CalendarDateFormat calendarDateFormat) {
         return (PeriodList<T>) new PeriodList<>(
-                Arrays.stream(aValue.split(",")).parallel().map(Period::parse).collect(Collectors.toList()),
+                Arrays.stream(aValue.split(RegEx.COMMA_DELIMITED)).parallel().map(Period::parse).collect(Collectors.toList()),
                 calendarDateFormat);
     }
 
@@ -164,15 +165,15 @@ public class PeriodList<T extends Temporal> implements Serializable {
         boolean normalised = false;
         for (Period<T> period1 : periods) {
             period = period1;
-            if (period.getStart() instanceof LocalDate) {
+            if (!TemporalAdapter.isDateTimePrecision(period.getStart())) {
                 continue;
             }
             if (period.isEmpty()) {
                 period = prevPeriod;
                 normalised = true;
             } else if (prevPeriod != null) {
-                Interval prevInterval = prevPeriod.toInterval();
-                Interval periodInterval = period.toInterval();
+                var prevInterval = prevPeriod.toInterval();
+                var periodInterval = period.toInterval();
                 if (prevInterval.encloses(periodInterval)) {
                     // ignore periods contained by other periods..
                     period = prevPeriod;
@@ -244,7 +245,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
         PeriodList<T> tmpResult = new PeriodList<>(dateFormat);
 
         for (final Period<T> subtraction : subtractions.getPeriods()) {
-            if (subtraction.getStart() instanceof LocalDate) {
+            if (!TemporalAdapter.isDateTimePrecision(subtraction.getStart())) {
                 tmpResult = tmpResult.addAll(result.getPeriods().stream()
                         .filter(p -> !p.equals(subtraction)).collect(Collectors.toList()));
             } else {
@@ -270,7 +271,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     }
 
     public List<Interval> toIntervalList() {
-        return periods.stream().map(p -> p.toInterval()).collect(Collectors.toList());
+        return periods.stream().map(Period::toInterval).collect(Collectors.toList());
     }
 
     @Override

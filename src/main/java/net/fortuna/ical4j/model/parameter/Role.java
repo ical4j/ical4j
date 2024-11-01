@@ -103,7 +103,7 @@ public class Role extends Parameter implements Encodable {
 
         @Override
         public Role createParameter(final String value) {
-            switch (value) {
+            switch (value.toUpperCase()) {
                 case VALUE_CHAIR: return CHAIR;
                 case VALUE_NON_PARTICIPANT: return NON_PARTICIPANT;
                 case VALUE_OPT_PARTICIPANT: return OPT_PARTICIPANT;

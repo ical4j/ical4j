@@ -61,9 +61,9 @@ import java.util.function.Predicate;
  */
 public class FilterTest<T extends Component> extends TestCase {
 
-    private Filter<T> filter;
+    private final Filter<T> filter;
     
-    private Collection<T> collection;
+    private final Collection<T> collection;
     
     private int expectedFilteredSize;
     
@@ -123,11 +123,11 @@ public class FilterTest<T extends Component> extends TestCase {
         Attendee a1 = new Attendee(new URI("Mailto:A@example.com"));
         Attendee a2 = new Attendee(new URI("Mailto:C@example.com"));
         
-        VEvent e1 = new VEvent().withProperty(organizer).withProperty(a1).getFluentTarget();
+        var e1 = (VEvent) new VEvent().add(organizer).add(a1);
         
-        VEvent e2 = new VEvent().withProperty(organizer).withProperty(a2).getFluentTarget();
+        var e2 = (VEvent) new VEvent().add(organizer).add(a2);
         
-        VEvent e3 = new VEvent().withProperty(organizer).withProperty(a1).withProperty(a2).getFluentTarget();
+        var e3 = (VEvent) new VEvent().add(organizer).add(a1).add(a2);
         
         Calendar calendar = new Calendar(new ComponentList<>(Arrays.asList(e1, e2, e3)));
 

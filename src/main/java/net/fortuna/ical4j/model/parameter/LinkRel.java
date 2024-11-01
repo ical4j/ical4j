@@ -34,41 +34,63 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.LinkRelationType;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.util.Uris;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
+/**
+ * <pre>
+ *     Purpose:
+ *     This property specifies the relationship of data referenced by a LINK property.
+ * Format Definition:
+ *
+ *     This parameter is defined by the following notation:
+ *
+ * linkrelparam = "LINKREL" "="
+ *                 (DQUOTE uri DQUOTE
+ *                / iana-token)   ; Other IANA registered type
+ *
+ * Description:
+ *
+ *     This parameter MUST be specified on all LINK properties and define the type of reference. This allows programs consuming this data to automatically scan for references they support. There is no default relation type.
+ * Any link relation in the link registry established by [RFC8288], or new link relations, may be used. It is expected that link relation types seeing significant usage in calendaring will have the calendaring usage described in an RFC.
+ * </pre>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9253.html#name-link-relation">rfc9253</a>
+ */
 public class LinkRel extends Parameter {
 
     private static final String PARAM_NAME = "LINKREL";
 
-    private final URI uri;
+    private final String value;
 
     public LinkRel(String value) {
         super(PARAM_NAME);
-        try {
-            this.uri = Uris.create(Strings.unquote(value));
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(e);
-        }
+        this.value = value;
+    }
+
+    public LinkRel(LinkRelationType linkRelationType) {
+        super(PARAM_NAME);
+        this.value = linkRelationType.toString();
     }
 
     public LinkRel(URI uri) {
         super(PARAM_NAME);
-        this.uri = uri;
+        this.value = uri.toASCIIString();
+    }
+
+    public LinkRelationType getLinkRelationType() {
+        return LinkRelationType.valueOf(value);
     }
 
     public URI getUri() {
-        return uri;
+        return URI.create(value);
     }
 
     @Override
     public String getValue() {
-        return Uris.decode(Strings.valueOf(getUri()));
+        return value;
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<LinkRel> {

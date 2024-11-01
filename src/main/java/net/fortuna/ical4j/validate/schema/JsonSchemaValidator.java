@@ -33,21 +33,19 @@
 
 package net.fortuna.ical4j.validate.schema;
 
+//import com.github.erosb.jsonsKema.*;
+
 import net.fortuna.ical4j.model.property.StructuredData;
-import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-public class JsonSchemaValidator implements Validator<StructuredData> {
+/**
+ * XXX: The validator library used in this class currently depends on the URLDecoder.decode(String, Charset)
+ * method added in Java 10. As such this will cause an error when used with Java &lt; 10.
+ */
+public class JsonSchemaValidator implements net.fortuna.ical4j.validate.Validator<StructuredData> {
 
     private final URL schemaUrl;
 
@@ -57,16 +55,33 @@ public class JsonSchemaValidator implements Validator<StructuredData> {
 
     @Override
     public ValidationResult validate(StructuredData target) throws ValidationException {
+        throw new UnsupportedOperationException("Schema validation not yet implemented");
+        /*
         ValidationResult result = new ValidationResult();
-        try (InputStream in = schemaUrl.openStream()) {
-            JSONObject rawSchema = new JSONObject(new JSONTokener(in));
-            Schema schema = SchemaLoader.load(rawSchema);
-            schema.validate(target.getValue());
+        try (final InputStream in = schemaUrl.openStream()) {
+            final String schemaJson = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
+
+            final JsonValue rawSchema = new JsonParser(schemaJson).parse();
+
+            final Schema schema = new SchemaLoader(rawSchema).load();
+            final Validator validator = Validator.forSchema(schema);
+
+            final JsonValue instance = new JsonParser(target.getValue()).parse();
+            final ValidationFailure failure = validator.validate(instance);
+
+            if(failure != null) {
+                result.getEntries().add(new ValidationEntry(
+                        failure.getMessage(),
+                        ValidationEntry.Severity.ERROR,
+                        target.getName()
+                ));
+            }
         } catch (IOException e) {
             throw new ValidationException("Unable to retrieve schema");
-        } catch (org.everit.json.schema.ValidationException e) {
-            result.getEntries().add(new ValidationEntry(e.getMessage(), ValidationEntry.Severity.ERROR, target.getName()));
         }
         return result;
+             */
     }
 }

@@ -1,14 +1,12 @@
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.Parameter
-import net.fortuna.ical4j.model.ParameterList
-import net.fortuna.ical4j.model.PropertyFactory
-
 class PropertyFactoryWrapper extends AbstractFactory {
 
     Class propertyClass
 
     PropertyFactory factory
+
+    def propertyPrefix
 
     PropertyFactoryWrapper(Class propClass, PropertyFactory factory) {
         this.propertyClass = propClass
@@ -18,21 +16,25 @@ class PropertyFactoryWrapper extends AbstractFactory {
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, propertyClass)) {
-            return value
+            return value.copy()
         }
         List<Parameter> parameters = (List<Parameter>) attributes.remove('parameters')
         if (parameters == null) {
             parameters = []
         }
         String propValue = attributes.remove('value')
+
+        def property
         if (propValue != null) {
-            return factory.createProperty(new ParameterList(parameters), propValue)
+            property = factory.createProperty(new ParameterList(parameters), propValue)
         }
         else if (value != null) {
-            return factory.createProperty(new ParameterList(parameters), (String) value)
+            property = factory.createProperty(new ParameterList(parameters), (String) value)
         } else {
-            return factory.createProperty()
+            property = factory.createProperty()
         }
+        property.prefix = propertyPrefix
+        return property
     }
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
