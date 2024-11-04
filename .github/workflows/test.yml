@@ -33,6 +33,6 @@ jobs:
         if: always()
         with:
           files: |
-            build/test-results/**/*.xml
-            build/test-results/**/*.trx
-            build/test-results/**/*.json
+            "$GITHUB_WORKSPACE/build/test-results/**/*.xml"
+            "$GITHUB_WORKSPACE/build/test-results/**/*.trx"
+            "$GITHUB_WORKSPACE/build/test-results/**/*.json"
