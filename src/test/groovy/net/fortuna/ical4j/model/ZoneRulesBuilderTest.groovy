@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -66,5 +68,36 @@ class ZoneRulesBuilderTest extends Specification {
         where:
         tzId                    | localDate                                     | expectedOffset
         'America/Los_Angeles'   | LocalDateTime.of(2023, 12, 14, 17, 0, 0, 0)   | ZoneOffset.ofHours(-8)
+    }
+
+    def 'test relaxed parsing of invalid tz definitions'() {
+
+        given: 'relaxed parsing enabled'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+
+        when: 'an invalid tz def is parsed'
+        def tzstring = '''BEGIN:VCALENDAR
+BEGIN:VTIMEZONE
+TZID:US/Central
+BEGIN:STANDARD
+DTSTART:20070101T000000Z
+RRULE:FREQ=YEARLY;WKST=SU;BYMONTH=11;BYDAY=1SU
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0600
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:20070101T000000Z
+RRULE:FREQ=YEARLY;WKST=SU;BYMONTH=3;BYDAY=1SU
+TZOFFSETFROM:-0600
+TZOFFSETTO:-0500
+END:DAYLIGHT
+END:VTIMEZONE
+END:VCALENDAR'''
+
+        def cal = new CalendarBuilder().build(new StringReader(tzstring))
+        def vtimezone = cal.getComponent('VTIMEZONE').get()
+
+        then:
+        noExceptionThrown()
     }
 }
