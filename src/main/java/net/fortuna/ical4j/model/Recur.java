@@ -751,12 +751,13 @@ public class Recur<T extends Temporal> implements Serializable {
     public final T getNextDate(final T seed, final T startDate) {
 
         T candidateSeed = seed;
+        int incrementMultiplier = 1;
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (count == null) {
             while (TemporalAdapter.isBefore(candidateSeed, startDate)) {
-                candidateSeed = increment(candidateSeed);
+                candidateSeed = increment(seed, incrementMultiplier++);
             }
         }
 
@@ -798,7 +799,7 @@ public class Recur<T extends Temporal> implements Serializable {
                     break;
                 }
             }
-            candidateSeed = increment(candidateSeed);
+            candidateSeed = increment(seed, incrementMultiplier++);
         }
         return null;
     }
@@ -808,9 +809,9 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @param cal a {@link Temporal} value to increment
      */
-    private T increment(final T cal) {
+    private T increment(final T cal, int multiplier) {
         // initialise interval..
-        final int calInterval = Math.max(getInterval(), 1);
+        final int calInterval = Math.max(getInterval(), 1) * multiplier;
         //noinspection unchecked
         return (T) cal.plus(calInterval, calIncField);
     }
@@ -1290,6 +1291,7 @@ public class Recur<T extends Temporal> implements Serializable {
         final List<T> dates;
 
         T candidateSeed;
+        int incrementMultiplier = 1;
 
         T lastCandidate = null;
 
@@ -1313,13 +1315,14 @@ public class Recur<T extends Temporal> implements Serializable {
             // optimize the start time for selecting candidates
             // (only applicable where a COUNT is not specified)
             if (count == null) {
-                T incremented = increment(candidateSeed);
+                T incremented = increment(seed, incrementMultiplier);
                 while (TemporalAdapter.isBefore(incremented, periodStart)) {
                     candidateSeed = incremented;
+                    incrementMultiplier++;
                     if (candidateSeed == null) {
                         break;
                     }
-                    incremented = increment(candidateSeed);
+                    incremented = increment(seed, incrementMultiplier);
                 }
             }
         }
@@ -1356,7 +1359,7 @@ public class Recur<T extends Temporal> implements Serializable {
                     } else {
                         noCandidateIncrementCount = 0;
                     }
-                    candidateSeed = increment(candidateSeed);
+                    candidateSeed = increment(seed, incrementMultiplier++);
                 }
             }
 

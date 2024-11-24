@@ -517,4 +517,28 @@ class RecurSpec extends Specification {
         then: 'result matched expected'
         ZonedDateTime.of(2019, 11, 3, 0, 59, 0, 0, zoneId).equals(list.get(7))
     }
+
+    def 'test getdates across a DST-change both ways'() {
+        given: 'a recurrence rule'
+        ZoneId zoneId = ZoneId.of("America/Los_Angeles")
+        Recur<ZonedDateTime> rrule = new Recur<>("FREQ=DAILY;COUNT=10;INTERVAL=1")
+
+        and: 'a period that crosses a tz change boundary (DST -> STD)'
+        ZonedDateTime seed = ZonedDateTime.of(2025, 3, 5, hour, 0, 0, 0, zoneId)
+        Period <ZonedDateTime> period = new Period<>(
+                LocalDateTime.parse(pStart).atZone(zoneId),
+                LocalDateTime.parse(pEnd).atZone(zoneId)
+        )
+
+        when: 'dates are calculated for the period'
+        List<ZonedDateTime> list = rrule.getDates(seed, period)
+
+        then: 'result matched expected'
+        list as String == expectedList
+
+        where:
+        hour    | pStart                  | pEnd                  | expectedList
+        5       | "2025-03-05T05:00:00"   | "2025-03-14T05:00:00" | '[2025-03-05T05:00-08:00[America/Los_Angeles], 2025-03-06T05:00-08:00[America/Los_Angeles], 2025-03-07T05:00-08:00[America/Los_Angeles], 2025-03-08T05:00-08:00[America/Los_Angeles], 2025-03-09T05:00-07:00[America/Los_Angeles], 2025-03-10T05:00-07:00[America/Los_Angeles], 2025-03-11T05:00-07:00[America/Los_Angeles], 2025-03-12T05:00-07:00[America/Los_Angeles], 2025-03-13T05:00-07:00[America/Los_Angeles], 2025-03-14T05:00-07:00[America/Los_Angeles]]'
+        2       | "2025-03-05T02:00:00"   | "2025-03-14T02:00:00" | '[2025-03-05T02:00-08:00[America/Los_Angeles], 2025-03-06T02:00-08:00[America/Los_Angeles], 2025-03-07T02:00-08:00[America/Los_Angeles], 2025-03-08T02:00-08:00[America/Los_Angeles], 2025-03-09T03:00-07:00[America/Los_Angeles], 2025-03-10T02:00-07:00[America/Los_Angeles], 2025-03-11T02:00-07:00[America/Los_Angeles], 2025-03-12T02:00-07:00[America/Los_Angeles], 2025-03-13T02:00-07:00[America/Los_Angeles], 2025-03-14T02:00-07:00[America/Los_Angeles]]'
+    }
 }
