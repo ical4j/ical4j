@@ -3969,6 +3969,12 @@ acceptedBreaks:
       justification: "refactoring_validation"
     - code: "java.method.numberOfParametersChanged"
       old: "method void net.fortuna.ical4j.validate.ValidationRule<T>::<init>(net.fortuna.ical4j.validate.ValidationRule.ValidationType,\
+        \ java.util.function.Predicate<T>, boolean, java.lang.String[])"
+      new: "method void net.fortuna.ical4j.validate.ValidationRule<T>::<init>(net.fortuna.ical4j.validate.ValidationRule.ValidationType,\
+        \ java.lang.Enum<?>[])"
+      justification: "validation_support_enum_identifiers"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.validate.ValidationRule<T>::<init>(net.fortuna.ical4j.validate.ValidationRule.ValidationType,\
         \ java.util.function.Predicate<T>, java.lang.String, java.lang.String[])"
       new: "method void net.fortuna.ical4j.validate.ValidationRule<T>::<init>(java.util.function.Predicate<T>,\
         \ java.lang.String, java.lang.String[])"

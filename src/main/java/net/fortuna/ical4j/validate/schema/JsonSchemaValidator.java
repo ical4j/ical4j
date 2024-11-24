@@ -42,8 +42,8 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import java.net.URL;
 
 /**
- * XXX: The validotor library used in this class currently depends on the URLDecoder.decode(String, Charset)
- * method added in Java 10. As such this will cause an error when used with Java < 10.
+ * XXX: The validator library used in this class currently depends on the URLDecoder.decode(String, Charset)
+ * method added in Java 10. As such this will cause an error when used with Java &lt; 10.
  */
 public class JsonSchemaValidator implements net.fortuna.ical4j.validate.Validator<StructuredData> {
 

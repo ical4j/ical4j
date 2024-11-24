@@ -7,11 +7,13 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.time.temporal.Temporal;
 import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneOffsetTransitionRule;
 import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
@@ -82,13 +84,23 @@ public class ZoneRulesBuilder {
 
             // ignore transitions that have no effect..
             if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.getOffset())) {
-                DtStart<LocalDateTime> start = observance.getRequiredProperty("DTSTART");
-                LocalDateTime periodEnd = LocalDateTime.now();
-                if (periodEnd.isBefore(start.getDate())) {
-                    periodEnd = start.getDate().plusYears(5);
+                final DtStart<Temporal> start = observance.getRequiredProperty("DTSTART");
+                LocalDateTime startDate;
+                if (!(start.getDate() instanceof LocalDateTime)) {
+                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                        startDate = LocalDateTime.from(start.getDate());
+                    } else {
+                        throw new RuntimeException("VTIMEZONE start date must be specified in local time");
+                    }
+                } else {
+                    startDate = (LocalDateTime) start.getDate();
                 }
-                observance.calculateRecurrenceSet(new Period<>(start.getDate(), periodEnd)).forEach( p -> {
-                    transitions.add(ZoneOffsetTransition.of((LocalDateTime) p.getStart(),
+                LocalDateTime periodEnd = LocalDateTime.now();
+                if (periodEnd.isBefore(startDate)) {
+                    periodEnd = startDate.plusYears(5);
+                }
+                observance.calculateRecurrenceSet(new Period<>(startDate, periodEnd)).forEach( p -> {
+                    transitions.add(ZoneOffsetTransition.of(LocalDateTime.from(p.getStart()),
                             offsetFrom.get().getOffset(), offsetTo.getOffset()));
                 });
             }

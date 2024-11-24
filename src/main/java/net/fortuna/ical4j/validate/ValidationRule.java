@@ -51,6 +51,10 @@ public class ValidationRule<T> implements Serializable {
 
     private final boolean relaxedModeSupported;
 
+    public ValidationRule(ValidationType type, Enum<?>...instances) {
+        this(type, Arrays.stream(instances).map(Enum::toString).toArray(String[]::new));
+    }
+
     /**
      * @param type rule type
      * @param instances list of identifiers to check (parameter, property, component, etc.)
