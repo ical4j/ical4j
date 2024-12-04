@@ -10,9 +10,12 @@ import spock.lang.Specification
 
 import java.time.DayOfWeek
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.time.temporal.Temporal
 import java.util.stream.IntStream
 
 import static net.fortuna.ical4j.model.WeekDay.*
+import static net.fortuna.ical4j.transform.recurrence.Frequency.MONTHLY
 import static net.fortuna.ical4j.transform.recurrence.Frequency.WEEKLY
 
 class ByDayRuleTest extends Specification {
@@ -83,6 +86,55 @@ class ByDayRuleTest extends Specification {
                 System.out.println(p)
             }
         }
+    }
+
+    def 'test offset day rules'() {
+        given: 'a BYDAY rule'
+        def rule = new ByDayRule(weekDays, frequency, DayOfWeek.SUNDAY)
+
+        expect: 'rule transformations are correct'
+        def dates = []
+        dateStrings.each {
+            dates << TemporalAdapter.parse(it).temporal
+        }
+
+        def expected = []
+        expectedStrings.each {
+            expected << TemporalAdapter.parse(it).temporal
+        }
+
+        rule.apply(dates) == expected
+
+        where:
+        weekDays                | frequency | dateStrings   | expectedStrings
+        [new WeekDay(FR, -1)]   | MONTHLY   | ['20140131']  | ['20140131']
+        [new WeekDay(FR, -1)]   | MONTHLY   | ['20140131', '20140228']  | ['20140131', '20140228']
+    }
+
+    def 'test offset day rules with count'() {
+        given: 'a BYDAY rule'
+        def rule = new ByDayRule(weekDays, frequency, DayOfWeek.SUNDAY)
+
+        expect: 'rule transformations are correct'
+        List<Temporal> dates = []
+        dates << TemporalAdapter.parse(seedString).temporal
+
+        def expected = []
+        expectedStrings.each {
+            expected << TemporalAdapter.parse(it).temporal
+        }
+
+        for (int i = 1; i < count; i++) {
+            dates << dates[0].plus(i, ChronoUnit.MONTHS)
+            dates = rule.apply(dates)
+        }
+        dates == expected
+
+        where:
+        weekDays                | frequency | seedString    | count   | expectedStrings
+        [new WeekDay(FR, -1)]   | MONTHLY   | '20140131'    | 2       | ['20140131', '20140228']
+        [new WeekDay(FR, -1)]   | MONTHLY   | '20140131'    | 4       | ['20140131', '20140228', '20140328', '20140425']
+        [new WeekDay(FR, -1)]   | MONTHLY   | '20250131'    | 4       | ['20250131', '20250228', '20250328', '20250425']
     }
 
     private static NumberList numberList(int startInclusive, int endExclusive) {
