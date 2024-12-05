@@ -435,8 +435,9 @@ class RecurSpec extends Specification {
         next as String == expectedDate
 
         where:
-        rule	                            | seed	            | start	            | expectedDate
-        'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| '20180329T025959'	| '20170729T030000'	| '20180329T025959'
+        rule	                                                    | seed	            | start	            | expectedDate
+        'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	                        | '20180329T025959'	| '20170729T030000'	| '20180329T025959'
+        'FREQ=WEEKLY;UNTIL=20260714T063000;INTERVAL=1;BYDAY=FR,SA'	| '20250323T111500'	| '20250325T111500'	| '20250328T111500'
     }
 
     def 'test BYDAY with MINUTELY precision'() {
