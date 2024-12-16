@@ -4035,3 +4035,9 @@ acceptedBreaks:
       new: "method void net.fortuna.ical4j.validate.ValidationRule<T>::<init>(net.fortuna.ical4j.validate.ValidationRule.ValidationType,\
         \ java.util.function.Predicate<T>, java.lang.String, boolean, java.lang.String[])"
       justification: "refactoring_validation"
+  "4.0.5":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.addedToInterface"
+      new: "method net.fortuna.ical4j.model.component.VTimeZone net.fortuna.ical4j.util.TimeZoneCache::getTimezone(java.lang.String,\
+        \ java.util.function.Supplier<net.fortuna.ical4j.model.component.VTimeZone>)"
+      justification: "refactoring_tz_cache"

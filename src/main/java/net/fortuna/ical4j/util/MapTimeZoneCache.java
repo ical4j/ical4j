@@ -2,12 +2,13 @@ package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.component.VTimeZone;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 public class MapTimeZoneCache implements TimeZoneCache {
 
-    private final Map<String, VTimeZone> mapCache;
+    private final ConcurrentMap<String, VTimeZone> mapCache;
 
     public MapTimeZoneCache() {
         mapCache = new ConcurrentHashMap<>();
@@ -16,6 +17,14 @@ public class MapTimeZoneCache implements TimeZoneCache {
     @Override
     public VTimeZone getTimezone(String id) {
         return mapCache.get(id);
+    }
+
+    @Override
+    public VTimeZone getTimezone(String id, Supplier<VTimeZone> putIfAbsent) {
+        if (!containsId(id)) {
+            mapCache.put(id, putIfAbsent.get());
+        }
+        return getTimezone(id);
     }
 
     @Override

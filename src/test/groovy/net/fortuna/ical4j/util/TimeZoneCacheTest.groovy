@@ -17,6 +17,6 @@ class TimeZoneCacheTest extends Specification {
         isAdded && cache.getTimezone(tz.timeZoneId.get().value) == tz
 
         where:
-        cache << [new MapTimeZoneCache(), new JCacheTimeZoneCache()]
+        cache << [new MapTimeZoneCache(), new CaffeineTimeZoneCache()]
     }
 }
