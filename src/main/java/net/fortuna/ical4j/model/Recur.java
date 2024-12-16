@@ -756,7 +756,7 @@ public class Recur<T extends Temporal> implements Serializable {
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (count == null) {
-            while (TemporalAdapter.isBefore(candidateSeed, startDate)) {
+            while (TemporalAdapter.isBefore(candidateSeed, startDate.minus(Math.max(getInterval(), 1), calIncField))) {
                 candidateSeed = increment(seed, incrementMultiplier++);
             }
         }
@@ -855,8 +855,9 @@ public class Recur<T extends Temporal> implements Serializable {
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);
             }
-        } else if (frequency == Frequency.MONTHLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
-                && weekNoList.isEmpty() && dayList.isEmpty())) {
+        } else if ((frequency == Frequency.MONTHLY && dayList.isEmpty()) ||
+                (frequency == Frequency.YEARLY && yearDayList.isEmpty()
+                    && weekNoList.isEmpty() && dayList.isEmpty())) {
 
             List<Integer> implicitMonthDayList = new NumberList(ChronoField.DAY_OF_MONTH.range(), false);
             // where seed doesn't provide timezone rules derive using system default timezone..
@@ -1316,7 +1317,7 @@ public class Recur<T extends Temporal> implements Serializable {
             // (only applicable where a COUNT is not specified)
             if (count == null) {
                 T incremented = increment(seed, incrementMultiplier);
-                while (TemporalAdapter.isBefore(incremented, periodStart)) {
+                while (TemporalAdapter.isBefore(incremented, periodStart.minus(Math.max(getInterval(), 1), calIncField))) {
                     candidateSeed = incremented;
                     incrementMultiplier++;
                     if (candidateSeed == null) {

@@ -22,7 +22,7 @@ module ical4j.core {
 
     // optional dependencies..
     requires static org.jetbrains.annotations;
-    requires static cache.api;
+    requires static com.github.benmanes.caffeine;
     requires static org.jparsec;
     requires static org.codehaus.groovy;
 //    requires static json.sKema;

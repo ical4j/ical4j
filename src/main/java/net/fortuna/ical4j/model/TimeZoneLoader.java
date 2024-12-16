@@ -73,21 +73,21 @@ public class TimeZoneLoader {
      */
     public VTimeZone loadVTimeZone(String id) throws IOException, ParserException {
         Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
-        if (!cache.containsId(id)) {
+        return cache.getTimezone(id, () -> {
             final var resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
             if (resource != null) {
                 try (var in = resource.openStream()) {
                     final var builder = new CalendarBuilder();
                     final var calendar = builder.build(in);
                     final Optional<VTimeZone> vTimeZone = calendar.getComponent(Component.VTIMEZONE);
-                    // load any available updates for the timezone.. can be explicitly disabled via configuration
-                    vTimeZone.ifPresent(timeZone -> cache.putIfAbsent(id, zoneUpdater.updateDefinition(timeZone)));
+                    return zoneUpdater.updateDefinition(vTimeZone.orElseThrow());
+                } catch (IOException | ParserException e) {
+                    throw new RuntimeException("Error loading timezone", e);
                 }
             } else {
                 return generateTimezoneForId(id);
             }
-        }
-        return cache.getTimezone(id);
+        });
     }
 
     private static VTimeZone generateTimezoneForId(String timezoneId) {
