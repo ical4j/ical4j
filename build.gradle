@@ -1,5 +1,4 @@
 plugins {
-    id 'java'
     id 'java-library'
     id 'groovy'
     id 'maven-publish'
@@ -10,25 +9,21 @@ plugins {
     id "com.palantir.revapi" version "1.7.0"
 //    id "net.ltgt.errorprone" version "2.0.2" apply false
 //    id "biz.aQute.bnd.builder" version "$bndVersion"
-    id 'org.javamodularity.moduleplugin' version '1.8.14'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
+    mavenLocal()
     mavenCentral()
-}
-
-jar {
-    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 java {
     withJavadocJar()
     withSourcesJar()
 
-    registerFeature('jcacheTimezoneCache') {
+    registerFeature('caffeineTimezoneCache') {
         usingSourceSet(sourceSets.main)
     }
 
@@ -44,8 +39,6 @@ java {
         usingSourceSet(sourceSets.main)
     }
 }
-
-sourcesJar.dependsOn 'compileModuleInfoJava'
 
 dependencies {
 //    errorprone "com.google.errorprone:error_prone_core:2.3.3"
@@ -63,7 +56,7 @@ dependencies {
     compileOnly "org.jetbrains:annotations:24.1.0"
 
     // optional timezone caching..
-    jcacheTimezoneCacheImplementation 'javax.cache:cache-api:1.1.1', 'org.jetbrains:annotations:23.0.0'
+    caffeineTimezoneCacheImplementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
 
     // optional parser for filter expressions..
     filterExpressionsImplementation "org.jparsec:jparsec:$jparsecVersion"
@@ -80,10 +73,8 @@ dependencies {
     testImplementation "org.apache.logging.log4j:log4j-core:$log4jVersion",
             "org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion",
             "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
+//            "org.codehaus.groovy:groovy:$groovyVersion"
             "org.codehaus.groovy:groovy-xml:$groovyVersion"
-
-    // A CachingProvider is required for TimeZoneCacheTest.groovy
-    testImplementation "org.cache2k:cache2k-jcache:$jcacheVersion"
 
     // groovy-test
     testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
@@ -104,10 +95,6 @@ dependencies {
 }
 
 test {
-    moduleOptions {
-        runOnClasspath = true
-    }
-
     useJUnitPlatform()
 
     finalizedBy jacocoTestCoverageVerification, jacocoTestReport // Ensure Jacoco is run after tests have completed
