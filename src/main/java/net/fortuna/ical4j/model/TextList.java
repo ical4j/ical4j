@@ -69,18 +69,18 @@ public class TextList implements Serializable {
         while (matcher.find()){
             values.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
         }
-        texts = Set.copyOf(values);
+        texts = new LinkedHashSet<>(values);
     }
 
     public TextList(List<String> texts) {
-        this.texts = Set.copyOf(texts);
+        this.texts = new LinkedHashSet<>(texts);
     }
 
     /**
      * @param textValues an array of text values
      */
     public TextList(String...textValues) {
-        texts = Set.copyOf(Arrays.asList(textValues));
+        texts = new LinkedHashSet<>(Arrays.asList(textValues));
     }
     
     /**
