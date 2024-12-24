@@ -95,10 +95,7 @@ public class ZoneRulesBuilder {
                 } else {
                     startDate = (LocalDateTime) start.getDate();
                 }
-                LocalDateTime periodEnd = LocalDateTime.now();
-                if (periodEnd.isBefore(startDate)) {
-                    periodEnd = startDate.plusYears(5);
-                }
+                final LocalDateTime periodEnd = LocalDateTime.now().plusYears(5);
                 observance.calculateRecurrenceSet(new Period<>(startDate, periodEnd)).forEach( p -> {
                     transitions.add(ZoneOffsetTransition.of(LocalDateTime.from(p.getStart()),
                             offsetFrom.get().getOffset(), offsetTo.getOffset()));
