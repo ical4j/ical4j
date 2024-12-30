@@ -107,7 +107,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VJournal extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VJournal>,
+public class VJournal extends CalendarComponent implements Prototype<VJournal>, ComponentContainer<Component>, RecurrenceSupport<VJournal>,
         DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
         RelationshipPropertyAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
@@ -229,7 +229,7 @@ public class VJournal extends CalendarComponent implements ComponentContainer<Co
     }
 
     @Override
-    public Component copy() {
+    public VJournal copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()

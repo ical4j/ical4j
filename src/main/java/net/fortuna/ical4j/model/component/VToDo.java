@@ -117,7 +117,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VToDo>,
+public class VToDo extends CalendarComponent implements Prototype<VToDo>, ComponentContainer<Component>, RecurrenceSupport<VToDo>,
         DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
         RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
@@ -350,7 +350,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     }
 
     @Override
-    public Component copy() {
+    public VToDo copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()

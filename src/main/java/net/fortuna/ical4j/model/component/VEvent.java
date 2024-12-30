@@ -190,7 +190,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VEvent>,
+public class VEvent extends CalendarComponent implements Prototype<VEvent>, ComponentContainer<Component>, RecurrenceSupport<VEvent>,
         DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
         RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
@@ -372,7 +372,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
                     if (startValue.isPresent() && !endValue.equals(startValue)) {
                         // invalid..
                         startEndValueMismatch = true;
-                    } else if (!startValue.isPresent() && !Value.DATE_TIME.equals(endValue.get())) {
+                    } else if (startValue.isEmpty() && !Value.DATE_TIME.equals(endValue.get())) {
                         // invalid..
                         startEndValueMismatch = true;
                     }
@@ -465,7 +465,7 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
-                final VEvent occurrence = (VEvent) this.copy();
+                final VEvent occurrence = this.copy();
                 occurrence.add(new RecurrenceId<>(date));
                 return occurrence;
             }
@@ -579,11 +579,11 @@ public class VEvent extends CalendarComponent implements ComponentContainer<Comp
     }
 
     @Override
-    public Component copy() {
+    public VEvent copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                        .map(Prototype::copy).collect(Collectors.toList())),
+                        .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
-                        .map(Prototype::copy).collect(Collectors.toList())));
+                        .map(Component::copy).collect(Collectors.toList())));
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {

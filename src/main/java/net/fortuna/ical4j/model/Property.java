@@ -59,7 +59,7 @@ import java.util.Optional;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content implements Prototype<Property>, Comparable<Property>, FluentProperty {
+public abstract class Property extends Content implements Comparable<Property>, FluentProperty {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -660,7 +660,7 @@ public abstract class Property extends Content implements Prototype<Property>, C
     }
 
     @Override
-    public int compareTo(Property o) {
+    public int compareTo(@NotNull Property o) {
         if (this.equals(o)) {
             return 0;
         }

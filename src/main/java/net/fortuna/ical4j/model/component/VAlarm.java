@@ -193,7 +193,7 @@ import static net.fortuna.ical4j.model.Property.*;
  *
  * @author Ben Fortuna
  */
-public class VAlarm extends Component implements ComponentContainer<Component>, DescriptivePropertyAccessor,
+public class VAlarm extends Component implements Prototype<VAlarm>, ComponentContainer<Component>, DescriptivePropertyAccessor,
     LocationsAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
@@ -330,7 +330,7 @@ public class VAlarm extends Component implements ComponentContainer<Component>, 
     }
 
     @Override
-    public Component copy() {
+    public VAlarm copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
