@@ -332,7 +332,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
     public final Calendar copy() {
         return new Calendar(
                 new PropertyList(getProperties().parallelStream()
-                        .map(Property::<Property>copy).collect(Collectors.toList())),
+                        .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()
                     .map(c -> (CalendarComponent) c.copy()).collect(Collectors.toList())));
     }

@@ -188,7 +188,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
         for (RDate<LocalDateTime> rdate : rdates) {
             List<LocalDateTime> rdateDates = rdate.getDates();
             for (final var rdateDate : rdateDates) {
-                final var rdateOnset = OffsetDateTime.from(rdateDate.atOffset(offsetFrom.getOffset()));
+                final var rdateOnset = rdateDate.atOffset(offsetFrom.getOffset());
                 if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
                     onset = rdateOnset;
                 }

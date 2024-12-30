@@ -163,7 +163,7 @@ public class FilterExpressionParser {
                 expression = FilterExpression.lessThanEqual(lessThanEqual[0], (String) resolveValue(lessThanEqual[1]));
             } else if (part.matches("[\\w-]+\\s*=\\s*[^<>=]+")) {
                 var equalTo = part.split("\\s*=\\s*");
-                expression = FilterExpression.equalTo(equalTo[0], (String) resolveValue(equalTo[1]));
+                expression = FilterExpression.equalTo(equalTo[0], resolveValue(equalTo[1]));
             } else if (part.matches("[\\w-]+\\s*>\\s*\\w+")) {
                 var greaterThan = part.split("\\s*>\\s*");
                 expression = FilterExpression.greaterThan(greaterThan[0], (Integer) resolveValue(greaterThan[1]));

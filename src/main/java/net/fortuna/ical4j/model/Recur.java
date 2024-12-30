@@ -965,7 +965,7 @@ public class Recur<T extends Temporal> implements Serializable {
                 if (TemporalAdjuster.class.isAssignableFrom(result.getClass())) {
                     return (R) one.with((TemporalAdjuster) result);
                 } else {
-                    return (R) one;
+                    return one;
                 }
             }
             @Override
