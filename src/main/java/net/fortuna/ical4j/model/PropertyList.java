@@ -106,7 +106,7 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
     @Override
     public ContentCollection<Property> replace(@NotNull Property content) {
         List<Property> copy = new ArrayList<>(properties);
-        copy.removeIf(p -> p.getName().equals(content.getName()));
+        copy.removeIf(p -> p.getName().equalsIgnoreCase(content.getName()));
         copy.add(content);
         return new PropertyList(copy);
     }
@@ -172,10 +172,9 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
         if (retval != 0) {
             return retval;
         } else {
-            // compare individual params..
-            return properties.stream().filter(o.properties::contains)
-                    .mapToInt(p -> p.compareTo(o.properties.get(o.properties.indexOf(p)))).sum();
+            // count missing params..
+            return (int) o.properties.stream().filter(p -> !properties.contains(p)).count();
+//                    .mapToInt(p -> p.compareTo(o.properties.get(o.properties.indexOf(p)))).sum();
         }
     }
-
 }
