@@ -49,7 +49,7 @@ public class DatePropertyRule implements Rfc5545PropertyRule<DateProperty> {
         if (!element.isUtc() || element.getParameter(Parameter.TZID).isEmpty()) {
             return element;
         }
-        element.getParameters().removeIf(p -> p.getName().equals(Parameter.TZID));
+        element.getParameters().removeIf(p -> p.getName().equalsIgnoreCase(Parameter.TZID));
         return element;
     }
 

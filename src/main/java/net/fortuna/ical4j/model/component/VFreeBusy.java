@@ -474,7 +474,7 @@ public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>
 
         List<Period<T>> periods = new ArrayList<>();
         // only events consume time..
-        components.stream().filter(c -> c.getName().equals(Component.VEVENT)).forEach(
+        components.stream().filter(c -> c.getName().equalsIgnoreCase(Component.VEVENT)).forEach(
                 c -> periods.addAll(((VEvent) c).getConsumedTime(range, false)));
         return new PeriodList<>(periods).normalise().getPeriods().stream().map(Period::toInterval).collect(Collectors.toList());
     }

@@ -76,7 +76,7 @@ public final class ParameterValidator {
     public static void assertOneOrLess(final String paramName, final List<Parameter> parameters)
             throws ValidationException {
 
-        assertFalse(parameters1 -> parameters1.stream().filter(p -> p.getName().equals(paramName)).count() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
+        assertFalse(parameters1 -> parameters1.stream().filter(p -> p.getName().equalsIgnoreCase(paramName)).count() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
                 parameters, paramName);
     }
 
@@ -91,7 +91,7 @@ public final class ParameterValidator {
      *             when the specified parameter does not occur once
      */
     public static void assertOne(final String paramName, final List<Parameter> parameters) throws ValidationException {
-        assertFalse(parameters1 -> parameters1.stream().filter(p -> p.getName().equals(paramName)).count() != 1,
+        assertFalse(parameters1 -> parameters1.stream().filter(p -> p.getName().equalsIgnoreCase(paramName)).count() != 1,
                 ASSERT_ONE_MESSAGE, false, parameters, paramName);
     }
 
@@ -113,7 +113,7 @@ public final class ParameterValidator {
      * @throws ValidationException where the assertion fails
      */
     public static void assertNullOrEqual(final Parameter param, final List<Parameter> parameters) throws ValidationException {
-        if (parameters.parallelStream().anyMatch(p -> !p.getName().equals(param.getName()))) {
+        if (parameters.parallelStream().anyMatch(p -> !p.getName().equalsIgnoreCase(param.getName()))) {
             throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[] {param});
         }
     }

@@ -41,8 +41,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -358,7 +356,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     public static final String TEL = "TEL";
 
     /**
-     *  Acknowledged Property taken from http://tools.ietf.org/html/draft-daboo-valarm-extensions-04
+     *  Acknowledged Property taken from <a href="http://tools.ietf.org/html/draft-daboo-valarm-extensions-04">draft-daboo-valarm-extensions</a>
      */
     public static final String ACKNOWLEDGED = "ACKNOWLEDGED";
 
@@ -433,7 +431,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
         this.parameters = aList;
     }
 
-    /**
+    /*
      * Creates a deep copy of the specified property. That is, the name, parameter list, and value are duplicated from
      * the specified property. This constructor should only be called from sub-classes to ensure type integrity is
      * maintained.
@@ -590,9 +588,9 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
     /**
      * Retrieve a single required parameter.
-     * @param name
-     * @param <P>
-     * @return
+     * @param name parameter name
+     * @param <P> expected parameter type
+     * @return a parameter of the specified type
      */
     public final <P extends Parameter> P getRequiredParameter(final String name) {
         return parameters.getRequired(name);
@@ -624,7 +622,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     public boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             final var p = (Property) arg0;
-            return getName().equals(p.getName())
+            return getName().equalsIgnoreCase(p.getName())
                     && new EqualsBuilder().append(getValue(), p.getValue()).append(parameters,
                     p.parameters).append(prefix, p.prefix).isEquals();
         }
