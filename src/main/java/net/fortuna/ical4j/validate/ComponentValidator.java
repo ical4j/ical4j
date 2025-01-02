@@ -34,7 +34,6 @@ package net.fortuna.ical4j.validate;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentContainer;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
@@ -53,7 +52,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * @author Ben
  *
  */
-public class ComponentValidator<T extends Component> extends AbstractValidator<T> implements ContentValidator<Property> {
+public class ComponentValidator<T extends Component> extends AbstractValidator<T> implements ContentValidator {
 
     public static final ComponentValidator<Available> AVAILABLE = new ComponentValidator<>(Component.AVAILABLE,
             new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
@@ -174,7 +173,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
      * @param componentName a component name used in the assertion
      * @param components a list of components
      * @throws ValidationException where the assertion fails
-     * @deprecated see {@link ContentValidator#assertNone(String, List, boolean)}
+     * @deprecated see {@link ContentValidator#assertNone(String, java.util.List, boolean)}
      */
     @Deprecated
     public static void assertNone(String componentName, ComponentList<?> components) throws ValidationException {
@@ -186,7 +185,7 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
      * @param componentName a component name used in the assertion
      * @param components a list of components
      * @throws ValidationException where the assertion fails
-     * @deprecated see {@link ContentValidator#assertOneOrLess(String, List, boolean)}
+     * @deprecated see {@link ContentValidator#assertOneOrLess(String, java.util.List, boolean)}
      */
     @Deprecated
     public static void assertOneOrLess(String componentName, ComponentList<?> components) throws ValidationException {

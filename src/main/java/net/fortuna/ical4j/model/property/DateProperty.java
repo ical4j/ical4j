@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZoneId;
@@ -305,7 +306,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     }
 
     @Override
-    public int compareTo(Property o) {
+    public int compareTo(@NotNull Property o) {
         if (o instanceof DateProperty) {
             return TemporalComparator.INSTANCE.compare(getDate(), ((DateProperty<?>) o).getDate());
         }

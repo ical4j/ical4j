@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -138,7 +139,7 @@ public class DtStamp extends DateProperty<Instant> implements UtcProperty {
     }
 
     @Override
-    public int compareTo(Property o) {
+    public int compareTo(@NotNull Property o) {
         if (o instanceof DateProperty) {
             return TemporalComparator.INSTANCE.compare(getDate(), ((DateProperty) o).getDate());
         }
