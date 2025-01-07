@@ -94,8 +94,8 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
                     DTSTART, DTEND));
 
     public static final ComponentValidator<VJournal> VJOURNAL = new ComponentValidator<>(Component.VJOURNAL,
-            new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
-            new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
+            new ValidationRule<>(One, DTSTAMP, UID),
+            new ValidationRule<>(OneOrLess, DTSTART, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
             new ValidationRule<>(OneExclusive, DTEND, DURATION),
             new ValidationRule<>((Predicate<VJournal> & Serializable) a -> a.getProperties(STATUS).stream()
                     .anyMatch(p -> !(VJOURNAL_DRAFT.equals(p) || VJOURNAL_FINAL.equals(p)
@@ -115,9 +115,9 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
             new ValidationRule<>(OneOrLess, LAST_MODIFIED, TZURL));
 
     public static final ComponentValidator<VToDo> VTODO = new ComponentValidator<>(Component.VTODO,
-            new ValidationRule<>(One, true, UID),
+            new ValidationRule<>(One, true, UID, DTSTAMP),
             new ValidationRule<>(OneOrLess, CLASS, COMPLETED, CREATED, DESCRIPTION,
-                    DTSTAMP, DTSTART, GEO, LAST_MODIFIED, LOCATION, ORGANIZER,
+                    DTSTART, GEO, LAST_MODIFIED, LOCATION, ORGANIZER,
                     PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, SEQUENCE, STATUS,
                     SUMMARY, UID, URL),
             new ValidationRule<>(OneExclusive, DUE, DURATION));

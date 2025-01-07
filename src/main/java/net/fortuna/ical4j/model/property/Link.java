@@ -156,7 +156,7 @@ public class Link extends Property {
 
     @Override
     public ValidationResult validate() throws ValidationException {
-        return null;
+        return ValidationResult.EMPTY;
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Link> {
