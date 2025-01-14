@@ -81,7 +81,7 @@ public class TimeZoneUpdater {
     }
 
     public boolean isEnabled() {
-        return !"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("true"));
+        return !"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"));
     }
 
     public URLConnection openConnection(URL url) throws IOException {
