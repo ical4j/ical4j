@@ -85,8 +85,8 @@ public class TimeZoneUpdater {
     }
 
     public URLConnection openConnection(URL url) throws IOException {
-        final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(0);
-        final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);
+        final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(10_000);
+        final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(10_000);
 
         URLConnection connection;
         if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
