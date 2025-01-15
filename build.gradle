@@ -44,25 +44,22 @@ dependencies {
 //    errorprone "com.google.errorprone:error_prone_core:2.3.3"
 //    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
-    api "org.slf4j:slf4j-api:$slf4jVersion",
-            "commons-codec:commons-codec:$commonsCodecVersion",
-            "org.apache.commons:commons-lang3:$commonsLangVersion",
-            "org.threeten:threeten-extra:$threetenExtraVersion"
+    api libs.slf4j, libs.commons.codec, libs.commons.lang, libs.threeten.extra
 
 //    api ("commons-validator:commons-validator:$commonsValidatorVersion") {
 //        exclude group: 'commons-collections', module: 'commons-collections'
 //    }
 
-    compileOnly "org.jetbrains:annotations:24.1.0"
+    compileOnly libs.jetbrains.annotations
 
     // optional timezone caching..
-    caffeineTimezoneCacheImplementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    caffeineTimezoneCacheImplementation libs.caffeine
 
     // optional parser for filter expressions..
-    filterExpressionsImplementation "org.jparsec:jparsec:$jparsecVersion"
+    filterExpressionsImplementation libs.jparsec
 
     // optional groovy DSL for calendar builder..
-    groovyDslImplementation "org.codehaus.groovy:groovy:$groovyVersion"
+    groovyDslImplementation libs.groovy
     //groovyDslImplementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
     // optional JSON schema validation for structured-data..
@@ -70,28 +67,12 @@ dependencies {
 
 //    annotationProcessor "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
 
-    testImplementation "org.apache.logging.log4j:log4j-core:$log4jVersion",
-            "org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion",
-            "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
-//            "org.codehaus.groovy:groovy:$groovyVersion"
-            "org.codehaus.groovy:groovy-xml:$groovyVersion"
+    testImplementation libs.log4j.core, libs.log4j.slf4j2, libs.tagsoup,
+            libs.groovy.xml, libs.groovy.test, libs.junit.jupiter, libs.hamcrest,
+            platform(libs.spock.bom), libs.spock.core,
+            libs.testcontainers, libs.testcontainers.spock
 
-    // groovy-test
-    testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
-
-    // test dependencies
-    testImplementation "org.junit.jupiter:junit-jupiter:$junitVintageVersion"
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // spock
-    testImplementation platform("org.spockframework:spock-bom:$spockVersion"),
-            "org.spockframework:spock-core"
-
-    testImplementation "org.hamcrest:hamcrest-core:$hamcrestVersion"
-
-    // testcontainers
-    testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
-            "org.testcontainers:spock:$testcontainersVersion"
+    testRuntimeOnly libs.junit.platform
 }
 
 test {
