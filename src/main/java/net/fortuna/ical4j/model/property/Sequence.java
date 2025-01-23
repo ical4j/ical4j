@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.ChangeManagementPropertyValidators;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
@@ -208,7 +209,7 @@ public class Sequence extends Property {
     }
 
     @Override
-    public int compareTo(Property o) {
+    public int compareTo(@NotNull Property o) {
         if (o instanceof Sequence) {
             return Comparator.comparing(Sequence::getName)
                     .thenComparing(Sequence::getSequenceNo)

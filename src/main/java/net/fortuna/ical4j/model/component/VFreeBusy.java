@@ -203,7 +203,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusy extends CalendarComponent implements ComponentContainer<Component>, ParticipantsAccessor,
+public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>, ComponentContainer<Component>, ParticipantsAccessor,
     LocationsAccessor, ResourcesAccessor, DateTimePropertyAccessor {
 
     private static final long serialVersionUID = 1046534053331139832L;
@@ -321,7 +321,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
         // ensure the request is valid..
         request.validate();
 
-        final Optional<Duration> duration = request.getDuration();
+        final Optional<Duration> duration = request.getProperty(DURATION);
 
         // 4.8.2.4 Date/Time Start:
         //
@@ -474,7 +474,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
 
         List<Period<T>> periods = new ArrayList<>();
         // only events consume time..
-        components.stream().filter(c -> c.getName().equals(Component.VEVENT)).forEach(
+        components.stream().filter(c -> c.getName().equalsIgnoreCase(Component.VEVENT)).forEach(
                 c -> periods.addAll(((VEvent) c).getConsumedTime(range, false)));
         return new PeriodList<>(periods).normalise().getPeriods().stream().map(Period::toInterval).collect(Collectors.toList());
     }
@@ -486,8 +486,8 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         var result = ComponentValidator.VFREEBUSY.validate(this);
 
-        final Optional<DtStart<Temporal>> dtStart = getDateTimeStart();
-        final Optional<DtEnd<Temporal>> dtEnd = getDateTimeEnd();
+        final Optional<DtStart<Temporal>> dtStart = getProperty(DTSTART);
+        final Optional<DtEnd<Temporal>> dtEnd = getProperty(DTEND);
         if (dtStart.isPresent() && dtEnd.isPresent()
                 && TemporalAdapter.isBefore(dtStart.get().getDate(), dtEnd.get().getDate())) {
             result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
@@ -545,7 +545,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      */
     @Deprecated
     public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
-        return getDateTimeStart();
+        return getProperty(DTSTART);
     }
 
     /**
@@ -554,7 +554,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
      */
     @Deprecated
     public final <T extends Temporal> Optional<DtEnd<T>> getEndDate() {
-        return getDateTimeEnd();
+        return getProperty(DTEND);
     }
 
     /**
@@ -590,7 +590,7 @@ public class VFreeBusy extends CalendarComponent implements ComponentContainer<C
     }
 
     @Override
-    public Component copy() {
+    public VFreeBusy copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()

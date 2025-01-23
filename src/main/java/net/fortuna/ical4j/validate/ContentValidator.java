@@ -4,7 +4,7 @@ import net.fortuna.ical4j.model.Content;
 
 import java.util.List;
 
-public interface ContentValidator<T extends Content> {
+public interface ContentValidator {
 
     String ASSERT_NONE_MESSAGE = "Content [{0}] is not applicable";
 
@@ -20,17 +20,17 @@ public interface ContentValidator<T extends Content> {
     }
 
     static <T extends Content> void assertOne(final String name, final List<T> content, boolean warn) throws ValidationException {
-        Validator.assertFalse(input -> input.stream().filter(c -> c.getName().equals(name)).count() != 1,
+        Validator.assertFalse(input -> input.stream().filter(c -> c.getName().equalsIgnoreCase(name)).count() != 1,
                 ASSERT_ONE_MESSAGE, warn, content, name);
     }
 
     static <T extends Content> void assertOneOrLess(final String name, final List<T> content, boolean warn) throws ValidationException {
-        Validator.assertFalse(input -> input.stream().filter(c -> c.getName().equals(name)).count() > 1,
+        Validator.assertFalse(input -> input.stream().filter(c -> c.getName().equalsIgnoreCase(name)).count() > 1,
                 ASSERT_ONE_OR_LESS_MESSAGE, warn, content, name);
     }
 
     static <T extends Content> void assertOneOrMore(final String name, final List<T> content, boolean warn) throws ValidationException {
-        Validator.assertFalse(input -> input.stream().filter(c -> c.getName().equals(name)).count() < 1,
+        Validator.assertFalse(input -> input.stream().noneMatch(c -> c.getName().equalsIgnoreCase(name)),
                 ASSERT_ONE_OR_MORE_MESSAGE, warn, content, name);
     }
 }

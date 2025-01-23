@@ -118,7 +118,7 @@ import java.util.stream.Collectors;
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent implements ComponentContainer<Observance>,
+public class VTimeZone extends CalendarComponent implements Prototype<VTimeZone>, ComponentContainer<Observance>,
     TimeZonePropertyAccessor {
 
     private static final long serialVersionUID = 5629679741050917815L;
@@ -228,7 +228,7 @@ public class VTimeZone extends CalendarComponent implements ComponentContainer<O
     }
 
     @Override
-    public Component copy() {
+    public VTimeZone copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()

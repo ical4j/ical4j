@@ -117,7 +117,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent implements ComponentContainer<Component>, RecurrenceSupport<VToDo>,
+public class VToDo extends CalendarComponent implements Prototype<VToDo>, ComponentContainer<Component>, RecurrenceSupport<VToDo>,
         DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
         RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
 
@@ -255,7 +255,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
             component.validate(recurse);
         }
 
-        final Optional<Status> status = getStatus();
+        final Optional<Status> status = getProperty(STATUS);
         if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
                 && !VTODO_COMPLETED.equals(status.get())
                 && !VTODO_IN_PROCESS.equals(status.get())
@@ -292,7 +292,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Deprecated
     public final Optional<Completed> getDateCompleted() {
-        return getDateTimeCompleted();
+        return getProperty(COMPLETED);
     }
 
     /**
@@ -302,7 +302,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Deprecated
     public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
-        return getDateTimeStart();
+        return getProperty(DTSTART);
     }
 
     /**
@@ -311,7 +311,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getDateTimeStamp();
+        return getProperty(DTSTAMP);
     }
 
     /**
@@ -320,7 +320,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
      */
     @Deprecated
     public final <T extends Temporal> Optional<Due<T>> getDue() {
-        return getDateTimeDue();
+        return getProperty(DUE);
     }
 
     /**
@@ -350,7 +350,7 @@ public class VToDo extends CalendarComponent implements ComponentContainer<Compo
     }
 
     @Override
-    public Component copy() {
+    public VToDo copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()

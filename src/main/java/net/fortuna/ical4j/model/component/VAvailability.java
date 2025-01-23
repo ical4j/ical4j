@@ -91,7 +91,7 @@ import java.util.stream.Collectors;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class VAvailability extends CalendarComponent implements ComponentContainer<Available> {
+public class VAvailability extends CalendarComponent implements Prototype<VAvailability>, ComponentContainer<Available> {
 
 	private static final long serialVersionUID = -3001603309266267258L;
 
@@ -167,7 +167,7 @@ public class VAvailability extends CalendarComponent implements ComponentContain
     }
 
     @Override
-    public Component copy() {
+    public VAvailability copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()

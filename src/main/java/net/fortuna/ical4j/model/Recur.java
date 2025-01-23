@@ -345,39 +345,39 @@ public class Recur<T extends Temporal> implements Serializable {
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
         while (tokens.hasNext()) {
             final var token = tokens.next();
-            if (FREQ.equals(token)) {
+            if (FREQ.equalsIgnoreCase(token)) {
                 frequency = Frequency.valueOf(nextToken(tokens, token));
-            } else if (SKIP.equals(token)) {
+            } else if (SKIP.equalsIgnoreCase(token)) {
                 skip = Skip.valueOf(nextToken(tokens, token));
-            } else if (RSCALE.equals(token)) {
+            } else if (RSCALE.equalsIgnoreCase(token)) {
                 rscale = RScale.valueOf(nextToken(tokens, token));
                 chronology = Chronology.of(rscale.getChronology());
-            } else if (UNTIL.equals(token)) {
+            } else if (UNTIL.equalsIgnoreCase(token)) {
                 final String untilString = nextToken(tokens, token);
                 until = TemporalAdapter.parse(untilString);
-            } else if (COUNT.equals(token)) {
+            } else if (COUNT.equalsIgnoreCase(token)) {
                 count = Integer.parseInt(nextToken(tokens, token));
-            } else if (INTERVAL.equals(token)) {
+            } else if (INTERVAL.equalsIgnoreCase(token)) {
                 interval = Integer.parseInt(nextToken(tokens, token));
-            } else if (BYSECOND.equals(token)) {
+            } else if (BYSECOND.equalsIgnoreCase(token)) {
                 secondList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.SECOND_OF_MINUTE), false);
-            } else if (BYMINUTE.equals(token)) {
+            } else if (BYMINUTE.equalsIgnoreCase(token)) {
                 minuteList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.MINUTE_OF_HOUR), false);
-            } else if (BYHOUR.equals(token)) {
+            } else if (BYHOUR.equalsIgnoreCase(token)) {
                 hourList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.HOUR_OF_DAY), false);
-            } else if (BYDAY.equals(token)) {
+            } else if (BYDAY.equalsIgnoreCase(token)) {
                 dayList.addAll(new WeekDayList(nextToken(tokens, token)));
-            } else if (BYMONTHDAY.equals(token)) {
+            } else if (BYMONTHDAY.equalsIgnoreCase(token)) {
                 monthDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_MONTH), true);
-            } else if (BYYEARDAY.equals(token)) {
+            } else if (BYYEARDAY.equalsIgnoreCase(token)) {
                 yearDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
-            } else if (BYWEEKNO.equals(token)) {
+            } else if (BYWEEKNO.equalsIgnoreCase(token)) {
                 weekNoList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.ALIGNED_WEEK_OF_YEAR), true);
-            } else if (BYMONTH.equals(token)) {
+            } else if (BYMONTH.equalsIgnoreCase(token)) {
                 monthList = new MonthList(nextToken(tokens, token), chronology.range(ChronoField.MONTH_OF_YEAR));
-            } else if (BYSETPOS.equals(token)) {
+            } else if (BYSETPOS.equalsIgnoreCase(token)) {
                 setPosList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
-            } else if (WKST.equals(token)) {
+            } else if (WKST.equalsIgnoreCase(token)) {
                 weekStartDay = WeekDay.getWeekDay(WeekDay.Day.valueOf(nextToken(tokens, token)));
             } else {
                 if (experimentalTokensAllowed) {
@@ -965,7 +965,7 @@ public class Recur<T extends Temporal> implements Serializable {
                 if (TemporalAdjuster.class.isAssignableFrom(result.getClass())) {
                     return (R) one.with((TemporalAdjuster) result);
                 } else {
-                    return (R) one;
+                    return one;
                 }
             }
             @Override

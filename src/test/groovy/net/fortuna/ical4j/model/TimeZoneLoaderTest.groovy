@@ -12,7 +12,7 @@ class TimeZoneLoaderTest extends AbstractTzurlIntegrationTest {
         def tz = loader.loadVTimeZone(id)
 
         then: 'a non-null instance is returned'
-        tz?.timeZoneId.get().value == id
+        tz?.timeZoneId.value == id
 
         and: 'subsequent retrieval returns the same object'
         loader.loadVTimeZone(id) === tz
@@ -33,7 +33,7 @@ class TimeZoneLoaderTest extends AbstractTzurlIntegrationTest {
         def tz = loader.loadVTimeZone(id)
 
         then: 'a non-null instance is returned'
-        tz?.timeZoneId.get().value == id
+        tz?.timeZoneId.value == id
 
         and: 'subsequent retrieval returns the same object'
         loader.loadVTimeZone(id) === tz

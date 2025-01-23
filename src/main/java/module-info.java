@@ -11,7 +11,6 @@ import net.fortuna.ical4j.validate.CalendarValidatorFactory;
 import java.time.zone.ZoneRulesProvider;
 
 module ical4j.core {
-    requires java.base;
     requires java.xml;
 
     requires org.apache.commons.codec;

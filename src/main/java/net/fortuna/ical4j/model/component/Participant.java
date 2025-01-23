@@ -118,7 +118,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author Mike Douglass
  */
-public class Participant extends Component implements ComponentContainer<Component>, ChangeManagementPropertyAccessor,
+public class Participant extends Component implements Prototype<Participant>, ComponentContainer<Component>, ChangeManagementPropertyAccessor,
     LocationsAccessor, ResourcesAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
@@ -193,7 +193,7 @@ public class Participant extends Component implements ComponentContainer<Compone
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getDateTimeStamp();
+        return getProperty(DTSTAMP);
     }
 
     /**
@@ -242,7 +242,7 @@ public class Participant extends Component implements ComponentContainer<Compone
     }
 
     @Override
-    public Component copy() {
+    public Participant copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
                         .map(Property::copy).collect(Collectors.toList())),
                 new ComponentList<>(getComponents().parallelStream()

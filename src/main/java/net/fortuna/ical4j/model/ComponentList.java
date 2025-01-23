@@ -107,7 +107,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T>,
     @Override
     public ContentCollection<T> replace(@NotNull T content) {
         List<T> copy = new ArrayList<>(components);
-        copy.removeIf(c -> c.getName().equals(content.getName()));
+        copy.removeIf(c -> c.getName().equalsIgnoreCase(content.getName()));
         copy.add(content);
         return new ComponentList<>(copy);
     }
@@ -173,9 +173,11 @@ public class ComponentList<T extends Component> implements ContentCollection<T>,
         if (retval != 0) {
             return retval;
         } else {
-            // compare individual params..
-            return components.stream().filter(o.components::contains)
-                    .mapToInt(c -> c.compareTo(o.components.get(o.components.indexOf(c)))).sum();
+            // count missing component..
+            return (int) o.components.stream().filter(c -> !components.contains(c)).count();
+//            // compare individual params..
+//            return components.stream().filter(o.components::contains)
+//                    .mapToInt(c -> c.compareTo(o.components.get(o.components.indexOf(c)))).sum();
         }
     }
 }

@@ -38,39 +38,45 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 
-import java.util.Optional;
-
+/**
+ * Convenience accessor methods for calendar properties. Note the default behaviour for these methods
+ * is to throw an exception where an underlying property is not present.
+ */
 public interface CalendarPropertyAccessor extends PropertyContainer {
 
     /**
      * Returns the mandatory prodid property.
      * @return the PRODID property, or null if property doesn't exist
+     * @throws ConstraintViolationException if the property is not present
      */
-    default Optional<ProdId> getProductId() {
-        return getProperty(Property.PRODID);
+    default ProdId getProductId() {
+        return (ProdId) getProperty(Property.PRODID).orElse(null);
     }
 
     /**
      * Returns the mandatory version property.
      * @return the VERSION property, or null if property doesn't exist
+     * @throws ConstraintViolationException if the property is not present
      */
-    default Optional<Version> getVersion() {
-        return getProperty(Property.VERSION);
+    default Version getVersion() {
+        return (Version) getProperty(Property.VERSION).orElse(null);
     }
 
     /**
      * Returns the optional calscale property.
      * @return the CALSCALE property, or null if property doesn't exist
+     * @throws ConstraintViolationException if the property is not present
      */
-    default Optional<CalScale> getCalendarScale() {
-        return getProperty(Property.CALSCALE);
+    default CalScale getCalendarScale() {
+        return (CalScale) getProperty(Property.CALSCALE).orElse(null);
     }
 
     /**
      * Returns the optional method property.
      * @return the METHOD property, or null if property doesn't exist
+     * @throws ConstraintViolationException if the property is not present
      */
-    default Optional<Method> getMethod() {
-        return getProperty(Property.METHOD);
+    default Method getMethod() {
+        return (Method) getProperty(Property.METHOD).orElse(null);
     }
 }

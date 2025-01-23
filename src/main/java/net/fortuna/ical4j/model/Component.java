@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.time.temporal.Temporal;
@@ -55,7 +56,7 @@ import static net.fortuna.ical4j.model.Property.UID;
  *
  * @author Ben Fortuna
  */
-public abstract class Component extends Content implements Prototype<Component>, Serializable,
+public abstract class Component extends Content implements Serializable,
         PropertyContainer, FluentComponent, Comparable<Component> {
 
     private static final long serialVersionUID = 4943193483665822201L;
@@ -282,7 +283,7 @@ public abstract class Component extends Content implements Prototype<Component>,
      */
     public Component copy() {
         return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
-                .map(Prototype::copy).collect(Collectors.toList())));
+                .map(Property::copy).collect(Collectors.toList())));
     }
 
     /**
@@ -302,7 +303,7 @@ public abstract class Component extends Content implements Prototype<Component>,
      * for calculations.
      *
      * @param period a range that defines the boundary for calculations
-     * @return a list of periods representing component occurrences within the specified boundary
+     * @return a set of periods representing component occurrences within the specified boundary
      */
     public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period) {
 
@@ -396,7 +397,7 @@ public abstract class Component extends Content implements Prototype<Component>,
     }
 
     @Override
-    public int compareTo(Component o) {
+    public int compareTo(@NotNull Component o) {
         if (this.equals(o)) {
             return 0;
         }

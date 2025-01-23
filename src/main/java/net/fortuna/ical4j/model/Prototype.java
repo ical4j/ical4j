@@ -33,6 +33,10 @@
 
 package net.fortuna.ical4j.model;
 
+/**
+ * Implementors are capable of producing an equivalent copy of itself. See the 
+ * @param <T>
+ */
 public interface Prototype<T> {
 
     T copy();

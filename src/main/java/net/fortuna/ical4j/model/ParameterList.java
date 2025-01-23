@@ -105,7 +105,7 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
     @Override
     public ContentCollection<Parameter> replace(@NotNull Parameter content) {
         List<Parameter> copy = new ArrayList<>(parameters);
-        copy.removeIf(p -> p.getName().equals(content.getName()));
+        copy.removeIf(p -> p.getName().equalsIgnoreCase(content.getName()));
         copy.add(content);
         return new ParameterList(copy);
     }
@@ -175,9 +175,10 @@ public class ParameterList implements ContentCollection<Parameter>, Comparable<P
         if (retval != 0) {
             return retval;
         } else {
-            // compare individual params..
-            return parameters.stream().filter(o.parameters::contains)
-                    .mapToInt(p -> p.compareTo(o.parameters.get(o.parameters.indexOf(p)))).sum();
+            // count missing params..
+            return (int) o.parameters.stream().filter(p -> !parameters.contains(p)).count();
+//            return parameters.stream().filter(o.parameters::contains)
+//                    .mapToInt(p -> p.compareTo(o.parameters.get(o.parameters.indexOf(p)))).sum();
         }
     }
 }
