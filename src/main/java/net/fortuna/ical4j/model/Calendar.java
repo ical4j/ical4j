@@ -312,7 +312,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
      */
     private ValidationResult validateComponents() throws ValidationException {
         var result = new ValidationResult();
-        Optional<Method> method = getMethod();
+        Optional<Method> method = getProperty(Property.METHOD);
         if (method.isPresent()) {
             for (var c : getComponents()) {
                 result = result.merge(c.validate(method.get()));
@@ -428,7 +428,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
     public String getContentType(Charset charset) {
         final var b = new StringBuilder("text/calendar");
 
-        final Optional<Method> method = getMethod();
+        final Optional<Method> method = getProperty(Property.METHOD);
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());

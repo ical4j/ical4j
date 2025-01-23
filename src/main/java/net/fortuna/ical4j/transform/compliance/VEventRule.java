@@ -46,6 +46,8 @@ import java.time.Period;
 import java.time.temporal.Temporal;
 import java.util.Optional;
 
+import static net.fortuna.ical4j.model.Property.*;
+
 /**
  * 
  * @author daniel grigore
@@ -57,9 +59,9 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
 
     @Override
     public VEvent apply(VEvent element) {
-        Optional<DtStart<Temporal>> start = element.getDateTimeStart();
-        Optional<DtEnd<Temporal>> end = element.getDateTimeEnd();
-        Optional<Duration> duration = element.getDuration();
+        Optional<DtStart<Temporal>> start = element.getProperty(DTSTART);
+        Optional<DtEnd<Temporal>> end = element.getProperty(DTEND);
+        Optional<Duration> duration = element.getProperty(DURATION);
         
         /*
          *     ; Either 'dtend' or 'duration' MAY appear in
@@ -86,7 +88,7 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
             }
         }
         
-        if (element.getDateTimeStamp().isEmpty()) {
+        if (element.getProperty(DTSTAMP).isEmpty()) {
             element.with(ChangeManagementPropertyModifiers.DTSTAMP, Instant.now());
         }     
         return element;

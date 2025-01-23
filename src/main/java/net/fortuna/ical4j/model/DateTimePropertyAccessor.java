@@ -36,38 +36,71 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.property.*;
 
 import java.time.temporal.Temporal;
-import java.util.Optional;
 
 public interface DateTimePropertyAccessor extends PropertyContainer {
 
     /**
      * @return
+     * @throws ConstraintViolationException if the property is not present
      */
-    default Optional<Completed> getDateTimeCompleted() {
-        return getProperty(Property.COMPLETED);
+    default Completed getDateTimeCompleted() {
+        return (Completed) getProperty(Property.COMPLETED).orElse(null);
     }
 
-    default <T extends Temporal> Optional<DtEnd<T>> getDateTimeEnd() {
-        return getProperty(Property.DTEND);
+    /**
+     *
+     * @return
+     * @param <T>
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default <T extends Temporal> DtEnd<T> getDateTimeEnd() {
+        return (DtEnd<T>) getProperty(Property.DTEND).orElse(null);
     }
 
-    default <T extends Temporal> Optional<Due<T>> getDateTimeDue() {
-        return getProperty(Property.DUE);
+    /**
+     *
+     * @return
+     * @param <T>
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default <T extends Temporal> Due<T> getDateTimeDue() {
+        return (Due<T>) getProperty(Property.DUE).orElse(null);
     }
 
-    default <T extends Temporal> Optional<DtStart<T>> getDateTimeStart() {
-        return getProperty(Property.DTSTART);
+    /**
+     *
+     * @return
+     * @param <T>
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default <T extends Temporal> DtStart<T> getDateTimeStart() {
+        return (DtStart<T>) getProperty(Property.DTSTART).orElse(null);
     }
 
-    default Optional<Duration> getDuration() {
-        return getProperty(Property.DURATION);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Duration getDuration() {
+        return (Duration) getProperty(Property.DURATION).orElse(null);
     }
 
-    default Optional<FreeBusy> getFreeBusyTime() {
-        return getProperty(Property.FREEBUSY);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default FreeBusy getFreeBusyTime() {
+        return (FreeBusy) getProperty(Property.FREEBUSY).orElse(null);
     }
 
-    default Optional<Transp> getTimeTransparency() {
-        return getProperty(Property.TRANSP);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Transp getTimeTransparency() {
+        return (Transp) getProperty(Property.TRANSP).orElse(null);
     }
 }

@@ -38,23 +38,41 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Sequence;
 
-import java.util.Optional;
-
 public interface ChangeManagementPropertyAccessor extends PropertyContainer {
 
-    default Optional<Created> getCreated() {
-        return getProperty(Property.CREATED);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Created getCreated() {
+        return (Created) getProperty(Property.CREATED).orElse(null);
     }
 
-    default Optional<DtStamp> getDateTimeStamp() {
-        return getProperty(Property.DTSTAMP);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default DtStamp getDateTimeStamp() {
+        return (DtStamp) getProperty(Property.DTSTAMP).orElse(null);
     }
 
-    default Optional<LastModified> getLastModified() {
-        return getProperty(Property.LAST_MODIFIED);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default LastModified getLastModified() {
+        return (LastModified) getProperty(Property.LAST_MODIFIED).orElse(null);
     }
 
-    default Optional<Sequence> getSequence() {
-        return getProperty(Property.SEQUENCE);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Sequence getSequence() {
+        return (Sequence) getProperty(Property.SEQUENCE).orElse(null);
     }
 }

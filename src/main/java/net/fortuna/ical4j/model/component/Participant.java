@@ -193,7 +193,7 @@ public class Participant extends Component implements Prototype<Participant>, Co
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getDateTimeStamp();
+        return getProperty(DTSTAMP);
     }
 
     /**
