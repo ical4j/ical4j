@@ -29,7 +29,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class,
                 Uid.class, LastModified.class, Url.class, RefreshInterval.class, Source.class, Color.class,
-                Name.class, Description.class, Categories.class, Image.class);
+                Name.class, Description.class, Categories.class, Image.class, XProperty.class);
     }
 
     @Override
@@ -53,9 +53,8 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         // validate properties..
         for (final var property : target.getProperties()) {
-            boolean isCalendarProperty = calendarProperties.stream().filter(calProp -> calProp.isInstance(property)) != null;
-
-            if (!(property instanceof XProperty) && !isCalendarProperty) {
+            boolean isCalendarProperty = calendarProperties.stream().anyMatch(calProp -> calProp.isInstance(property));
+            if (!isCalendarProperty) {
                 result.getEntries().add(new ValidationEntry("Invalid property: " + property.getName(),
                         ValidationEntry.Severity.ERROR, Calendar.VCALENDAR));
             }
