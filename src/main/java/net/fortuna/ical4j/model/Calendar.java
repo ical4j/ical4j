@@ -367,7 +367,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
         final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<>(
                 timezoneList, Property.TZID);
 
-        final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
+        final Map<Uid, Calendar> calendars = new HashMap<>();
         for (final var c : getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
