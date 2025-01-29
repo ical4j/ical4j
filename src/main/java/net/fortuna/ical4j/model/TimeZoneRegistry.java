@@ -95,7 +95,10 @@ public interface TimeZoneRegistry {
     void clear();
     
     /**
-     * Returns a timezone with the specified identifier.
+     * Returns a timezone with the specified identifier,
+     * potentially performing a network call to update the definition.
+     * <p>Timezone definitions are cached in memory, but in case of a cache miss,
+     * a request to tzurl.org is done in a synchronized block.</p>
      * @param id a timezone identifier
      * @return a timezone matching the specified identifier. If no timezone
      * is registered with the specified identifier null is returned.
