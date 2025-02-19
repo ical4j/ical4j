@@ -34,8 +34,6 @@ import java.util.Objects;
  */
 public class TemporalAdapter<T extends Temporal> implements Serializable {
 
-    private static final TemporalComparator COMPARATOR = TemporalComparator.INSTANCE;
-
     /**
      * The iCalendar-compliant string representation of a {@link Temporal} value.
      */
@@ -345,11 +343,11 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     }
 
     public static <T extends Temporal> boolean isBefore(T date1, T date2) {
-        return COMPARATOR.compare(date1, date2) < 0;
+        return TemporalComparator.INSTANCE.compare(date1, date2) < 0;
     }
 
     public static <T extends Temporal> boolean isAfter(T date1, T date2) {
-        return COMPARATOR.compare(date1, date2) > 0;
+        return TemporalComparator.INSTANCE.compare(date1, date2) > 0;
     }
 
     @Override
