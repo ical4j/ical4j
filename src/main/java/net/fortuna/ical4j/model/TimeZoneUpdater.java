@@ -46,6 +46,7 @@ import java.net.*;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.TZURL;
+import static net.fortuna.ical4j.model.Property.TZID;
 
 /**
  * Support for updating timezone definitions.
