@@ -48,6 +48,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static net.fortuna.ical4j.model.Property.METHOD;
+
 /**
  * $Id$
  *
@@ -139,7 +141,7 @@ public final class Calendars {
 		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<>(
         		timezoneList, Property.TZID);
         
-        final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
+        final Map<Uid, Calendar> calendars = new HashMap<>();
         for (final var c : calendar.getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
@@ -205,7 +207,7 @@ public final class Calendars {
     public static String getContentType(Calendar calendar, Charset charset) {
         final var b = new StringBuilder("text/calendar");
         
-        final Optional<Method> method = calendar.getMethod();
+        final Optional<Method> method = calendar.getProperty(METHOD);
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());

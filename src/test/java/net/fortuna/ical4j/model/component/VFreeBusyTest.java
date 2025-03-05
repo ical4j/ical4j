@@ -55,6 +55,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static net.fortuna.ical4j.model.Property.FREEBUSY;
+
 /**
  * Created on 10/02/2005
  *
@@ -307,7 +309,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
      */
     public void testFbType() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getFreeBusyTime();
+        Optional<FreeBusy> fb = result.getProperty(FREEBUSY);
         assertTrue(fb.isPresent()
                 && fb.get().getParameter(Parameter.FBTYPE).equals(Optional.of(expectedFbType)));
     }
@@ -318,7 +320,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
 //    @Ignore("Recurrences with FREQ=WEEKLY not compatible with Instant temporal type currently")
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getFreeBusyTime();
+        Optional<FreeBusy> fb = result.getProperty(FREEBUSY);
         if (expectedIntervalCount > 0) {
             assertTrue(fb.isPresent());
             assertEquals(expectedIntervalCount, fb.get().getIntervals().size());
@@ -333,7 +335,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest<T> 
 //    @Ignore("Recurrences with FREQ=WEEKLY not compatible with Instant temporal type currently")
     public void testFreeBusyPeriods() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getFreeBusyTime();
+        Optional<FreeBusy> fb = result.getProperty(FREEBUSY);
         assertTrue(fb.isPresent());
         assertEquals(expectedIntervals, fb.get().getIntervals());
     }

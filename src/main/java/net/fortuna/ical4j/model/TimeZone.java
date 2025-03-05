@@ -83,7 +83,7 @@ public class TimeZone extends java.util.TimeZone {
 
     public TimeZone(final VTimeZone vTimeZone, boolean negativeDstSupported) {
         this.vTimeZone = vTimeZone;
-        final Optional<TzId> tzId = vTimeZone.getTimeZoneId();
+        final Optional<TzId> tzId = vTimeZone.getProperty(Property.TZID);
         if (tzId.isPresent()) {
             setID(tzId.get().getValue());
         } else {
@@ -218,12 +218,12 @@ public class TimeZone extends java.util.TimeZone {
             latestSeasonalTime = seasonalTimes.get(0);
         }
         if (latestSeasonalTime instanceof Daylight) {
-            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getTimeZoneOffsetFrom();
+            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
             if (offsetFrom.isPresent()) {
                 return (int) (offsetFrom.get().getOffset().getTotalSeconds() * 1_000L);
             }
         } else if (latestSeasonalTime instanceof Standard) {
-            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getTimeZoneOffsetTo();
+            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
             if (offsetTo.isPresent()) {
                 return (int) (offsetTo.get().getOffset().getTotalSeconds() * 1_000L);
             }

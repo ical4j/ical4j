@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Optional;
 
+import static net.fortuna.ical4j.model.Property.TZURL;
+
 /**
  * Support for updating timezone definitions.
  */
@@ -108,7 +110,7 @@ public class TimeZoneUpdater {
      */
     public VTimeZone updateDefinition(VTimeZone vTimeZone) {
         if (isEnabled() && vTimeZone != null) {
-            final Optional<TzUrl> tzUrl = vTimeZone.getTimeZoneUrl();
+            final Optional<TzUrl> tzUrl = vTimeZone.getProperty(TZURL);
             if (tzUrl.isPresent()) {
                 try {
                     boolean secureScheme = "true".equals(Configurator.getProperty(SECURE_CONNECTION_ENABLED).orElse("false"));
