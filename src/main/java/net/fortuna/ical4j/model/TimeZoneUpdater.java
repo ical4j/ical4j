@@ -119,7 +119,7 @@ public class TimeZoneUpdater {
                             .withHost(Configurator.getProperty(UPDATE_HOST_OVERRIDE).orElse(null))
                             .withPort(Configurator.getIntProperty(UPDATE_PORT_OVERRIDE).orElse(-1)).toUrl();
                     LOG.info("About to refresh definition of {} from {}",
-                            vTimeZone.getTimeZoneId().map(Object::toString).orElseGet(vTimeZone::toString), updateUrl);
+                            vTimeZone.getProperty(TZID).map(Object::toString).orElseGet(vTimeZone::toString), updateUrl);
                     var connection = openConnection(updateUrl);
 
                     final var builder = new CalendarBuilder();
