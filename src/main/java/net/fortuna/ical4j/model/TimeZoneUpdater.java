@@ -38,6 +38,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.Configurator;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ import java.net.*;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.TZURL;
+import static net.fortuna.ical4j.model.Property.TZID;
 
 /**
  * Support for updating timezone definitions.
@@ -65,6 +67,8 @@ public class TimeZoneUpdater {
 
     private static final String SECURE_CONNECTION_ENABLED = "net.fortuna.ical4j.timezone.update.connection.secure";
 
+    private static final Logger LOG = LoggerFactory.getLogger(TimeZoneUpdater.class);
+
     private Proxy proxy = null;
 
     public TimeZoneUpdater() {
@@ -77,18 +81,17 @@ public class TimeZoneUpdater {
                 proxy = new Proxy(type, new InetSocketAddress(proxyHost, proxyPort));
             }
         } catch (Throwable e) {
-            LoggerFactory.getLogger(TimeZoneUpdater.class).warn(
-                    "Error loading proxy server configuration: " + e.getMessage());
+            LOG.warn("Error loading proxy server configuration: " + e.getMessage());
         }
     }
 
     public boolean isEnabled() {
-        return !"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("true"));
+        return !"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"));
     }
 
     public URLConnection openConnection(URL url) throws IOException {
-        final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(0);
-        final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);
+        final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(10_000);
+        final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(10_000);
 
         URLConnection connection;
         if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
@@ -116,6 +119,8 @@ public class TimeZoneUpdater {
                             .withScheme(Configurator.getProperty(UPDATE_SCHEME_OVERRIDE).orElse(secureScheme ? "https" : null))
                             .withHost(Configurator.getProperty(UPDATE_HOST_OVERRIDE).orElse(null))
                             .withPort(Configurator.getIntProperty(UPDATE_PORT_OVERRIDE).orElse(-1)).toUrl();
+                    LOG.info("About to refresh definition of {} from {}",
+                            vTimeZone.getProperty(TZID).map(Object::toString).orElseGet(vTimeZone::toString), updateUrl);
                     var connection = openConnection(updateUrl);
 
                     final var builder = new CalendarBuilder();
@@ -125,7 +130,7 @@ public class TimeZoneUpdater {
                         return updatedVTimeZone.get();
                     }
                 } catch (IOException | ParserException | URISyntaxException e) {
-                    LoggerFactory.getLogger(TimeZoneUpdater.class).warn("Error updating timezone definition", e);
+                    LOG.warn("Error updating timezone definition", e);
                 }
             }
         }
