@@ -211,7 +211,7 @@ public class VJournal extends CalendarComponent implements Prototype<VJournal>, 
      */
     @Deprecated
     public final <T extends Temporal> Optional<DtStart<T>> getStartDate() {
-        return getDateTimeStart();
+        return getProperty(DTSTART);
     }
 
     /**
@@ -220,7 +220,7 @@ public class VJournal extends CalendarComponent implements Prototype<VJournal>, 
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getDateTimeStamp();
+        return getProperty(DTSTAMP);
     }
 
     @Override

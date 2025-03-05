@@ -3,47 +3,88 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.property.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Provides convenience methods for accessing descriptive properties of components and calendars.
  */
 public interface DescriptivePropertyAccessor extends PropertyContainer {
 
+    /**
+     *
+     * @return
+     */
     default List<Attach> getAttachments() {
         return getProperties(Property.ATTACH);
     }
 
-    default Optional<Categories> getCategories() {
-        return getProperty(Property.CATEGORIES);
+    /**
+     *
+     * @return
+     */
+    default List<Categories> getCategories() {
+        return getProperties(Property.CATEGORIES);
     }
 
-    default Optional<Clazz> getClassification() {
-        return getProperty(Property.CLASS);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Clazz getClassification() {
+        return (Clazz) getProperty(Property.CLASS).orElse(null);
     }
 
+    /**
+     *
+     * @return
+     */
     default List<Comment> getComments() {
         return getProperties(Property.COMMENT);
     }
 
-    default Optional<Description> getDescription() {
-        return getProperty(Property.DESCRIPTION);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Description getDescription() {
+        return (Description) getProperty(Property.DESCRIPTION).orElse(null);
     }
 
-    default Optional<Geo> getGeographicPos() {
-        return getProperty(Property.GEO);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Geo getGeographicPos() {
+        return (Geo) getProperty(Property.GEO).orElse(null);
     }
 
-    default Optional<Location> getLocation() {
-        return getProperty(Property.LOCATION);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Location getLocation() {
+        return (Location) getProperty(Property.LOCATION).orElse(null);
     }
 
-    default Optional<PercentComplete> getPercentComplete() {
-        return getProperty(Property.PERCENT_COMPLETE);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default PercentComplete getPercentComplete() {
+        return (PercentComplete) getProperty(Property.PERCENT_COMPLETE).orElse(null);
     }
 
-    default Optional<Priority> getPriority() {
-        return getProperty(Property.PRIORITY);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Priority getPriority() {
+        return (Priority) getProperty(Property.PRIORITY).orElse(null);
     }
 
     // XXX: Conflicts with VRESOURCE sub-components..
@@ -51,11 +92,21 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
 //        return getProperty(Property.RESOURCES);
 //    }
 
-    default Optional<Status> getStatus() {
-        return getProperty(Property.STATUS);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Status getStatus() {
+        return (Status) getProperty(Property.STATUS).orElse(null);
     }
 
-    default Optional<Summary> getSummary() {
-        return getProperty(Property.SUMMARY);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default Summary getSummary() {
+        return (Summary) getProperty(Property.SUMMARY).orElse(null);
     }
 }

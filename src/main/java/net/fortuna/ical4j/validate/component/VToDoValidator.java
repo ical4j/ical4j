@@ -33,7 +33,7 @@ public class VToDoValidator extends ComponentValidator<VToDo> {
     public ValidationResult validate(VToDo target) throws ValidationException {
         ValidationResult result = ComponentValidator.VTODO.validate(target);
 
-        final Optional<Status> status = target.getStatus();
+        final Optional<Status> status = target.getProperty(STATUS);
         if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
                 && !VTODO_COMPLETED.equals(status.get())
                 && !VTODO_IN_PROCESS.equals(status.get())

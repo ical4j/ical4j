@@ -21,6 +21,8 @@ import java.time.zone.ZoneRules;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static net.fortuna.ical4j.model.Property.TZOFFSETFROM;
+
 /**
  * Construct a {@link java.time.zone.ZoneRules} instance from a {@link net.fortuna.ical4j.model.component.VTimeZone}.
  */
@@ -55,7 +57,7 @@ public class ZoneRulesBuilder {
 
         for (var observance : sorted) {
             // ignore transitions that have no effect..
-            Optional<TzOffsetFrom> offsetFrom = observance.getTimeZoneOffsetFrom();
+            Optional<TzOffsetFrom> offsetFrom = observance.getProperty(TZOFFSETFROM);
             TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
             DtStart<LocalDateTime> start = observance.getRequiredProperty("DTSTART");
 
@@ -79,7 +81,7 @@ public class ZoneRulesBuilder {
         List<ZoneOffsetTransition> transitions = new ArrayList<>();
 
         for (Observance observance : observances) {
-            Optional<TzOffsetFrom> offsetFrom = observance.getTimeZoneOffsetFrom();
+            Optional<TzOffsetFrom> offsetFrom = observance.getProperty(TZOFFSETFROM);
             TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
 
             // ignore transitions that have no effect..
