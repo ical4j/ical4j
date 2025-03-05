@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 
 import java.time.ZoneId;
+import java.time.DateTimeException;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -80,10 +81,14 @@ public class TzId extends Parameter implements Encodable {
      */
     public ZoneId toZoneId(TimeZoneRegistry timeZoneRegistry) {
         if (timeZoneRegistry != null && !timeZoneRegistry.getZoneRules().isEmpty()) {
-            return timeZoneRegistry.getZoneId(getValue());
-        } else {
-            return TimeZoneRegistry.getGlobalZoneId(getValue());
+            try {
+                return timeZoneRegistry.getZoneId(getValue());
+            } catch (DateTimeException e) {
+                // fails with "Unknown timezone identifier" if tzid not in VTIMEZONE
+                // fall through to try GlobalZone instead
+            }
         }
+        return TimeZoneRegistry.getGlobalZoneId(getValue());
     }
 
     /**
