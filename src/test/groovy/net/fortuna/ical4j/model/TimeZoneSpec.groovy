@@ -139,7 +139,7 @@ class TimeZoneSpec extends Specification {
 		'Asia/Rangoon'			| 'Asia/Yangon'
 		'America/Santa_Isabel'	| 'America/Tijuana'
 		'Pacific/Johnston'		| 'Pacific/Honolulu'
-		'EST'					| 'EST'
+		'EST'					| 'America/Panama'
     }
 
 	@Unroll('#tzid')

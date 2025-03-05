@@ -36,7 +36,6 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.property.*;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
 
@@ -46,38 +45,50 @@ public interface TimeZonePropertyAccessor extends PropertyContainer {
     /**
      * @return the mandatory timezone identifier property
      */
-    default Optional<TzId> getTimeZoneId() {
-        return getProperty(TZID);
+    default TzId getTimeZoneId() {
+        return (TzId) getProperty(TZID).orElse(null);
     }
 
     /**
      * @return the optional last-modified property
      */
-    default Optional<LastModified> getLastModified() {
-        return getProperty(LAST_MODIFIED);
+    default LastModified getLastModified() {
+        return (LastModified) getProperty(LAST_MODIFIED).orElse(null);
     }
 
     /**
      * @return the optional timezone url property
+     * @throws ConstraintViolationException if the property is not present
      */
-    default Optional<TzUrl> getTimeZoneUrl() {
-        return getProperty(TZURL);
+    default TzUrl getTimeZoneUrl() {
+        return (TzUrl) getProperty(TZURL).orElse(null);
     }
 
-    default Optional<TzOffsetFrom> getTimeZoneOffsetFrom() {
-        return getProperty(TZOFFSETFROM);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default TzOffsetFrom getTimeZoneOffsetFrom() {
+        return (TzOffsetFrom) getProperty(TZOFFSETFROM).orElse(null);
     }
 
-    default Optional<TzOffsetTo> getTimeZoneOffsetTo() {
-        return getProperty(TZOFFSETTO);
+    /**
+     *
+     * @return
+     * @throws ConstraintViolationException if the property is not present
+     */
+    default TzOffsetTo getTimeZoneOffsetTo() {
+        return (TzOffsetTo) getProperty(TZOFFSETTO).orElse(null);
     }
 
     /**
      * Returns the mandatory dtstart property.
      *
      * @return the DTSTART property or null if not specified
+     * @throws ConstraintViolationException if the property is not present
      */
-    default Optional<DtStart<LocalDateTime>> getStartDate() {
-        return getProperty(DTSTART);
+    default DtStart<LocalDateTime> getStartDate() {
+        return (DtStart<LocalDateTime>) getProperty(DTSTART).orElse(null);
     }
 }

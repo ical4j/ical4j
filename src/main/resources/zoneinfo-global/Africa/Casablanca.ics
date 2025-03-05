@@ -1,10 +1,10 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2024a//EN
+PRODID:-//tzurl.org//NONSGML Olson 2025a//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/tzurl.org/2024a/Africa/Casablanca
+TZID:/tzurl.org/2025a/Africa/Casablanca
 TZUNTIL:20870511T020001Z
-LAST-MODIFIED:20240422T053452Z
+LAST-MODIFIED:20250121T082934Z
 TZURL:https://www.tzurl.org/zoneinfo-global/Africa/Casablanca
 X-LIC-LOCATION:Africa/Casablanca
 X-PROLEPTIC-TZNAME:LMT

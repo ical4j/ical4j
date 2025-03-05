@@ -159,7 +159,6 @@ Asia/Barnaul
 Asia/Beirut
 Asia/Bishkek
 Asia/Chita
-Asia/Choibalsan
 Asia/Colombo
 Asia/Damascus
 Asia/Dhaka
@@ -239,11 +238,6 @@ Australia/Lord_Howe
 Australia/Melbourne
 Australia/Perth
 Australia/Sydney
-CET
-CST6CDT
-EET
-EST
-EST5EDT
 Etc/GMT+1
 Etc/GMT+10
 Etc/GMT+11
@@ -310,14 +304,9 @@ Europe/Vilnius
 Europe/Volgograd
 Europe/Warsaw
 Europe/Zurich
-HST
 Indian/Chagos
 Indian/Maldives
 Indian/Mauritius
-MET
-MST
-MST7MDT
-PST8PDT
 Pacific/Apia
 Pacific/Auckland
 Pacific/Bougainville
@@ -348,4 +337,3 @@ Pacific/Rarotonga
 Pacific/Tahiti
 Pacific/Tarawa
 Pacific/Tongatapu
-WET

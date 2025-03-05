@@ -47,9 +47,9 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSI
  * Created: [Apr 6, 2004]
  * <p/>
  * Defines a VERSION iCalendar property. When creating a new calendar you should always add a version property with
- * value "2.0". There is actually a constant defined in the Version class for this. e.g:
+ * value "2.0". There is actually a constant defined in the ImmutableVersion class for this. e.g:
  * <code>    Calendar calendar = new Calendar();</code>
- * <code>    calendar.add(Version.VERSION_2_0);</code>
+ * <code>    calendar.add(Immutable.VERSION_2_0);</code>
  *
  * @author Ben Fortuna
  */
