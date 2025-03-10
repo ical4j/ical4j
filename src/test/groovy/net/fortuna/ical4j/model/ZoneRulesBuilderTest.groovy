@@ -46,15 +46,21 @@ class ZoneRulesBuilderTest extends Specification {
         def tz = timeZoneRegistry.getTimeZone(timezone)
         def zonerules = new ZoneRulesBuilder().vTimeZone(tz.getVTimeZone()).build()
 
-        zonerules.isDaylightSavings(Instant.from(TemporalAdapter.parse(date).toLocalTime())) == inDaylightTime
+        def instant = Instant.from(TemporalAdapter.parse(date).toLocalTime())
+        zonerules.isDaylightSavings(instant) == inDaylightTime
+
+        and:
+        zonerules.getDaylightSavings(instant) == Duration.parse(savings)
 
         where:
-        date				| timezone					| inDaylightTime
-        '20110328T110000'	| 'America/Los_Angeles'		| true
-        '20231214T170000'	| 'America/Los_Angeles'		| false
-        '20110328T110000'	| 'Australia/Melbourne'		| true
-        '20110228T110000'	| 'Europe/London'		    | false
-        '20231115T083000'	| 'America/Sao_Paulo'		| false
+        date				| timezone					| inDaylightTime    | savings
+        '20110328T110000'	| 'America/Los_Angeles'		| true              | 'PT1H'
+        '20231214T170000'	| 'America/Los_Angeles'		| false             | 'PT0S'
+        '20110328T110000'	| 'Australia/Melbourne'		| true              | 'PT1H'
+        '20110228T110000'	| 'Europe/London'		    | false             | 'PT0S'
+        '20231115T083000'	| 'America/Sao_Paulo'		| false             | 'PT0S'
+        '20271101T140000'	| 'Australia/Sydney'		| true              | 'PT1H'
+        '20270901T140000'	| 'Australia/Sydney'		| false             | 'PT0S'
     }
 
     def 'test zoneid offsets'() {
