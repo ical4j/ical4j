@@ -129,7 +129,7 @@ public class ZoneRulesBuilder {
                 var dayOfWeek = WeekDay.getDayOfWeek(rrule.get().getRecur().getDayList().get(0));
                 var time = LocalTime.from(startDate.getDate());
                 boolean endOfDay = false;
-                var timeDefinition = TimeDefinition.UTC;
+                var timeDefinition = TimeDefinition.WALL;
                 transitionRules.add(ZoneOffsetTransitionRule.of(recurMonth, dayOfMonth, dayOfWeek, time, endOfDay,
                         timeDefinition, standardOffset, offsetFrom.getOffset(), offsetTo.getOffset()));
             }
