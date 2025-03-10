@@ -36,7 +36,7 @@ public class ZoneRulesBuilder {
     }
 
     /**
-     * Build a list of transitions for the recognised standard offset. For example, where the standard UTC
+     * Build a list of historical transitions for the recognised standard offset. For example, where the standard UTC
      * offset changes from -7 to -8 permanently.
      * @param observances
      * @return
@@ -73,7 +73,8 @@ public class ZoneRulesBuilder {
     }
 
     /**
-     * Build a list of transitions for DST changes. These are typically temporary offset changes every six months.
+     * Build a list of transitions for historical DST changes. These are typically temporary offset changes
+     * every six months.
      * @param observances
      * @return
      */
@@ -110,6 +111,14 @@ public class ZoneRulesBuilder {
         return transitions;
     }
 
+    /**
+     * Build rules for future DST transitions.
+     *
+     * @param observances
+     * @param standardOffset
+     * @return
+     * @throws ConstraintViolationException
+     */
     private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
         List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
 
@@ -134,6 +143,8 @@ public class ZoneRulesBuilder {
                         timeDefinition, standardOffset, offsetFrom.getOffset(), offsetTo.getOffset()));
             }
         }
+        //  Note the order of the list is significant!
+        transitionRules.sort(Comparator.comparing(ZoneOffsetTransitionRule::getMonth));
         return transitionRules;
     }
 
