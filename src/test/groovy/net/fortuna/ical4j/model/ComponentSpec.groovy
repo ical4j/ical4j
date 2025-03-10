@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model
 import net.fortuna.ical4j.model.component.VEvent
 import spock.lang.Specification
 
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.temporal.Temporal
 
 class ComponentSpec extends Specification {
@@ -34,6 +36,28 @@ class ComponentSpec extends Specification {
                                                                    '20150330T000000/PT1H',
                                                                    '20150430T000000/PT1H',
                                                                    '20150530T000000/PT1H', '20150630T000000/PT1H']
+    }
+
+    def "test Component.calculateRecurrenceSet2"() {
+        given: 'a component'
+        VEvent component = new ContentBuilder().with {
+            vevent {
+                dtstart '20240101T140000', parameters: parameters { tzid_ 'Australia/Sydney' }
+                dtend '20240101T200000', parameters: parameters { tzid_ 'Australia/Sydney' }
+                rrule 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU'
+            }
+        }
+        and: 'an expected list of periods'
+        def expectedPeriods = [Period.parse('20241101T140000/PT6H')] as Set
+
+        and: 'a period argument'
+        ZoneId timezone = ZoneId.of("Australia/Sydney")
+        ZonedDateTime from = ZonedDateTime.of(2024, 11, 1, 0, 0, 0, 0, timezone)
+        ZonedDateTime to = ZonedDateTime.of(2024, 11, 2, 0, 0, 0, 0, timezone)
+        Period<ZonedDateTime> period = new Period<ZonedDateTime>(from, to)
+
+        expect: 'calculate recurrence set returns the expected results'
+        component.calculateRecurrenceSet(period) == expectedPeriods
     }
 
     def "test Component.calculateRecurrenceSet with RDATE"() {
