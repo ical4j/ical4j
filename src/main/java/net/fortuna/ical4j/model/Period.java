@@ -35,12 +35,15 @@ import net.fortuna.ical4j.util.TimeZones;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.Date;
 import java.util.*;
+import java.util.Date;
 
 /**
  * $Id$ [Apr 14, 2004]
@@ -297,10 +300,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public final boolean includes(final Temporal date) {
         Objects.requireNonNull(date, "date");
-        var dateInstant = (date instanceof LocalDateTime) ? ((LocalDateTime) date)
-                .toInstant(ZoneOffset.from(ZonedDateTime.now())) : Instant.from(date);
-        return start.equals(date) || end.equals(date)
-                || toInterval().encloses(Interval.of(dateInstant, Duration.ZERO));
+        return TemporalComparator.INSTANCE.compare(start, date) <= 0
+                && TemporalComparator.INSTANCE.compare(end, date) >= 0;
     }
 
     /**
@@ -463,9 +464,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public boolean intersects(Period<?> other) {
         Objects.requireNonNull(other, "other");
-        var thisInterval = toInterval();
-        var thatInterval = other.toInterval();
-        return thisInterval.overlaps(thatInterval);
+        return other.equals(this) || TemporalComparator.INSTANCE.compare(this.start, other.end) < 0
+                && TemporalComparator.INSTANCE.compare(other.start, this.end) < 0;
     }
 
     public Interval toInterval() {
