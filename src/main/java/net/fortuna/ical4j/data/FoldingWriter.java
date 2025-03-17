@@ -101,7 +101,7 @@ public class FoldingWriter extends FilterWriter {
      */
     @Override
     public final void write(final char[] buffer, final int offset,
-                            final int length) throws IOException {
+            final int length) throws IOException {
         final int maxIndex = offset + length - 1;
         for (int i = offset; i <= maxIndex; i++) {
 
@@ -111,12 +111,15 @@ public class FoldingWriter extends FilterWriter {
                         + lineLength + "]");
             }
 
-            // check for fold first so we don't unnecessarily fold after
-            // no more data..
-            if (lineLength >= foldLength) {
-                super.write(FOLD_PATTERN, 0, FOLD_PATTERN.length);
+            // Detect surrogate pairs (such as emojis) to avoid splitting them.
+            boolean isHighSurrogate = Character.isHighSurrogate(buffer[i]);
+            boolean hasLowSurrogate = i < maxIndex && Character.isLowSurrogate(buffer[i + 1]);
 
-                // re-initialise to 1 to account for the space in fold pattern..
+            // If we are at the fold limit and have a surrogate pair, fold before writing
+            // the complete pair.
+            // OR Normal folding when the limit is reached"
+            if (lineLength >= foldLength - 1 && isHighSurrogate && hasLowSurrogate || lineLength >= foldLength) {
+                super.write(FOLD_PATTERN, 0, FOLD_PATTERN.length);
                 lineLength = 1;
             }
 
