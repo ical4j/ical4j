@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -92,7 +93,7 @@ public class Attach extends Property {
 
     private URI uri;
 
-    private byte[] binary;
+    private ByteBuffer binary;
 
     /**
      * Default constructor.
@@ -113,7 +114,7 @@ public class Attach extends Property {
     /**
      * @param data binary data
      */
-    public Attach(final byte[] data) {
+    public Attach(final ByteBuffer data) {
         this(new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY)), data);
     }
 
@@ -121,7 +122,7 @@ public class Attach extends Property {
      * @param aList a list of parameters for this component
      * @param data  binary data
      */
-    public Attach(final ParameterList aList, final byte[] data) {
+    public Attach(final ParameterList aList, final ByteBuffer data) {
         super(ATTACH, aList);
         this.binary = data;
         this.uri = null;
@@ -160,8 +161,28 @@ public class Attach extends Property {
     /**
      * @return Returns the binary.
      */
-    public final byte[] getBinary() {
+    public final ByteBuffer getBinary() {
         return binary;
+    }
+
+    /**
+     * Returns the binary data as a byte array. If the binary data is backed by
+     * an array, it returns that array directly. Otherwise, it creates a new
+     * byte array and copies the data from the ByteBuffer.
+     *
+     * @return byte array containing the binary data, or null if no binary data is set
+     */
+    public byte[] getBinaryData() {
+        if (binary != null) {
+            if (binary.hasArray()) {
+                return binary.array();
+            } else {
+                byte[] data = new byte[binary.remaining()];
+                binary.get(data);
+                return data;
+            }
+        }
+        return null;
     }
 
     /**
@@ -190,7 +211,7 @@ public class Attach extends Property {
             try {
                 final var decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(encoding.get());
-                binary = decoder.decode(aValue.getBytes());
+                binary = ByteBuffer.wrap(decoder.decode(aValue.getBytes()));
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
@@ -219,10 +240,9 @@ public class Attach extends Property {
         } else if (getBinary() != null) {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
-                Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
-                final var encoder = EncoderFactory.getInstance()
-                        .createBinaryEncoder(encoding.get());
-                return new String(encoder.encode(getBinary()));
+                Encoding encoding = getRequiredParameter(Parameter.ENCODING);
+                final var encoder = EncoderFactory.getInstance().createBinaryEncoder(encoding);
+                return new String(encoder.encode(getBinaryData()));
             } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
@@ -234,7 +254,7 @@ public class Attach extends Property {
     /**
      * @param binary The binary to set.
      */
-    public final void setBinary(final byte[] binary) {
+    public final void setBinary(final ByteBuffer binary) {
         this.binary = binary;
         // unset uri..
         this.uri = null;
