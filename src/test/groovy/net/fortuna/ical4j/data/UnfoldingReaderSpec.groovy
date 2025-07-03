@@ -6,6 +6,9 @@ import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.property.Attach
 import spock.lang.Specification
 
+import java.nio.channels.FileChannel
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.security.MessageDigest
 
 class UnfoldingReaderSpec extends Specification {
@@ -13,6 +16,7 @@ class UnfoldingReaderSpec extends Specification {
     def 'verify unfolding encoded binary attachments'() {
         given: 'a calendar object string with an encoded binary attachment'
         def builder = new ContentBuilder()
+        def file = Files.newByteChannel(Paths.get('gradle/wrapper/gradle-wrapper.jar'))
         def calendar = builder.calendar() {
             prodid '-//Ben Fortuna//iCal4j 1.0//EN'
             version '2.0'
@@ -21,7 +25,7 @@ class UnfoldingReaderSpec extends Specification {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
-                attach new Attach(new File('gradle/wrapper/gradle-wrapper.jar').bytes)
+                attach new Attach(file.map(FileChannel.MapMode.READ_ONLY, 0, file.size()))
             }
         }
 
@@ -33,8 +37,8 @@ class UnfoldingReaderSpec extends Specification {
         Calendar parsed = new CalendarBuilder().build(new StringReader(calendarString as String))
 
         then: 'the encoded binary is decoded correctly'
-        def attach = parsed.getComponents()[0].getRequiredProperty(Property.ATTACH)
+        Attach attach = parsed.getComponents()[0].getRequiredProperty(Property.ATTACH)
         def md5 = MessageDigest.getInstance("MD5")
-        md5.digest(attach.binary) == md5.digest(new File('gradle/wrapper/gradle-wrapper.jar').bytes)
+        md5.digest(attach.binaryData) == md5.digest(new File('gradle/wrapper/gradle-wrapper.jar').bytes)
     }
 }

@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.property.Categories;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.Summary;
 
+import java.nio.ByteBuffer;
 import java.util.function.BiFunction;
 
 /**
@@ -46,7 +47,7 @@ import java.util.function.BiFunction;
  */
 public interface DescriptivePropertyModifiers {
 
-    BiFunction<PropertyContainer, byte[], PropertyContainer> ATTACHMENT = (c, p) -> {
+    BiFunction<PropertyContainer, ByteBuffer, PropertyContainer> ATTACHMENT = (c, p) -> {
         if (p != null) c.add(new Attach(p)); return c;
     };
 
