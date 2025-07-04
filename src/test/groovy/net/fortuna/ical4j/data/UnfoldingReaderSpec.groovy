@@ -7,7 +7,6 @@ import net.fortuna.ical4j.model.property.Attach
 import spock.lang.Specification
 
 import java.nio.channels.FileChannel
-import java.nio.file.Files
 import java.nio.file.Paths
 import java.security.MessageDigest
 
@@ -16,7 +15,7 @@ class UnfoldingReaderSpec extends Specification {
     def 'verify unfolding encoded binary attachments'() {
         given: 'a calendar object string with an encoded binary attachment'
         def builder = new ContentBuilder()
-        def file = Files.newByteChannel(Paths.get('gradle/wrapper/gradle-wrapper.jar'))
+        FileChannel file = FileChannel.open(Paths.get('gradle/wrapper/gradle-wrapper.jar'))
         def calendar = builder.calendar() {
             prodid '-//Ben Fortuna//iCal4j 1.0//EN'
             version '2.0'

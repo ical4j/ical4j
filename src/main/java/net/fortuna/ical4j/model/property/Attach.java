@@ -46,10 +46,15 @@ import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -90,6 +95,8 @@ import java.util.Optional;
 public class Attach extends Property {
 
     private static final long serialVersionUID = 4439949507756383452L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(Attach.class);
 
     private URI uri;
 
@@ -179,6 +186,7 @@ public class Attach extends Property {
             } else {
                 byte[] data = new byte[binary.remaining()];
                 binary.get(data);
+                binary.rewind(); // Reset position to the beginning after reading
                 return data;
             }
         }
@@ -209,15 +217,25 @@ public class Attach extends Property {
         if (encoding.isPresent()) {
             // binary = Base64.decode(aValue);
             try {
-                final var decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(encoding.get());
-                binary = ByteBuffer.wrap(decoder.decode(aValue.getBytes()));
+                final var decoder = DecoderFactory.getInstance().createBinaryDecoder(encoding.get());
+                byte[] decodedBytes = decoder.decode(aValue.getBytes());
+                try {
+                    File binaryData = File.createTempFile("ical4j-attach", ".tmp");
+                    binaryData.deleteOnExit();
+
+                    FileChannel fileChannel = new RandomAccessFile(binaryData, "rw").getChannel();
+                    MappedByteBuffer binary = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, decodedBytes.length);
+                    binary.put(decodedBytes);
+                    binary.rewind();
+                    this.binary = binary;
+                } catch (IOException e) {
+                    LOG.error("Error creating temporary file", e);
+                    binary = ByteBuffer.wrap(decodedBytes);
+                }
             } catch (UnsupportedEncodingException uee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", uee);
+                LOG.error("Error encoding binary data", uee);
             } catch (DecoderException de) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error decoding binary data", de);
+                LOG.error("Error decoding binary data", de);
             }
         }
         // assume URI..
