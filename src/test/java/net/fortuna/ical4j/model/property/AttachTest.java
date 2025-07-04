@@ -78,12 +78,12 @@ public class AttachTest extends TestCase {
                 bout.write(i);
                 i = fin.read();
             }
-        }
 
-        ParameterList params = new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY));
+            ParameterList params = new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY));
 
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
-        attach = new Attach(params, ByteBuffer.wrap(bout.toByteArray()));
+            attach = new Attach(params, ByteBuffer.wrap(bout.toByteArray()));
+        }
     }
 
     /*
