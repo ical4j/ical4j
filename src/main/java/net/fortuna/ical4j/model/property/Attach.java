@@ -223,11 +223,13 @@ public class Attach extends Property {
                     File binaryData = File.createTempFile("ical4j-attach", ".tmp");
                     binaryData.deleteOnExit();
 
-                    FileChannel fileChannel = new RandomAccessFile(binaryData, "rw").getChannel();
-                    MappedByteBuffer binary = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, decodedBytes.length);
-                    binary.put(decodedBytes);
-                    binary.rewind();
-                    this.binary = binary;
+                    try (RandomAccessFile raf = new RandomAccessFile(binaryData, "rw")) {
+                        FileChannel fileChannel = raf.getChannel();
+                        MappedByteBuffer binary = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, decodedBytes.length);
+                        binary.put(decodedBytes);
+                        binary.rewind();
+                        this.binary = binary;
+                    }
                 } catch (IOException e) {
                     LOG.error("Error creating temporary file", e);
                     binary = ByteBuffer.wrap(decodedBytes);
