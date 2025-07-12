@@ -1,7 +1,7 @@
 [versions]
 slf4j = "2.0.12"
 commons-codec = "1.17.0"
-commons-lang = "3.14.0"
+commons-lang = "3.18.0"
 threeten-extra = "1.8.0"
 jparsec = "3.1"
 caffeine = "3.1.8"
