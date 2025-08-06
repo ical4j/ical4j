@@ -32,8 +32,7 @@
 package net.fortuna.ical4j.model;
 
 /**
- * @author fortuna
- *
+ * An exception that indicates an error related to calendar operations.
  */
 public class CalendarException extends RuntimeException {
 

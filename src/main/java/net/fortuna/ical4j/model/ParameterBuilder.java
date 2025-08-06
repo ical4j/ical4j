@@ -7,7 +7,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by fortuna on 8/09/14.
+ * Builder for creating {@link Parameter} instances.
+ * This builder allows for the specification of parameter factories, a name, and a value.
+ * It supports the creation of parameters with custom names and values, including experimental or illegal names
+ * if configured to do so.
+ * <p>
+ * Usage example:
+ * <pre>
+ * ParameterBuilder builder = new ParameterBuilder()
+ *         .factories(Arrays.asList(new MyParameterFactory()))
+ *         .name("MY-PARAM")
+ *         .value("myValue");
+ * Parameter myParam = builder.build();
+ * </pre>
+ * </p>
+ * <p> Note: The builder supports a list of parameter factories that can be used to create specific types of
+ * parameters based on the name provided. If no factory supports the name, it will create a generic
+ * {@link XParameter} or throw an exception if the name is not allowed.
+ * </p>
  */
 public class ParameterBuilder extends AbstractContentBuilder {
 

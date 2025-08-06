@@ -41,8 +41,11 @@ import java.time.temporal.TemporalAmount;
 import java.util.function.BiFunction;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * An interface for modifying date-time related properties in a {@link PropertyContainer}.
+ * Provides methods to set properties such as completed, end date/time, due date/time,
+ * start date/time, duration, free/busy time, and transparency.
+ * Each method takes a {@link PropertyContainer} and a value, and returns the modified container.
+ * If the value is null, the property is not set.
  */
 public interface DateTimePropertyModifiers {
 

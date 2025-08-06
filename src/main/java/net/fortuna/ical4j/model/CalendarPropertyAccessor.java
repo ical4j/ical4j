@@ -39,8 +39,9 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 
 /**
- * Convenience accessor methods for calendar properties. Note the default behaviour for these methods
- * is to throw an exception where an underlying property is not present.
+ * An interface for accessing calendar properties in a calendar model.
+ * This interface extends PropertyContainer to provide access to calendar-specific properties.
+ * It provides default methods to retrieve mandatory and optional properties such as PRODID, VERSION, CALSCALE, and METHOD.
  */
 public interface CalendarPropertyAccessor extends PropertyContainer {
 

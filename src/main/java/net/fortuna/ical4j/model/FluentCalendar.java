@@ -40,7 +40,33 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREG
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
- * Provide fluent API support for {@link Calendar}
+ * An interface for a fluent API to build iCalendar {@link Calendar} objects.
+ * Provides methods to add default properties, product ID, custom properties, and components to the calendar.
+ * <p>
+ * Example usage:
+ * <pre>
+ * FluentCalendar calendar = new FluentCalendarImpl();
+ * calendar.withDefaults()
+ *         .withProdId("-//My Company//My Product//EN")
+ *         .withProperty(new CustomProperty("X-CUSTOM", "value"))
+ *         .withComponent(new EventComponent("My Event", LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+ * </pre>
+ * This interface allows for a more readable and maintainable way to construct calendar objects by chaining method calls.
+ * Each method returns the same instance of the calendar, allowing for a fluent style of programming.
+ * <p>
+ * Implementations of this interface should provide the actual calendar object and handle the addition of properties and components.
+ * The methods defined here are intended to be used in a fluent manner, allowing for easy chaining of method calls to build up a calendar object step by step.
+ * <p>
+ * Note: This interface does not define how the calendar is serialized or encoded; it focuses solely on the fluent construction of the calendar object.
+ * Implementations should ensure that the final calendar object can be serialized to the iCalendar format as per the iCalendar specification.
+ * <p>
+ * This interface is part of the iCal4j library, which provides a comprehensive set of tools for working with iCalendar data.
+ * It is designed to be used in Java applications that need to create, manipulate, or read iCalendar files.
+ * The fluent API style enhances readability and usability, making it easier for developers to work with calendar data without dealing with the complexities of the underlying iCalendar model directly.
+ * <p>
+ * Implementations of this interface should ensure that the calendar object is properly initialized and that all methods
+ * return the same instance of the calendar to maintain the fluent API style.
+ * <p>
  */
 public interface FluentCalendar {
 

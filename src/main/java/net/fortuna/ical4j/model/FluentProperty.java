@@ -34,7 +34,8 @@
 package net.fortuna.ical4j.model;
 
 /**
- * Provide fluent API support for {@link Component}
+ * An interface for properties that can be modified fluently.
+ * Provides a method to get the target property and a default method to add a parameter.
  */
 public interface FluentProperty {
 

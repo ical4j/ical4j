@@ -37,6 +37,11 @@ import net.fortuna.ical4j.model.property.*;
 
 import java.time.temporal.Temporal;
 
+/**
+ * An interface for components that contain date-time related properties.
+ * Provides methods to access various date-time properties such as start, end,
+ * due, completed, duration, free/busy time, and transparency.
+ */
 public interface DateTimePropertyAccessor extends PropertyContainer {
 
     /**

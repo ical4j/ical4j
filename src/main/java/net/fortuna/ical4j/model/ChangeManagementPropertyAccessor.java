@@ -38,6 +38,11 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Sequence;
 
+/**
+ * An interface for accessing change management properties in a property container.
+ * This interface extends PropertyContainer to provide access to properties related to
+ * change management, such as creation date, last modified date, and sequence number.
+ */
 public interface ChangeManagementPropertyAccessor extends PropertyContainer {
 
     /**

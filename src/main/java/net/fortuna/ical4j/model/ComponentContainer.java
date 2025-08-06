@@ -2,6 +2,12 @@ package net.fortuna.ical4j.model;
 
 import java.util.function.BiFunction;
 
+/**
+ * A container for components that can hold a list of subcomponents of type {@code C}.
+ * This interface extends {@link ComponentListAccessor} to provide access to the component list.
+ *
+ * @param <C> the type of component contained in this container
+ */
 public interface ComponentContainer<C extends Component> extends ComponentListAccessor<C> {
 
     void setComponentList(ComponentList<C> components);

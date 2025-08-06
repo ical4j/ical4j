@@ -23,6 +23,13 @@ import java.util.TimeZone;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * A utility class for loading and managing time zone definitions.
+ * It supports loading VTimeZone definitions from the classpath and generating
+ * time zone definitions based on Java TimeZone IDs.
+ * <p>
+ * This class also provides caching capabilities for loaded time zones.
+ */
 public class TimeZoneLoader {
 
     private static final String TZ_CACHE_IMPL = "net.fortuna.ical4j.timezone.cache.impl";

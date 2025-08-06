@@ -8,6 +8,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * A custom implementation of {@link ZoneRulesProvider} that delegates to a {@link TimeZoneRegistry}.
+ */
 public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
     // A weak reference should be sufficient as only properties

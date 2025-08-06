@@ -34,7 +34,8 @@
 package net.fortuna.ical4j.model;
 
 /**
- * Provide fluent API support for {@link Component}
+ * An interface for components that can be modified fluently.
+ * Provides a method to get the target component and a default method to add a property.
  */
 public interface FluentComponent {
 

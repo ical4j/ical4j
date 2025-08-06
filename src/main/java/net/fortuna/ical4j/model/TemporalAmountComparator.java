@@ -6,6 +6,11 @@ import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
 import java.util.Comparator;
 
+/**
+ * A comparator for {@link TemporalAmount} instances that can compare different types of temporal amounts,
+ * such as {@link Period} and {@link Duration}. It handles comparisons based on the type and values of the
+ * temporal amounts, including special handling for date-based units.
+ */
 public class TemporalAmountComparator implements Comparator<TemporalAmount> {
     @Override
     public int compare(TemporalAmount o1, TemporalAmount o2) {

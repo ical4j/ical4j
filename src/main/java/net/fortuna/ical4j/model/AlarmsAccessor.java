@@ -37,6 +37,11 @@ import net.fortuna.ical4j.model.component.VAlarm;
 
 import java.util.List;
 
+/**
+ * An interface for accessing alarm components in a calendar model.
+ * This interface extends ComponentContainer to provide access to VAlarm components.
+ * It provides a default method to retrieve a list of alarms from the component container.
+ */
 public interface AlarmsAccessor extends ComponentContainer<Component> {
 
     default List<VAlarm> getAlarms() {

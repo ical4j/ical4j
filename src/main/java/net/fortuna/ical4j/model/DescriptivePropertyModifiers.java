@@ -42,8 +42,7 @@ import java.nio.ByteBuffer;
 import java.util.function.BiFunction;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * An interface for modifying descriptive properties in a {@link PropertyContainer}.
  */
 public interface DescriptivePropertyModifiers {
 

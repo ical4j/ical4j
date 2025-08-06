@@ -38,6 +38,12 @@ import net.fortuna.ical4j.model.property.*;
 import java.time.temporal.Temporal;
 import java.util.List;
 
+/**
+ * An interface for accessing properties related to relationships in iCalendar objects.
+ * This includes properties such as attendees, contact, organizer, recurrence ID, related to, and URL.
+ *
+ * @see <a href="https://icalendar.org/iCalendar-RFC-5545/3-8-Relationship-Properties.html">RFC 5545 - 3.8 Relationship Properties</a>
+ */
 public interface RelationshipPropertyAccessor extends PropertyContainer {
 
     /**

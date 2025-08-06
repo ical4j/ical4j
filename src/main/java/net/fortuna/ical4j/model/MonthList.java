@@ -10,6 +10,10 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a list of months, ensuring that all months added are within a specified range.
+ * This class extends ArrayList to provide additional functionality for managing a list of Month objects.
+ */
 public class MonthList extends ArrayList<Month> {
 
     private final ValueRange valueRange;

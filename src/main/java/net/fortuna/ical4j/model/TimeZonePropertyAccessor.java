@@ -39,6 +39,9 @@ import java.time.LocalDateTime;
 
 import static net.fortuna.ical4j.model.Property.*;
 
+/**
+ * An interface for components that contain time zone related properties.
+ */
 public interface TimeZonePropertyAccessor extends PropertyContainer {
 
 

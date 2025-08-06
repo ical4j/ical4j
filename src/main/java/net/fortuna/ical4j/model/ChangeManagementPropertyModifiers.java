@@ -44,8 +44,10 @@ import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * An interface for modifying change management properties in a property container.
+ * This interface provides methods to set properties such as creation date, last modified date,
+ * and sequence number. It also includes a method to increment the sequence number.
+ * The methods return the modified property container.
  */
 public interface ChangeManagementPropertyModifiers {
 

@@ -41,6 +41,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Interface for calendar components that support recurrence calculations.
+ * This interface provides methods to calculate the recurrence set for a component
+ * based on its start date, recurrence rules, and exception rules.
+ *
+ * @param <T> the type of calendar component that supports recurrence
+ */
 public interface RecurrenceSupport<T extends CalendarComponent> extends PropertyContainer, Prototype<T> {
 
     /**

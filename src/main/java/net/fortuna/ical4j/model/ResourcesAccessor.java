@@ -37,6 +37,12 @@ import net.fortuna.ical4j.model.component.VResource;
 
 import java.util.List;
 
+/**
+ * An interface for accessing resources in a component container.
+ * This interface extends the ComponentContainer to provide access to VResource components.
+ *
+ * @see <a href="https://icalendar.org/iCalendar-RFC-5545/3-8-Relationship-Properties.html">RFC 5545 - 3.8 Relationship Properties</a>
+ */
 public interface ResourcesAccessor extends ComponentContainer<Component> {
 
     default List<VResource> getResources() {
