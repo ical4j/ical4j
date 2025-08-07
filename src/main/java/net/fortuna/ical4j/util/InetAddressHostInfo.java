@@ -37,8 +37,13 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 /**
- * @author fortuna
- *
+ * Provides platform-independent host information based on the
+ * {@link InetAddress} class.
+ * <p>
+ * This class retrieves the first non-loopback address of the host machine
+ * to use as the host information. It implements the {@link HostInfo} interface
+ * to provide a method for retrieving the host name.
+ * </p>
  */
 public class InetAddressHostInfo implements HostInfo {
 

@@ -32,8 +32,13 @@
 package net.fortuna.ical4j.util;
 
 /**
- * @author fortuna
  *
+ * Provides a simple implementation of the {@link HostInfo} interface
+ * that returns a specified hostname.
+ * <p>
+ * This class is useful when you want to provide a fixed hostname
+ * without relying on system properties or network interfaces.
+ * </p>
  */
 public class SimpleHostInfo implements HostInfo {
 

@@ -6,6 +6,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
+/**
+ * A simple in-memory cache for time zones, using a {@link ConcurrentMap} to store
+ * time zones by their ID. This implementation is thread-safe and allows for
+ * concurrent access.
+ *
+ * <p>This class implements the {@link TimeZoneCache} interface, providing methods
+ * to retrieve, add, and check for time zones in the cache.</p>
+ *
+ * @see TimeZoneCache
+ */
 public class MapTimeZoneCache implements TimeZoneCache {
 
     private final ConcurrentMap<String, VTimeZone> mapCache;

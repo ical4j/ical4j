@@ -38,7 +38,9 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * @author fortuna
+ *
+ * Utility class for loading resources via the thread context classloader or
+ * the current classloader.
  */
 public class ResourceLoader {
 
