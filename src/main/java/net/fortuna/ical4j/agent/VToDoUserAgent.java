@@ -11,6 +11,14 @@ import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
+/**
+ * User agent for handling VTODO calendar components.
+ * This class provides methods to publish, request, reply, add, cancel,
+ * refresh, and manage to-do items in a calendar.
+ * It extends the AbstractUserAgent to leverage common functionality for iCalendar components.
+ *
+ * Created by fortuna on 19/07/2017.
+ */
 public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
     private final RequestTransformer delegateTransformer;

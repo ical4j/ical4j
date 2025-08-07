@@ -10,6 +10,13 @@ import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
+/**
+ * User agent for handling VFREEBUSY calendar components.
+ * This class provides methods to publish, request, and reply to busy time information.
+ * It extends the AbstractUserAgent to leverage common functionality for iCalendar components.
+ *
+ * Created by fortuna on 19/07/2017.
+ */
 public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
 
     public VFreeBusyUserAgent(ProdId prodId, Organizer organizer, Supplier<Uid> uidGenerator) {
