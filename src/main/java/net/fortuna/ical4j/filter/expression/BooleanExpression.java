@@ -35,6 +35,10 @@ package net.fortuna.ical4j.filter.expression;
 
 import java.util.Objects;
 
+/**
+ * Represents a boolean expression in a filter, encapsulating a boolean value.
+ * This class implements the {@link LiteralExpression} interface and provides methods for equality checking and hashing.
+ */
 public class BooleanExpression implements LiteralExpression<Boolean> {
 
     public static final BooleanExpression TRUE = new BooleanExpression(true);

@@ -7,6 +7,13 @@ import net.fortuna.ical4j.filter.expression.UnaryExpression;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * PredicateFactory provides a way to create predicates based on filter expressions.
+ * It supports unary, binary, and boolean expressions, allowing for flexible filtering
+ * of objects of type T.
+ *
+ * @param <T> the type of objects this factory produces predicates for
+ */
 public interface PredicateFactory<T> {
 
     default Predicate<T> predicate(FilterExpression expression) {

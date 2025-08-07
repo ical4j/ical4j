@@ -44,6 +44,18 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/**
+ * PropertyFilter produces predicates for lambda-style filtering of {@link Property iCalendar properties}.
+ * <p>
+ * The following example prints all properties where the property name starts with "X-".
+ * </p>
+ * <pre>
+ * Predicate<Property> filter = new PropertyFilter().predicate(FilterExpression.startsWith("X-"));
+ * calendar.getProperties().stream()
+ *   .filter(filter)
+ *   .forEach(System.out::println);
+ * </pre>
+ */
 public class PropertyFilter extends AbstractFilter<Property> {
 
     public PropertyFilter() {

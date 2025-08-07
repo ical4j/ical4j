@@ -46,6 +46,13 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * AbstractFilter provides a base implementation for filter expressions, allowing subclasses to
+ * define specific filtering logic while providing common functionality for handling properties
+ * and parameters.
+ *
+ * @param <T> the type of objects this filter operates on
+ */
 public abstract class AbstractFilter<T> implements PredicateFactory<T> {
 
     private final Supplier<List<ParameterFactory<?>>> parameterFactorySupplier;

@@ -7,6 +7,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a filter expression used to query or filter iCalendar data.
+ * This interface provides methods to create various types of filter expressions
+ * such as comparisons, logical operations, and object existence checks.
+ */
 public interface FilterExpression {
 
     enum Op {
