@@ -38,6 +38,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Abstract base class for validators that apply a set of validation rules to a target object.
+ *
+ * @param <T> the type of the target object to validate
+ */
 public abstract class AbstractValidator<T> implements Validator<T> {
 
     private final List<AbstractValidationRuleSet<? super T>> ruleSets;

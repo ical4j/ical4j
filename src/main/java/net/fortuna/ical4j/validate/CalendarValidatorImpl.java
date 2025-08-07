@@ -15,6 +15,33 @@ import static net.fortuna.ical4j.model.Property.VERSION;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
+ * Validator implementation for iCalendar {@link Calendar} objects.
+ * <p>
+ * This class implements the {@link Validator} interface and provides validation
+ * logic for various properties and components of an iCalendar calendar.
+ * It checks for the presence of required properties, validates the version,
+ * and ensures that the calendar contains at least one component.
+ * It also validates the properties against a set of rules defined in the
+ * {@link PropertyContainerRuleSet}.
+ * <p>
+ * The validator supports relaxed validation mode, allowing for more lenient
+ * checks when the {@link CompatibilityHints#KEY_RELAXED_VALIDATION} hint is enabled.
+ * In this mode, certain strict checks, such as the version requirement, may be bypassed.
+ * <p>
+ * Usage:
+ * <pre>
+ * CalendarValidator validator = new CalendarValidatorImpl();
+ * ValidationResult result = validator.validate(calendar);
+ * if (result.isValid()) {
+ *     // Calendar is valid
+ * } else {
+ *     // Handle validation errors
+ *     for (ValidationEntry entry : result.getEntries()) {
+ *         System.out.println(entry.getMessage());
+ *     }
+ * }
+ * </pre>
+ *
  * Created by fortuna on 13/09/15.
  */
 public class CalendarValidatorImpl implements Validator<Calendar> {

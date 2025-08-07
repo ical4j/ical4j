@@ -4,6 +4,15 @@ import net.fortuna.ical4j.model.Content;
 
 import java.util.List;
 
+/**
+ * Interface for validating content in a list of {@link Content} objects.
+ * Provides static methods to assert conditions on the presence and count of
+ * specific content types within a list.
+ * <p>
+ * This interface defines methods to validate that content is either absent,
+ * present exactly once, present one or fewer times, or present at least once.
+ * </p>
+ */
 public interface ContentValidator {
 
     String ASSERT_NONE_MESSAGE = "Content [{0}] is not applicable";

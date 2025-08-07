@@ -38,7 +38,13 @@ import net.fortuna.ical4j.model.Property;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * A rule set for validating a {@link Property} against a set of validation rules.
+ * This class extends {@link AbstractValidationRuleSet} and provides specific validation logic
+ * for properties, including checks for the presence and validity of parameters and values.
+ *
+ * @param <T> the type of the property to validate
+ */
 public class PropertyRuleSet<T extends Property> extends AbstractValidationRuleSet<T> {
 
     @SafeVarargs

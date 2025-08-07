@@ -40,6 +40,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A rule set for validating a {@link ComponentContainer} against a set of validation rules.
+ * This class extends {@link AbstractValidationRuleSet} and provides specific validation logic
+ * for components contained within a {@link ComponentContainer}.
+ */
 public class ComponentContainerRuleSet extends AbstractValidationRuleSet<ComponentContainer<? extends Component>> {
 
     @SafeVarargs
