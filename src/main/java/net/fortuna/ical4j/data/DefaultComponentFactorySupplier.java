@@ -10,6 +10,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * Provides a default list of component factories for parsing iCalendar components.
+ * This includes standard components as defined in RFC 5545, as well as additional
+ * components from RFC 7953 and RFC 9073.
+ *
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc5545">RFC 5545</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc7953">RFC 7953</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc9073">RFC 9073</a>
+ */
 public class DefaultComponentFactorySupplier implements Supplier<List<ComponentFactory<? extends Component>>> {
 
     @Override
