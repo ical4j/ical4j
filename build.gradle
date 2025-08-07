@@ -183,7 +183,7 @@ publishing {
     repositories {
         maven {
             name = "OSSRH"
-            url = !isReleaseVersion ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            url = !isReleaseVersion ? "https://central.sonatype.com/repository/maven-snapshots/" : "https://central.sonatype.com"
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")
