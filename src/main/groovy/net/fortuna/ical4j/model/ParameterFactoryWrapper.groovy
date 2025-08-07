@@ -2,6 +2,11 @@ package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.ParameterFactory
 
+/**
+ * A wrapper for a ParameterFactory that allows dynamic creation of parameters
+ * based on their class type. This class extends AbstractFactory to integrate
+ * with Groovy's FactoryBuilderSupport.
+ */
 class ParameterFactoryWrapper extends AbstractFactory {
 
     Class parameterClass

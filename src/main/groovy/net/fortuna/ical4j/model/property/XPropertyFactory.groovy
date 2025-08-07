@@ -35,6 +35,10 @@ package net.fortuna.ical4j.model.property
 import net.fortuna.ical4j.model.ParameterList
 
 /**
+ * A factory for creating XProperty instances in Groovy.
+ * This class extends AbstractPropertyFactory and provides methods to create
+ * and manage XProperty objects within a Groovy builder context.
+ *
  * $Id$
  *
  * Created on: 02/08/2009

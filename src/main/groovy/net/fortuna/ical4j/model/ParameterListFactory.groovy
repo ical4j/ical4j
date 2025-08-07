@@ -32,6 +32,10 @@
 package net.fortuna.ical4j.model
 
 /**
+ * A factory for creating ParameterList instances in Groovy.
+ * This class extends AbstractFactory and provides methods to create
+ * and manage ParameterList objects within a Groovy builder context.
+ *
  * $Id$
  *
  * Created on: 03/08/2009

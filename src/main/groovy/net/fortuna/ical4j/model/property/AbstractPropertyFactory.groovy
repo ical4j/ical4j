@@ -34,6 +34,10 @@ package net.fortuna.ical4j.model.property
 import net.fortuna.ical4j.model.Parameter
 
 /**
+ * An abstract factory for creating property instances in Groovy.
+ * This class extends AbstractFactory and provides methods to create
+ * and manage property objects within a Groovy builder context.
+ *
  * $Id$
  *
  * Created on: 03/08/2009

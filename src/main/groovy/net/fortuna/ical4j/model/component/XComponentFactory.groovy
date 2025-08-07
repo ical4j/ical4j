@@ -35,6 +35,10 @@ import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 
 /**
+ * A factory for creating XComponent instances in Groovy.
+ * This class extends AbstractFactory and provides methods to create
+ * and manage XComponent objects within a Groovy builder context.
+ *
  * @author fortuna
  *
  */

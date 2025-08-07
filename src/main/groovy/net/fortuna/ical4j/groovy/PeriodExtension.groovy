@@ -36,6 +36,11 @@ import net.fortuna.ical4j.model.PeriodList
 
 import java.time.Duration
 
+/**
+ * A Groovy extension for the Period class to provide additional functionality.
+ * This class allows for adding periods, subtracting periods, and negating them
+ * using Groovy's operator overloading capabilities.
+ */
 class PeriodExtension {
 	static Period plus(Period self, Period period) {
 		self.add(period)
