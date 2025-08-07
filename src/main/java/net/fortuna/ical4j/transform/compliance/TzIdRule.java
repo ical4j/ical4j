@@ -36,7 +36,10 @@ package net.fortuna.ical4j.transform.compliance;
 import net.fortuna.ical4j.model.property.TzId;
 
 /**
- * 
+ * A rule that applies compliance transformations to TzId elements.
+ * This rule ensures that the timezone value of the TzId property is corrected
+ * according to RFC 5545.
+ *
  * @author daniel grigore
  * @author corneliu dobrota
  */

@@ -42,6 +42,19 @@ import net.fortuna.ical4j.transform.Transformer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+/**
+ * Transformer that applies RFC5545 compliance rules to a Calendar object.
+ * <p>
+ * This transformer ensures that the properties and components of the calendar conform to the rules defined in RFC5545.
+ * It processes each component and its properties, applying necessary transformations to ensure compliance.
+ * </p>
+ * <p> The transformer also limits the number of certain properties (e.g., STATUS) to a maximum of one occurrence per component,
+ * as specified in the RFC5545 standard.
+ * </p>
+ * <p> Note: This transformer is designed to be used as part of a compliance transformation process and should be
+ * applied to a Calendar object before it is serialized or processed further.
+ * </p>
+ */
 public class Rfc5545Transformer implements Transformer<Calendar> {
 
     @Override

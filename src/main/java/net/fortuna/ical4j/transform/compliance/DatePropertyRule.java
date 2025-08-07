@@ -37,6 +37,9 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.property.DateProperty;
 
 /**
+ * A rule that applies compliance transformations to DateProperty elements.
+ * This rule ensures that the timezone parameter is correctly set for date properties
+ * according to RFC 5545.
  * 
  * @author daniel grigore
  * @author corneliu dobrota

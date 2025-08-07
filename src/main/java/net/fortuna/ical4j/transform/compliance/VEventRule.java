@@ -49,7 +49,16 @@ import java.util.Optional;
 import static net.fortuna.ical4j.model.Property.*;
 
 /**
- * 
+ * A rule that applies compliance transformations to VEvent elements.
+ * This rule ensures that:
+ * <ol>
+ * <li>If both 'dtend' and 'duration' properties are present, 'duration' is removed.
+ * <li>If the event is an all-day event (both 'dtstart' and 'dtend' are of type DATE and equal),
+ *    'dtend' is adjusted to be one day after 'dtstart'.
+ * <li>If 'dtstamp' is not present, it is added with the current timestamp.
+ * </ol>
+ * This rule is based on RFC 5545 compliance requirements.
+ *
  * @author daniel grigore
  * @author corneliu dobrota
  * @author stefan popescu
