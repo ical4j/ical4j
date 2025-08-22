@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.property.Categories;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Test for a property matching any values in the provided list.
@@ -56,7 +57,8 @@ public class CategoriesInRule<T extends PropertyContainer> implements Predicate<
 
     @Override
     public boolean test(T t) {
-        return t.getProperties(Property.CATEGORIES).stream().anyMatch(p ->
-                ((Categories) p).getCategories().getTexts().containsAll(categories));
+        return t.getProperties(Property.CATEGORIES).stream().flatMap(c ->
+                ((Categories) c).getCategories().getTexts().stream()).collect(Collectors.toSet())
+                .containsAll(categories);
     }
 }
