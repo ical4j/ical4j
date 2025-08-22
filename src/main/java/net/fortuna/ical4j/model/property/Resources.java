@@ -67,6 +67,11 @@ public class Resources extends Property {
         resources = new TextList(resource.getRequiredProperty(Property.NAME).getValue());
     }
 
+    public Resources(String aName) {
+        super(RESOURCES);
+        setValue(aName);
+    }
+
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
