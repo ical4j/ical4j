@@ -612,7 +612,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         var event = (VEvent) new VEvent().withProperty(uid).withProperty(start).withProperty(end).getFluentTarget();
         suite.addTest(new VEventTest<>("testValidation", event));
 
-        event = (VEvent) event.copy();
+        event = event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
         startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
         DtStart<ZonedDateTime> newstart = new DtStart<>(startParams, ZonedDateTime.now());
@@ -620,7 +620,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         suite.addTest(new VEventTest<>("testValidationException", event));
 
         // test 1..
-        event = (VEvent) event.copy();
+        event = event.copy();
         startParams = new ParameterList(Collections.singletonList(Value.DATE));
         newstart = new DtStart<>(startParams, event.getRequiredProperty(Property.DTSTART).getValue());
         event.replace(newstart);
@@ -634,7 +634,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 //        suite.addTest(new VEventTest<>("testValidation", event));
 
         // test 2..
-        event = (VEvent) event.copy();
+        event = event.copy();
         startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
         start = new DtStart<>(startParams, event.getRequiredProperty(Property.DTSTART).getValue());
         event.replace(start);

@@ -76,7 +76,7 @@ public class VAlarmTest extends ComponentTest {
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
 
-        alarm = (VAlarm) alarm.copy();
+        alarm = alarm.copy();
         alarm.add(DISPLAY).add(new Description("Testing display"));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
@@ -89,11 +89,11 @@ public class VAlarmTest extends ComponentTest {
         alarm.add(duration);
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
         
-        alarm = (VAlarm) alarm.copy();
+        alarm = alarm.copy();
         alarm.add(new Repeat(2));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
-        alarm = (VAlarm) alarm.copy();
+        alarm = alarm.copy();
         alarm.remove(duration);
 //        suite.addTest(new VAlarmTest("testValidationException", alarm));
         
