@@ -325,8 +325,14 @@ public abstract class Component extends Content implements Serializable,
         // periods from the end date..
         TemporalAmount rDuration;
         // if no end or duration specified, end date equals start date..
+        // unless the start date represents a date value, in which case
+        // the effective duration is 1 day..
         if (end.isEmpty() && duration.isEmpty()) {
-            rDuration = java.time.Duration.ZERO;
+            if (Optional.of(Value.DATE).equals(start.get().getParameter(Parameter.VALUE))) {
+                rDuration = java.time.Period.ofDays(1);
+            } else {
+                rDuration = java.time.Duration.ZERO;
+            }
         } else if (duration.isEmpty()) {
             rDuration = TemporalAmountAdapter.between(start.get().getDate(), end.get().getDate()).getDuration();
         } else {
