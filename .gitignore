@@ -12,3 +12,4 @@ zones.tab
 out/
 **/zoneinfo/**/index.html
 **/zoneinfo-global/**/index.html
+**/.DS_Store
