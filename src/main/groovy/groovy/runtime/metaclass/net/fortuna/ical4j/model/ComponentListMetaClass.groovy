@@ -1,5 +1,10 @@
 package groovy.runtime.metaclass.net.fortuna.ical4j.model
 
+/**
+ * A MetaClass for ComponentList that allows dynamic property access.
+ * This class extends the DelegatingMetaClass to provide custom behavior
+ * for property retrieval.
+ */
 class ComponentListMetaClass extends DelegatingMetaClass {
 
     ComponentListMetaClass(MetaClass delegate) {

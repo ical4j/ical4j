@@ -37,6 +37,12 @@ import net.fortuna.ical4j.model.parameter.*
 import net.fortuna.ical4j.model.property.*
 
 /**
+ * A factory for creating iCalendar content in Groovy.
+ * This class extends FactoryBuilderSupport and provides methods to register
+ * various components, properties, and parameters used in iCalendar files.
+ * It allows for easy construction of iCalendar objects using Groovy's
+ * builder syntax.
+ *
  * $Id$
  *
  * Created on: 03/08/2009

@@ -39,6 +39,12 @@ import net.fortuna.ical4j.model.Property;
 import static net.fortuna.ical4j.model.Component.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
+/**
+ * ITIPValidator is a validator for iTIP messages, ensuring that the required properties and components
+ * are present in a Calendar object according to the iCalendar specification.
+ * It checks for the presence of PRODID, VERSION, METHOD, and CALSCALE properties,
+ * and ensures that at least one of VEVENT, VFREEBUSY, VTODO, or VJOURNAL components is present.
+ */
 public class ITIPValidator implements Validator<Calendar> {
 
     private static final PropertyContainerRuleSet<Calendar> PROPS_RULE_SET = new PropertyContainerRuleSet<>(

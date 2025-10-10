@@ -39,6 +39,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A rule set for validating a {@link PropertyContainer} against a set of validation rules.
+ * This class extends {@link AbstractValidationRuleSet} and provides specific validation logic
+ * for properties contained within a {@link PropertyContainer}.
+ *
+ * @param <T> the type of the property container to validate
+ */
 public class PropertyContainerRuleSet<T extends PropertyContainer> extends AbstractValidationRuleSet<T> {
 
     @SafeVarargs

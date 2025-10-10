@@ -49,6 +49,40 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
+ * A validator for iCalendar components, providing a set of validation rules
+ * for various iCalendar component types.
+ * <p>
+ * This class extends {@link AbstractValidator} and implements {@link ContentValidator}.
+ * It provides static instances for validating specific component types such as
+ * {@link Available}, {@link Participant}, {@link VAvailability}, {@link VEvent},
+ * {@link VFreeBusy}, {@link VJournal}, {@link VLocation}, {@link VResource},
+ * {@link VTimeZone}, {@link VToDo}, {@link VVenue}, {@link Observance},
+ * and {@link VAlarm}. Each static instance is configured with specific
+ * validation rules that are applied to the respective component type.
+ * <p>
+ * The validation rules include checks for required properties, optional properties,
+ * exclusive properties, and specific conditions such as date-time values.
+ * The class also provides methods for asserting the absence or presence of components
+ * within a component list, which throw exceptions if the assertions fail.
+ * <p>
+ * This class is designed to be used in the context of validating iCalendar data
+ * structures, ensuring that they conform to the iCalendar specification and
+ * the specific requirements of each component type.
+ * <p>
+ * Example usage:
+ * <pre>
+ * ComponentValidator<VEvent> eventValidator = ComponentValidator.VEVENT;
+ * VEvent event = new VEvent();
+ * // Set properties on the event...
+ * ValidationResult result = eventValidator.validate(event);
+ * if (!result.isValid()) {
+ *     // Handle validation errors
+ *     for (ValidationEntry entry : result.getEntries()) {
+ *         System.out.println(entry.getMessage());
+ *     }
+ * }
+ * </pre>
+ *
  * @author Ben
  *
  */

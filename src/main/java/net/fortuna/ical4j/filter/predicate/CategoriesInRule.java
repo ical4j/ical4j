@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2012, Ben Fortuna
+/*
+ * Copyright (c) 2004-2021, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,49 +29,36 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.component
+package net.fortuna.ical4j.filter.predicate;
 
-import net.fortuna.ical4j.model.Property
-import net.fortuna.ical4j.model.PropertyList
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyContainer;
+import net.fortuna.ical4j.model.property.Categories;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
- * A factory for creating XComponent instances in Groovy.
- * This class extends AbstractFactory and provides methods to create
- * and manage XComponent objects within a Groovy builder context.
- *
- * @author fortuna
+ * Test for a property matching any values in the provided list.
+ * @param <T>
+ *     a property container type
+ *     @author fortuna
  *
  */
-class XComponentFactory extends AbstractFactory {
+public class CategoriesInRule<T extends PropertyContainer> implements Predicate<T> {
 
+    private final List<String> categories;
 
-     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         def component
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XComponent.class)) {
-             component = (XComponent) value.copy()
-         }
-         else {
-             def componentName = attributes.remove('name')
-             if (componentName == null) {
-                 componentName = value
-             }
-             def properties = attributes.remove('properties')
-             if (properties == null) {
-                 properties = []
-             }
-             component = newInstance(componentName, properties)
-         }
-         return component
-     }
-     
-     protected static Object newInstance(def name, def properties) {
-         return new XComponent((String) name, new PropertyList((List) properties))
-     }
-     
-     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-         if (child instanceof Property) {
-             parent.add(child)
-         }
-     }
+    public CategoriesInRule(String... categories) {
+        this.categories = Arrays.asList(categories);
+    }
+
+    @Override
+    public boolean test(T t) {
+        return t.getProperties(Property.CATEGORIES).stream().flatMap(c ->
+                ((Categories) c).getCategories().getTexts().stream()).collect(Collectors.toSet())
+                .containsAll(categories);
+    }
 }
-

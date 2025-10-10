@@ -35,6 +35,12 @@ package net.fortuna.ical4j.filter.expression;
 
 import net.fortuna.ical4j.filter.FilterExpression;
 
+/**
+ * Represents a literal expression in a filter, encapsulating a value of type T.
+ * This interface extends {@link FilterExpression} and provides a method to retrieve the value.
+ *
+ * @param <T> the type of the value contained in the literal expression
+ */
 public interface LiteralExpression<T> extends FilterExpression {
 
     T getValue();

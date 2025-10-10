@@ -37,6 +37,13 @@ import net.fortuna.ical4j.model.component.Participant;
 
 import java.util.List;
 
+/**
+ * Provides access to a collection of {@link Participant} components.
+ * This interface extends {@link ComponentContainer} to allow retrieval of participants.
+ *
+ * @see ComponentContainer
+ * @see Participant
+ */
 public interface ParticipantsAccessor extends ComponentContainer<Component> {
 
     default List<Participant> getParticipants() {

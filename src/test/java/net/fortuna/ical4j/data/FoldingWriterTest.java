@@ -31,13 +31,14 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
-import net.fortuna.ical4j.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.StringWriter;
+
+import org.junit.jupiter.api.Test;
+
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * $Id$
@@ -48,21 +49,82 @@ import java.io.StringWriter;
  *
  * @author Ben Fortuna
  */
-public class FoldingWriterTest extends TestCase {
+class FoldingWriterTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FoldingWriterTest.class);
+    @Test
+    void testLineLengthAppend() throws IOException {
 
-    /**
-     * Test writing a line equal to fold length.
-     */
-    public void testLineLength73() throws IOException {
         StringWriter sw = new StringWriter();
-        FoldingWriter writer = new FoldingWriter(sw);
-        writer.write("BEGIN:VCALENDAR");
-        writer.write(Strings.LINE_SEPARATOR);
-        writer.write("PRODID:-//Open Source Applications Foundation//NONSGML Scooby Server//EN");
-        writer.write(Strings.LINE_SEPARATOR);
-        writer.write("VERSION:2.0");
-        LOG.info(sw.getBuffer().toString());
+        try (FoldingWriter writer = new FoldingWriter(sw, 20)) {
+            for (int i = 0; i < 25; i++) {
+                writer.write(Integer.toString(i % 10));
+            }
+            assertEquals("01234567890123456789" + Strings.LINE_SEPARATOR + " 01234", sw.getBuffer().toString());
+        }
     }
+
+    @Test
+    void testLineLength73() throws IOException {
+        StringWriter sw = new StringWriter();
+
+        try (FoldingWriter writer = new FoldingWriter(sw)) {
+            writer.write("BEGIN:VCALENDAR");
+            writer.write(Strings.LINE_SEPARATOR);
+            writer.write("PRODID:-//Open Source Applications Foundation//NONSGML Scooby Server//EN");
+            writer.write(Strings.LINE_SEPARATOR);
+            writer.write("VERSION:2.0");
+
+            assertEquals("BEGIN:VCALENDAR"
+                    + Strings.LINE_SEPARATOR
+                    + "PRODID:-//Open Source Applications Foundation//NONSGML Scooby Server//EN"
+                    + Strings.LINE_SEPARATOR
+                    + "VERSION:2.0",
+                    sw.getBuffer().toString());
+        }
+    }
+
+    @Test
+    void testLineLength73Fold() throws IOException {
+        StringWriter sw = new StringWriter();
+
+        try (FoldingWriter writer = new FoldingWriter(sw)) {
+            writer.write("BEGIN:VCALENDAR");
+            writer.write(Strings.LINE_SEPARATOR);
+            writer.write("PRODID:-//Open Source Applications Foundation//NONSGML Scooby Server Application//EN");
+            writer.write(Strings.LINE_SEPARATOR);
+            writer.write("VERSION:2.0");
+
+            assertEquals("BEGIN:VCALENDAR"
+                    + Strings.LINE_SEPARATOR
+                    + "PRODID:-//Open Source Applications Foundation//NONSGML Scooby Server Appl"
+                    + Strings.LINE_SEPARATOR
+                    + " ication//EN"
+                    + Strings.LINE_SEPARATOR
+                    + "VERSION:2.0",
+                    sw.getBuffer().toString());
+        }
+    }
+
+    @Test
+    void testMultibyteCharacterFolding() throws IOException {
+
+        StringBuilder longText = new StringBuilder();
+        for (int i = 0; i < 25; i++) {
+            longText.append("🙂");
+        }
+
+        StringWriter sw = new StringWriter();
+        try (FoldingWriter writer = new FoldingWriter(sw, 20)) {
+
+            writer.write(longText.toString());
+
+            assertEquals("🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+                    + Strings.LINE_SEPARATOR
+                    + " 🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+                    + Strings.LINE_SEPARATOR
+                    + " 🙂🙂🙂🙂🙂🙂",
+                    sw.getBuffer().toString());
+        }
+    }
+
 }

@@ -10,6 +10,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * Provides a default list of property factories for parsing iCalendar properties.
+ * This includes standard properties as defined in RFC 5545, as well as additional
+ * properties from RFC 7986, RFC 7953, and RFC 9073.
+ *
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc5545">RFC 5545</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc7986">RFC 7986</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc7953">RFC 7953</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc9073">RFC 9073</a>
+ */
 public class DefaultPropertyFactorySupplier implements Supplier<List<PropertyFactory<? extends Property>>> {
 
     @Override

@@ -46,9 +46,15 @@ import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -90,9 +96,11 @@ public class Attach extends Property {
 
     private static final long serialVersionUID = 4439949507756383452L;
 
+    private static final Logger LOG = LoggerFactory.getLogger(Attach.class);
+
     private URI uri;
 
-    private byte[] binary;
+    private ByteBuffer binary;
 
     /**
      * Default constructor.
@@ -113,7 +121,7 @@ public class Attach extends Property {
     /**
      * @param data binary data
      */
-    public Attach(final byte[] data) {
+    public Attach(final ByteBuffer data) {
         this(new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY)), data);
     }
 
@@ -121,7 +129,7 @@ public class Attach extends Property {
      * @param aList a list of parameters for this component
      * @param data  binary data
      */
-    public Attach(final ParameterList aList, final byte[] data) {
+    public Attach(final ParameterList aList, final ByteBuffer data) {
         super(ATTACH, aList);
         this.binary = data;
         this.uri = null;
@@ -160,8 +168,29 @@ public class Attach extends Property {
     /**
      * @return Returns the binary.
      */
-    public final byte[] getBinary() {
+    public final ByteBuffer getBinary() {
         return binary;
+    }
+
+    /**
+     * Returns the binary data as a byte array. If the binary data is backed by
+     * an array, it returns that array directly. Otherwise, it creates a new
+     * byte array and copies the data from the ByteBuffer.
+     *
+     * @return byte array containing the binary data, or null if no binary data is set
+     */
+    public byte[] getBinaryData() {
+        if (binary != null) {
+            if (binary.hasArray()) {
+                return binary.array();
+            } else {
+                byte[] data = new byte[binary.remaining()];
+                binary.get(data);
+                binary.rewind(); // Reset position to the beginning after reading
+                return data;
+            }
+        }
+        return null;
     }
 
     /**
@@ -188,15 +217,27 @@ public class Attach extends Property {
         if (encoding.isPresent()) {
             // binary = Base64.decode(aValue);
             try {
-                final var decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(encoding.get());
-                binary = decoder.decode(aValue.getBytes());
+                final var decoder = DecoderFactory.getInstance().createBinaryDecoder(encoding.get());
+                byte[] decodedBytes = decoder.decode(aValue.getBytes());
+                try {
+                    File binaryData = File.createTempFile("ical4j-attach", ".tmp");
+                    binaryData.deleteOnExit();
+
+                    try (RandomAccessFile raf = new RandomAccessFile(binaryData, "rw")) {
+                        FileChannel fileChannel = raf.getChannel();
+                        MappedByteBuffer binary = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, decodedBytes.length);
+                        binary.put(decodedBytes);
+                        binary.rewind();
+                        this.binary = binary;
+                    }
+                } catch (IOException e) {
+                    LOG.error("Error creating temporary file", e);
+                    binary = ByteBuffer.wrap(decodedBytes);
+                }
             } catch (UnsupportedEncodingException uee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", uee);
+                LOG.error("Error encoding binary data", uee);
             } catch (DecoderException de) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error decoding binary data", de);
+                LOG.error("Error decoding binary data", de);
             }
         }
         // assume URI..
@@ -219,10 +260,9 @@ public class Attach extends Property {
         } else if (getBinary() != null) {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
-                Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
-                final var encoder = EncoderFactory.getInstance()
-                        .createBinaryEncoder(encoding.get());
-                return new String(encoder.encode(getBinary()));
+                Encoding encoding = getRequiredParameter(Parameter.ENCODING);
+                final var encoder = EncoderFactory.getInstance().createBinaryEncoder(encoding);
+                return new String(encoder.encode(getBinaryData()));
             } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
@@ -234,7 +274,7 @@ public class Attach extends Property {
     /**
      * @param binary The binary to set.
      */
-    public final void setBinary(final byte[] binary) {
+    public final void setBinary(final ByteBuffer binary) {
         this.binary = binary;
         // unset uri..
         this.uri = null;

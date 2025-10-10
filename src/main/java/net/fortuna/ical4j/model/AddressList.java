@@ -45,10 +45,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * $Id$ [23-Apr-2004]
- *
- * Defines a list of iCalendar addresses.
- * @author Ben Fortuna
+ * A list of addresses.
+ * <p>
+ * This class provides functionality to parse a string representation of addresses,
+ * create an immutable list of addresses, and perform operations such as adding or removing addresses.
+ * <p>
+ * The addresses are stored as URIs, and the class ensures that the addresses are unique and
+ * unmodifiable once created. It also supports relaxed parsing of addresses if specified.
+ * <p>
+ * The class implements Serializable to allow for serialization of the address list.
+ * <p>
+ * Example usage:
+ * <pre>
+ * AddressList addressList = new AddressList("mailto:joe@example.com", "mailto:jane@example.com");
+ * * // Add an address
+ * addressList = addressList.add(new URI("mailto:jeff@example.com"));
+ * * // Remove an address
+ * addressList = addressList.remove(new URI("mailto:joe@example.com"));
+ * * // Convert to string representation
+ * String addressString = addressList.toString();
+ * </pre>
+ * <p> Note: The class is designed to handle URIs and may throw a URISyntaxException if the
+ * provided string is not a valid URI format. It also supports relaxed parsing, allowing for
+ * invalid addresses to be ignored if specified.
+ * <p>
+ * This class is part of the iCal4j library, which provides a comprehensive set of
+ * tools for working with iCalendar data.
+ * <p>
  */
 public class AddressList implements Serializable {
 

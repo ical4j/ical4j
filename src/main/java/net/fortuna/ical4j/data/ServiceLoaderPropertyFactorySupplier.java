@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
+/**
+ * Provides a list of property factories by loading them via the Java ServiceLoader mechanism.
+ * This allows for dynamic discovery of property factories at runtime, enabling extensibility
+ * and customization of iCalendar property parsing.
+ *
+ * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">ServiceLoader</a>
+ */
 public class ServiceLoaderPropertyFactorySupplier implements Supplier<List<PropertyFactory<?>>> {
 
     @Override

@@ -192,7 +192,7 @@ public interface DescriptivePropertyValidators {
      * </pre>
      */
     Validator<Geo> GEO = new PropertyValidator<>(Property.GEO,
-            new ValidationRule<>(ValueMatch, "([0-9]*[.])?[0-9]+;([0-9]*[.])?[0-9]+"));
+            new ValidationRule<>(ValueMatch, "(-)?([0-9]*[.])?[0-9]+;(-)?([0-9]*[.])?[0-9]+"));
     /**
      * <pre>
      *        Format Definition:  This property is defined by the following

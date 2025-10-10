@@ -40,7 +40,9 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Generate a report from a {@link ValidationResult}.
+ * A utility class to generate validation reports.
+ * This class provides methods to output validation results in different formats,
+ * such as HTML and plain text.
  */
 public class ValidationReport {
 

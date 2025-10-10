@@ -11,6 +11,15 @@ import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
+/**
+ * User agent for handling iCalendar VEvent components.
+ * This class provides methods to publish, request, delegate, reply, add,
+ * cancel, refresh, counter, and decline counter for VEvent components.
+ * It extends the AbstractUserAgent class to provide specific functionality
+ * for VEvent components.
+ *
+ * Created by fortuna on 19/07/2017.
+ */
 public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
     private final RequestTransformer delegateTransformer;
@@ -226,7 +235,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar refresh(VEvent component) {
-        return validate(wrap(REFRESH, (VEvent) component.copy()));
+        return validate(wrap(REFRESH, component.copy()));
     }
 
     /**

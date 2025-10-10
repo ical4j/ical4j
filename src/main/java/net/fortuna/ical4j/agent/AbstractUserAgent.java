@@ -20,6 +20,10 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
 /**
+ * Abstract base class for user agents that handle iCalendar components.
+ * This class provides common functionality for transforming and validating
+ * calendar components based on the iCalendar method specified.
+ *
  * Created by fortuna on 19/07/2017.
  */
 public abstract class AbstractUserAgent<T extends CalendarComponent> implements UserAgent<T> {

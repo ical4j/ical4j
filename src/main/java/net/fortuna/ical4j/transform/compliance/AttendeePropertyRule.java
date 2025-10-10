@@ -36,6 +36,14 @@ package net.fortuna.ical4j.transform.compliance;
 import net.fortuna.ical4j.model.property.Attendee;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * A rule that applies to the {@link Attendee} property, specifically to ensure
+ * that the email address is formatted correctly by removing surrounding apostrophes.
+ * This is in compliance with RFC 5545.
+ *
+ * <p>It checks if the attendee's email address starts and ends with an apostrophe
+ * and removes them if they do.</p>
+ */
 public class AttendeePropertyRule implements Rfc5545PropertyRule<Attendee> {
 
     private static final String MAILTO = "mailto";

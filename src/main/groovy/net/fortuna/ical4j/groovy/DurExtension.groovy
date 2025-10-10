@@ -33,6 +33,11 @@ package net.fortuna.ical4j.groovy
 
 import net.fortuna.ical4j.model.Dur
 
+/**
+ * A Groovy extension for the Dur class to provide additional functionality.
+ * This class allows for adding durations and negating them using Groovy's
+ * operator overloading capabilities.
+ */
 class DurExtension {
 	static Dur plus(Dur self, Dur duration) {
 		self.add(duration)

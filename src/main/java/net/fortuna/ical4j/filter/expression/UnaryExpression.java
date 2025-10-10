@@ -36,6 +36,10 @@ import net.fortuna.ical4j.filter.FilterExpression;
 
 import java.util.Objects;
 
+/**
+ * Represents a unary expression in a filter, encapsulating an operator and an operand.
+ * This class implements the {@link FilterExpression} interface and provides methods for equality checking and hashing.
+ */
 public class UnaryExpression implements FilterExpression {
 
     public final FilterExpression.Op operator;

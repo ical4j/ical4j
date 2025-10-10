@@ -38,15 +38,15 @@ import net.fortuna.ical4j.model.property.Categories;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.Summary;
 
+import java.nio.ByteBuffer;
 import java.util.function.BiFunction;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
- * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * An interface for modifying descriptive properties in a {@link PropertyContainer}.
  */
 public interface DescriptivePropertyModifiers {
 
-    BiFunction<PropertyContainer, byte[], PropertyContainer> ATTACHMENT = (c, p) -> {
+    BiFunction<PropertyContainer, ByteBuffer, PropertyContainer> ATTACHMENT = (c, p) -> {
         if (p != null) c.add(new Attach(p)); return c;
     };
 

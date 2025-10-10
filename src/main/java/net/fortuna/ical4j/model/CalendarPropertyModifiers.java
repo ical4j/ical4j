@@ -38,8 +38,25 @@ import net.fortuna.ical4j.model.property.Method;
 import java.util.function.BiFunction;
 
 /**
- * A collection of functions used to modify date-time properties in a target property container.
+ * A collection of functions used to modify calendar properties in a target property container.
  * Used in conjunction with {@link PropertyContainer#with(BiFunction, Object)}
+ * <p> This interface provides a method to replace the Method property in a PropertyContainer.
+ * It is designed to be used with a lambda expression or method reference that takes a PropertyContainer and a Method,
+ * and returns a modified PropertyContainer.
+ * <p>
+ * Example usage:
+ * <pre>
+ * PropertyContainer container = new PropertyContainer();
+ * Method method = new Method("PUBLISH");
+ * PropertyContainer modifiedContainer = container.with(CalendarPropertyModifiers.METHOD, method);
+ * </pre>
+ * This will replace the existing Method property in the container with the new Method instance.
+ * If the Method property does not exist, it will be added.
+ * </p>
+ * <p> Note: This interface is intended for internal use within the iCal4j library and may not
+ * be suitable for general use outside the library's context.
+ * It is primarily used to provide a consistent way to modify calendar properties in a PropertyContainer.
+ * </p>
  */
 public interface CalendarPropertyModifiers {
 

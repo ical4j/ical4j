@@ -38,6 +38,10 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Represents a date expression in a filter, encapsulating a date value.
+ * This class implements the {@link LiteralExpression} interface and provides methods for equality checking and hashing.
+ */
 public class DateExpression implements LiteralExpression<Date> {
 
     private final Date value;

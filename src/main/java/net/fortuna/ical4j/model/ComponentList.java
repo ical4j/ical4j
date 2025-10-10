@@ -38,10 +38,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * $Id$ [Apr 5, 2004]
- *
- * Defines a list of iCalendar components.
- * @author Ben Fortuna
+ * A collection of components that implements the {@link ContentCollection} interface.
+ * This class provides methods to add, remove, and replace components, as well as retrieve
+ * all components in the collection. It also implements the {@link Comparable} interface
+ * to allow for comparison based on the size and contents of the component list.
  */
 public class ComponentList<T extends Component> implements ContentCollection<T>,
         Comparable<ComponentList<? extends Component>> {

@@ -32,9 +32,13 @@
 package net.fortuna.ical4j.filter.predicate
 
 import net.fortuna.ical4j.model.ContentBuilder
+import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.TextList
 import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.property.Attendee
+import net.fortuna.ical4j.model.property.Categories
 import net.fortuna.ical4j.model.property.Organizer
+import org.jetbrains.annotations.NotNull
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -70,5 +74,32 @@ class PropertyEqualToRuleTest extends Specification {
 
         where:
         rule << [new PropertyEqualToRule<VEvent>(organiser), new PropertyEqualToRule<VEvent>(attendee)]
+    }
+
+    def 'test predicate with custom comparator'() {
+        given: 'a component with two properties'
+        VEvent event = builder.vevent {
+            organizer(organiser)
+            attendee(attendee)
+            categories(new Categories(new TextList(['work', 'personal'])))
+        }
+
+        and: 'a custom comparator for the property rule'
+        def categoriesWork = new Categories() {
+            @Override
+            int compareTo(@NotNull Property o) {
+                if (o instanceof Categories && o.getCategories().getTexts().contains('work')) {
+                    return 0 // Match if 'work' is in the categories
+                }
+                // Otherwise, use the default comparison
+                return super.compareTo(o)
+            }
+        }
+
+        when: 'a property rule is applied with a custom comparator'
+        def rule = new PropertyEqualToRule<VEvent>(categoriesWork)
+
+        then: 'the rule matches'
+        rule.test(event)
     }
 }

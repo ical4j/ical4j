@@ -32,6 +32,10 @@
 package net.fortuna.ical4j.model.parameter
 
 /**
+ * A factory for creating XParameter instances in Groovy.
+ * This class extends AbstractFactory and provides methods to create
+ * and manage XParameter objects within a Groovy builder context.
+ *
  * @author fortuna
  *
  */

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Defines a month of the year, which may be a leap-month in some calendaring systems.
+ * Represents a month of the year, with an option to indicate if it is a leap month.
  */
 public class Month implements Serializable {
 

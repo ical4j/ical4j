@@ -36,6 +36,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+/**
+ * Represents a string expression in a filter, encapsulating a string value.
+ * This class implements the {@link LiteralExpression} interface and provides methods for equality checking and hashing.
+ */
 public class StringExpression implements LiteralExpression<String> {
 
     public final Object value;

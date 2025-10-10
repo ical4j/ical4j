@@ -10,6 +10,13 @@ import java.util.function.Supplier;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 
+/**
+ * User agent for handling VJOURNAL calendar components.
+ * This class provides methods to publish, add, cancel, and manage journal entries.
+ * It extends the AbstractUserAgent to leverage common functionality for iCalendar components.
+ *
+ * Created by fortuna on 19/07/2017.
+ */
 public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
 
     public VJournalUserAgent(ProdId prodId, Organizer organizer, Supplier<Uid> uidGenerator) {

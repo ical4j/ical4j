@@ -36,6 +36,10 @@ import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.util.Objects;
 
+/**
+ * Represents a temporal expression in a filter, encapsulating a {@link Temporal} value.
+ * This class implements the {@link LiteralExpression} interface and provides methods for equality checking and hashing.
+ */
 public class TemporalExpression implements LiteralExpression<Temporal> {
 
     private final Temporal value;

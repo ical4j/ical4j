@@ -37,6 +37,10 @@ import net.fortuna.ical4j.model.component.VLocation;
 
 import java.util.List;
 
+/**
+ * An interface for components that can provide access to a list of VLocation components.
+ * This interface extends ComponentContainer to allow retrieval of components by type.
+ */
 public interface LocationsAccessor extends ComponentContainer<Component> {
 
     default List<VLocation> getLocations() {

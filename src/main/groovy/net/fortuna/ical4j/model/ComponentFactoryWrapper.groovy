@@ -1,5 +1,9 @@
 package net.fortuna.ical4j.model
 
+/**
+ * A wrapper for the ComponentFactory that allows it to be used as a factory in Groovy's FactoryBuilderSupport.
+ * This class extends AbstractFactory and provides methods to create new instances of components.
+ */
 class ComponentFactoryWrapper extends AbstractFactory {
 
     Class componentClass

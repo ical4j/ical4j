@@ -6,6 +6,10 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 
 import java.util.function.Supplier;
 
+/**
+ * A cache implementation for time zones using Caffeine.
+ * This class provides methods to get, put, and check the existence of time zones in the cache.
+ */
 public class CaffeineTimeZoneCache implements TimeZoneCache {
 
     private final Cache<String, VTimeZone> cache;

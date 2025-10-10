@@ -15,6 +15,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Default implementation of a {@link ContentHandler} that builds a {@link Calendar} object from an iCalendar data stream.
+ * This implementation supports nested components and properties, and allows for custom handling of time zones.
+ * It also provides a context for customization through the {@link ContentHandlerContext}.
+ */
 public class DefaultContentHandler implements ContentHandler {
 
     private final ContentHandlerContext context;

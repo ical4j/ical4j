@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A builder for creating instances of {@link Component} with a specified name, properties, and sub-components.
+ * This builder allows for the addition of properties and sub-components, and supports custom component factories.
+ *
+ * @param <T> the type of component to build
+ */
 public class ComponentBuilder<T extends Component> extends AbstractContentBuilder {
 
     private final List<ComponentFactory<?>> factories;

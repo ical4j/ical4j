@@ -4744,3 +4744,23 @@ acceptedBreaks:
       old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.component.VToDo::copy()"
       new: "method net.fortuna.ical4j.model.component.VToDo net.fortuna.ical4j.model.component.VToDo::copy()"
       justification: "refactoring_prototype"
+  "4.1.1":
+    org.mnode.ical4j:ical4j:
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(===byte[]===)"
+      new: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(===java.nio.ByteBuffer===)"
+      justification: "ATTACH_BYTEBUFFER_FOR_LARGE_FILE_SUPPORT"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===byte[]===)"
+      new: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(net.fortuna.ical4j.model.ParameterList,\
+        \ ===java.nio.ByteBuffer===)"
+      justification: "ATTACH_BYTEBUFFER_FOR_LARGE_FILE_SUPPORT"
+    - code: "java.method.parameterTypeChanged"
+      old: "parameter void net.fortuna.ical4j.model.property.Attach::setBinary(===byte[]===)"
+      new: "parameter void net.fortuna.ical4j.model.property.Attach::setBinary(===java.nio.ByteBuffer===)"
+      justification: "ATTACH_BYTEBUFFER_FOR_LARGE_FILE_SUPPORT"
+    - code: "java.method.returnTypeChanged"
+      old: "method byte[] net.fortuna.ical4j.model.property.Attach::getBinary()"
+      new: "method java.nio.ByteBuffer net.fortuna.ical4j.model.property.Attach::getBinary()"
+      justification: "ATTACH_BYTEBUFFER_FOR_LARGE_FILE_SUPPORT"

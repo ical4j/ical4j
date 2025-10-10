@@ -36,6 +36,10 @@ import java.time.temporal.Temporal;
 import java.util.Objects;
 import java.util.function.Function;
 
+/**
+ * Represents a function expression in a filter, encapsulating a function that takes a String and returns a Temporal.
+ * This class implements the {@link LiteralExpression} interface and provides methods for equality checking and hashing.
+ */
 public class FunctionExpression implements LiteralExpression<Function<String, Temporal>> {
 
     private final Function<String, Temporal> value;

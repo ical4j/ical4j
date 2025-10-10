@@ -38,6 +38,10 @@ import net.fortuna.ical4j.model.property.Attach
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.nio.channels.FileChannel
+import java.nio.file.Files
+import java.nio.file.Paths
+
 class CalendarValidatorImplTest extends Specification {
 
     @Shared
@@ -52,6 +56,7 @@ class CalendarValidatorImplTest extends Specification {
         CalendarValidatorImpl validator = []
 
         and: 'a calendar instance'
+        def file = Files.newByteChannel(Paths.get('gradle/wrapper/gradle-wrapper.jar'))
         def calendar = builder.calendar() {
             prodid '-//Ben Fortuna//iCal4j 1.0//EN'
             version '2.0'
@@ -60,7 +65,7 @@ class CalendarValidatorImplTest extends Specification {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
-                attach new Attach(new File('gradle/wrapper/gradle-wrapper.jar').bytes)
+                attach new Attach(file.map(FileChannel.MapMode.READ_ONLY, 0, file.size()))
             }
         }
 

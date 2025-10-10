@@ -38,6 +38,10 @@ import net.fortuna.ical4j.filter.FilterTarget;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a target expression in a filter, encapsulating a {@link FilterTarget} value.
+ * This class implements the {@link FilterExpression} interface and provides methods for equality checking and hashing.
+ */
 public class TargetExpression implements FilterExpression {
 
     public final FilterTarget value;

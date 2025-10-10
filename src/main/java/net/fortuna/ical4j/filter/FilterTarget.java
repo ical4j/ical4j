@@ -40,6 +40,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Represents a target for filtering operations, encapsulating a name, an optional value, and a list of attributes.
+ * The target is defined by a specification string that can include a name and an optional value separated by a colon.
+ */
 public class FilterTarget {
 
     private final String name;

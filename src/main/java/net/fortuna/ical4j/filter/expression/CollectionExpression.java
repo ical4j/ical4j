@@ -35,6 +35,10 @@ package net.fortuna.ical4j.filter.expression;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Represents a collection expression in a filter, encapsulating a collection of objects.
+ * This class implements the {@link LiteralExpression} interface and provides methods for equality checking and hashing.
+ */
 public class CollectionExpression implements LiteralExpression<Collection<?>> {
 
     private final Collection<?> value;

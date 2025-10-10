@@ -32,12 +32,15 @@
 package net.fortuna.ical4j.model.component
 
 import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.model.CalendarDateFormat
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Period
 import spock.lang.Specification
 
 import java.time.*
 import java.time.temporal.ChronoUnit
+
+import static net.fortuna.ical4j.model.CalendarDateFormat.UTC_DATE_TIME_FORMAT
 
 class VEventSpec extends Specification {
 	
@@ -129,4 +132,27 @@ END:VCALENDAR\r\n'''
 		then: 'the result matches expected'
 		recurrenceSet as String == '[20240630T040000Z/PT0S, 20240901T040000Z/PT0S, 20240908T040000Z/PT0S, 20240915T040000Z/PT0S]'
 	}
+
+    def 'test consumed time for non-recurring event'() {
+        given: 'a non-recurring event'
+        def event = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20240101T100000Z'
+            dtend '20240101T110000Z'
+            summary 'Test Event'
+        }
+
+        expect: 'the consumed time for a given period is as expected'
+        event.getConsumedTime(new Period(
+                UTC_DATE_TIME_FORMAT.parse("20240101T090000Z"),
+                UTC_DATE_TIME_FORMAT.parse("20240101T120000Z")
+        )).get(0).duration == Duration.ofHours(1)
+
+        and: 'the consumed time for a non-overlapping period is zero'
+        event.getConsumedTime(new Period(
+                UTC_DATE_TIME_FORMAT.parse("20240101T110000Z"),
+                UTC_DATE_TIME_FORMAT.parse("20240101T120000Z")
+        )).empty
+    }
 }

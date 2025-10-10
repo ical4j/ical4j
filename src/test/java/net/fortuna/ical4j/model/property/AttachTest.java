@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,27 +72,28 @@ public class AttachTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        FileInputStream fin = new FileInputStream("etc/artwork/logo.png");
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        for (int i = fin.read(); i >= 0; ) {
-            bout.write(i);
-            i = fin.read();
-        }
+        try (FileInputStream fin = new FileInputStream("etc/artwork/logo.png")) {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            for (int i = fin.read(); i >= 0; ) {
+                bout.write(i);
+                i = fin.read();
+            }
 
-        ParameterList params = new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY));
+            ParameterList params = new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY));
 
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
-        attach = new Attach(params, bout.toByteArray());
+            attach = new Attach(params, ByteBuffer.wrap(bout.toByteArray()));
+        }
     }
 
     /*
      * Class under test for void Attach(ParameterList, String)
      */
-    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException, ConstraintViolationException {
+    public void testAttachParameterListString() throws IOException, ValidationException, ParserException, ConstraintViolationException {
 
         //log.info(attach);
         ParameterList startParams = new ParameterList(Collections.singletonList(Value.DATE));
-        DtStart start = new DtStart<>(startParams, LocalDate.now().withMonth(12).withDayOfMonth(25));
+        DtStart<LocalDate> start = new DtStart<>(startParams, LocalDate.now().withMonth(12).withDayOfMonth(25));
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
@@ -121,8 +123,7 @@ public class AttachTest extends TestCase {
     /**
      * Unit testing of serialization.
      */
-    public void testSerialization() throws IOException, ClassNotFoundException,
-            URISyntaxException {
+    public void testSerialization() throws IOException, ClassNotFoundException {
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(bout);

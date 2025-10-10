@@ -36,6 +36,11 @@ package net.fortuna.ical4j.validate;
 import java.util.Comparator;
 import java.util.Objects;
 
+/**
+ * Represents a validation entry that contains a message, severity level, and context.
+ * This class implements Comparable to allow sorting of validation entries based on context,
+ * severity, and message.
+ */
 public class ValidationEntry implements Comparable<ValidationEntry> {
 
     public enum Severity {

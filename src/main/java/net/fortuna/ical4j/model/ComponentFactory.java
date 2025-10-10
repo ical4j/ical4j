@@ -1,7 +1,10 @@
 package net.fortuna.ical4j.model;
 
 /**
- * Created by fortuna on 12/09/14.
+ * A factory interface for creating instances of {@link Component}.
+ * This interface allows for the creation of components with or without properties and sub-components.
+ *
+ * @param <T> the type of component to create
  */
 public interface ComponentFactory<T extends Component> {
 

@@ -5,6 +5,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Interface for accessing a list of properties.
+ * Provides methods to retrieve properties by name, including convenience methods for required properties.
+ *
+ * @see PropertyList
+ */
 public interface PropertyListAccessor {
 
     PropertyList getPropertyList();

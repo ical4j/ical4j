@@ -36,6 +36,10 @@ import net.fortuna.ical4j.filter.FilterExpression;
 
 import java.util.Objects;
 
+/**
+ * Represents a binary expression in a filter, consisting of a left operand, an operator, and a right operand.
+ * This class implements the {@link FilterExpression} interface and provides methods for equality checking and hashing.
+ */
 public class BinaryExpression implements FilterExpression {
 
     public final FilterExpression left;

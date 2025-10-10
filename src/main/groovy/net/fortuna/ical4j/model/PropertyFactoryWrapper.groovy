@@ -1,5 +1,10 @@
 package net.fortuna.ical4j.model
 
+/**
+ * A wrapper for the PropertyFactory that allows dynamic creation of properties
+ * with a specified prefix and parameters.
+ * This class extends AbstractFactory to provide custom instantiation logic.
+ */
 class PropertyFactoryWrapper extends AbstractFactory {
 
     Class propertyClass

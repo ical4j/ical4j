@@ -36,7 +36,10 @@ package net.fortuna.ical4j.transform.compliance;
 import net.fortuna.ical4j.model.property.DateListProperty;
 
 /**
- * 
+ * A rule that applies compliance transformations to DateListProperty elements.
+ * This rule ensures that the timezone parameter is correctly set for date list properties
+ * according to RFC 5545.
+ *
  * @author corneliu dobrota
  * @author daniel grigore
  *

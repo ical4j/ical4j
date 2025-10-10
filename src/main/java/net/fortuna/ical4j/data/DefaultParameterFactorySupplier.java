@@ -9,6 +9,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * Provides a default list of parameter factories for parsing iCalendar parameters.
+ * This includes standard parameters as defined in RFC 5545, as well as additional
+ * parameters from RFC 7986.
+ *
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc5545">RFC 5545</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc7986">RFC 7986</a>
+ */
 public class DefaultParameterFactorySupplier implements Supplier<List<ParameterFactory<? extends Parameter>>> {
 
     @Override

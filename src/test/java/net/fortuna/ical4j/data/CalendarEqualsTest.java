@@ -109,7 +109,7 @@ public class CalendarEqualsTest extends TestCase {
 
         if (errorOccurred) {
             if (valid) {
-                throw new AssertionFailedError("Calendar file " + file.toString() + " isn't valid:\n" + exception.getMessage());
+                throw new AssertionFailedError("Calendar file " + file + " isn't valid:\n" + exception.getMessage());
             }
         }
 
@@ -123,11 +123,11 @@ public class CalendarEqualsTest extends TestCase {
 
             if (errorOccurred) {
                 if (valid) {
-                    throw new AssertionFailedError("Calendar file " + file.toString() + " isn't valid:\n" + exception.getMessage());
+                    throw new AssertionFailedError("Calendar file " + file + " isn't valid:\n" + exception.getMessage());
                 }
             } else {
                 if (! valid) {
-                    throw new AssertionFailedError("Calendar file " + file.toString() + " isn't valid and shouldn't validate.");
+                    throw new AssertionFailedError("Calendar file " + file + " isn't valid and shouldn't validate.");
                 }
             }
 
@@ -142,7 +142,7 @@ public class CalendarEqualsTest extends TestCase {
                 errorOccurred = true;
             }
 
-            assertEquals("Parsed calendar isn't equal to itself!  : " + file.toString(),
+            assertEquals("Parsed calendar isn't equal to itself!  : " + file,
                     calendar, reparsedCalendar);
         }
     }
