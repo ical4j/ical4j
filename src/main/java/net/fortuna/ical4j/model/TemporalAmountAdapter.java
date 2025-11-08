@@ -160,6 +160,10 @@ public class TemporalAmountAdapter implements Serializable {
             retVal = java.time.Period.parse(value);
         } else if (lenient && value.matches("P([+-]?[0-9]*[MHS])+")) {
             retVal = java.time.Duration.parse("PT" + value.substring(1));
+        } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING) &&
+            value.matches("([+-])?P.+W.+D.*")) {
+            var split = value.split("\\d+D");
+            retVal = java.time.Period.parse(split[0]);
         } else {
             retVal = java.time.Duration.parse(value);
         }

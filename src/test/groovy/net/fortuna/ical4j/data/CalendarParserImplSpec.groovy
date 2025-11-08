@@ -89,6 +89,7 @@ class CalendarParserImplSpec extends Specification {
 		'/samples/valid/blankTzid.ics'  | []
 		'/samples/invalid/sogo-geo-escaped-semicolon.ics' | [KEY_RELAXED_PARSING]
 		'/samples/valid/bitfire1.ics' | []
+		'/samples/valid/maritz.ics' | [KEY_RELAXED_PARSING]
 	}
 
 	def 'verify parsing empty lines'() {
