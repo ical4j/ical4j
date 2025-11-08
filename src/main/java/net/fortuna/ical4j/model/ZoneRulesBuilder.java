@@ -165,7 +165,7 @@ public class ZoneRulesBuilder {
         TzOffsetTo offsetTo = currentStandard.getRequiredProperty(Property.TZOFFSETTO);
 
         var standardOffset = offsetTo.getOffset();
-        var wallOffset = offsetFrom.getOffset();
+        var wallOffset = offsetTo.getOffset();
 
         List<Standard> stdObservances = vTimeZone.getComponents(Observance.STANDARD);
         List<ZoneOffsetTransition> standardOffsetTransitions = buildStandardOffsetTransitions(stdObservances);

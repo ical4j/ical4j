@@ -38,6 +38,8 @@ class ZoneRulesBuilderTest extends Specification {
         'Europe/Madrid'         | 1             | ZoneOffset.ofHours(1)
         'America/Los_Angeles'   | 1             | ZoneOffset.ofHours(-8)
         'America/Los_Angeles'   | 180           | ZoneOffset.ofHours(-7)
+        'Pacific/Tahiti'   | 1           | ZoneOffset.ofHours(-10)
+        'Pacific/Midway'   | 1           | ZoneOffset.ofHours(-11)
     }
 
     @Unroll
