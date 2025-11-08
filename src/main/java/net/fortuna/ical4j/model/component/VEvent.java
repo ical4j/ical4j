@@ -529,7 +529,7 @@ public class VEvent extends CalendarComponent implements Prototype<VEvent>, Comp
                     vEventDuration = duration.get();
                 } else if (dtStart.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
                     // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
-                    vEventDuration = new Duration(java.time.Period.ZERO);
+                    vEventDuration = new Duration(java.time.Duration.ZERO);
                 } else {
                     // If "DTSTART" is a DATE, then the event's duration is one day (see: RFC 5545, 3.6.1 Event Component)
                     vEventDuration = new Duration(java.time.Period.ofDays(1));
