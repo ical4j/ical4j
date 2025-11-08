@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model
 
 import spock.lang.Specification
 
+import java.time.LocalDate
 import java.time.ZonedDateTime
 
 class PeriodSpec extends Specification {
@@ -103,7 +104,7 @@ class PeriodSpec extends Specification {
 		year1994	| monthMarch.start.withYear(2047) | false
 	}
 
-	def 'test intersection'() {
+	def 'test overlap'() {
 		expect: 'result of period intersection test is as expected'
 		period1.toInterval().overlaps(period2.toInterval()) == expectedIntersection
 
@@ -118,6 +119,23 @@ class PeriodSpec extends Specification {
 		winter	| monthMarch | true
 		monthMarch	| winter | true
 	}
+
+    def 'test intersects'() {
+        expect: 'result of period intersection test is as expected'
+        period1.intersects(period2) == expectedIntersection
+
+            where:
+            period1	| period2              | expectedIntersection
+            monthMarch	| monthMay | false
+            monthMay	| monthMarch | false
+            monthMarch	| monthApril | false
+            monthApril	| monthMarch | false
+            firstHalf	| lastHalf | true
+            lastHalf	| firstHalf | true
+            winter	| monthMarch | true
+            monthMarch	| winter | true
+            new Period<>(LocalDate.parse("2025-10-17"), LocalDate.parse("2025-11-05")) | new Period<>(ZonedDateTime.parse("2025-10-17T00:00:00Z"), ZonedDateTime.parse("2025-11-05T00:00:00Z")) | true
+    }
 
 	def 'test contains'() {
 		expect: 'result of period containment test is as expected'

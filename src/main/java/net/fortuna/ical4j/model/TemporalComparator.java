@@ -66,6 +66,11 @@ public class TemporalComparator implements Comparator<Temporal> {
             } else if (o2 instanceof LocalDate) {
                 return compare(l1, (LocalDate) o2);
             }
+        } else if (o1 instanceof ZonedDateTime) {
+            var l1 = (ZonedDateTime) o1;
+            if (o2 instanceof LocalDate) {
+                return compare(l1, (LocalDate) o2);
+            }
         } else if (o1 instanceof LocalDateTime) {
             var l1 = (LocalDateTime) o1;
             if (o2 instanceof Instant) {
@@ -83,6 +88,8 @@ public class TemporalComparator implements Comparator<Temporal> {
                 return compare(l1, (Instant) o2);
             } else if (o2 instanceof OffsetDateTime) {
                 return compare(l1, (OffsetDateTime) o2);
+            } else if (o2 instanceof ZonedDateTime) {
+                return compare(l1, (ZonedDateTime) o2);
             } else if (o2 instanceof LocalDateTime) {
                 return compare(l1, (LocalDateTime) o2);
             } else if (o2 instanceof LocalDate) {
@@ -94,26 +101,63 @@ public class TemporalComparator implements Comparator<Temporal> {
         return diff > 0 ? Integer.MAX_VALUE : diff < 0 ? Integer.MIN_VALUE : 0;
     }
 
+    /**
+     * Specific comparisons for supported temporal types.
+     * @param o1 first instant
+     * @param o2 second instant
+     * @return less than zero if o1 is before o2, zero if equal, greater than zero if o1 is after o2
+     */
     public int compare(Instant o1, Instant o2) {
         return o1.compareTo(o2);
     }
 
+    /**
+     * Specific comparisons for supported temporal types.
+     * @param o1 first instant
+     * @param o2 second instant
+     * @return less than zero if o1 is before o2, zero if equal, greater than zero if o1 is after o2
+     */
     public int compare(OffsetDateTime o1, OffsetDateTime o2) {
         return o1.compareTo(o2);
     }
 
+    /**
+     * Specific comparisons for supported temporal types.
+     * @param o1 first instant
+     * @param o2 second instant
+     * @return less than zero if o1 is before o2, zero if equal, greater than zero if o1 is after o2
+     */
     public int compare(LocalDateTime o1, LocalDateTime o2) {
         return o1.compareTo(o2);
     }
 
+    /**
+     * Specific comparisons for supported temporal types.
+     * @param o1 first instant
+     * @param o2 second instant
+     * @return less than zero if o1 is before o2, zero if equal, greater than zero if o1 is after o2
+     */
+    public int compare(ZonedDateTime o1, ZonedDateTime o2) {
+        return o1.compareTo(o2);
+    }
+
+    /**
+     * Specific comparisons for supported temporal types.
+     * @param o1 first instant
+     * @param o2 second instant
+     * @return less than zero if o1 is before o2, zero if equal, greater than zero if o1 is after o2
+     */
     public int compare(LocalDate o1, LocalDate o2) {
         return o1.compareTo(o2);
     }
 
+    ///////////////////////////////////////////////////////////////
+    // Handle incompatible temporal type comparisons...
+    ///////////////////////////////////////////////////////////////
+
     public int compare(Instant o1, LocalDateTime o2) {
         return o1.compareTo(ZonedDateTime.of(o2, defaultZoneId).toInstant());
     }
-
     public int compare(LocalDateTime o1, Instant o2) {
         return ZonedDateTime.of(o1, defaultZoneId).toInstant().compareTo(o2);
     }
@@ -129,31 +173,38 @@ public class TemporalComparator implements Comparator<Temporal> {
     public int compare(OffsetDateTime o1, LocalDateTime o2) {
         return o1.compareTo(OffsetDateTime.of(o2, defaultZoneId.getRules().getOffset(o2)));
     }
-
     public int compare(LocalDateTime o1, OffsetDateTime o2) {
         return OffsetDateTime.of(o1, defaultZoneId.getRules().getOffset(o1)).compareTo(o2);
     }
 
+
     public int compare(Instant o1, LocalDate o2) {
         return compare(o1, o2.atStartOfDay());
     }
-
     public int compare(LocalDate o1, Instant o2) {
         return compare(o1.atStartOfDay(), o2);
     }
 
+
     public int compare(OffsetDateTime o1, LocalDate o2) {
         return compare(o1, o2.atStartOfDay());
     }
-
     public int compare(LocalDate o1, OffsetDateTime o2) {
         return compare(o1.atStartOfDay(), o2);
     }
 
+
+    public int compare(ZonedDateTime o1, LocalDate o2) {
+        return compare(o1, o2.atStartOfDay().atZone(defaultZoneId));
+    }
+    public int compare(LocalDate o1, ZonedDateTime o2) {
+        return compare(o1.atStartOfDay().atZone(defaultZoneId), o2);
+    }
+
+
     public int compare(LocalDateTime o1, LocalDate o2) {
         return compare(o1, o2.atStartOfDay());
     }
-
     public int compare(LocalDate o1, LocalDateTime o2) {
         return compare(o1.atStartOfDay(), o2);
     }
