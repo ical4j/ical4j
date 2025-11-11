@@ -183,9 +183,9 @@ public class DefaultContentHandler implements ContentHandler {
 
             if (parameter instanceof TzId) {
                 if (getComponentBuilder() != null && (getComponentBuilder().hasName(Observance.STANDARD)
-                        || getComponentBuilder().hasName(Observance.DAYLIGHT))
-                        && propertyBuilder.hasName(Property.DTSTART)) {
-                    // we don't allow TZID parameter in VTIMEZONE definitions as it causes StackOverflowError..
+                        || getComponentBuilder().hasName(Observance.DAYLIGHT))) {
+                    // we don't allow TZID parameter in ANY properties VTIMEZONE definitions as it causes StackOverflowError..
+                    // e.g. DTSTART, RDATE, etc.
                     return;
                 }
             }

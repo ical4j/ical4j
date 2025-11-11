@@ -186,17 +186,26 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
         // check rdates for latest applicable onset..
         final List<RDate<LocalDateTime>> rdates = getProperties(RDATE);
         for (RDate<LocalDateTime> rdate : rdates) {
-            List<LocalDateTime> rdateDates = rdate.getDates();
-            for (final var rdateDate : rdateDates) {
-                final var rdateOnset = rdateDate.atOffset(offsetFrom.getOffset());
-                if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
-                    onset = rdateOnset;
+            if (rdate.getPeriods().isPresent()) {
+                for (var rdatePeriod : rdate.getPeriods().get()) {
+                    final var rdateOnset = rdatePeriod.getStart().atOffset(offsetFrom.getOffset());
+                    if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
+                        onset = rdateOnset;
+                    }
+                    cacheableOnsets.add(rdateOnset);
                 }
-                /*
-                 * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
-                 * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
-                 */
-                cacheableOnsets.add(rdateOnset);
+            } else {
+                for (final var rdateDate : rdate.getDates()) {
+                    final var rdateOnset = rdateDate.atOffset(offsetFrom.getOffset());
+                    if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
+                        onset = rdateOnset;
+                    }
+                    /*
+                     * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
+                     * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
+                     */
+                    cacheableOnsets.add(rdateOnset);
+                }
             }
         }
 
