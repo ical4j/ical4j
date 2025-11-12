@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
  *
@@ -39,11 +39,10 @@ import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
- *
  * Accessor implementation for a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList implements ContentCollection<Property>, Comparable<PropertyList> {
+public class PropertyList implements ContentCollection<Property, PropertyList>, Comparable<PropertyList> {
 
     private final List<Property> properties;
 
@@ -64,21 +63,21 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
     }
 
     @Override
-    public ContentCollection<Property> add(@NotNull Property content) {
+    public PropertyList add(@NotNull Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.add(content);
         return new PropertyList(copy);
     }
 
     @Override
-    public ContentCollection<Property> addAll(@NotNull Collection<Property> content) {
+    public PropertyList addAll(@NotNull Collection<Property> content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.addAll(content);
         return new PropertyList(copy);
     }
 
     @Override
-    public ContentCollection<Property> remove(Property content) {
+    public PropertyList remove(Property content) {
         List<Property> copy = new ArrayList<>(properties);
         if (copy.remove(content)) {
             return new PropertyList(copy);
@@ -88,13 +87,13 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
     }
 
     @Override
-    public ContentCollection<Property> removeAll(String... name) {
+    public PropertyList removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         return removeIf(p -> names.contains(p.getName()));
     }
 
     @Override
-    public ContentCollection<Property> removeIf(Predicate<Property> filter) {
+    public PropertyList removeIf(Predicate<Property> filter) {
         List<Property> copy = new ArrayList<>(properties);
         if (copy.removeIf(filter)) {
             return new PropertyList(copy);
@@ -104,7 +103,7 @@ public class PropertyList implements ContentCollection<Property>, Comparable<Pro
     }
 
     @Override
-    public ContentCollection<Property> replace(@NotNull Property content) {
+    public PropertyList replace(@NotNull Property content) {
         List<Property> copy = new ArrayList<>(properties);
         copy.removeIf(p -> p.getName().equalsIgnoreCase(content.getName()));
         copy.add(content);

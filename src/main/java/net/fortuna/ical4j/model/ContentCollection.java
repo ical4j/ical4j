@@ -10,25 +10,24 @@ import java.util.stream.Collectors;
 
 /**
  * Implementors of this interface support the immutable collection contract specified by this interface.
- *
  * The contract states that any mutation function will not modify the underlying collection, but rather
  * will return a copy of the collection with the applied mutation.
  *
  * @param <T>
  */
-public interface ContentCollection<T extends Content> extends Serializable {
+public interface ContentCollection<T extends Content, E extends ContentCollection<T, E>> extends Serializable {
 
-    ContentCollection<T> add(T content);
+    E add(T content);
 
-    ContentCollection<T> addAll(Collection<T> content);
+    E addAll(Collection<T> content);
 
-    ContentCollection<T> remove(T content);
+    E remove(T content);
 
-    ContentCollection<T> removeAll(String... name);
+    E removeAll(String... name);
 
-    ContentCollection<T> removeIf(Predicate<T> filter);
+    E removeIf(Predicate<T> filter);
 
-    ContentCollection<T> replace(T content);
+    E replace(T content);
 
     List<T> getAll();
 
