@@ -63,13 +63,13 @@ public class ContentHandlerContext {
         return context;
     }
 
-    public ContentHandlerContext withSupressInvalidProperties(boolean supressInvalidProperties) {
+    public ContentHandlerContext withSuppressInvalidProperties(boolean suppressInvalidProperties) {
         var context = new ContentHandlerContext();
         context.parameterFactorySupplier = this.parameterFactorySupplier;
         context.propertyFactorySupplier = this.propertyFactorySupplier;
         context.componentFactorySupplier = this.componentFactorySupplier;
         context.ignoredPropertyNames = this.ignoredPropertyNames;
-        context.suppressInvalidProperties = supressInvalidProperties;
+        context.suppressInvalidProperties = suppressInvalidProperties;
         return context;
     }
 
