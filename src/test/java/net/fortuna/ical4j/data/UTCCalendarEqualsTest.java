@@ -1,13 +1,5 @@
 package net.fortuna.ical4j.data;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
@@ -20,9 +12,20 @@ import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.immutable.ImmutableVersion;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.RandomUidGenerator;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class UTCCalendarEqualsTest extends TestCase {
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
+public class UTCCalendarEqualsTest {
+
+    @Test
     public void testGetValidCalendarUTC() throws Exception {
         Calendar calendar = new Calendar();
         TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
@@ -48,9 +51,10 @@ public class UTCCalendarEqualsTest extends TestCase {
         //when
         boolean result = calendar.equals(c2);
         //then no exceptions
-        assertTrue(result);
+        Assert.assertTrue(result);
     }
-    
+
+    @Test
     public void testGetValidCalendarEtcUTC() throws Exception {
         Calendar calendar = new Calendar();
         TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
@@ -76,7 +80,7 @@ public class UTCCalendarEqualsTest extends TestCase {
         //when
         boolean result = calendar.equals(c2);
         //then no exceptions
-        assertTrue(result);
+        Assert.assertTrue(result);
     }
 
     public String convertToDatabaseColumn(Calendar aCalendar) throws IOException {

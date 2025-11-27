@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -39,6 +38,10 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,13 +58,13 @@ import java.util.Optional;
  *
  * @author randy
  */
-public class CalendarBuilderTimezoneTest extends TestCase {
+public class CalendarBuilderTimezoneTest {
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(
@@ -73,8 +76,8 @@ public class CalendarBuilderTimezoneTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected final void tearDown() throws Exception {
+    @After
+    public final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
@@ -88,7 +91,8 @@ public class CalendarBuilderTimezoneTest extends TestCase {
      * are correctly handled and that dates defined before the
      * VTIMEZONE are parsed properly.
      */
-    public void testVTimeZoneAfterVEvent() throws Exception {
+   @Test
+   public void testVTimeZoneAfterVEvent() throws Exception {
 
         // Evolution includes VTIMEZONE defs after VEVENT defs,
         // which is allowed by RFC-2445
@@ -98,21 +102,21 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         Calendar calendar = null;
 
         calendar = builder.build(in);
-        assertNotNull("Calendar is null", calendar);
+        Assert.assertNotNull("Calendar is null", calendar);
         List<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
-        assertEquals("VEVENT not found", 1, comps.size());
+        Assert.assertEquals("VEVENT not found", 1, comps.size());
         VEvent vevent = (VEvent) comps.get(0);
 
         DtStart<?> dtstart = vevent.getRequiredProperty(Property.DTSTART);
         ZonedDateTime dateTime = (ZonedDateTime) dtstart.getDate();
 
-        assertEquals("date value not correct", "20080624T130000", dtstart.getValue());
-        assertNotNull("timezone not present", dateTime.getZone());
-        assertEquals("timezone not correct",
-                "/softwarestudio.org/Tzfile/America/Chicago", builder.getRegistry().getTzId(dateTime.getZone().getId()));
+        Assert.assertEquals("date value not correct", "20080624T130000", dtstart.getValue());
+        Assert.assertNotNull("timezone not present", dateTime.getZone());
+        Assert.assertEquals("timezone not correct", "/softwarestudio.org/Tzfile/America/Chicago", builder.getRegistry().getTzId(dateTime.getZone().getId()));
 
     }
 
+    @Test
     public void testTwoDaylights() throws IOException, ParserException, ConstraintViolationException {
 
         System.setProperty("net.fortuna.ical4j.timezone.utcDefault", "true");
@@ -174,39 +178,39 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         Calendar calendar = null;
 
         calendar = builder.build(in);
-        assertNotNull("Calendar is null", calendar);
+        Assert.assertNotNull("Calendar is null", calendar);
         List<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
-        assertEquals("2 VEVENTs not found", 2, comps.size());
+        Assert.assertEquals("2 VEVENTs not found", 2, comps.size());
         VEvent vevent0 = (VEvent) comps.get(0);
 
         DtStart<ZonedDateTime> dtstart0 = vevent0.getRequiredProperty(Property.DTSTART);
         Optional<TzId> dtstart0TzId = dtstart0.getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20200503T173000", dtstart0.getValue());
-        assertTrue("timezone not present", dtstart0TzId.isPresent());
-        assertEquals("timezone not correct", "Europe/Amsterdam", dtstart0TzId.get().getValue());
+        Assert.assertEquals("date value not correct", "20200503T173000", dtstart0.getValue());
+        Assert.assertTrue("timezone not present", dtstart0TzId.isPresent());
+        Assert.assertEquals("timezone not correct", "Europe/Amsterdam", dtstart0TzId.get().getValue());
 
         DtEnd<ZonedDateTime> dtend0 = vevent0.getRequiredProperty(Property.DTEND);
         Optional<TzId> dtend0TzId = dtend0.getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20200503T200000", dtend0.getValue());
-        assertTrue("timezone not present", dtend0TzId.isPresent());
-        assertEquals("timezone not correct", "Europe/Amsterdam", dtend0TzId.get().getValue());
+        Assert.assertEquals("date value not correct", "20200503T200000", dtend0.getValue());
+        Assert.assertTrue("timezone not present", dtend0TzId.isPresent());
+        Assert.assertEquals("timezone not correct", "Europe/Amsterdam", dtend0TzId.get().getValue());
 
         VEvent vevent1 = (VEvent) comps.get(1);
         DtStart<ZonedDateTime> dtstart1 = vevent1.getRequiredProperty(Property.DTSTART);
         Optional<TzId> dtstart1TzId = dtstart1.getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20191006T190000", dtstart1.getValue());
-        assertTrue("timezone not present", dtstart1TzId.isPresent());
-        assertEquals("timezone not correct", "Europe/Amsterdam", dtstart1TzId.get().getValue());
+        Assert.assertEquals("date value not correct", "20191006T190000", dtstart1.getValue());
+        Assert.assertTrue("timezone not present", dtstart1TzId.isPresent());
+        Assert.assertEquals("timezone not correct", "Europe/Amsterdam", dtstart1TzId.get().getValue());
 
         DtEnd<ZonedDateTime> dtend1 = vevent1.getRequiredProperty(Property.DTEND);
         Optional<TzId> dtend1TzId = dtend1.getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20191006T203000", dtend1.getValue());
-        assertTrue("timezone not present", dtend1TzId.isPresent());
-        assertEquals("timezone not correct", "Europe/Amsterdam", dtend1TzId.get().getValue());
+        Assert.assertEquals("date value not correct", "20191006T203000", dtend1.getValue());
+        Assert.assertTrue("timezone not present", dtend1TzId.isPresent());
+        Assert.assertEquals("timezone not correct", "Europe/Amsterdam", dtend1TzId.get().getValue());
 
     }
 }

@@ -31,8 +31,9 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,8 +49,9 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author benf
  */
-public class ConcurrencyTest extends TestCase {
+public class ConcurrencyTest {
 
+    @Test
     public void testConcurrency() throws Exception {
 
 
@@ -71,9 +73,10 @@ public class ConcurrencyTest extends TestCase {
         }
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.MINUTES);
-        assertEquals(3700, size.longValue());
+        Assert.assertEquals(3700, size.longValue());
     }
 
+    @Test
     public void testConcurrencySingleInstanceOfCalendar() throws Exception {
         final Calendar calendar;
         try(FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics")) {
@@ -96,6 +99,6 @@ public class ConcurrencyTest extends TestCase {
         }
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.MINUTES);
-        assertEquals(3700, size.longValue());
+        Assert.assertEquals(3700, size.longValue());
     }
 }

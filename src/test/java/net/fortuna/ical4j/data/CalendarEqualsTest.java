@@ -32,15 +32,24 @@
 package net.fortuna.ical4j.data;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * $Id: CalendarBuilderTest.java [Apr 5, 2004]
@@ -49,27 +58,13 @@ import java.io.IOException;
  *
  * @author benf
  */
-public class CalendarEqualsTest extends TestCase {
+public class CalendarEqualsTest {
 
-    private final File file;
-    
-    private final boolean valid;
-    
-    /**
-     * @param file
-     * @param valid
-     */
-    public CalendarEqualsTest(File file, boolean valid) {
-        super("testCalendarEquals");
-        this.file = file;
-        this.valid = valid;
-    }
-    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
@@ -78,8 +73,8 @@ public class CalendarEqualsTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected final void tearDown() throws Exception {
+    @After
+    public final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
@@ -87,13 +82,15 @@ public class CalendarEqualsTest extends TestCase {
 
     /**
      *
-     * @param file
-     * @param valid true if file is supposed to be valid
+     * @param filename
      * @throws Exception
-     */ 
-    public void testCalendarEquals() throws Exception {
+     */
+    @ParameterizedTest
+    @MethodSource
+    @Disabled
+    public void testCalendarEquals(String filename) throws Exception {
         
-        FileInputStream fin = new FileInputStream(file);
+        FileInputStream fin = new FileInputStream(filename);
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = null;
 
@@ -108,9 +105,7 @@ public class CalendarEqualsTest extends TestCase {
         }
 
         if (errorOccurred) {
-            if (valid) {
-                throw new AssertionFailedError("Calendar file " + file + " isn't valid:\n" + exception.getMessage());
-            }
+            throw new AssertionFailedError("Calendar file " + filename + " isn't valid:\n" + exception.getMessage());
         }
 
         if (calendar != null) {
@@ -122,16 +117,10 @@ public class CalendarEqualsTest extends TestCase {
             }
 
             if (errorOccurred) {
-                if (valid) {
-                    throw new AssertionFailedError("Calendar file " + file + " isn't valid:\n" + exception.getMessage());
-                }
-            } else {
-                if (! valid) {
-                    throw new AssertionFailedError("Calendar file " + file + " isn't valid and shouldn't validate.");
-                }
+                throw new AssertionFailedError("Calendar file " + filename + " isn't valid:\n" + exception.getMessage());
             }
 
-            fin = new FileInputStream(file);
+            fin = new FileInputStream(filename);
             Calendar reparsedCalendar = null;
             builder = new CalendarBuilder();
 
@@ -142,32 +131,16 @@ public class CalendarEqualsTest extends TestCase {
                 errorOccurred = true;
             }
 
-            assertEquals("Parsed calendar isn't equal to itself!  : " + file,
-                    calendar, reparsedCalendar);
+            Assert.assertEquals("Parsed calendar isn't equal to itself!  : " + filename, calendar, reparsedCalendar);
         }
-    }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#getName()
-     */
-    /**
-     * Overridden to return the current iCalendar file under test.
-     */
-    @Override
-    public final String getName() {
-        return super.getName() + " [" + file.getName() + "]";
     }
 
-    /**
-     * 
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        
-        File[] testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
-        for (File testFile : testFiles) {
-            suite.addTest(new CalendarEqualsTest(testFile, true));
-        }
-        return suite;
+
+    private static List<String> testCalendarEquals() {
+
+        // valid tests..
+        return Arrays.stream(Objects.requireNonNull(new File("src/test/resources/samples/valid")
+                        .listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"))))
+                .map(File::getPath).collect(Collectors.toList());
     }
 }

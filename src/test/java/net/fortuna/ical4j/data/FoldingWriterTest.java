@@ -31,14 +31,13 @@
  */
 package net.fortuna.ical4j.data;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import net.fortuna.ical4j.util.Strings;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.junit.jupiter.api.Test;
-
-import net.fortuna.ical4j.util.Strings;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$

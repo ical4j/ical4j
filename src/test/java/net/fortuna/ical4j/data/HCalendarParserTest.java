@@ -31,12 +31,14 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ConstraintViolationException;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.Calendars;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -49,19 +51,19 @@ import java.io.IOException;
  *
  */
 @Ignore("Test fails in travis-ci")
-public class HCalendarParserTest extends TestCase {
+public class HCalendarParserTest {
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
     /**
      * Test method for {@link net.fortuna.ical4j.data.HCalendarParser#parse(java.io.Reader, net.fortuna.ical4j.data.ContentHandler)}.
      */
+    @Test
     public void testParseReaderContentHandler() throws IOException, ParserException, ConstraintViolationException {
         Calendar icsCalendar = Calendars.load(getClass().getResource("/samples/hcalendar/example1.ics"));
         // remove prod-id which seems to be not handled by hcalendar..
@@ -71,8 +73,8 @@ public class HCalendarParserTest extends TestCase {
         Calendar hcalCalendar = builder.build(getClass().getResourceAsStream("/samples/hcalendar/example1.html"));
         
 //        assertEquals(icsCalendar, hcalCalendar);
-        assertEquals(icsCalendar.getProperties().size(), hcalCalendar.getProperties().size());
-        assertEquals(icsCalendar.getComponents().size(), hcalCalendar.getComponents().size());
+        Assert.assertEquals(icsCalendar.getProperties().size(), hcalCalendar.getProperties().size());
+        Assert.assertEquals(icsCalendar.getComponents().size(), hcalCalendar.getComponents().size());
     }
 
 }

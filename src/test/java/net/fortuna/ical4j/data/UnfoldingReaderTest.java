@@ -31,8 +31,9 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,44 +47,22 @@ import java.io.StringReader;
  * @author Ben
  *
  */
-public class UnfoldingReaderTest extends TestCase {
+public class UnfoldingReaderTest {
 
     private static final int BUFFER_SIZE = 1024;
-    
-    private final UnfoldingReader reader;
-    
-    /**
-     * @param input
-     */
-    public UnfoldingReaderTest(String input) {
-        this(new UnfoldingReader(new StringReader(input), BUFFER_SIZE));
-    }
-    
-    /**
-     * @param reader
-     */
-    public UnfoldingReaderTest(UnfoldingReader reader) {
-        super("testUnfolding");
-        this.reader = reader;
-    }
-    
+
     /**
      * @throws IOException
      */
-    public void testUnfolding() throws IOException {
+    @ParameterizedTest
+    @ValueSource(strings = {"a\r\n bc"})
+    public void testUnfolding(String input) throws IOException {
+        UnfoldingReader reader = new UnfoldingReader(new StringReader(input), BUFFER_SIZE);
         BufferedReader b = new BufferedReader(reader, BUFFER_SIZE);
         String line = null;
         while ((line = b.readLine()) != null) {
-            assertFalse(line.matches("^\\s.*"));
+            Assertions.assertFalse(line.matches("^\\s.*"));
         }
     }
-    
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new UnfoldingReaderTest("a\r\n bc"));
-        return suite;
-    }
+
 }
