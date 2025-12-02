@@ -13,6 +13,8 @@ import java.util.TreeMap;
  */
 public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
+    public static final String LOCALIZED_TZ_DISABLED = "net.fortuna.ical4j.timezone.local.disabled";
+
     // A weak reference should be sufficient as only properties
     // with a registry reference will use this custom provider..
     private final WeakReference<TimeZoneRegistry> timeZoneRegistry;

@@ -5,6 +5,7 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Constants;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +91,9 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void endCalendar() {
-        ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(tzRegistry));
+        if ("false".equals(Configurator.getProperty(ZoneRulesProviderImpl.LOCALIZED_TZ_DISABLED).orElse("false"))) {
+            ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(tzRegistry));
+        }
         consumer.accept(new Calendar(new PropertyList(calendarProperties),
                 new ComponentList<>(calendarComponents)));
     }
