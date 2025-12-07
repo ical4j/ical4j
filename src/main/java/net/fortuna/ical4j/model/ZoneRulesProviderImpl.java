@@ -12,8 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
-    public static final String LOCALIZED_TZ_DISABLED = "net.fortuna.ical4j.timezone.local.disabled";
-
     public static final ZoneRulesProviderImpl INSTANCE = new ZoneRulesProviderImpl();
     static {
         ZoneRulesProvider.registerProvider(INSTANCE);
