@@ -4751,6 +4751,10 @@ acceptedBreaks:
       new: "interface net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
         \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>"
       justification: "refactor_generics_content_collection"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.ZoneRulesProviderImpl::<init>(net.fortuna.ical4j.model.TimeZoneRegistry)"
+      new: "method void net.fortuna.ical4j.model.ZoneRulesProviderImpl::<init>()"
+      justification: "zonerulesprovider_memory_leak_fix"
     - code: "java.method.parameterTypeChanged"
       old: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(===byte[]===)"
       new: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(===java.nio.ByteBuffer===)"
