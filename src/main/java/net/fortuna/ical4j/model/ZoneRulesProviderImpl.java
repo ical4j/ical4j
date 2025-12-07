@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Configurator;
+
 import java.lang.ref.WeakReference;
 import java.time.zone.ZoneRules;
 import java.time.zone.ZoneRulesProvider;
@@ -9,6 +11,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A custom implementation of {@link ZoneRulesProvider} that delegates to a {@link TimeZoneRegistry}.
+ * This implementation maintains a pool of globally unique zone IDs that can be allocated to
+ * {@link TimeZoneRegistry} instances to avoid conflicts with the standard Java zone rules.
+ * @see TimeZoneRegistry
+ * @see TimeZoneRegistryImpl
+ * @author Ben Fortuna
  */
 public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
@@ -27,7 +34,7 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
     public ZoneRulesProviderImpl() {
         Set<String> globalZoneIds = new HashSet<>();
-        for (int i = 0; i < 1500; i++) {
+        for (int i = 0; i < Configurator.getIntProperty("net.fortuna.ical4j.timezone.id.pool.size").orElse(1500); i++) {
             globalZoneIds.add("ical4j-local-" + i);
         }
         this.registeredZoneIds = Collections.unmodifiableSet(globalZoneIds);
