@@ -38,7 +38,6 @@ import net.fortuna.ical4j.model.property.TzId
 import spock.lang.Specification
 
 import java.time.*
-import java.time.zone.ZoneRulesProvider
 
 class DateListTestSpec extends Specification {
 
@@ -74,9 +73,6 @@ class DateListTestSpec extends Specification {
 
         TimeZone timeZone = new TimeZone(vTimeZone)
         timeZoneRegistry.register(timeZone)
-
-        and: 'registered zone rules provider'
-        ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(timeZoneRegistry))
 
         and: 'corresponding tzid parameter'
         net.fortuna.ical4j.model.parameter.TzId tzIdParam = new net.fortuna.ical4j.model.parameter.TzId('Europe/Atlantis')
