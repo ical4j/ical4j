@@ -117,9 +117,10 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent implements Prototype<VToDo>, ComponentContainer<Component>, RecurrenceSupport<VToDo>,
-        DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
-        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
+public class VToDo extends CalendarComponent implements Prototype<VToDo>, ComponentContainer<Component>,
+        RecurrenceSupport<VToDo>, DescriptivePropertyAccessor, ChangeManagementPropertyAccessor,
+        DateTimePropertyAccessor, RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor,
+        LocationsAccessor, ResourcesAccessor, StatusAccessor {
 
     private static final long serialVersionUID = -269658210065896668L;
 
