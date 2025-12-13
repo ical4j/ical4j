@@ -77,7 +77,7 @@ class DefaultContentHandlerTest extends Specification {
         and: 'a content handler instance with supressed invalid properties'
         DefaultContentHandler contentHandler = [{result = it} as Consumer<Calendar>,
                                                 TimeZoneRegistryFactory.instance.createRegistry(),
-                                                new ContentHandlerContext().withSupressInvalidProperties(true)]
+                                                new ContentHandlerContext().withSuppressInvalidProperties(true)]
 
         when: 'a calendar is parsed'
         contentHandler.startCalendar()

@@ -32,11 +32,12 @@
 package net.fortuna.ical4j.data;
 
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Strings;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.StringReader;
 import java.util.List;
@@ -48,7 +49,7 @@ import java.util.List;
  *
  * @author arnaudq
  */
-public class CalendarBuilderCustomRegistryTest extends TestCase {
+public class CalendarBuilderCustomRegistryTest {
 
     private static final String SCHEDULE_STATUS = "SCHEDULE-STATUS-1";
 
@@ -87,12 +88,13 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
     /**
      * Test the calendar builder with a custom parameters.
      */
+    @Test
     public void testCustomParameter() throws Exception {
 
         // try to build with a regular builder
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
-        assertTrue(cal.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.ATTENDEE)
+        Assert.assertTrue(cal.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.ATTENDEE)
                 .getRequiredParameter(SCHEDULE_STATUS) instanceof XParameter);
 
         // try to build with a custom parameter factory
@@ -121,6 +123,6 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         List<VEvent> event = cal.getComponents(Component.VEVENT);
         var eventBis = event.get(0).copy();
-        assertEquals(eventBis, event.get(0));
+        Assert.assertEquals(eventBis, event.get(0));
     }
 }

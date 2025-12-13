@@ -31,17 +31,25 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * $Id: CalendarOutputterTest.java [Apr 6, 2004]
@@ -50,42 +58,33 @@ import java.io.*;
  *
  * @author benf
  */
-@Ignore
-public class CalendarOutputterTest extends TestCase {
+public class CalendarOutputterTest {
 
     private static final Logger log = LoggerFactory.getLogger(CalendarOutputterTest.class);
-
-    private final String filename;
-
-    /**
-     * @param method
-     * @param file
-     */
-    public CalendarOutputterTest(final String file) {
-        super("testOutput");
-        this.filename = file;
-    }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected final void tearDown() throws Exception {
+    @After
+    public final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
 
     /**
      * @throws Exception
      */
-    public void testOutput() throws Exception {
+    @ParameterizedTest
+    @MethodSource
+    @Disabled
+    public void testOutput(final String filename) throws Exception {
         try {
             CalendarBuilder builder = new CalendarBuilder();
             FileInputStream fin = new FileInputStream(filename);
@@ -101,7 +100,7 @@ public class CalendarOutputterTest extends TestCase {
                 log.error("Error while parsing: " + filename, e);
             }
 
-            assertNotNull(calendar);
+            Assert.assertNotNull(calendar);
 
             outputter.setValidating(false);
             outputter.output(calendar, out);
@@ -127,7 +126,7 @@ public class CalendarOutputterTest extends TestCase {
 
             String rawData = rout.toString();
 
-            assertEquals("Output differed from expected: " + filename, rawData, out.toString());
+            Assert.assertEquals("Output differed from expected: " + filename, rawData, out.toString());
         } catch (IOException e) {
             log.error("Error while parsing: " + filename, e);
             throw e;
@@ -136,40 +135,18 @@ public class CalendarOutputterTest extends TestCase {
             throw e;
         }
     }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#getName()
-     */
 
-    /**
-     * Overridden to return the current iCalendar file under test.
-     */
-    @Override
-    public final String getName() {
-        return super.getName() + " [" + filename + "]";
-    }
-
-    /**
-     * @return
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        File[] testFiles = null;
+    private static List<String> testOutput() {
+        List<String> input = new ArrayList<>();
 
         // valid tests..
-        testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
-        for (int i = 0; i < testFiles.length; i++) {
-            log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
-        }
-
+        input.addAll(Arrays.stream(Objects.requireNonNull(new File("src/test/resources/samples/valid")
+                        .listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"))))
+                .map(File::getPath).collect(Collectors.toList()));
         // invalid tests..
-        testFiles = new File("src/test/resources/samples/invalid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
-        for (int i = 0; i < testFiles.length; i++) {
-            log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
-        }
-
-        return suite;
+        input.addAll(Arrays.stream(Objects.requireNonNull(new File("src/test/resources/samples/invalid")
+                        .listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"))))
+                .map(File::getPath).collect(Collectors.toList()));
+        return input;
     }
 }

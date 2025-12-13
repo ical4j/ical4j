@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * all components in the collection. It also implements the {@link Comparable} interface
  * to allow for comparison based on the size and contents of the component list.
  */
-public class ComponentList<T extends Component> implements ContentCollection<T>,
+public class ComponentList<T extends Component> implements ContentCollection<T, ComponentList<T>>,
         Comparable<ComponentList<? extends Component>> {
 
     private final List<T> components;
@@ -65,21 +65,21 @@ public class ComponentList<T extends Component> implements ContentCollection<T>,
     }
 
     @Override
-    public ContentCollection<T> add(@NotNull T content) {
+    public ComponentList<T> add(@NotNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.add(content);
         return new ComponentList<>(copy);
     }
 
     @Override
-    public ContentCollection<T> addAll(@NotNull Collection<T> content) {
+    public ComponentList<T> addAll(@NotNull Collection<T> content) {
         List<T> copy = new ArrayList<>(components);
         copy.addAll(content);
         return new ComponentList<>(copy);
     }
 
     @Override
-    public ContentCollection<T> remove(T content) {
+    public ComponentList<T> remove(T content) {
         List<T> copy = new ArrayList<>(components);
         if (copy.remove(content)) {
             return new ComponentList<>(copy);
@@ -89,13 +89,13 @@ public class ComponentList<T extends Component> implements ContentCollection<T>,
     }
 
     @Override
-    public ContentCollection<T> removeAll(String... name) {
+    public ComponentList<T> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         return removeIf(c -> names.contains(c.getName()));
     }
 
     @Override
-    public ContentCollection<T> removeIf(Predicate<T> filter) {
+    public ComponentList<T> removeIf(Predicate<T> filter) {
         List<T> copy = new ArrayList<>(components);
         if (copy.removeIf(filter)) {
             return new ComponentList<>(copy);
@@ -105,7 +105,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T>,
     }
 
     @Override
-    public ContentCollection<T> replace(@NotNull T content) {
+    public ComponentList<T> replace(@NotNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.removeIf(c -> c.getName().equalsIgnoreCase(content.getName()));
         copy.add(content);

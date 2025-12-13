@@ -1,5 +1,13 @@
-/**
- * Copyright (c) 2012, Ben Fortuna
+package net.fortuna.ical4j.model.component;
+
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+
+import java.util.stream.Collectors;
+
+/*
+ * Copyright (c) 2025, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,40 +37,45 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.data;
+public class VStatus extends Component implements Prototype<VStatus> {
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-
-/**
- * $Id$
- *
- * Created on 09/11/2008
- *
- * @author Ben
- *
- */
-public class UnfoldingReaderTest {
-
-    private static final int BUFFER_SIZE = 1024;
-
-    /**
-     * @throws IOException
-     */
-    @ParameterizedTest
-    @ValueSource(strings = {"a\r\n bc"})
-    public void testUnfolding(String input) throws IOException {
-        UnfoldingReader reader = new UnfoldingReader(new StringReader(input), BUFFER_SIZE);
-        BufferedReader b = new BufferedReader(reader, BUFFER_SIZE);
-        String line = null;
-        while ((line = b.readLine()) != null) {
-            Assertions.assertFalse(line.matches("^\\s.*"));
-        }
+    public VStatus() {
+        super(VSTATUS);
     }
 
+    public VStatus(PropertyList p) {
+        super(VSTATUS, p);
+    }
+
+    @Override
+    public ValidationResult validate(boolean recurse) throws ValidationException {
+        return ValidationResult.EMPTY;
+    }
+
+    @Override
+    public VStatus copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                .map(Property::copy).collect(Collectors.toList())));
+    }
+
+    @Override
+    protected ComponentFactory<VStatus> newFactory() {
+        return new Factory();
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VStatus> {
+        public Factory() {
+            super(VSTATUS);
+        }
+
+        @Override
+        public VStatus createComponent() {
+            return new VStatus();
+        }
+
+        @Override
+        public VStatus createComponent(PropertyList properties) {
+            return new VStatus(properties);
+        }
+    }
 }

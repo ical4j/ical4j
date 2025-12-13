@@ -31,10 +31,13 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,39 +53,23 @@ import java.net.URL;
  *
  * @author Ben Fortuna
  */
-public class CalendarParserImplTest extends TestCase {
+public class CalendarParserImplTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(CalendarParserImplTest.class);
-
-    private final URL resource;
-
-    private final int expectedErrorLineNo;
-
-    /**
-     * @param resouces a calendar resource
-     * @param expectedErrorLineNo
-     */
-    public CalendarParserImplTest(String resourceString, int expectedErrorLineNo) {
-        super("testParserException");
-        this.resource = getClass().getResource(resourceString);
-        this.expectedErrorLineNo = expectedErrorLineNo;
-    }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
 
@@ -91,37 +78,21 @@ public class CalendarParserImplTest extends TestCase {
      *
      * @throws IOException
      */
-    public void testParserException() throws IOException {
+    @ParameterizedTest
+    @CsvSource(value = {
+            "/samples/invalid/13-MoonPhase.ics:215",
+            "/samples/invalid/overlaps.ics:1",
+            "/samples/invalid/schedule-unstable.ics:12",
+            "/samples/invalid/sogo-geo-escaped-semicolon.ics:9" }, delimiterString = ":")
+    public void testParserException(String resourceString, int expectedErrorLineNo) throws IOException {
         try {
+            URL resource = getClass().getResource(resourceString);
             Calendars.load(resource);
-            fail("Should throw ParserException: [" + resource + "]");
+            Assert.fail("Should throw ParserException: [" + resource + "]");
         } catch (ParserException pe) {
             LOG.info(pe.getMessage());
-            assertEquals(expectedErrorLineNo, pe.getLineNo());
+            Assert.assertEquals(expectedErrorLineNo, pe.getLineNo());
         }
     }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#getName()
-     */
 
-    /**
-     * Overridden to return the current iCalendar file under test.
-     */
-    @Override
-    public final String getName() {
-        return super.getName() + " [" + resource + "]";
-    }
-
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/13-MoonPhase.ics", 215));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/overlaps.ics", 1));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/schedule-unstable.ics", 12));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/sogo-geo-escaped-semicolon.ics", 9));
-        return suite;
-    }
 }

@@ -8,7 +8,6 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Constants;
 import org.slf4j.LoggerFactory;
 
-import java.time.zone.ZoneRulesProvider;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,9 +89,9 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void endCalendar() {
-        ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(tzRegistry));
-        consumer.accept(new Calendar(new PropertyList(calendarProperties),
-                new ComponentList<>(calendarComponents)));
+        Calendar calendar = new Calendar(new PropertyList(calendarProperties),
+                new ComponentList<>(calendarComponents));
+        consumer.accept(calendar);
     }
 
     @Override

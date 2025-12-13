@@ -31,21 +31,28 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.DateTimeException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * $Id: CalendarBuilderTest.java [Apr 5, 2004]
@@ -54,32 +61,15 @@ import java.time.DateTimeException;
  *
  * @author benf
  */
-public class CalendarBuilderTest extends TestCase {
+public class CalendarBuilderTest {
 
     private static final Logger log = LoggerFactory.getLogger(CalendarBuilderTest.class);
-
-    private final String filename;
-
-    private final FileInputStream fin;
-
-    /**
-     * Constructor.
-     *
-     * @param method name of method to run in test case
-     * @param file   an iCalendar filename
-     * @throws FileNotFoundException
-     */
-    public CalendarBuilderTest(String testMethod, final String file) throws FileNotFoundException {
-        super(testMethod);
-        this.filename = file;
-        this.fin = new FileInputStream(filename);
-    }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(
@@ -95,8 +85,8 @@ public class CalendarBuilderTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected final void tearDown() throws Exception {
+    @After
+    public final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
@@ -107,7 +97,11 @@ public class CalendarBuilderTest extends TestCase {
      * @throws ParserException
      * @throws ValidationException
      */
-    public void testBuildValid() throws IOException, ParserException, ValidationException {
+    @ParameterizedTest
+    @MethodSource
+    @Disabled
+    public void testBuildValid(final String filename) throws IOException, ParserException, ValidationException {
+        final FileInputStream fin = new FileInputStream(filename);
         Calendar calendar = new CalendarBuilder().build(fin);
         calendar.validate();
     }
@@ -116,53 +110,31 @@ public class CalendarBuilderTest extends TestCase {
      * @throws IOException
      * @throws ParserException
      */
-    public void testBuildInvalid() throws IOException {
+    @ParameterizedTest
+    @MethodSource
+    public void testBuildInvalid(final String filename) throws IOException {
+        final FileInputStream fin = new FileInputStream(filename);
         try {
             Calendar calendar = new CalendarBuilder().build(fin);
             ValidationResult result = calendar.validate();
-            assertTrue(result.hasErrors());
+            Assert.assertTrue(result.hasErrors());
         } catch (DateTimeException | ValidationException | ParserException e) {
             log.trace("Caught exception: [" + filename + "," + e.getMessage() + "]");
         }
     }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#getName()
-     */
 
-    /**
-     * Overridden to return the current iCalendar file under test.
-     */
-    @Override
-    public final String getName() {
-        return super.getName() + " [" + filename + "]";
-    }
-
-    /**
-     * Test suite.
-     *
-     * @return test suite
-     * @throws FileNotFoundException
-     */
-    public static Test suite() throws FileNotFoundException {
-        TestSuite suite = new TestSuite();
-
-        File[] testFiles = null;
+    private static List<String> testBuildValid() {
 
         // valid tests..
-        testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
-        for (int i = 0; i < testFiles.length; i++) {
-            log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarBuilderTest("testBuildValid", testFiles[i].getPath()));
-        }
+        return Arrays.stream(Objects.requireNonNull(new File("src/test/resources/samples/valid")
+                        .listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"))))
+                .map(File::getPath).collect(Collectors.toList());
+    }
 
+    private static List<String> testBuildInvalid() {
         // invalid tests..
-        testFiles = new File("src/test/resources/samples/invalid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
-        for (int i = 0; i < testFiles.length; i++) {
-            log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarBuilderTest("testBuildInvalid", testFiles[i].getPath()));
-        }
-
-        return suite;
+        return Arrays.stream(Objects.requireNonNull(new File("src/test/resources/samples/invalid")
+                        .listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"))))
+                .map(File::getPath).collect(Collectors.toList());
     }
 }

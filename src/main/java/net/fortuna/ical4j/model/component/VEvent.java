@@ -192,7 +192,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  */
 public class VEvent extends CalendarComponent implements Prototype<VEvent>, ComponentContainer<Component>, RecurrenceSupport<VEvent>,
         DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
-        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
+        RelationshipPropertyAccessor, AlarmsAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor,
+        StatusAccessor {
 
     private static final long serialVersionUID = 2547948989200697335L;
 

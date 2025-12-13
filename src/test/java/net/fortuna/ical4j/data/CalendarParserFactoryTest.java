@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * $Id$
@@ -41,23 +44,23 @@ import junit.framework.TestCase;
  * @author fortuna
  *
  */
-public class CalendarParserFactoryTest extends TestCase {
+public class CalendarParserFactoryTest {
 
     private String originalParserFactory;
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         originalParserFactory = System.getProperty(CalendarParserFactory.KEY_FACTORY_CLASS);
     }
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         if (originalParserFactory != null) {
             System.setProperty(CalendarParserFactory.KEY_FACTORY_CLASS,
                     originalParserFactory);
@@ -70,8 +73,9 @@ public class CalendarParserFactoryTest extends TestCase {
     /**
      * Test method for {@link CalendarParserFactory#get()}.
      */
+    @Test
     public void testCreateDefaultParser() {
-        assertTrue(CalendarParserFactory.getInstance().get() instanceof CalendarParserImpl);
+        Assert.assertTrue(CalendarParserFactory.getInstance().get() instanceof CalendarParserImpl);
     }
     
     /**

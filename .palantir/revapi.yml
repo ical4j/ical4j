@@ -4746,6 +4746,15 @@ acceptedBreaks:
       justification: "refactoring_prototype"
   "4.1.1":
     org.mnode.ical4j:ical4j:
+    - code: "java.generics.formalTypeParameterAdded"
+      old: "interface net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content>"
+      new: "interface net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.numberOfParametersChanged"
+      old: "method void net.fortuna.ical4j.model.ZoneRulesProviderImpl::<init>(net.fortuna.ical4j.model.TimeZoneRegistry)"
+      new: "method void net.fortuna.ical4j.model.ZoneRulesProviderImpl::<init>()"
+      justification: "zonerulesprovider_memory_leak_fix"
     - code: "java.method.parameterTypeChanged"
       old: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(===byte[]===)"
       new: "parameter void net.fortuna.ical4j.model.property.Attach::<init>(===java.nio.ByteBuffer===)"
@@ -4760,7 +4769,148 @@ acceptedBreaks:
       old: "parameter void net.fortuna.ical4j.model.property.Attach::setBinary(===byte[]===)"
       new: "parameter void net.fortuna.ical4j.model.property.Attach::setBinary(===java.nio.ByteBuffer===)"
       justification: "ATTACH_BYTEBUFFER_FOR_LARGE_FILE_SUPPORT"
+    - code: "java.method.removed"
+      old: "method net.fortuna.ical4j.data.ContentHandlerContext net.fortuna.ical4j.data.ContentHandlerContext::withSupressInvalidProperties(boolean)"
+      justification: "fixed_type_in_method_signature"
     - code: "java.method.returnTypeChanged"
       old: "method byte[] net.fortuna.ical4j.model.property.Attach::getBinary()"
       new: "method java.nio.ByteBuffer net.fortuna.ical4j.model.property.Attach::getBinary()"
       justification: "ATTACH_BYTEBUFFER_FOR_LARGE_FILE_SUPPORT"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Parameter>\
+        \ net.fortuna.ical4j.model.ParameterList::add(net.fortuna.ical4j.model.Parameter)"
+      new: "method net.fortuna.ical4j.model.ParameterList net.fortuna.ical4j.model.ParameterList::add(net.fortuna.ical4j.model.Parameter)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Parameter>\
+        \ net.fortuna.ical4j.model.ParameterList::addAll(java.util.Collection<net.fortuna.ical4j.model.Parameter>)"
+      new: "method net.fortuna.ical4j.model.ParameterList net.fortuna.ical4j.model.ParameterList::addAll(java.util.Collection<net.fortuna.ical4j.model.Parameter>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Parameter>\
+        \ net.fortuna.ical4j.model.ParameterList::remove(net.fortuna.ical4j.model.Parameter)"
+      new: "method net.fortuna.ical4j.model.ParameterList net.fortuna.ical4j.model.ParameterList::remove(net.fortuna.ical4j.model.Parameter)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Parameter>\
+        \ net.fortuna.ical4j.model.ParameterList::removeAll(java.lang.String[])"
+      new: "method net.fortuna.ical4j.model.ParameterList net.fortuna.ical4j.model.ParameterList::removeAll(java.lang.String[])"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Parameter>\
+        \ net.fortuna.ical4j.model.ParameterList::removeIf(java.util.function.Predicate<net.fortuna.ical4j.model.Parameter>)"
+      new: "method net.fortuna.ical4j.model.ParameterList net.fortuna.ical4j.model.ParameterList::removeIf(java.util.function.Predicate<net.fortuna.ical4j.model.Parameter>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Parameter>\
+        \ net.fortuna.ical4j.model.ParameterList::replace(net.fortuna.ical4j.model.Parameter)"
+      new: "method net.fortuna.ical4j.model.ParameterList net.fortuna.ical4j.model.ParameterList::replace(net.fortuna.ical4j.model.Parameter)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.PropertyList::add(net.fortuna.ical4j.model.Property)"
+      new: "method net.fortuna.ical4j.model.PropertyList net.fortuna.ical4j.model.PropertyList::add(net.fortuna.ical4j.model.Property)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.PropertyList::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      new: "method net.fortuna.ical4j.model.PropertyList net.fortuna.ical4j.model.PropertyList::addAll(java.util.Collection<net.fortuna.ical4j.model.Property>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.PropertyList::remove(net.fortuna.ical4j.model.Property)"
+      new: "method net.fortuna.ical4j.model.PropertyList net.fortuna.ical4j.model.PropertyList::remove(net.fortuna.ical4j.model.Property)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.PropertyList::removeAll(java.lang.String[])"
+      new: "method net.fortuna.ical4j.model.PropertyList net.fortuna.ical4j.model.PropertyList::removeAll(java.lang.String[])"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.PropertyList::removeIf(java.util.function.Predicate<net.fortuna.ical4j.model.Property>)"
+      new: "method net.fortuna.ical4j.model.PropertyList net.fortuna.ical4j.model.PropertyList::removeIf(java.util.function.Predicate<net.fortuna.ical4j.model.Property>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<net.fortuna.ical4j.model.Property>\
+        \ net.fortuna.ical4j.model.PropertyList::replace(net.fortuna.ical4j.model.Property)"
+      new: "method net.fortuna.ical4j.model.PropertyList net.fortuna.ical4j.model.PropertyList::replace(net.fortuna.ical4j.model.Property)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::add(T)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::addAll(java.util.Collection<T>)"
+      new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::addAll(java.util.Collection<T>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::remove(T)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::removeAll(java.lang.String[])"
+      new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::removeAll(java.lang.String[])"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::removeIf(java.util.function.Predicate<T>)"
+      new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::removeIf(java.util.function.Predicate<T>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
+        \ extends net.fortuna.ical4j.model.Component>::replace(T)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::add(T)"
+      new: "method E net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>>::add(T)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::addAll(java.util.Collection<T>)"
+      new: "method E net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>>::addAll(java.util.Collection<T>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::remove(T)"
+      new: "method E net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>>::remove(T)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::removeAll(java.lang.String[])"
+      new: "method E net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>>::removeAll(java.lang.String[])"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::removeIf(java.util.function.Predicate<T>)"
+      new: "method E net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>>::removeIf(java.util.function.Predicate<T>)"
+      justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
+        \ extends net.fortuna.ical4j.model.Content>::replace(T)"
+      new: "method E net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
+        \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>>::replace(T)"
+      justification: "refactor_generics_content_collection"

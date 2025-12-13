@@ -119,7 +119,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * @author Mike Douglass
  */
 public class Participant extends Component implements Prototype<Participant>, ComponentContainer<Component>, ChangeManagementPropertyAccessor,
-    LocationsAccessor, ResourcesAccessor {
+    LocationsAccessor, ResourcesAccessor, StatusAccessor {
 
     private static final long serialVersionUID = -8193965477414653802L;
 

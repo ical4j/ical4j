@@ -109,7 +109,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  */
 public class VJournal extends CalendarComponent implements Prototype<VJournal>, ComponentContainer<Component>, RecurrenceSupport<VJournal>,
         DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, DateTimePropertyAccessor,
-        RelationshipPropertyAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor {
+        RelationshipPropertyAccessor, ParticipantsAccessor, LocationsAccessor, ResourcesAccessor, StatusAccessor {
 
     private static final long serialVersionUID = -7635140949183238830L;
 

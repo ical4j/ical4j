@@ -74,6 +74,11 @@ public abstract class Component extends Content implements Serializable,
     /**
      * Component token.
      */
+    public static final String VSTATUS = "VSTATUS";
+
+    /**
+     * Component token.
+     */
     public static final String PARTICIPANT = "PARTICIPANT";
 
     /**

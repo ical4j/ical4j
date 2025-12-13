@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -48,8 +48,9 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author benf
  */
-public class CalendarBuilderConcurrencyTest extends TestCase {
+public class CalendarBuilderConcurrencyTest {
 
+    @Test
     public void testConcurrency() throws Exception {
         final AtomicLong size = new AtomicLong();
         ExecutorService executorService = Executors.newFixedThreadPool(100);
@@ -57,25 +58,17 @@ public class CalendarBuilderConcurrencyTest extends TestCase {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
-                    FileInputStream fis = null;
-                    try {
-                        fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics");
+                    try (FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics")) {
                         Calendar calendar = new CalendarBuilder().build(fis);
                         size.addAndGet(calendar.getComponents().size());
                     } catch (Exception e) {
                         throw new RuntimeException(e.getMessage(), e);
-                    } finally {
-                        try {
-                            fis.close();
-                        } catch (IOException e) {
-                            //ignore
-                        }
                     }
                 }
             });
         }
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.MINUTES);
-        assertEquals(3700, size.longValue());
+        Assert.assertEquals(3700, size.longValue());
     }
 }

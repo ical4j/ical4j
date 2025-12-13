@@ -41,7 +41,10 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -156,7 +159,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         // use latest timezone definition to build zone rules..
         var newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
                 .build();
-        var globalId = "ical4j~" + UUID.randomUUID();
+        var globalId = ZoneRulesProviderImpl.INSTANCE.getZoneIdPool().allocate(this);
         zoneIds.put(globalId, timezone.getID());
         zoneRules.put(globalId, newZoneRules);
     }

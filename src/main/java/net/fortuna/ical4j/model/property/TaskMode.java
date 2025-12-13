@@ -1,5 +1,14 @@
-/**
- * Copyright (c) 2012, Ben Fortuna
+package net.fortuna.ical4j.model.property;
+
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationResult;
+
+/*
+ * Copyright (c) 2025, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,40 +38,54 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.data;
+public class TaskMode extends Property {
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+    private String value;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+    public TaskMode() {
+        super(TASK_MODE);
+    }
 
-/**
- * $Id$
- *
- * Created on 09/11/2008
- *
- * @author Ben
- *
- */
-public class UnfoldingReaderTest {
+    public TaskMode(ParameterList aList) {
+        super(TASK_MODE, aList);
+    }
 
-    private static final int BUFFER_SIZE = 1024;
+    @Override
+    public void setValue(String aValue) {
+        this.value = aValue;
+    }
 
-    /**
-     * @throws IOException
-     */
-    @ParameterizedTest
-    @ValueSource(strings = {"a\r\n bc"})
-    public void testUnfolding(String input) throws IOException {
-        UnfoldingReader reader = new UnfoldingReader(new StringReader(input), BUFFER_SIZE);
-        BufferedReader b = new BufferedReader(reader, BUFFER_SIZE);
-        String line = null;
-        while ((line = b.readLine()) != null) {
-            Assertions.assertFalse(line.matches("^\\s.*"));
+    @Override
+    public ValidationResult validate() throws ValidationException {
+        return ValidationResult.EMPTY;
+    }
+
+    @Override
+    protected PropertyFactory<?> newFactory() {
+        return null;
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<TaskMode> {
+
+        public Factory() {
+            super(SUMMARY);
+        }
+
+        @Override
+        public TaskMode createProperty(final ParameterList parameters, final String value) {
+            TaskMode property = new TaskMode(parameters);
+            property.setValue(value);
+            return property;
+        }
+
+        @Override
+        public TaskMode createProperty() {
+            return new TaskMode();
         }
     }
 
+    @Override
+    public String getValue() {
+        return value;
+    }
 }

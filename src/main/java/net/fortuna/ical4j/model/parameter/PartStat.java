@@ -62,6 +62,8 @@ public class PartStat extends Parameter implements Encodable {
 
     private static final String VALUE_IN_PROCESS = "IN-PROCESS";
 
+    private static final String VALUE_FAILED = "FAILED";
+
     /**
      * Needs action.
      */
@@ -88,14 +90,19 @@ public class PartStat extends Parameter implements Encodable {
     public static final PartStat DELEGATED = new PartStat(VALUE_DELEGATED);
 
     /**
-     * Completed.
+     * To-do completed; COMPLETED property has DATE-TIME completed
      */
     public static final PartStat COMPLETED = new PartStat(VALUE_COMPLETED);
 
     /**
-     * In-process.
+     * To-do in process of being completed
      */
     public static final PartStat IN_PROCESS = new PartStat(VALUE_IN_PROCESS);
+
+    /**
+     * To-do cannot be completed
+     */
+    public static final PartStat FAILED = new PartStat(VALUE_FAILED);
 
     private final String value;
 

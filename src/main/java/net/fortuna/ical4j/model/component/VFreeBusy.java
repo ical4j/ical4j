@@ -204,7 +204,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * @author Ben Fortuna
  */
 public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>, ComponentContainer<Component>, ParticipantsAccessor,
-    LocationsAccessor, ResourcesAccessor, DateTimePropertyAccessor {
+    LocationsAccessor, ResourcesAccessor, DateTimePropertyAccessor, StatusAccessor {
 
     private static final long serialVersionUID = 1046534053331139832L;
 

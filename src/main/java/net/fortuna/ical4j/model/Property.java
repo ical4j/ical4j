@@ -395,6 +395,14 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
     public static final String XML = "XML";
 
+    public static final String ESTIMATED_DURATION = "ESTIMATED-DURATION";
+
+    public static final String REASON = "REASON";
+
+    public static final String SUBSTATE = "SUBSTATE";
+
+    public static final String TASK_MODE = "TASK-MODE";
+
     private final String name;
 
     /**
