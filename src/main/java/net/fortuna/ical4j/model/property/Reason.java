@@ -51,6 +51,11 @@ public class Reason extends Property {
         super(REASON);
     }
 
+    public Reason(URI uri) {
+        super(REASON);
+        this.uri = uri;
+    }
+
     public Reason(ParameterList aList) {
         super(REASON, aList);
     }
