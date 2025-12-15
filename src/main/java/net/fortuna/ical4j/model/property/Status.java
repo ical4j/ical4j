@@ -129,6 +129,8 @@ public class Status extends Property {
     public static final String VALUE_IN_PROCESS = "IN-PROCESS";
     public static final String VALUE_DRAFT = "DRAFT";
     public static final String VALUE_FINAL = "FINAL";
+    public static final String VALUE_PENDING = "PENDING";
+    public static final String VALUE_FAILED = "FAILED";
 
     // Status values for a "VEVENT"
 

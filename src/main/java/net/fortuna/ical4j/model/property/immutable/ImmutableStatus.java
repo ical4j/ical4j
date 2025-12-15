@@ -71,6 +71,17 @@ public final class ImmutableStatus extends Status implements ImmutableProperty {
      * Cancelled VTODO status.
      */
     public static final Status VTODO_CANCELLED = new ImmutableStatus(VALUE_CANCELLED);
+
+    /**
+     * Indicates a to-do has been created and accepted, but has not yet started.
+     */
+    public static final Status VTODO_PENDING = new ImmutableStatus(VALUE_PENDING);
+
+    /**
+     * Indicates to-do has failed.
+     */
+    public static final Status VTODO_FAILED = new ImmutableStatus(VALUE_FAILED);
+
     /**
      * Draft VJOURNAL status.
      */
