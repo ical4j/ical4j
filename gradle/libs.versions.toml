@@ -6,7 +6,7 @@ threeten-extra = "1.8.0"
 jparsec = "3.1"
 caffeine = "3.1.8"
 groovy = "3.0.25"
-log4j = "2.25.2"
+log4j = "2.25.3"
 spock = "2.4-M7-groovy-3.0"
 tagsoup = "1.2.1"
 # spock pulls in hamcrest 2.2, but junit pulls in
