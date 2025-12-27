@@ -72,7 +72,7 @@ import java.net.URISyntaxException;
  */
 public class Concept extends Property {
 
-    private static final String PROPERTY_NAME = "CONCEPT";
+    public static final String PROPERTY_NAME = "CONCEPT";
     
     private URI uri;
 

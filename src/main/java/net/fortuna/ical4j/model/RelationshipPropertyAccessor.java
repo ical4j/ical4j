@@ -99,4 +99,8 @@ public interface RelationshipPropertyAccessor extends PropertyContainer {
     default Url getUrl() {
         return (Url) getProperty(Property.URL).orElse(null);
     }
+
+    default List<Link> getLinks() {
+        return getProperties(Link.PROPERTY_NAME);
+    }
 }

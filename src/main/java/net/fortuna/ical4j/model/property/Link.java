@@ -82,7 +82,7 @@ import java.util.Collections;
 
 public class Link extends Property {
 
-    private static final String PROPERTY_NAME = "LINK";
+    public static final String PROPERTY_NAME = "LINK";
 
     private URI uri;
 
