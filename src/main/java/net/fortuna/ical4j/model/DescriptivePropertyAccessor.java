@@ -143,4 +143,8 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
     default Summary getSummary() {
         return (Summary) getProperty(Property.SUMMARY).orElse(null);
     }
+
+    default Concept getConcept() {
+        return (Concept) getProperty(Concept.PROPERTY_NAME).orElse(null);
+    }
 }

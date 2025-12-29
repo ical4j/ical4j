@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Configurator;
+import org.slf4j.Logger;
 
 import java.lang.ref.WeakReference;
 import java.time.zone.ZoneRules;
@@ -23,6 +24,8 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
     static {
         ZoneRulesProvider.registerProvider(INSTANCE);
     }
+
+    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(ZoneRulesProviderImpl.class);
 
     private final Set<String> registeredZoneIds;
 
@@ -89,6 +92,9 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
             String zoneId = availableZoneIds.poll();
             if (zoneId != null) {
                 allocatedZoneIds.put(zoneId, new WeakReference<>(registry));
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Allocated zone ID: {} ({} remaining)", zoneId, availableZoneIds());
+                }
             }
             refresh.set(true);
             return zoneId;
@@ -108,6 +114,10 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
                     release(entry.getKey());
                 }
             }
+        }
+
+        public int availableZoneIds() {
+            return availableZoneIds.size();
         }
     }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
  *
@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.time.LocalDate;
 import java.util.Arrays;

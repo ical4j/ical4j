@@ -48,7 +48,7 @@ import java.util.Set;
  *
  * @param <T> the type of calendar component that supports recurrence
  */
-public interface RecurrenceSupport<T extends CalendarComponent> extends PropertyContainer, Prototype<T> {
+public interface RecurrenceSupport<T extends Component> extends PropertyContainer, Prototype<T> {
 
     /**
      * Calculates the recurrence set for this component using the specified period.

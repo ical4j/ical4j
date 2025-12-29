@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
  *
@@ -42,7 +42,6 @@ import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
- *
  * Defines an iCalendar VAVAILABILITY component.
  *
  * <pre>
@@ -91,7 +90,8 @@ import java.util.stream.Collectors;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class VAvailability extends CalendarComponent implements Prototype<VAvailability>, ComponentContainer<Available> {
+public class VAvailability extends CalendarComponent implements Prototype<VAvailability>, ComponentContainer<Available>,
+    DateTimePropertyAccessor, DescriptivePropertyAccessor, ChangeManagementPropertyAccessor, RelationshipPropertyAccessor {
 
 	private static final long serialVersionUID = -3001603309266267258L;
 
