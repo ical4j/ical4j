@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
  *
@@ -31,13 +31,12 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -85,7 +84,8 @@ import net.fortuna.ical4j.validate.ValidationResult;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class Available extends Component {
+public class Available extends Component implements DescriptivePropertyAccessor, DateTimePropertyAccessor,
+        ChangeManagementPropertyAccessor, RecurrenceSupport<Available> {
 
     private static final long serialVersionUID = -2494710612002978763L;
 
@@ -115,6 +115,12 @@ public class Available extends Component {
             results = results.merge(validateProperties());
         }
         return results;
+    }
+
+    @Override
+    public Available copy() {
+        return newFactory().createComponent(new PropertyList(getProperties().parallelStream()
+                        .map(Property::copy).collect(Collectors.toList())));
     }
 
     @Override

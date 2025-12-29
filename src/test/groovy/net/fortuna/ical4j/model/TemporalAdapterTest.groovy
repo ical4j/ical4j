@@ -84,5 +84,7 @@ class TemporalAdapterTest extends Specification {
         where:
         t1  | t2    | isBefore
         Instant.now()   | LocalDate.now()   | false
+        ZonedDateTime.parse('2006-01-01T00:00:00Z') | ZonedDateTime.parse('2006-01-08T00:00:00Z') | true
+        ZonedDateTime.parse('2006-01-08T00:00:00Z') | ZonedDateTime.parse('2006-01-01T00:00:00Z') | false
     }
 }

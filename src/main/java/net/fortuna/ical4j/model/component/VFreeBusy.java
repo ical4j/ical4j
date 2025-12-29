@@ -489,7 +489,7 @@ public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>
         final Optional<DtStart<Temporal>> dtStart = getProperty(DTSTART);
         final Optional<DtEnd<Temporal>> dtEnd = getProperty(DTEND);
         if (dtStart.isPresent() && dtEnd.isPresent()
-                && TemporalAdapter.isBefore(dtStart.get().getDate(), dtEnd.get().getDate())) {
+                && TemporalAdapter.isAfter(dtStart.get().getDate(), dtEnd.get().getDate())) {
             result.getEntries().add(new ValidationEntry("Property [" + Property.DTEND
                     + "] must be later in time than [" + Property.DTSTART + "]", ValidationEntry.Severity.ERROR,
                     getName()));

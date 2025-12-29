@@ -46,6 +46,11 @@ public class Substate extends Property {
         super(SUBSTATE);
     }
 
+    public Substate(String value) {
+        super(SUBSTATE);
+        setValue(value);
+    }
+
     public Substate(ParameterList aList) {
         super(SUBSTATE, aList);
     }

@@ -41,7 +41,12 @@ public interface ContentCollection<T extends Content, E extends ContentCollectio
     default <R extends T> List<R> get(String... names) {
         if (names.length > 0) {
             List<String> filter = Arrays.stream(names).map(String::toUpperCase).collect(Collectors.toList());
-            return getAll().stream().filter(c -> filter.contains(c.getName())).map(c -> (R) c).collect(Collectors.toList());
+            // sort according to the order of names specified in the filter
+            return getAll().stream().filter(c -> filter.contains(c.getName())).map(c -> (R) c).sorted((a, b) -> {
+                int idxA = filter.indexOf(a.getName().toUpperCase());
+                int idxB = filter.indexOf(b.getName().toUpperCase());
+                return Integer.compare(idxA, idxB);
+            }).collect(Collectors.toList());
         } else {
             return (List<R>) getAll();
         }

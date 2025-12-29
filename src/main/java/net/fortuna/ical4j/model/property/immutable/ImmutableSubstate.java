@@ -1,11 +1,9 @@
-package net.fortuna.ical4j.model.property;
+package net.fortuna.ical4j.model.property.immutable;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
+import net.fortuna.ical4j.model.property.ImmutableProperty;
+import net.fortuna.ical4j.model.property.Substate;
 
 /*
  * Copyright (c) 2025, Ben Fortuna
@@ -38,59 +36,38 @@ import net.fortuna.ical4j.validate.ValidationResult;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class TaskMode extends Property {
+public class ImmutableSubstate extends Substate implements ImmutableProperty {
 
-    private String value;
+    public static final Substate OK = new ImmutableSubstate("OK");
+    public static final Substate ERROR = new ImmutableSubstate("ERROR");
+    public static final Substate SUSPENDED = new ImmutableSubstate("SUSPENDED");
 
-    public TaskMode() {
-        super(TASK_MODE);
-    }
-
-    public TaskMode(String value) {
-        super(TASK_MODE);
-        setValue(value);
-    }
-
-    public TaskMode(ParameterList aList) {
-        super(TASK_MODE, aList);
+    public ImmutableSubstate(String value) {
+        super(value);
     }
 
     @Override
-    public void setValue(String aValue) {
-        this.value = aValue;
+    public <T extends Property> T add(Parameter parameter) {
+        return ImmutableProperty.super.add(parameter);
     }
 
     @Override
-    public ValidationResult validate() throws ValidationException {
-        return ValidationResult.EMPTY;
+    public <T extends Property> T remove(Parameter parameter) {
+        return ImmutableProperty.super.remove(parameter);
     }
 
     @Override
-    protected PropertyFactory<?> newFactory() {
-        return null;
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory<TaskMode> {
-
-        public Factory() {
-            super(SUMMARY);
-        }
-
-        @Override
-        public TaskMode createProperty(final ParameterList parameters, final String value) {
-            TaskMode property = new TaskMode(parameters);
-            property.setValue(value);
-            return property;
-        }
-
-        @Override
-        public TaskMode createProperty() {
-            return new TaskMode();
-        }
+    public <T extends Property> T removeAll(String... parameterName) {
+        return ImmutableProperty.super.removeAll(parameterName);
     }
 
     @Override
-    public String getValue() {
-        return value;
+    public <T extends Property> T replace(Parameter parameter) {
+        return ImmutableProperty.super.replace(parameter);
+    }
+
+    @Override
+    public void setValue(final String aValue) {
+        ImmutableProperty.super.setValue(aValue);
     }
 }

@@ -33,6 +33,7 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.junit.After;
@@ -103,7 +104,8 @@ public class CalendarBuilderTest {
     public void testBuildValid(final String filename) throws IOException, ParserException, ValidationException {
         final FileInputStream fin = new FileInputStream(filename);
         Calendar calendar = new CalendarBuilder().build(fin);
-        calendar.validate();
+        ValidationResult result = calendar.validate();
+        Assert.assertFalse(result.getEntries().stream().map(ValidationEntry::getMessage).collect(Collectors.joining(",")), result.hasErrors());
     }
 
     /**

@@ -4746,11 +4746,32 @@ acceptedBreaks:
       justification: "refactoring_prototype"
   "4.1.1":
     org.mnode.ical4j:ical4j:
+    - code: "java.class.noLongerImplementsInterface"
+      old: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.component.CalendarComponent>"
+      new: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.Component>"
+      justification: "extend_recurrence_support_to_all_components"
+    - code: "java.class.nowImplementsInterface"
+      old: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.component.CalendarComponent>"
+      new: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.Component>"
+      justification: "extend_recurrence_support_to_all_components"
+    - code: "java.class.superTypeTypeParametersChanged"
+      old: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.component.CalendarComponent>"
+      new: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.Component>"
+      justification: "extend_recurrence_support_to_all_components"
     - code: "java.generics.formalTypeParameterAdded"
       old: "interface net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content>"
       new: "interface net.fortuna.ical4j.model.ContentCollection<T extends net.fortuna.ical4j.model.Content,\
         \ E extends net.fortuna.ical4j.model.ContentCollection<T, E>>"
       justification: "refactor_generics_content_collection"
+    - code: "java.generics.formalTypeParameterChanged"
+      old: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.component.CalendarComponent>"
+      new: "interface net.fortuna.ical4j.model.RecurrenceSupport<T extends net.fortuna.ical4j.model.Component>"
+      justification: "extend_recurrence_support_to_all_components"
+    - code: "java.method.inheritedMovedToClass"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.Component::copy()\
+        \ @ net.fortuna.ical4j.model.component.Available"
+      new: "method net.fortuna.ical4j.model.component.Available net.fortuna.ical4j.model.component.Available::copy()"
+      justification: "extend_recurrence_support_to_all_components"
     - code: "java.method.numberOfParametersChanged"
       old: "method void net.fortuna.ical4j.model.ZoneRulesProviderImpl::<init>(net.fortuna.ical4j.model.TimeZoneRegistry)"
       new: "method void net.fortuna.ical4j.model.ZoneRulesProviderImpl::<init>()"
@@ -4837,6 +4858,11 @@ acceptedBreaks:
       new: "method net.fortuna.ical4j.model.PropertyList net.fortuna.ical4j.model.PropertyList::replace(net.fortuna.ical4j.model.Property)"
       justification: "refactor_generics_content_collection"
     - code: "java.method.returnTypeChangedCovariantly"
+      old: "method net.fortuna.ical4j.model.Component net.fortuna.ical4j.model.Component::copy()\
+        \ @ net.fortuna.ical4j.model.component.Available"
+      new: "method net.fortuna.ical4j.model.component.Available net.fortuna.ical4j.model.component.Available::copy()"
+      justification: "extend_recurrence_support_to_all_components"
+    - code: "java.method.returnTypeChangedCovariantly"
       old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ComponentList<T\
         \ extends net.fortuna.ical4j.model.Component>::add(T)"
       new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
@@ -4872,6 +4898,12 @@ acceptedBreaks:
       new: "method net.fortuna.ical4j.model.ComponentList<T> net.fortuna.ical4j.model.ComponentList<T\
         \ extends net.fortuna.ical4j.model.Component>::replace(T)"
       justification: "refactor_generics_content_collection"
+    - code: "java.method.returnTypeTypeParametersChanged"
+      old: "method java.util.List<T> net.fortuna.ical4j.model.RecurrenceSupport<T\
+        \ extends net.fortuna.ical4j.model.component.CalendarComponent>::getOccurrences(net.fortuna.ical4j.model.Period<java.time.temporal.Temporal>)"
+      new: "method java.util.List<T> net.fortuna.ical4j.model.RecurrenceSupport<T\
+        \ extends net.fortuna.ical4j.model.Component>::getOccurrences(net.fortuna.ical4j.model.Period<java.time.temporal.Temporal>)"
+      justification: "extend_recurrence_support_to_all_components"
     - code: "java.method.returnTypeTypeParametersChanged"
       old: "method net.fortuna.ical4j.model.ContentCollection<T> net.fortuna.ical4j.model.ContentCollection<T\
         \ extends net.fortuna.ical4j.model.Content>::add(T)"
