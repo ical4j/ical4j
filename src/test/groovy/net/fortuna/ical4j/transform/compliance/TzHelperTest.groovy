@@ -33,7 +33,6 @@
 
 package net.fortuna.ical4j.transform.compliance
 
-
 import spock.lang.Specification
 
 class TzHelperTest extends Specification {
@@ -41,5 +40,36 @@ class TzHelperTest extends Specification {
     def 'test retrieval of msTimezone alias'() {
         expect:
         TzHelper.getCorrectedTimeZoneIdFrom('W. Europe Standard Time') == 'Europe/Vienna'
+    }
+
+    def 'test Hawaiian timezone mapping'() {
+        expect:
+        // US/Hawaii is normalized to Pacific/Honolulu by the TimeZoneRegistry
+        TzHelper.getCorrectedTimeZoneIdFrom('Hawaiian Standard Time') == 'Pacific/Honolulu'
+    }
+
+    def 'test W. Australia timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('W. Australia Standard Time') == 'Australia/Perth'
+    }
+
+    def 'test Tonga timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Tonga Standard Time') == 'Pacific/Tongatapu'
+    }
+
+    def 'test Azores timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Azores Standard Time') == 'Atlantic/Azores'
+    }
+
+    def 'test Arabic timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Arabic Standard Time') == 'Asia/Baghdad'
+    }
+
+    def 'test Central Asia timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Central Asia Standard Time') == 'Asia/Almaty'
     }
 }
