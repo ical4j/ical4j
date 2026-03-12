@@ -276,10 +276,11 @@ public class CalendarDateFormat implements Serializable {
         if (formatter == null) {
             synchronized (pattern) {
                 if (formatter == null) {
-                    formatter = DateTimeFormatter.ofPattern(pattern);
+                    DateTimeFormatter f = DateTimeFormatter.ofPattern(pattern);
                     if (pattern.endsWith("'Z'")) {
-                        formatter = formatter.withZone(ZoneOffset.UTC);
+                        f = f.withZone(ZoneOffset.UTC);
                     }
+                    formatter = f;
                 }
             }
         }

@@ -151,6 +151,12 @@ public class HCalendarParser implements CalendarParser {
     static {
         BUILDER_FACTORY.setNamespaceAware(true);
         BUILDER_FACTORY.setIgnoringComments(true);
+        try {
+            // Prevent XXE attacks - see https://github.com/ical4j/ical4j/issues/802
+            BUILDER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (ParserConfigurationException e) {
+            throw new CalendarException(e);
+        }
 
         XPATH_METHOD = compileExpression("//*[contains(@class, 'method')]");
         XPATH_VEVENTS = compileExpression("//*[contains(@class, 'vevent')]");
