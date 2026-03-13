@@ -273,11 +273,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     public static final String KEY_MAX_INCREMENT_COUNT = "net.fortuna.ical4j.recur.maxincrementcount";
 
-    private static final int maxIncrementCount;
-
-    static {
-        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1_000);
-    }
+    private final int maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1_000);
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
 
@@ -1347,18 +1343,15 @@ public class Recur<T extends Temporal> implements Serializable {
         public boolean tryAdvance(Consumer<? super T> action) {
             boolean advance = maxCount < 0 || generatedCount < maxCount;
             if (advance) {
-                if (getUntil() != null && lastCandidate != null && TemporalAdapter.isAfter(lastCandidate, getUntil())) {
-                    advance = false;
-                } else if (periodEnd != null && lastCandidate != null && TemporalAdapter.isAfter(lastCandidate, periodEnd)) {
-                    advance = false;
-                } else if (getCount() >= 1 && (generatedCount + invalidCandidates.size()) >= getCount()) {
-                    advance = false;
-                }
+                advance = isWithinEndBoundaries(lastCandidate);
             }
 
             if (advance) {
                 // generate new candidate list..
                 while (candidates == null || !candidates.hasNext()) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        throw new RuntimeException("Thread was interrupted during recurrence generation");
+                    }
 
                     // rootSeed = date used for the seed for the RRule at the
                     //            start of the first period.
@@ -1368,7 +1361,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
                     if (!candidates.hasNext()) {
                         noCandidateIncrementCount++;
-                        if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                        if (((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) || !isWithinEndBoundaries(candidateSeed)) {
                             advance = false;
                             break;
                         }
@@ -1394,6 +1387,18 @@ public class Recur<T extends Temporal> implements Serializable {
                         action.accept(lastCandidate);
                     }
                 }
+            }
+            return advance;
+        }
+
+        private boolean isWithinEndBoundaries(T candidate) {
+            boolean advance = true;
+            if (getUntil() != null && candidate != null && TemporalAdapter.isAfter(candidate, getUntil())) {
+                advance = false;
+            } else if (periodEnd != null && candidate != null && TemporalAdapter.isAfter(candidate, periodEnd)) {
+                advance = false;
+            } else if (getCount() >= 1 && (generatedCount + invalidCandidates.size()) >= getCount()) {
+                advance = false;
             }
             return advance;
         }
