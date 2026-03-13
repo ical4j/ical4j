@@ -115,10 +115,15 @@ public class FoldingWriter extends FilterWriter {
             boolean isHighSurrogate = Character.isHighSurrogate(buffer[i]);
             boolean hasLowSurrogate = i < maxIndex && Character.isLowSurrogate(buffer[i + 1]);
 
+            // Don't fold before line endings - RFC 5545 says "excluding the line break"
+            // so a line of exactly foldLength chars + CRLF is valid.
+            boolean isLineEnding = buffer[i] == '\r' || buffer[i] == '\n';
+
             // If we are at the fold limit and have a surrogate pair, fold before writing
             // the complete pair.
-            // OR Normal folding when the limit is reached"
-            if (lineLength >= foldLength - 1 && isHighSurrogate && hasLowSurrogate || lineLength >= foldLength) {
+            // OR Normal folding when the limit is reached
+            // BUT skip folding if we're about to write a line ending
+            if (!isLineEnding && (lineLength >= foldLength - 1 && isHighSurrogate && hasLowSurrogate || lineLength >= foldLength)) {
                 super.write(FOLD_PATTERN, 0, FOLD_PATTERN.length);
                 lineLength = 1;
             }

@@ -126,4 +126,37 @@ class FoldingWriterTest {
         }
     }
 
+    /**
+     * Test that a line of exactly foldLength chars followed by CRLF does NOT
+     * create an empty continuation line.
+     *
+     * RFC 5545 Section 3.1: "Lines of text SHOULD NOT be longer than 75 octets,
+     * excluding the line break." - the line break doesn't count, so a line of
+     * exactly 75 chars + CRLF is valid and should not be folded.
+     *
+     * @see <a href="https://github.com/ical4j/ical4j/issues/832">Issue #832</a>
+     */
+    @Test
+    void testNoFoldAtExactMaxLength() throws IOException {
+        StringWriter sw = new StringWriter();
+
+        // PRODID: (7 chars) + 68 chars = 75 chars exactly
+        String exactlyMaxLength = "PRODID:01234567890123456789012345678901234567890123456789012345678901234567";
+        assertEquals(75, exactlyMaxLength.length());
+
+        try (FoldingWriter writer = new FoldingWriter(sw, 75)) {
+            writer.write(exactlyMaxLength);
+            writer.write(Strings.LINE_SEPARATOR);
+            writer.write("VERSION:2.0");
+            writer.write(Strings.LINE_SEPARATOR);
+
+            // Should NOT have an empty continuation line after PRODID
+            assertEquals(exactlyMaxLength
+                    + Strings.LINE_SEPARATOR
+                    + "VERSION:2.0"
+                    + Strings.LINE_SEPARATOR,
+                    sw.getBuffer().toString());
+        }
+    }
+
 }
