@@ -64,7 +64,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
     private class LimitFilter implements Function<T, Optional<T>> {
         @Override
         public Optional<T> apply(T date) {
-            if (monthDayList.contains(getDayOfMonth(date))) {
+            if (monthDayList.contains(getDayOfMonth(date)) || monthDayList.contains(getDayOfMonthFromEnd(date))) {
                 return Optional.of(date);
             }
             return Optional.empty();
