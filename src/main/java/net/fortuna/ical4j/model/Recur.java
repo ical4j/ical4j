@@ -1289,7 +1289,7 @@ public class Recur<T extends Temporal> implements Serializable {
         final Temporal periodEnd;
         final int maxCount;
 
-        final List<T> dates;
+        int generatedCount;
 
         T candidateSeed;
         int incrementMultiplier = 1;
@@ -1303,40 +1303,55 @@ public class Recur<T extends Temporal> implements Serializable {
         int noCandidateIncrementCount = 0;
 
         public DateSpliterator(T seed, Temporal periodStart, Temporal periodEnd, int maxCount) {
-            super(maxCount, 0);
+            super(maxCount>0 ? maxCount : Long.MAX_VALUE, ORDERED | DISTINCT | NONNULL);
             this.seed = seed;
             this.periodStart = periodStart;
             this.periodEnd = periodEnd;
             this.maxCount = maxCount;
 
-            dates = new ArrayList<>();
+            generatedCount = 0;
 
             candidateSeed = seed;
 
             // optimize the start time for selecting candidates
             // (only applicable where a COUNT is not specified)
             if (count == null) {
+                // Use and exponential approach to increment the candidate seed until it's after the period start.
                 T incremented = increment(seed, incrementMultiplier);
                 while (TemporalAdapter.isBefore(incremented, periodStart.minus(Math.max(getInterval(), 1), calIncField))) {
                     candidateSeed = incremented;
-                    incrementMultiplier++;
+                    incrementMultiplier *= 2;
                     if (candidateSeed == null) {
                         break;
                     }
                     incremented = increment(seed, incrementMultiplier);
                 }
+                // Now let's make a binary search between the last candidate seed and the current one to find the optimal candidate seed to start with.
+                int low = Math.max(1, incrementMultiplier / 2); // last before
+                int high = incrementMultiplier; // first after
+                while (low < high) {
+                    int mid = (low + high) / 2;
+                    incremented = increment(seed, mid);
+                    if (TemporalAdapter.isBefore(incremented, periodStart.minus(Math.max(getInterval(), 1), calIncField))) {
+                        candidateSeed  = incremented;
+                        low = mid + 1;
+                    } else {
+                        high = mid;
+                    }
+                }
+                incrementMultiplier = low;
             }
         }
 
         @Override
         public boolean tryAdvance(Consumer<? super T> action) {
-            boolean advance = maxCount < 0 || dates.size() < maxCount;
+            boolean advance = maxCount < 0 || generatedCount < maxCount;
             if (advance) {
                 if (getUntil() != null && lastCandidate != null && TemporalAdapter.isAfter(lastCandidate, getUntil())) {
                     advance = false;
                 } else if (periodEnd != null && lastCandidate != null && TemporalAdapter.isAfter(lastCandidate, periodEnd)) {
                     advance = false;
-                } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
+                } else if (getCount() >= 1 && (generatedCount + invalidCandidates.size()) >= getCount()) {
                     advance = false;
                 }
             }
@@ -1375,7 +1390,7 @@ public class Recur<T extends Temporal> implements Serializable {
                     } else if (!TemporalAdapter.isBefore(lastCandidate, periodStart) && !TemporalAdapter.isAfter(lastCandidate, periodEnd)
                             && (getUntil() == null || !TemporalAdapter.isAfter(lastCandidate, getUntil()))) {
 
-                        dates.add(lastCandidate);
+                        generatedCount++;
                         action.accept(lastCandidate);
                     }
                 }

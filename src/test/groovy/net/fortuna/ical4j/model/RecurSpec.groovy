@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.transform.recurrence.Frequency
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
+import spock.lang.Timeout
 import spock.lang.Unroll
 
 import java.time.*
@@ -503,6 +503,20 @@ class RecurSpec extends Specification {
  20520318T163700, 20520318T163800, 20520325T163700, 20520325T163800, 20520401T163700, 20520401T163800,
  20520408T163700, 20520408T163800, 20520415T163700, 20520415T163800, 20520422T163700, 20520422T163800,
  20520429T163700, 20520429T163800, 20520506T163700, 20520506T163800, 20520513T163700, 20520513T163800''').dates
+    }
+
+    @Timeout(5)
+    def 'test getdates as string with seed far in the past'() {
+        given: 'a recurrence rule'
+        Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.SECONDLY).interval(1).build()
+
+        when: 'dates are generated for a period'
+        def count = recur.getDatesAsStream((LocalDateTime) TemporalAdapter.parse('20200101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260131T235959').temporal, -1).count()
+
+        then: 'result matches expected'
+        count == 86400 * 31 // number of seconds in January 2026
     }
 
     def 'test getdates across a DST-change'() {
