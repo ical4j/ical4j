@@ -33,13 +33,126 @@
 
 package net.fortuna.ical4j.transform.compliance
 
-
 import spock.lang.Specification
+
+import java.nio.charset.StandardCharsets
 
 class TzHelperTest extends Specification {
 
     def 'test retrieval of msTimezone alias'() {
         expect:
         TzHelper.getCorrectedTimeZoneIdFrom('W. Europe Standard Time') == 'Europe/Vienna'
+    }
+
+    def 'test Hawaiian timezone mapping'() {
+        expect:
+        // US/Hawaii is normalized to Pacific/Honolulu by the TimeZoneRegistry
+        TzHelper.getCorrectedTimeZoneIdFrom('Hawaiian Standard Time') == 'Pacific/Honolulu'
+    }
+
+    def 'test W. Australia timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('W. Australia Standard Time') == 'Australia/Perth'
+    }
+
+    def 'test Tonga timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Tonga Standard Time') == 'Pacific/Tongatapu'
+    }
+
+    def 'test Azores timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Azores Standard Time') == 'Atlantic/Azores'
+    }
+
+    def 'test Arabic timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Arabic Standard Time') == 'Asia/Baghdad'
+    }
+
+    def 'test Central Asia timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Central Asia Standard Time') == 'Asia/Almaty'
+    }
+
+    def 'test Mitteleuropaeische Zeit timezone mapping'() {
+        expect:
+        TzHelper.getCorrectedTimeZoneIdFrom('Mitteleuropäische Zeit') == 'Europe/Vienna'
+    }
+
+    def 'verify all MS timezone names resolve correctly'() {
+        given: "Load all timezone names from msTimezoneNames file with UTF-8"
+        def properties = new Properties()
+        def inputStream = TzHelper.class.getResourceAsStream('msTimezoneNames')
+        def reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+        properties.load(reader)
+        reader.close()
+        inputStream.close()
+
+        expect: "All MS timezone names should resolve to valid timezone IDs"
+        properties.each { msName, expectedTzId ->
+            def result = TzHelper.getCorrectedTimeZoneIdFrom(msName as String)
+            assert result != null : "Failed to resolve MS timezone name: ${msName} (expected: ${expectedTzId})"
+            println "✓ ${msName} -> ${result}"
+        }
+    }
+
+    def 'verify all MS timezone IDs resolve correctly'() {
+        given: "Load all timezone IDs from msTimezoneIds file with UTF-8"
+        def properties = new Properties()
+        def inputStream = TzHelper.class.getResourceAsStream('msTimezoneIds')
+        def reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+        properties.load(reader)
+        reader.close()
+        inputStream.close()
+
+        expect: "All MS timezone IDs should resolve to valid timezone IDs"
+        properties.each { msId, expectedTzId ->
+            def result = TzHelper.getCorrectedTimeZoneIdFrom(msId as String)
+            assert result != null : "Failed to resolve MS timezone ID: ${msId} (expected: ${expectedTzId})"
+            println "✓ ${msId} -> ${result}"
+        }
+    }
+
+    def 'verify all combined MS timezones resolve correctly'() {
+        given: "Load all timezones from msTimezones file with UTF-8"
+        def inputStream = TzHelper.class.getResourceAsStream('msTimezones')
+        def lines = new InputStreamReader(inputStream, StandardCharsets.UTF_8).text.readLines()
+        def failedMappings = []
+
+        when: "Parse and verify each timezone mapping"
+        lines.each { line ->
+            if (line.trim().isEmpty()) return
+
+            def parts = line.split('=')
+            if (parts.length != 2) return
+
+            def expectedTzId = parts[1]
+            def nameAndId = parts[0].split(';')
+
+            if (nameAndId.length == 2) {
+                def msName = nameAndId[0]
+                def msDisplayId = nameAndId[1]
+
+                // Test the MS name
+                def nameResult = TzHelper.getCorrectedTimeZoneIdFrom(msName)
+                if (nameResult == null) {
+                    failedMappings << "MS Name '${msName}' failed (expected: ${expectedTzId})"
+                } else {
+                    println "✓ Name: ${msName} -> ${nameResult}"
+                }
+
+                // Test the display ID
+                def idResult = TzHelper.getCorrectedTimeZoneIdFrom(msDisplayId)
+                if (idResult == null) {
+                    failedMappings << "MS Display ID '${msDisplayId}' failed (expected: ${expectedTzId})"
+                } else {
+                    println "✓ ID: ${msDisplayId} -> ${idResult}"
+                }
+            }
+        }
+
+        then: "No mappings should fail"
+        failedMappings.isEmpty() || { println "Failed mappings:\n${failedMappings.join('\n')}"; false }()
     }
 }

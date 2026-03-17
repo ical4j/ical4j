@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.property.DateProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -83,7 +84,7 @@ public class TzHelper {
     }
 
     private static void initMsTimezones() {
-        try (var scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE))) {
+        try (var scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE), StandardCharsets.UTF_8)) {
             while (scanner.hasNext()) {
                 var arr = scanner.nextLine().split("=");
                 var standardTzId = arr[1];
