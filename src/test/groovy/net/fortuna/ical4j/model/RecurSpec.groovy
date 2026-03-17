@@ -561,4 +561,25 @@ class RecurSpec extends Specification {
         5       | "2025-03-05T05:00:00"   | "2025-03-14T05:00:00" | '[2025-03-05T05:00-08:00[America/Los_Angeles], 2025-03-06T05:00-08:00[America/Los_Angeles], 2025-03-07T05:00-08:00[America/Los_Angeles], 2025-03-08T05:00-08:00[America/Los_Angeles], 2025-03-09T05:00-07:00[America/Los_Angeles], 2025-03-10T05:00-07:00[America/Los_Angeles], 2025-03-11T05:00-07:00[America/Los_Angeles], 2025-03-12T05:00-07:00[America/Los_Angeles], 2025-03-13T05:00-07:00[America/Los_Angeles], 2025-03-14T05:00-07:00[America/Los_Angeles]]'
         2       | "2025-03-05T02:00:00"   | "2025-03-14T02:00:00" | '[2025-03-05T02:00-08:00[America/Los_Angeles], 2025-03-06T02:00-08:00[America/Los_Angeles], 2025-03-07T02:00-08:00[America/Los_Angeles], 2025-03-08T02:00-08:00[America/Los_Angeles], 2025-03-09T03:00-07:00[America/Los_Angeles], 2025-03-10T02:00-07:00[America/Los_Angeles], 2025-03-11T02:00-07:00[America/Los_Angeles], 2025-03-12T02:00-07:00[America/Los_Angeles], 2025-03-13T02:00-07:00[America/Los_Angeles], 2025-03-14T02:00-07:00[America/Los_Angeles]]'
     }
+
+    @Timeout(5)
+    def 'test conflicting rule execution times, also with high maxincrementcount'() {
+        given: 'a recurrence rule with conflicting rule execution'
+        System.setProperty("net.fortuna.ical4j.recur.maxincrementcount", String.valueOf(50_000_000))
+        Recur<LocalDateTime> recur = new Recur<>("FREQ=MONTHLY;BYMONTHDAY=1;BYDAY=2SU")
+
+        and: 'a period that would cause a lot of iterations if not handled correctly'
+        LocalDateTime seed = LocalDateTime.of(2022, 1, 1, 0, 0)
+        LocalDateTime start = LocalDateTime.of(2022, 1, 1, 0, 0)
+        LocalDateTime end = LocalDateTime.of(2024, 1, 1, 0, 0)
+
+        when: 'dates are generated for a period'
+        List<LocalDateTime> dates = recur.getDates(seed, start, end)
+
+        then: 'result matches expected'
+        dates == []
+
+        cleanup:
+        System.clearProperty("net.fortuna.ical4j.recur.maxincrementcount")
+    }
 }
