@@ -38,6 +38,8 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
@@ -74,8 +76,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 "net/fortuna/ical4j/transform/compliance/msTimezoneNames",
                 "net/fortuna/ical4j/transform/compliance/msTimezoneIds")) {
 
-            try (var aliasInputStream = ResourceLoader.getResourceAsStream(aliasResource)) {
-                ALIASES.load(aliasInputStream);
+            try (var aliasInputStream = ResourceLoader.getResourceAsStream(aliasResource);
+                 var reader = new InputStreamReader(aliasInputStream, StandardCharsets.UTF_8)) {
+                ALIASES.load(reader);
             } catch (IOException | NullPointerException e) {
                 LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
                         "Error loading timezone aliases: {}", e.getMessage());
@@ -83,8 +86,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         }
 
         // load custom tz aliases..
-        try (var aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias")) {
-            ALIASES.load(aliasInputStream);
+        try (var aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias");
+             var reader = new InputStreamReader(aliasInputStream, StandardCharsets.UTF_8)) {
+            ALIASES.load(reader);
         } catch (IOException | NullPointerException e) {
             LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
                     "No custom timezone aliases: {}", e.getMessage());
