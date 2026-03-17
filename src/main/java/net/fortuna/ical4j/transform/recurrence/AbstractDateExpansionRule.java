@@ -114,6 +114,14 @@ abstract class AbstractDateExpansionRule<T extends Temporal> implements Transfor
         return getTemporalField(date, DAY_OF_MONTH);
     }
 
+    int getDayOfMonthFromEnd(T date) {
+        int dayOfMonth = getTemporalField(date, DAY_OF_MONTH);
+        int lengthOfMonth = date.isSupported(DAY_OF_MONTH)
+                ? (int) date.range(DAY_OF_MONTH).getMaximum()
+                : TemporalAdapter.toLocalTime(date, TimeZones.getDefault().toZoneId()).toLocalDate().lengthOfMonth();
+        return -(lengthOfMonth - dayOfMonth + 1);
+    }
+
     int getDayOfYear(T date) {
         return getTemporalField(date, DAY_OF_YEAR);
     }
