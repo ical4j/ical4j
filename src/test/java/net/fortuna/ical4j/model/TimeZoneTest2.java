@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class TimeZoneTest2 {
 
@@ -125,4 +126,12 @@ public class TimeZoneTest2 {
         assertEquals(1609945200000L, dt2.getTime());    // fails!
     }
 
+    @Test
+    public void getTimeZone_with_unknown_id() {
+        var tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
+
+        var timeZone = tzReg.getTimeZone("unknown");
+
+        assertNull(timeZone);
+    }
 }
