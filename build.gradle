@@ -73,6 +73,11 @@ dependencies {
             libs.testcontainers, libs.testcontainers.spock
 
     testRuntimeOnly libs.junit.platform
+
+    // Include junit-vintage-engine so junit4 tests are executed.
+    testRuntimeOnly libs.junit.vintage
+    // Explicitly depend on junit4, not transitively via groovy-test or testcontainers.
+    testCompileOnly libs.junit.junit4
 }
 
 test {
