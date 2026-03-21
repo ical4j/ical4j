@@ -116,8 +116,12 @@ class TzHelperTest extends Specification {
 
     def 'verify all combined MS timezones resolve correctly'() {
         given: "Load all timezones from msTimezones file with UTF-8"
-        def inputStream = TzHelper.class.getResourceAsStream('msTimezones')
-        def lines = new InputStreamReader(inputStream, StandardCharsets.UTF_8).text.readLines()
+        def lines
+        TzHelper.class.getResourceAsStream('msTimezones').withCloseable { inputStream ->
+            new InputStreamReader(inputStream, StandardCharsets.UTF_8).withCloseable { reader ->
+                lines = reader.readLines()
+            }
+        }
         def failedMappings = []
 
         when: "Parse and verify each timezone mapping"
