@@ -31,26 +31,12 @@ public class MapTimeZoneCache implements TimeZoneCache {
 
     @Override
     public VTimeZone getTimezone(String id, Supplier<VTimeZone> putIfAbsent) {
-        if (!containsId(id)) {
-            VTimeZone vTimeZone = putIfAbsent.get();
-            if (vTimeZone != null) {
-                mapCache.put(id, vTimeZone);
-            } else {
-                return null;
-            }
-        }
-        return getTimezone(id);
+        return mapCache.computeIfAbsent(id, k -> putIfAbsent.get());
     }
 
     @Override
     public boolean putIfAbsent(String id, VTimeZone timeZone) {
-        var v = mapCache.get(id);
-        if (v == null) {
-            mapCache.put(id, timeZone);
-            return true;
-        } else {
-            return false;
-        }
+        return mapCache.putIfAbsent(id, timeZone) == null;
     }
 
     @Override
