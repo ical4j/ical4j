@@ -534,6 +534,9 @@ class RecurSpec extends Specification {
 
         then: 'result matches expected'
         count == 1
+
+        cleanup:
+        System.clearProperty("net.fortuna.ical4j.recur.maxincrementcount")
     }
 
     def 'test getdates across a DST-change'() {

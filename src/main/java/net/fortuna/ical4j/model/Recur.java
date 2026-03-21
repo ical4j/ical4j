@@ -725,7 +725,6 @@ public class Recur<T extends Temporal> implements Serializable {
      * @return a list of dates represented by this recur instance
      */
     public final List<T> getDates(final T seed, final Temporal periodStart, final Temporal periodEnd, final int maxCount) {
-
         final List<T> dates = getDatesAsStream(seed, periodStart, periodEnd, maxCount).collect(Collectors.toList());
 
         // sort final list..
@@ -739,6 +738,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     public final Stream<T> getDatesAsStream(final T seed, final Temporal periodStart, final Temporal periodEnd,
                                             int maxCount) {
+        initRules();
         Spliterator<T> spliterator = new DateSpliterator(seed, periodStart, periodEnd, maxCount);
         return StreamSupport.stream(spliterator, false);
     }
@@ -755,6 +755,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @return the next date in the recurrence series after startDate
      */
     public final T getNextDate(final T seed, final T startDate) {
+        initRules();
 
         T candidateSeed = seed;
         int incrementMultiplier = 1;
@@ -947,7 +948,6 @@ public class Recur<T extends Temporal> implements Serializable {
                     + frequency + "' in recurrence rule");
         }
 
-        initRules();
     }
 
     private void initRules() {
