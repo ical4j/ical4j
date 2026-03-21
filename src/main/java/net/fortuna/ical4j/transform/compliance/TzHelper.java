@@ -99,7 +99,7 @@ public class TzHelper {
     }
 
     static void correctTzParameterFrom(Property property) {
-        if (!property.getParameter(Parameter.TZID).isPresent()) {
+        if (property.getParameter(Parameter.TZID).isPresent()) {
             var newTimezoneId = getCorrectedTimezoneFromTzParameter(property);
             correctTzParameter(property, newTimezoneId);
         }
