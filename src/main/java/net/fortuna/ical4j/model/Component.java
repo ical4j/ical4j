@@ -331,14 +331,18 @@ public abstract class Component extends Content implements Serializable,
                 .period(period);
 
         // add recurrence dates..
+        List<T> recurrenceDates = new ArrayList<>();
+        Set<Period<T>> recurrencePeriods = new HashSet<>();
         for (var p : getProperties(RDATE)) {
             Optional<Value> value = p.getParameter(Parameter.VALUE);
             if (value.equals(Optional.of(Value.PERIOD))) {
-                builder.recurrencePeriods(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()));
+                recurrencePeriods.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()));
             } else {
-                builder.recurrenceDates(((DateListProperty<T>) p).getDates());
+                recurrenceDates.addAll(((DateListProperty<T>) p).getDates());
             }
         }
+        builder.recurrenceDates(recurrenceDates);
+        builder.recurrencePeriods(recurrencePeriods);
 
         // add recurrence rules..
         builder.recurrenceRules(getProperties(RRULE).stream().map(r -> ((RRule<T>) r).getRecur())
