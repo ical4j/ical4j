@@ -521,6 +521,21 @@ class RecurSpec extends Specification {
         count == 86400 * 31 // number of seconds in January 2026
     }
 
+    @Timeout(5)
+    def 'test secondly with multiple filtering rules'() {
+        given: 'a recurrence rule'
+        System.setProperty("net.fortuna.ical4j.recur.maxincrementcount", String.valueOf(50_000_000))
+        Recur<LocalDateTime> recur = new Recur("FREQ=SECONDLY;INTERVAL=1;BYMONTH=1;BYMONTHDAY=31;BYHOUR=23;BYMINUTE=59;BYSECOND=0")
+
+        when: 'dates are generated for a period'
+        def count = recur.getDatesAsStream((LocalDateTime) TemporalAdapter.parse('20200101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260131T235959').temporal, -1).count()
+
+        then: 'result matches expected'
+        count == 1
+    }
+
     def 'test getdates across a DST-change'() {
         given: 'a recurrence rule'
         ZoneId zoneId = ZoneId.of("America/Los_Angeles")

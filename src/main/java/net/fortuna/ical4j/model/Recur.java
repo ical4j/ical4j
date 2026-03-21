@@ -316,6 +316,16 @@ public class Recur<T extends Temporal> implements Serializable {
     // Temporal field we increment based on frequency.
     private TemporalUnit calIncField;
 
+    private ByMonthRule<T> monthRule;
+    private ByWeekNoRule<T> weekNoRule;
+    private ByYearDayRule<T> yearDayRule;
+    private ByMonthDayRule<T> monthDayRule;
+    private ByDayRule<T> dayRule;
+    private ByHourRule<T> hourRule;
+    private ByMinuteRule<T> minuteRule;
+    private BySecondRule<T> secondRule;
+    private BySetPosRule<T> setPosRule;
+
     /**
      * Default constructor.
      */
@@ -821,32 +831,32 @@ public class Recur<T extends Temporal> implements Serializable {
     private List<T> getCandidates(final T rootSeed, final T date) {
         List<T> dates = new ArrayList<>();
         dates.add(date);
-        if (!monthList.isEmpty()) {
-            dates = new ByMonthRule<T>(monthList, frequency, skip).apply(dates);
+        if (monthRule!=null) {
+            dates = monthRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTH processing: " + dates);
             }
         }
 
-        if (!weekNoList.isEmpty()) {
-            dates = new ByWeekNoRule<T>(weekNoList, frequency, WeekDay.getDayOfWeek(weekStartDay)).apply(dates);
+        if (weekNoRule != null) {
+            dates = weekNoRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYWEEKNO processing: " + dates);
             }
         }
 
-        if (!yearDayList.isEmpty()) {
-            dates = new ByYearDayRule<T>(yearDayList, frequency).apply(dates);
+        if (yearDayRule != null) {
+            dates = yearDayRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYYEARDAY processing: " + dates);
             }
         }
 
-        if (!monthDayList.isEmpty()) {
-            dates = new ByMonthDayRule<T>(monthDayList, frequency, skip).apply(dates);
+        if (monthDayRule != null) {
+            dates = monthDayRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);
@@ -862,8 +872,8 @@ public class Recur<T extends Temporal> implements Serializable {
             dates = implicitRule.apply(dates);
         }
 
-        if (!dayList.isEmpty()) {
-            dates = new ByDayRule<T>(dayList, deriveFilterType(), WeekDay.getDayOfWeek(weekStartDay)).apply(dates);
+        if (dayRule != null) {
+            dates = dayRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYDAY processing: " + dates);
@@ -875,32 +885,32 @@ public class Recur<T extends Temporal> implements Serializable {
             dates = implicitRule.apply(dates);
         }
 
-        if (!hourList.isEmpty()) {
-            dates = new ByHourRule<T>(hourList, frequency).apply(dates);
+        if (hourRule != null) {
+            dates = hourRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYHOUR processing: " + dates);
             }
         }
 
-        if (!minuteList.isEmpty()) {
-            dates = new ByMinuteRule<T>(minuteList, frequency).apply(dates);
+        if (minuteRule != null) {
+            dates = minuteRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMINUTE processing: " + dates);
             }
         }
 
-        if (!secondList.isEmpty()) {
-            dates = new BySecondRule<T>(secondList, frequency).apply(dates);
+        if (secondRule != null) {
+            dates = secondRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYSECOND processing: " + dates);
             }
         }
 
-        if (!setPosList.isEmpty()) {
-            dates = new BySetPosRule<T>(setPosList).apply(dates);
+        if (setPosRule != null) {
+            dates = setPosRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after SETPOS processing: " + dates);
@@ -936,6 +946,39 @@ public class Recur<T extends Temporal> implements Serializable {
             throw new IllegalArgumentException("Invalid FREQ rule part '"
                     + frequency + "' in recurrence rule");
         }
+
+        initRules();
+    }
+
+    private void initRules() {
+        if (!monthList.isEmpty()) {
+            monthRule = new ByMonthRule<>(monthList, frequency, skip);
+        }
+        if (!weekNoList.isEmpty()) {
+            weekNoRule = new ByWeekNoRule<T>(weekNoList, frequency, WeekDay.getDayOfWeek(weekStartDay));
+        }
+        if (!yearDayList.isEmpty()) {
+            yearDayRule = new ByYearDayRule<T>(yearDayList, frequency);
+        }
+        if (!monthDayList.isEmpty()) {
+            monthDayRule = new ByMonthDayRule<>(monthDayList, frequency, skip);
+        }
+        if (!dayList.isEmpty()) {
+            dayRule = new ByDayRule<>(dayList, deriveFilterType(), WeekDay.getDayOfWeek(weekStartDay));
+        }
+        if (!hourList.isEmpty()) {
+            hourRule = new ByHourRule<>(hourList, frequency);
+        }
+        if (!minuteList.isEmpty()) {
+            minuteRule = new ByMinuteRule<>(minuteList, frequency);
+        }
+        if (!secondList.isEmpty()) {
+            secondRule = new BySecondRule<>(secondList, frequency);
+        }
+        if (!setPosList.isEmpty()) {
+            setPosRule = new BySetPosRule<T>(setPosList);
+        }
+
     }
 
     private static TemporalUnit weekBasedYears(DayOfWeek weekStartDay) {
