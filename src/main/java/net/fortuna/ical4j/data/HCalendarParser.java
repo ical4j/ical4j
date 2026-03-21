@@ -151,6 +151,30 @@ public class HCalendarParser implements CalendarParser {
     static {
         BUILDER_FACTORY.setNamespaceAware(true);
         BUILDER_FACTORY.setIgnoringComments(true);
+        try {
+            // Prevent XXE attacks - see https://github.com/ical4j/ical4j/issues/802
+            BUILDER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (ParserConfigurationException e) {
+            throw new CalendarException(e);
+        }
+        // Additional hardening against XXE: disable DTDs and external entities where supported.
+        try {
+            BUILDER_FACTORY.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        } catch (ParserConfigurationException e) {
+            LOG.warn("XML parser does not support disallow-doctype-decl; XXE protection may be reduced.", e);
+        }
+        try {
+            BUILDER_FACTORY.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            BUILDER_FACTORY.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        } catch (ParserConfigurationException e) {
+            LOG.warn("XML parser does not support disabling external entities; XXE protection may be reduced.", e);
+        }
+        try {
+            BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        } catch (IllegalArgumentException e) {
+            LOG.warn("XML parser does not support ACCESS_EXTERNAL_* attributes; XXE protection may be reduced.", e);
+        }
 
         XPATH_METHOD = compileExpression("//*[contains(@class, 'method')]");
         XPATH_VEVENTS = compileExpression("//*[contains(@class, 'vevent')]");

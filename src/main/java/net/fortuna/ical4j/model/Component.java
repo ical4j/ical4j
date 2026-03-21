@@ -42,10 +42,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.Property.UID;
 
 /**
@@ -312,95 +312,51 @@ public abstract class Component extends Content implements Serializable,
      */
     public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<? extends Temporal> period) {
 
-        final Set<Period<T>> recurrenceSet = new TreeSet<>();
-
-        final Optional<DtStart<T>> start = getProperty(Property.DTSTART);
-        Optional<DateProperty<T>> end = getProperty(Property.DTEND);
+        final Optional<DtStart<T>> start = getProperty(DTSTART);
+        Optional<DateProperty<T>> end = getProperty(DTEND);
         if (end.isEmpty()) {
-            end = getProperty(Property.DUE);
+            end = getProperty(DUE);
         }
-        Optional<Duration> duration = getProperty(Property.DURATION);
+        Optional<Duration> duration = getProperty(DURATION);
 
         // if no start date specified return empty list..
         if (start.isEmpty()) {
             return Collections.emptySet();
         }
 
-        // if an explicit event duration is not specified, derive a value for recurring
-        // periods from the end date..
-        TemporalAmount rDuration;
-        // if no end or duration specified, end date equals start date..
-        // unless the start date represents a date value, in which case
-        // the effective duration is 1 day..
-        if (end.isEmpty() && duration.isEmpty()) {
-            if (Optional.of(Value.DATE).equals(start.get().getParameter(Parameter.VALUE))) {
-                rDuration = java.time.Period.ofDays(1);
-            } else {
-                rDuration = java.time.Duration.ZERO;
-            }
-        } else if (duration.isEmpty()) {
-            rDuration = TemporalAmountAdapter.between(start.get().getDate(), end.get().getDate()).getDuration();
-        } else {
-            rDuration = duration.get().getDuration();
-        }
+        RecurrenceSet.Builder<T> builder = new RecurrenceSet.Builder<>();
+        builder.start(start.map(DtStart::getDate).orElse(null))
+                .duration(duration.map(Duration::getDuration).orElse(null))
+                .end(end.map(DateProperty::getDate).orElse(null))
+                .period(period);
 
         // add recurrence dates..
-        List<Property> rDates = getProperties(Property.RDATE);
-        for (var p : rDates) {
+        List<T> recurrenceDates = new ArrayList<>();
+        Set<Period<T>> recurrencePeriods = new HashSet<>();
+        for (var p : getProperties(RDATE)) {
             Optional<Value> value = p.getParameter(Parameter.VALUE);
             if (value.equals(Optional.of(Value.PERIOD))) {
-                recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).parallelStream()
-                        .filter(period::intersects).collect(Collectors.toList()));
+                recurrencePeriods.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()));
             } else {
-                recurrenceSet.addAll(((DateListProperty<T>) p).getDates().parallelStream()
-                        .filter(period::includes).map(d -> new Period<>(d, rDuration)).collect(Collectors.toList()));
+                recurrenceDates.addAll(((DateListProperty<T>) p).getDates());
             }
         }
-
-        // allow for recurrence rules that start prior to the specified period
-        // but still intersect with it..
-        final var startMinusDuration = period.getStart().minus(rDuration);
-
-        final T seed = start.get().getDate();
+        builder.recurrenceDates(recurrenceDates);
+        builder.recurrencePeriods(recurrencePeriods);
 
         // add recurrence rules..
-        List<Property> rRules = getProperties(Property.RRULE);
-        if (!rRules.isEmpty()) {
-            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule<T>) r).getRecur().getDates(seed,
-                    startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
-                    .map(rruleDate -> new Period<>(rruleDate, rDuration)).collect(Collectors.toList()));
-        } else {
-            // add initial instance if intersection with the specified period..
-            Period<T> startPeriod;
-            if (end.isPresent()) {
-                startPeriod = new Period<>(seed, end.get().getDate());
-            } else {
-                /*
-                 * PeS: Anniversary type has no DTEND nor DUR, define DUR
-                 * locally, otherwise we get NPE
-                 */
-                startPeriod = duration.map(value -> new Period<>(seed, value.getDuration())).orElseGet(
-                        () -> new Period<>(seed, new Duration(rDuration).getDuration()));
-            }
-            if (period.intersects(startPeriod)) {
-                recurrenceSet.add(startPeriod);
-            }
-        }
+        builder.recurrenceRules(getProperties(RRULE).stream().map(r -> ((RRule<T>) r).getRecur())
+                .collect(Collectors.toList()));
 
         // subtract exception dates..
-        List<Property> exDateProps = getProperties(Property.EXDATE);
-        List<Temporal> exDates = exDateProps.stream().map(p -> ((DateListProperty<T>) p).getDates())
-                .flatMap(List<T>::stream).collect(Collectors.toList());
-
-        recurrenceSet.removeIf(recurrence -> exDates.contains(recurrence.getStart()));
+        builder.exceptionDates(getProperties(EXDATE).stream().map(p -> ((DateListProperty<T>) p).getDates())
+                .flatMap(List<T>::stream).collect(Collectors.toList()));
 
         // subtract exception rules..
-        List<Property> exRules = getProperties(Property.EXRULE);
-        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule<T>) e).getRecur().getDates(seed,
-                period)).flatMap(List<T>::stream).collect(Collectors.toList());
+        builder.exceptionRules(getProperties(EXRULE).stream().map(r -> ((ExRule<T>) r).getRecur())
+                .collect(Collectors.toList()));
 
-        recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));
-
+        final Set<Period<T>> recurrenceSet = builder.build();
         // set a link to the origin
         recurrenceSet.forEach( p -> p.setComponent(this));
 

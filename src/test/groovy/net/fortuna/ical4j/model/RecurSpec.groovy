@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.transform.recurrence.Frequency
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
+import spock.lang.Timeout
 import spock.lang.Unroll
 
 import java.time.*
@@ -83,6 +83,7 @@ class RecurSpec extends Specification {
 //        'FREQ=DAILY;UNTIL=20130906' | Value.DATE_TIME    | '20130831T170001'    | '20200110T133320'    | []
         'FREQ=MONTHLY;COUNT=10;INTERVAL=1;BYDAY=-1FR'                                           | '20250131' | '20260131'
         'FREQ=MONTHLY;COUNT=10;INTERVAL=1;BYDAY=-1FR'                                           | '20250131T020000' | '20260131T020000'
+        'FREQ=DAILY;BYMONTH=1;BYMONTHDAY=-2'                                                    | '20260101'        | '20261231'
 
         expected << [
                 ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000'],
@@ -122,6 +123,7 @@ class RecurSpec extends Specification {
                 ['20250131', '20250228','20250328', '20250425', '20250530', '20250627', '20250725', '20250829', '20250926', '20251031'],
                 ['20250131T020000', '20250228T020000','20250328T020000', '20250425T020000', '20250530T020000',
                         '20250627T020000', '20250725T020000', '20250829T020000', '20250926T020000', '20251031T020000'],
+                ['20260130']
         ]
     }
 
@@ -505,6 +507,20 @@ class RecurSpec extends Specification {
  20520429T163700, 20520429T163800, 20520506T163700, 20520506T163800, 20520513T163700, 20520513T163800''').dates
     }
 
+    @Timeout(5)
+    def 'test getdates as string with seed far in the past'() {
+        given: 'a recurrence rule'
+        Recur<LocalDateTime> recur = new Recur.Builder<LocalDateTime>().frequency(Frequency.SECONDLY).interval(1).build()
+
+        when: 'dates are generated for a period'
+        def count = recur.getDatesAsStream((LocalDateTime) TemporalAdapter.parse('20200101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260131T235959').temporal, -1).count()
+
+        then: 'result matches expected'
+        count == 86400 * 31 // number of seconds in January 2026
+    }
+
     def 'test getdates across a DST-change'() {
         given: 'a recurrence rule'
         ZoneId zoneId = ZoneId.of("America/Los_Angeles")
@@ -546,5 +562,26 @@ class RecurSpec extends Specification {
         hour    | pStart                  | pEnd                  | expectedList
         5       | "2025-03-05T05:00:00"   | "2025-03-14T05:00:00" | '[2025-03-05T05:00-08:00[America/Los_Angeles], 2025-03-06T05:00-08:00[America/Los_Angeles], 2025-03-07T05:00-08:00[America/Los_Angeles], 2025-03-08T05:00-08:00[America/Los_Angeles], 2025-03-09T05:00-07:00[America/Los_Angeles], 2025-03-10T05:00-07:00[America/Los_Angeles], 2025-03-11T05:00-07:00[America/Los_Angeles], 2025-03-12T05:00-07:00[America/Los_Angeles], 2025-03-13T05:00-07:00[America/Los_Angeles], 2025-03-14T05:00-07:00[America/Los_Angeles]]'
         2       | "2025-03-05T02:00:00"   | "2025-03-14T02:00:00" | '[2025-03-05T02:00-08:00[America/Los_Angeles], 2025-03-06T02:00-08:00[America/Los_Angeles], 2025-03-07T02:00-08:00[America/Los_Angeles], 2025-03-08T02:00-08:00[America/Los_Angeles], 2025-03-09T03:00-07:00[America/Los_Angeles], 2025-03-10T02:00-07:00[America/Los_Angeles], 2025-03-11T02:00-07:00[America/Los_Angeles], 2025-03-12T02:00-07:00[America/Los_Angeles], 2025-03-13T02:00-07:00[America/Los_Angeles], 2025-03-14T02:00-07:00[America/Los_Angeles]]'
+    }
+
+    @Timeout(5)
+    def 'test conflicting rule execution times, also with high maxincrementcount'() {
+        given: 'a recurrence rule with conflicting rule execution'
+        System.setProperty("net.fortuna.ical4j.recur.maxincrementcount", String.valueOf(50_000_000))
+        Recur<LocalDateTime> recur = new Recur<>("FREQ=MONTHLY;BYMONTHDAY=1;BYDAY=2SU")
+
+        and: 'a period that would cause a lot of iterations if not handled correctly'
+        LocalDateTime seed = LocalDateTime.of(2022, 1, 1, 0, 0)
+        LocalDateTime start = LocalDateTime.of(2022, 1, 1, 0, 0)
+        LocalDateTime end = LocalDateTime.of(2024, 1, 1, 0, 0)
+
+        when: 'dates are generated for a period'
+        List<LocalDateTime> dates = recur.getDates(seed, start, end)
+
+        then: 'result matches expected'
+        dates == []
+
+        cleanup:
+        System.clearProperty("net.fortuna.ical4j.recur.maxincrementcount")
     }
 }

@@ -1,7 +1,7 @@
 (UTC-12\:00)\ International\ Date\ Line\ West=Etc/GMT+12
 (UTC-11\:00)\ Coordinated\ Universal\ Time\ -11=Etc/GMT+12
 (UTC-11\:00)Samoa=US/Samoa
-(UTC-10\:00)\ Hawaii=US/Hwaii
+(UTC-10\:00)\ Hawaii=US/Hawaii
 (UTC-09\:00)\ Alaska=US/Alaska
 (UTC-08\:00)\ Pacific\ Time\ (US\ and\ Canada)=Canada/Pacific
 (UTC-08\:00)Baja\ California=Mexico/BajaNorte
@@ -29,7 +29,7 @@
 (UTC-03\:00)\ Buenos\ Aires=America/Buenos_Aires
 (UTC-02\:00)\ Mid-Atlantic=Atlantic/South_Georgia
 (UTC-02\:00)\ Coordinated\ Universal\ Time\ -02=Etc/GMT+2
-(UTC-01\:00)\ Azores=America/Azores
+(UTC-01\:00)\ Azores=Atlantic/Azores
 (UTC-01\:00)\ Cape\ Verde\ Is.=Atlantic/Cape_Verde
 (UTC)\ Dublin,\ Edinburgh,\ Lisbon,\ London=Europe/Dublin
 (UTC)\ Monrovia,\ Reykjavik=UTC
@@ -54,7 +54,7 @@
 (UTC+02\:00)\ Damascus=Asia/Damascus
 (UTC+02\:00)\ Istanbul=Asia/Istanbul
 (UTC+03\:00)\ Kuwait,\ Riyadh=Asia/Kuwait
-(UTC+03\:00)\ Baghdad=Asia/Bagdad
+(UTC+03\:00)\ Baghdad=Asia/Baghdad
 (UTC+03\:00)\ Nairobi=Africa/Nairobi
 (UTC+03\:00)\ Kaliningrad=Europe/Kaliningrad
 (UTC+03\:30)\ Tehran=Asia/Tehran
@@ -71,8 +71,8 @@
 (UTC+05\:30)\ Sri\ Jayawardenepura=Asia/Kolkata
 (UTC+05\:45)\ Kathmandu=Asia/Kathmandu
 (UTC+06\:00)\ Ekaterinburg=Asia/Yekaterinburg
-(UTC+06\:00)\ Astana=Asia/Astana
-(UTC+06\:00)\ Dhaka=Asia/Astana
+(UTC+06\:00)\ Astana=Asia/Almaty
+(UTC+06\:00)\ Dhaka=Asia/Almaty
 (UTC+06\:30)\ Yangon\ (Rangoon)=Asia/Rangoon
 (UTC+07\:00)\ Novosibirsk=Asia/Novosibirsk
 (UTC+07\:00)\ Bangkok,\ Hanoi,\ Jakarta=Asia/Jakarta
@@ -80,7 +80,7 @@
 (UTC+08\:00)\ Beijing,\ Chongqing,\ Hong\ Kong,\ Urumqi=Hongkong
 (UTC+08\:00)\ Kuala\ Lumpur,\ Singapore=Asia/Kuala_Lumpur
 (UTC+08\:00)\ Taipei=Asia/Taipei
-(UTC+08\:00)\ Perth=Austraila/Perth
+(UTC+08\:00)\ Perth=Australia/Perth
 (UTC+08\:00)\ Ulaanbaatar=Asia/Ulaanbaatar
 (UTC+09\:00)\ Irkutsk=Asia/Irkutsk
 (UTC+09\:00)\ Seoul=Asia/Seoul
@@ -98,4 +98,4 @@
 (UTC+12\:00)\ Fiji=Pacific/Fiji
 (UTC+12\:00)\ Auckland,\ Wellington=Pacific/Auckland
 (UTC+12\:00)\ Coordinated\ Universal\ Time\ +12=NZ
-(UTC+13\:00)\ Nuku'alofa=Pacific/Alpia
+(UTC+13\:00)\ Nuku'alofa=Pacific/Tongatapu
