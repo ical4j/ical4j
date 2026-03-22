@@ -288,24 +288,25 @@ public class Attach extends Property {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-
-        var data = getBinaryData();
-        if (data != null) {
-            out.writeInt(data.length);
-            out.write(data);
-        } else {
-            out.writeInt(-1);
-        }
+        out.writeObject(getBinaryData());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        int dataLength = in.readInt();
-        if (dataLength >= 0) {
-            var buffer = new byte[dataLength];
-            in.readFully(buffer);
-            this.binary = ByteBuffer.wrap(buffer);
+        try {
+            var data = (byte[]) in.readObject();
+            this.binary = (data != null) ? ByteBuffer.wrap(data) : null;
+        } catch (OptionalDataException e) {
+            // Backward compatibility: older serialized forms do not include the extra data appended in writeObject().
+            if (!e.eof) {
+                // An unexpected error occurred
+                throw e;
+            }
+            this.binary = null;
+        } catch (EOFException e) {
+            // Backward compatibility: older serialized forms do not include the extra data appended in writeObject().
+            this.binary = null;
         }
     }
 
