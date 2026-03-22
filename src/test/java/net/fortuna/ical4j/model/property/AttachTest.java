@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -40,105 +39,74 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-/**
- * $Id$
- * <p/>
- * Created on 7/04/2005
- *
- * @author Ben Fortuna
- *         <p/>
- *         Test case for Attach property.
- */
-public class AttachTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-    private final Logger log = LoggerFactory.getLogger(AttachTest.class);
+/**
+ * Unit tests for Attach property.
+ */
+public class AttachTest {
 
     private Attach attach;
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        try (FileInputStream fin = new FileInputStream("etc/artwork/logo.png")) {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            for (int i = fin.read(); i >= 0; ) {
-                bout.write(i);
-                i = fin.read();
-            }
-
-            ParameterList params = new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY));
-
-//        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
-            attach = new Attach(params, ByteBuffer.wrap(bout.toByteArray()));
-        }
+    @BeforeEach
+    void setUp() throws Exception {
+        var data = Files.readAllBytes(Paths.get("etc/artwork/logo.png"));
+        attach = new Attach(new ParameterList(List.of(Encoding.BASE64, Value.BINARY)), ByteBuffer.wrap(data));
     }
 
-    /*
-     * Class under test for void Attach(ParameterList, String)
-     */
-    public void testAttachParameterListString() throws IOException, ValidationException, ParserException, ConstraintViolationException {
+    @Test
+    void testAttachParameterListString() throws IOException, ValidationException, ParserException, ConstraintViolationException {
+        var start = new DtStart<>(LocalDate.now().withMonth(12).withDayOfMonth(25));
+        var summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        //log.info(attach);
-        ParameterList startParams = new ParameterList(Collections.singletonList(Value.DATE));
-        DtStart<LocalDate> start = new DtStart<>(startParams, LocalDate.now().withMonth(12).withDayOfMonth(25));
+        var christmas = (VEvent) new VEvent()
+                .withProperty(start)
+                .withProperty(summary)
+                .withProperty(attach)
+                .withProperty(new Uid("000001@modularity.net.au"))
+                .getFluentTarget();
 
-        Summary summary = new Summary("Christmas Day; \n this is a, test\\");
-
-        var christmas = (VEvent) new VEvent().withProperty(start).withProperty(summary).withProperty(attach)
-                .withProperty(new Uid("000001@modularity.net.au")).getFluentTarget();
-
-        Calendar calendar = new Calendar().withDefaults()
+        var calendar = new Calendar()
+                .withDefaults()
                 .withProdId("-//Ben Fortuna//iCal4j 1.0//EN")
-                .withComponent(christmas).getFluentTarget();
+                .withComponent(christmas)
+                .getFluentTarget();
 
-        StringWriter sw = new StringWriter();
-        CalendarOutputter out = new CalendarOutputter();
-        out.output(calendar, sw);
+        var stringWriter = new StringWriter();
+        new CalendarOutputter().output(calendar, stringWriter);
+        var calendarString = stringWriter.toString();
 
-        CalendarBuilder builder = new CalendarBuilder();
-        Calendar cout = builder.build(new StringReader(sw.toString()));
+        var calendarBuilder = new CalendarBuilder();
+        var parsedCalendar = calendarBuilder.build(new StringReader(calendarString));
+        var parsedEvent = parsedCalendar.<VEvent>getComponent(Component.VEVENT).orElseThrow();
+        Attach parsedAttach = parsedEvent.getRequiredProperty(Property.ATTACH);
 
-        List<VEvent> eout = cout.getComponents(Component.VEVENT);
-
-        Attach aout = eout.get(0).getRequiredProperty(Property.ATTACH);
-        assertNotNull(aout);
-        assertEquals(attach, aout);
-
-        log.info(sw.toString());
+        assertNotNull(parsedAttach);
+        assertEquals(attach, parsedAttach);
     }
 
-    /**
-     * Unit testing of serialization.
-     */
-    public void testSerialization() throws IOException, ClassNotFoundException {
+    @Test
+    void testSerialization() throws IOException, ClassNotFoundException {
+        var bout = new ByteArrayOutputStream();
+        var out = new ObjectOutputStream(bout);
 
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bout);
         out.writeObject(attach);
 
-        ObjectInputStream in = new ObjectInputStream(
-                new ByteArrayInputStream(bout.toByteArray()));
+        var in = new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray()));
+        Attach deserialized = (Attach) in.readObject();
 
-        Attach clone = (Attach) in.readObject();
-
-        assertNotNull(clone);
-        assertEquals(attach, clone);
-
-        // set a bogus value to trigger logging..
-//        clone.getParameters().removeIf(p -> p.getName().equals(Parameter.ENCODING));
-//        clone.getParameters().add(new Encoding("BOGUS"));
-//        clone.setValue("");
+        assertNotNull(deserialized);
+        assertEquals(attach, deserialized);
     }
 }
