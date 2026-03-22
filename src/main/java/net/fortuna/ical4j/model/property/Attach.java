@@ -46,10 +46,7 @@ import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -100,7 +97,7 @@ public class Attach extends Property {
 
     private URI uri;
 
-    private ByteBuffer binary;
+    private transient ByteBuffer binary;
 
     /**
      * Default constructor.
@@ -287,6 +284,30 @@ public class Attach extends Property {
         this.uri = uri;
         // unset binary..
         this.binary = null;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeObject(getBinaryData());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        try {
+            var data = (byte[]) in.readObject();
+            this.binary = (data != null) ? ByteBuffer.wrap(data) : null;
+        } catch (OptionalDataException e) {
+            // Backward compatibility: older serialized forms do not include the extra data appended in writeObject().
+            if (!e.eof) {
+                // An unexpected error occurred
+                throw e;
+            }
+            this.binary = null;
+        } catch (EOFException e) {
+            // Backward compatibility: older serialized forms do not include the extra data appended in writeObject().
+            this.binary = null;
+        }
     }
 
     @Override
