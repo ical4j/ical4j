@@ -46,10 +46,7 @@ import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -100,7 +97,7 @@ public class Attach extends Property {
 
     private URI uri;
 
-    private ByteBuffer binary;
+    private transient ByteBuffer binary;
 
     /**
      * Default constructor.
@@ -287,6 +284,29 @@ public class Attach extends Property {
         this.uri = uri;
         // unset binary..
         this.binary = null;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+
+        var data = getBinaryData();
+        if (data != null) {
+            out.writeInt(data.length);
+            out.write(data);
+        } else {
+            out.writeInt(-1);
+        }
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        int dataLength = in.readInt();
+        if (dataLength >= 0) {
+            var buffer = new byte[dataLength];
+            in.readFully(buffer);
+            this.binary = ByteBuffer.wrap(buffer);
+        }
     }
 
     @Override

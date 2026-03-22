@@ -40,7 +40,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,8 +122,7 @@ public class AttachTest extends TestCase {
     /**
      * Unit testing of serialization.
      */
-    @Ignore("Failed after re-enabling JUnit 3/4 tests")
-    public void ignore_testSerialization() throws IOException, ClassNotFoundException {
+    public void testSerialization() throws IOException, ClassNotFoundException {
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(bout);
