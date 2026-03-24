@@ -33,6 +33,8 @@
 
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Enums;
+
 /**
  * Registered Link Relation Types.
  * @see <a href="https://www.iana.org/assignments/link-relations/link-relations.xhtml">link-relations</a>
@@ -56,7 +58,7 @@ public enum LinkRelationType {
     via, webmention, working_copy, working_copy_of;
 
     public static LinkRelationType from(String linkRelationTypeString) {
-        return Enum.valueOf(LinkRelationType.class, linkRelationTypeString.replace("-", "_")
+        return Enums.parse(LinkRelationType.class, linkRelationTypeString.replace("-", "_")
                 .replace(".", "$"));
     }
 

@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.transform.recurrence.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.Enums;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -352,11 +353,11 @@ public class Recur<T extends Temporal> implements Serializable {
         while (tokens.hasNext()) {
             final var token = tokens.next();
             if (FREQ.equalsIgnoreCase(token)) {
-                frequency = Frequency.valueOf(nextToken(tokens, token));
+                frequency = Enums.parse(Frequency.class, nextToken(tokens, token));
             } else if (SKIP.equalsIgnoreCase(token)) {
-                skip = Skip.valueOf(nextToken(tokens, token));
+                skip = Enums.parse(Skip.class, nextToken(tokens, token));
             } else if (RSCALE.equalsIgnoreCase(token)) {
-                rscale = RScale.valueOf(nextToken(tokens, token));
+                rscale = Enums.parse(RScale.class, nextToken(tokens, token));
                 chronology = Chronology.of(rscale.getChronology());
             } else if (UNTIL.equalsIgnoreCase(token)) {
                 final String untilString = nextToken(tokens, token);
@@ -384,7 +385,7 @@ public class Recur<T extends Temporal> implements Serializable {
             } else if (BYSETPOS.equalsIgnoreCase(token)) {
                 setPosList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
             } else if (WKST.equalsIgnoreCase(token)) {
-                weekStartDay = WeekDay.getWeekDay(WeekDay.Day.valueOf(nextToken(tokens, token)));
+                weekStartDay = WeekDay.getWeekDay(Enums.parse(WeekDay.Day.class, nextToken(tokens, token)));
             } else {
                 if (experimentalTokensAllowed) {
                     // assume experimental value..
@@ -412,7 +413,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Deprecated
     public Recur(final String frequency, final T until) {
-        this(Frequency.valueOf(frequency), until);
+        this(Enums.parse(Frequency.class, frequency), until);
     }
 
     public Recur(final Frequency frequency) {
@@ -436,7 +437,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Deprecated
     public Recur(final String frequency, final int count) {
-        this(Frequency.valueOf(frequency), count);
+        this(Enums.parse(Frequency.class, frequency), count);
     }
 
     /**
@@ -1042,7 +1043,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Deprecated
     public final void setFrequency(final String frequency) {
-        this.frequency = Frequency.valueOf(frequency);
+        this.frequency = Enums.parse(Frequency.class, frequency);
         validateFrequency();
     }
 
