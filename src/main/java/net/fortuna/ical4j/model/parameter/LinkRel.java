@@ -81,7 +81,7 @@ public class LinkRel extends Parameter {
     }
 
     public LinkRelationType getLinkRelationType() {
-        return LinkRelationType.valueOf(value);
+        return LinkRelationType.from(value);
     }
 
     public URI getUri() {

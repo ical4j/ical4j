@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Enums;
 import net.fortuna.ical4j.util.Numbers;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -103,7 +104,7 @@ public class WeekDay implements Serializable {
         } else {
             offset = 0;
         }
-        day = Day.valueOf(value.substring(value.length() - 2));
+        day = Enums.parse(Day.class, value.substring(value.length() - 2));
     }
     
     /**

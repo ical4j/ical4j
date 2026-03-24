@@ -114,7 +114,7 @@ public final class Configurator {
         Optional<String> property = getProperty(key);
         if (property.isPresent()) {
             try {
-                return Optional.of(Enum.valueOf(clazz, property.get()));
+                return Optional.of(Enums.parse(clazz, property.get()));
             } catch (IllegalArgumentException iae) {
                 LOG.error(String.format("Invalid configuration value: %s", key), iae);
                 return Optional.empty();
