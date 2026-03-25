@@ -74,7 +74,7 @@ public class Display extends Parameter implements Encodable {
         var valueStrings = value.split(RegEx.COMMA_DELIMITED);
         for (var valueString : valueStrings) {
             try {
-                Enums.parse(Value.class, valueString);
+                Enums.parse(Value.class, valueString, PARAMETER_NAME );
             } catch (IllegalArgumentException iae) {
                 if (!valueString.startsWith(Parameter.EXPERIMENTAL_PREFIX)) {
                     throw iae;
