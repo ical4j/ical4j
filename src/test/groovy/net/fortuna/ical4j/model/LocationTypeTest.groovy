@@ -10,8 +10,8 @@ class LocationTypeTest extends Specification {
 
         where:
         locationTypeString  | expectedType
-        "public"            | LocationType.public_
-        "bus-station"       | LocationType.bus_station
+        "Public"            | LocationType.public_
+        "BUS-STATION"       | LocationType.bus_station
     }
 
     def 'assert string formatting'() {

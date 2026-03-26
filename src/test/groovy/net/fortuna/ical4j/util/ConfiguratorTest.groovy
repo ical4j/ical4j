@@ -53,13 +53,16 @@ class ConfiguratorTest extends Specification {
     def 'assert retrieval of enum property'() {
         given: 'an existing system property key'
         def key = "${ConfiguratorTest}.enumProp"
-        System.setProperty(key, 'SU')
+        System.setProperty(key, enumString)
 
         when: 'retrieving the property'
         def prop = Configurator.getEnumProperty(WeekDay.Day.class, key)
 
         then: 'property is a non-empty optional'
         prop.isPresent() && prop.get() == WeekDay.Day.SU
+
+        where:
+        enumString << ['Su', 'su', 'SU']
     }
 
     def 'assert retrieval of object property'() {
