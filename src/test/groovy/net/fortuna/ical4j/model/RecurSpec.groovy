@@ -618,4 +618,21 @@ class RecurSpec extends Specification {
         'FREQ=WEEKLY;INTERVAL=1;BYDAY=CO' | 'Invalid value CO for BYDAY'
     }
 
+    def 'assert parsing recurrence rules'() {
+        when: 'a Recur is created from the string'
+        Recur recur = [ruleString]
+
+        then: 'the Recur value matches the original string'
+        recur.toString().equalsIgnoreCase(ruleString)
+
+        where:
+        ruleString << [
+                "FREQ=MONTHLY;BYMONTHDAY=1,15;BYDAY=MO,TU,WE,TH,FR;BYHOUR=9;BYMINUTE=0;BYSECOND=0",
+                "FREQ=WEEKLY;WKST=su;INTERVAL=2;BYDAY=Su",
+                "FREQ=WEEKLY;wkst=MO;Interval=2;ByDay=SU,MO",
+                "FREQ=weekly;WKST=SU;INTERVAL=2;BYDAY=SU,MO",
+                "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5",
+                "freq=YEARLY;BYWEEKNO=20;BYDAY=MO"
+        ]
+    }
 }

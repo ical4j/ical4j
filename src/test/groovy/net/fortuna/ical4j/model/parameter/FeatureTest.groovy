@@ -47,4 +47,15 @@ END:VCALENDAR
         then: 'a valid calendar is realised'
         calendar?.getComponents()[0].getProperties()[0].getRequiredParameter('FEATURE').value == 'AUDIO'
     }
+
+    def 'assert parsing feature string'() {
+        when: 'the string is parsed'
+        Feature feature = [featureString]
+
+        then: 'the object value matches the original string'
+        feature.value.equalsIgnoreCase(featureString)
+
+        where:
+        featureString << ['AUDIO,CHAT,FEED', 'audio,chat,feed', 'Audio,Chat,Feed', 'CHAT,FEED,X-Foo']
+    }
 }
