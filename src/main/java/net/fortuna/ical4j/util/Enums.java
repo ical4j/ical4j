@@ -13,4 +13,8 @@ public final class Enums {
         }
         throw new IllegalArgumentException("Invalid value " + value + " for " + parameter);
     }
+
+    public static <T extends Enum<T>> T parse(Class<T> enumClass, String value) {
+        return parse(enumClass, value, enumClass.getSimpleName());
+    }
 }

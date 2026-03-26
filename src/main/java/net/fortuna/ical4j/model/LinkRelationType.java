@@ -59,7 +59,7 @@ public enum LinkRelationType {
 
     public static LinkRelationType from(String linkRelationTypeString) {
         return Enums.parse(LinkRelationType.class, linkRelationTypeString.replace("-", "_")
-                .replace(".", "$"), LinkRelationType.class.getSimpleName());
+                .replace(".", "$"));
     }
 
     @Override

@@ -14,9 +14,9 @@ public enum LocationType {
 
     public static LocationType from(String locationTypeString) {
         if ("public".equalsIgnoreCase(locationTypeString)) {
-            return Enums.parse(LocationType.class, "public_", LocationType.class.getSimpleName());
+            return Enums.parse(LocationType.class, "public_");
         } else {
-            return Enums.parse(LocationType.class, locationTypeString.replace("-", "_"), LocationType.class.getSimpleName());
+            return Enums.parse(LocationType.class, locationTypeString.replace("-", "_"));
         }
     }
 

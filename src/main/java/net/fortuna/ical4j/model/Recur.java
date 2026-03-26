@@ -413,7 +413,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Deprecated
     public Recur(final String frequency, final T until) {
-        this(Enums.parse(Frequency.class, frequency,"FREQ" ), until);
+        this(Enums.parse(Frequency.class, frequency,FREQ), until);
     }
 
     public Recur(final Frequency frequency) {
@@ -437,7 +437,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Deprecated
     public Recur(final String frequency, final int count) {
-        this(Enums.parse(Frequency.class, frequency, "FREQ" ), count);
+        this(Enums.parse(Frequency.class, frequency, FREQ), count);
     }
 
     /**
@@ -1043,7 +1043,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Deprecated
     public final void setFrequency(final String frequency) {
-        this.frequency = Enums.parse(Frequency.class, frequency,"FREQ" );
+        this.frequency = Enums.parse(Frequency.class, frequency,FREQ);
         validateFrequency();
     }
 
