@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -115,16 +116,15 @@ public class ExDateTest {
     }
 
     @Test
-    @Ignore("TODO: Investigate and fix failure introduced after re-enabling JUnit 3/4 tests; this test verifies EXDATE values in EXDATE-IN-UTC.ics preserve UTC timezone. Re-enable once UTC EXDATE handling is corrected.")
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
 
         List<VEvent> event = calendar.getComponents(Component.VEVENT);
-        List<Property> exdates = event.get(0).getProperties(Property.EXDATE);
-        for (Property exDate : exdates) {
-            for (Instant dateEx : ((ExDate<Instant>) exDate).getDates()) {
-                assertNotNull(dateEx);
+        List<ExDate<Temporal>> exdates = event.get(0).getProperties(Property.EXDATE);
+        for (var exDate : exdates) {
+            for (var dateEx : exDate.getDates()) {
+                assertTrue(TemporalAdapter.isUtc(dateEx));
             }
         }
     }
