@@ -84,7 +84,9 @@ public class TzHelper {
     }
 
     private static void initMsTimezones() {
-        try (var scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE), StandardCharsets.UTF_8)) {
+        // Note: Scanner(InputStream, Charset) is not available on Android versions prior to Android 14.
+        //noinspection CharsetObjectCanBeUsed
+        try (var scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE), "UTF-8")) {
             while (scanner.hasNext()) {
                 var arr = scanner.nextLine().split("=");
                 var standardTzId = arr[1];
