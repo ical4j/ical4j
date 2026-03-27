@@ -603,6 +603,21 @@ class RecurSpec extends Specification {
         System.clearProperty("net.fortuna.ical4j.recur.maxincrementcount")
     }
 
+    @Unroll
+    def "test invalid rule: #rruleString"() {
+        when: "creating a new Recur with #rruleString"
+        new Recur(rruleString)
+
+        then: "an IllegalArgumentException is thrown with message: #expectedMessage"
+        def e = thrown(IllegalArgumentException)
+        e.message == expectedMessage
+
+        where:
+        rruleString                       | expectedMessage
+        'FREQ=9'                          | 'Invalid value 9 for FREQ'
+        'FREQ=WEEKLY;INTERVAL=1;BYDAY=CO' | 'Invalid value CO for BYDAY'
+    }
+
     def 'assert parsing recurrence rules'() {
         when: 'a Recur is created from the string'
         Recur recur = [ruleString]

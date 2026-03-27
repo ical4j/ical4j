@@ -104,7 +104,7 @@ public class WeekDay implements Serializable {
         } else {
             offset = 0;
         }
-        day = Enums.parse(Day.class, value.substring(value.length() - 2));
+        day = Enums.parse(Day.class, value.substring(value.length() - 2), "BYDAY");
     }
     
     /**

@@ -84,7 +84,7 @@ public class Feature extends Parameter implements Encodable {
         super(PARAMETER_NAME);
         for (var valueString : valueStrings) {
             try {
-                Enums.parse(Value.class, valueString);
+                Enums.parse(Value.class, valueString, PARAMETER_NAME);
             } catch (IllegalArgumentException iae) {
                 if (!valueString.startsWith(Parameter.EXPERIMENTAL_PREFIX)) {
                     throw iae;
