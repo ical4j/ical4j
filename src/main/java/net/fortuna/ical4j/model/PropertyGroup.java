@@ -33,7 +33,7 @@
 
 package net.fortuna.ical4j.model;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +46,7 @@ public class PropertyGroup implements PropertyListAccessor {
 
     private final PropertyList propertyList;
 
-    public PropertyGroup(List<Property> properties, @NotNull String prefix) {
+    public PropertyGroup(List<Property> properties, @NonNull String prefix) {
         this.propertyList = new PropertyList(properties.stream().filter(p -> prefix.equals(p.getPrefix()))
                 .collect(Collectors.toList()));
     }

@@ -39,7 +39,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -421,7 +421,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
         this(aName, new ParameterList());
     }
 
-    protected Property(@NotNull Enum<?> name) {
+    protected Property(@NonNull Enum<?> name) {
         this(name.toString(), new ParameterList());
     }
 
@@ -434,7 +434,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
         this.parameters = aList;
     }
 
-    protected Property(@NotNull Enum<?> name, final ParameterList aList) {
+    protected Property(@NonNull Enum<?> name, final ParameterList aList) {
         this.name = name.toString();
         this.parameters = aList;
     }
@@ -533,7 +533,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     @SuppressWarnings("unchecked")
     public <T extends Property> T add(Parameter parameter) {
-        setParameters((ParameterList) parameters.add(parameter));
+        setParameters(parameters.add(parameter));
         return (T) this;
     }
 
@@ -544,7 +544,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     @SuppressWarnings("unchecked")
     public <T extends Property> T remove(Parameter parameter) {
-        setParameters((ParameterList) parameters.remove(parameter));
+        setParameters(parameters.remove(parameter));
         return (T) this;
     }
 
@@ -555,7 +555,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     @SuppressWarnings("unchecked")
     public <T extends Property> T removeAll(String... parameterName) {
-        setParameters((ParameterList) parameters.removeAll(parameterName));
+        setParameters(parameters.removeAll(parameterName));
         return (T) this;
     }
 
@@ -566,7 +566,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      */
     @SuppressWarnings("unchecked")
     public <T extends Property> T replace(Parameter parameter) {
-        setParameters((ParameterList) parameters.replace(parameter));
+        setParameters(parameters.replace(parameter));
         return (T) this;
     }
 
@@ -590,7 +590,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
         return parameters.getFirst(name);
     }
 
-    public final <P extends Parameter> Optional<P> getParameter(@NotNull Enum<?> name) {
+    public final <P extends Parameter> Optional<P> getParameter(@NonNull Enum<?> name) {
         return getParameter(name.toString());
     }
 
@@ -604,7 +604,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
         return parameters.getRequired(name);
     }
 
-    public final <P extends Parameter> P getRequiredParameter(@NotNull Enum<?> name) {
+    public final <P extends Parameter> P getRequiredParameter(@NonNull Enum<?> name) {
         return getRequiredParameter(name.toString());
     }
 
@@ -666,7 +666,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     }
 
     @Override
-    public int compareTo(@NotNull Property o) {
+    public int compareTo(@NonNull Property o) {
         if (this.equals(o)) {
             return 0;
         }

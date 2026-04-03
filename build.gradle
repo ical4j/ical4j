@@ -50,7 +50,7 @@ dependencies {
 //        exclude group: 'commons-collections', module: 'commons-collections'
 //    }
 
-    compileOnly libs.jetbrains.annotations
+    compileOnly libs.jspecify
 
     // optional timezone caching..
     caffeineTimezoneCacheImplementation libs.caffeine
