@@ -521,6 +521,24 @@ class RecurSpec extends Specification {
         count == 86400 * 31 // number of seconds in January 2026
     }
 
+    @Timeout(5)
+    def 'test secondly with multiple filtering rules'() {
+        given: 'a recurrence rule'
+        System.setProperty("net.fortuna.ical4j.recur.maxincrementcount", String.valueOf(50_000_000))
+        Recur<LocalDateTime> recur = new Recur("FREQ=SECONDLY;INTERVAL=1;BYMONTH=1;BYMONTHDAY=31;BYHOUR=23;BYMINUTE=59;BYSECOND=0")
+
+        when: 'dates are generated for a period'
+        def count = recur.getDatesAsStream((LocalDateTime) TemporalAdapter.parse('20200101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260101T000000').temporal,
+                (LocalDateTime) TemporalAdapter.parse('20260131T235959').temporal, -1).count()
+
+        then: 'result matches expected'
+        count == 1
+
+        cleanup:
+        System.clearProperty("net.fortuna.ical4j.recur.maxincrementcount")
+    }
+
     def 'test getdates across a DST-change'() {
         given: 'a recurrence rule'
         ZoneId zoneId = ZoneId.of("America/Los_Angeles")
@@ -583,5 +601,38 @@ class RecurSpec extends Specification {
 
         cleanup:
         System.clearProperty("net.fortuna.ical4j.recur.maxincrementcount")
+    }
+
+    @Unroll
+    def "test invalid rule: #rruleString"() {
+        when: "creating a new Recur with #rruleString"
+        new Recur(rruleString)
+
+        then: "an IllegalArgumentException is thrown with message: #expectedMessage"
+        def e = thrown(IllegalArgumentException)
+        e.message == expectedMessage
+
+        where:
+        rruleString                       | expectedMessage
+        'FREQ=9'                          | 'Invalid value 9 for FREQ'
+        'FREQ=WEEKLY;INTERVAL=1;BYDAY=CO' | 'Invalid value CO for BYDAY'
+    }
+
+    def 'assert parsing recurrence rules'() {
+        when: 'a Recur is created from the string'
+        Recur recur = [ruleString]
+
+        then: 'the Recur value matches the original string'
+        recur.toString().equalsIgnoreCase(ruleString)
+
+        where:
+        ruleString << [
+                "FREQ=MONTHLY;BYMONTHDAY=1,15;BYDAY=MO,TU,WE,TH,FR;BYHOUR=9;BYMINUTE=0;BYSECOND=0",
+                "FREQ=WEEKLY;WKST=su;INTERVAL=2;BYDAY=Su",
+                "FREQ=WEEKLY;wkst=MO;Interval=2;ByDay=SU,MO",
+                "FREQ=weekly;WKST=SU;INTERVAL=2;BYDAY=SU,MO",
+                "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5",
+                "freq=YEARLY;BYWEEKNO=20;BYDAY=MO"
+        ]
     }
 }

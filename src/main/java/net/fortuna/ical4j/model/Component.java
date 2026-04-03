@@ -38,7 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
 import java.time.temporal.Temporal;
@@ -364,7 +364,7 @@ public abstract class Component extends Content implements Serializable,
     }
 
     @Override
-    public int compareTo(@NotNull Component o) {
+    public int compareTo(@NonNull Component o) {
         if (this.equals(o)) {
             return 0;
         }

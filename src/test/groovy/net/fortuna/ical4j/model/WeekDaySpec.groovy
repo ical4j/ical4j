@@ -20,4 +20,19 @@ class WeekDaySpec extends Specification {
         new Date('20180221')    | '-2WE'
         new Date('20191130')    | '-1SA'
     }
+
+    def 'assert parsing weekday value'() {
+        expect: 'parsed value matches expected'
+        new WeekDay(weekdayString).toString().equalsIgnoreCase(expected)
+
+        where:
+        weekdayString   | expected
+        'mo'            | 'mo'
+        'Tu'            | 'Tu'
+        'WE'            | 'WE'
+        '-1Th'            | '-1Th'
+        '+2fr'            | '2fr'
+        '-3SA'            | '-3SA'
+        'Su'            | 'Su'
+    }
 }

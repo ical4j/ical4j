@@ -39,7 +39,7 @@ junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
 junit-junit4 = { group = "junit", name="junit", version.ref = "junit4" }
 junit-vintage = { group = "org.junit.vintage", name="junit-vintage-engine", version.ref = "junit" }
 
-jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0"}
+jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0"}
 
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine"}
 jparsec = { group = "org.jparsec", name = "jparsec", version.ref = "jparsec"}

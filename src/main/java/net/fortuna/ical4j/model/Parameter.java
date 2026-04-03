@@ -35,7 +35,7 @@ import net.fortuna.ical4j.util.Strings;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Comparator;
 
@@ -225,7 +225,7 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
         this.name = aName;
     }
 
-    public Parameter(@NotNull Enum<?> name) {
+    public Parameter(@NonNull Enum<?> name) {
         this(name.toString());
     }
 
@@ -285,7 +285,7 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
     }
 
     @Override
-    public int compareTo(Parameter o) {
+    public int compareTo(@NonNull Parameter o) {
         if (this.equals(o)) {
             return 0;
         }

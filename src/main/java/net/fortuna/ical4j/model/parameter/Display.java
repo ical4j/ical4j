@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.util.Enums;
 import net.fortuna.ical4j.util.RegEx;
 
 import java.util.Arrays;
@@ -73,7 +74,7 @@ public class Display extends Parameter implements Encodable {
         var valueStrings = value.split(RegEx.COMMA_DELIMITED);
         for (var valueString : valueStrings) {
             try {
-                Value.valueOf(valueString.toUpperCase());
+                Enums.parse(Value.class, valueString, PARAMETER_NAME);
             } catch (IllegalArgumentException iae) {
                 if (!valueString.startsWith(Parameter.EXPERIMENTAL_PREFIX)) {
                     throw iae;

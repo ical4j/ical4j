@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -65,14 +65,14 @@ public class ComponentList<T extends Component> implements ContentCollection<T, 
     }
 
     @Override
-    public ComponentList<T> add(@NotNull T content) {
+    public ComponentList<T> add(@NonNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.add(content);
         return new ComponentList<>(copy);
     }
 
     @Override
-    public ComponentList<T> addAll(@NotNull Collection<T> content) {
+    public ComponentList<T> addAll(@NonNull Collection<T> content) {
         List<T> copy = new ArrayList<>(components);
         copy.addAll(content);
         return new ComponentList<>(copy);
@@ -105,7 +105,7 @@ public class ComponentList<T extends Component> implements ContentCollection<T, 
     }
 
     @Override
-    public ComponentList<T> replace(@NotNull T content) {
+    public ComponentList<T> replace(@NonNull T content) {
         List<T> copy = new ArrayList<>(components);
         copy.removeIf(c -> c.getName().equalsIgnoreCase(content.getName()));
         copy.add(content);

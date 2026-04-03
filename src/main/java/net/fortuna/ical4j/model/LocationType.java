@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Enums;
+
 /**
  * Location types as defined by the Location Types Registry (RFC4589): https://tools.ietf.org/html/rfc4589
  */
@@ -11,10 +13,10 @@ public enum LocationType {
     truck, underway, unknown, warehouse, water, watercraft;
 
     public static LocationType from(String locationTypeString) {
-        if ("public".equals(locationTypeString)) {
-            return Enum.valueOf(LocationType.class, "public_");
+        if ("public".equalsIgnoreCase(locationTypeString)) {
+            return Enums.parse(LocationType.class, "public_");
         } else {
-            return Enum.valueOf(LocationType.class, locationTypeString.replace("-", "_"));
+            return Enums.parse(LocationType.class, locationTypeString.replace("-", "_"));
         }
     }
 

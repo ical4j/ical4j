@@ -48,18 +48,27 @@ class ConfiguratorTest extends Specification {
 
         then: 'property is a non-empty optional'
         prop.isPresent() && prop.get() == 5
+
+        cleanup: 'remove system property'
+        System.clearProperty(key)
     }
 
     def 'assert retrieval of enum property'() {
         given: 'an existing system property key'
         def key = "${ConfiguratorTest}.enumProp"
-        System.setProperty(key, 'SU')
+        System.setProperty(key, enumString)
 
         when: 'retrieving the property'
         def prop = Configurator.getEnumProperty(WeekDay.Day.class, key)
 
         then: 'property is a non-empty optional'
         prop.isPresent() && prop.get() == WeekDay.Day.SU
+
+        cleanup: 'remove system property'
+        System.clearProperty(key)
+
+        where:
+        enumString << ['Su', 'su', 'SU']
     }
 
     def 'assert retrieval of object property'() {
@@ -71,6 +80,9 @@ class ConfiguratorTest extends Specification {
         def prop = Configurator.getObjectProperty(key)
 
         then: 'property is a non-empty optional'
-        prop.isPresent() && prop.get() instanceof Date
+        prop.isPresent() && (prop.get() instanceof Date)
+
+        cleanup: 'remove system property'
+        System.clearProperty(key)
     }
 }

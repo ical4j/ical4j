@@ -33,7 +33,7 @@
 
 package net.fortuna.ical4j.validate;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +50,7 @@ public abstract class AbstractValidator<T> implements Validator<T> {
     private final String context;
 
     @SafeVarargs
-    public AbstractValidator(@NotNull Enum<?> context, AbstractValidationRuleSet<? super T>... ruleSets) {
+    public AbstractValidator(@NonNull Enum<?> context, AbstractValidationRuleSet<? super T>... ruleSets) {
         this(context.toString(), ruleSets);
     }
 

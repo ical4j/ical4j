@@ -9,14 +9,14 @@ import net.fortuna.ical4j.model.Calendar
 class DisplayTest extends AbstractBuilderTest {
 
     def 'assert value stored correctly'() {
-        given: 'a display value'
-        String displayValue = 'GRAPHIC,THUMBNAIL'
-
         when: 'a display object is constructed'
         Display display = [displayValue]
 
         then: 'the object value matches the original address'
         display.value == displayValue
+
+        where:
+        displayValue << ['BADGE,THUMBNAIL', 'GRAPHIC,Thumbnail', 'fullsize']
     }
 
     def 'assert factory is located correctly'() {

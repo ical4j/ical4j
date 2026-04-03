@@ -1,6 +1,6 @@
 package net.fortuna.ical4j.model;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.function.BiFunction;
@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 public interface PropertyContainer extends PropertyListAccessor {
     BiFunction<PropertyContainer, Property, PropertyContainer> ADD_IF_NOT_PRESENT = (c, p) -> {
-        if (!c.getProperty(p.getName()).isPresent()) {
+        if (c.getProperty(p.getName()).isEmpty()) {
             c.add(p);
         }
         return c;
@@ -21,8 +21,8 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param property the property to add
      * @return a reference to the container to support method chaining
      */
-    default <T extends PropertyContainer> T add(@NotNull Property property) {
-        setPropertyList((PropertyList) getPropertyList().add(property));
+    default <T extends PropertyContainer> T add(@NonNull Property property) {
+        setPropertyList(getPropertyList().add(property));
         return (T) this;
     }
 
@@ -31,8 +31,8 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @param properties a collection of properties to add
      * @return a reference to the container to support method chaining
      */
-    default <T extends PropertyContainer> T addAll(@NotNull Collection<Property> properties) {
-        setPropertyList((PropertyList) getPropertyList().addAll(properties));
+    default <T extends PropertyContainer> T addAll(@NonNull Collection<Property> properties) {
+        setPropertyList(getPropertyList().addAll(properties));
         return (T) this;
     }
 
@@ -42,7 +42,7 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @return a reference to the container to support method chaining
      */
     default <T extends PropertyContainer> T remove(Property property) {
-        setPropertyList((PropertyList) getPropertyList().remove(property));
+        setPropertyList(getPropertyList().remove(property));
         return (T) this;
     }
 
@@ -52,7 +52,7 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @return a reference to the container to support method chaining
      */
     default <T extends PropertyContainer> T removeAll(String... name) {
-        setPropertyList((PropertyList) getPropertyList().removeAll(name));
+        setPropertyList(getPropertyList().removeAll(name));
         return (T) this;
     }
 
@@ -62,7 +62,7 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @return a reference to the container to support method chaining
      */
     default <T extends PropertyContainer> T removeIf(Predicate<Property> filter) {
-        setPropertyList((PropertyList) getPropertyList().removeIf(filter));
+        setPropertyList(getPropertyList().removeIf(filter));
         return (T) this;
     }
 
@@ -72,7 +72,7 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @return a reference to the container to support method chaining
      */
     default <T extends PropertyContainer> T replace(Property property) {
-        setPropertyList((PropertyList) getPropertyList().replace(property));
+        setPropertyList(getPropertyList().replace(property));
         return (T) this;
     }
 
