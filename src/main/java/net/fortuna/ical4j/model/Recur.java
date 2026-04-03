@@ -833,7 +833,7 @@ public class Recur<T extends Temporal> implements Serializable {
     private List<T> getCandidates(final T rootSeed, final T date) {
         List<T> dates = new ArrayList<>();
         dates.add(date);
-        if (monthRule!=null) {
+        if (monthRule != null) {
             dates = monthRule.apply(dates);
             // debugging..
             if (log.isDebugEnabled()) {
