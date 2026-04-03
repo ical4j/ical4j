@@ -21,7 +21,7 @@ class WeekDaySpec extends Specification {
         new Date('20191130')    | '-1SA'
     }
 
-    def 'asset parsing weekday value'() {
+    def 'assert parsing weekday value'() {
         expect: 'parsed value matches expected'
         new WeekDay(weekdayString).toString().equalsIgnoreCase(expected)
 
