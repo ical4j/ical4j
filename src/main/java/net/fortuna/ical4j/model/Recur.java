@@ -317,15 +317,15 @@ public class Recur<T extends Temporal> implements Serializable {
     // Temporal field we increment based on frequency.
     private TemporalUnit calIncField;
 
-    private ByMonthRule<T> monthRule;
-    private ByWeekNoRule<T> weekNoRule;
-    private ByYearDayRule<T> yearDayRule;
-    private ByMonthDayRule<T> monthDayRule;
-    private ByDayRule<T> dayRule;
-    private ByHourRule<T> hourRule;
-    private ByMinuteRule<T> minuteRule;
-    private BySecondRule<T> secondRule;
-    private BySetPosRule<T> setPosRule;
+    private transient ByMonthRule<T> monthRule;
+    private transient ByWeekNoRule<T> weekNoRule;
+    private transient ByYearDayRule<T> yearDayRule;
+    private transient ByMonthDayRule<T> monthDayRule;
+    private transient ByDayRule<T> dayRule;
+    private transient ByHourRule<T> hourRule;
+    private transient ByMinuteRule<T> minuteRule;
+    private transient BySecondRule<T> secondRule;
+    private transient BySetPosRule<T> setPosRule;
 
     /**
      * Default constructor.
