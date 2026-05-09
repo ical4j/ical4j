@@ -86,6 +86,45 @@ test {
     finalizedBy jacocoTestCoverageVerification, jacocoTestReport // Ensure Jacoco is run after tests have completed
 
 //    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
+
+    // Make testcontainers usable on Podman without per-developer setup.
+    // Testcontainers reads its config from env vars (Java system properties are
+    // ignored for DOCKER_HOST and ryuk.disabled), so configure it here.
+    def existing = System.getenv('DOCKER_HOST')
+    def malformed = existing && (existing.contains('$(') || existing.contains('${'))
+    def socket = resolvePodmanSocket()
+    if (!existing || malformed) {
+        if (socket) {
+            environment 'DOCKER_HOST', "unix://${socket}"
+        } else if (malformed) {
+            // Avoid passing the broken value through to the test JVM.
+            environment 'DOCKER_HOST', ''
+        }
+    }
+    // Ryuk (the testcontainers reaper) relies on Docker-specific privileged
+    // semantics that hang on Podman; disable it when running against Podman.
+    if (socket) {
+        environment 'TESTCONTAINERS_RYUK_DISABLED', 'true'
+    }
+}
+
+def resolvePodmanSocket() {
+    try {
+        def proc = ['podman', 'machine', 'inspect', '--format',
+                    '{{.ConnectionInfo.PodmanSocket.Path}}'].execute()
+        proc.waitFor()
+        if (proc.exitValue() == 0) {
+            def path = proc.text.trim().readLines().find { it && file(it).exists() }
+            if (path) return path
+        }
+    } catch (IOException ignored) {
+        // podman binary not on PATH
+    }
+    def candidates = [System.getenv('XDG_RUNTIME_DIR') ? "${System.getenv('XDG_RUNTIME_DIR')}/podman/podman.sock" : null,
+                      '/run/podman/podman.sock',
+                      '/var/run/podman/podman.sock',
+                      '/var/run/docker.sock']
+    return candidates.findResult { it && file(it).exists() ? it : null }
 }
 
 jacocoTestCoverageVerification {
