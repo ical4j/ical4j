@@ -122,6 +122,26 @@ public class ZoneRulesBuilder {
     private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
         List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
 
+        // If every applicable observance carries an RRULE whose UNTIL is already in the past, the
+        // zone has truly abolished recurring DST (e.g. Asia/Tokyo 1948-1951, Asia/Shanghai
+        // 1986-1991). Skip building any future transition rules so we don't resurrect historical
+        // DST as a forever-yearly rule. Zones whose pristine VTIMEZONE only has an RRULE on one
+        // of STANDARD/DAYLIGHT (e.g. Australia/Darwin, America/Sao_Paulo) fall through unchanged,
+        // since the pristine code relies on the single-sided phantom rule to compensate for a
+        // separate UNTIL-comparison limitation in buildDSTTransitions.
+        Instant now = Instant.now();
+        boolean allExpired = !observances.isEmpty() && observances.stream().allMatch(obs -> {
+            Optional<RRule<?>> r = obs.getProperty(Property.RRULE);
+            if (r.isEmpty() || r.get().getRecur().getMonthList().isEmpty()) {
+                return false;
+            }
+            Temporal until = r.get().getRecur().getUntil();
+            return until != null && TemporalComparator.INSTANCE.compare(now, until) > 0;
+        });
+        if (allExpired) {
+            return transitionRules;
+        }
+
         for (Observance observance : observances) {
             Optional<RRule<?>> rrule = observance.getProperty(Property.RRULE);
             TzOffsetFrom offsetFrom = observance.getRequiredProperty(Property.TZOFFSETFROM);
