@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.util;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
@@ -60,78 +67,27 @@ import java.util.Objects;
  *
  * @author Ben Fortuna
  */
-public class CalendarsTest extends TestCase {
+public class CalendarsTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(CalendarsTest.class);
 
-    private String path;
-    
-    private URL resource;
-
-    private Calendar[] calendars;
-
-    private Calendar calendar;
-
-    private int expectedCount;
-
-    private Charset charset;
-
-    private String expectedContentType;
-
-    /**
-     * @param testMethod
-     * @param path
-     */
-    public CalendarsTest(String testMethod, String path) {
-        super(testMethod);
-        this.path = path;
-        this.resource = getClass().getResource(path);
-    }
-
-    /**
-     * @param testMethod
-     */
-    public CalendarsTest(String testMethod, Calendar[] calendars) {
-        super(testMethod);
-        this.calendars = calendars;
-    }
-
-    /**
-     * @param testMethod
-     */
-    public CalendarsTest(String testMethod, Calendar calendar, int expectedCount) {
-        super(testMethod);
-        this.calendar = calendar;
-        this.expectedCount = expectedCount;
-    }
-
-    /**
-     * @param testMethod
-     */
-    public CalendarsTest(String testMethod, Calendar calendar, Charset charset, String expectedContentType) {
-        super(testMethod);
-        this.calendar = calendar;
-        this.charset = charset;
-        this.expectedContentType = expectedContentType;
-    }
-
-    /**
-     * Test loading of calendars.
-     *
-     * @throws IOException
-     * @throws ParserException
-     */
-    public void testLoad() throws IOException, ParserException {
+    @ParameterizedTest(name = "load [{0}]")
+    @MethodSource("loadData")
+    public void testLoad(String path) throws IOException, ParserException {
+        URL resource = getClass().getResource(path);
         assertNotNull(Calendars.load(resource));
     }
 
-    /**
-     * Test loading of calendars.
-     *
-     * @throws IOException
-     * @throws ParserException
-     */
-    public void testLoadFileNotFoundException() throws IOException, ParserException {
+    static Stream<Arguments> loadData() {
+        return Stream.of(
+                Arguments.of("/samples/valid/Australian32Holidays.ics"),
+                Arguments.of("/samples/valid/google_aus_holidays.ics")
+        );
+    }
+
+    @ParameterizedTest(name = "loadFileNotFoundException [{0}]")
+    @MethodSource("loadFileNotFoundExceptionData")
+    public void testLoadFileNotFoundException(String path) throws IOException, ParserException {
         try {
             Calendars.load(path);
             fail("Should throw FileNotFoundException");
@@ -140,24 +96,15 @@ public class CalendarsTest extends TestCase {
         }
     }
 
-    /**
-     * Test loading of calendars.
-     *
-     * @throws IOException
-     */
-    public void testLoadParserException() throws IOException {
-        try {
-            Calendars.load(resource);
-            fail("Should throw ParserException");
-        } catch (ParserException pe) {
-            LOG.info("Caught exception: " + pe.getMessage());
-        }
+    static Stream<Arguments> loadFileNotFoundExceptionData() {
+        return Stream.of(
+                Arguments.of("/samples/valid/doesnt-exist.ics")
+        );
     }
 
-    /**
-     * Test merging of calendars.
-     */
-    public void testMerge() throws IOException, ParserException {
+    @ParameterizedTest(name = "merge")
+    @MethodSource("mergeData")
+    public void testMerge(Calendar[] calendars) throws IOException, ParserException {
         Calendar result = calendars[0];
         for (int i = 1; i < calendars.length; i++) {
             result = Calendars.merge(result, calendars[i]);
@@ -165,78 +112,80 @@ public class CalendarsTest extends TestCase {
 
         for (Calendar value : calendars) {
             for (Property p : value.getProperties()) {
-                assertTrue("Property [" + p + "] not found in merged calendar",
-                        result.getProperties().contains(p));
+                assertTrue(result.getProperties().contains(p),
+                        "Property [" + p + "] not found in merged calendar");
             }
             for (CalendarComponent c : value.getComponents()) {
-                assertTrue("Component [" + c + "] not found in merged calendar",
-                        result.getComponents().contains(c));
+                assertTrue(result.getComponents().contains(c),
+                        "Component [" + c + "] not found in merged calendar");
             }
         }
     }
 
-    /**
-     * Test calendar split.
-     */
-    public void testSplit() throws IOException, ParserException {
+    static Stream<Arguments> mergeData() throws IOException, ParserException {
+        List<Calendar> calendars = new ArrayList<>();
+        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))));
+        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics"))));
+        return Stream.of(
+                Arguments.of((Object) calendars.toArray(Calendar[]::new))
+        );
+    }
+
+    @ParameterizedTest(name = "split [expectedCount={1}]")
+    @MethodSource("splitData")
+    public void testSplit(Calendar calendar, int expectedCount) throws IOException, ParserException {
         Calendar[] split = Calendars.split(calendar);
         assertEquals(expectedCount, split.length);
     }
 
-    /**
-     *
-     */
-    public void testGetContentType() {
+    static Stream<Arguments> splitData() throws IOException, ParserException {
+        Calendar calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
+        return Stream.of(
+                Arguments.of(calendar, 10)
+        );
+    }
+
+    @ParameterizedTest(name = "getContentType [charset={1}]")
+    @MethodSource("getContentTypeData")
+    public void testGetContentType(Calendar calendar, Charset charset, String expectedContentType) {
         assertEquals(expectedContentType, Calendars.getContentType(calendar, charset));
     }
-    
+
+    static Stream<Arguments> getContentTypeData() throws IOException, ParserException {
+        Calendar aus = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
+        Calendar oz = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics")));
+        return Stream.of(
+                Arguments.of(aus, null, "text/calendar; method=PUBLISH"),
+                Arguments.of(oz, null, "text/calendar; method=PUBLISH"),
+                Arguments.of(oz, StandardCharsets.US_ASCII, "text/calendar; method=PUBLISH; charset=US-ASCII")
+        );
+    }
+
     /**
      * Ensures that after de-serialization a calendar can still be copied.
      */
-    public void testShouldSerializeDeserializeCorrectly()
+    @ParameterizedTest(name = "serializeDeserialize")
+    @MethodSource("shouldSerializeDeserializeCorrectlyData")
+    public void testShouldSerializeDeserializeCorrectly(Calendar calendar)
             throws IOException, ClassNotFoundException, ParseException, URISyntaxException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(this.calendar);
+        oos.writeObject(calendar);
         oos.flush();
 
         assertNotNull(baos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
         Calendar copy = (Calendar) ois.readObject();
         assertNotNull(copy);
-        assertEquals(copy, this.calendar);
+        assertEquals(copy, calendar);
         Calendar newCopy = new Calendar(copy);
         assertEquals(newCopy, copy);
     }
 
-    /**
-     * @return
-     * @throws ParserException
-     * @throws IOException
-     */
-    public static TestSuite suite() throws IOException, ParserException {
-        TestSuite suite = new TestSuite();
-
-        suite.addTest(new CalendarsTest("testLoad", "/samples/valid/Australian32Holidays.ics"));
-        suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "/samples/valid/doesnt-exist.ics"));
-        suite.addTest(new CalendarsTest("testLoad", "/samples/valid/google_aus_holidays.ics"));
-
-        List<Calendar> calendars = new ArrayList<Calendar>();
-        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))));
-        calendars.add(Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics"))));
-        suite.addTest(new CalendarsTest("testMerge", calendars.toArray(Calendar[]::new)));
-
+    static Stream<Arguments> shouldSerializeDeserializeCorrectlyData() throws IOException, ParserException {
         Calendar calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
-        suite.addTest(new CalendarsTest("testSplit", calendar, 10));
-
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
-
-        calendar = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics")));
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, StandardCharsets.US_ASCII, "text/calendar; method=PUBLISH; charset=US-ASCII"));
-        suite.addTest(new CalendarsTest("testShouldSerializeDeserializeCorrectly",
-                Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"))), -1));
-        
-        return suite;
+        return Stream.of(
+                Arguments.of(calendar)
+        );
     }
 }

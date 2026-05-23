@@ -84,10 +84,10 @@ Each sub-phase below is ONE atomic commit — the base class and ALL its subclas
    - [ ] 5.5.1 Migrate each file
    - [ ] 5.5.2 Run `./gradlew test` — all green
    - [ ] 5.5.3 Commit Sub-phase 4e
-- [ ] 5.6 **Sub-phase 4f (commit)**: `util/*` parameterised — `UrisTest`, `CalendarsTest`
-   - [ ] 5.6.1 Migrate each file
-   - [ ] 5.6.2 Run `./gradlew test` — all green
-   - [ ] 5.6.3 Commit Sub-phase 4f
+- [x] 5.6 **Sub-phase 4f (commit)**: `util/*` parameterised — `UrisTest`, `CalendarsTest`
+   - [x] 5.6.1 Migrate each file
+   - [x] 5.6.2 Run `./gradlew test` — all green
+   - [x] 5.6.3 Commit Sub-phase 4f
 - [ ] 5.7 Final sweep: `grep -rlE "extends TestCase|^import junit\.framework" src/test/java --include="*.java"` MUST return zero results
 
 ## 6. Phase 5 — Cleanup
