@@ -31,58 +31,34 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$ [06-Apr-2004]
  *
  */
-public class CalendarDateFormatFactoryTest extends TestCase {
+public class CalendarDateFormatFactoryTest {
 
     private static final boolean STRICT = false;
-    
+
     private static final boolean LENIENT = true;
 
-    private final String pattern;
-    
-    private final boolean lenient;
-    
-    private final java.util.TimeZone[] timeZones;
-    
-    private final String[] values;
-
-    /**
-     * @param testMethod
-     * @param pattern
-     * @param lenient
-     * @param values
-     */
-    public CalendarDateFormatFactoryTest(String testMethod, String pattern, boolean lenient, String[] values) {
-    	this(testMethod, pattern, lenient, null, values);
-    }
-    
-    /**
-     * @param pattern
-     * @param lenient
-     * @param timeZones
-     * @param values
-     */
-    public CalendarDateFormatFactoryTest(String testMethod, String pattern, boolean lenient, java.util.TimeZone[] timeZones,
-    		String[] values) {
-    	super(testMethod);
-    	this.pattern = pattern;
-    	this.lenient = lenient;
-    	this.timeZones = timeZones;
-    	this.values = values;
-    }
-
+    @Test
     public void testFallbackToSimpleDateFormat() throws Exception {
         SimpleDateFormat f = new SimpleDateFormat("HH");
         assertEquals(f, CalendarDateFormatFactory.getInstance("HH"));
@@ -90,15 +66,17 @@ public class CalendarDateFormatFactoryTest extends TestCase {
 
     private DateFormat getCalendarFormatForPattern(String pattern) {
         DateFormat cdf = CalendarDateFormatFactory.getInstance(pattern);
-        assertTrue("didn't get calendar format for pattern: " + pattern,
-                cdf.getClass().getName().startsWith(CalendarDateFormatFactory.class.getName()));
+        assertTrue(cdf.getClass().getName().startsWith(CalendarDateFormatFactory.class.getName()),
+                "didn't get calendar format for pattern: " + pattern);
         return cdf;
     }
 
     /**
      * @throws ParseException
      */
-    public void testParseSuccess() throws ParseException {
+    @ParameterizedTest(name = "parseSuccess [{0}]")
+    @MethodSource("parseSuccessData")
+    public void testParseSuccess(String pattern, boolean lenient, java.util.TimeZone[] timeZones, String[] values) throws ParseException {
 
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         // Date instances are always in UTC..
@@ -130,10 +108,28 @@ public class CalendarDateFormatFactoryTest extends TestCase {
         }
     }
 
+    static Stream<Arguments> parseSuccessData() {
+        java.util.TimeZone[] tz = {TimeZone.getDefault(), TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("US/Eastern"), TimeZone.getTimeZone("US/Pacific")};
+        return Stream.of(
+                Arguments.of("yyyyMMdd'T'HHmmss", LENIENT, tz, new String[] {"20081201T231370", "20081601T000000", "20081201T000000xyz"}),
+                Arguments.of("yyyyMMdd'T'HHmmss", STRICT, tz, new String[] {"00010215T023456", "20081201T000000"}),
+                Arguments.of("yyyyMMdd'T'HHmmss'Z'", LENIENT, tz, new String[] {"20083101T000000Z", "20081201T000000Zxyz"}),
+                Arguments.of("yyyyMMdd'T'HHmmss'Z'", STRICT, tz, new String[] {"20081201T000000Z"}),
+                Arguments.of("yyyyMMdd", LENIENT, tz, new String[] {"20081301", "20081201xyz"}),
+                Arguments.of("HHmmss", LENIENT, tz, new String[] {"260000"}),
+                Arguments.of("HHmmss", STRICT, tz, new String[] {"021234", "233456"}),
+                Arguments.of("HHmmss'Z'", LENIENT, tz, new String[] {"261234Z"}),
+                Arguments.of("HHmmss'Z'", STRICT, tz, new String[] {"021234Z"}),
+                Arguments.of("HHmmss'Z'", LENIENT, tz, new String[] {"233456Zzxy"})
+        );
+    }
+
     /**
-     * 
+     *
      */
-    public void testParseFailure() {
+    @ParameterizedTest(name = "parseFailure [{0}]")
+    @MethodSource("parseFailureData")
+    public void testParseFailure(String pattern, boolean lenient, java.util.TimeZone[] timeZones, String[] values) {
 
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         DateFormat cdf = getCalendarFormatForPattern(pattern);
@@ -178,34 +174,15 @@ public class CalendarDateFormatFactoryTest extends TestCase {
 
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-    	TestSuite suite = new TestSuite();
-
+    static Stream<Arguments> parseFailureData() {
         java.util.TimeZone[] tz = {TimeZone.getDefault(), TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("US/Eastern"), TimeZone.getTimeZone("US/Pacific")};
-
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "yyyyMMdd'T'HHmmss", STRICT, new String[] {"1", "20081201T231370", "20081601T000000"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss", LENIENT, tz, new String[] {"20081201T231370", "20081601T000000", "20081201T000000xyz"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss", STRICT, tz, new String[] {"00010215T023456", "20081201T000000"}));
-
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "yyyyMMdd'T'HHmmss'Z'", STRICT, new String[] {"1", "20081201T000000", "20083101T000000Z"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss'Z'", LENIENT, tz, new String[] {"20083101T000000Z", "20081201T000000Zxyz"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss'Z'", STRICT, tz, new String[] {"20081201T000000Z"}));
-
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "yyyyMMdd", STRICT, new String[] {"1", "20081301"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd", LENIENT, tz, new String[] {"20081301", "20081201xyz"}));
-
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "HHmmss", STRICT, new String[] {"1", "260000"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss", LENIENT, tz, new String[] {"260000"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss", STRICT, tz, new String[] {"021234", "233456"}));
-
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "HHmmss'Z'", STRICT, new String[] {"1", "123456", "261234Z"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss'Z'", LENIENT, tz, new String[] {"261234Z"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss'Z'", STRICT, tz, new String[] {"021234Z"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "HHmmss'Z'", STRICT, tz, new String[] {"233456Zzxy"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss'Z'", LENIENT, tz, new String[] {"233456Zzxy"}));
-    	return suite;
+        return Stream.of(
+                Arguments.of("yyyyMMdd'T'HHmmss", STRICT, (java.util.TimeZone[]) null, new String[] {"1", "20081201T231370", "20081601T000000"}),
+                Arguments.of("yyyyMMdd'T'HHmmss'Z'", STRICT, (java.util.TimeZone[]) null, new String[] {"1", "20081201T000000", "20083101T000000Z"}),
+                Arguments.of("yyyyMMdd", STRICT, (java.util.TimeZone[]) null, new String[] {"1", "20081301"}),
+                Arguments.of("HHmmss", STRICT, (java.util.TimeZone[]) null, new String[] {"1", "260000"}),
+                Arguments.of("HHmmss'Z'", STRICT, (java.util.TimeZone[]) null, new String[] {"1", "123456", "261234Z"}),
+                Arguments.of("HHmmss'Z'", STRICT, tz, new String[] {"233456Zzxy"})
+        );
     }
 }

@@ -31,11 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
-import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +46,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
@@ -51,71 +61,87 @@ import java.util.Calendar;
  *
  * @author Ben Fortuna
  */
-public class DateTimeTest extends TestCase {
+public class DateTimeTest {
 
     private final Logger log = LoggerFactory.getLogger(DateTimeTest.class);
 
     private static final TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
-    private DateTime dateTime;
-
-    private String expectedToString;
-
-    private String badlyFormated;
-
-    // static {
-    // TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
-    // }
-
-    /**
-     * @param testMethod
-     */
-    public DateTimeTest(String testMethod) {
-        super(testMethod);
-    }
-
-    /**
-     * Default constructor.
-     */
-    public DateTimeTest(DateTime dateTime, String expectedToString) {
-        super("testToString");
-        this.dateTime = dateTime;
-        this.expectedToString = expectedToString;
-    }
-
-    public DateTimeTest(String badlyFormated, String expectedToString) {
-        super("testRelaxed");
-        this.badlyFormated = badlyFormated;
-        this.expectedToString = expectedToString;
-    }
-
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         // ensure relaxing parsing is disabled for these tests..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @AfterEach
+    void tearDown() {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 
     /**
      *
      */
-    public void testToString() {
-        assertNotNull("Null input date", dateTime);
-        assertEquals("Incorrect string representation", expectedToString, dateTime.toString());
+    @ParameterizedTest(name = "toString [{1}]")
+    @MethodSource("toStringData")
+    public void testToString(DateTime dateTime, String expectedToString) {
+        assertNotNull(dateTime, "Null input date");
+        assertEquals(expectedToString, dateTime.toString(), "Incorrect string representation");
+    }
+
+    static Stream<Arguments> toStringData() throws ParseException {
+        Stream.Builder<Arguments> builder = Stream.builder();
+
+        // test DateTime(long)..
+        DateTime dt = new DateTime(0);
+        dt.setUtc(true);
+        builder.add(Arguments.of(dt, "19700101T000000Z"));
+
+        // change default tz to non-UTC timezone.
+        java.util.TimeZone originalTzDefault = java.util.TimeZone.getDefault();
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
+
+        // test DateTime(Date)..
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 1984);
+        // months are zero-based..
+        cal.set(Calendar.MONTH, 3);
+        cal.set(Calendar.DAY_OF_MONTH, 17);
+        cal.set(Calendar.HOUR_OF_DAY, 3);
+        cal.set(Calendar.MINUTE, 15);
+        cal.set(Calendar.SECOND, 34);
+        builder.add(Arguments.of(new DateTime(cal.getTime()), "19840417T031534"));
+        java.util.TimeZone.setDefault(originalTzDefault);
+
+        TimeZone tz = registry.getTimeZone("Australia/Melbourne");
+        // test DateTime(String)..
+        builder.add(Arguments.of(new DateTime("20000827T030000", tz), "20000827T030000"));
+        builder.add(Arguments.of(new DateTime("20070101T080000", tz), "20070101T080000"));
+        builder.add(Arguments.of(new DateTime("20050630T093000", tz), "20050630T093000"));
+        builder.add(Arguments.of(new DateTime("20050630T093000Z"), "20050630T093000Z"));
+        builder.add(Arguments.of(new DateTime("19390901T000000", tz), "19390901T000000"));
+
+        builder.add(Arguments.of(new DateTime("20000402T020000", tz), "20000402T020000"));
+        builder.add(Arguments.of(new DateTime("20000402T020000", tz), "20000402T020000"));
+
+        DateFormat df = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+        cal.clear();
+        cal.set(2000, 0, 1, 2, 0, 0);
+        for (int i = 0; i < 365; i++) {
+            String dateString = df.format(cal.getTime());
+            builder.add(Arguments.of(new DateTime(dateString), dateString));
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        builder.add(Arguments.of(new DateTime("20071104T000000",
+                registry.getTimeZone("America/Los_Angeles")), "20071104T000000"));
+
+        return builder.build();
     }
 
     /*
      * Class under test for void DateTime(String)
      */
+    @Test
     public void testDateTimeString() throws Exception {
         try {
             new DateTime("20050630");
@@ -123,17 +149,11 @@ public class DateTimeTest extends TestCase {
         } catch (ParseException pe) {
             log.info("Exception occurred: " + pe.getMessage());
         }
-
-//        try {
-//            new DateTime("20000402T020000",
-//                    registry.getTimeZone("America/Los_Angeles"));
-//            fail("Should throw ParseException");
-//        } catch (ParseException pe) {
-//            log.info("Exception occurred: " + pe.getMessage());
-//        }
     }
 
-    public void testRelaxed() throws Exception {
+    @ParameterizedTest(name = "relaxed [{1}]")
+    @MethodSource("relaxedData")
+    public void testRelaxed(String badlyFormated, String expectedToString) throws Exception {
 
         try {
             new DateTime(badlyFormated);
@@ -143,10 +163,16 @@ public class DateTimeTest extends TestCase {
         try {
             CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
             DateTime dt = new DateTime(badlyFormated);
-            assertEquals(this.expectedToString, dt.toString());
+            assertEquals(expectedToString, dt.toString());
         } catch (ParseException pe) {
             fail("exception not expected with relaxed parsing is used");
         }
+    }
+
+    static Stream<Arguments> relaxedData() {
+        return Stream.of(
+                Arguments.of("00001231T000000Z", "00011231T000000")
+        );
     }
 
     /**
@@ -154,6 +180,7 @@ public class DateTimeTest extends TestCase {
      *
      * @throws ParseException
      */
+    @Test
     public void testDateTimeEquals() throws ParseException {
         // change default tz to non-UTC timezone.
         java.util.TimeZone originalTzDefault = java.util.TimeZone.getDefault();
@@ -180,6 +207,7 @@ public class DateTimeTest extends TestCase {
      *
      * @throws ParseException
      */
+    @Test
     public void testDateTimeHashCode() throws ParseException {
         TimeZone tz1 = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone("Europe/Paris");
         TimeZone tz2 = (TimeZone) tz1.clone();
@@ -195,6 +223,7 @@ public class DateTimeTest extends TestCase {
     /**
      * Test UTC date-times.
      */
+    @Test
     public void testUtc() throws ParseException {
         // ordinary date..
         DateTime date1 = new DateTime("20050101T093000");
@@ -221,79 +250,5 @@ public class DateTimeTest extends TestCase {
         DateTime date5 = new DateTime(false);
         date5.setTimeZone(utcTz);
         assertFalse(date5.isUtc());
-    }
-
-    @Override
-    public String getName() {
-        if (StringUtils.isNotEmpty(expectedToString)) {
-            return super.getName() + " [" + expectedToString + "]";
-        }
-        return super.getName();
-    }
-
-    /**
-     * @return
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
-
-        // test DateTime(long)..
-        DateTime dt = new DateTime(0);
-        dt.setUtc(true);
-//      dt.setTimeZone(TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(TimeZones.GMT_ID));
-//      assertEquals("19700101T000000", dt.toString());
-        suite.addTest(new DateTimeTest(dt, "19700101T000000Z"));
-
-        // change default tz to non-UTC timezone.
-        java.util.TimeZone originalTzDefault = java.util.TimeZone.getDefault();
-        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
-
-        // test DateTime(Date)..
-        Calendar cal = Calendar.getInstance(); //TimeZone.getTimeZone("GMT"));
-        cal.set(Calendar.YEAR, 1984);
-        // months are zero-based..
-        cal.set(Calendar.MONTH, 3);
-        cal.set(Calendar.DAY_OF_MONTH, 17);
-        cal.set(Calendar.HOUR_OF_DAY, 3);
-        cal.set(Calendar.MINUTE, 15);
-        cal.set(Calendar.SECOND, 34);
-        suite.addTest(new DateTimeTest(new DateTime(cal.getTime()), "19840417T031534"));
-        java.util.TimeZone.setDefault(originalTzDefault);
-
-        TimeZone tz = registry.getTimeZone("Australia/Melbourne");
-        // test DateTime(String)..
-        suite.addTest(new DateTimeTest(new DateTime("20000827T030000", tz), "20000827T030000"));
-        suite.addTest(new DateTimeTest(new DateTime("20070101T080000", tz), "20070101T080000"));
-        suite.addTest(new DateTimeTest(new DateTime("20050630T093000", tz), "20050630T093000"));
-        suite.addTest(new DateTimeTest(new DateTime("20050630T093000Z"), "20050630T093000Z"));
-        suite.addTest(new DateTimeTest(new DateTime("19390901T000000", tz), "19390901T000000"));
-
-        suite.addTest(new DateTimeTest(new DateTime("20000402T020000", tz), "20000402T020000"));
-        suite.addTest(new DateTimeTest(new DateTime("20000402T020000", tz), "20000402T020000"));
-
-        DateFormat df = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-//        Calendar cal = Calendar.getInstance(); //java.util.TimeZone.getTimeZone("America/Los_Angeles"));
-        cal.clear();
-        cal.set(2000, 0, 1, 2, 0, 0);
-        for (int i = 0; i < 365; i++) {
-            String dateString = df.format(cal.getTime());
-            suite.addTest(new DateTimeTest(new DateTime(dateString), dateString));
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-        }
-
-        suite.addTest(new DateTimeTest(new DateTime("20071104T000000",
-                registry.getTimeZone("America/Los_Angeles")), "20071104T000000"));
-//        suite.addTest(new DateTimeTest(new DateTime("20110326T090000",
-//                registry.getTimeZone("Europe/Minsk")), "20110326T090000"));
-
-        // other tests..
-        suite.addTest(new DateTimeTest("testDateTimeString"));
-        suite.addTest(new DateTimeTest("testDateTimeEquals"));
-        suite.addTest(new DateTimeTest("testDateTimeHashCode"));
-        suite.addTest(new DateTimeTest("testUtc"));
-
-        suite.addTest(new DateTimeTest("00001231T000000Z", "00011231T000000"));
-
-        return suite;
     }
 }

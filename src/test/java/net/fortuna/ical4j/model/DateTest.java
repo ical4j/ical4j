@@ -31,12 +31,16 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.TimeZones;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -46,82 +50,57 @@ import java.util.Calendar;
  * @author Ben Fortuna
  *
  */
-public class DateTest extends TestCase {
+public class DateTest {
 
-    private final Date date;
-
-    private java.util.Date date2;
-    
-    private String expectedString;
-    
     /**
-     * @param date
-     * @param expectedString
+     *
      */
-    public DateTest(Date date, String expectedString) {
-        super("testToString");
-        this.date = date;
-        this.expectedString = expectedString;
-    }
-    
-    /**
-     * @param date
-     * @param date2
-     */
-    public DateTest(Date date, java.util.Date date2) {
-        super("testEquals");
-        this.date = date;
-        this.date2 = date2;
-    }
-    
-    /**
-     * 
-     */
-    public void testToString() {
+    @ParameterizedTest(name = "toString [{0}]")
+    @MethodSource("toStringData")
+    public void testToString(Date date, String expectedString) {
         assertEquals(expectedString, date.toString());
     }
-    
-    /**
-     * 
-     */
-    public void testEquals() {
-        assertEquals(date2, date);
-    }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#getName()
-     */
-    @Override
-    public String getName() {
-        return super.getName() + " [" + date.toString() + "]";
-    }
-    
-    /**
-     * @return
-     * @throws ParseException 
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new DateTest(new Date(0L), "19700101"));
 
+    static Stream<Arguments> toStringData() throws ParseException {
         Calendar cal = Calendar.getInstance(TimeZones.getDateTimeZone());
         cal.clear();
         cal.set(Calendar.YEAR, 1984);
         // months are zero-based..
         cal.set(Calendar.MONTH, 3);
         cal.set(Calendar.DAY_OF_MONTH, 17);
-        suite.addTest(new DateTest(new Date(cal.getTime()), "19840417"));
+        Date date1984 = new Date(cal.getTime());
 
-        suite.addTest(new DateTest(new Date("20050630"), "20050630"));
-
-        // Test equality of Date instances created using different constructors..
         Calendar calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.set(Calendar.MILLISECOND, 1);
-        suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101").toString()));
-        suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101")));
-        
+        Date dateCalendar = new Date(calendar.getTime());
+
+        return Stream.of(
+                Arguments.of(new Date(0L), "19700101"),
+                Arguments.of(date1984, "19840417"),
+                Arguments.of(new Date("20050630"), "20050630"),
+                // Test equality of Date instances created using different constructors..
+                Arguments.of(dateCalendar, new Date("20050101").toString())
+        );
+    }
+
+    /**
+     *
+     */
+    @ParameterizedTest(name = "equals [{0}]")
+    @MethodSource("equalsData")
+    public void testEquals(Date date, java.util.Date date2) {
+        assertEquals(date2, date);
+    }
+
+    static Stream<Arguments> equalsData() throws ParseException {
+        Calendar calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
+        calendar.clear();
+        calendar.set(2005, 0, 1);
+        calendar.set(Calendar.MILLISECOND, 1);
+        Date dateCalendar = new Date(calendar.getTime());
+
         calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
         calendar.clear();
         calendar.set(2005, 0, 1);
@@ -129,7 +108,11 @@ public class DateTest extends TestCase {
         calendar.clear(Calendar.MINUTE);
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
-        suite.addTest(new DateTest(new Date("20050101"), calendar.getTime()));
-        return suite;
+        java.util.Date timeClean = calendar.getTime();
+
+        return Stream.of(
+                Arguments.of(dateCalendar, new Date("20050101")),
+                Arguments.of(new Date("20050101"), timeClean)
+        );
     }
 }

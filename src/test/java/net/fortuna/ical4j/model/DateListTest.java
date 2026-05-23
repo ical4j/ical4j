@@ -31,8 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -42,46 +47,23 @@ import junit.framework.TestSuite;
  * @author Ben
  *
  */
-public class DateListTest extends TestCase {
-
-    private final DateList<?> dateList;
-    
-    private final int expectedSize;
+public class DateListTest {
 
     /**
-     * @param value
-     * @param expectedSize
+     *
      */
-    public DateListTest(String value, int expectedSize) {
-        this(DateList.parse(value), expectedSize);
-    }
-
-    /**
-     * @param dateList
-     * @param expectedSize
-     */
-    public DateListTest(DateList<?> dateList, int expectedSize) {
-        super("testSize");
-        this.dateList = dateList;
-        this.expectedSize = expectedSize;
-    }
-    
-    /**
-     * 
-     */
-    public void testSize() {
+    @ParameterizedTest(name = "size [{1}]")
+    @MethodSource("sizeData")
+    public void testSize(DateList<?> dateList, int expectedSize) {
         assertEquals(expectedSize, dateList.getDates().size());
     }
-    
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new DateListTest(new DateList<>(), 0));
-        suite.addTest(new DateListTest(new Date().toString(), 1));
-        suite.addTest(new DateListTest(new DateTime().toString(), 1));
-        suite.addTest(new DateListTest(new DateTime(123) + "," + new DateTime(999), 2));
-        return suite;
+
+    static Stream<Arguments> sizeData() {
+        return Stream.of(
+                Arguments.of(new DateList<>(), 0),
+                Arguments.of(DateList.parse(new Date().toString()), 1),
+                Arguments.of(DateList.parse(new DateTime().toString()), 1),
+                Arguments.of(DateList.parse(new DateTime(123) + "," + new DateTime(999)), 2)
+        );
     }
 }
