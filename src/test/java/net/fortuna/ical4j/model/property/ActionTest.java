@@ -31,58 +31,86 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.AUDIO;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.DISPLAY;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.EMAIL;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.PROCEDURE;
 
 /**
  * Created: [19/11/2008]
  *
  * @author fortuna
  */
-public class ActionTest extends PropertyTest {
+public class ActionTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public ActionTest(Action action, String expectedValue) {
-        super(action, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public ActionTest(String testMethod, Action property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new ActionTest(AUDIO, "AUDIO"));
-        suite.addTest(new ActionTest(DISPLAY, "DISPLAY"));
-        suite.addTest(new ActionTest(EMAIL, "EMAIL"));
-        suite.addTest(new ActionTest(PROCEDURE, "PROCEDURE"));
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
 
-        suite.addTest(new ActionTest("testEquals", AUDIO));
-        suite.addTest(new ActionTest("testEquals", DISPLAY));
-        suite.addTest(new ActionTest("testEquals", EMAIL));
-        suite.addTest(new ActionTest("testEquals", PROCEDURE));
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
+    }
 
-        suite.addTest(new ActionTest("testValidation", AUDIO));
-        suite.addTest(new ActionTest("testValidation", DISPLAY));
-        suite.addTest(new ActionTest("testValidation", EMAIL));
-        suite.addTest(new ActionTest("testValidation", PROCEDURE));
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(AUDIO, "AUDIO"),
+                Arguments.of(DISPLAY, "DISPLAY"),
+                Arguments.of(EMAIL, "EMAIL"),
+                Arguments.of(PROCEDURE, "PROCEDURE")
+        );
+    }
 
-        suite.addTest(new ActionTest("testImmutable", AUDIO));
-        suite.addTest(new ActionTest("testImmutable", DISPLAY));
-        suite.addTest(new ActionTest("testImmutable", EMAIL));
-        suite.addTest(new ActionTest("testImmutable", PROCEDURE));
-        return suite;
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(AUDIO),
+                Arguments.of(DISPLAY),
+                Arguments.of(EMAIL),
+                Arguments.of(PROCEDURE)
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(AUDIO),
+                Arguments.of(DISPLAY),
+                Arguments.of(EMAIL),
+                Arguments.of(PROCEDURE)
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(AUDIO),
+                Arguments.of(DISPLAY),
+                Arguments.of(EMAIL),
+                Arguments.of(PROCEDURE)
+        );
     }
 }

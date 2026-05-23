@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.net.URI;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.net.URI;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -44,34 +49,41 @@ import net.fortuna.ical4j.model.PropertyTest;
  * @author Ben
  *
  */
-public class TzUrlTest extends PropertyTest {
+public class TzUrlTest {
 
-    /**
-     * @param url
-     * @param expectedValue
-     */
-    public TzUrlTest(TzUrl url, String expectedValue) {
-        super(url, expectedValue);
-    }
-    
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public TzUrlTest(String testMethod, TzUrl property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        TzUrl url = new TzUrl(URI.create(""));
-        suite.addTest(new TzUrlTest(url, ""));
-        suite.addTest(new TzUrlTest("testValidation", url));
-        suite.addTest(new TzUrlTest("testEquals", url));
-        return suite;
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new TzUrl(URI.create("")), "")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(new TzUrl(URI.create("")))
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(new TzUrl(URI.create("")))
+        );
+    }
 }

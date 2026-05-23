@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -43,35 +48,41 @@ import java.text.ParseException;
  *
  * @author fortuna
  */
-public class LastModifiedTest extends PropertyTest {
+public class LastModifiedTest {
 
-    /**
-     * @param expectedValue
-     */
-    public LastModifiedTest(LastModified lastModified, String expectedValue) {
-        super(lastModified, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public LastModifiedTest(String testMethod, LastModified property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @throws ParseException
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
-        LastModified modified = new LastModified("20081124T090000Z");
-        suite.addTest(new LastModifiedTest(modified, "20081124T090000Z"));
-        
-        modified = new LastModified("20081124T090000Z");
-        suite.addTest(new LastModifiedTest("testValidation", modified));
-        suite.addTest(new LastModifiedTest("testEquals", modified));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new LastModified("20081124T090000Z"), "20081124T090000Z")
+        );
+    }
+
+    static Stream<Arguments> validationData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new LastModified("20081124T090000Z"))
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new LastModified("20081124T090000Z"))
+        );
+    }
 }

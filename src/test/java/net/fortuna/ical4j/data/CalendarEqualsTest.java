@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.data;
 
-import junit.framework.AssertionFailedError;
+import static org.junit.jupiter.api.Assertions.fail;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -105,7 +105,7 @@ public class CalendarEqualsTest {
         }
 
         if (errorOccurred) {
-            throw new AssertionFailedError("Calendar file " + filename + " isn't valid:\n" + exception.getMessage());
+            fail("Calendar file " + filename + " isn't valid:\n" + exception.getMessage());
         }
 
         if (calendar != null) {
@@ -117,7 +117,7 @@ public class CalendarEqualsTest {
             }
 
             if (errorOccurred) {
-                throw new AssertionFailedError("Calendar file " + filename + " isn't valid:\n" + exception.getMessage());
+                fail("Calendar file " + filename + " isn't valid:\n" + exception.getMessage());
             }
 
             fin = new FileInputStream(filename);

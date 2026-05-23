@@ -31,12 +31,21 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.text.ParseException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.HIGH;
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.LOW;
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.MEDIUM;
+import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.UNDEFINED;
 
 /**
  * $Id$
@@ -45,51 +54,65 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutablePriority.*;
  *
  * @author fortuna
  */
-public class PriorityTest extends PropertyTest {
+public class PriorityTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public PriorityTest(Priority priority, String expectedValue) {
-        super(priority, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public PriorityTest(String testMethod, Priority property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
-    /**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new PriorityTest(UNDEFINED, "0"));
-        suite.addTest(new PriorityTest(HIGH, "1"));
-        suite.addTest(new PriorityTest(MEDIUM, "5"));
-        suite.addTest(new PriorityTest(LOW, "9"));
-        
-        suite.addTest(new PriorityTest("testValidation", UNDEFINED));
-        suite.addTest(new PriorityTest("testValidation", HIGH));
-        suite.addTest(new PriorityTest("testValidation", MEDIUM));
-        suite.addTest(new PriorityTest("testValidation", LOW));
-        
-        suite.addTest(new PriorityTest("testEquals", UNDEFINED));
-        suite.addTest(new PriorityTest("testEquals", HIGH));
-        suite.addTest(new PriorityTest("testEquals", MEDIUM));
-        suite.addTest(new PriorityTest("testEquals", LOW));
-        
-        suite.addTest(new PriorityTest("testImmutable", UNDEFINED));
-        suite.addTest(new PriorityTest("testImmutable", HIGH));
-        suite.addTest(new PriorityTest("testImmutable", MEDIUM));
-        suite.addTest(new PriorityTest("testImmutable", LOW));
-        
-        return suite;
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(UNDEFINED, "0"),
+                Arguments.of(HIGH, "1"),
+                Arguments.of(MEDIUM, "5"),
+                Arguments.of(LOW, "9")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(UNDEFINED),
+                Arguments.of(HIGH),
+                Arguments.of(MEDIUM),
+                Arguments.of(LOW)
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(UNDEFINED),
+                Arguments.of(HIGH),
+                Arguments.of(MEDIUM),
+                Arguments.of(LOW)
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(UNDEFINED),
+                Arguments.of(HIGH),
+                Arguments.of(MEDIUM),
+                Arguments.of(LOW)
+        );
+    }
 }

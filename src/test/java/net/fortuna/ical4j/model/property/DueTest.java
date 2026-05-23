@@ -31,45 +31,56 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * Created: [24/11/2008]
  *
  * @author fortuna
  */
-public class DueTest extends PropertyTest {
+public class DueTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public DueTest(Due due, String expectedValue) {
-        super(due, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public DueTest(String testMethod, Due property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
-    /**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
-        Due due = new Due("20081124T090000");
-        suite.addTest(new DueTest(due, "20081124T090000"));
-        suite.addTest(new DueTest("testEquals", due));
-        suite.addTest(new DueTest("testValidation", due));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    static Stream<Arguments> getValueData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new Due("20081124T090000"), "20081124T090000")
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new Due("20081124T090000"))
+        );
+    }
+
+    static Stream<Arguments> validationData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new Due("20081124T090000"))
+        );
+    }
 }

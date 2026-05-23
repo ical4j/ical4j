@@ -31,20 +31,31 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.ConstraintViolationException;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -54,41 +65,18 @@ import java.util.List;
  * Unit testing for {@link Categories}.
  * @author Ben Fortuna
  */
-public class CategoriesTest extends PropertyTest {
+public class CategoriesTest {
 
-    private Categories value;
-    private int expectedCategories;
-
-
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public CategoriesTest(Categories property, String expectedValue) {
-        super(property, expectedValue);
-    }
-
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public CategoriesTest(String testMethod, Categories property) {
-        super(testMethod, property);
-    }
-
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public CategoriesTest(String testMethod, Categories property, int expectedCategories) {
-        super(testMethod, property);
-        this.value = property;
-        this.expectedCategories = expectedCategories;
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
     /**
      * Test escaping of commas in categories.
      */
+    @Test
     public void testCommaEscaping() throws ValidationException, IOException,
             ParserException, ConstraintViolationException {
         Categories cat1 = new Categories("test1");
@@ -117,26 +105,22 @@ public class CategoriesTest extends PropertyTest {
     }
 
     /**
-     * Test escaping of commas in categories.
+     * Test escaping of commas in categories - assert size.
      */
-    public void testCommaEscapingCount() throws ValidationException, IOException,
-            ParserException {
-
+    @ParameterizedTest(name = "commaEscapingCount")
+    @MethodSource("commaEscapingCountData")
+    public void testCommaEscapingCount(Categories value, int expectedCategories)
+            throws ValidationException, IOException, ParserException {
         assertEquals(expectedCategories, value.getCategories().getTexts().size());
     }
 
-    /**
-     * @return
-     * @throws ValidationException
-     * @throws IOException
-     * @throws ParserException
-     */
-    public static TestSuite suite() throws IOException, ValidationException,
+    static Stream<Arguments> getValueData() throws IOException, ValidationException,
             ParserException, ConstraintViolationException {
-        TestSuite suite = new TestSuite();
+        Stream.Builder<Arguments> rows = Stream.builder();
+
         String list = "one,two,three";
         Categories categories = new Categories(list);
-        suite.addTest(new CategoriesTest(categories, list));
+        rows.add(Arguments.of(categories, list));
 
         // Test escaping of categories string representation..
         Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
@@ -152,13 +136,15 @@ public class CategoriesTest extends PropertyTest {
 
         Categories copy = calendar.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.CATEGORIES);
         assertEquals(orig, copy);
-        suite.addTest(new CategoriesTest(copy, orig.getValue()));
+        rows.add(Arguments.of(copy, orig.getValue()));
 
-        // other tests..
-        suite.addTest(new CategoriesTest("testCommaEscaping", null));
-        suite.addTest(new CategoriesTest("testCommaEscapingCount", new Categories("a\\,b"), 1));
-        suite.addTest(new CategoriesTest("testCommaEscapingCount", new Categories("a,b\\,c"), 2));
+        return rows.build();
+    }
 
-        return suite;
+    static Stream<Arguments> commaEscapingCountData() {
+        return Stream.of(
+                Arguments.of(new Categories("a\\,b"), 1),
+                Arguments.of(new Categories("a,b\\,c"), 2)
+        );
     }
 }

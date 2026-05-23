@@ -31,42 +31,42 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ConstraintViolationException;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created on 21/08/2007
  *
  * Unit tests for Description property.
  */
-public class DescriptionTest extends PropertyTest {
+public class DescriptionTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public DescriptionTest(Property property, String expectedValue) {
-        super(property, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @return
-     * @throws ParserException
-     * @throws IOException
-     */
-    public static TestSuite suite() throws IOException, ParserException, ConstraintViolationException {
-        TestSuite suite = new TestSuite();
+    static Stream<Arguments> getValueData() throws IOException, ParserException, ConstraintViolationException {
         // Test correct parsing of text with tabs.
         Calendar calendar = Calendars.load(DescriptionTest.class.getResource("/samples/valid/mansour.ics"));
         List<VEvent> event = calendar.getComponents(Component.VEVENT);
         Description description = event.get(0).getRequiredProperty(Property.DESCRIPTION);
-        suite.addTest(new DescriptionTest(description, "Test\t\ttabs"));
-        return suite;
+        return Stream.of(
+                Arguments.of(description, "Test\t\ttabs")
+        );
     }
 }

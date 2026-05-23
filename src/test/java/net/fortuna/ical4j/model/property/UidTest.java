@@ -31,8 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -41,33 +47,29 @@ import net.fortuna.ical4j.model.PropertyTest;
  *
  * @author fortuna
  */
-public class UidTest extends PropertyTest {
+public class UidTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public UidTest(Uid uid, String expectedValue) {
-        super(uid, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public UidTest(String testMethod, Uid property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        Uid uid = new Uid("");
-        suite.addTest(new UidTest(uid, ""));
-        suite.addTest(new UidTest("testValidation", uid));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new Uid(""), "")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(new Uid(""))
+        );
+    }
 }

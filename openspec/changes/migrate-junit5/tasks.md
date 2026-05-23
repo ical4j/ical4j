@@ -57,17 +57,17 @@ For each file with `suite()`:
 
 Each sub-phase below is ONE atomic commit — the base class and ALL its subclasses move together so test discovery is preserved at every commit boundary.
 
-- [ ] 5.1 **Sub-phase 4a (atomic commit)**: `AbstractPropertyTest` + `model/PropertyTest` + all ~54 `model/property/*` subclasses
-   - [ ] 5.1.1 Migrate `AbstractPropertyTest` off `TestCase` (drop `String name` constructor; keep `assertValidationError` using Jupiter `assertTrue`)
-   - [ ] 5.1.2 Migrate `model/PropertyTest` — convert from per-row constructors + `suite()` to either: (i) Jupiter-friendly base exposing protected static helpers, or (ii) a real test class with its own @ParameterizedTest methods that subclasses inherit. Choose (i) — see design.md.
-   - [ ] 5.1.3 Migrate each `model/property/*` subclass to one or more `@ParameterizedTest` methods feeding from `static Stream<Arguments> data()` sources
-   - [ ] 5.1.4 Run `./gradlew test` — all green
+- [x] 5.1 **Sub-phase 4a (atomic commit)**: `AbstractPropertyTest` + `model/PropertyTest` + all ~54 `model/property/*` subclasses
+   - [x] 5.1.1 Migrate `AbstractPropertyTest` off `TestCase` (drop `String name` constructor; keep `assertValidationError` using Jupiter `assertTrue`)
+   - [x] 5.1.2 Migrate `model/PropertyTest` — convert from per-row constructors + `suite()` to either: (i) Jupiter-friendly base exposing protected static helpers, or (ii) a real test class with its own @ParameterizedTest methods that subclasses inherit. Choose (i) — see design.md.
+   - [x] 5.1.3 Migrate each `model/property/*` subclass to one or more `@ParameterizedTest` methods feeding from `static Stream<Arguments> data()` sources
+   - [x] 5.1.4 Run `./gradlew test` — all green
    - [ ] 5.1.5 Commit Sub-phase 4a
 - [x] 5.2 **Sub-phase 4b (atomic commit)**: `model/ParameterTest` + all ~20 `model/parameter/*` subclasses (some already migrated — preserve those)
    - [x] 5.2.1 Migrate `model/ParameterTest` off `TestCase`
    - [x] 5.2.2 Migrate each `model/parameter/*` subclass that still extends `ParameterTest` or `TestCase`
    - [x] 5.2.3 Run `./gradlew test` — all green
-   - [ ] 5.2.4 Commit Sub-phase 4b
+   - [x] 5.2.4 Commit Sub-phase 4b
 - [x] 5.3 **Sub-phase 4c (atomic commit)**: `model/ComponentTest` + `model/CalendarComponentTest` + all ~12 `model/component/*` subclasses
    - [x] 5.3.1 Migrate `ComponentTest` off `TestCase`
    - [x] 5.3.2 Migrate `CalendarComponentTest` (extends `ComponentTest`) off `TestCase`
@@ -88,7 +88,7 @@ Each sub-phase below is ONE atomic commit — the base class and ALL its subclas
    - [x] 5.6.1 Migrate each file
    - [x] 5.6.2 Run `./gradlew test` — all green
    - [x] 5.6.3 Commit Sub-phase 4f
-- [ ] 5.7 Final sweep: `grep -rlE "extends TestCase|^import junit\.framework" src/test/java --include="*.java"` MUST return zero results
+- [x] 5.7 Final sweep: `grep -rlE "extends TestCase|^import junit\.framework" src/test/java --include="*.java"` MUST return zero results
 
 ## 6. Phase 5 — Cleanup
 
