@@ -31,15 +31,18 @@
  */
 package net.fortuna.ical4j.util;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.StringDecoder;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
@@ -50,7 +53,7 @@ import java.io.UnsupportedEncodingException;
  *
  * @author Ben Fortuna
  */
-public class DefaultDecoderFactoryTest extends TestCase {
+public class DefaultDecoderFactoryTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultDecoderFactoryTest.class);
 
@@ -62,6 +65,7 @@ public class DefaultDecoderFactoryTest extends TestCase {
      * @throws UnsupportedEncodingException
      * @throws DecoderException
      */
+    @Test
     public void testCreateBinaryDecoder() throws UnsupportedEncodingException,
             DecoderException {
 
@@ -92,6 +96,7 @@ public class DefaultDecoderFactoryTest extends TestCase {
      * @throws UnsupportedEncodingException
      * @throws DecoderException
      */
+    @Test
     public void testCreateStringDecoder() throws UnsupportedEncodingException,
             DecoderException {
 

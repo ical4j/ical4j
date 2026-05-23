@@ -26,16 +26,16 @@ Each base class is now migrated *together with* every subclass that depends on i
 - [x] 2.16 `transform/compliance/Rfc5545TransformerTest.java`
 - [x] 2.17 `transform/compliance/AttendeePropertyRuleTest.java`
 - [x] 2.18 Run `./gradlew test` — all green
-- [ ] 2.19 Commit Phase 1
+- [x] 2.19 Commit Phase 1
 
 ## 3. Phase 2 — Simple JUnit 3 files (no setUp, no suite(), no base-class consumers)
 
 Targets: files that `extends TestCase` directly, do not define `setUp`/`tearDown`, do not define `suite()`, and are not themselves used as a base class by other tests. The first three (`PropertyTest`, `ComponentTest`, `ParameterTest`, `FilterTest`, `CalendarComponentTest`) are EXCLUDED from this phase — they're handled in Phase 4 with their subclasses.
 
-- [ ] 3.1 Enumerate this set with: `comm -23 <(grep -rl "extends TestCase" src/test --include="*.java" | sort) <(grep -rlE "suite\(\)|protected void (setUp|tearDown)" src/test --include="*.java" | sort)`
-- [ ] 3.2 Subtract base classes (`PropertyTest`, `ComponentTest`, `ParameterTest`, `FilterTest`, `CalendarComponentTest`, `AbstractPropertyTest`)
-- [ ] 3.3 For each file: remove `extends TestCase`, drop `junit.framework.*` imports, add `@Test`, change `public` test methods to package-private, flip any message-first assertions
-- [ ] 3.4 Run `./gradlew test` — all green
+- [x] 3.1 Enumerate this set with: `comm -23 <(grep -rl "extends TestCase" src/test --include="*.java" | sort) <(grep -rlE "suite\(\)|protected void (setUp|tearDown)" src/test --include="*.java" | sort)`
+- [x] 3.2 Subtract base classes (`PropertyTest`, `ComponentTest`, `ParameterTest`, `FilterTest`, `CalendarComponentTest`, `AbstractPropertyTest`)
+- [x] 3.3 For each file: remove `extends TestCase`, drop `junit.framework.*` imports, add `@Test`, change `public` test methods to package-private, flip any message-first assertions
+- [x] 3.4 Run `./gradlew test` — all green
 - [ ] 3.5 Commit Phase 2
 
 ## 4. Phase 3 — setUp/tearDown JUnit 3 files (no base-class consumers, no suite())
