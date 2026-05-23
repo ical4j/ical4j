@@ -1,12 +1,12 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.Observance;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TimeZoneTest2 {
 

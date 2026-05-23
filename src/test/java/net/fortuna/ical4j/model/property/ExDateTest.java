@@ -38,10 +38,10 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * $Id$
@@ -67,7 +67,7 @@ public class ExDateTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
@@ -76,7 +76,7 @@ public class ExDateTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
@@ -94,7 +94,7 @@ public class ExDateTest {
         List<VEvent> event = calendar.getComponents(Component.VEVENT);
         List<Property> exdates = event.get(0).getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
-            assertTrue("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID).isPresent());
+            assertTrue(exDate.getParameter(Parameter.TZID).isPresent(), "This EXDATE should have a timezone");
         }
     }
 
@@ -133,7 +133,7 @@ public class ExDateTest {
      * Allow date values by default if relaxed parsing enabled.
      */
     @Test
-    @Ignore
+    @Disabled
     public void testRelaxedValidation() {
         ExDate<Instant> property = new ExDate<>(new ParameterList(), "20080315");
         try {

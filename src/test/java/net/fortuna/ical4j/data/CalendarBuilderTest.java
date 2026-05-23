@@ -36,10 +36,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -55,6 +53,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * $Id: CalendarBuilderTest.java [Apr 5, 2004]
  * <p/>
@@ -69,7 +70,7 @@ public class CalendarBuilderTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Before
+    @BeforeEach
     public final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
@@ -86,7 +87,7 @@ public class CalendarBuilderTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @After
+    @AfterEach
     public final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
@@ -105,7 +106,7 @@ public class CalendarBuilderTest {
         final FileInputStream fin = new FileInputStream(filename);
         Calendar calendar = new CalendarBuilder().build(fin);
         ValidationResult result = calendar.validate();
-        Assert.assertFalse(result.getEntries().stream().map(ValidationEntry::getMessage).collect(Collectors.joining(",")), result.hasErrors());
+        assertFalse(result.hasErrors(), result.getEntries().stream().map(ValidationEntry::getMessage).collect(Collectors.joining(",")));
     }
 
     /**
@@ -119,7 +120,7 @@ public class CalendarBuilderTest {
         try {
             Calendar calendar = new CalendarBuilder().build(fin);
             ValidationResult result = calendar.validate();
-            Assert.assertTrue(result.hasErrors());
+            assertTrue(result.hasErrors());
         } catch (DateTimeException | ValidationException | ParserException e) {
             log.trace("Caught exception: [" + filename + "," + e.getMessage() + "]");
         }

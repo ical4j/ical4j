@@ -36,11 +36,13 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Strings;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * $Id: CalendarBuilderCustomRegistryTest.java [Nov 16, 2009]
@@ -94,7 +96,7 @@ public class CalendarBuilderCustomRegistryTest {
         // try to build with a regular builder
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
-        Assert.assertTrue(cal.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.ATTENDEE)
+        assertTrue(cal.getComponents(Component.VEVENT).get(0).getRequiredProperty(Property.ATTENDEE)
                 .getRequiredParameter(SCHEDULE_STATUS) instanceof XParameter);
 
         // try to build with a custom parameter factory
@@ -123,6 +125,6 @@ public class CalendarBuilderCustomRegistryTest {
 
         List<VEvent> event = cal.getComponents(Component.VEVENT);
         var eventBis = event.get(0).copy();
-        Assert.assertEquals(eventBis, event.get(0));
+        assertEquals(eventBis, event.get(0));
     }
 }
