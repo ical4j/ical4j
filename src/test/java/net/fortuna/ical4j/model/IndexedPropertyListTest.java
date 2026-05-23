@@ -31,10 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.parameter.CuType;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Ben Fortuna
  */
-public class IndexedPropertyListTest extends TestCase {
+public class IndexedPropertyListTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(IndexedPropertyListTest.class);
 
@@ -56,8 +58,8 @@ public class IndexedPropertyListTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CalendarBuilder builder = new CalendarBuilder();
@@ -67,14 +69,15 @@ public class IndexedPropertyListTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected final void tearDown() throws Exception {
+    @AfterEach
+    final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
 
     /**
      * Indexing with IndexedPropertyList.
      */
+    @Test
     public void testIndexing() {
         // a VEvent for more interesting data.. 
         Component component = calendar.getComponents(Component.VEVENT).iterator().next();

@@ -35,30 +35,33 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Created on 15/06/2005
  *
  * @author Ben_Fortuna
  */
-public class ParameterFactoryImplTest extends TestCase {
+public class ParameterFactoryImplTest {
 
     private final Logger log = LoggerFactory.getLogger(ParameterFactoryImplTest.class);
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
+    @AfterEach
+    void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 
     /**
      * @throws Exception
      */
+    @Test
     public void testCreateParameter() throws Exception {
         Parameter p = new ParameterFactoryImpl().createParameter(
                 Parameter.ALTREP, "Test");
@@ -69,6 +72,7 @@ public class ParameterFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    @Test
     public void testCreateExperimentalParameter() throws Exception {
         Parameter p = new ParameterFactoryImpl().createParameter(
                 "X-my-param", "Test");
@@ -79,6 +83,7 @@ public class ParameterFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    @Test
     public void testInvalidParameter() throws Exception {
         try {
             new ParameterFactoryImpl().createParameter("my-param",
@@ -92,6 +97,7 @@ public class ParameterFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    @Test
     public void testRelaxedParsing() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
 

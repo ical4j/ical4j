@@ -31,10 +31,11 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Location;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,7 @@ import java.util.Optional;
  *
  * @author Ben Fortuna
  */
-public class IndexedComponentListTest extends TestCase {
+public class IndexedComponentListTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(IndexedComponentListTest.class);
 
@@ -60,8 +61,8 @@ public class IndexedComponentListTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         calendar = builder.build(getClass().getResourceAsStream("/samples/valid/Australian_TV_Melbourne.ics"));
     }
@@ -69,6 +70,7 @@ public class IndexedComponentListTest extends TestCase {
     /**
      * Indexing with IndexedComponentList.
      */
+    @Test
     public void testIndexing() {
         long start = System.currentTimeMillis();
         IndexedComponentList<CalendarComponent> list = new IndexedComponentList<CalendarComponent>(
@@ -81,6 +83,7 @@ public class IndexedComponentListTest extends TestCase {
     /**
      * Perform manual indexing.
      */
+    @Test
     public void testManualIndexing() {
         long start = System.currentTimeMillis();
         List<Component> list = new ArrayList<Component>();

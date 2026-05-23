@@ -31,16 +31,21 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
@@ -51,12 +56,12 @@ import java.net.URISyntaxException;
  *
  * @author Ben Fortuna
  */
-public class OrganizerTest extends TestCase {
+public class OrganizerTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganizerTest.class);
 
-    @Override
-    protected void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
@@ -64,14 +69,15 @@ public class OrganizerTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 
     /**
      * Test handling of invalid address values.
      */
+    @Test
     public void testInvalidAddress() throws URISyntaxException {
         String value = "MAILTO:";
 

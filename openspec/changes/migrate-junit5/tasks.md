@@ -36,15 +36,15 @@ Targets: files that `extends TestCase` directly, do not define `setUp`/`tearDown
 - [x] 3.2 Subtract base classes (`PropertyTest`, `ComponentTest`, `ParameterTest`, `FilterTest`, `CalendarComponentTest`, `AbstractPropertyTest`)
 - [x] 3.3 For each file: remove `extends TestCase`, drop `junit.framework.*` imports, add `@Test`, change `public` test methods to package-private, flip any message-first assertions
 - [x] 3.4 Run `./gradlew test` — all green
-- [ ] 3.5 Commit Phase 2
+- [x] 3.5 Commit Phase 2
 
 ## 4. Phase 3 — setUp/tearDown JUnit 3 files (no base-class consumers, no suite())
 
-- [ ] 4.1 Enumerate: `grep -rl "extends TestCase" src/test --include="*.java" | xargs grep -lE "protected void (setUp|tearDown)"`
+- [x] 4.1 Enumerate: `grep -rl "extends TestCase" src/test --include="*.java" | xargs grep -lE "protected void (setUp|tearDown)"`
 - [ ] 4.2 Subtract files with `suite()` (they belong to Phase 4) and base classes
-- [ ] 4.3 For each remaining file: PATTERN 2 transform — `@BeforeEach`/`@AfterEach`, plus PATTERN 1 changes
-- [ ] 4.4 Run `./gradlew test` — all green
-- [ ] 4.5 Commit Phase 3
+- [x] 4.3 For each remaining file: PATTERN 2 transform — `@BeforeEach`/`@AfterEach`, plus PATTERN 1 changes
+- [x] 4.4 Run `./gradlew test` — all green
+- [x] 4.5 Commit Phase 3
 
 ## 5. Phase 4 — Parameterised suite() files (~105 files) + base classes (bundled)
 
