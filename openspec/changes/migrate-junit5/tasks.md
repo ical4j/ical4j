@@ -74,16 +74,16 @@ Each sub-phase below is ONE atomic commit — the base class and ALL its subclas
    - [ ] 5.3.3 Migrate each `model/component/*` subclass
    - [ ] 5.3.4 Run `./gradlew test` — all green
    - [ ] 5.3.5 Commit Sub-phase 4c
-- [ ] 5.4 **Sub-phase 4d (atomic commit)**: `filter/FilterTest` + filter subclasses (`filter/predicate/*`)
-   - [ ] 5.4.1 Migrate `FilterTest` off `TestCase`
-   - [ ] 5.4.2 Migrate `filter/predicate/*` subclasses
-   - [ ] 5.4.3 Run `./gradlew test` — all green
+- [x] 5.4 **Sub-phase 4d (atomic commit)**: `filter/FilterTest` + filter subclasses (`filter/predicate/*`)
+   - [x] 5.4.1 Migrate `FilterTest` off `TestCase`
+   - [x] 5.4.2 Migrate `filter/predicate/*` subclasses
+   - [x] 5.4.3 Run `./gradlew test` — all green
    - [ ] 5.4.4 Commit Sub-phase 4d
 - [x] 5.5 **Sub-phase 4e (commit)**: standalone `model/*` parameterised tests — no base-class entanglement
    - Files: `DateTest`, `DateTimeTest`, `DateListTest`, `DurTest`, `NumberListTest`, `PeriodTest`, `PeriodListTest`, `RecurTest`, `TextListTest`, `TimeZoneTest`, `AddressListTest`, `CalendarDateFormatFactoryTest`
    - [x] 5.5.1 Migrate each file
    - [x] 5.5.2 Run `./gradlew test` — all green
-   - [ ] 5.5.3 Commit Sub-phase 4e
+   - [x] 5.5.3 Commit Sub-phase 4e
 - [x] 5.6 **Sub-phase 4f (commit)**: `util/*` parameterised — `UrisTest`, `CalendarsTest`
    - [x] 5.6.1 Migrate each file
    - [x] 5.6.2 Run `./gradlew test` — all green
