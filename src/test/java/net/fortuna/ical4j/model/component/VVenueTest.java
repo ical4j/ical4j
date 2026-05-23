@@ -31,12 +31,18 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.SocketException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -45,32 +51,42 @@ import java.net.SocketException;
  *
  * @author fortuna
  */
-public class VVenueTest extends ComponentTest {
+public class VVenueTest {
 
-    /**
-     * @param testMethod
-     * @param component
-     */
-    public VVenueTest(String testMethod, VVenue component) {
-        super(testMethod, component);
+    @AfterEach
+    void tearDown() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
-    /**
-     * @return
-     * @throws SocketException 
-     */
-    public static TestSuite suite() throws SocketException {
-        TestSuite suite = new TestSuite();
+    @ParameterizedTest(name = "isCalendarComponent")
+    @MethodSource("isCalendarComponentData")
+    public void testIsCalendarComponent(VVenue component) {
+        ComponentTest.assertIsCalendarComponent(component);
+    }
 
-        var vv = new VVenue();
-        suite.addTest(new VVenueTest("testIsCalendarComponent", vv));
-        suite.addTest(new VVenueTest("testValidationException", vv));
-        
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(VVenue component) {
+        ComponentTest.assertValidationException(component);
+    }
+
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(VVenue component) throws ValidationException {
+        ComponentTest.assertValidation(component);
+    }
+
+    static Stream<Arguments> isCalendarComponentData() {
+        return Stream.of(Arguments.of(new VVenue()));
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(Arguments.of(new VVenue()));
+    }
+
+    static Stream<Arguments> validationData() throws SocketException {
         UidGenerator g = new RandomUidGenerator();
         var vv2 = (VVenue) new VVenue().withProperty(g.generateUid()).getFluentTarget();
-        suite.addTest(new VVenueTest("testValidation", vv2));
-        
-        return suite;
+        return Stream.of(Arguments.of(vv2));
     }
-
 }
