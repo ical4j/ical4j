@@ -31,33 +31,30 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * Created: [18/11/2008]
  *
  * @author fortuna
  */
-public class RoleTest extends ParameterTest {
+public class RoleTest {
 
-    /**
-     * @param testMethod
-     * @param parameter
-     * @param expectedName
-     * @param expectedValue
-     */
-    public RoleTest(String testMethod, Role role, String expectedValue) {
-        super(testMethod, role, Parameter.ROLE, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Parameter parameter, String expectedValue) {
+        ParameterTest.assertGetValue(parameter, expectedValue);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new RoleTest("testGetValue", Role.CHAIR, "CHAIR"));
-        return suite;
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(Role.CHAIR, "CHAIR")
+        );
     }
 }

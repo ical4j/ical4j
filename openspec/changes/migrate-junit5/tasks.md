@@ -63,10 +63,10 @@ Each sub-phase below is ONE atomic commit — the base class and ALL its subclas
    - [ ] 5.1.3 Migrate each `model/property/*` subclass to one or more `@ParameterizedTest` methods feeding from `static Stream<Arguments> data()` sources
    - [ ] 5.1.4 Run `./gradlew test` — all green
    - [ ] 5.1.5 Commit Sub-phase 4a
-- [ ] 5.2 **Sub-phase 4b (atomic commit)**: `model/ParameterTest` + all ~20 `model/parameter/*` subclasses (some already migrated — preserve those)
-   - [ ] 5.2.1 Migrate `model/ParameterTest` off `TestCase`
-   - [ ] 5.2.2 Migrate each `model/parameter/*` subclass that still extends `ParameterTest` or `TestCase`
-   - [ ] 5.2.3 Run `./gradlew test` — all green
+- [x] 5.2 **Sub-phase 4b (atomic commit)**: `model/ParameterTest` + all ~20 `model/parameter/*` subclasses (some already migrated — preserve those)
+   - [x] 5.2.1 Migrate `model/ParameterTest` off `TestCase`
+   - [x] 5.2.2 Migrate each `model/parameter/*` subclass that still extends `ParameterTest` or `TestCase`
+   - [x] 5.2.3 Run `./gradlew test` — all green
    - [ ] 5.2.4 Commit Sub-phase 4b
 - [x] 5.3 **Sub-phase 4c (atomic commit)**: `model/ComponentTest` + `model/CalendarComponentTest` + all ~12 `model/component/*` subclasses
    - [x] 5.3.1 Migrate `ComponentTest` off `TestCase`

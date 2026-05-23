@@ -31,34 +31,30 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * Created: [18/11/2008]
  *
  * @author fortuna
  */
-public class LanguageTest extends ParameterTest {
+public class LanguageTest {
 
-    /**
-     * @param testMethod
-     * @param parameter
-     * @param expectedName
-     * @param expectedValue
-     */
-    public LanguageTest(String testMethod, Language language,
-            String expectedValue) {
-        super(testMethod, language, Parameter.LANGUAGE, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Parameter parameter, String expectedValue) {
+        ParameterTest.assertGetValue(parameter, expectedValue);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new LanguageTest("testGetValue", new Language(""), ""));
-        return suite;
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new Language(""), "")
+        );
     }
 }

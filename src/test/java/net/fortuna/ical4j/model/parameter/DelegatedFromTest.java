@@ -31,40 +31,45 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import java.net.URISyntaxException;
-
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
 /**
  * Created: [17/11/2008]
  *
  * @author fortuna
  */
-public class DelegatedFromTest extends ParameterTest {
+public class DelegatedFromTest {
 
-    /**
-     * @param testMethod
-     * @param parameter
-     * @param expectedName
-     * @param expectedValue
-     */
-    public DelegatedFromTest(String testMethod, Parameter parameter,
-            String expectedValue) {
-        super(testMethod, parameter, Parameter.DELEGATED_FROM, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Parameter parameter, String expectedValue) {
+        ParameterTest.assertGetValue(parameter, expectedValue);
     }
 
-    /**
-     * @return
-     * @throws URISyntaxException
-     */
-    public static TestSuite suite() throws URISyntaxException {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new DelegatedFromTest("testGetValue",
-                new DelegatedFrom("test@example.com,test2@example.com"), "\"test@example.com\",\"test2@example.com\""));
-        suite.addTest(new DelegatedFromTest("testToString",
-                new DelegatedFrom("test@example.com,test2@example.com"), "\"test@example.com\",\"test2@example.com\""));
-        return suite;
+    @ParameterizedTest(name = "toString")
+    @MethodSource("toStringData")
+    public void testToString(Parameter parameter, String expectedName, String expectedValue) {
+        ParameterTest.assertToString(parameter, expectedName, expectedValue);
+    }
+
+    static Stream<Arguments> getValueData() throws URISyntaxException {
+        return Stream.of(
+                Arguments.of(new DelegatedFrom("test@example.com,test2@example.com"),
+                        "\"test@example.com\",\"test2@example.com\"")
+        );
+    }
+
+    static Stream<Arguments> toStringData() throws URISyntaxException {
+        return Stream.of(
+                Arguments.of(new DelegatedFrom("test@example.com,test2@example.com"),
+                        Parameter.DELEGATED_FROM, "\"test@example.com\",\"test2@example.com\"")
+        );
     }
 }
