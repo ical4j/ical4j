@@ -62,37 +62,37 @@
 - [x] 7.4 Add a test: `new CalendarValidatorImpl()` (no rules) on a Calendar missing PRODID returns a ValidationEntry for PRODID
 - [x] 7.5 Add a test: same for missing VERSION
 - [x] 7.6 Run `./gradlew test` — green
-- [ ] 7.7 Commit "fix: enforce PRODID and VERSION presence in CalendarValidatorImpl per RFC 5545 §3.6"
+- [x] 7.7 Commit "fix: enforce PRODID and VERSION presence in CalendarValidatorImpl per RFC 5545 §3.6"
 
 ## 8. D5 — Delete deprecated validator subclasses
 
-- [ ] 8.1 Verify no remaining ical4j source references the following classes outside their own files:
+- [-] 8.1 Verify no remaining ical4j source references the following classes outside their own files:
   - `validate/component/VEventValidator.java`
   - `validate/component/VToDoValidator.java`
   - `validate/component/VAvailabilityValidator.java`
   - `validate/component/VFreeBusyValidator.java`
   - `validate/component/VTimeZoneValidator.java`
   - `validate/component/AvailableValidator.java`
-- [ ] 8.2 If 1.3 surfaced no external subclasses (or the decision is to remove anyway), delete all six files
-- [ ] 8.3 Update any documentation, javadoc `@see` references, or release notes
-- [ ] 8.4 Run `./gradlew test` and `./gradlew jar` — green
-- [ ] 8.5 Commit "refactor: remove deprecated validate/component/*Validator subclasses"
+- [-] 8.2 If 1.3 surfaced no external subclasses (or the decision is to remove anyway), delete all six files
+- [-] 8.3 Update any documentation, javadoc `@see` references, or release notes
+- [-] 8.4 Run `./gradlew test` and `./gradlew jar` — green
+- [-] 8.5 Commit "refactor: remove deprecated validate/component/*Validator subclasses"
 
 ## 9. Cleanup & docs
 
-- [ ] 9.1 Update CHANGELOG.md (or release notes) with the behavioural changes:
+- [-] 9.1 Update CHANGELOG.md (or release notes) with the behavioural changes:
   - PUBLISH/ATTENDEE now permitted (looser)
   - VFREEBUSY/COUNTER now validated (new coverage)
   - Unsupported (component, method) no longer throws (looser exception surface)
   - Per-component iTIP results now surface at calendar level (stricter result)
   - PRODID/VERSION presence now enforced unconditionally (stricter)
-- [ ] 9.2 Run `./gradlew clean test jacocoTestReport` — confirm coverage threshold (≥0.7) still met
+- [x] 9.2 Run `./gradlew clean test jacocoTestReport` — confirm coverage threshold (≥0.7) still met
 - [ ] 9.3 Open PR; reference RFC sections in PR body
 
 ## 10. Validation gates (apply at every commit boundary)
 
-- [ ] 10.1 `./gradlew clean test` passes
-- [ ] 10.2 No new compiler warnings introduced
-- [ ] 10.3 JaCoCo coverage ≥ 0.7
-- [ ] 10.4 Spock/Groovy untouched (`git diff --name-only -- src/test/groovy/` is empty per change boundary; this matches the existing test-framework spec's scope rule)
-- [ ] 10.5 Spock test count unchanged
+- [x] 10.1 `./gradlew clean test` passes
+- [x] 10.2 No new compiler warnings introduced
+- [x] 10.3 JaCoCo coverage ≥ 0.7
+- [x] 10.4 Spock/Groovy untouched (`git diff --name-only -- src/test/groovy/` is empty per change boundary; this matches the existing test-framework spec's scope rule)
+- [x] 10.5 Spock test count unchanged
