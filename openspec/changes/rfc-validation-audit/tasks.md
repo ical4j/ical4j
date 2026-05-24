@@ -52,16 +52,16 @@
 - [x] 6.3 Add a test: COUNTER VFREEBUSY missing UID produces a ValidationEntry for UID
 - [x] 6.4 Add a test: COUNTER VFREEBUSY does not throw `ValidationException`
 - [x] 6.5 Run `./gradlew test` — green
-- [ ] 6.6 Commit "feat: add VFREEBUSY/COUNTER iTIP validation rule set per RFC 5546 §4.3.3"
+- [x] 6.6 Commit "feat: add VFREEBUSY/COUNTER iTIP validation rule set per RFC 5546 §4.3.3"
 
 ## 7. F2 — Enforce PRODID and VERSION presence in CalendarValidatorImpl
 
-- [ ] 7.1 In `CalendarValidatorImpl.validate`, after the constructor-rules-driven check, add unconditional presence checks: if `target.getProperty(PRODID).isEmpty()` add ERROR entry; same for VERSION
-- [ ] 7.2 Update tests that constructed `CalendarValidatorImpl` directly with no rules and previously passed validation despite missing PRODID/VERSION
-- [ ] 7.3 Verify `DefaultCalendarValidatorFactory.newInstance()` still passes its existing tests (the constructor-rules path already covers PRODID/VERSION; the new checks should be redundant but not contradict)
-- [ ] 7.4 Add a test: `new CalendarValidatorImpl()` (no rules) on a Calendar missing PRODID returns a ValidationEntry for PRODID
-- [ ] 7.5 Add a test: same for missing VERSION
-- [ ] 7.6 Run `./gradlew test` — green
+- [x] 7.1 In `CalendarValidatorImpl.validate`, after the constructor-rules-driven check, add unconditional presence checks: if `target.getProperty(PRODID).isEmpty()` add ERROR entry; same for VERSION
+- [x] 7.2 Update tests that constructed `CalendarValidatorImpl` directly with no rules and previously passed validation despite missing PRODID/VERSION
+- [x] 7.3 Verify `DefaultCalendarValidatorFactory.newInstance()` still passes its existing tests (the constructor-rules path already covers PRODID/VERSION; the new checks should be redundant but not contradict)
+- [x] 7.4 Add a test: `new CalendarValidatorImpl()` (no rules) on a Calendar missing PRODID returns a ValidationEntry for PRODID
+- [x] 7.5 Add a test: same for missing VERSION
+- [x] 7.6 Run `./gradlew test` — green
 - [ ] 7.7 Commit "fix: enforce PRODID and VERSION presence in CalendarValidatorImpl per RFC 5545 §3.6"
 
 ## 8. D5 — Delete deprecated validator subclasses

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.METHOD;
+import static net.fortuna.ical4j.model.Property.PRODID;
 import static net.fortuna.ical4j.model.Property.VERSION;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
@@ -62,6 +63,20 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
     @Override
     public ValidationResult validate(Calendar target) throws ValidationException {
         var result = new ValidationResult(rules.apply(Calendar.VCALENDAR, target));
+
+        // RFC 5545 §3.6 — PRODID and VERSION are REQUIRED on every iCalendar object.
+        // Enforced unconditionally here (independent of constructor-passed rules) so
+        // that direct CalendarValidatorImpl construction matches the guarantee that
+        // DefaultCalendarValidatorFactory.newInstance() already provides through its
+        // rule set.
+        if (target.getProperty(PRODID).isEmpty()) {
+            result.getEntries().add(new ValidationEntry("PRODID is required",
+                    ValidationEntry.Severity.ERROR, Calendar.VCALENDAR));
+        }
+        if (target.getProperty(VERSION).isEmpty()) {
+            result.getEntries().add(new ValidationEntry("VERSION is required",
+                    ValidationEntry.Severity.ERROR, Calendar.VCALENDAR));
+        }
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
