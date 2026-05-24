@@ -24,15 +24,15 @@
 - [x] 3.2 Update `ITIPRuleRegistry.validate(...)` to use the same not-applicable entry shape when a registry cell is empty (consistency)
 - [x] 3.3 Update any tests in `validate/CalendarValidatorImplTest` and per-component validate(Method) tests that previously expected `ValidationException` for unsupported methods
 - [x] 3.4 Run `./gradlew test` — green
-- [ ] 3.5 Commit "fix: report unsupported (component, method) as validation entry instead of throwing"
+- [x] 3.5 Commit "fix: report unsupported (component, method) as validation entry instead of throwing"
 
 ## 4. F10 — Merge per-component iTIP results
 
-- [ ] 4.1 In `CalendarValidatorImpl.validate`, change the `for (var component : target.getComponents()) { component.validate(method.get()); }` loop to `for (var component : target.getComponents()) { result = result.merge(component.validate(method.get())); }`
-- [ ] 4.2 Run `./gradlew test` — expect new failures in tests that had been passing only because per-component iTIP errors were silently dropped. Investigate each failure; some are expected behaviour changes (correctness fixes), some may indicate over-strict rules in the registry that should be relaxed.
-- [ ] 4.3 For each failed test that reflects a correctness fix: update the test expectation to match the new (correct) behaviour
-- [ ] 4.4 For each failed test that reveals an over-strict rule: document the rule in the design doc's Open Questions and decide whether to relax (with `relaxedModeSupported=true`) or accept as a strict rule
-- [ ] 4.5 Run `./gradlew test` — green
+- [x] 4.1 In `CalendarValidatorImpl.validate`, change the `for (var component : target.getComponents()) { component.validate(method.get()); }` loop to `for (var component : target.getComponents()) { result = result.merge(component.validate(method.get())); }`
+- [x] 4.2 Run `./gradlew test` — expect new failures in tests that had been passing only because per-component iTIP errors were silently dropped. Investigate each failure; some are expected behaviour changes (correctness fixes), some may indicate over-strict rules in the registry that should be relaxed.
+- [x] 4.3 For each failed test that reflects a correctness fix: update the test expectation to match the new (correct) behaviour
+- [x] 4.4 For each failed test that reveals an over-strict rule: document the rule in the design doc's Open Questions and decide whether to relax (with `relaxedModeSupported=true`) or accept as a strict rule
+- [x] 4.5 Run `./gradlew test` — green
 - [ ] 4.6 Commit "fix: merge per-component iTIP validation results into calendar-level result"
 
 ## 5. F1 — Drop None ATTENDEE rule for VEVENT/PUBLISH

@@ -94,7 +94,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
             // perform ITIP validation on components..
             for (var component : target.getComponents()) {
-                component.validate(method.get());
+                result = result.merge(component.validate(method.get()));
             }
         }
         return result;
