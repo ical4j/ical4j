@@ -23,12 +23,14 @@ import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.property.immutable.ImmutableAction;
+import net.fortuna.ical4j.model.property.immutable.ImmutableStatus;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -150,5 +152,32 @@ public class ComponentValidatorHelpersTest {
                         + result.getEntries());
     }
 
-    // VTODO STATUS predicate tests are added by Section 4.
+    // ----- VTODO STATUS predicate (Section 4) -----
+
+    @Test
+    public void vToDoStatusCompletedProducesNoStatusEntry() {
+        VToDo todo = new VToDo(false);
+        todo.add(new net.fortuna.ical4j.model.property.DtStamp());
+        todo.add(new net.fortuna.ical4j.model.property.Uid("status-completed-uid"));
+        todo.add(ImmutableStatus.VTODO_COMPLETED);
+
+        ValidationResult result = ComponentValidator.VTODO.validate(todo);
+
+        assertFalse(anyEntryMentions(result, "STATUS value not applicable for VTODO"),
+                "VTODO with STATUS:COMPLETED should not flag STATUS; got: " + result.getEntries());
+    }
+
+    @Test
+    public void vToDoStatusTentativeProducesStatusEntry() {
+        VToDo todo = new VToDo(false);
+        todo.add(new net.fortuna.ical4j.model.property.DtStamp());
+        todo.add(new net.fortuna.ical4j.model.property.Uid("status-tentative-uid"));
+        // TENTATIVE is a VEVENT status, not valid for VTODO.
+        todo.add(ImmutableStatus.VEVENT_TENTATIVE);
+
+        ValidationResult result = ComponentValidator.VTODO.validate(todo);
+
+        assertTrue(anyEntryMentions(result, "STATUS value not applicable for VTODO"),
+                "VTODO with VEVENT STATUS must flag STATUS; got: " + result.getEntries());
+    }
 }

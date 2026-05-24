@@ -28,12 +28,12 @@
 
 ## 4. Add VTODO STATUS predicate to ComponentValidator.VTODO (D2-ALT)
 
-- [ ] 4.1 In `ComponentValidator.VTODO`, add a `ValidationRule<>((Predicate<VToDo> & Serializable) ...)` mirroring the existing `VJOURNAL` STATUS check pattern, asserting STATUS value is one of NEEDS-ACTION/COMPLETED/IN-PROCESS/CANCELLED.
-- [ ] 4.2 Add a test in `ComponentValidatorHelpersTest`:
+- [x] 4.1 In `ComponentValidator.VTODO`, add a `ValidationRule<>((Predicate<VToDo> & Serializable) ...)` mirroring the existing `VJOURNAL` STATUS check pattern, asserting STATUS value is one of NEEDS-ACTION/COMPLETED/IN-PROCESS/CANCELLED.
+- [x] 4.2 Add a test in `ComponentValidatorHelpersTest`:
   - VTODO with STATUS:COMPLETED → no STATUS entry
   - VTODO with STATUS:TENTATIVE (a VEVENT value) → STATUS entry
-- [ ] 4.3 Run `./gradlew test` — green
-- [ ] 4.4 Commit: "feat: enforce VTODO STATUS allowed values via ValidationRule predicate"
+- [x] 4.3 Run `./gradlew test` — green
+- [x] 4.4 Commit: "feat: enforce VTODO STATUS allowed values via ValidationRule predicate"
 
 ## 5. Update no-method validate() paths in model classes
 

@@ -155,7 +155,11 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
                     DTSTART, GEO, LAST_MODIFIED, LOCATION, ORGANIZER,
                     PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, SEQUENCE, STATUS,
                     SUMMARY, UID, URL),
-            new ValidationRule<>(OneExclusive, DUE, DURATION));
+            new ValidationRule<>(OneExclusive, DUE, DURATION),
+            new ValidationRule<>((Predicate<VToDo> & Serializable) t -> t.getProperties(STATUS).stream()
+                    .anyMatch(p -> !(VTODO_NEEDS_ACTION.equals(p) || VTODO_COMPLETED.equals(p)
+                            || VTODO_IN_PROCESS.equals(p) || VTODO_CANCELLED.equals(p))),
+                    "STATUS value not applicable for VTODO", STATUS));
 
     public static final ComponentValidator<VVenue> VVENUE = new ComponentValidator<>(Component.VVENUE,
             new ValidationRule<>(One, UID),
