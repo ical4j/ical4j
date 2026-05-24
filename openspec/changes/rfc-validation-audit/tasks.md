@@ -33,14 +33,14 @@
 - [x] 4.3 For each failed test that reflects a correctness fix: update the test expectation to match the new (correct) behaviour
 - [x] 4.4 For each failed test that reveals an over-strict rule: document the rule in the design doc's Open Questions and decide whether to relax (with `relaxedModeSupported=true`) or accept as a strict rule
 - [x] 4.5 Run `./gradlew test` — green
-- [ ] 4.6 Commit "fix: merge per-component iTIP validation results into calendar-level result"
+- [x] 4.6 Commit "fix: merge per-component iTIP validation results into calendar-level result"
 
 ## 5. F1 — Drop None ATTENDEE rule for VEVENT/PUBLISH
 
-- [ ] 5.1 In `ITIPRuleRegistry` (the entry for `(VEVENT, PUBLISH)`), remove the `new ValidationRule<>(None, true, ATTENDEE)` rule
-- [ ] 5.2 Add a test: PUBLISH VEVENT with one ATTENDEE produces no validation entries naming ATTENDEE
-- [ ] 5.3 Add a test: PUBLISH VEVENT with multiple ATTENDEEs validates clean
-- [ ] 5.4 Run `./gradlew test` — green
+- [x] 5.1 In `ITIPRuleRegistry` (the entry for `(VEVENT, PUBLISH)`), remove the `new ValidationRule<>(None, true, ATTENDEE)` rule
+- [x] 5.2 Add a test: PUBLISH VEVENT with one ATTENDEE produces no validation entries naming ATTENDEE
+- [x] 5.3 Add a test: PUBLISH VEVENT with multiple ATTENDEEs validates clean
+- [x] 5.4 Run `./gradlew test` — green
 - [ ] 5.5 Commit "fix: allow ATTENDEE on VEVENT/PUBLISH per RFC 5546 §3.2.1.1"
 
 ## 6. F3 — Add VFREEBUSY/COUNTER iTIP rule set

@@ -93,12 +93,15 @@ public final class ITIPRuleRegistry {
                 new ValidationRule<>(None, ATTACH, ATTENDEE, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND,
                         DTSTART, DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
                         RESOURCES, RRULE, STATUS, SUMMARY, TRANSP, URL)));
+        // RFC 5546 §3.2.1.1: VEVENT/PUBLISH allows ATTENDEE 0+. The previously-present
+        // `new ValidationRule<>(None, true, ATTENDEE)` rule contradicted the RFC and
+        // rejected real-world Outlook/Google PUBLISH exports that legitimately list
+        // attendees. Removed in this change (F1 of rfc-validation-audit).
         vevent.put(PUBLISH, new VEventValidator(
                 new ValidationRule<>(One, DTSTART, UID),
                 new ValidationRule<>(One, true, DTSTAMP, ORGANIZER, SUMMARY),
                 new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
                         DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
-                new ValidationRule<>(None, true, ATTENDEE),
                 new ValidationRule<>(None, REQUEST_STATUS)));
         vevent.put(REFRESH, new VEventValidator(false,
                 new ValidationRule<>(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
