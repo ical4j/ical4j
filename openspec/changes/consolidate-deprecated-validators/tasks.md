@@ -45,13 +45,13 @@
 
 ## 6. Update ITIPRuleRegistry to drop deprecated subclasses (D6)
 
-- [ ] 6.1 Choose between sketch options in design.md D6: (a) `validateWithAlarms(...)` wrapper that aggregates `ComponentValidator<>` + alarm-validation; or (b) inline lambda creation per registry entry. Default to (a) — fewer copies of the wrapper code.
-- [ ] 6.2 Replace each `new VEventValidator(alarmsAllowed, rules...)` registry entry with `validateWithAlarms(new ComponentValidator<>(VEVENT, rules...), alarmsAllowed)`-shaped construction
-- [ ] 6.3 Same for `new VToDoValidator(alarmsAllowed, rules...)` → `validateWithAlarms(new ComponentValidator<>(VTODO, rules...), alarmsAllowed)`
-- [ ] 6.4 Replace `new VTimeZoneValidator()` registry entry with a `new ComponentValidator<>(VTIMEZONE, ...)` plus a wrapper that calls `validateObservances` after the base validation
-- [ ] 6.5 Drop the now-unused `import net.fortuna.ical4j.validate.component.VEventValidator`, etc. from `ITIPRuleRegistry.java`
-- [ ] 6.6 Run `./gradlew test` — green
-- [ ] 6.7 Commit: "refactor: drop deprecated validator subclasses from ITIPRuleRegistry"
+- [x] 6.1 Choose between sketch options in design.md D6: (a) `validateWithAlarms(...)` wrapper that aggregates `ComponentValidator<>` + alarm-validation; or (b) inline lambda creation per registry entry. Default to (a) — fewer copies of the wrapper code.
+- [x] 6.2 Replace each `new VEventValidator(alarmsAllowed, rules...)` registry entry with `validateWithAlarms(new ComponentValidator<>(VEVENT, rules...), alarmsAllowed)`-shaped construction
+- [x] 6.3 Same for `new VToDoValidator(alarmsAllowed, rules...)` → `validateWithAlarms(new ComponentValidator<>(VTODO, rules...), alarmsAllowed)`
+- [x] 6.4 Replace `new VTimeZoneValidator()` registry entry with a `new ComponentValidator<>(VTIMEZONE, ...)` plus a wrapper that calls `validateObservances` after the base validation
+- [x] 6.5 Drop the now-unused `import net.fortuna.ical4j.validate.component.VEventValidator`, etc. from `ITIPRuleRegistry.java`
+- [x] 6.6 Run `./gradlew test` — green
+- [x] 6.7 Commit: "refactor: drop deprecated validator subclasses from ITIPRuleRegistry"
 
 ## 7. Delete the three remaining @Deprecated files
 

@@ -33,13 +33,11 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentContainer;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.component.VEventValidator;
-import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
-import net.fortuna.ical4j.validate.component.VToDoValidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,99 +70,108 @@ public final class ITIPRuleRegistry {
     static {
         // ----- VEVENT -----
         Map<Method, Validator<? extends CalendarComponent>> vevent = new HashMap<>();
-        vevent.put(ADD, new VEventValidator(
+        vevent.put(ADD, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, SUMMARY, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
-                new ValidationRule<>(None, RECURRENCE_ID, REQUEST_STATUS)));
-        vevent.put(CANCEL, new VEventValidator(false,
+                new ValidationRule<>(None, RECURRENCE_ID, REQUEST_STATUS)), true));
+        vevent.put(CANCEL, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DTSTART, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, SUMMARY, TRANSP, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-        vevent.put(COUNTER, new VEventValidator(
+                new ValidationRule<>(None, REQUEST_STATUS)), false));
+        vevent.put(COUNTER, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, DTSTAMP, DTSTART, SEQUENCE, SUMMARY, UID),
                 new ValidationRule<>(One, true, ORGANIZER),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
-        vevent.put(DECLINE_COUNTER, new VEventValidator(false,
+                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)), true));
+        vevent.put(DECLINE_COUNTER, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, DTSTAMP, ORGANIZER, UID),
                 new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE),
                 new ValidationRule<>(None, ATTACH, ATTENDEE, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND,
                         DTSTART, DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
-                        RESOURCES, RRULE, STATUS, SUMMARY, TRANSP, URL)));
+                        RESOURCES, RRULE, STATUS, SUMMARY, TRANSP, URL)), false));
         // RFC 5546 §3.2.1.1: VEVENT/PUBLISH allows ATTENDEE 0+. The previously-present
         // `new ValidationRule<>(None, true, ATTENDEE)` rule contradicted the RFC and
         // rejected real-world Outlook/Google PUBLISH exports that legitimately list
         // attendees. Removed in this change (F1 of rfc-validation-audit).
-        vevent.put(PUBLISH, new VEventValidator(
+        vevent.put(PUBLISH, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, DTSTART, UID),
                 new ValidationRule<>(One, true, DTSTAMP, ORGANIZER, SUMMARY),
                 new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
                         DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-        vevent.put(REFRESH, new VEventValidator(false,
+                new ValidationRule<>(None, REQUEST_STATUS)), true));
+        vevent.put(REFRESH, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
                 new ValidationRule<>(OneOrLess, RECURRENCE_ID),
                 new ValidationRule<>(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND, DTSTART,
                         DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
-                        REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, SUMMARY, TRANSP, URL)));
+                        REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, SUMMARY, TRANSP, URL)), false));
         // NOTE: VEVENT/REPLY's alarms-allowed flag is determined by the KEY_RELAXED_VALIDATION
         // compatibility hint at registry-class load time. This mirrors the legacy behaviour from
         // VEvent.java where the static initialiser captured the hint's value once at class load.
         // (Behaviour preserved verbatim by this refactor; revisiting this is out of scope here.)
-        vevent.put(REPLY, new VEventValidator(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION),
+        vevent.put(REPLY, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
                 new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
                         DTSTART, DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, SUMMARY, TRANSP,
-                        URL)));
-        vevent.put(REQUEST, new VEventValidator(
+                        URL)),
+                CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)));
+        vevent.put(REQUEST, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(OneOrMore, true, ATTENDEE),
                 new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SUMMARY, UID),
                 new ValidationRule<>(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
+                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)), true));
         RULES.put(Component.VEVENT, vevent);
 
         // ----- VTODO -----
         Map<Method, Validator<? extends CalendarComponent>> vtodo = new HashMap<>();
-        vtodo.put(ADD, new VToDoValidator(new ValidationRule<>(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
+        vtodo.put(ADD, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RESOURCES, STATUS, URL),
-                new ValidationRule<>(None, RECURRENCE_ID, REQUEST_STATUS)));
-        vtodo.put(CANCEL, new VToDoValidator(false, new ValidationRule<>(One, UID, DTSTAMP, ORGANIZER, SEQUENCE),
+                new ValidationRule<>(None, RECURRENCE_ID, REQUEST_STATUS)), true));
+        vtodo.put(CANCEL, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(One, UID, DTSTAMP, ORGANIZER, SEQUENCE),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, PRIORITY, STATUS, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-        vtodo.put(COUNTER, new VToDoValidator(new ValidationRule<>(OneOrMore, ATTENDEE),
+                new ValidationRule<>(None, REQUEST_STATUS)), false));
+        vtodo.put(COUNTER, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(OneOrMore, ATTENDEE),
                 new ValidationRule<>(One, DTSTAMP, ORGANIZER, PRIORITY, SUMMARY, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, RRULE, SEQUENCE, STATUS,
-                        URL)));
-        vtodo.put(DECLINE_COUNTER, new VToDoValidator(false, new ValidationRule<>(OneOrMore, ATTENDEE),
+                        URL)), true));
+        vtodo.put(DECLINE_COUNTER, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(OneOrMore, ATTENDEE),
                 new ValidationRule<>(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, LOCATION, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS,
-                        URL)));
-        vtodo.put(PUBLISH, new VToDoValidator(new ValidationRule<>(One, DTSTAMP, SUMMARY, UID),
+                        URL)), false));
+        vtodo.put(PUBLISH, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(One, DTSTAMP, SUMMARY, UID),
                 new ValidationRule<>(One, true, ORGANIZER, PRIORITY),
                 new ValidationRule<>(OneOrLess, DTSTART, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DUE, DURATION,
                         GEO, LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, STATUS, URL),
-                new ValidationRule<>(None, ATTENDEE, REQUEST_STATUS)));
-        vtodo.put(REFRESH, new VToDoValidator(false, new ValidationRule<>(One, ATTENDEE, DTSTAMP, UID),
+                new ValidationRule<>(None, ATTENDEE, REQUEST_STATUS)), true));
+        vtodo.put(REFRESH, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(One, ATTENDEE, DTSTAMP, UID),
                 new ValidationRule<>(OneOrLess, RECURRENCE_ID),
                 new ValidationRule<>(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTSTART, DUE,
                         DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE, PRIORITY,
-                        RDATE, RELATED_TO, REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, URL)));
-        vtodo.put(REPLY, new VToDoValidator(false, new ValidationRule<>(OneOrMore, ATTENDEE),
+                        RDATE, RELATED_TO, REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, URL)), false));
+        vtodo.put(REPLY, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(OneOrMore, ATTENDEE),
                 new ValidationRule<>(One, DTSTAMP, ORGANIZER, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, PRIORITY, RESOURCES, RECURRENCE_ID, SEQUENCE, STATUS,
-                        SUMMARY, URL)));
-        vtodo.put(REQUEST, new VToDoValidator(new ValidationRule<>(OneOrMore, ATTENDEE),
+                        SUMMARY, URL)), false));
+        vtodo.put(REQUEST, withAlarms(new ComponentValidator<>(Component.VTODO,
+                new ValidationRule<>(OneOrMore, ATTENDEE),
                 new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, PRIORITY, SUMMARY, UID),
                 new ValidationRule<>(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, STATUS, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
+                new ValidationRule<>(None, REQUEST_STATUS)), true));
         RULES.put(Component.VTODO, vtodo);
 
         // ----- VJOURNAL -----
@@ -213,8 +220,47 @@ public final class ITIPRuleRegistry {
         // The convention: a null-keyed entry in the per-component map serves as the
         // "any method" fallback, consulted when no method-specific entry exists.
         Map<Method, Validator<? extends CalendarComponent>> vtimezone = new HashMap<>();
-        vtimezone.put(null, new VTimeZoneValidator());
+        vtimezone.put(null, withObservances(ComponentValidator.VTIMEZONE));
         RULES.put(Component.VTIMEZONE, vtimezone);
+    }
+
+    /**
+     * Wraps a base {@link ComponentValidator} with sub-component VALARM validation. After the
+     * base validator runs, {@link ComponentValidator#validateAlarms(ComponentContainer, boolean, ValidationResult)}
+     * appends entries for each contained VALARM (or for their presence when
+     * {@code alarmsAllowed} is false). Replaces the alarm logic previously baked into
+     * the deprecated {@code VEventValidator} / {@code VToDoValidator} subclasses.
+     */
+    private static Validator<? extends CalendarComponent> withAlarms(
+            ComponentValidator<? extends CalendarComponent> base, boolean alarmsAllowed) {
+        @SuppressWarnings("unchecked")
+        Validator<CalendarComponent> baseV = (Validator<CalendarComponent>) base;
+        return (Validator<CalendarComponent>) target -> {
+            ValidationResult r = baseV.validate(target);
+            if (target instanceof ComponentContainer) {
+                ComponentValidator.validateAlarms((ComponentContainer<?>) target, alarmsAllowed, r);
+            }
+            return r;
+        };
+    }
+
+    /**
+     * Wraps a base {@link ComponentValidator} with VTIMEZONE observance validation. After the
+     * base validator runs, {@link ComponentValidator#validateObservances(VTimeZone, ValidationResult)}
+     * appends a presence entry if neither STANDARD nor DAYLIGHT is present, plus per-observance
+     * entries. Replaces the throw-based observance check previously in {@code VTimeZoneValidator}.
+     */
+    private static Validator<? extends CalendarComponent> withObservances(
+            ComponentValidator<? extends CalendarComponent> base) {
+        @SuppressWarnings("unchecked")
+        Validator<CalendarComponent> baseV = (Validator<CalendarComponent>) base;
+        return (Validator<CalendarComponent>) target -> {
+            ValidationResult r = baseV.validate(target);
+            if (target instanceof VTimeZone) {
+                ComponentValidator.validateObservances((VTimeZone) target, r);
+            }
+            return r;
+        };
     }
 
     private ITIPRuleRegistry() {
