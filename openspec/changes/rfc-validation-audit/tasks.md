@@ -16,14 +16,14 @@
 - [x] 2.8 Same for `VToDo.validate(Method)`, `VJournal.validate(Method)`, `VFreeBusy.validate(Method)`
 - [x] 2.9 Delete the (now-unused) `methodValidators` maps and static initialisers in the four model classes
 - [x] 2.10 Run `./gradlew test` — MUST be green with no count change vs 1.1 baseline (semantics unchanged in this step)
-- [ ] 2.11 Commit "refactor: move iTIP rule definitions into ITIPRuleRegistry"
+- [x] 2.11 Commit "refactor: move iTIP rule definitions into ITIPRuleRegistry"
 
 ## 3. F4 — Unsupported (component, method) returns a ValidationResult
 
-- [ ] 3.1 Change `CalendarComponent.validate(Method)` (base in `src/main/java/net/fortuna/ical4j/model/component/CalendarComponent.java`) from `throw new ValidationException(...)` to returning a `ValidationResult` with a single ERROR `ValidationEntry` whose message is `String.format("Method %s not applicable to component %s", method.getValue(), getName())`. Keep the `throws ValidationException` on the signature for binary compat.
-- [ ] 3.2 Update `ITIPRuleRegistry.validate(...)` to use the same not-applicable entry shape when a registry cell is empty (consistency)
-- [ ] 3.3 Update any tests in `validate/CalendarValidatorImplTest` and per-component validate(Method) tests that previously expected `ValidationException` for unsupported methods
-- [ ] 3.4 Run `./gradlew test` — green
+- [x] 3.1 Change `CalendarComponent.validate(Method)` (base in `src/main/java/net/fortuna/ical4j/model/component/CalendarComponent.java`) from `throw new ValidationException(...)` to returning a `ValidationResult` with a single ERROR `ValidationEntry` whose message is `String.format("Method %s not applicable to component %s", method.getValue(), getName())`. Keep the `throws ValidationException` on the signature for binary compat.
+- [x] 3.2 Update `ITIPRuleRegistry.validate(...)` to use the same not-applicable entry shape when a registry cell is empty (consistency)
+- [x] 3.3 Update any tests in `validate/CalendarValidatorImplTest` and per-component validate(Method) tests that previously expected `ValidationException` for unsupported methods
+- [x] 3.4 Run `./gradlew test` — green
 - [ ] 3.5 Commit "fix: report unsupported (component, method) as validation entry instead of throwing"
 
 ## 4. F10 — Merge per-component iTIP results
