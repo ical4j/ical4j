@@ -11,20 +11,20 @@
 - [x] 2.2 `git rm src/main/java/net/fortuna/ical4j/validate/component/VFreeBusyValidator.java`
 - [x] 2.3 `git rm src/main/java/net/fortuna/ical4j/validate/component/AvailableValidator.java`
 - [x] 2.4 Run `./gradlew test` — green
-- [ ] 2.5 Commit: "refactor: remove trivial pass-through deprecated validator subclasses"
+- [x] 2.5 Commit: "refactor: remove trivial pass-through deprecated validator subclasses"
 
 ## 3. Add canonical helpers in ComponentValidator (D1 + D3)
 
-- [ ] 3.1 Add `ComponentValidator.validateAlarms(Component, boolean alarmsAllowed, ValidationResult)` (or chosen signature per design D1). Body lifted from `VEventValidator` / `VToDoValidator` (they're identical).
-- [ ] 3.2 Add `ComponentValidator.validateObservances(VTimeZone, ValidationResult)`. Body lifted from `VTimeZoneValidator`, but converted from `throw new ValidationException(...)` to `result.getEntries().add(new ValidationEntry(..., ERROR, ...))` per D3.
-- [ ] 3.3 Add unit tests in a new `ComponentValidatorHelpersTest.java`:
+- [x] 3.1 Add `ComponentValidator.validateAlarms(Component, boolean alarmsAllowed, ValidationResult)` (or chosen signature per design D1). Body lifted from `VEventValidator` / `VToDoValidator` (they're identical).
+- [x] 3.2 Add `ComponentValidator.validateObservances(VTimeZone, ValidationResult)`. Body lifted from `VTimeZoneValidator`, but converted from `throw new ValidationException(...)` to `result.getEntries().add(new ValidationEntry(..., ERROR, ...))` per D3.
+- [x] 3.3 Add unit tests in a new `ComponentValidatorHelpersTest.java`:
   - alarm-allowed VEvent with valid VALARM → no entries
   - alarm-allowed VEvent with VALARM missing ACTION → ACTION entry
   - alarm-disallowed VEvent with any VALARM → VALARM entry
   - VTIMEZONE missing both STANDARD/DAYLIGHT → presence entry (no throw)
   - VTIMEZONE with STANDARD → no presence entry
-- [ ] 3.4 Run `./gradlew test` — green
-- [ ] 3.5 Commit: "feat: add validateAlarms and validateObservances helpers in ComponentValidator"
+- [x] 3.4 Run `./gradlew test` — green
+- [x] 3.5 Commit: "feat: add validateAlarms and validateObservances helpers in ComponentValidator"
 
 ## 4. Add VTODO STATUS predicate to ComponentValidator.VTODO (D2-ALT)
 

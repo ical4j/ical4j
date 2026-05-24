@@ -40,6 +40,7 @@ import net.fortuna.ical4j.model.property.DateProperty;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -225,5 +226,60 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
     public static void assertOneOrLess(String componentName, ComponentList<?> components) throws ValidationException {
         Validator.assertFalse(input -> input.getComponents(componentName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
                 components, componentName);
+    }
+
+    /**
+     * Validates VALARM sub-components of a calendar component:
+     * <ul>
+     *   <li>When {@code alarmsAllowed} is true: validates each VALARM against the
+     *       {@link #VALARM_ITIP} rule set, appending any entries to {@code result}.</li>
+     *   <li>When {@code alarmsAllowed} is false: produces a {@link ValidationEntry}
+     *       for each VALARM present (matches the {@link #NO_ALARMS} rule).</li>
+     * </ul>
+     *
+     * Used by the iTIP rule registry and the no-method validate() path so that
+     * alarm validation is exercised consistently across both paths.
+     *
+     * @param target the parent component containing VALARM sub-components
+     * @param alarmsAllowed whether alarms are permitted in this context
+     * @param result the validation result to append entries to
+     */
+    public static void validateAlarms(ComponentContainer<?> target, boolean alarmsAllowed,
+                                      ValidationResult result) {
+        if (alarmsAllowed) {
+            List<? extends Component> alarms = target.getComponents(Component.VALARM);
+            result.getEntries().addAll(alarms.stream()
+                    .map(c -> VALARM_ITIP.validate((VAlarm) c))
+                    .flatMap(r -> r.getEntries().stream())
+                    .collect(Collectors.toList()));
+        } else {
+            result.getEntries().addAll(new ComponentContainerRuleSet(NO_ALARMS)
+                    .apply(((Component) target).getName(), target));
+        }
+    }
+
+    /**
+     * Validates VTIMEZONE observance structure:
+     * <ul>
+     *   <li>Adds an ERROR {@link ValidationEntry} when neither STANDARD nor DAYLIGHT is present.</li>
+     *   <li>Validates each observance against {@link #OBSERVANCE_ITIP} and aggregates entries.</li>
+     * </ul>
+     *
+     * @param target the VTIMEZONE component
+     * @param result the validation result to append entries to
+     */
+    public static void validateObservances(VTimeZone target, ValidationResult result) {
+        if (target.getComponent(Observance.STANDARD).isEmpty()
+                && target.getComponent(Observance.DAYLIGHT).isEmpty()) {
+            result.getEntries().add(new ValidationEntry(
+                    "Sub-components [" + Observance.STANDARD + "," + Observance.DAYLIGHT
+                            + "] must be specified at least once",
+                    ValidationEntry.Severity.ERROR,
+                    target.getName()));
+        }
+        target.getObservances().stream()
+                .map(OBSERVANCE_ITIP::validate)
+                .flatMap(r -> r.getEntries().stream())
+                .forEach(result.getEntries()::add);
     }
 }
