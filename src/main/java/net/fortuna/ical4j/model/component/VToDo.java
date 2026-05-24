@@ -43,7 +43,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -204,18 +203,10 @@ public class VToDo extends CalendarComponent implements Prototype<VToDo>, Compon
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         var result = ComponentValidator.VTODO.validate(this);
+        ComponentValidator.validateAlarms(this, true, result);
         // validate that getAlarms() only contains VAlarm components
         for (var component : getAlarms()) {
             component.validate(recurse);
-        }
-
-        final Optional<Status> status = getProperty(STATUS);
-        if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
-                && !VTODO_COMPLETED.equals(status.get())
-                && !VTODO_IN_PROCESS.equals(status.get())
-                && !VTODO_CANCELLED.equals(status.get())) {
-            throw new ValidationException("Status property ["
-                    + status + "] may not occur in VTODO");
         }
 
         if (recurse) {

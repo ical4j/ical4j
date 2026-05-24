@@ -279,6 +279,7 @@ public class VEvent extends CalendarComponent implements Prototype<VEvent>, Comp
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         var result = ComponentValidator.VEVENT.validate(this);
+        ComponentValidator.validateAlarms(this, true, result);
         // validate that getAlarms() only contains VAlarm components
 //        final Iterator iterator = getAlarms().iterator();
 //        while (iterator.hasNext()) {

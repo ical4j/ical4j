@@ -37,11 +37,11 @@
 
 ## 5. Update no-method validate() paths in model classes
 
-- [ ] 5.1 `VEvent.validate()` (the no-arg, no-method path) — after the existing `ComponentValidator.VEVENT.validate(this)` call, invoke `ComponentValidator.validateAlarms(this, true, result)`. Closes the asymmetry vs the iTIP path.
-- [ ] 5.2 `VToDo.validate()` — same treatment with `validateAlarms`. STATUS check now flows via the VTODO predicate added in §4.
-- [ ] 5.3 `VTimeZone.validate()` — replace `new VTimeZoneValidator().validate(this)` with `ComponentValidator.VTIMEZONE.validate(this)` + `ComponentValidator.validateObservances(this, result)`.
-- [ ] 5.4 Run `./gradlew test` — green
-- [ ] 5.5 Commit: "refactor: move alarm/observance validation into canonical paths in VEvent/VToDo/VTimeZone"
+- [x] 5.1 `VEvent.validate()` (the no-arg, no-method path) — after the existing `ComponentValidator.VEVENT.validate(this)` call, invoke `ComponentValidator.validateAlarms(this, true, result)`. Closes the asymmetry vs the iTIP path.
+- [x] 5.2 `VToDo.validate()` — same treatment with `validateAlarms`. STATUS check now flows via the VTODO predicate added in §4.
+- [x] 5.3 `VTimeZone.validate()` — replace `new VTimeZoneValidator().validate(this)` with `ComponentValidator.VTIMEZONE.validate(this)` + `ComponentValidator.validateObservances(this, result)`.
+- [x] 5.4 Run `./gradlew test` — green
+- [x] 5.5 Commit: "refactor: move alarm/observance validation into canonical paths in VEvent/VToDo/VTimeZone"
 
 ## 6. Update ITIPRuleRegistry to drop deprecated subclasses (D6)
 
