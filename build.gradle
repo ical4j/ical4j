@@ -74,10 +74,11 @@ dependencies {
 
     testRuntimeOnly libs.junit.platform
 
-    // Include junit-vintage-engine so junit4 tests are executed.
+    // Required by JUnit 4-style Groovy tests in src/test/groovy/ that use
+    // @RunWith(Parameterized) and extend GroovyTestCase. Java tests have all
+    // been migrated to JUnit Jupiter and no longer require vintage. The
+    // junit4 dependency itself is provided transitively via groovy-test.
     testRuntimeOnly libs.junit.vintage
-    // Explicitly depend on junit4, not transitively via groovy-test or testcontainers.
-    testCompileOnly libs.junit.junit4
 }
 
 test {

@@ -92,12 +92,12 @@ Each sub-phase below is ONE atomic commit — the base class and ALL its subclas
 
 ## 6. Phase 5 — Cleanup
 
-- [ ] 6.1 Remove `testRuntimeOnly libs.junit.vintage` from `build.gradle`
-- [ ] 6.2 Remove `testCompileOnly libs.junit.junit4` from `build.gradle`
-- [ ] 6.3 Run `./gradlew clean test` — verify Spock + testcontainers tests still pass without vintage engine
-- [ ] 6.4 If 6.3 fails, restore the missing dependency with an inline comment in `build.gradle` citing the failure
-- [ ] 6.5 Verify `./gradlew jacocoTestReport` — coverage at or above pre-migration baseline (target ≥ 0.7 per existing rule)
-- [ ] 6.6 Update or delete `docs/JUNIT5_MIGRATION_GUIDE.md` (default: delete — this OpenSpec change is the durable record)
+- [~] 6.1 Remove `testRuntimeOnly libs.junit.vintage` from `build.gradle`
+- [x] 6.2 Remove `testCompileOnly libs.junit.junit4` from `build.gradle`
+- [x] 6.3 Run `./gradlew clean test` — verify Spock + testcontainers tests still pass without vintage engine
+- [x] 6.4 If 6.3 fails, restore the missing dependency with an inline comment in `build.gradle` citing the failure
+- [x] 6.5 Verify `./gradlew jacocoTestReport` — coverage at or above pre-migration baseline (target ≥ 0.7 per existing rule)
+- [x] 6.6 Update or delete `docs/JUNIT5_MIGRATION_GUIDE.md` (default: delete — this OpenSpec change is the durable record)
 - [ ] 6.7 Final commit
 
 ## 7. Validation gates (apply at every phase boundary)
