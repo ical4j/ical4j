@@ -31,8 +31,13 @@
  */
 package net.fortuna.ical4j.util;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * $Id$ [17-Jan-2005]
@@ -40,8 +45,8 @@ import junit.framework.TestSuite;
  * Unit test for StringUtils.
  * @author Chris Borrill
  */
-public class StringsTest extends TestCase {
-    
+public class StringsTest {
+
     private static final String SEMI_COLON = ";XXX;";
     private static final String ESCAPED_SEMI_COLON = "\\;XXX\\;";
     
@@ -57,67 +62,43 @@ public class StringsTest extends TestCase {
     private static final String NEWLINE = "\nXXX\n\n";
     private static final String ESCAPED_NEWLINE = "\\nXXX\\n\\n";
 
-    private final String testString;
-    
-    private final String expectedValue;
-    
-    public StringsTest(String testMethod) {
-        super(testMethod);
-        testString = null;
-        expectedValue = null;
-    }
-    
-    public StringsTest(String testString, String expectedValue) {
-        super("testEscapeUnescape");
-        this.testString = testString;
-        this.expectedValue = expectedValue;
-    }
-    
-    public void testEscapeUnescape() {
+    @ParameterizedTest(name = "escape/unescape: {0}")
+    @MethodSource("escapeUnescapeTestData")
+    void testEscapeUnescape(String testString, String expectedValue) {
         final String value = Strings.escape(testString);
-        assertEquals("Escape failed", expectedValue, value);
-        assertEquals("Unescape failed", testString, Strings.unescape(value));
+        assertEquals(expectedValue, value, "Escape failed");
+        assertEquals(testString, Strings.unescape(value), "Unescape failed");
+    }
+
+    static Stream<org.junit.jupiter.params.provider.Arguments> escapeUnescapeTestData() {
+        return Stream.of(
+            org.junit.jupiter.params.provider.Arguments.of(SEMI_COLON, ESCAPED_SEMI_COLON),
+            org.junit.jupiter.params.provider.Arguments.of(COMMA, ESCAPED_COMMA),
+            org.junit.jupiter.params.provider.Arguments.of(DOUBLE_BACKSLASH, ESCAPED_DOUBLE_BACKSLASH),
+            org.junit.jupiter.params.provider.Arguments.of(NEWLINE, ESCAPED_NEWLINE),
+            org.junit.jupiter.params.provider.Arguments.of("a\\nb", "a\\\\nb")
+        );
     }
 
     /**
      * Test un-escaping of quotes (not part of spec, but remains for
      * backwards compatibility.
      */
-    public void testUnEscapeQuote() {
-        assertEquals("UnEscapeQuote", QUOTE, Strings.unescape(ESCAPED_QUOTE));
+    @Test
+    void testUnEscapeQuote() {
+        assertEquals(QUOTE, Strings.unescape(ESCAPED_QUOTE), "UnEscapeQuote");
     }
 
     /**
      * Unit testing of quotable parameter value strings.
      */
-    public void testQuotableParamString() {
+    @Test
+    void testQuotableParamString() {
         assertFalse(Strings.PARAM_QUOTE_PATTERN.matcher("").find());
         assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(":").find());
         assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(";").find());
         assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(",").find());
         assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(
                 "Pacific Time (US & Canada), Tijuana").find());
-    }
-
-    @Override
-    public String getName() {
-        if (testString != null) {
-            return super.getName() + " [" + Strings.escape(testString) + "]";
-        }
-        return super.getName();
-    }
-    
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new StringsTest(SEMI_COLON, ESCAPED_SEMI_COLON));
-        suite.addTest(new StringsTest(COMMA, ESCAPED_COMMA));
-//        suite.addTest(new StringsTest(QUOTE, ESCAPED_QUOTE));
-        suite.addTest(new StringsTest(DOUBLE_BACKSLASH, ESCAPED_DOUBLE_BACKSLASH));
-        suite.addTest(new StringsTest(NEWLINE, ESCAPED_NEWLINE));
-        suite.addTest(new StringsTest("a\\nb", "a\\\\nb"));
-        
-        suite.addTest(new StringsTest("testUnEscapeQuote"));
-        suite.addTest(new StringsTest("testQuotableParamString"));
-        return suite;
     }
 }

@@ -31,13 +31,14 @@
  */
 package net.fortuna.ical4j.util;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.property.Uid;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * $Id$
@@ -48,22 +49,17 @@ import static org.junit.Assert.assertNotEquals;
  * @author Ben Fortuna
  *
  */
-public class UidGeneratorTest extends TestCase {
+public class UidGeneratorTest {
 
     private UidGenerator generator;
     
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         generator = new FixedUidGenerator("1");
     }
     
-    /**
-     * Test method for {@link UidGenerator#generateUid()}.
-     */
-    public void testGenerateUid() throws InterruptedException {
+    @Test
+    void testGenerateUid() throws InterruptedException {
         final List<Uid> uids = new ArrayList<Uid>();
         
         Thread[] threads = new Thread[10];

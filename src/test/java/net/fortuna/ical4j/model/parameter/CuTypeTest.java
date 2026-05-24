@@ -31,7 +31,9 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -41,12 +43,13 @@ import junit.framework.TestCase;
  * Unit tests for parameter: CUTYPE
  * @author Ben Fortuna
  */
-public class CuTypeTest extends TestCase {
+public class CuTypeTest {
 
     /**
      * Test that constant CUTYPEs equal equivalent new instances.
      */
-    public void testConstantEquals() {
+    @Test
+    void testConstantEquals() {
         assertEquals(CuType.INDIVIDUAL, new CuType(CuType.INDIVIDUAL.getValue()));
         assertEquals(CuType.GROUP, new CuType(CuType.GROUP.getValue()));
         assertEquals(CuType.RESOURCE, new CuType(CuType.RESOURCE.getValue()));
