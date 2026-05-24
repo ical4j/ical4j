@@ -41,17 +41,17 @@
 - [x] 5.2 Add a test: PUBLISH VEVENT with one ATTENDEE produces no validation entries naming ATTENDEE
 - [x] 5.3 Add a test: PUBLISH VEVENT with multiple ATTENDEEs validates clean
 - [x] 5.4 Run `./gradlew test` — green
-- [ ] 5.5 Commit "fix: allow ATTENDEE on VEVENT/PUBLISH per RFC 5546 §3.2.1.1"
+- [x] 5.5 Commit "fix: allow ATTENDEE on VEVENT/PUBLISH per RFC 5546 §3.2.1.1"
 
 ## 6. F3 — Add VFREEBUSY/COUNTER iTIP rule set
 
-- [ ] 6.1 In `ITIPRuleRegistry`, add the entry for `(VFREEBUSY, COUNTER)`:
+- [x] 6.1 In `ITIPRuleRegistry`, add the entry for `(VFREEBUSY, COUNTER)`:
   - `One`: ATTENDEE, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID
   - `OneOrLess`: COMMENT, DURATION, URL
-- [ ] 6.2 Add a test: COUNTER VFREEBUSY with all required properties validates clean
-- [ ] 6.3 Add a test: COUNTER VFREEBUSY missing UID produces a ValidationEntry for UID
-- [ ] 6.4 Add a test: COUNTER VFREEBUSY does not throw `ValidationException`
-- [ ] 6.5 Run `./gradlew test` — green
+- [x] 6.2 Add a test: COUNTER VFREEBUSY with all required properties validates clean
+- [x] 6.3 Add a test: COUNTER VFREEBUSY missing UID produces a ValidationEntry for UID
+- [x] 6.4 Add a test: COUNTER VFREEBUSY does not throw `ValidationException`
+- [x] 6.5 Run `./gradlew test` — green
 - [ ] 6.6 Commit "feat: add VFREEBUSY/COUNTER iTIP validation rule set per RFC 5546 §4.3.3"
 
 ## 7. F2 — Enforce PRODID and VERSION presence in CalendarValidatorImpl

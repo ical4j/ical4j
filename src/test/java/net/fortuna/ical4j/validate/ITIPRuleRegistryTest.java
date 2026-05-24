@@ -28,7 +28,6 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -92,7 +91,6 @@ public class ITIPRuleRegistryTest {
     // F3: VFREEBUSY/COUNTER has a defined rule set.
 
     @Test
-    @Disabled("Enabled in Section 6 when VFREEBUSY/COUNTER rule is added (F3)")
     public void counterVFreeBusyWithRequiredPropertiesIsValid() throws URISyntaxException {
         VFreeBusy fb = new VFreeBusy();
         fb.add(new Uid("test-uid"));
@@ -108,7 +106,6 @@ public class ITIPRuleRegistryTest {
     }
 
     @Test
-    @Disabled("Enabled in Section 6 when VFREEBUSY/COUNTER rule is added (F3)")
     public void counterVFreeBusyMissingUidReportsUid() throws URISyntaxException {
         VFreeBusy fb = new VFreeBusy();
         fb.add(new Organizer(new URI("mailto:organizer@example.com")));

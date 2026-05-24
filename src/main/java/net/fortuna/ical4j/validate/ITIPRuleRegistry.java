@@ -200,6 +200,12 @@ public final class ITIPRuleRegistry {
                 new ValidationRule<>(OneOrMore, ATTENDEE),
                 new ValidationRule<>(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule<>(None, FREEBUSY, DURATION, REQUEST_STATUS, URL)));
+        // RFC 5546 §4.3.3: VFREEBUSY/COUNTER. Added in rfc-validation-audit (F3).
+        // The (component, method) cell was previously unmapped, causing a thrown
+        // "Unsupported method" exception for COUNTER messages with VFREEBUSY.
+        vfreebusy.put(COUNTER, new ComponentValidator<>(Component.VFREEBUSY,
+                new ValidationRule<>(One, ATTENDEE, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
+                new ValidationRule<>(OneOrLess, COMMENT, DURATION, URL)));
         RULES.put(Component.VFREEBUSY, vfreebusy);
 
         // ----- VTIMEZONE -----
