@@ -55,12 +55,12 @@
 
 ## 7. Delete the three remaining @Deprecated files
 
-- [ ] 7.1 `grep -rn "VEventValidator\|VToDoValidator\|VTimeZoneValidator" src/main/java src/test/java --include="*.java"` MUST return nothing outside the file definitions themselves
-- [ ] 7.2 `git rm src/main/java/net/fortuna/ical4j/validate/component/VEventValidator.java`
-- [ ] 7.3 `git rm src/main/java/net/fortuna/ical4j/validate/component/VToDoValidator.java`
-- [ ] 7.4 `git rm src/main/java/net/fortuna/ical4j/validate/component/VTimeZoneValidator.java`
-- [ ] 7.5 Run `./gradlew test` and `./gradlew jar` — green
-- [ ] 7.6 Verify the `validate/component/` directory is empty (or remove the empty directory if appropriate)
+- [x] 7.1 `grep -rn "VEventValidator\|VToDoValidator\|VTimeZoneValidator" src/main/java src/test/java --include="*.java"` MUST return nothing outside the file definitions themselves
+- [x] 7.2 `git rm src/main/java/net/fortuna/ical4j/validate/component/VEventValidator.java`
+- [x] 7.3 `git rm src/main/java/net/fortuna/ical4j/validate/component/VToDoValidator.java`
+- [x] 7.4 `git rm src/main/java/net/fortuna/ical4j/validate/component/VTimeZoneValidator.java`
+- [x] 7.5 Run `./gradlew test` and `./gradlew jar` — green
+- [x] 7.6 Verify the `validate/component/` directory is empty (or remove the empty directory if appropriate)
 - [ ] 7.7 Commit: "refactor: delete remaining @Deprecated validate/component/*Validator subclasses"
 
 ## 8. Cleanup
