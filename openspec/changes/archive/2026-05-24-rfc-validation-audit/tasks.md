@@ -87,7 +87,7 @@
   - Per-component iTIP results now surface at calendar level (stricter result)
   - PRODID/VERSION presence now enforced unconditionally (stricter)
 - [x] 9.2 Run `./gradlew clean test jacocoTestReport` — confirm coverage threshold (≥0.7) still met
-- [ ] 9.3 Open PR; reference RFC sections in PR body
+- [-] 9.3 Open PR; reference RFC sections in PR body
 
 ## 10. Validation gates (apply at every commit boundary)
 
