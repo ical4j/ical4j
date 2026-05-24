@@ -61,18 +61,18 @@
 - [x] 7.4 `git rm src/main/java/net/fortuna/ical4j/validate/component/VTimeZoneValidator.java`
 - [x] 7.5 Run `./gradlew test` and `./gradlew jar` — green
 - [x] 7.6 Verify the `validate/component/` directory is empty (or remove the empty directory if appropriate)
-- [ ] 7.7 Commit: "refactor: delete remaining @Deprecated validate/component/*Validator subclasses"
+- [x] 7.7 Commit: "refactor: delete remaining @Deprecated validate/component/*Validator subclasses"
 
 ## 8. Cleanup
 
-- [ ] 8.1 Final `./gradlew clean test jacocoTestReport` — coverage ≥ 0.7
-- [ ] 8.2 Verify test count: at least 282 tests (276 pre-change + the new helper tests from §3.3 and §4.2)
-- [ ] 8.3 Open PR; reference: parent change `rfc-validation-audit`, RFC 5545 §3.8.1.11 (VTODO STATUS), RFC 5545 §3.6.5 (VTIMEZONE observance requirement)
+- [x] 8.1 Final `./gradlew clean test jacocoTestReport` — coverage ≥ 0.7
+- [x] 8.2 Verify test count: at least 282 tests (276 pre-change + the new helper tests from §3.3 and §4.2)
+- [-] 8.3 Open PR; reference: parent change `rfc-validation-audit`, RFC 5545 §3.8.1.11 (VTODO STATUS), RFC 5545 §3.6.5 (VTIMEZONE observance requirement)
 
 ## 9. Validation gates (at every commit boundary)
 
-- [ ] 9.1 `./gradlew clean test` passes
-- [ ] 9.2 No new compiler warnings
-- [ ] 9.3 JaCoCo ≥ 0.7
-- [ ] 9.4 Spock/Groovy untouched (`git diff --name-only -- src/test/groovy/` empty)
-- [ ] 9.5 Spock test count unchanged
+- [x] 9.1 `./gradlew clean test` passes
+- [x] 9.2 No new compiler warnings
+- [x] 9.3 JaCoCo ≥ 0.7
+- [x] 9.4 Spock/Groovy untouched (`git diff --name-only -- src/test/groovy/` empty)
+- [x] 9.5 Spock test count unchanged
