@@ -31,12 +31,27 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.text.ParseException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VEVENT_CANCELLED;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VEVENT_CONFIRMED;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VEVENT_TENTATIVE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VJOURNAL_CANCELLED;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VJOURNAL_DRAFT;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VJOURNAL_FINAL;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VTODO_CANCELLED;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VTODO_COMPLETED;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VTODO_IN_PROCESS;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.VTODO_NEEDS_ACTION;
 
 /**
  * $Id$
@@ -45,74 +60,89 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
  *
  * @author fortuna
  */
-public class StatusTest extends PropertyTest {
+public class StatusTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public StatusTest(Status status, String expectedValue) {
-        super(status, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public StatusTest(String testMethod, Status property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new StatusTest(VEVENT_CANCELLED, "CANCELLED"));
-        suite.addTest(new StatusTest(VEVENT_CONFIRMED, "CONFIRMED"));
-        suite.addTest(new StatusTest(VEVENT_TENTATIVE, "TENTATIVE"));
-        suite.addTest(new StatusTest(VJOURNAL_CANCELLED, "CANCELLED"));
-        suite.addTest(new StatusTest(VJOURNAL_DRAFT, "DRAFT"));
-        suite.addTest(new StatusTest(VJOURNAL_FINAL, "FINAL"));
-        suite.addTest(new StatusTest(VTODO_CANCELLED, "CANCELLED"));
-        suite.addTest(new StatusTest(VTODO_COMPLETED, "COMPLETED"));
-        suite.addTest(new StatusTest(VTODO_IN_PROCESS, "IN-PROCESS"));
-        suite.addTest(new StatusTest(VTODO_NEEDS_ACTION, "NEEDS-ACTION"));
-        
-        suite.addTest(new StatusTest("testValidation", VEVENT_CANCELLED));
-        suite.addTest(new StatusTest("testValidation", VEVENT_CONFIRMED));
-        suite.addTest(new StatusTest("testValidation", VEVENT_TENTATIVE));
-        suite.addTest(new StatusTest("testValidation", VJOURNAL_CANCELLED));
-        suite.addTest(new StatusTest("testValidation", VJOURNAL_DRAFT));
-        suite.addTest(new StatusTest("testValidation", VJOURNAL_FINAL));
-        suite.addTest(new StatusTest("testValidation", VTODO_CANCELLED));
-        suite.addTest(new StatusTest("testValidation", VTODO_COMPLETED));
-        suite.addTest(new StatusTest("testValidation", VTODO_IN_PROCESS));
-        suite.addTest(new StatusTest("testValidation", VTODO_NEEDS_ACTION));
-        
-        suite.addTest(new StatusTest("testEquals", VEVENT_CANCELLED));
-        suite.addTest(new StatusTest("testEquals", VEVENT_CONFIRMED));
-        suite.addTest(new StatusTest("testEquals", VEVENT_TENTATIVE));
-        suite.addTest(new StatusTest("testEquals", VJOURNAL_CANCELLED));
-        suite.addTest(new StatusTest("testEquals", VJOURNAL_DRAFT));
-        suite.addTest(new StatusTest("testEquals", VJOURNAL_FINAL));
-        suite.addTest(new StatusTest("testEquals", VTODO_CANCELLED));
-        suite.addTest(new StatusTest("testEquals", VTODO_COMPLETED));
-        suite.addTest(new StatusTest("testEquals", VTODO_IN_PROCESS));
-        suite.addTest(new StatusTest("testEquals", VTODO_NEEDS_ACTION));
-        
-        suite.addTest(new StatusTest("testImmutable", VEVENT_CANCELLED));
-        suite.addTest(new StatusTest("testImmutable", VEVENT_CONFIRMED));
-        suite.addTest(new StatusTest("testImmutable", VEVENT_TENTATIVE));
-        suite.addTest(new StatusTest("testImmutable", VJOURNAL_CANCELLED));
-        suite.addTest(new StatusTest("testImmutable", VJOURNAL_DRAFT));
-        suite.addTest(new StatusTest("testImmutable", VJOURNAL_FINAL));
-        suite.addTest(new StatusTest("testImmutable", VTODO_CANCELLED));
-        suite.addTest(new StatusTest("testImmutable", VTODO_COMPLETED));
-        suite.addTest(new StatusTest("testImmutable", VTODO_IN_PROCESS));
-        suite.addTest(new StatusTest("testImmutable", VTODO_NEEDS_ACTION));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(VEVENT_CANCELLED, "CANCELLED"),
+                Arguments.of(VEVENT_CONFIRMED, "CONFIRMED"),
+                Arguments.of(VEVENT_TENTATIVE, "TENTATIVE"),
+                Arguments.of(VJOURNAL_CANCELLED, "CANCELLED"),
+                Arguments.of(VJOURNAL_DRAFT, "DRAFT"),
+                Arguments.of(VJOURNAL_FINAL, "FINAL"),
+                Arguments.of(VTODO_CANCELLED, "CANCELLED"),
+                Arguments.of(VTODO_COMPLETED, "COMPLETED"),
+                Arguments.of(VTODO_IN_PROCESS, "IN-PROCESS"),
+                Arguments.of(VTODO_NEEDS_ACTION, "NEEDS-ACTION")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(VEVENT_CANCELLED),
+                Arguments.of(VEVENT_CONFIRMED),
+                Arguments.of(VEVENT_TENTATIVE),
+                Arguments.of(VJOURNAL_CANCELLED),
+                Arguments.of(VJOURNAL_DRAFT),
+                Arguments.of(VJOURNAL_FINAL),
+                Arguments.of(VTODO_CANCELLED),
+                Arguments.of(VTODO_COMPLETED),
+                Arguments.of(VTODO_IN_PROCESS),
+                Arguments.of(VTODO_NEEDS_ACTION)
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(VEVENT_CANCELLED),
+                Arguments.of(VEVENT_CONFIRMED),
+                Arguments.of(VEVENT_TENTATIVE),
+                Arguments.of(VJOURNAL_CANCELLED),
+                Arguments.of(VJOURNAL_DRAFT),
+                Arguments.of(VJOURNAL_FINAL),
+                Arguments.of(VTODO_CANCELLED),
+                Arguments.of(VTODO_COMPLETED),
+                Arguments.of(VTODO_IN_PROCESS),
+                Arguments.of(VTODO_NEEDS_ACTION)
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(VEVENT_CANCELLED),
+                Arguments.of(VEVENT_CONFIRMED),
+                Arguments.of(VEVENT_TENTATIVE),
+                Arguments.of(VJOURNAL_CANCELLED),
+                Arguments.of(VJOURNAL_DRAFT),
+                Arguments.of(VJOURNAL_FINAL),
+                Arguments.of(VTODO_CANCELLED),
+                Arguments.of(VTODO_COMPLETED),
+                Arguments.of(VTODO_IN_PROCESS),
+                Arguments.of(VTODO_NEEDS_ACTION)
+        );
+    }
 }

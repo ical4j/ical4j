@@ -34,15 +34,15 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Strings;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -59,7 +59,7 @@ public class RDateTest {
 
     private ZoneId timezone;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         timezone = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
     }
@@ -91,7 +91,7 @@ public class RDateTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testToString() throws Exception {
         RDate rDate = new RDate(new ParameterList(), "20121212T121212Z");
         assertEquals(Property.RDATE + ":20121212T121212Z" + Strings.LINE_SEPARATOR, rDate.toString());

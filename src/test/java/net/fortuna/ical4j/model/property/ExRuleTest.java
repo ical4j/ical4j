@@ -31,47 +31,61 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * Created: [24/11/2008]
  *
  * @author fortuna
  */
-public class ExRuleTest extends PropertyTest {
+public class ExRuleTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public ExRuleTest(ExRule exRule, String expectedValue) {
-        super(exRule, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public ExRuleTest(String testMethod, ExRule property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
-    /**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        ExRule rule = new ExRule(new Recur.Builder().frequency(Frequency.DAILY).count(1).build());
-        suite.addTest(new ExRuleTest(rule, "FREQ=DAILY;COUNT=1"));
-        suite.addTest(new ExRuleTest("testValidation", rule));
-        suite.addTest(new ExRuleTest("testEquals", rule));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    private static ExRule newRule() {
+        return new ExRule(new Recur.Builder().frequency(Frequency.DAILY).count(1).build());
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(newRule(), "FREQ=DAILY;COUNT=1")
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(newRule())
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(newRule())
+        );
+    }
 }

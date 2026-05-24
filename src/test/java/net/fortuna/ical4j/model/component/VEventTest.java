@@ -31,9 +31,9 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -45,6 +45,12 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,11 +66,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
@@ -73,60 +85,14 @@ import static org.junit.Assert.assertNotEquals;
  *
  * @author Ben Fortuna
  */
-public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
+public class VEventTest {
 
     private static final Logger log = LoggerFactory.getLogger(VEventTest.class);
 
-    private VEvent event;
-
-    private Period<T> period;
-
-    private T date;
-
     private TzId tzParam;
 
-    /**
-     * @param testMethod
-     */
-    public VEventTest(String testMethod) {
-        super(testMethod, null);
-    }
-
-    /**
-     * @param testMethod
-     * @param event
-     */
-    public VEventTest(String testMethod, VEvent event) {
-        super(testMethod, event);
-        this.event = event;
-    }
-
-    /**
-     * @param testMethod
-     * @param component
-     * @param period
-     */
-    public VEventTest(String testMethod, VEvent component, Period<T> period) {
-        this(testMethod, component);
-        this.period = period;
-    }
-
-    /**
-     * @param testMethod
-     * @param component
-     * @param date
-     */
-    public VEventTest(String testMethod, VEvent component, T date) {
-        this(testMethod, component);
-        this.date = date;
-    }
-
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    public void setUp() {
         // relax validation to avoid UID requirement..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
 
@@ -136,17 +102,13 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         tzParam = new TzId(registry.getTimeZone("Australia/Melbourne").getID());
     }
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() {
         // relax validation to avoid UID requirement..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
-        super.tearDown();
     }
 
     /**
@@ -168,9 +130,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         return calendar;
     }
 
-    /**
-     *
-     */
+    @Test
     public final void testChristmas() {
         // create event start date..
         LocalDate christmasDay = LocalDate.now().withMonth(12).withDayOfMonth(25);
@@ -187,6 +147,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
     /**
      * Test creating an event with an associated timezone.
      */
+    @Test
     public final void testMelbourneCup() {
         ZoneId timezone = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
 
@@ -197,40 +158,15 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         log.info(melbourneCup.toString());
     }
 
-    public final void test2() throws ConstraintViolationException {
-        LocalDate christmasDay = LocalDate.now().withMonth(12).withDayOfMonth(25);
-
-        VEvent christmas = new VEvent(christmasDay, "Christmas Day");
-
-        // initialise as an all-day event..
-        christmas.getRequiredProperty(Property.DTSTART).add(Value.DATE);
-
-        // add timezone information..
-        christmas.getRequiredProperty(Property.DTSTART).add(tzParam);
-
-        log.info(christmas.toString());
-    }
-
-    public final void test3() throws ConstraintViolationException {
-        // tomorrow..
-        ZonedDateTime tomorrow = ZonedDateTime.now().withDayOfMonth(1).withHour(9).withMinute(30);
-
-        VEvent meeting = new VEvent(tomorrow, java.time.Duration.ofHours(1), "Progress Meeting");
-
-        // add timezone information..
-        meeting.getRequiredProperty(Property.DTSTART).add(tzParam);
-
-        log.info(meeting.toString());
-    }
-
-
     /**
      * Test Null Dates
      * Test Start today, End One month from now.
      *
      * @throws Exception
      */
-    public final void testGetConsumedTime() throws Exception {
+    @ParameterizedTest(name = "getConsumedTime")
+    @MethodSource("getConsumedTimeData")
+    public final void testGetConsumedTime(VEvent event) throws Exception {
 
         // Test Null Dates
         try {
@@ -247,17 +183,10 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 
         ZonedDateTime queryEnd = queryStart.withMonth(5).withHour(7).withMinute(15);
 
-        ZonedDateTime week1EndDate = queryStart.withDayOfMonth(8).withHour(11).withMinute(15);
-
-        ZonedDateTime week4StartDate = queryStart.withDayOfMonth(24).withHour(14).withMinute(47);
-
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
         // April 18th through to the 22nd.
         List<Period<ZonedDateTime>> weeklyPeriods = event.getConsumedTime(new Period<>(queryStart, queryEnd));
-//        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
-//                                                      week1EndDate.getTime());
-//        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
         ZonedDateTime expectedStartOfFirstRange = queryStart.withDayOfMonth(1).withHour(9).withMinute(0);
         ZonedDateTime expectedEndOfFirstRange = queryStart.withDayOfMonth(1).withHour(17).withMinute(0);
 
@@ -266,37 +195,21 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         Period firstPeriod = (Period) weeklyPeriods.toArray()[0];
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
-//        assertEquals(dailyPeriods, weeklyPeriods);
-
     }
 
 
     /**
      * Test whether you can select weekdays using a daily frequency.
-     * <p/>
-     * This test really belongs in RecurTest, but the weekly range test
-     * in this VEventTest matches so perfectly with the daily range test
-     * that should produce the same results for some weeks that it was
-     * felt leveraging the existing test code was more important.
-     * <p/>
-     * This addresses bug
-     * <a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1203990&group_id=107024&atid=646395">1203990</a>
      */
-    public final void testGetConsumedTimeDaily() throws Exception {
+    @ParameterizedTest(name = "getConsumedTimeDaily")
+    @MethodSource("getConsumedTimeDailyData")
+    public final void testGetConsumedTimeDaily(VEvent event) throws Exception {
 
-        // Test Starts 04/03/2005, Ends One week later.
-        // Query Calendar Start and End Dates.
         ZonedDateTime queryStartDate = ZonedDateTime.of(2005, 4, 3,
                 5, 12, 0, 0, ZoneId.systemDefault());
         ZonedDateTime queryEndDate = ZonedDateTime.of(2005, 4, 10,
                 21, 55, 0, 0, ZoneId.systemDefault());
 
-        // This range is Monday to Friday every day (which has a filtering
-        // effect), starting from March 7th 2005. Our query dates are
-        // April 3rd through to the 10th.
-//        PeriodList weeklyPeriods =
-//                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
-//                        new DateTime(queryEndDate.getTime()));
         List<Period<ZonedDateTime>> dailyPeriods = event.getConsumedTime(new Period<>(queryStartDate, queryEndDate));
 
         ZonedDateTime expectedStartOfFirstRange = ZonedDateTime.of(2005, 4, 4,
@@ -309,41 +222,22 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         Period firstPeriod = (Period) dailyPeriods.toArray()[0];
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
-//        assertEquals(weeklyPeriods, dailyPeriods);
     }
 
 
     /**
      * Test whether you can select weekdays using a monthly frequency.
-     * <p/>
-     * This test really belongs in RecurTest, but the weekly range test
-     * in this VEventTest matches so perfectly with the daily range test
-     * that should produce the same results for some weeks that it was
-     * felt leveraging the existing test code was more important.
-     * <p/>
-     * Section 4.3.10 of the iCalendar specification RFC 2445 reads:
-     * <pre>
-     * If an integer modifier is not present, it means all days of
-     * this type within the specified frequency.
-     * </pre>
-     * This test ensures compliance.
      */
-    public final void testGetConsumedTimeMonthly() throws Exception {
+    @ParameterizedTest(name = "getConsumedTimeMonthly")
+    @MethodSource("getConsumedTimeMonthlyData")
+    public final void testGetConsumedTimeMonthly(VEvent event) throws Exception {
 
-        // Test Starts 04/03/2005, Ends two weeks later.
-        // Query Calendar Start and End Dates.
         ZonedDateTime queryStartDate = ZonedDateTime.of(2005, 4, 3,
                 5, 12, 0, 0, ZoneId.systemDefault());
         ZonedDateTime queryEndDate = ZonedDateTime.of(2005, 4, 17,
                 21, 55, 0, 0, ZoneId.systemDefault());
 
-        // This range is Monday to Friday every month (which has a multiplying
-        // effect), starting from March 7th 2005. Our query dates are
-        // April 3rd through to the 17th.
         List<Period<ZonedDateTime>> monthlyPeriods = event.getConsumedTime(new Period<>(queryStartDate, queryEndDate));
-//        PeriodList dailyPeriods =
-//                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
-//                        new DateTime(queryEndDate.getTime()));
 
         ZonedDateTime expectedStartOfFirstRange = ZonedDateTime.of(2005, 4, 4,
                 9, 0, 0, 0, ZoneId.systemDefault());
@@ -354,10 +248,10 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         Period firstPeriod = (Period) monthlyPeriods.toArray()[0];
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
-//        assertEquals(dailyPeriods, monthlyPeriods);
     }
 
 
+    @Test
     public final void testGetConsumedTime2() throws Exception {
         String resource = "/samples/valid/derryn.ics";
 
@@ -366,7 +260,6 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         ZonedDateTime start = ZonedDateTime.now();
         ZonedDateTime end = start.plusWeeks(4);
 
-        //Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
         calendar.getComponents().forEach(calendarComponent -> {
             if (calendarComponent instanceof VEvent) {
                 List<Period<ZonedDateTime>> consumed = ((VEvent) calendarComponent).getConsumedTime(
@@ -378,6 +271,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         });
     }
 
+    @Test
     public final void testGetConsumedTime3() throws Exception {
         String resource = "/samples/valid/calconnect10.ics";
 
@@ -395,15 +289,14 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
     /**
      * Test COUNT rules.
      */
+    @Test
     public void testGetConsumedTimeByCount() {
         Recur<?> recur = new Recur.Builder<>().frequency(Frequency.WEEKLY).count(3)
             .interval(1).dayList(SU).build();
         log.info(recur.toString());
 
         ZonedDateTime start = ZonedDateTime.now().withDayOfMonth(8);
-//        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
         ZonedDateTime end = start.plusHours(1);
-//        log.info(recur.getDates(start, end, Value.DATE_TIME));
 
         RRule<?> rrule = new RRule<>(recur);
         var event = new VEvent(start, end, "Test recurrence COUNT").add(rrule);
@@ -419,6 +312,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
      * A test to confirm that the end date is calculated correctly
      * from a given start date and duration.
      */
+    @Test
     public final void testEventEndDate() {
         LocalDate startDate = LocalDate.now();
         log.info("Start date: " + startDate);
@@ -429,23 +323,9 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
     }
 
     /**
-     * A test to confirm that the end date is calculated correctly
-     * from a given start date and duration, even when timezone is specified.
-     */
-    public final void testEventEndDateWithTimeZone() throws ParseException {
-        TimeZone timezone = new TimeZoneRegistryImpl().getTimeZone("Asia/Seoul");
-        TemporalAdapter startDateTime = TemporalAdapter.parse("20181003T130000", timezone.toZoneId());
-        log.info("Start date: " + startDateTime);
-        VEvent event = new VEvent(startDateTime.getTemporal(),
-                java.time.Duration.ofHours(1), "1 hour event");
-        assertEquals(startDateTime.getTemporal(), event.getDateTimeEnd().getDate());
-    }
-
-    /**
      * Test to ensure that EXDATE properties are correctly applied.
-     *
-     * @throws ParseException
      */
+    @Test
     public void testGetConsumedTimeWithExDate() throws ParseException {
 
         var event1 = (VEvent) new VEvent(TemporalAdapter.parse("20050103T080000").getTemporal(),
@@ -464,9 +344,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
 
     /**
      * Test to ensure that EXDATE properties are correctly applied.
-     *
-     * @throws ParseException
      */
+    @Test
     public void testGetConsumedTimeWithExDate2() throws IOException, ParserException, ConstraintViolationException {
         InputStream in = getClass().getResourceAsStream("/samples/valid/friday13.ics");
         net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(in);
@@ -483,6 +362,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
     /**
      * Test equality of events with different alarm sub-components.
      */
+    @Test
     public void testEquals() {
         String summary = "test event";
         PropertyList props = new PropertyList(Arrays.asList(new DtStart<>(Instant.now()), new Summary(summary)));
@@ -497,10 +377,9 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
         assertNotEquals(e1, e2);
     }
 
-    /**
-     *
-     */
-    public void testCalculateRecurrenceSetNotEmpty() {
+    @ParameterizedTest(name = "calculateRecurrenceSetNotEmpty")
+    @MethodSource("calculateRecurrenceSetNotEmptyData")
+    public <T extends Temporal> void testCalculateRecurrenceSetNotEmpty(VEvent event, Period<T> period) {
         Set<Period<T>> recurrenceSet = event.calculateRecurrenceSet(period);
         assertFalse(recurrenceSet.isEmpty());
     }
@@ -508,189 +387,223 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest<T> {
     /**
      * Unit tests for {@link VEvent#getOccurrence(Temporal)}.
      */
-    public void testGetOccurrence() throws IOException, ParseException, URISyntaxException {
+    @ParameterizedTest(name = "getOccurrence")
+    @MethodSource("getOccurrenceData")
+    public <T extends Temporal> void testGetOccurrence(VEvent event, T date) throws IOException, ParseException, URISyntaxException {
         VEvent occurrence = event.getOccurrence(date);
         assertNotNull(occurrence);
         assertEquals(event.getUid(), occurrence.getUid());
     }
 
-    /**
-     * @return
-     * @throws ValidationException
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws IOException
-     * @throws ParserException
-     */
-    public static TestSuite suite() throws ValidationException, IOException, ParserException, ConstraintViolationException {
-        UidGenerator uidGenerator = new RandomUidGenerator();
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(VEvent component) throws ValidationException {
+        ComponentTest.assertValidation(component);
+    }
 
-        ZonedDateTime weekday9AM = ZonedDateTime.now().withYear(2005).withMonth(3).withDayOfMonth(7)
-                .withHour(9).withMinute(0).withSecond(0).withNano(0);
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(VEvent component) {
+        ComponentTest.assertValidationException(component);
+    }
 
-        ZonedDateTime weekday5PM = ZonedDateTime.now().withYear(2005).withMonth(3).withDayOfMonth(7)
-                .withHour(17).withMinute(0).withSecond(0).withNano(0);
+    @ParameterizedTest(name = "isCalendarComponent")
+    @MethodSource("isCalendarComponentData")
+    public void testIsCalendarComponent(VEvent component) {
+        ComponentTest.assertIsCalendarComponent(component);
+    }
 
-        // Do the recurrence until December 31st.
-        ZonedDateTime until = ZonedDateTime.now().withYear(2005).withMonth(12).withDayOfMonth(31);
+    @ParameterizedTest(name = "publishValidation")
+    @MethodSource("publishValidationData")
+    public void testPublishValidation(VEvent component) throws ValidationException {
+        CalendarComponentTest.assertPublishValidation(component);
+    }
 
-        // 9:00AM to 5:00PM Rule using weekly
-        Recur<ZonedDateTime> recurWeekly = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY).until(until)
-            .dayList(MO, TU, WE, TH, FR)
-            .interval(1).weekStartDay(MO).build();
-        RRule<ZonedDateTime> rruleWeekly = new RRule<>(recurWeekly);
+    @ParameterizedTest(name = "requestValidation")
+    @MethodSource("requestValidationData")
+    public void testRequestValidation(VEvent component) throws ValidationException {
+        CalendarComponentTest.assertRequestValidation(component);
+    }
 
-        // 9:00AM to 5:00PM Rule using daily frequency
-        Recur<ZonedDateTime> recurDaily = new Recur.Builder<ZonedDateTime>().frequency(Frequency.DAILY).until(until)
-            .dayList(MO, TU, WE, TH, FR)
-            .interval(1).weekStartDay(MO).build();
-        RRule<ZonedDateTime> rruleDaily = new RRule<>(recurDaily);
+    // ---------- @MethodSource providers ----------
 
-        // 9:00AM to 5:00PM Rule using monthly frequency
-        Recur<ZonedDateTime> recurMonthly = new Recur.Builder<ZonedDateTime>().frequency(Frequency.MONTHLY).until(until)
-            .dayList(MO, TU, WE, TH, FR)
-            .interval(1).weekStartDay(MO).build();
-        RRule<ZonedDateTime> rruleMonthly = new RRule<>(recurMonthly);
+    private static VEvent weekdayNineToFive(Frequency frequency, UidGenerator uidGenerator,
+                                            ZonedDateTime weekday9AM, ZonedDateTime weekday5PM,
+                                            ZonedDateTime until, String summary) throws ValidationException {
+        Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(frequency).until(until)
+                .dayList(MO, TU, WE, TH, FR)
+                .interval(1).weekStartDay(MO).build();
+        RRule<ZonedDateTime> rrule = new RRule<>(recur);
 
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId("Australia/Melbourne")));
 
-        var weekdayNineToFiveEvents = (VEvent) new VEvent().withProperty(rruleWeekly)
-                .withProperty(new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY"))
+        var event = (VEvent) new VEvent().withProperty(rrule)
+                .withProperty(new Summary(summary))
                 .withProperty(new DtStart<>(tzParams, weekday9AM))
                 .withProperty(new DtEnd<>(tzParams, weekday5PM))
                 .withProperty(uidGenerator.generateUid()).getFluentTarget();
         // ensure event is valid..
-        weekdayNineToFiveEvents.validate();
+        event.validate();
+        return event;
+    }
 
-        var dailyWeekdayEvents = (VEvent) new VEvent().withProperty(rruleDaily)
-                .withProperty(new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY"))
-                .withProperty(new DtStart<>(tzParams, weekday9AM))
-                .withProperty(new DtEnd<>(tzParams, weekday5PM))
-                .withProperty(uidGenerator.generateUid()).getFluentTarget();
-        // ensure event is valid..
-        dailyWeekdayEvents.validate();
+    private static ZonedDateTime weekday9AM() {
+        return ZonedDateTime.now().withYear(2005).withMonth(3).withDayOfMonth(7)
+                .withHour(9).withMinute(0).withSecond(0).withNano(0);
+    }
 
-        var monthlyWeekdayEvents = (VEvent) new VEvent().withProperty(rruleMonthly)
-                .withProperty(new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY"))
-                .withProperty(new DtStart<>(tzParams, weekday9AM))
-                .withProperty(new DtEnd<>(tzParams, weekday5PM))
-                .withProperty(uidGenerator.generateUid()).getFluentTarget();
-        // ensure event is valid..
-        monthlyWeekdayEvents.validate();
+    private static ZonedDateTime weekday5PM() {
+        return ZonedDateTime.now().withYear(2005).withMonth(3).withDayOfMonth(7)
+                .withHour(17).withMinute(0).withSecond(0).withNano(0);
+    }
 
-        // enable relaxed parsing to allow copying of invalid events..
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+    private static ZonedDateTime untilDate() {
+        return ZonedDateTime.now().withYear(2005).withMonth(12).withDayOfMonth(31);
+    }
 
-        TestSuite suite = new TestSuite();
+    static Stream<Arguments> calculateRecurrenceSetNotEmptyData() throws ValidationException, ParseException {
+        UidGenerator uidGenerator = new RandomUidGenerator();
+        VEvent weekdayNineToFiveEvents = weekdayNineToFive(Frequency.WEEKLY, uidGenerator,
+                weekday9AM(), weekday5PM(), untilDate(),
+                "TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
 
-        //testCalculateRecurrenceSet..
         ZonedDateTime periodStart = TemporalAdapter.parse("20050101T000000",
                 ZoneId.systemDefault()).getTemporal();
         ZonedDateTime periodEnd = TemporalAdapter.parse("20051231T235959",
                 ZoneId.systemDefault()).getTemporal();
         Period<ZonedDateTime> period = new Period<>(periodStart, periodEnd);
-        suite.addTest(new VEventTest<>("testCalculateRecurrenceSetNotEmpty", weekdayNineToFiveEvents, period));
+        return Stream.of(Arguments.of(weekdayNineToFiveEvents, period));
+    }
 
-        //testGetOccurrence..
-        suite.addTest(new VEventTest<>("testGetOccurrence", weekdayNineToFiveEvents,
+    static Stream<Arguments> getOccurrenceData() throws ValidationException {
+        UidGenerator uidGenerator = new RandomUidGenerator();
+        VEvent weekdayNineToFiveEvents = weekdayNineToFive(Frequency.WEEKLY, uidGenerator,
+                weekday9AM(), weekday5PM(), untilDate(),
+                "TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
+        return Stream.of(Arguments.of(weekdayNineToFiveEvents,
                 weekdayNineToFiveEvents.getDateTimeStart().getDate()));
+    }
 
-        //testGetConsumedTime..
-        suite.addTest(new VEventTest<>("testGetConsumedTime", weekdayNineToFiveEvents));
-        suite.addTest(new VEventTest<>("testGetConsumedTimeDaily", dailyWeekdayEvents));
-        suite.addTest(new VEventTest<>("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
+    static Stream<Arguments> getConsumedTimeData() throws ValidationException {
+        UidGenerator uidGenerator = new RandomUidGenerator();
+        VEvent weekdayNineToFiveEvents = weekdayNineToFive(Frequency.WEEKLY, uidGenerator,
+                weekday9AM(), weekday5PM(), untilDate(),
+                "TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
+        return Stream.of(Arguments.of(weekdayNineToFiveEvents));
+    }
 
-        //test event validation..
-        UidGenerator ug = new RandomUidGenerator();
-        Uid uid = ug.generateUid();
+    static Stream<Arguments> getConsumedTimeDailyData() throws ValidationException {
+        UidGenerator uidGenerator = new RandomUidGenerator();
+        VEvent dailyWeekdayEvents = weekdayNineToFive(Frequency.DAILY, uidGenerator,
+                weekday9AM(), weekday5PM(), untilDate(),
+                "TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
+        return Stream.of(Arguments.of(dailyWeekdayEvents));
+    }
 
-        ParameterList startParams = new ParameterList(Collections.singletonList(Value.DATE));
-        DtStart<LocalDate> start = new DtStart<>(startParams, LocalDate.now());
+    static Stream<Arguments> getConsumedTimeMonthlyData() throws ValidationException {
+        UidGenerator uidGenerator = new RandomUidGenerator();
+        VEvent monthlyWeekdayEvents = weekdayNineToFive(Frequency.MONTHLY, uidGenerator,
+                weekday9AM(), weekday5PM(), untilDate(),
+                "TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
+        return Stream.of(Arguments.of(monthlyWeekdayEvents));
+    }
 
-        ParameterList endParams = new ParameterList(Collections.singletonList(Value.DATE));
-        DtEnd<LocalDate> end = new DtEnd<>(endParams, LocalDate.now());
-        var event = (VEvent) new VEvent().withProperty(uid).withProperty(start).withProperty(end).getFluentTarget();
-        suite.addTest(new VEventTest<>("testValidation", event));
+    /**
+     * Builds the validation/validationException/isCalendarComponent test data which all use
+     * the same chain of {@code event.copy()} mutations from the original {@code suite()}.
+     */
+    private static class ValidationFixture {
+        final VEvent validEvent;
+        final VEvent invalidEvent;
+        final VEvent finalEvent;
 
-        event = event.copy();
-//        start = (DtStart) event.getProperty(Property.DTSTART);
-        startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
-        DtStart<ZonedDateTime> newstart = new DtStart<>(startParams, ZonedDateTime.now());
-        event.replace(newstart);
-        suite.addTest(new VEventTest<>("testValidationException", event));
+        ValidationFixture() {
+            CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+            try {
+                UidGenerator ug = new RandomUidGenerator();
+                Uid uid = ug.generateUid();
 
-        // test 1..
-        event = event.copy();
-        startParams = new ParameterList(Collections.singletonList(Value.DATE));
-        newstart = new DtStart<>(startParams, event.getRequiredProperty(Property.DTSTART).getValue());
-        event.replace(newstart);
-//        suite.addTest(new VEventTest<>("testValidationException", event));
+                ParameterList startParams = new ParameterList(Collections.singletonList(Value.DATE));
+                DtStart<LocalDate> start = new DtStart<>(startParams, LocalDate.now());
 
-//        event = (VEvent) event.copy();
-//        start = (DtStart) event.getProperty(Property.DTSTART);
-//        start.getParameters().remove(Value.DATE_TIME);
-//        end = (DtEnd) event.getProperty(Property.DTEND);
-//        end.getParameters().replace(Value.DATE_TIME);
-//        suite.addTest(new VEventTest<>("testValidation", event));
+                ParameterList endParams = new ParameterList(Collections.singletonList(Value.DATE));
+                DtEnd<LocalDate> end = new DtEnd<>(endParams, LocalDate.now());
+                var event = (VEvent) new VEvent().withProperty(uid).withProperty(start).withProperty(end).getFluentTarget();
+                this.validEvent = event;
 
-        // test 2..
-        event = event.copy();
-        startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
-        start = new DtStart<>(startParams, event.getRequiredProperty(Property.DTSTART).getValue());
-        event.replace(start);
+                event = event.copy();
+                ParameterList startParams2 = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+                DtStart<ZonedDateTime> newstart = new DtStart<>(startParams2, ZonedDateTime.now());
+                event.replace(newstart);
+                this.invalidEvent = event;
 
-        endParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
-        end = new DtEnd<>(endParams, event.getRequiredProperty(Property.DTEND).getValue());
-        event.replace(end);
-//        suite.addTest(new VEventTest<>("testValidationException", event));
+                // test 1..
+                event = event.copy();
+                ParameterList startParams3 = new ParameterList(Collections.singletonList(Value.DATE));
+                DtStart<?> newstart3 = new DtStart<>(startParams3, event.getRequiredProperty(Property.DTSTART).getValue());
+                event.replace(newstart3);
 
-        // test 3..
-//        event = (VEvent) event.copy();
-//        start = (DtStart) event.getProperty(Property.DTSTART);
-//        start.getParameters().remove(Value.DATE);
-//        end = (DtEnd) event.getProperty(Property.DTEND);
-//        end.getParameters().replace(Value.DATE);
-//        suite.addTest(new VEventTest<>("testValidationException", event));
+                // test 2..
+                event = event.copy();
+                ParameterList startParams4 = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+                DtStart<?> startA = new DtStart<>(startParams4, event.getRequiredProperty(Property.DTSTART).getValue());
+                event.replace(startA);
 
-        // disable relaxed parsing after copying invalid events..
-        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
-
-        suite.addTest(new VEventTest<>("testChristmas"));
-        suite.addTest(new VEventTest<>("testMelbourneCup"));
-        suite.addTest(new VEventTest<>("testGetConsumedTime2"));
-        suite.addTest(new VEventTest<>("testGetConsumedTime3"));
-        suite.addTest(new VEventTest<>("testGetConsumedTimeByCount"));
-        suite.addTest(new VEventTest<>("testEventEndDate"));
-        suite.addTest(new VEventTest<>("testGetConsumedTimeWithExDate"));
-        suite.addTest(new VEventTest<>("testGetConsumedTimeWithExDate2"));
-        suite.addTest(new VEventTest<>("testIsCalendarComponent", event));
-        suite.addTest(new VEventTest<>("testEquals"));
-//        suite.addTest(new VEventTest<>("testValidation"));
-
-        // use relaxed unfolding for samples..
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
-
-        // test iTIP validation..
-//        File[] testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
-        URL[] testFiles = new URL[]{VEventTest.class.getResource("/samples/valid/calconnect.ics"), VEventTest.class.getResource("/samples/valid/calconnect10.ics")};
-        for (URL testFile : testFiles) {
-            log.info("Sample [" + testFile + "]");
-            net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFile);
-            if (PUBLISH.equals(calendar.getRequiredProperty(Property.METHOD))) {
-                calendar.<VEvent>getComponents(Component.VEVENT).forEach(calendarComponent -> {
-                    suite.addTest(new VEventTest<>("testPublishValidation", calendarComponent));
-                });
-            } else if (REQUEST.equals(calendar.getRequiredProperty(Property.METHOD))) {
-                calendar.<VEvent>getComponents(Component.VEVENT).forEach(calendarComponent -> {
-                    suite.addTest(new VEventTest<>("testRequestValidation", calendarComponent));
-                });
+                ParameterList endParams2 = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+                DtEnd<?> endA = new DtEnd<>(endParams2, event.getRequiredProperty(Property.DTEND).getValue());
+                event.replace(endA);
+                this.finalEvent = event;
+            } finally {
+                CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
             }
         }
+    }
 
-        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
-        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
+    static Stream<Arguments> validationData() {
+        ValidationFixture fx = new ValidationFixture();
+        return Stream.of(Arguments.of(fx.validEvent));
+    }
 
-        return suite;
+    static Stream<Arguments> validationExceptionData() {
+        ValidationFixture fx = new ValidationFixture();
+        return Stream.of(Arguments.of(fx.invalidEvent));
+    }
+
+    static Stream<Arguments> isCalendarComponentData() {
+        ValidationFixture fx = new ValidationFixture();
+        return Stream.of(Arguments.of(fx.finalEvent));
+    }
+
+    private static Stream<Arguments> iTipValidationData(String method) throws IOException, ParserException {
+        Stream.Builder<Arguments> rows = Stream.builder();
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
+        try {
+            URL[] testFiles = new URL[]{VEventTest.class.getResource("/samples/valid/calconnect.ics"),
+                    VEventTest.class.getResource("/samples/valid/calconnect10.ics")};
+            for (URL testFile : testFiles) {
+                log.info("Sample [" + testFile + "]");
+                net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFile);
+                if ("PUBLISH".equals(method) && PUBLISH.equals(calendar.getRequiredProperty(Property.METHOD))) {
+                    calendar.<VEvent>getComponents(Component.VEVENT).forEach(
+                            calendarComponent -> rows.add(Arguments.of(calendarComponent)));
+                } else if ("REQUEST".equals(method) && REQUEST.equals(calendar.getRequiredProperty(Property.METHOD))) {
+                    calendar.<VEvent>getComponents(Component.VEVENT).forEach(
+                            calendarComponent -> rows.add(Arguments.of(calendarComponent)));
+                }
+            }
+        } finally {
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
+        }
+        return rows.build();
+    }
+
+    static Stream<Arguments> publishValidationData() throws IOException, ParserException {
+        return iTipValidationData("PUBLISH");
+    }
+
+    static Stream<Arguments> requestValidationData() throws IOException, ParserException {
+        return iTipValidationData("REQUEST");
     }
 }

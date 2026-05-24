@@ -31,10 +31,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.text.ParseException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.OPAQUE;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
@@ -46,42 +52,57 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSP
  *
  * @author fortuna
  */
-public class TranspTest extends PropertyTest {
+public class TranspTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public TranspTest(Transp transp, String expectedValue) {
-        super(transp, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public TranspTest(String testMethod, Transp property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new TranspTest(OPAQUE, "OPAQUE"));
-        suite.addTest(new TranspTest(TRANSPARENT, "TRANSPARENT"));
-        
-        suite.addTest(new TranspTest("testValidation", OPAQUE));
-        suite.addTest(new TranspTest("testValidation", TRANSPARENT));
-        
-        suite.addTest(new TranspTest("testEquals", OPAQUE));
-        suite.addTest(new TranspTest("testEquals", TRANSPARENT));
-        
-        suite.addTest(new TranspTest("testImmutable", OPAQUE));
-        suite.addTest(new TranspTest("testImmutable", TRANSPARENT));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(OPAQUE, "OPAQUE"),
+                Arguments.of(TRANSPARENT, "TRANSPARENT")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(OPAQUE),
+                Arguments.of(TRANSPARENT)
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(OPAQUE),
+                Arguments.of(TRANSPARENT)
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(OPAQUE),
+                Arguments.of(TRANSPARENT)
+        );
+    }
 }

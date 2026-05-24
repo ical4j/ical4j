@@ -31,29 +31,31 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.text.ParseException;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author fortuna
  *
  */
-public class TimeTest extends TestCase {
-    
+public class TimeTest {
+
     private final TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     /**
      * {@inheritDoc}
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() throws Exception {
     }
 
+    @Test
     public void testTimeString() throws ParseException {
         Time time = new Time("020000", registry.getTimeZone("America/Los_Angeles"));
-        Assert.assertEquals("020000", time.toString());
+        assertEquals("020000", time.toString());
     }
 }

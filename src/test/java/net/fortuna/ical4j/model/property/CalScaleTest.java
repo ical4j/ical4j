@@ -31,8 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREGORIAN;
 
@@ -42,34 +49,32 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableCalScale.GREG
  * Created on 16/03/2005
  *
  * @author Ben
- * 
+ *
  *  Tests related to the property CALSCALE
  */
-public class CalScaleTest extends PropertyTest {
+public class CalScaleTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public CalScaleTest(CalScale property, String expectedValue) {
-        super(property, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public CalScaleTest(String testMethod, CalScale property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new CalScaleTest(GREGORIAN, "GREGORIAN"));
-        suite.addTest(new CalScaleTest("testImmutable", GREGORIAN));
-        return suite;
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(GREGORIAN, "GREGORIAN")
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(GREGORIAN)
+        );
     }
 }

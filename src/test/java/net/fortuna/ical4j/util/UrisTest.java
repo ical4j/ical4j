@@ -31,8 +31,15 @@
  */
 package net.fortuna.ical4j.util;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$ [17-Jan-2005]
@@ -40,62 +47,39 @@ import junit.framework.TestSuite;
  * Unit test for StringUtils.
  * @author Chris Borrill
  */
-public class UrisTest extends TestCase {
+public class UrisTest {
 
-    private final String testString;
-    
-    private final String expectedValue;
-    
-    public UrisTest(String testString) {
-        this(testString, testString);
-    }
-    
-    public UrisTest(String testString, String expectedValue) {
-        super("testCreateUri");
-        this.testString = testString;
-        this.expectedValue = expectedValue;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_PARSING, true);
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
-        super.tearDown();
-    }
-    
-    public void testCreateUri() throws Exception {
-        assertEquals("create failed", expectedValue, Uris.create(testString).toString());
     }
 
-    @Override
-    public String getName() {
-        if (testString != null) {
-            return super.getName() + " [" + testString + "]";
-        }
-        return super.getName();
+    @ParameterizedTest(name = "createUri [{0}]")
+    @MethodSource("createUriData")
+    public void testCreateUri(String testString, String expectedValue) throws Exception {
+        assertEquals(expectedValue, Uris.create(testString).toString(), "create failed");
     }
-    
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new UrisTest("mailto:joe@example.com"));
-        suite.addTest(new UrisTest("mailto:ga\u00eblle@example.com"));
-        suite.addTest(new UrisTest("mailto:joe+titi@example.com"));
-        suite.addTest(new UrisTest("mailto:joe%titi@example.com", "mailto:joe%25titi@example.com"));
-        suite.addTest(new UrisTest("mailto:jack jill@example.com", "mailto:jack%20jill@example.com"));
-        suite.addTest(new UrisTest("sms:caluser2@example.com,%20mailto:caluser2@example.com"));
-        suite.addTest(new UrisTest("toto"));
-        suite.addTest(new UrisTest(":toto", Uris.INVALID_SCHEME + ":" + ":toto"));
-        suite.addTest(new UrisTest("toto:", Uris.INVALID_SCHEME + ":" + "toto:"));
 
-        return suite;
+    static Stream<Arguments> createUriData() {
+        return Stream.of(
+                Arguments.of("mailto:joe@example.com", "mailto:joe@example.com"),
+                Arguments.of("mailto:gaëlle@example.com", "mailto:gaëlle@example.com"),
+                Arguments.of("mailto:joe+titi@example.com", "mailto:joe+titi@example.com"),
+                Arguments.of("mailto:joe%titi@example.com", "mailto:joe%25titi@example.com"),
+                Arguments.of("mailto:jack jill@example.com", "mailto:jack%20jill@example.com"),
+                Arguments.of("sms:caluser2@example.com,%20mailto:caluser2@example.com", "sms:caluser2@example.com,%20mailto:caluser2@example.com"),
+                Arguments.of("toto", "toto"),
+                Arguments.of(":toto", Uris.INVALID_SCHEME + ":" + ":toto"),
+                Arguments.of("toto:", Uris.INVALID_SCHEME + ":" + "toto:")
+        );
     }
 }

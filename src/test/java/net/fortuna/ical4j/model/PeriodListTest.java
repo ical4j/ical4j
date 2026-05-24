@@ -31,8 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,10 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created on 13/02/2005
@@ -50,101 +56,20 @@ import java.util.List;
  *
  * @author Ben Fortuna
  */
-public class PeriodListTest extends TestCase {
+public class PeriodListTest {
 
     private final Logger log = LoggerFactory.getLogger(PeriodListTest.class);
 
-    private PeriodList<LocalDate> periodList;
-
-    private PeriodList<LocalDate> expectedPeriodList;
-    
-    private int expectedSize;
-    
-    private Period<LocalDate> expectedPeriod;
-    
     /**
-     * @param periodList
-     * @param periodList2
+     *
      */
-    public PeriodListTest(PeriodList<LocalDate> periodList, PeriodList<LocalDate> expectedPeriodList) {
-        super("testEquals");
-        this.periodList = periodList;
-        this.expectedPeriodList = expectedPeriodList;
-    }
-    
-    /**
-     * @param periodList
-     * @param expectedSize
-     */
-    public PeriodListTest(PeriodList<LocalDate> periodList, int expectedSize) {
-        super("testSize");
-        this.periodList = periodList;
-        this.expectedSize = expectedSize;
-    }
-    
-    /**
-     * @param periodList
-     * @param expectedFirstPeriod
-     */
-    public PeriodListTest(String testMethod, PeriodList<LocalDate> periodList, Period<LocalDate> expectedPeriod) {
-        super(testMethod);
-        this.periodList = periodList;
-        this.expectedPeriod = expectedPeriod;
-    }
-    
-    /**
-     * @param testMethod
-     * @param periodList
-     */
-    public PeriodListTest(String testMethod, PeriodList<LocalDate> periodList) {
-    	super(testMethod);
-    	this.periodList = periodList;
-    }
-    
-    /**
-     * @param testMethod
-     */
-    public PeriodListTest(String testMethod) {
-        super(testMethod);
-    }
-    
-    /**
-     * 
-     */
-    public void testEquals() {
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(PeriodList<LocalDate> periodList, PeriodList<LocalDate> expectedPeriodList) {
         assertEquals(expectedPeriodList, periodList);
     }
-    
-    /**
-     * 
-     */
-    public void testSize() {
-        assertEquals(expectedSize, periodList.getPeriods().size());
-    }
-    
-    /**
-     * 
-     */
-    public void testIsEmpty() {
-    	assertTrue(periodList.getPeriods().isEmpty());
-    }
-    
-    /**
-     * 
-     */
-    public void testFirstPeriodEquals() {
-        assertEquals(expectedPeriod, periodList.getPeriods().toArray()[0]);
-    }
-    
-    public void testContains() {
-    	assertTrue(periodList.getPeriods().contains(expectedPeriod));
-    }
-    
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+
+    static Stream<Arguments> equalsData() {
         // create ranges that are intervals
         LocalDate begin1994 = LocalDate.now().withYear(1994).withMonth(1).withDayOfMonth(1);
         LocalDate end1994 = begin1994.withMonth(12).withDayOfMonth(31);
@@ -187,10 +112,6 @@ public class PeriodListTest extends TestCase {
         List<Period<LocalDate>> tailSet = new ArrayList<>();
         tailSet.add(tail1994);
 
-        /*
-         * assertNull("Removing null from a null set should return null", empty1.subtract(null)); assertNull("Removing
-         * from a null set should return null", normalizer.subtractDateRanges(null, headSet));
-         */
         PeriodList<LocalDate> evenMonths = new PeriodList<LocalDate>(CalendarDateFormat.DATE_FORMAT)
             .add(monthFebruary)
             .add(monthApril)
@@ -198,100 +119,26 @@ public class PeriodListTest extends TestCase {
             .add(monthAugust)
             .add(monthOctober)
             .add(monthDecember);
-        
+
         PeriodList<LocalDate> headSet = new PeriodList<LocalDate>(CalendarDateFormat.DATE_FORMAT)
             .add(head1994);
-        
+
         PeriodList<LocalDate> empty1 = new PeriodList<>(CalendarDateFormat.DATE_FORMAT);
         PeriodList<LocalDate> empty2 = new PeriodList<>(CalendarDateFormat.DATE_FORMAT);
-        
-        suite.addTest(new PeriodListTest(evenMonths.subtract(null), evenMonths));
-        suite.addTest(new PeriodListTest(empty1.subtract(empty2), empty1));
-        suite.addTest(new PeriodListTest(headSet.subtract(empty1), headSet));
-        suite.addTest(new PeriodListTest(evenMonths.subtract(empty1), evenMonths));
 
-        // other tests..
-        suite.addTest(new PeriodListTest("testTimezone"));
-        suite.addTest(new PeriodListTest("testNormalise"));
-        
-        return suite;
+        return Stream.of(
+                Arguments.of(evenMonths.subtract(null), evenMonths),
+                Arguments.of(empty1.subtract(empty2), empty1),
+                Arguments.of(headSet.subtract(empty1), headSet),
+                Arguments.of(evenMonths.subtract(empty1), evenMonths)
+        );
     }
-
-    public final void testPeriodListSort() {
-        LocalDate start = LocalDate.now();
-        LocalDate end = start.withDayOfMonth(25);
-
-        PeriodList<LocalDate> periods = new PeriodList<LocalDate>(CalendarDateFormat.DATE_FORMAT)
-            .add(new Period<>(start, end))
-            .add(new Period<>(end, java.time.Duration.ofHours(2)))
-            .add(new Period<>(start, java.time.Duration.ofHours(2)))
-            .add(new Period<>(start, java.time.Duration.ofHours(1)));
-
-        // log.info("Unsorted list: " + periods);
-
-        // Collections.sort(periods);
-
-        log.info("Sorted list: " + periods);
-    }
-
-    /**
-     * test null init and add test null init test null add test empty init and add test empty init test empty add
-     * @throws Exception
-     */
-    /*
-     * public void testEmptyAddPeriods() throws Exception { SortedSet empty1 = new TreeSet(); SortedSet empty2 = new
-     * TreeSet(); assertNull("Normalizing null sets should return null", normalizer.addDateRanges(null, null));
-     * assertEquals(headSet, normalizer.addDateRanges(null, headSet)); assertEquals(evenMonths,
-     * normalizer.addDateRanges(evenMonths, null)); assertEquals(empty1, normalizer.addDateRanges(empty1, empty2));
-     * assertEquals(headSet, normalizer.addDateRanges(empty1, headSet)); assertEquals(evenMonths,
-     * normalizer.addDateRanges(evenMonths, empty1)); }
-     */
-
-    /**
-     * Test null dateList Test empty dateList Test Jan/Feb/Mar dateList
-     * @throws Exception
-     */
-    /*
-     * public void testCreateDateRangeSet() throws Exception { // Test null dateList
-     * assertNull(normalizer.createDateRangeSet(null, 0)); // Test empty dateList DateList emptyDateList = new
-     * DateList(Value.DATE_TIME); assertEquals(normalizer.createDateRangeSet(emptyDateList, 0).size(), 0); // Test
-     * Jan/Feb/Mar dateList DateList dateList1 = new DateList(Value.DATE_TIME); final long EIGHT_HOURS = 1000 * 60 * 60 *
-     * 8; dateList1.add(jan1994); // Jan 22 dateList1.add(feb1994); // Feb 15 dateList1.add(mar1994); // Mar 4 SortedSet
-     * dateRangeSet = normalizer.createDateRangeSet(dateList1, EIGHT_HOURS); Object[] objArray = dateRangeSet.toArray();
-     * DateRange[] dateRangeArray = new DateRange[objArray.length]; for (int i = 0; i < objArray.length; i++) {
-     * dateRangeArray[i] = (DateRange) objArray[i]; } assertEquals(dateRangeArray[0].getStartDate(), jan1994);
-     * assertEquals(dateRangeArray[0].getEndDate(), new Date(jan1994.getTime() + EIGHT_HOURS));
-     * assertEquals(dateRangeArray[1].getStartDate(), feb1994); assertEquals(dateRangeArray[1].getEndDate(), new
-     * Date(feb1994.getTime() + EIGHT_HOURS)); assertEquals(dateRangeArray[2].getStartDate(), mar1994);
-     * assertEquals(dateRangeArray[2].getEndDate(), new Date(mar1994.getTime() + EIGHT_HOURS)); }
-     */
-
-    /**
-     * Test null ranges
-     * @throws Exception
-     */
-    /*
-     * public void testAddNullDateRanges() throws Exception { // Test null ranges.
-     * assertNull(normalizer.addDateRanges(null, null)); }
-     */
-
-    /**
-     * Test subtract null range sets.
-     * @throws Exception
-     */
-    /*
-     * public void testSubtractNullDateRanges() throws Exception { assertNull(normalizer.subtractDateRanges(null,
-     * null)); }
-     */
 
     /**
      * Test timezone functionality.
      */
+    @Test
     public void testTimezone() {
-//        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance()
-//                .createRegistry();
-//        TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
-
         PeriodList<Instant> list = new PeriodList<>(CalendarDateFormat.UTC_DATE_TIME_FORMAT);
 
         for (int i = 0; i < 5; i++) {
@@ -300,7 +147,7 @@ public class PeriodListTest extends TestCase {
 
             list = list.add(new Period<>(start, end));
         }
-        
+
         log.info("Timezone test - period list: [" + list + "]");
 
         list.getPeriods().forEach(p -> {
@@ -308,10 +155,11 @@ public class PeriodListTest extends TestCase {
             assertTrue(p.toString().endsWith("Z"));
         });
     }
-    
+
     /**
      * Unit tests for {@link PeriodList#normalise()}.
      */
+    @Test
     public void testNormalise() {
         // test a list of periods consuming no time..
         ZonedDateTime start = ZonedDateTime.now();
@@ -319,7 +167,7 @@ public class PeriodListTest extends TestCase {
         PeriodList<ZonedDateTime> periods = new PeriodList<ZonedDateTime>()
             .add(new Period<>(start, start))
             .add(new Period<>(start, start));
-        
+
         assertTrue(periods.normalise().getPeriods().isEmpty());
     }
 }

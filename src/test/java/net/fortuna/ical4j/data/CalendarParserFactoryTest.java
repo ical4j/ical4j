@@ -31,10 +31,11 @@
  */
 package net.fortuna.ical4j.data;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * $Id$
@@ -51,7 +52,7 @@ public class CalendarParserFactoryTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         originalParserFactory = System.getProperty(CalendarParserFactory.KEY_FACTORY_CLASS);
     }
@@ -59,7 +60,7 @@ public class CalendarParserFactoryTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (originalParserFactory != null) {
             System.setProperty(CalendarParserFactory.KEY_FACTORY_CLASS,
@@ -75,7 +76,7 @@ public class CalendarParserFactoryTest {
      */
     @Test
     public void testCreateDefaultParser() {
-        Assert.assertTrue(CalendarParserFactory.getInstance().get() instanceof CalendarParserImpl);
+        assertTrue(CalendarParserFactory.getInstance().get() instanceof CalendarParserImpl);
     }
     
     /**

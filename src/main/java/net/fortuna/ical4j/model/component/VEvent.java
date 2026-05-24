@@ -35,9 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.*;
-import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.temporal.Temporal;
@@ -46,10 +44,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableTransp.TRANSPARENT;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -196,54 +192,6 @@ public class VEvent extends CalendarComponent implements Prototype<VEvent>, Comp
         StatusAccessor {
 
     private static final long serialVersionUID = 2547948989200697335L;
-
-    private static final Map<Method, Validator<VEvent>> methodValidators = new HashMap<>();
-    static {
-        methodValidators.put(ADD, new VEventValidator(
-                new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, SUMMARY, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
-                new ValidationRule<>(None, RECURRENCE_ID, REQUEST_STATUS)));
-        methodValidators.put(CANCEL, new VEventValidator(false,
-                new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DTSTART, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, SUMMARY, TRANSP, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-        methodValidators.put(COUNTER, new VEventValidator(
-                new ValidationRule<>(One, DTSTAMP, DTSTART, SEQUENCE, SUMMARY, UID),
-                new ValidationRule<>(One, true, ORGANIZER),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
-        methodValidators.put(DECLINE_COUNTER, new VEventValidator(false,
-                new ValidationRule<>(One, DTSTAMP, ORGANIZER, UID),
-                new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE),
-                new ValidationRule<>(None, ATTACH, ATTENDEE, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND,
-                        DTSTART, DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
-                        RESOURCES, RRULE, STATUS, SUMMARY, TRANSP, URL)));
-        methodValidators.put(PUBLISH, new VEventValidator(
-                new ValidationRule<>(One, DTSTART, UID),
-                new ValidationRule<>(One, true, DTSTAMP, ORGANIZER, SUMMARY),
-                new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
-                        DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
-                new ValidationRule<>(None, true, ATTENDEE),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-        methodValidators.put(REFRESH, new VEventValidator(false,
-                new ValidationRule<>(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
-                new ValidationRule<>(OneOrLess, RECURRENCE_ID),
-                new ValidationRule<>(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND, DTSTART,
-                        DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
-                        REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, SUMMARY, TRANSP, URL)));
-        methodValidators.put(REPLY, new VEventValidator(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION),
-                new ValidationRule<>(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
-                new ValidationRule<>(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
-                        DTSTART, DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, SUMMARY, TRANSP,
-                        URL)));
-        methodValidators.put(REQUEST, new VEventValidator(
-                new ValidationRule<>(OneOrMore, true, ATTENDEE),
-                new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SUMMARY, UID),
-                new ValidationRule<>(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL)));
-    }
 
     /**
      * Default constructor.
@@ -401,14 +349,9 @@ public class VEvent extends CalendarComponent implements Prototype<VEvent>, Comp
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
+    @Override
     public ValidationResult validate(Method method) throws ValidationException {
-        final Validator<VEvent> validator = methodValidators.get(method);
-        if (validator != null) {
-            return validator.validate(this);
-        }
-        else {
-            return super.validate(method);
-        }
+        return ITIPRuleRegistry.validate(this, method);
     }
 
     /**

@@ -32,8 +32,7 @@
 package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.Calendar;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,6 +40,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id: CalendarBuilderTest.java [Apr 5, 2004]
@@ -73,7 +74,7 @@ public class ConcurrencyTest {
         }
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.MINUTES);
-        Assert.assertEquals(3700, size.longValue());
+        assertEquals(3700, size.longValue());
     }
 
     @Test
@@ -99,6 +100,6 @@ public class ConcurrencyTest {
         }
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.MINUTES);
-        Assert.assertEquals(3700, size.longValue());
+        assertEquals(3700, size.longValue());
     }
 }

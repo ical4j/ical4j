@@ -37,27 +37,27 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class Rfc5545TransformerTest {
 
     private Rfc5545Transformer transformer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         transformer = new Rfc5545Transformer();
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void shouldCorrectCalendarBody() throws IOException, ParserException {
 
         String[] calendarNames = { "yahoo1.txt", "yahoo2.txt", "outlook1.txt", "outlook2.txt", "apple.txt" };
@@ -74,7 +74,7 @@ public class Rfc5545TransformerTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void shouldCorrectMsSpecificTimeZones() throws IOException, ParserException {
         String[] actuals = { "timezones/outlook1.txt", "timezones/outlook2.txt" };
         String[] expecteds = { "timezones/outlook1_expected.txt", "timezones/outlook2_expected.txt" };
@@ -83,12 +83,12 @@ public class Rfc5545TransformerTest {
             Calendar actual = buildCalendar(actuals[i]);
             actual = transformer.apply(actual);
             Calendar expected = buildCalendar(expecteds[i]);
-            assertEquals("on from " + expecteds[i] + " and " + actuals[i] + " failed.", expected, actual);
+            assertEquals(expected, actual, "on from " + expecteds[i] + " and " + actuals[i] + " failed.");
         }
     }
 
     @Test
-    @Ignore("Unable to parse invalid UTC properties using new date/time API")
+    @Disabled("Unable to parse invalid UTC properties using new date/time API")
     public void shouldCorrectDTStampByAddingUTCTimezone() {
         String calendarName = "dtstamp/invalid.txt";
         try {
@@ -101,7 +101,7 @@ public class Rfc5545TransformerTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void shouldSetTimezoneToUtcForNoTZdescription() {
         String actualCalendar = "outlook/TZ-no-description.txt";
         try {

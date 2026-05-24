@@ -31,54 +31,81 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.CONFIDENTIAL;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.PRIVATE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableClazz.PUBLIC;
 
 /**
  * Created: [19/11/2008]
  *
  * @author fortuna
  */
-public class ClazzTest extends PropertyTest {
+public class ClazzTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public ClazzTest(Clazz clazz, String expectedValue) {
-        super(clazz, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public ClazzTest(String testMethod, Clazz property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new ClazzTest(CONFIDENTIAL, "CONFIDENTIAL"));
-        suite.addTest(new ClazzTest(PRIVATE, "PRIVATE"));
-        suite.addTest(new ClazzTest(PUBLIC, "PUBLIC"));
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
 
-        suite.addTest(new ClazzTest("testEquals", CONFIDENTIAL));
-        suite.addTest(new ClazzTest("testEquals", PRIVATE));
-        suite.addTest(new ClazzTest("testEquals", PUBLIC));
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
+    }
 
-        suite.addTest(new ClazzTest("testValidation", CONFIDENTIAL));
-        suite.addTest(new ClazzTest("testValidation", PRIVATE));
-        suite.addTest(new ClazzTest("testValidation", PUBLIC));
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(CONFIDENTIAL, "CONFIDENTIAL"),
+                Arguments.of(PRIVATE, "PRIVATE"),
+                Arguments.of(PUBLIC, "PUBLIC")
+        );
+    }
 
-        suite.addTest(new ClazzTest("testImmutable", CONFIDENTIAL));
-        suite.addTest(new ClazzTest("testImmutable", PRIVATE));
-        suite.addTest(new ClazzTest("testImmutable", PUBLIC));
-        return suite;
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(CONFIDENTIAL),
+                Arguments.of(PRIVATE),
+                Arguments.of(PUBLIC)
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(CONFIDENTIAL),
+                Arguments.of(PRIVATE),
+                Arguments.of(PUBLIC)
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(CONFIDENTIAL),
+                Arguments.of(PRIVATE),
+                Arguments.of(PUBLIC)
+        );
     }
 }

@@ -12,8 +12,7 @@ import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.immutable.ImmutableVersion;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.RandomUidGenerator;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -22,6 +21,8 @@ import java.io.Writer;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UTCCalendarEqualsTest {
 
@@ -51,7 +52,7 @@ public class UTCCalendarEqualsTest {
         //when
         boolean result = calendar.equals(c2);
         //then no exceptions
-        Assert.assertTrue(result);
+        assertTrue(result);
     }
 
     @Test
@@ -80,7 +81,7 @@ public class UTCCalendarEqualsTest {
         //when
         boolean result = calendar.equals(c2);
         //then no exceptions
-        Assert.assertTrue(result);
+        assertTrue(result);
     }
 
     public String convertToDatabaseColumn(Calendar aCalendar) throws IOException {

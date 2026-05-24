@@ -35,12 +35,13 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ConstraintViolationException;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.Calendars;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -50,13 +51,13 @@ import java.io.IOException;
  * @author fortuna
  *
  */
-@Ignore("Test fails in travis-ci")
+@Disabled("Test fails in travis-ci")
 public class HCalendarParserTest {
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
@@ -73,8 +74,8 @@ public class HCalendarParserTest {
         Calendar hcalCalendar = builder.build(getClass().getResourceAsStream("/samples/hcalendar/example1.html"));
         
 //        assertEquals(icsCalendar, hcalCalendar);
-        Assert.assertEquals(icsCalendar.getProperties().size(), hcalCalendar.getProperties().size());
-        Assert.assertEquals(icsCalendar.getComponents().size(), hcalCalendar.getComponents().size());
+        assertEquals(icsCalendar.getProperties().size(), hcalCalendar.getProperties().size());
+        assertEquals(icsCalendar.getComponents().size(), hcalCalendar.getComponents().size());
     }
 
 }

@@ -31,14 +31,20 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.immutable.ImmutableParticipantType;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.SocketException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -47,32 +53,44 @@ import java.net.SocketException;
  *
  * @author Mike Douglass
  */
-public class ParticipantTest extends ComponentTest {
+public class ParticipantTest {
 
-    /**
-     * @param component to test
-     */
-    public ParticipantTest(final String testMethod,
-                           final Participant component) {
-        super(testMethod, component);
+    @AfterEach
+    void tearDown() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
-    /**
-     * @return
-     * @throws SocketException 
-     */
-    public static TestSuite suite() throws SocketException {
-        final TestSuite suite = new TestSuite();
+    @ParameterizedTest(name = "isNotCalendarComponent")
+    @MethodSource("isNotCalendarComponentData")
+    public void testIsNotCalendarComponent(Participant component) {
+        ComponentTest.assertIsNotCalendarComponent(component);
+    }
 
-        Participant p = new Participant();
-        suite.addTest(new ParticipantTest("testIsNotCalendarComponent", p));
-        suite.addTest(new ParticipantTest("testValidationException", p));
-        
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(Participant component) {
+        ComponentTest.assertValidationException(component);
+    }
+
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Participant component) throws ValidationException {
+        ComponentTest.assertValidation(component);
+    }
+
+    static Stream<Arguments> isNotCalendarComponentData() {
+        return Stream.of(Arguments.of(new Participant()));
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(Arguments.of(new Participant()));
+    }
+
+    static Stream<Arguments> validationData() throws SocketException {
         final UidGenerator g = new RandomUidGenerator();
         var p2 = (Participant) new Participant().withProperty(g.generateUid())
                 .withProperty(ImmutableParticipantType.ACTIVE)
                 .withProperty(new DtStamp()).getFluentTarget();
-        suite.addTest(new ParticipantTest("testValidation", p2));
-        return suite;
+        return Stream.of(Arguments.of(p2));
     }
 }

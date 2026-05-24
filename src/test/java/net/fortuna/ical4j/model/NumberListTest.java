@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -43,61 +48,42 @@ import org.slf4j.LoggerFactory;
  *
  * @author Ben
  */
-public class NumberListTest extends TestCase {
+public class NumberListTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(NumberListTest.class);
 
-    private final NumberList numberList;
-
-    private int expectedSize;
-
-    private String expectedString;
-
-    private Integer validNumber;
-
-    private Integer invalidNumber;
-
-    /**
-     * @param numberList
-     * @param expectedSize
-     */
-    public NumberListTest(NumberList numberList, int expectedSize) {
-        super("testSize");
-        this.numberList = numberList;
-        this.expectedSize = expectedSize;
-    }
-
-    /**
-     * @param numberList
-     * @param expectedString
-     */
-    public NumberListTest(NumberList numberList, String expectedString) {
-        super("testToString");
-        this.numberList = numberList;
-        this.expectedString = expectedString;
-    }
-
-    /**
-     * @param list
-     * @param validNumber
-     * @param invalidNumber
-     */
-    public NumberListTest(NumberList list, Integer validNumber, Integer invalidNumber) {
-        super("testBounds");
-        this.numberList = list;
-        this.validNumber = validNumber;
-        this.invalidNumber = invalidNumber;
-    }
-
-    public void testSize() {
+    @ParameterizedTest(name = "size [{0}]")
+    @MethodSource("sizeData")
+    public void testSize(NumberList numberList, int expectedSize) {
         assertEquals(expectedSize, numberList.size());
     }
 
-    public void testToString() {
+    static Stream<Arguments> sizeData() {
+        return Stream.of(
+                Arguments.of(new NumberList("1,1,2,4,5"), 5),
+                Arguments.of(new NumberList("-9,-2,-3,3,5,6"), 6),
+                Arguments.of(new NumberList("0,2,5,-2,-4,-5,+3"), 7)
+        );
+    }
+
+    @ParameterizedTest(name = "toString [{0}]")
+    @MethodSource("toStringData")
+    public void testToString(NumberList numberList, String expectedString) {
         assertEquals(expectedString, numberList.toString());
     }
 
-    public void testBounds() {
+    static Stream<Arguments> toStringData() {
+        return Stream.of(
+                Arguments.of(new NumberList("1,1,2,4,5"), "1,1,2,4,5"),
+                Arguments.of(new NumberList("-9,-2,-3,3,5,6"), "-9,-2,-3,3,5,6"),
+                Arguments.of(new NumberList("0,2,5,-2,-4,-5,+3"), "0,2,5,-2,-4,-5,3"),
+                Arguments.of(new NumberList("0,2,5,-2,-4,-5,+3", 0, 5, true), "0,2,5,-2,-4,-5,3")
+        );
+    }
+
+    @ParameterizedTest(name = "bounds [{0}]")
+    @MethodSource("boundsData")
+    public void testBounds(NumberList numberList, Integer validNumber, Integer invalidNumber) {
         numberList.add(validNumber);
         try {
             numberList.add(invalidNumber);
@@ -106,32 +92,10 @@ public class NumberListTest extends TestCase {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-        return super.getName() + " [" + numberList + "]";
-    }
-
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new NumberListTest(new NumberList("1,1,2,4,5"), 5));
-        suite.addTest(new NumberListTest(new NumberList("1,1,2,4,5"), "1,1,2,4,5"));
-
-        suite.addTest(new NumberListTest(new NumberList("-9,-2,-3,3,5,6"), 6));
-        suite.addTest(new NumberListTest(new NumberList("-9,-2,-3,3,5,6"), "-9,-2,-3,3,5,6"));
-
-        suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), 7));
-        suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), "0,2,5,-2,-4,-5,3"));
-        suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3", 0, 5, true), "0,2,5,-2,-4,-5,3"));
-
-        suite.addTest(new NumberListTest(new NumberList(0, 1, false), 0, -1));
-        suite.addTest(new NumberListTest(new NumberList("1", 0, 1, true), 0, 2));
-
-        return suite;
+    static Stream<Arguments> boundsData() {
+        return Stream.of(
+                Arguments.of(new NumberList(0, 1, false), 0, -1),
+                Arguments.of(new NumberList("1", 0, 1, true), 0, 2)
+        );
     }
 }

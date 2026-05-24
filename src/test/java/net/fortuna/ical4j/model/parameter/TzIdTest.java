@@ -31,16 +31,19 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Parameter;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.zone.ZoneRules;
 import java.util.Map;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * $Id$
@@ -50,12 +53,13 @@ import java.util.Optional;
  * Unit tests for the TzId parameter.
  * @author Ben Fortuna
  */
-public class TzIdTest extends TestCase {
+public class TzIdTest {
 
     /**
      * @throws IOException
      * @throws ParserException
      */
+    @Test
     public void testTzIdCompatibility() throws IOException, ParserException {
         
         CalendarBuilder builder = new CalendarBuilder();

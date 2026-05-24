@@ -31,12 +31,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +50,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -54,64 +59,57 @@ import java.util.Collections;
  *
  * @author Ben Fortuna
  */
-public class DtEndTest extends PropertyTest {
+public class DtEndTest {
 
     private static final Logger log = LoggerFactory.getLogger(DtEndTest.class);
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public DtEndTest(String testMethod, DtEnd property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
-    /**
-     * @return
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws IOException
-     */
-    public static TestSuite suite() throws IOException, URISyntaxException, ParseException {
-
+    static Stream<Arguments> validationData() throws IOException, URISyntaxException, ParseException {
         // enable relaxed parsing to allow copying of invalid properties..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-        
-        TestSuite suite = new TestSuite();
-        ParameterList dtendParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
-        DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(dtendParams, ZonedDateTime.now());
+        try {
+            Stream.Builder<Arguments> rows = Stream.builder();
 
-        // test validation..
-        log.info(dtEnd.toString());
-        suite.addTest(new DtEndTest("testValidation", dtEnd));
+            ParameterList dtendParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+            DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(dtendParams, ZonedDateTime.now());
 
-        //
-        ParameterList newParams;
-        DtEnd<LocalDate> dtEndLocalDate = new DtEnd<>(dtEnd.getDate().toLocalDate());
-        dtEndLocalDate.replace(Value.DATE);
-        log.info(dtEndLocalDate.toString());
-        suite.addTest(new DtEndTest("testValidation", dtEndLocalDate));
+            // test validation..
+            log.info(dtEnd.toString());
+            rows.add(Arguments.of(dtEnd));
 
-        //
-        dtEnd = new DtEnd<>(dtEnd.getParameterList(), dtEnd.getDate());
-        log.info(dtEnd.toString());
-        suite.addTest(new DtEndTest("testValidation", dtEnd));
+            //
+            ParameterList newParams;
+            DtEnd<LocalDate> dtEndLocalDate = new DtEnd<>(dtEnd.getDate().toLocalDate());
+            dtEndLocalDate.replace(Value.DATE);
+            log.info(dtEndLocalDate.toString());
+            rows.add(Arguments.of(dtEndLocalDate));
 
-        //
-        newParams = (ParameterList) dtEnd.getParameterList().replace(Value.DATE);
-        dtEndLocalDate = new DtEnd<>(newParams, dtEnd.getDate().toLocalDate());
-        log.info(dtEndLocalDate.toString());
-        suite.addTest(new DtEndTest("testValidation", dtEndLocalDate));
+            //
+            dtEnd = new DtEnd<>(dtEnd.getParameterList(), dtEnd.getDate());
+            log.info(dtEnd.toString());
+            rows.add(Arguments.of(dtEnd));
 
-        //
-        dtEnd = new DtEnd<>(ZonedDateTime.now());
-        dtEnd.removeAll(Parameter.VALUE);
-        log.info(dtEnd.toString());
-        suite.addTest(new DtEndTest("testValidation", dtEnd));
-        
-        // disable relaxed parsing after copying invalid properties..
-        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+            //
+            newParams = (ParameterList) dtEnd.getParameterList().replace(Value.DATE);
+            dtEndLocalDate = new DtEnd<>(newParams, dtEnd.getDate().toLocalDate());
+            log.info(dtEndLocalDate.toString());
+            rows.add(Arguments.of(dtEndLocalDate));
 
-        return suite;
+            //
+            dtEnd = new DtEnd<>(ZonedDateTime.now());
+            dtEnd.removeAll(Parameter.VALUE);
+            log.info(dtEnd.toString());
+            rows.add(Arguments.of(dtEnd));
+
+            return rows.build();
+        } finally {
+            // disable relaxed parsing after copying invalid properties..
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        }
     }
 }

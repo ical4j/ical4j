@@ -31,36 +31,42 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * Created: [17/11/2008]
  *
  * @author fortuna
  */
-public class AbbrevTest extends ParameterTest {
+public class AbbrevTest {
 
-    /**
-     * @param testMethod
-     * @param parameter
-     * @param expectedName
-     * @param expectedValue
-     */
-    public AbbrevTest(String testMethod, Abbrev abbrev, String expectedValue) {
-        super(testMethod, abbrev, Parameter.ABBREV, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Parameter parameter, String expectedValue) {
+        ParameterTest.assertGetValue(parameter, expectedValue);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new AbbrevTest("testGetValue", new Abbrev("value"),
-                "value"));
-        suite.addTest(new AbbrevTest("testToString", new Abbrev("value"),
-                "value"));
-        return suite;
+    @ParameterizedTest(name = "toString")
+    @MethodSource("toStringData")
+    public void testToString(Parameter parameter, String expectedName, String expectedValue) {
+        ParameterTest.assertToString(parameter, expectedName, expectedValue);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new Abbrev("value"), "value")
+        );
+    }
+
+    static Stream<Arguments> toStringData() {
+        return Stream.of(
+                Arguments.of(new Abbrev("value"), Parameter.ABBREV, "value")
+        );
     }
 }

@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.ZoneOffset;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -43,34 +48,45 @@ import java.time.ZoneOffset;
  *
  * @author fortuna
  */
-public class TzOffsetFromTest extends PropertyTest {
+public class TzOffsetFromTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public TzOffsetFromTest(TzOffsetFrom offset, String expectedValue) {
-        super(offset, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public TzOffsetFromTest(String testMethod, TzOffsetFrom property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        TzOffsetFrom offset = new TzOffsetFrom(ZoneOffset.of("+1000"));
-        suite.addTest(new TzOffsetFromTest(offset, "+1000"));
-        suite.addTest(new TzOffsetFromTest("testValidation", offset));
-        suite.addTest(new TzOffsetFromTest("testEquals", offset));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    private static TzOffsetFrom newOffset() {
+        return new TzOffsetFrom(ZoneOffset.of("+1000"));
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(newOffset(), "+1000")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(newOffset())
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(newOffset())
+        );
+    }
 }

@@ -31,18 +31,22 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.parameter.TzId;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.Collections;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -52,37 +56,18 @@ import java.util.Collections;
  * Unit tests specific to {@link DateProperty} and its subclasses.
  * @author Ben
  */
-public class DatePropertyTest extends PropertyTest {
+public class DatePropertyTest {
 
-    private DateProperty property;
-
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public DatePropertyTest(DateProperty property, String expectedValue) {
-        super(property, expectedValue);
-    }
-
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public DatePropertyTest(String testMethod, DateProperty property) {
-        super(testMethod, property);
-        this.property = property;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public void testCopy() throws URISyntaxException {
+    @ParameterizedTest(name = "copy")
+    @MethodSource("copyData")
+    public void testCopy(DateProperty<?> property) throws URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
     }
 
-    public void testHashValue() {
+    @ParameterizedTest(name = "hashValue")
+    @MethodSource("hashValueData")
+    public void testHashValue(DateProperty<?> property) {
         Temporal date = property.getDate();
         if (date != null) {
             assertEquals(date.hashCode(), property.hashCode());
@@ -91,29 +76,36 @@ public class DatePropertyTest extends PropertyTest {
         }
     }
 
+    private static DtStamp newDtStamp() {
+        return new DtStamp();
+    }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        DtStamp dtStamp = new DtStamp();
-        // dtStamp.getParameters().add(new TzId("Australia/Melbourne"));
-        // dtStamp.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
-        suite.addTest(new DatePropertyTest("testCopy", dtStamp));
-        suite.addTest(new DatePropertyTest("testHashValue", dtStamp));
-
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static DtStart newDtStartMelbourne() {
         ParameterList tzParams = new ParameterList(Collections.singletonList(
                 new TzId(ZoneId.of("Australia/Melbourne").getId())));
-        DtStart dtStart = new DtStart<>(tzParams,
+        return new DtStart<>(tzParams,
                 ZonedDateTime.now(TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne")));
-        // dtStart.getParameters().add(new TzId("Australia/Melbourne"));
-        suite.addTest(new DatePropertyTest("testCopy", dtStart));
-        suite.addTest(new DatePropertyTest("testHashValue", dtStart));
+    }
 
-        DtStart dtStartEmpty = new DtStart();
-        suite.addTest(new DatePropertyTest("testCopy", dtStartEmpty));
-        suite.addTest(new DatePropertyTest("testHashValue", dtStartEmpty));
-        return suite;
+    @SuppressWarnings("rawtypes")
+    private static DtStart newDtStartEmpty() {
+        return new DtStart();
+    }
+
+    static Stream<Arguments> copyData() {
+        return Stream.of(
+                Arguments.of(newDtStamp()),
+                Arguments.of(newDtStartMelbourne()),
+                Arguments.of(newDtStartEmpty())
+        );
+    }
+
+    static Stream<Arguments> hashValueData() {
+        return Stream.of(
+                Arguments.of(newDtStamp()),
+                Arguments.of(newDtStartMelbourne()),
+                Arguments.of(newDtStartEmpty())
+        );
     }
 }

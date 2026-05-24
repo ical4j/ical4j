@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -43,35 +48,41 @@ import net.fortuna.ical4j.model.PropertyTest;
  *
  * @author fortuna
  */
-public class RecurrenceIdTest extends PropertyTest {
+public class RecurrenceIdTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public RecurrenceIdTest(RecurrenceId id, String expectedValue) {
-        super(id, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public RecurrenceIdTest(String testMethod, RecurrenceId property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
-        RecurrenceId id = new RecurrenceId("20081124T180000");
-        suite.addTest(new RecurrenceIdTest(id, "20081124T180000"));
-        suite.addTest(new RecurrenceIdTest("testValidation", id));
-        suite.addTest(new RecurrenceIdTest("testEquals", id));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new RecurrenceId("20081124T180000"), "20081124T180000")
+        );
+    }
+
+    static Stream<Arguments> validationData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new RecurrenceId("20081124T180000"))
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new RecurrenceId("20081124T180000"))
+        );
+    }
 }

@@ -31,14 +31,22 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ConstraintViolationException;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -48,39 +56,48 @@ import java.util.List;
  * Unit tests for Summary property.
  * @author Ben Fortuna
  */
-public class SummaryTest extends PropertyTest {
+public class SummaryTest {
 
-    /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public SummaryTest(Summary property, String expectedValue) {
-		super(property, expectedValue);
-	}
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public SummaryTest(String testMethod, Summary property) {
-		super(testMethod, property);
-	}
-    
-    /**
-     * @return
-     * @throws ParserException 
-     * @throws IOException 
-     */
-    public static TestSuite suite() throws IOException, ParserException, ConstraintViolationException {
-    	TestSuite suite = new TestSuite();
-    	// Test correct parsing of quoted text..
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    private static Summary loadSummary() throws IOException, ParserException, ConstraintViolationException {
+        // Test correct parsing of quoted text..
         Calendar calendar = Calendars.load(SummaryTest.class.getResource("/samples/valid/mansour.ics"));
         List<VEvent> event = calendar.getComponents(Component.VEVENT);
-        Summary summary = event.get(0).getRequiredProperty(Property.SUMMARY);
-        suite.addTest(new SummaryTest(summary, "A colon with spaces on either side : like that"));
-        
-        suite.addTest(new SummaryTest("testValidation", summary));
-        suite.addTest(new SummaryTest("testEquals", summary));
-    	return suite;
+        return event.get(0).getRequiredProperty(Property.SUMMARY);
+    }
+
+    static Stream<Arguments> getValueData() throws IOException, ParserException, ConstraintViolationException {
+        return Stream.of(
+                Arguments.of(loadSummary(), "A colon with spaces on either side : like that")
+        );
+    }
+
+    static Stream<Arguments> validationData() throws IOException, ParserException, ConstraintViolationException {
+        return Stream.of(
+                Arguments.of(loadSummary())
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws IOException, ParserException, ConstraintViolationException {
+        return Stream.of(
+                Arguments.of(loadSummary())
+        );
     }
 }

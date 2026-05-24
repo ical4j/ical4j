@@ -31,12 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +47,12 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created on 7/03/2005
@@ -53,51 +62,30 @@ import java.util.Date;
  * @author Ben Fortuna
  *
  */
-public class TriggerTest extends PropertyTest {
+public class TriggerTest {
 
-    private final Logger log = LoggerFactory.getLogger(TriggerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TriggerTest.class);
 
-    private final Trigger trigger;
-    
-    /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public TriggerTest(Trigger property, String expectedValue) {
-		super(property, expectedValue);
-		this.trigger = property;
-	}
-
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public TriggerTest(String testMethod, Trigger property) {
-		super(testMethod, property);
-		this.trigger = property;
-	}
-
-	/**
-     * @throws ParseException
-     */
-    public void testSetValue() throws ParseException {
+    @ParameterizedTest(name = "setValue")
+    @MethodSource("setValueData")
+    public void testSetValue(Trigger trigger) throws ParseException {
         trigger.setValue(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString(ZoneOffset.UTC));
 
-        log.info(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString());
-        log.info(trigger.toString());
+        LOG.info(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString());
+        LOG.info(trigger.toString());
 
-//        trigger.setValue(DurationFormat.getInstance().format(5000));
         trigger.setValue(java.time.Duration.ofSeconds(5).toString());
-        
-//        log.info(DurationFormat.getInstance().format(5000));
-        log.info(java.time.Duration.ofSeconds(5).toString());
-        log.info(trigger.toString());
+
+        LOG.info(java.time.Duration.ofSeconds(5).toString());
+        LOG.info(trigger.toString());
     }
 
     /**
      * Unit test on a duration trigger.
      */
-    public void testTriggerDuration() {
+    @ParameterizedTest(name = "triggerDuration")
+    @MethodSource("triggerDurationData")
+    public void testTriggerDuration(Trigger trigger) {
         assertNotNull(trigger.getDuration());
         assertNull(trigger.getDate());
     }
@@ -105,7 +93,9 @@ public class TriggerTest extends PropertyTest {
     /**
      * Unit test on a date-time trigger.
      */
-    public void testTriggerDateTime() {
+    @ParameterizedTest(name = "triggerDateTime")
+    @MethodSource("triggerDateTimeData")
+    public void testTriggerDateTime(Trigger trigger) {
         assertNull(trigger.getDuration());
         assertNotNull(trigger.getDate());
         ValidationResult result = trigger.validate();
@@ -115,24 +105,30 @@ public class TriggerTest extends PropertyTest {
         assertValidationError(trigger);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-    	TestSuite suite = new TestSuite();
-        Trigger trigger = new Trigger();
-    	suite.addTest(new TriggerTest("testSetValue", trigger));
+    private static void assertValidationError(final Property property) {
+        try {
+            ValidationResult result = property.validate();
+            assertTrue(result.hasErrors());
+        } catch (ValidationException ve) {
+            LOG.debug("Exception caught", ve);
+        }
+    }
 
-    	trigger = new Trigger(java.time.Duration.ofDays(1));
-    	suite.addTest(new TriggerTest("testTriggerDuration", trigger));
-        
-    	trigger = new Trigger(Instant.now());
-    	suite.addTest(new TriggerTest("testTriggerDateTime", trigger));
+    static Stream<Arguments> setValueData() {
+        return Stream.of(
+                Arguments.of(new Trigger())
+        );
+    }
 
-//    	trigger = new Trigger(Instant.now());
-//    	trigger.replace(Value.DURATION);
-//    	suite.addTest(new TriggerTest("testTriggerDateTimeInvalid", trigger));
+    static Stream<Arguments> triggerDurationData() {
+        return Stream.of(
+                Arguments.of(new Trigger(java.time.Duration.ofDays(1)))
+        );
+    }
 
-    	return suite;
+    static Stream<Arguments> triggerDateTimeData() {
+        return Stream.of(
+                Arguments.of(new Trigger(Instant.now()))
+        );
     }
 }

@@ -44,8 +44,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -207,20 +205,6 @@ public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>
     LocationsAccessor, ResourcesAccessor, DateTimePropertyAccessor, StatusAccessor {
 
     private static final long serialVersionUID = 1046534053331139832L;
-
-    private static final Map<Method, Validator<VFreeBusy>> methodValidators = new HashMap<>();
-    static {
-        methodValidators.put(PUBLISH, new ComponentValidator<>(VFREEBUSY, new ValidationRule<>(OneOrMore, FREEBUSY),
-                new ValidationRule<>(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
-                new ValidationRule<>(OneOrLess, URL),
-                new ValidationRule<>(None, ATTENDEE, DURATION, REQUEST_STATUS)));
-        methodValidators.put(REPLY, new ComponentValidator<>(VFREEBUSY, new ValidationRule<>(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
-                new ValidationRule<>(OneOrLess, URL),
-                new ValidationRule<>(None, DURATION, SEQUENCE)));
-        methodValidators.put(REQUEST, new ComponentValidator<>(VFREEBUSY, new ValidationRule<>(OneOrMore, ATTENDEE),
-                new ValidationRule<>(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
-                new ValidationRule<>(None, FREEBUSY, DURATION, REQUEST_STATUS, URL)));
-    }
 
     /**
      * Default constructor.
@@ -505,14 +489,9 @@ public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
+    @Override
     public ValidationResult validate(Method method) throws ValidationException {
-        final Validator<VFreeBusy> validator = methodValidators.get(method);
-        if (validator != null) {
-            return validator.validate(this);
-        }
-        else {
-            return super.validate(method);
-        }
+        return ITIPRuleRegistry.validate(this, method);
     }
 
     /**

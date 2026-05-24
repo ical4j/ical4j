@@ -31,36 +31,40 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ConstraintViolationException;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  *
  */
-public class VAvailabilityTestCase extends TestCase
+public class VAvailabilityTestCase
 {
+    @Test
     public void testVAvailability() throws ParserException, IOException, ConstraintViolationException {
         CalendarBuilder calendarBuilder = new CalendarBuilder();
         String availability = getVAvailabilityICal();
         Reader reader = new StringReader(availability);
         Calendar calendar = calendarBuilder.build(reader);
         List<VAvailability> availabilityComponent = calendar.getComponents(Component.VAVAILABILITY);
-        Assert.assertFalse(availabilityComponent.isEmpty());
-        Assert.assertFalse(availabilityComponent.get(0).getComponents().isEmpty());
+        assertFalse(availabilityComponent.isEmpty());
+        assertFalse(availabilityComponent.get(0).getComponents().isEmpty());
         String iCalString = calendar.toString();
-        Assert.assertTrue(iCalString.contains("BEGIN:AVAILABLE"));
-        Assert.assertEquals(iCalString.trim(), availability);
+        assertTrue(iCalString.contains("BEGIN:AVAILABLE"));
+        assertEquals(iCalString.trim(), availability);
     }
 
     private String getVAvailabilityICal()
