@@ -33,47 +33,28 @@
 
 package net.fortuna.ical4j.transform.compliance;
 
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.DtStart;
+import org.junit.jupiter.api.Test;
 
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Optional;
+import java.util.List;
 
-/**
- * A rule that applies compliance transformations to DateProperty elements.
- * This rule ensures that the timezone parameter is correctly set for date properties
- * according to RFC 5545.
- *
- * @author daniel grigore
- * @author corneliu dobrota
- */
-public class DatePropertyRule implements Rfc5545PropertyRule<DateProperty> {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public DateProperty apply(DateProperty element) {
-        Optional<TzId> originalTzId = element.getParameter(Parameter.TZID);
-        TzHelper.correctTzParameterFrom(element);
-        // When an unknown TZID is stripped from a zoned date-time, preserve the absolute
-        // instant by converting the value to UTC rather than leaving it as floating time.
-        if (originalTzId.isPresent()
-                && element.getParameter(Parameter.TZID).isEmpty()
-                && element.getDate() instanceof ZonedDateTime
-                && !element.isUtc()) {
-            element.setDate(((ZonedDateTime) element.getDate()).toInstant());
-            return element;
-        }
-        if (!element.isUtc() || element.getParameter(Parameter.TZID).isEmpty()) {
-            return element;
-        }
-        element.getParameters().removeIf(p -> p.getName().equalsIgnoreCase(Parameter.TZID));
-        return element;
+class DatePropertyRuleTest {
+
+    @Test
+    void removing_unknown_TZID_value_should_convert_date_to_UTC() {
+        var zoneId = ZoneOffset.ofHours(10);
+        var zonedDateTime = ZonedDateTime.of(2026, 3, 24, 12, 0, 0, 0, zoneId);
+        var dtStart = new DtStart<>(new ParameterList(List.of(new TzId(zoneId.getId()))), zonedDateTime);
+        // DTSTART;TZID="+10:00":20260324T120000
+
+        var result = new DatePropertyRule().apply(dtStart);
+
+        assertEquals("DTSTART:20260324T020000Z\r\n", result.toString());
     }
-
-    @Override
-    public Class<DateProperty> getSupportedType() {
-        return DateProperty.class;
-    }
-
 }
