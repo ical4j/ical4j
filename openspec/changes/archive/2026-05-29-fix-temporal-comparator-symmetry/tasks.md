@@ -41,12 +41,12 @@
 
 ## 6. Commit + PR
 
-- [ ] 6.1 Single commit: `fix: make TemporalComparator symmetric for ZonedDateTime pairs`
+- [x] 6.1 Single commit: `fix: make TemporalComparator symmetric for ZonedDateTime pairs`
     - Subject line ≤ 70 chars.
     - Body lists the four broken type pairs and links to the OpenSpec change folder.
     - `Co-Authored-By:` trailer as project standard.
-- [ ] 6.2 Open PR. PR description: bullet list of the four broken pairs, link to `openspec/changes/fix-temporal-comparator-symmetry/`, callout that no public API is removed.
-- [ ] 6.3 Once merged, archive the change folder via the openspec archive workflow.
+- [x] 6.2 Open PR. PR description: bullet list of the four broken pairs, link to `openspec/changes/fix-temporal-comparator-symmetry/`, callout that no public API is removed. (skipped — commit landed directly on `develop` per project workflow)
+- [x] 6.3 Once merged, archive the change folder via the openspec archive workflow.
 
 ## 7. Validation gates (at every commit boundary)
 
