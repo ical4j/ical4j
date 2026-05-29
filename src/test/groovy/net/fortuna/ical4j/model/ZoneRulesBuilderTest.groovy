@@ -81,6 +81,41 @@ class ZoneRulesBuilderTest extends Specification {
         'America/Los_Angeles'   | LocalDateTime.of(2023, 12, 14, 17, 0, 0, 0)   | ZoneOffset.ofHours(-8)
     }
 
+    def 'build DST transitions from non-recurring (single date-time) observances'() {
+        given: 'a VTIMEZONE whose DAYLIGHT/STANDARD observances are one-off transitions (no RRULE)'
+        // This is the form emitted by some clients (e.g. Apple/iCloud) - see issue #793.
+        def tzstring = '''\
+                BEGIN:VCALENDAR
+                VERSION:2.0
+                BEGIN:VTIMEZONE
+                TZID:America/New_York
+                X-LIC-LOCATION:America/New_York
+                BEGIN:DAYLIGHT
+                DTSTART;VALUE=DATE-TIME:20250309T070000
+                TZNAME:EDT
+                TZOFFSETFROM:-0500
+                TZOFFSETTO:-0400
+                END:DAYLIGHT
+                BEGIN:STANDARD
+                DTSTART;VALUE=DATE-TIME:20251102T060000
+                TZNAME:EST
+                TZOFFSETFROM:-0400
+                TZOFFSETTO:-0500
+                END:STANDARD
+                END:VTIMEZONE
+                END:VCALENDAR
+                '''.stripIndent()
+        def vtimezone = new CalendarBuilder().build(new StringReader(tzstring)).getComponent('VTIMEZONE').get()
+
+        when: 'zone rules are built from the VTIMEZONE'
+        def zonerules = new ZoneRulesBuilder().vTimeZone(vtimezone).build()
+
+        then: 'the one-off DST transitions are applied rather than collapsing to a single fixed offset'
+        // before the fix these observances produced no transitions, so summer incorrectly returned EST (-05:00)
+        zonerules.getOffset(LocalDateTime.of(2025, 2, 21, 14, 30)) == ZoneOffset.ofHours(-5)
+        zonerules.getOffset(LocalDateTime.of(2025, 7, 15, 14, 30)) == ZoneOffset.ofHours(-4)
+    }
+
     def 'test relaxed parsing of invalid tz definitions'() {
 
         given: 'relaxed parsing enabled'
