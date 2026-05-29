@@ -37,7 +37,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
@@ -94,4 +96,28 @@ public class PeriodTest {
 
         LOG.info("Timezone test - period: [" + p + "]");
     }
+	
+	/**
+	 * Regression test for VFREEBUSY.
+	 * When start/end are OffSetDateTime with UTC timeStamps, period.toInterval()
+	 * must not re-apply systems timezone.
+	 */
+	@Test
+	public void testUTCOffSetDateTimeNotShiftedBySystemTimezone() {
+		//Simulated system timezone
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Bangkok"));
+		
+		//FREEBUSY:20250110T100000Z/20250110T103000Z
+		OffsetDateTime start = OffsetDateTime.of(2025, 1, 10, 10, 0, 0, 0, ZoneOffset.UTC);
+		OffsetDateTime end   = OffsetDateTime.of(2025, 1, 10, 10, 30, 0, 0, ZoneOffset.UTC);
+		
+		Period<OffsetDateTime> period = new Period<>(start, end);
+		
+		org.threeten.extra.Interval interval = period.toInterval(ZoneId.of("Asia/Bangkok"));
+		
+		assertEquals(start.toInstant(), interval.getStart(),
+				"Start instant must not be shifted by system timezone");
+		assertEquals(end.toInstant(), interval.getEnd(),
+				"End instant must not be shifted by system timezone");
+	}
 }
