@@ -42,6 +42,10 @@ import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -192,28 +196,51 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
+            TemporalAdapter<?> parsed;
             try {
                 if (tzId.isPresent()) {
-                    this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, tzId.get(), timeZoneRegistry);
+                    parsed = TemporalAdapter.parse(value, tzId.get(), timeZoneRegistry);
                 } else if (defaultTimeZone != null && shouldApplyTimezone()) {
-                    this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, defaultTimeZone);
+                    parsed = TemporalAdapter.parse(value, defaultTimeZone);
                 } else {
-                    this.date = TemporalAdapter.parse(value, parseFormat);
+                    parsed = TemporalAdapter.parse(value, parseFormat);
                 }
             } catch (DateTimeParseException dtpe) {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     LoggerFactory.getLogger(DateProperty.class).debug("Invalid DATE-TIME format", dtpe);
 
                     // parse with relaxed format..
-                    this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
-                            .orElseGet(() -> TemporalAdapter.parse(value, CalendarDateFormat.DEFAULT_PARSE_FORMAT));
+                    parsed = tzId.isPresent()
+                            ? TemporalAdapter.parse(value, tzId.get(), timeZoneRegistry)
+                            : TemporalAdapter.parse(value, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
                 } else {
                     throw dtpe;
                 }
             }
+            if (this instanceof UtcProperty) {
+                parsed = coerceToInstant(parsed);
+            }
+            this.date = (TemporalAdapter<T>) parsed;
         } else {
             this.date = null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static TemporalAdapter<Instant> coerceToInstant(TemporalAdapter<?> adapter) {
+        Temporal t = adapter.getTemporal();
+        if (t instanceof Instant) {
+            return (TemporalAdapter<Instant>) adapter;
+        } else if (t instanceof OffsetDateTime) {
+            return new TemporalAdapter<>(((OffsetDateTime) t).toInstant());
+        } else if (t instanceof ZonedDateTime) {
+            return new TemporalAdapter<>(((ZonedDateTime) t).toInstant());
+        } else if (t instanceof LocalDateTime) {
+            return new TemporalAdapter<>(((LocalDateTime) t).atOffset(ZoneOffset.UTC).toInstant());
+        } else if (t instanceof LocalDate) {
+            return new TemporalAdapter<>(((LocalDate) t).atStartOfDay(ZoneOffset.UTC).toInstant());
+        }
+        return new TemporalAdapter<>(Instant.from(t));
     }
 
     /**
