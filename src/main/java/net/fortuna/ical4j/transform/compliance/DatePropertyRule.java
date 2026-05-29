@@ -34,21 +34,36 @@
 package net.fortuna.ical4j.transform.compliance;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateProperty;
+
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 /**
  * A rule that applies compliance transformations to DateProperty elements.
  * This rule ensures that the timezone parameter is correctly set for date properties
  * according to RFC 5545.
- * 
+ *
  * @author daniel grigore
  * @author corneliu dobrota
  */
 public class DatePropertyRule implements Rfc5545PropertyRule<DateProperty> {
 
     @Override
+    @SuppressWarnings("unchecked")
     public DateProperty apply(DateProperty element) {
+        Optional<TzId> originalTzId = element.getParameter(Parameter.TZID);
         TzHelper.correctTzParameterFrom(element);
+        // When an unknown TZID is stripped from a zoned date-time, preserve the absolute
+        // instant by converting the value to UTC rather than leaving it as floating time.
+        if (originalTzId.isPresent()
+                && element.getParameter(Parameter.TZID).isEmpty()
+                && element.getDate() instanceof ZonedDateTime
+                && !element.isUtc()) {
+            element.setDate(((ZonedDateTime) element.getDate()).toInstant());
+            return element;
+        }
         if (!element.isUtc() || element.getParameter(Parameter.TZID).isEmpty()) {
             return element;
         }

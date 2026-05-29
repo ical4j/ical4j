@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021, Ben Fortuna
+ *  Copyright (c) 2024, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,19 +31,30 @@
  *
  */
 
-package net.fortuna.ical4j.validate.component;
+package net.fortuna.ical4j.transform.compliance;
 
-import net.fortuna.ical4j.model.component.VAvailability;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.DtStart;
+import org.junit.jupiter.api.Test;
 
-@Deprecated
-public class VAvailabilityValidator implements Validator<VAvailability> {
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
 
-    @Override
-    public ValidationResult validate(VAvailability target) throws ValidationException {
-        return ComponentValidator.VAVAILABILITY.validate(target);
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class DatePropertyRuleTest {
+
+    @Test
+    void removing_unknown_TZID_value_should_convert_date_to_UTC() {
+        var zoneId = ZoneOffset.ofHours(10);
+        var zonedDateTime = ZonedDateTime.of(2026, 3, 24, 12, 0, 0, 0, zoneId);
+        var dtStart = new DtStart<>(new ParameterList(List.of(new TzId(zoneId.getId()))), zonedDateTime);
+        // DTSTART;TZID="+10:00":20260324T120000
+
+        var result = new DatePropertyRule().apply(dtStart);
+
+        assertEquals("DTSTART:20260324T020000Z\r\n", result.toString());
     }
 }

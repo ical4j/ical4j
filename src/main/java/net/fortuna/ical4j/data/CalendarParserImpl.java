@@ -351,7 +351,8 @@ public class CalendarParserImpl implements CalendarParser {
                 // check for additional words to account for equals (=) in param-value
                 int nextToken = nextToken(tokeniser, in);
 
-                while (nextToken != ';' && nextToken != ':' && nextToken != ',') {
+                while (nextToken != ';' && nextToken != ':' && nextToken != ','
+                        || isEscapedSemicolon(nextToken, paramValue)) {
 
                     if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
                         paramValue.append(tokeniser.sval);
@@ -371,6 +372,17 @@ public class CalendarParserImpl implements CalendarParser {
             } catch (ClassCastException cce) {
                 throw new ParserException("Error parsing parameter", getLineNumber(tokeniser, in), cce);
             }
+        }
+
+        // Apple's X-APPLE-STRUCTURED-LOCATION emits parameter values like
+        // `X-TITLE=Hauptstraße 1-5\; 4041 Linz`. RFC 5545 doesn't permit a
+        // semicolon (escaped or otherwise) inside a parameter value, so under
+        // relaxed parsing we treat `\;` as a literal part of the value rather
+        // than a parameter separator.
+        private boolean isEscapedSemicolon(int token, StringBuilder paramValue) {
+            return absorbWhitespaceEnabled && token == ';'
+                    && paramValue.length() > 0
+                    && paramValue.charAt(paramValue.length() - 1) == '\\';
         }
     }
 
