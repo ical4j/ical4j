@@ -102,10 +102,19 @@ public class ZoneRulesBuilder {
                 if (periodEnd.isBefore(startDate)) {
                     periodEnd = startDate.plusYears(5);
                 }
-                observance.calculateRecurrenceSet(new Period<>(startDate, periodEnd)).forEach( p -> {
-                    transitions.add(ZoneOffsetTransition.of(LocalDateTime.from(p.getStart()),
+                var recurrenceSet = observance.calculateRecurrenceSet(new Period<>(startDate, periodEnd));
+                if (recurrenceSet.isEmpty()) {
+                    // A non-recurring observance (no RRULE/RDATE) defines a single transition at its
+                    // DTSTART, but calculateRecurrenceSet omits the zero-duration initial instance that
+                    // lies exactly on the period start boundary. Add it explicitly; otherwise the zone
+                    // collapses to a single fixed offset and DST is never applied (issue #793).
+                    transitions.add(ZoneOffsetTransition.of(startDate,
                             offsetFrom.get().getOffset(), offsetTo.getOffset()));
-                });
+                } else {
+                    recurrenceSet.forEach(p -> transitions.add(ZoneOffsetTransition.of(
+                            LocalDateTime.from(p.getStart()),
+                            offsetFrom.get().getOffset(), offsetTo.getOffset())));
+                }
             }
         }
         return transitions;
