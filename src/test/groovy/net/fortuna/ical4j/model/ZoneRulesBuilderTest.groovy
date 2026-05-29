@@ -40,6 +40,9 @@ class ZoneRulesBuilderTest extends Specification {
         'America/Los_Angeles'   | 180           | ZoneOffset.ofHours(-7)
         'Pacific/Tahiti'   | 1           | ZoneOffset.ofHours(-10)
         'Pacific/Midway'   | 1           | ZoneOffset.ofHours(-11)
+        'Asia/Tokyo'       | 1           | ZoneOffset.ofHours(9)
+        'Asia/Tokyo'       | 180         | ZoneOffset.ofHours(9)
+        'Asia/Shanghai'    | 180         | ZoneOffset.ofHours(8)
     }
 
     @Unroll
