@@ -47,12 +47,12 @@
 
 ## 6. Commit
 
-- [ ] 6.1 Single commit: `fix: coerce non-Instant relaxed-parse results to Instant for UtcProperty`
+- [x] 6.1 Single commit: `fix: coerce non-Instant relaxed-parse results to Instant for UtcProperty` (commit `a23f71fc6`)
     - Subject line ≤ 70 chars.
     - Body: reference defect inventory D-1..D-4, link to `openspec/changes/coerce-utc-property-relaxed-parse-to-instant/`.
     - `Co-Authored-By:` trailer.
-- [ ] 6.2 Push to `develop`.
-- [ ] 6.3 Archive the change folder via the openspec archive workflow.
+- [x] 6.2 Push to `develop`. (`6c8299166..a23f71fc6`)
+- [x] 6.3 Archive the change folder via the openspec archive workflow.
 
 ## 7. Validation gates (at every commit boundary)
 
