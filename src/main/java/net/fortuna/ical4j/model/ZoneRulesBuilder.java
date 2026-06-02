@@ -157,14 +157,33 @@ public class ZoneRulesBuilder {
             TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
             DtStart<LocalDateTime> startDate = observance.getRequiredProperty(Property.DTSTART);
 
-            // ignore invalid rules
-            if (rrule.isPresent() && !rrule.get().getRecur().getMonthList().isEmpty()) {
-                var recurMonth = java.time.Month.of(rrule.get().getRecur().getMonthList().get(0).getMonthOfYear());
-                int dayOfMonth = rrule.get().getRecur().getDayList().get(0).getOffset();
-                if (dayOfMonth == 0) {
-                    dayOfMonth = rrule.get().getRecur().getMonthDayList().get(0);
+            // ignore invalid rules and no-effect transitions (mirrors buildDSTTransitions)
+            if (rrule.isPresent() && !rrule.get().getRecur().getMonthList().isEmpty()
+                    && !offsetFrom.getOffset().equals(offsetTo.getOffset())) {
+                var recur = rrule.get().getRecur();
+                var recurMonth = java.time.Month.of(recur.getMonthList().get(0).getMonthOfYear());
+
+                // derive the transition day. A BYDAY part may carry an ordinal offset (e.g. -1SU) or
+                // a plain weekday (offset 0, in which case BYMONTHDAY pins the day). When neither BYDAY
+                // nor BYMONTHDAY is present (e.g. FREQ=YEARLY;BYMONTH=1), fall back to the DTSTART day
+                // as a fixed-date transition (null day-of-week).
+                int dayOfMonth;
+                java.time.DayOfWeek dayOfWeek;
+                if (!recur.getDayList().isEmpty()) {
+                    dayOfMonth = recur.getDayList().get(0).getOffset();
+                    if (dayOfMonth == 0) {
+                        dayOfMonth = recur.getMonthDayList().isEmpty()
+                                ? startDate.getDate().getDayOfMonth() : recur.getMonthDayList().get(0);
+                    }
+                    dayOfWeek = WeekDay.getDayOfWeek(recur.getDayList().get(0));
+                } else if (!recur.getMonthDayList().isEmpty()) {
+                    dayOfMonth = recur.getMonthDayList().get(0);
+                    dayOfWeek = null;
+                } else {
+                    dayOfMonth = startDate.getDate().getDayOfMonth();
+                    dayOfWeek = null;
                 }
-                var dayOfWeek = WeekDay.getDayOfWeek(rrule.get().getRecur().getDayList().get(0));
+
                 var time = LocalTime.from(startDate.getDate());
                 boolean endOfDay = false;
                 var timeDefinition = TimeDefinition.WALL;
