@@ -38,6 +38,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
@@ -479,6 +480,13 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 //            throw new UnsupportedOperationException("Unable to create Interval from date-only temporal.");
         } else if (start instanceof Instant) {
             return Interval.of((Instant) start, (Instant) end);
+        } else if (start instanceof OffsetDateTime){
+			if(duration != null){
+				return Interval.of(((OffsetDateTime) start).toInstant(), duration.toDuration());
+			}else{
+				return Interval.of(((OffsetDateTime) start).toInstant(),
+						((OffsetDateTime) end).toInstant());
+			}
         } else {
             // calculate zone offset based on current applicable rules
             var zoneOffset = zoneId.getRules().getOffset(Instant.now());
