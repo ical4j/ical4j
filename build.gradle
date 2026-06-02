@@ -1,3 +1,18 @@
+buildscript {
+    // The axion-release plugin (at its latest, 1.21.1) pulls Bouncy Castle 1.81/1.82 onto the
+    // plugin classpath, below the 1.84 that fixes GHSA-p93r-85wp-75v3, -cj8j-37rh-8475,
+    // -c3fc-8qff-9hwx and -wg6q-6289-32hp. Force the patched version until axion-release ships it.
+    // Build-time only; not part of the published ical4j artifact.
+    configurations.classpath {
+        resolutionStrategy {
+            force 'org.bouncycastle:bcprov-jdk18on:1.84',
+                    'org.bouncycastle:bcpg-jdk18on:1.84',
+                    'org.bouncycastle:bcpkix-jdk18on:1.84',
+                    'org.bouncycastle:bcutil-jdk18on:1.84'
+        }
+    }
+}
+
 plugins {
     id 'java-library'
     id 'groovy'
@@ -6,7 +21,7 @@ plugins {
     id 'signing'
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
     id "pl.allegro.tech.build.axion-release" version "1.21.1" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
-    id "com.palantir.revapi" version "1.7.0"
+    id "com.palantir.revapi" version "2.0.0"
 //    id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
 }
@@ -43,6 +58,15 @@ java {
 dependencies {
 //    errorprone "com.google.errorprone:error_prone_core:2.3.3"
 //    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+
+    // testcontainers (test-only) pulls commons-compress 1.24.0, below the 1.26.0 that fixes
+    // GHSA-4g9r-vxhx-9pgx and GHSA-4265-ccf5-phj5. Constrain to the patched version. Test scope
+    // only; not part of the published ical4j artifact.
+    constraints {
+        testImplementation('org.apache.commons:commons-compress:1.26.0') {
+            because 'CVE fixes; pulled transitively by testcontainers'
+        }
+    }
 
     api libs.slf4j, libs.commons.codec, libs.commons.lang, libs.threeten.extra
 
