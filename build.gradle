@@ -88,6 +88,10 @@ test {
 
 //    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
 
+    // ZoneRulesTimezoneIndependenceTest only has signal when the JVM starts in a non-UTC zone;
+    // it is executed by the dedicated timezoneIndependenceTest task instead.
+    exclude '**/ZoneRulesTimezoneIndependenceTest*'
+
     // Make testcontainers usable on Podman without per-developer setup.
     // Testcontainers reads its config from env vars (Java system properties are
     // ignored for DOCKER_HOST and ryuk.disabled), so configure it here.
@@ -108,6 +112,21 @@ test {
         environment 'TESTCONTAINERS_RYUK_DISABLED', 'true'
     }
 }
+
+// Runs the timezone-independence guard with a non-UTC JVM default zone. ZoneRules derivation must
+// not depend on TimeZones.getDefault(); this catches regressions that pass under UTC-default CI.
+tasks.register('timezoneIndependenceTest', Test) {
+    description = 'Runs ZoneRules timezone-independence guards under a non-UTC default zone.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+    systemProperty 'user.timezone', 'Australia/Sydney'
+    filter {
+        includeTestsMatching 'net.fortuna.ical4j.model.ZoneRulesTimezoneIndependenceTest'
+    }
+}
+check.dependsOn 'timezoneIndependenceTest'
 
 def resolvePodmanSocket() {
     try {

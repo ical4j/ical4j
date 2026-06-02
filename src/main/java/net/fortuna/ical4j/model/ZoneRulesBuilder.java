@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
@@ -12,6 +13,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
 import java.time.zone.ZoneOffsetTransition;
@@ -20,6 +22,7 @@ import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.time.zone.ZoneRules;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.fortuna.ical4j.model.Property.TZOFFSETFROM;
 
@@ -102,19 +105,40 @@ public class ZoneRulesBuilder {
                 if (periodEnd.isBefore(startDate)) {
                     periodEnd = startDate.plusYears(5);
                 }
-                var recurrenceSet = observance.calculateRecurrenceSet(new Period<>(startDate, periodEnd));
-                if (recurrenceSet.isEmpty()) {
-                    // A non-recurring observance (no RRULE/RDATE) defines a single transition at its
-                    // DTSTART, but calculateRecurrenceSet omits the zero-duration initial instance that
-                    // lies exactly on the period start boundary. Add it explicitly; otherwise the zone
-                    // collapses to a single fixed offset and DST is never applied (issue #793).
-                    transitions.add(ZoneOffsetTransition.of(startDate,
-                            offsetFrom.get().getOffset(), offsetTo.getOffset()));
-                } else {
-                    recurrenceSet.forEach(p -> transitions.add(ZoneOffsetTransition.of(
-                            LocalDateTime.from(p.getStart()),
-                            offsetFrom.get().getOffset(), offsetTo.getOffset())));
+                final LocalDateTime rangeEnd = periodEnd;
+
+                // Generate onset instances with offset-aware recurrence seeding. The generic
+                // Component.calculateRecurrenceSet anchors recurrence on the floating DTSTART, so when
+                // an RRULE UNTIL is expressed in UTC (as required for VTIMEZONE) the comparison resolves
+                // the floating candidate via TimeZones.getDefault() - making the derived ZoneRules depend
+                // on the JVM default zone (e.g. Asia/Tokyo's expired 1948-1951 DST yields +10:00 east of
+                // UTC). Seeding getDates with an OffsetDateTime at TZOFFSETFROM makes the UNTIL comparison
+                // deterministic, mirroring Observance.getLatestOnset.
+                final ZoneOffset offset = offsetFrom.get().getOffset();
+                final SortedSet<LocalDateTime> onsets = new TreeSet<>();
+                // the initial instance is always a transition onset (also covers non-recurring
+                // observances, whose single DTSTART transition must not be dropped - issue #793).
+                onsets.add(startDate);
+
+                final OffsetDateTime seed = startDate.atOffset(offset);
+                final OffsetDateTime limit = periodEnd.atOffset(offset);
+                final List<RRule<OffsetDateTime>> rrules = observance.getProperties(Property.RRULE);
+                for (RRule<OffsetDateTime> rrule : rrules) {
+                    rrule.getRecur().getDates(seed, seed, limit)
+                            .forEach(d -> onsets.add(d.toLocalDateTime()));
                 }
+                final List<RDate<LocalDateTime>> rdates = observance.getProperties(Property.RDATE);
+                for (RDate<LocalDateTime> rdate : rdates) {
+                    // RDATE may carry either date-time values or periods (VALUE=PERIOD); the period
+                    // start is the transition onset in the latter case.
+                    final Stream<LocalDateTime> rdateOnsets = rdate.getPeriods().isPresent()
+                            ? rdate.getPeriods().get().stream().map(p -> LocalDateTime.from(p.getStart()))
+                            : rdate.getDates().stream();
+                    rdateOnsets.filter(d -> !d.isBefore(startDate) && !d.isAfter(rangeEnd))
+                            .forEach(onsets::add);
+                }
+
+                onsets.forEach(d -> transitions.add(ZoneOffsetTransition.of(d, offset, offsetTo.getOffset())));
             }
         }
         return transitions;
