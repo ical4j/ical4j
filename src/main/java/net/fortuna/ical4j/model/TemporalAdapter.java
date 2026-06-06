@@ -116,9 +116,10 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
                         try {
                             temporal = (T) CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString,
                                     tzId.toZoneId(timeZoneRegistry));
-                        } catch (DateTimeParseException e) {
-                            // TZID specified for non-floating date-time. If relaxed validation enabled fall back
-                            // to default parser and ignore TZID..
+                        } catch (DateTimeException e) {
+                            // Either the TZID was specified for a non-floating date-time (DateTimeParseException),
+                            // or it resolved to no known zone (ZoneRulesException). Both extend DateTimeException.
+                            // If relaxed validation is enabled fall back to the default parser and ignore the TZID..
                             if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
                                 temporal = (T) CalendarDateFormat.DEFAULT_PARSE_FORMAT.parse(valueString);
                             } else {
