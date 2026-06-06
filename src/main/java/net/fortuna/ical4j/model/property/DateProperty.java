@@ -36,12 +36,14 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.LoggerFactory;
 
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -157,7 +159,16 @@ public abstract class DateProperty<T extends Temporal> extends Property {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
             if (tzId.isPresent() && shouldApplyTimezone()) {
                 //xxx: type T should always be ZonedDateTime where TZID parameter is specified..
-                return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
+                try {
+                    return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
+                } catch (DateTimeException e) {
+                    // TZID resolved to no known zone. Under relaxed validation the value has been parsed as a
+                    // floating date-time (see TemporalAdapter#getTemporal); return it and ignore the TZID.
+                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+                        return date.getTemporal();
+                    }
+                    throw e;
+                }
             } else {
                 return date.getTemporal();
             }
@@ -250,7 +261,17 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public String getValue() {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent() && shouldApplyTimezone()) {
-            return date.toString(tzId.get().toZoneId(timeZoneRegistry));
+            try {
+                return date.toString(tzId.get().toZoneId(timeZoneRegistry));
+            } catch (DateTimeException e) {
+                // TZID resolved to no known zone. If relaxed validation is enabled the value has already been
+                // parsed as a floating date-time (see TemporalAdapter#getTemporal), so emit its floating form
+                // and ignore the TZID; otherwise propagate the failure.
+                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+                    return Strings.valueOf(date);
+                }
+                throw e;
+            }
         } else if (this instanceof UtcProperty) {
             return date.toString(ZoneOffset.UTC);
         } else {
@@ -329,7 +350,19 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return new DatePropertyValidator<>().validate(this);
+        ValidationResult result = new DatePropertyValidator<>().validate(this);
+        // A TZID that resolves to no known zone is a structural error and is reported here, even though
+        // value access (getValue/getDate) tolerates it as a floating value under relaxed validation.
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
+        if (tzId.isPresent() && shouldApplyTimezone()) {
+            try {
+                tzId.get().toZoneId(timeZoneRegistry);
+            } catch (DateTimeException e) {
+                result.getEntries().add(new ValidationEntry("Unresolvable TZID [" + tzId.get().getValue() + "]",
+                        ValidationEntry.Severity.ERROR, getName()));
+            }
+        }
+        return result;
     }
 
     @Override
