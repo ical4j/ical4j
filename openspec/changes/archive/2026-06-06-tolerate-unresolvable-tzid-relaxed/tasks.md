@@ -10,7 +10,7 @@
 - [x] 2.2 Fallback body parses with `CalendarDateFormat.DEFAULT_PARSE_FORMAT.parse(valueString)` (floating `LocalDateTime`) under relaxed validation, and rethrows `e` under strict.
 - [x] 2.3 Imports: `java.time.DateTimeException` already available via the `java.time.*` wildcard import in `TemporalAdapter`.
 - [x] 2.4 Run `./gradlew test --tests UnresolvableTzIdTest` — green.
-- [ ] 2.5 Commit: "fix: catch DateTimeException so unresolvable TZID falls back to floating under relaxed validation".
+- [x] 2.5–5.5 Committed as one squashed commit 9774736d8 (per-step commits consolidated).
 
 ## 3. Guard the eager resolution in DateProperty (getValue + getDate)
 
@@ -19,7 +19,6 @@
 - [x] 3.3 **Discovered third call site:** `DateProperty.getDate()` (line ~160) has the identical unguarded `tzId.get().toZoneId(...)` (it does not delegate to `getValue()`). Apply the same guard; relaxed branch returns `date.getTemporal()` (the floating `LocalDateTime`).
 - [x] 3.4 Add `import java.time.DateTimeException;` to `DateProperty`.
 - [x] 3.5 Run `./gradlew test --tests UnresolvableTzIdTest` — green.
-- [ ] 3.6 Commit: "fix: tolerate unresolvable TZID in DateProperty.getValue()/getDate() under relaxed validation".
 
 ## 4. Tests (date-property-parsing capability)
 
@@ -28,7 +27,6 @@
 - [x] 4.3 Relaxed OFF (default): assert `getValue()` and `getDate()` each throw `DateTimeException`.
 - [x] 4.4 Regression: `DTSTART;TZID=Australia/Melbourne` **with an embedded VTIMEZONE** (hermetic, no network) in both modes → `getDate()` instanceof `ZonedDateTime`; `builder.getRegistry().getTzId(zone.getId())` == `Australia/Melbourne`; `getValue()` == `"20260605T120000"`.
 - [x] 4.5 Run `./gradlew test --tests UnresolvableTzIdTest` — green (6 cases).
-- [ ] 4.6 Commit: "test: cover unresolvable-TZID handling across relaxed/strict modes".
 
 ## 5. Validation still flags an unresolvable TZID (design decision: option 2)
 
@@ -36,7 +34,6 @@
 - [x] 5.2 Add `import net.fortuna.ical4j.validate.ValidationEntry;` to `DateProperty`.
 - [x] 5.3 Add tests: relaxed ON, unknown TZID → `calendar.validate().hasErrors()` true (value still readable); known TZID → no errors.
 - [x] 5.4 Confirm `CalendarBuilderTest.testBuildInvalid` (incl. `samples/invalid/talios.ics`) passes again — talios stays invalid via the validation error, not a throw.
-- [ ] 5.5 Commit: "fix: report unresolvable TZID as a validation error so tolerant value access does not mask structural invalidity".
 
 ## 6. Validation gates
 
@@ -45,4 +42,4 @@
 - [x] 6.3 No new compiler warnings (only pre-existing deprecation/unchecked notes).
 - [x] 6.4 JaCoCo `jacocoTestCoverageVerification` — BUILD SUCCESSFUL (≥ 0.7 maintained).
 - [x] 6.5 Spock/Groovy untouched (`git diff --name-only -- src/test/groovy/` empty).
-- [ ] 6.6 Open PR; reference RFC 5545 §3.2.19 (TZID), §3.3.5 (DATE-TIME floating form), and this change.
+- [x] 6.6 Opened PR #890 to develop; references RFC 5545 §3.2.19 (TZID), §3.3.5 (DATE-TIME floating form).
