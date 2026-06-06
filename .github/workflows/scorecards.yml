@@ -17,6 +17,8 @@ jobs:
     permissions:
       # Needed to upload the results to code-scanning dashboard.
       security-events: write
+      # Needed to publish results and get a badge (via OIDC).
+      id-token: write
       actions: read
       contents: read
 
@@ -31,9 +33,9 @@ jobs:
         with:
           results_file: results.sarif
           results_format: sarif
-          # Read-only PAT token. To create it,
-          # follow the steps in https://github.com/ossf/scorecard-action#pat-token-creation.
-          repo_token: ${{ secrets.SCORECARD_READ_TOKEN }}
+          # Use the built-in workflow token. A PAT is only required for the Branch-Protection
+          # check on public repos; the default GITHUB_TOKEN covers the remaining checks.
+          repo_token: ${{ github.token }}
           # Publish the results to enable scorecard badges. For more details, see
           # https://github.com/ossf/scorecard-action#publishing-results.
           # For private repositories, `publish_results` will automatically be set to `false`,
