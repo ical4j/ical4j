@@ -90,11 +90,13 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
         public synchronized String allocate(TimeZoneRegistry registry) {
             cleanup();
             String zoneId = availableZoneIds.poll();
-            if (zoneId != null) {
-                allocatedZoneIds.put(zoneId, new WeakReference<>(registry));
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Allocated zone ID: {} ({} remaining)", zoneId, availableZoneIds());
-                }
+            if (zoneId == null) {
+                throw new RuntimeException("Ran out of available zone IDs");
+            }
+
+            allocatedZoneIds.put(zoneId, new WeakReference<>(registry));
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Allocated zone ID: {} ({} remaining)", zoneId, availableZoneIds());
             }
             refresh.set(true);
             return zoneId;
