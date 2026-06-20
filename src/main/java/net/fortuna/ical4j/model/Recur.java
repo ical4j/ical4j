@@ -670,7 +670,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     /**
      * Returns a list of start dates in the specified period represented by this recur. This method includes a base date
-     * argument, which indicates the start of the fist occurrence of this recurrence. The base date is used to inject
+     * argument, which indicates the start of the first occurrence of this recurrence. The base date is used to inject
      * default values to return a set of dates in the correct format. For example, if the search start date (start) is
      * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM, the start dates returned should all be at
      * 9:00AM, and not 12:19PM.
@@ -686,7 +686,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     /**
      * Returns a list of start dates in the specified period represented by this recur. This method includes a base date
-     * argument, which indicates the start of the fist occurrence of this recurrence. The base date is used to inject
+     * argument, which indicates the start of the first occurrence of this recurrence. The base date is used to inject
      * default values to return a set of dates in the correct format. For example, if the search start date (start) is
      * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM, the start dates returned should all be at
      * 9:00AM, and not 12:19PM.
@@ -719,7 +719,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     /**
      * Returns the next date of this recurrence given a seed date
-     * and start date.  The seed date indicates the start of the fist
+     * and start date.  The seed date indicates the start of the first
      * occurrence of this recurrence. The start date is the
      * starting date to search for the next recurrence.  Return null
      * if there is no occurrence date after start date.
