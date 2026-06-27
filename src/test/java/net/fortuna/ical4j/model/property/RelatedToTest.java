@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -44,34 +49,41 @@ import java.net.URISyntaxException;
  * @author Ben
  *
  */
-public class RelatedToTest extends PropertyTest {
+public class RelatedToTest {
 
-    /**
-     * @param relatedTo
-     * @param expectedValue
-     */
-    public RelatedToTest(RelatedTo relatedTo, String expectedValue) {
-        super(relatedTo, expectedValue);
-    }
-    
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public RelatedToTest(String testMethod, RelatedTo property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     */
-    public static TestSuite suite() throws URISyntaxException {
-        TestSuite suite = new TestSuite();
-        RelatedTo related = new RelatedTo("value");
-        suite.addTest(new RelatedToTest(related, "value"));
-        suite.addTest(new RelatedToTest("testValidation", related));
-        suite.addTest(new RelatedToTest("testEquals", related));
-        return suite;
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() throws URISyntaxException {
+        return Stream.of(
+                Arguments.of(new RelatedTo("value"), "value")
+        );
+    }
+
+    static Stream<Arguments> validationData() throws URISyntaxException {
+        return Stream.of(
+                Arguments.of(new RelatedTo("value"))
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws URISyntaxException {
+        return Stream.of(
+                Arguments.of(new RelatedTo("value"))
+        );
+    }
 }

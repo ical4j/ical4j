@@ -31,8 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -42,34 +48,45 @@ import net.fortuna.ical4j.model.PropertyTest;
  * @author Ben
  *
  */
-public class LocationTypeTest extends PropertyTest {
+public class LocationTypeTest {
 
-    /**
-     * @param type
-     * @param expectedValue
-     */
-    public LocationTypeTest(LocationType type, String expectedValue) {
-        super(type, expectedValue);
-    }
-    
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public LocationTypeTest(String testMethod, LocationType property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        LocationType type = new LocationType(net.fortuna.ical4j.model.LocationType.bus_station);
-        suite.addTest(new LocationTypeTest(type, "bus-station"));
-        suite.addTest(new LocationTypeTest("testValidation", type));
-        suite.addTest(new LocationTypeTest("testEquals", type));
-        return suite;
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    private static LocationType busStation() {
+        return new LocationType(net.fortuna.ical4j.model.LocationType.bus_station);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(busStation(), "bus-station")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(busStation())
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(busStation())
+        );
+    }
 }

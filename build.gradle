@@ -1,3 +1,18 @@
+buildscript {
+    // The axion-release plugin (at its latest, 1.21.1) pulls Bouncy Castle 1.81/1.82 onto the
+    // plugin classpath, below the 1.84 that fixes GHSA-p93r-85wp-75v3, -cj8j-37rh-8475,
+    // -c3fc-8qff-9hwx and -wg6q-6289-32hp. Force the patched version until axion-release ships it.
+    // Build-time only; not part of the published ical4j artifact.
+    configurations.classpath {
+        resolutionStrategy {
+            force 'org.bouncycastle:bcprov-jdk18on:1.84',
+                    'org.bouncycastle:bcpg-jdk18on:1.84',
+                    'org.bouncycastle:bcpkix-jdk18on:1.84',
+                    'org.bouncycastle:bcutil-jdk18on:1.84'
+        }
+    }
+}
+
 plugins {
     id 'java-library'
     id 'groovy'
@@ -5,8 +20,8 @@ plugins {
     id 'jacoco'
     id 'signing'
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
-    id "pl.allegro.tech.build.axion-release" version "1.20.1" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
-    id "com.palantir.revapi" version "1.7.0"
+    id "pl.allegro.tech.build.axion-release" version "1.21.1" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
+    id "com.palantir.revapi" version "2.0.0"
 //    id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
 }
@@ -44,6 +59,15 @@ dependencies {
 //    errorprone "com.google.errorprone:error_prone_core:2.3.3"
 //    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
+    // testcontainers (test-only) pulls commons-compress 1.24.0, below the 1.26.0 that fixes
+    // GHSA-4g9r-vxhx-9pgx and GHSA-4265-ccf5-phj5. Constrain to the patched version. Test scope
+    // only; not part of the published ical4j artifact.
+    constraints {
+        testImplementation('org.apache.commons:commons-compress:1.26.0') {
+            because 'CVE fixes; pulled transitively by testcontainers'
+        }
+    }
+
     api libs.slf4j, libs.commons.codec, libs.commons.lang, libs.threeten.extra
 
 //    api ("commons-validator:commons-validator:$commonsValidatorVersion") {
@@ -74,10 +98,11 @@ dependencies {
 
     testRuntimeOnly libs.junit.platform
 
-    // Include junit-vintage-engine so junit4 tests are executed.
+    // Required by JUnit 4-style Groovy tests in src/test/groovy/ that use
+    // @RunWith(Parameterized) and extend GroovyTestCase. Java tests have all
+    // been migrated to JUnit Jupiter and no longer require vintage. The
+    // junit4 dependency itself is provided transitively via groovy-test.
     testRuntimeOnly libs.junit.vintage
-    // Explicitly depend on junit4, not transitively via groovy-test or testcontainers.
-    testCompileOnly libs.junit.junit4
 }
 
 test {
@@ -86,6 +111,64 @@ test {
     finalizedBy jacocoTestCoverageVerification, jacocoTestReport // Ensure Jacoco is run after tests have completed
 
 //    jvmArgs = [ "-Duser.timezone=UTC" ] // Some tests require default timezone to be UTC
+
+    // ZoneRulesTimezoneIndependenceTest only has signal when the JVM starts in a non-UTC zone;
+    // it is executed by the dedicated timezoneIndependenceTest task instead.
+    exclude '**/ZoneRulesTimezoneIndependenceTest*'
+
+    // Make testcontainers usable on Podman without per-developer setup.
+    // Testcontainers reads its config from env vars (Java system properties are
+    // ignored for DOCKER_HOST and ryuk.disabled), so configure it here.
+    def existing = System.getenv('DOCKER_HOST')
+    def malformed = existing && (existing.contains('$(') || existing.contains('${'))
+    def socket = resolvePodmanSocket()
+    if (!existing || malformed) {
+        if (socket) {
+            environment 'DOCKER_HOST', "unix://${socket}"
+        } else if (malformed) {
+            // Avoid passing the broken value through to the test JVM.
+            environment 'DOCKER_HOST', ''
+        }
+    }
+    // Ryuk (the testcontainers reaper) relies on Docker-specific privileged
+    // semantics that hang on Podman; disable it when running against Podman.
+    if (socket) {
+        environment 'TESTCONTAINERS_RYUK_DISABLED', 'true'
+    }
+}
+
+// Runs the timezone-independence guard with a non-UTC JVM default zone. ZoneRules derivation must
+// not depend on TimeZones.getDefault(); this catches regressions that pass under UTC-default CI.
+tasks.register('timezoneIndependenceTest', Test) {
+    description = 'Runs ZoneRules timezone-independence guards under a non-UTC default zone.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+    systemProperty 'user.timezone', 'Australia/Sydney'
+    filter {
+        includeTestsMatching 'net.fortuna.ical4j.model.ZoneRulesTimezoneIndependenceTest'
+    }
+}
+check.dependsOn 'timezoneIndependenceTest'
+
+def resolvePodmanSocket() {
+    try {
+        def proc = ['podman', 'machine', 'inspect', '--format',
+                    '{{.ConnectionInfo.PodmanSocket.Path}}'].execute()
+        proc.waitFor()
+        if (proc.exitValue() == 0) {
+            def path = proc.text.trim().readLines().find { it && file(it).exists() }
+            if (path) return path
+        }
+    } catch (IOException ignored) {
+        // podman binary not on PATH
+    }
+    def candidates = [System.getenv('XDG_RUNTIME_DIR') ? "${System.getenv('XDG_RUNTIME_DIR')}/podman/podman.sock" : null,
+                      '/run/podman/podman.sock',
+                      '/var/run/podman/podman.sock',
+                      '/var/run/docker.sock']
+    return candidates.findResult { it && file(it).exists() ? it : null }
 }
 
 jacocoTestCoverageVerification {

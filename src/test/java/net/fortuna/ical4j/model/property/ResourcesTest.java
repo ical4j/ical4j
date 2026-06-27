@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collections;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -44,34 +49,45 @@ import java.util.Collections;
  * @author Ben
  *
  */
-public class ResourcesTest extends PropertyTest {
+public class ResourcesTest {
 
-    /**
-     * @param resources
-     * @param expectedValue
-     */
-    public ResourcesTest(Resources resources, String expectedValue) {
-        super(resources, expectedValue);
-    }
-    
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public ResourcesTest(String testMethod, Resources property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        Resources resources = new Resources(Collections.singletonList("value"));
-        suite.addTest(new ResourcesTest(resources, "value"));
-        suite.addTest(new ResourcesTest("testValidation", resources));
-        suite.addTest(new ResourcesTest("testEquals", resources));
-        return suite;
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    private static Resources newResources() {
+        return new Resources(Collections.singletonList("value"));
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(newResources(), "value")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(newResources())
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(newResources())
+        );
+    }
 }

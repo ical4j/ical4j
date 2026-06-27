@@ -33,10 +33,10 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.ITIPRuleRegistry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.OffsetDateTime;
@@ -123,8 +123,6 @@ public class VTimeZone extends CalendarComponent implements Prototype<VTimeZone>
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private static final Validator<VTimeZone> itipValidator = new VTimeZoneValidator();
-
     /**
      * Default constructor.
      */
@@ -162,7 +160,8 @@ public class VTimeZone extends CalendarComponent implements Prototype<VTimeZone>
      */
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
-        var result = new VTimeZoneValidator().validate(this);
+        var result = ComponentValidator.VTIMEZONE.validate(this);
+        ComponentValidator.validateObservances(this, result);
         if (recurse) {
             result = result.merge(validateProperties());
         }
@@ -171,7 +170,7 @@ public class VTimeZone extends CalendarComponent implements Prototype<VTimeZone>
 
     @Override
     public ValidationResult validate(Method method) throws ValidationException {
-        return itipValidator.validate(this);
+        return ITIPRuleRegistry.validate(this, method);
     }
 
     /**

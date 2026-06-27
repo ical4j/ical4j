@@ -5,8 +5,11 @@ import net.fortuna.ical4j.model.parameter.Value
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.time.Duration
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.Temporal
 
 class ComponentSpec extends Specification {
@@ -23,8 +26,13 @@ class ComponentSpec extends Specification {
                 rrule 'FREQ=MONTHLY'
             }
         }
-        and: 'an expected list of periods'
-        def expectedPeriods = expectedResults.collect { Period.parse(it)} as Set
+        and: 'an expected list of periods (zoned to the DTSTART timezone)'
+        ZoneId melbourne = ZoneId.of('Australia/Melbourne')
+        def fmt = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")
+        def expectedPeriods = expectedResults.collect {
+            def (s, d) = it.split('/')
+            new Period<ZonedDateTime>(LocalDateTime.parse(s, fmt).atZone(melbourne), Duration.parse(d))
+        } as Set
 
         expect: 'calculate recurrence set returns the expected results'
         component.calculateRecurrenceSet(period) == expectedPeriods
@@ -52,14 +60,15 @@ class ComponentSpec extends Specification {
                 rrule 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU'
             }
         }
-        and: 'an expected list of periods'
-        def expectedPeriods = [Period.parse('20241101T140000/PT6H')] as Set
-
         and: 'a period argument'
         ZoneId timezone = ZoneId.of("Australia/Sydney")
         ZonedDateTime from = ZonedDateTime.of(2024, 11, 1, 0, 0, 0, 0, timezone)
         ZonedDateTime to = ZonedDateTime.of(2024, 11, 2, 0, 0, 0, 0, timezone)
         Period<ZonedDateTime> period = new Period<ZonedDateTime>(from, to)
+
+        and: 'an expected list of periods (zoned to the DTSTART timezone)'
+        def expectedPeriods = [new Period<ZonedDateTime>(
+                ZonedDateTime.of(2024, 11, 1, 14, 0, 0, 0, timezone), Duration.ofHours(6))] as Set
 
         expect: 'calculate recurrence set returns the expected results'
         component.calculateRecurrenceSet(period) == expectedPeriods

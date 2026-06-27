@@ -31,8 +31,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -42,27 +49,50 @@ import net.fortuna.ical4j.model.ComponentTest;
  * Unit tests for <code>XComponent</code>
  * @author Ben Fortuna
  */
-public class XComponentTest extends ComponentTest {
-    
-    /**
-     * @param testMethod
-     * @param component
-     */
-    public XComponentTest(String testMethod, XComponent component) {
-        super(testMethod, component);
+public class XComponentTest {
+
+    @AfterEach
+    void tearDown() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
-    
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        
-        suite.addTest(new XComponentTest("testIsCalendarComponent", new XComponent("X-TEST")));
-        suite.addTest(new XComponentTest("testValidation", new XComponent("X-TEST")));
-        suite.addTest(new XComponentTest("testValidationException", new XComponent("TEST")));
-        suite.addTest(new XComponentTest("testRelaxedValidation", new XComponent("TEST")));
-        
-        return suite;
+
+    @ParameterizedTest(name = "isCalendarComponent")
+    @MethodSource("isCalendarComponentData")
+    public void testIsCalendarComponent(XComponent component) {
+        ComponentTest.assertIsCalendarComponent(component);
+    }
+
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(XComponent component) throws ValidationException {
+        ComponentTest.assertValidation(component);
+    }
+
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(XComponent component) {
+        ComponentTest.assertValidationException(component);
+    }
+
+    @ParameterizedTest(name = "relaxedValidation")
+    @MethodSource("relaxedValidationData")
+    public void testRelaxedValidation(XComponent component) throws ValidationException {
+        ComponentTest.assertRelaxedValidation(component);
+    }
+
+    static Stream<Arguments> isCalendarComponentData() {
+        return Stream.of(Arguments.of(new XComponent("X-TEST")));
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(Arguments.of(new XComponent("X-TEST")));
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(Arguments.of(new XComponent("TEST")));
+    }
+
+    static Stream<Arguments> relaxedValidationData() {
+        return Stream.of(Arguments.of(new XComponent("TEST")));
     }
 }

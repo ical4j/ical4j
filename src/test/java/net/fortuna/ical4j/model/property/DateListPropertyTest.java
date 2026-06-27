@@ -31,15 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.TzId;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -49,50 +53,27 @@ import java.time.ZonedDateTime;
  * Unit tests specific to {@link DateListProperty} and its subclasses.
  * @author arnaudq
  */
-public class DateListPropertyTest extends PropertyTest {
+public class DateListPropertyTest {
 
-    private DateListProperty<?> property;
-
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public DateListPropertyTest(DateListProperty<?> property, String expectedValue) {
-        super(property, expectedValue);
-    }
-
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public DateListPropertyTest(String testMethod, DateListProperty<?> property) {
-        super(testMethod, property);
-        this.property = property;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public void testCopy() throws URISyntaxException {
+    @ParameterizedTest(name = "copy")
+    @MethodSource("copyData")
+    public void testCopy(DateListProperty<?> property) throws URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
+    static Stream<Arguments> copyData() throws ParseException {
         ExDate<Instant> exZulu = new ExDate<>();
         exZulu.setValue("20111212T000000Z");
-        suite.addTest(new DateListPropertyTest("testCopy", exZulu));
 
+        @SuppressWarnings("unchecked")
         ExDate<ZonedDateTime> exMelbourne = (ExDate<ZonedDateTime>) new ExDate<>()
                 .withParameter(new TzId("Australia/Melbourne")).getFluentTarget();
         exMelbourne.setValue("20111212T000000");
 
-        suite.addTest(new DateListPropertyTest("testCopy", exMelbourne));
-        return suite;
+        return Stream.of(
+                Arguments.of(exZulu),
+                Arguments.of(exMelbourne)
+        );
     }
 }

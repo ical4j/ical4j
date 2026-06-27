@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -39,12 +38,19 @@ import net.fortuna.ical4j.model.ConstraintViolationException;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
@@ -54,15 +60,15 @@ import java.net.URISyntaxException;
  * @author Ben
  *
  */
-public class AttendeeTest extends TestCase {
+public class AttendeeTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(AttendeeTest.class);
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
@@ -70,16 +76,16 @@ public class AttendeeTest extends TestCase {
     /**
      * {@inheritDoc}
      */
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
-        super.tearDown();
     }
-    
+
     /**
      * Test method for {@link net.fortuna.ical4j.model.property.Attendee#Attendee(java.lang.String)}.
      */
+    @Test
     public void testAttendeeString() throws URISyntaxException {
         try {
             new Attendee("MAILTO:CET Meeting Room@university.edu");
@@ -94,6 +100,7 @@ public class AttendeeTest extends TestCase {
         assertEquals(new URI("MAILTO:CET%20Meeting%20Room@university.edu"), attendee.getCalAddress());
     }
 
+    @Test
     public void testRelaxedParsing() throws IOException, ParserException, ConstraintViolationException {
         try {
             Calendars.load(getClass().getResource("/samples/invalid/groupwise.ics"));

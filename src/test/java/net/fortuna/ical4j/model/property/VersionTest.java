@@ -31,13 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Created on 16/03/2005
@@ -48,59 +54,68 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSI
  *
  * Tests related to the property VERSION
  */
-public class VersionTest extends PropertyTest {
+public class VersionTest {
 
-    private final Version version;
-    
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public VersionTest(Version property, String expectedValue) {
-        super(property, expectedValue);
-        this.version = property;
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
     /**
-     * @param testMethod
-     * @param property
-     */
-    public VersionTest(String testMethod, Version property) {
-        super(testMethod, property);
-        this.version = property;
-    }
-
-    /*
      * Test that the constant VERSION_2_0 is immutable.
      */
-    @Override
-    public void testImmutable() throws IOException, URISyntaxException {
-        super.testImmutable();
-        
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Version version) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(version);
+
         try {
             version.setMinVersion("3.0");
             fail("UnsupportedOperationException should be thrown");
+        } catch (UnsupportedOperationException uoe) {
         }
-        catch (UnsupportedOperationException uoe) {
-        }
-        
+
         try {
             version.setMaxVersion("5.0");
             fail("UnsupportedOperationException should be thrown");
-        }
-        catch (UnsupportedOperationException uoe) {
+        } catch (UnsupportedOperationException uoe) {
         }
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new VersionTest(VERSION_2_0, "2.0"));
-        suite.addTest(new VersionTest("testImmutable", VERSION_2_0));
-        suite.addTest(new VersionTest("testValidation", VERSION_2_0));
-        suite.addTest(new VersionTest("testEquals", VERSION_2_0));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(VERSION_2_0, "2.0")
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(VERSION_2_0)
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(VERSION_2_0)
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(VERSION_2_0)
+        );
     }
 }

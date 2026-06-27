@@ -31,8 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -42,40 +48,54 @@ import net.fortuna.ical4j.model.PropertyTest;
  * @author Ben
  *
  */
-public class PercentCompleteTest extends PropertyTest {
+public class PercentCompleteTest {
 
-    /**
-     * @param percentComplete
-     * @param expectedValue
-     */
-    public PercentCompleteTest(PercentComplete percentComplete, String expectedValue) {
-        super(percentComplete, expectedValue);
-    }
-    
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public PercentCompleteTest(String testMethod, PercentComplete property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        PercentComplete pc = new PercentComplete(100);
-        suite.addTest(new PercentCompleteTest(pc, "100"));
-        suite.addTest(new PercentCompleteTest("testValidation", pc));
-        suite.addTest(new PercentCompleteTest("testEquals", pc));
-        
-        pc = new PercentComplete(101);
-        suite.addTest(new PercentCompleteTest("testValidationException", pc));
-        
-        pc = new PercentComplete(-1);
-        suite.addTest(new PercentCompleteTest("testValidationException", pc));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(Property property) {
+        PropertyTest.assertValidationException(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new PercentComplete(100), "100")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(new PercentComplete(100))
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(new PercentComplete(100))
+        );
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(
+                Arguments.of(new PercentComplete(101)),
+                Arguments.of(new PercentComplete(-1))
+        );
+    }
 }

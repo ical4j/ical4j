@@ -31,7 +31,9 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -42,12 +44,13 @@ import junit.framework.TestCase;
  * @author Ben Fortuna
  *
  */
-public class CnTest extends TestCase {
+public class CnTest {
 
     /**
      * Test unquoting of value strings.
      */
-    public void testUnquotingValues() {
+    @Test
+    void testUnquotingValues() {
         Cn cn = new Cn("\"x,xx\"");
         
         assertEquals("x,xx", cn.getValue());

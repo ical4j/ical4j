@@ -34,10 +34,8 @@ package net.fortuna.ical4j.data;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -50,6 +48,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * $Id: CalendarOutputterTest.java [Apr 6, 2004]
@@ -65,7 +66,7 @@ public class CalendarOutputterTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Before
+    @BeforeEach
     public final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
@@ -73,7 +74,7 @@ public class CalendarOutputterTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @After
+    @AfterEach
     public final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
@@ -100,7 +101,7 @@ public class CalendarOutputterTest {
                 log.error("Error while parsing: " + filename, e);
             }
 
-            Assert.assertNotNull(calendar);
+            assertNotNull(calendar);
 
             outputter.setValidating(false);
             outputter.output(calendar, out);
@@ -126,7 +127,7 @@ public class CalendarOutputterTest {
 
             String rawData = rout.toString();
 
-            Assert.assertEquals("Output differed from expected: " + filename, rawData, out.toString());
+            assertEquals(rawData, out.toString(), "Output differed from expected: " + filename);
         } catch (IOException e) {
             log.error("Error while parsing: " + filename, e);
             throw e;

@@ -31,15 +31,18 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * $Id$
@@ -49,15 +52,15 @@ import java.time.temporal.Temporal;
  * @author fortuna
  *
  */
-public class ObservanceTest extends TestCase {
+public class ObservanceTest {
 
     private Observance observance;
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         observance = (Observance) new Standard().withProperty(new DtStart<>("16010101T030000"))
                 .withProperty(new TzOffsetFrom("+0200"))
                 .withProperty(new TzOffsetTo("+0100"))
@@ -68,6 +71,7 @@ public class ObservanceTest extends TestCase {
     /**
      * Test method for {@link net.fortuna.ical4j.model.component.Observance#getLatestOnset(Temporal)}.
      */
+    @Test
     public void testGetLatestOnset() {
         for (int i = 10; i > 0; i--) {
             OffsetDateTime onset = observance.getLatestOnset(

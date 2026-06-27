@@ -38,8 +38,8 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;
 import java.time.DayOfWeek;
@@ -61,7 +61,7 @@ public class CalendarTest {
 
     private Calendar calendar;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         calendar = new Calendar().withDefaults()
                 .withProdId("-//Ben Fortuna//iCal4j 1.0//EN")

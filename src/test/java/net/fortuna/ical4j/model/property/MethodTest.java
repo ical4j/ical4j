@@ -31,12 +31,25 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.text.ParseException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.ADD;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.CANCEL;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.COUNTER;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.DECLINE_COUNTER;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REFRESH;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REPLY;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUEST;
 
 /**
  * $Id$
@@ -45,67 +58,81 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
  *
  * @author fortuna
  */
-public class MethodTest extends PropertyTest {
+public class MethodTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public MethodTest(Method method, String expectedValue) {
-        super(method, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public MethodTest(String testMethod, Method property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
-    /**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new MethodTest(ADD, "ADD"));
-        suite.addTest(new MethodTest(CANCEL, "CANCEL"));
-        suite.addTest(new MethodTest(COUNTER, "COUNTER"));
-        suite.addTest(new MethodTest(DECLINE_COUNTER, "DECLINECOUNTER"));
-        suite.addTest(new MethodTest(PUBLISH, "PUBLISH"));
-        suite.addTest(new MethodTest(REFRESH, "REFRESH"));
-        suite.addTest(new MethodTest(REPLY, "REPLY"));
-        suite.addTest(new MethodTest(REQUEST, "REQUEST"));
-        
-        suite.addTest(new MethodTest("testValidation", ADD));
-        suite.addTest(new MethodTest("testValidation", CANCEL));
-        suite.addTest(new MethodTest("testValidation", COUNTER));
-        suite.addTest(new MethodTest("testValidation", DECLINE_COUNTER));
-        suite.addTest(new MethodTest("testValidation", PUBLISH));
-        suite.addTest(new MethodTest("testValidation", REFRESH));
-        suite.addTest(new MethodTest("testValidation", REPLY));
-        suite.addTest(new MethodTest("testValidation", REQUEST));
-        
-        suite.addTest(new MethodTest("testEquals", ADD));
-        suite.addTest(new MethodTest("testEquals", CANCEL));
-        suite.addTest(new MethodTest("testEquals", COUNTER));
-        suite.addTest(new MethodTest("testEquals", DECLINE_COUNTER));
-        suite.addTest(new MethodTest("testEquals", PUBLISH));
-        suite.addTest(new MethodTest("testEquals", REFRESH));
-        suite.addTest(new MethodTest("testEquals", REPLY));
-        suite.addTest(new MethodTest("testEquals", REQUEST));
-        
-        suite.addTest(new MethodTest("testImmutable", ADD));
-        suite.addTest(new MethodTest("testImmutable", CANCEL));
-        suite.addTest(new MethodTest("testImmutable", COUNTER));
-        suite.addTest(new MethodTest("testImmutable", DECLINE_COUNTER));
-        suite.addTest(new MethodTest("testImmutable", PUBLISH));
-        suite.addTest(new MethodTest("testImmutable", REFRESH));
-        suite.addTest(new MethodTest("testImmutable", REPLY));
-        suite.addTest(new MethodTest("testImmutable", REQUEST));
-        
-        return suite;
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(ADD, "ADD"),
+                Arguments.of(CANCEL, "CANCEL"),
+                Arguments.of(COUNTER, "COUNTER"),
+                Arguments.of(DECLINE_COUNTER, "DECLINECOUNTER"),
+                Arguments.of(PUBLISH, "PUBLISH"),
+                Arguments.of(REFRESH, "REFRESH"),
+                Arguments.of(REPLY, "REPLY"),
+                Arguments.of(REQUEST, "REQUEST")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(ADD),
+                Arguments.of(CANCEL),
+                Arguments.of(COUNTER),
+                Arguments.of(DECLINE_COUNTER),
+                Arguments.of(PUBLISH),
+                Arguments.of(REFRESH),
+                Arguments.of(REPLY),
+                Arguments.of(REQUEST)
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(ADD),
+                Arguments.of(CANCEL),
+                Arguments.of(COUNTER),
+                Arguments.of(DECLINE_COUNTER),
+                Arguments.of(PUBLISH),
+                Arguments.of(REFRESH),
+                Arguments.of(REPLY),
+                Arguments.of(REQUEST)
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(ADD),
+                Arguments.of(CANCEL),
+                Arguments.of(COUNTER),
+                Arguments.of(DECLINE_COUNTER),
+                Arguments.of(PUBLISH),
+                Arguments.of(REFRESH),
+                Arguments.of(REPLY),
+                Arguments.of(REQUEST)
+        );
+    }
 }

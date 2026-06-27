@@ -31,44 +31,56 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * Created: [24/11/2008]
  *
  * @author fortuna
  */
-public class CreatedTest extends PropertyTest {
+public class CreatedTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public CreatedTest(Created created, String expectedValue) {
-        super(created, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public CreatedTest(String testMethod, Created property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
-    /**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
-        Created created = new Created("20081124T090000Z");
-        suite.addTest(new CreatedTest(created, "20081124T090000Z"));
-        suite.addTest(new CreatedTest("testEquals", created));
-        suite.addTest(new CreatedTest("testValidation", created));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    static Stream<Arguments> getValueData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new Created("20081124T090000Z"), "20081124T090000Z")
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new Created("20081124T090000Z"))
+        );
+    }
+
+    static Stream<Arguments> validationData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new Created("20081124T090000Z"))
+        );
     }
 }

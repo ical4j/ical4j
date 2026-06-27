@@ -31,11 +31,16 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -44,30 +49,29 @@ import java.net.URISyntaxException;
  * Test case for AltRep.
  * @author benfortuna
  */
-public class AltRepTest extends TestCase {
+public class AltRepTest {
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_PARSING, false);
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
-        super.tearDown();
     }
-    
+
     /*
      * Class to test for void AltRep(String)
      */
+    @Test
     public void testAltRepString() throws URISyntaxException {
         
         try {
@@ -87,6 +91,7 @@ public class AltRepTest extends TestCase {
     /*
      * Class to test for void AltRep(URI)
      */
+    @Test
     public void testAltRepURI() throws URISyntaxException {
         
         AltRep ar = new AltRep(new URI("mailto:valid@test.com"));

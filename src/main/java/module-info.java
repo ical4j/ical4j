@@ -37,7 +37,6 @@ module ical4j.core {
     exports net.fortuna.ical4j.util;
     exports net.fortuna.ical4j.validate;
     exports net.fortuna.ical4j.validate.property;
-    exports net.fortuna.ical4j.validate.component;
     exports net.fortuna.ical4j.agent;
     exports net.fortuna.ical4j.data;
     exports net.fortuna.ical4j.transform;

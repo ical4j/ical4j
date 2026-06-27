@@ -31,45 +31,55 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * Created: [24/11/2008]
  *
  * @author fortuna
  */
-public class DurationTest extends PropertyTest {
+public class DurationTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public DurationTest(Duration duration, String expectedValue) {
-        super(duration, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public DurationTest(String testMethod, Duration property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        Duration duration = new Duration(java.time.Period.ofWeeks(1));
-        suite.addTest(new DurationTest(duration, "P1W"));
-        suite.addTest(new DurationTest("testValidation", duration));
-        suite.addTest(new DurationTest("testEquals", duration));
-        return suite;
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new Duration(java.time.Period.ofWeeks(1)), "P1W")
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(new Duration(java.time.Period.ofWeeks(1)))
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(new Duration(java.time.Period.ofWeeks(1)))
+        );
+    }
 }

@@ -31,14 +31,24 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ConstraintViolationException;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -48,48 +58,32 @@ import java.util.List;
  * Unit tests for Location property.
  * @author Ben Fortuna
  */
-public class LocationTest extends PropertyTest {
+public class LocationTest {
+
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
+    }
 
     /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public LocationTest(Location property, String expectedValue) {
-		super(property, expectedValue);
-	}
-
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public LocationTest(String testMethod, Location property) {
-		super(testMethod, property);
-	}
-
-	/**
      * Test correct parsing of quoted text.
-     * @throws IOException
-     * @throws ParserException
      */
+    @Test
     public void testQuotedText() throws IOException, ParserException, ConstraintViolationException {
         Calendar calendar = Calendars.load(getClass().getResource("/samples/valid/mansour.ics"));
         List<VEvent> event = calendar.getComponents(Component.VEVENT);
         assertEquals("At \"The Terrace\" Complex > Melbourne \"\\,",
-				event.get(0).getRequiredProperty(Property.LOCATION).getValue());
+                event.get(0).getRequiredProperty(Property.LOCATION).getValue());
     }
-    
-    /**
-     * @return
-     * @throws ParserException 
-     * @throws IOException 
-     */
-    public static TestSuite suite() throws IOException, ParserException, ConstraintViolationException {
-    	TestSuite suite = new TestSuite();
-    	//testQuotedText..
+
+    static Stream<Arguments> getValueData() throws IOException, ParserException, ConstraintViolationException {
+        // testQuotedText..
         Calendar calendar = Calendars.load(LocationTest.class.getResource("/samples/valid/mansour.ics"));
-		List<VEvent> event = calendar.getComponents(Component.VEVENT);
+        List<VEvent> event = calendar.getComponents(Component.VEVENT);
         Location location = event.get(0).getRequiredProperty(Property.LOCATION);
-        suite.addTest(new LocationTest(location, "At \"The Terrace\" Complex > Melbourne \"\\,"));
-    	return suite;
+        return Stream.of(
+                Arguments.of(location, "At \"The Terrace\" Complex > Melbourne \"\\,")
+        );
     }
 }

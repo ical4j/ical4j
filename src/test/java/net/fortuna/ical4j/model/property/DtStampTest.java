@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -43,34 +48,41 @@ import net.fortuna.ical4j.model.PropertyTest;
  *
  * @author fortuna
  */
-public class DtStampTest extends PropertyTest {
+public class DtStampTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public DtStampTest(DtStamp dtStamp, String expectedValue) {
-        super(dtStamp, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public DtStampTest(String testMethod, DtStamp property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
-    /**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() throws ParseException {
-        TestSuite suite = new TestSuite();
-        DtStamp dtStamp = new DtStamp("20081124T090000Z");
-        suite.addTest(new DtStampTest(dtStamp, "20081124T090000Z"));
-        suite.addTest(new DtStampTest("testEquals", dtStamp));
-        suite.addTest(new DtStampTest("testValidation", dtStamp));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    static Stream<Arguments> getValueData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new DtStamp("20081124T090000Z"), "20081124T090000Z")
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new DtStamp("20081124T090000Z"))
+        );
+    }
+
+    static Stream<Arguments> validationData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new DtStamp("20081124T090000Z"))
+        );
     }
 }

@@ -33,9 +33,8 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
@@ -43,6 +42,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
@@ -60,7 +62,7 @@ public class CalendarParserImplTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
@@ -68,7 +70,7 @@ public class CalendarParserImplTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
@@ -88,10 +90,10 @@ public class CalendarParserImplTest {
         try {
             URL resource = getClass().getResource(resourceString);
             Calendars.load(resource);
-            Assert.fail("Should throw ParserException: [" + resource + "]");
+            fail("Should throw ParserException: [" + resource + "]");
         } catch (ParserException pe) {
             LOG.info(pe.getMessage());
-            Assert.assertEquals(expectedErrorLineNo, pe.getLineNo());
+            assertEquals(expectedErrorLineNo, pe.getLineNo());
         }
     }
 

@@ -36,20 +36,20 @@ package net.fortuna.ical4j.transform.compliance;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.parameter.Cn;
 import net.fortuna.ical4j.model.property.Attendee;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AttendeePropertyRuleTest {
 
     private ParameterList params;
 
 
-    @Before
+    @BeforeEach
     public void setup() {
         params = new ParameterList(Collections.singletonList(new Cn("Mobile Media")));
     }

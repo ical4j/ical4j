@@ -31,21 +31,24 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.DtStart;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.StringReader;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * $Id$
@@ -56,7 +59,7 @@ import java.util.*;
  *
  * @author Ben Fortuna
  */
-public class TimeZoneTest extends TestCase {
+public class TimeZoneTest {
 
     private static final long GMT_PLUS_4 = 4 * 60 * 60 * 1000;
 
@@ -64,203 +67,124 @@ public class TimeZoneTest extends TestCase {
 
     private static final long GMT_MINUS_10 = -10 * 60 * 60 * 1000;
 
-    private static final long GMT_MINUS_1030 = -630 * 60 * 1000;
-
-    private static final long GMT_MINUS_103126 = GMT_MINUS_1030 - (60 * 1000) - (26 * 1000);
-
     private static final Logger LOG = LoggerFactory.getLogger(TimeZoneTest.class);
 
-    private TimeZoneRegistry registry;
-
-    private java.util.TimeZone tz;
-
-    private final TimeZone timezone;
-
-    private String expectedTimezoneId;
-
-    private boolean expectedUseDaylightTime;
-
-    private int expectedDstSavings;
-
-    private long expectedRawOffset;
-
-    private Date date;
-
-    private String zuluDateTimeStr;
-    private String expectedLocalDateTimeStr;
-
-    private long expectedOffset;
-
-    private boolean expectedInDaylight;
-
-    /**
-     * @param testMethod
-     * @param timezoneId
-     */
-    public TimeZoneTest(String testMethod, String timezoneId) {
-        super(testMethod);
-        // java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("America/Los_Angeles"));
-        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        tz = java.util.TimeZone.getTimeZone(timezoneId);
-        timezone = registry.getTimeZone(timezoneId);
+    private static TimeZone timezoneFor(String timezoneId) {
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        return registry.getTimeZone(timezoneId);
     }
-
-    /**
-     * @param testMethod
-     * @param timezoneId
-     * @param expectedTimezoneId
-     */
-    public TimeZoneTest(String testMethod, String timezoneId, String expectedTimezoneId) {
-        this(testMethod, timezoneId);
-        this.expectedTimezoneId = expectedTimezoneId;
-    }
-
-    /**
-     * @param testMethod
-     * @param timezoneId
-     * @param expectedUseDaylightTime
-     */
-    public TimeZoneTest(String testMethod, String timezoneId, boolean expectedUseDaylightTime) {
-        this(testMethod, timezoneId);
-        this.expectedUseDaylightTime = expectedUseDaylightTime;
-    }
-
-    /**
-     * @param testMethod
-     * @param timezoneId
-     * @param expectedDstSavings
-     */
-    public TimeZoneTest(String testMethod, String timezoneId, int expectedDstSavings) {
-        this(testMethod, timezoneId);
-        this.expectedDstSavings = expectedDstSavings;
-    }
-
-    /**
-     * @param testMethod
-     * @param timezoneId
-     * @param expectedRawOffset
-     */
-    public TimeZoneTest(String testMethod, String timezoneId, long expectedRawOffset) {
-        this(testMethod, timezoneId);
-        this.expectedRawOffset = expectedRawOffset;
-    }
-
-    /**
-     * @param testMethod
-     * @param timezoneId
-     * @param date
-     * @param expectedOffset
-     */
-    public TimeZoneTest(String testMethod, String timezoneId, Date date, long expectedOffset) {
-        this(testMethod, timezoneId);
-        this.date = date;
-        this.expectedOffset = expectedOffset;
-    }
-
-    /**
-     * @param testMethod
-     * @param timezoneId
-     * @param date
-     * @param expectedInDaylight
-     */
-    public TimeZoneTest(String testMethod, String timezoneId, Date date, boolean expectedInDaylight) {
-        this(testMethod, timezoneId);
-        this.date = date;
-        this.expectedInDaylight = expectedInDaylight;
-    }
-
-    /**
-     * @param testMethod
-     * @param vtimezoneDef
-     * @param String       zuluStr
-     * @param String       expectedLocalStr
-     */
-    public TimeZoneTest(String testMethod, String vtimezoneDef, String zuluDateTimeStr,
-                        String expectedLocalDateTimeStr) throws Exception {
-        super(testMethod);
-        net.fortuna.ical4j.model.Calendar cal = new CalendarBuilder().build(new StringReader(vtimezoneDef));
-        List<VTimeZone> vtz = cal.getComponents(VTimeZone.VTIMEZONE);
-        this.timezone = new TimeZone(vtz.get(0));
-        this.zuluDateTimeStr = zuluDateTimeStr;
-        this.expectedLocalDateTimeStr = expectedLocalDateTimeStr;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-//    protected void setUp() throws Exception {
-//        super.setUp();
-//        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-//        tz = java.util.TimeZone.getTimeZone("Australia/Melbourne");
-//        timezone = registry.getTimeZone("Australia/Melbourne");
-//    }
 
     /**
      * Assert the zone info id is the same as the Java timezone.
      */
-    public void testGetId() {
-        // assertEquals(tz.getID(), timezone.getID());
+    @ParameterizedTest(name = "getId [{0}]")
+    @MethodSource("getIdData")
+    public void testGetId(String timezoneId, String expectedTimezoneId) {
+        TimeZone timezone = timezoneFor(timezoneId);
         assertNotNull(timezone.getID());
         if (expectedTimezoneId != null) {
             assertEquals(expectedTimezoneId, timezone.getID());
         }
     }
 
-    /**
-     * Assert the zone info name is the same as the Java timezone.
-     */
-    public void testGetDisplayName() {
-        // assertEquals(tz.getDisplayName(), timezone.getDisplayName());
-        assertNotNull(timezone.getDisplayName());
+    static Stream<Arguments> getIdData() {
+        return Stream.of(
+                Arguments.of("Australia/Melbourne", null),
+                Arguments.of("US/Mountain", "America/Denver"),
+                Arguments.of("Asia/Calcutta", "Asia/Kolkata")
+        );
     }
 
     /**
      * Assert the zone info name is the same as the Java timezone.
      */
-    public void testGetDisplayNameShort() {
-        // assertEquals(tz.getDisplayName(false, TimeZone.SHORT), timezone.getDisplayName(false, TimeZone.SHORT));
-        assertNotNull(timezone.getDisplayName(false, TimeZone.SHORT));
+    @ParameterizedTest(name = "getDisplayName [{0}]")
+    @MethodSource("getDisplayNameData")
+    public void testGetDisplayName(String timezoneId) {
+        TimeZone timezone = timezoneFor(timezoneId);
+        assertNotNull(timezone.getDisplayName());
+    }
+
+    static Stream<Arguments> getDisplayNameData() {
+        return Stream.of(
+                Arguments.of("Australia/Melbourne")
+        );
+    }
+
+    /**
+     * Assert the zone info name is the same as the Java timezone.
+     */
+    @ParameterizedTest(name = "getDisplayNameShort [{0}]")
+    @MethodSource("getDisplayNameShortData")
+    public void testGetDisplayNameShort(String timezoneId) {
+        TimeZone timezone = timezoneFor(timezoneId);
+        assertNotNull(timezone.getDisplayName(false, java.util.TimeZone.SHORT));
+    }
+
+    static Stream<Arguments> getDisplayNameShortData() {
+        return Stream.of(
+                Arguments.of("Australia/Melbourne")
+        );
     }
 
     /**
      * Assert the raw offset is the same as its Java equivalent.
      */
-    public void testGetRawOffset() {
+    @ParameterizedTest(name = "getRawOffset [{0}]")
+    @MethodSource("getRawOffsetData")
+    public void testGetRawOffset(String timezoneId, long expectedRawOffset) {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timezoneId);
+        TimeZone timezone = timezoneFor(timezoneId);
         assertEquals(expectedRawOffset, timezone.getRawOffset());
         assertEquals(tz.getRawOffset(), timezone.getRawOffset());
+    }
+
+    static Stream<Arguments> getRawOffsetData() {
+        return Stream.of(
+                Arguments.of("Australia/Melbourne", GMT_PLUS_10),
+                Arguments.of("Pacific/Honolulu", GMT_MINUS_10),
+                Arguments.of("Europe/Samara", GMT_PLUS_4)
+        );
     }
 
     /**
      * Assert the zone info has the same rules as its Java equivalent.
      */
-    public void testHasSameRules() {
+    @ParameterizedTest(name = "hasSameRules [{0}]")
+    @MethodSource("hasSameRulesData")
+    public void testHasSameRules(String timezoneId) {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timezoneId);
+        TimeZone timezone = timezoneFor(timezoneId);
         assertTrue(timezone.hasSameRules(tz));
+    }
+
+    static Stream<Arguments> hasSameRulesData() {
+        return Stream.of(
+                Arguments.of("Australia/Melbourne")
+        );
     }
 
     /**
      * A test to ensure the method TimeZone.inDaylightTime() is working correctly (for the last 10 years).
      */
-    public void testInDaylightTime() {
+    @ParameterizedTest(name = "inDaylightTime [{0}]")
+    @MethodSource("inDaylightTimeData")
+    public void testInDaylightTime(String timezoneId, Date date, boolean expectedInDaylight) {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timezoneId);
+        TimeZone timezone = timezoneFor(timezoneId);
         if (date != null) {
             assertEquals(expectedInDaylight, timezone.inDaylightTime(date));
         } else {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.YEAR, -10);
-            /*
-             * cal.set(Calendar.MONTH, 12); assertEquals(tz.inDaylightTime(cal.getTime()),
-             * timezone.inDaylightTime(cal.getTime())); cal.set(Calendar.MONTH, 6);
-             * assertEquals(tz.inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal.getTime()));
-             */
             long start, stop;
             for (int y = 0; y < 10; y++) {
                 cal.clear(Calendar.DAY_OF_YEAR);
                 for (int i = 0; i < 365; i++) {
                     cal.add(Calendar.DAY_OF_YEAR, 1);
                     start = System.currentTimeMillis();
-                    assertEquals("inDaylightTime() invalid: [" + cal.getTime()
-                            + "]", tz.inDaylightTime(cal.getTime()), timezone
-                            .inDaylightTime(cal.getTime()));
+                    assertEquals(tz.inDaylightTime(cal.getTime()), timezone
+                            .inDaylightTime(cal.getTime()), "inDaylightTime() invalid: [" + cal.getTime() + "]");
                     stop = System.currentTimeMillis();
                     LOG.debug("Time: " + (stop - start) + "ms");
                 }
@@ -268,18 +192,46 @@ public class TimeZoneTest extends TestCase {
         }
     }
 
+    static Stream<Arguments> inDaylightTimeData() {
+        Calendar cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));
+        cal.set(2010, 9, 30, 4, 0, 0);
+        Date parisDate = cal.getTime();
+        cal.set(2002, 11, 04, 4, 0, 0);
+        Date bahiaDate = cal.getTime();
+        return Stream.of(
+                Arguments.of("Europe/Samara", null, false),
+                Arguments.of("Europe/Paris", parisDate, true),
+                Arguments.of("America/Bahia", bahiaDate, true)
+        );
+    }
+
     /**
      * Ensure useDaylightTime() method is working correctly.
      */
-    public void testUseDaylightTime() {
+    @ParameterizedTest(name = "useDaylightTime [{0}]")
+    @MethodSource("useDaylightTimeData")
+    public void testUseDaylightTime(String timezoneId, boolean expectedUseDaylightTime) {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timezoneId);
+        TimeZone timezone = timezoneFor(timezoneId);
         assertEquals(expectedUseDaylightTime, timezone.useDaylightTime());
         assertEquals(tz.useDaylightTime(), timezone.useDaylightTime());
+    }
+
+    static Stream<Arguments> useDaylightTimeData() {
+        return Stream.of(
+                Arguments.of("Australia/Melbourne", true),
+                Arguments.of("Africa/Abidjan", false)
+        );
     }
 
     /**
      * Assert getOffset() returns the same result as its Java timezone equivalent.
      */
-    public void testGetOffset() {
+    @ParameterizedTest(name = "getOffset [{0}]")
+    @MethodSource("getOffsetData")
+    public void testGetOffset(String timezoneId, Date date, long expectedOffset) {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timezoneId);
+        TimeZone timezone = timezoneFor(timezoneId);
         if (date != null) {
             assertEquals(expectedOffset, timezone.getOffset(date.getTime()));
             assertEquals(tz.getOffset(date.getTime()), timezone.getOffset(date.getTime()));
@@ -295,103 +247,45 @@ public class TimeZoneTest extends TestCase {
         }
     }
 
-    public void testAmericaIndiana() {
-        java.util.TimeZone indianaTz = java.util.TimeZone
-                .getTimeZone("America/Indiana/Indianapolis");
-
-        ZonedDateTime dtStart = ZonedDateTime.now(indianaTz.toZoneId()).withHour(10).withMinute(20);
-        ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
-        DtStart pDtStart = new DtStart<>(tzParams, dtStart);
-        assertFalse(pDtStart.isUtc());
-    }
-
-    public void testAustraliaSydney() {
-        // java.util.TimeZone sydneyTz = java.util.TimeZone.getTimeZone("Australia/Sydney");
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(2003, 7, 31, 23, 00, 00);
-
-        assertEquals("inDaylightTime() invalid: [" + cal.getTime() + "]", tz
-                .inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal
-                .getTime()));
+    static Stream<Arguments> getOffsetData() {
+        return Stream.of(
+                Arguments.of("Europe/Samara", null, GMT_PLUS_4),
+                Arguments.of("Australia/Melbourne", null, 0L),
+                Arguments.of("Pacific/Honolulu", new Date(), GMT_MINUS_10)
+        );
     }
 
     /**
      * Test custom DST savings implementation.
      */
-    public void testGetDSTSavings() {
+    @ParameterizedTest(name = "getDSTSavings [{0}]")
+    @MethodSource("getDSTSavingsData")
+    public void testGetDSTSavings(String timezoneId, int expectedDstSavings) {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timezoneId);
+        TimeZone timezone = timezoneFor(timezoneId);
         assertEquals(expectedDstSavings, timezone.getDSTSavings());
         assertEquals(tz.getDSTSavings(), timezone.getDSTSavings());
     }
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#getName()
-     */
-    @Override
-    public String getName() {
-        if (timezone != null) {
-            return super.getName() + " [" + timezone.getID() + "]";
-        }
-        return super.getName();
+    static Stream<Arguments> getDSTSavingsData() {
+        return Stream.of(
+                Arguments.of("Australia/Melbourne", 3600000)
+        );
     }
 
-    public void testZuluToLocal() throws Exception {
+    @ParameterizedTest(name = "zuluToLocal [{1}]")
+    @MethodSource("zuluToLocalData")
+    public void testZuluToLocal(String vtimezoneDef, String zuluDateTimeStr,
+                                String expectedLocalDateTimeStr) throws Exception {
+        net.fortuna.ical4j.model.Calendar cal = new CalendarBuilder().build(new StringReader(vtimezoneDef));
+        List<VTimeZone> vtz = cal.getComponents(VTimeZone.VTIMEZONE);
+        TimeZone timezone = new TimeZone(vtz.get(0));
         DateTime d = new DateTime(zuluDateTimeStr);
         d.setTimeZone(timezone);
         assertEquals(expectedLocalDateTimeStr, d.toString());
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() throws Exception {
-        TestSuite suite = new TestSuite();
-
-        suite.addTest(new TimeZoneTest("testGetId", "Australia/Melbourne"));
-        suite.addTest(new TimeZoneTest("testGetId", "US/Mountain", "America/Denver"));
-        suite.addTest(new TimeZoneTest("testGetId", "Asia/Calcutta", "Asia/Kolkata"));
-
-        suite.addTest(new TimeZoneTest("testGetDisplayName", "Australia/Melbourne"));
-        suite.addTest(new TimeZoneTest("testGetDisplayNameShort", "Australia/Melbourne"));
-
-        suite.addTest(new TimeZoneTest("testGetRawOffset", "Australia/Melbourne", GMT_PLUS_10));
-        suite.addTest(new TimeZoneTest("testGetRawOffset", "Pacific/Honolulu", GMT_MINUS_10));
-
-        suite.addTest(new TimeZoneTest("testGetRawOffset", "Europe/Samara", GMT_PLUS_4));
-        suite.addTest(new TimeZoneTest("testInDaylightTime", "Europe/Samara", false));
-        suite.addTest(new TimeZoneTest("testGetOffset", "Europe/Samara", GMT_PLUS_4));
-
-        suite.addTest(new TimeZoneTest("testHasSameRules", "Australia/Melbourne"));
-
-        Calendar cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
-        cal.set(1999, 2, 28, 2, 1);
-        // technically, 2:01am, Sunday 28 March 1999 doesn't exist, so it can't be in daylight time..
-//        suite.addTest(new TimeZoneTest("testInDaylightTime", "Australia/Melbourne", cal.getTime(), false));
-//        suite.addTest(new TimeZoneTest("testInDaylightTime", "Australia/Melbourne"));
-
-        suite.addTest(new TimeZoneTest("testUseDaylightTime", "Australia/Melbourne", true));
-        suite.addTest(new TimeZoneTest("testUseDaylightTime", "Africa/Abidjan", false));
-        suite.addTest(new TimeZoneTest("testGetDSTSavings", "Australia/Melbourne", 3600000));
-
-        suite.addTest(new TimeZoneTest("testGetOffset", "Australia/Melbourne"));
-        //testHonoluluCurrentOffset..
-        suite.addTest(new TimeZoneTest("testGetOffset", "Pacific/Honolulu", new Date(), GMT_MINUS_10));
-        //testHonoluluHistoricalOffset..
-        cal = new GregorianCalendar(1925, 0, 1);
-//        suite.addTest(new TimeZoneTest("testGetOffset", "Pacific/Honolulu", cal.getTime(), GMT_MINUS_1030));
-        //testHonoluluPreHistoricOffset..
-        cal = new GregorianCalendar(1800, 0, 1);
-//        suite.addTest(new TimeZoneTest("testGetOffset", "Pacific/Honolulu", cal.getTime(), GMT_MINUS_103126));
-        cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));
-        cal.set(2010, 9, 30, 4, 0, 0);
-        suite.addTest(new TimeZoneTest("testInDaylightTime", "Europe/Paris", cal.getTime(), true));
-//        cal.set(2010, 9, 31, 4, 0, 0);
-//        suite.addTest(new TimeZoneTest("testInDaylightTime", "Europe/Paris", cal.getTime(), false));
-//        cal.set(2010, 9, 31, 4, 0, 0);
-//        suite.addTest(new TimeZoneTest("testInDaylightTime", "America/Bahia", cal.getTime(), false));
-        cal.set(2002, 11, 04, 4, 0, 0);
-        suite.addTest(new TimeZoneTest("testInDaylightTime", "America/Bahia", cal.getTime(), true));
-
+    static Stream<Arguments> zuluToLocalData() {
         String minskDefinition =
                 "BEGIN:VCALENDAR\r\n"
                         + "BEGIN:VTIMEZONE\r\n"
@@ -436,7 +330,6 @@ public class TimeZoneTest extends TestCase {
                         + "END:STANDARD\r\n"
                         + "END:VTIMEZONE\r\n"
                         + "END:VCALENDAR\r\n";
-        suite.addTest(new TimeZoneTest("testZuluToLocal", minskDefinition, "20100428T140000Z", "20100428T170000"));
 
         String weirdo = "BEGIN:VCALENDAR\n"
                 + "BEGIN:VTIMEZONE\n"
@@ -455,7 +348,10 @@ public class TimeZoneTest extends TestCase {
                 + "END:STANDARD\n"
                 + "END:VTIMEZONE\n"
                 + "END:VCALENDAR\n";
-        suite.addTest(new TimeZoneTest("testZuluToLocal", weirdo, "20130618T150000Z", "20130618T170000"));
-        return suite;
+
+        return Stream.of(
+                Arguments.of(minskDefinition, "20100428T140000Z", "20100428T170000"),
+                Arguments.of(weirdo, "20130618T150000Z", "20130618T170000")
+        );
     }
 }

@@ -31,13 +31,18 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
@@ -45,103 +50,93 @@ import java.net.URISyntaxException;
  * Created on 16/11/2005
  *
  */
-public class AddressListTest extends TestCase {
+public class AddressListTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddressListTest.class);
-    
-    private final String value;
-    
-    private final int expectedSize;
-    
-    private final String[] compatibilityHints;
-    
-    /**
-     * @param testMethod
-     * @param value
-     */
-    public AddressListTest(String testMethod, String value, String[] compatibilityHints) {
-    	this(testMethod, value, -1, compatibilityHints);
-    }
-    
-    /**
-     * @param testMethod
-     * @param value
-     * @param expectedSize
-     */
-    public AddressListTest(String testMethod, String value, int expectedSize, String[] compatibilityHints) {
-    	super(testMethod);
-    	this.expectedSize = expectedSize;
-    	this.value = value;
-    	this.compatibilityHints = compatibilityHints;
-    }
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
-    	for (int i = 0; i < compatibilityHints.length; i++) {
-    		CompatibilityHints.setHintEnabled(compatibilityHints[i], true);
-    	}
-    }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
-    	for (int i = 0; i < compatibilityHints.length; i++) {
-    		CompatibilityHints.clearHintEnabled(compatibilityHints[i]);
-    	}
-    }
-    
     /**
      * Assert three addresses parsed from value.
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
-    public void testSize() throws URISyntaxException {
-    	AddressList addresses = new AddressList(value);
-        assertEquals(expectedSize, addresses.getAddresses().size());
+    @ParameterizedTest(name = "size [{0}]")
+    @MethodSource("sizeData")
+    public void testSize(String value, int expectedSize, String[] compatibilityHints) throws URISyntaxException {
+        try {
+            for (int i = 0; i < compatibilityHints.length; i++) {
+                CompatibilityHints.setHintEnabled(compatibilityHints[i], true);
+            }
+            AddressList addresses = new AddressList(value);
+            assertEquals(expectedSize, addresses.getAddresses().size());
+        } finally {
+            for (int i = 0; i < compatibilityHints.length; i++) {
+                CompatibilityHints.clearHintEnabled(compatibilityHints[i]);
+            }
+        }
     }
-    
+
+    static Stream<Arguments> sizeData() {
+        String value1 = "\"address1@example.com\",\"address2@example.com\",\"address3@example.com\"";
+        String value2 = "address1@example.com,<address2@example.com>,address3@example.com";
+        return Stream.of(
+                Arguments.of(value1, 3, new String[] {}),
+                Arguments.of(value2, 2, new String[] {CompatibilityHints.KEY_RELAXED_PARSING})
+        );
+    }
+
     /**
      * Assert toString() produces identical address list string value.
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
-    public void testToString() throws URISyntaxException {
-    	AddressList addresses = new AddressList(value);
-        assertEquals(value, addresses.toString());
+    @ParameterizedTest(name = "toString [{0}]")
+    @MethodSource("toStringData")
+    public void testToString(String value, String[] compatibilityHints) throws URISyntaxException {
+        try {
+            for (int i = 0; i < compatibilityHints.length; i++) {
+                CompatibilityHints.setHintEnabled(compatibilityHints[i], true);
+            }
+            AddressList addresses = new AddressList(value);
+            assertEquals(value, addresses.toString());
+        } finally {
+            for (int i = 0; i < compatibilityHints.length; i++) {
+                CompatibilityHints.clearHintEnabled(compatibilityHints[i]);
+            }
+        }
     }
-    
+
+    static Stream<Arguments> toStringData() {
+        String value = "\"address1@example.com\",\"address2@example.com\",\"address3@example.com\"";
+        return Stream.of(
+                Arguments.of(value, new String[] {})
+        );
+    }
+
     /**
      * Test invalid addresses are correctly handled.
      */
-    public void testInvalidAddressList() throws URISyntaxException {
+    @ParameterizedTest(name = "invalidAddressList [{0}]")
+    @MethodSource("invalidAddressListData")
+    public void testInvalidAddressList(String value, String[] compatibilityHints) throws URISyntaxException {
         try {
-            new AddressList(value);
-            fail("Should throw URISyntaxException");
-        }
-        catch (URISyntaxException use) {
-            LOG.info("Caught exception: " + use.getMessage());
+            for (int i = 0; i < compatibilityHints.length; i++) {
+                CompatibilityHints.setHintEnabled(compatibilityHints[i], true);
+            }
+            try {
+                new AddressList(value);
+                fail("Should throw URISyntaxException");
+            } catch (URISyntaxException use) {
+                LOG.info("Caught exception: " + use.getMessage());
+            }
+        } finally {
+            for (int i = 0; i < compatibilityHints.length; i++) {
+                CompatibilityHints.clearHintEnabled(compatibilityHints[i]);
+            }
         }
     }
-    
-    /**
-     * @return
-     * @throws URISyntaxException
-     */
-    public static TestSuite suite() throws URISyntaxException {
-    	TestSuite suite = new TestSuite();
-        
-        String value = "\"address1@example.com\",\"address2@example.com\",\"address3@example.com\"";
-    	suite.addTest(new AddressListTest("testSize", value, 3, new String[] {}));
-    	suite.addTest(new AddressListTest("testToString", value, new String[] {}));
-    	
-        value = "address1@example.com,<address2@example.com>,address3@example.com";
-    	suite.addTest(new AddressListTest("testInvalidAddressList", value, new String[] {}));
-    	suite.addTest(new AddressListTest("testSize", value, 2, new String[] {CompatibilityHints.KEY_RELAXED_PARSING}));
-    	// Test broken when NOTES_COMPATIBILITY made more specific.. not sure this is a real-world case tho..
-//    	suite.addTest(new AddressListTest("testSize", value, 3, new String[] {CompatibilityHints.KEY_NOTES_COMPATIBILITY}));
-    	return suite;
+
+    static Stream<Arguments> invalidAddressListData() {
+        String value = "address1@example.com,<address2@example.com>,address3@example.com";
+        return Stream.of(
+                Arguments.of(value, new String[] {})
+        );
     }
 }

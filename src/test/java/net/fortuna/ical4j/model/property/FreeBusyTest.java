@@ -31,11 +31,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
-import org.junit.Ignore;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.text.ParseException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -45,35 +50,42 @@ import java.text.ParseException;
  * @author Ben
  *
  */
-@Ignore("Failed after re-enabling JUnit 3/4 tests")
-public class FreeBusyTest extends PropertyTest {
+@Disabled("Failed after re-enabling JUnit 3/4 tests")
+public class FreeBusyTest {
 
-    /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public FreeBusyTest(FreeBusy property, String expectedValue) {
-		super(property, expectedValue);
-	}
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public FreeBusyTest(String testMethod, FreeBusy property) {
-		super(testMethod, property);
-	}
-    
-    /**
-     * @return
-     * @throws ParseException 
-     */
-    public static TestSuite suite() throws ParseException {
-    	TestSuite suite = new TestSuite();
-        FreeBusy fb = new FreeBusy("20070904T140000Z/PT3H");
-        suite.addTest(new FreeBusyTest(fb, "20070904T140000Z/20070904T170000Z"));
-        suite.addTest(new FreeBusyTest("testValidation", fb));
-        suite.addTest(new FreeBusyTest("testEquals", fb));
-    	return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new FreeBusy("20070904T140000Z/PT3H"), "20070904T140000Z/20070904T170000Z")
+        );
+    }
+
+    static Stream<Arguments> validationData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new FreeBusy("20070904T140000Z/PT3H"))
+        );
+    }
+
+    static Stream<Arguments> equalsData() throws ParseException {
+        return Stream.of(
+                Arguments.of(new FreeBusy("20070904T140000Z/PT3H"))
+        );
     }
 }

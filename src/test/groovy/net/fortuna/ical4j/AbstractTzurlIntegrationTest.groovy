@@ -8,6 +8,10 @@ import spock.lang.Specification
 
 /**
  * Provides local tzurl instance for tests that require timezone definition updates.
+ *
+ * Podman compatibility (DOCKER_HOST resolution and Ryuk disablement) is configured
+ * via env vars set by the Gradle {@code test} task; Testcontainers reads those
+ * settings as env vars only, so they cannot be set from inside the test JVM.
  */
 @Testcontainers
 abstract class AbstractTzurlIntegrationTest extends Specification {

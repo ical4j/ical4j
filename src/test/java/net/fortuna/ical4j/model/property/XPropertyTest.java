@@ -31,12 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collections;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -46,48 +51,83 @@ import java.util.Collections;
  * @author Ben
  *
  */
-public class XPropertyTest extends PropertyTest {
-    
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public XPropertyTest(XProperty property, String expectedValue) {
-        super(property, expectedValue);
+public class XPropertyTest {
+
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public XPropertyTest(String testMethod, XProperty property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(Property property) {
+        PropertyTest.assertValidationException(property);
+    }
+
+    @ParameterizedTest(name = "relaxedValidation")
+    @MethodSource("relaxedValidationData")
+    public void testRelaxedValidation(Property property) throws ValidationException {
+        PropertyTest.assertRelaxedValidation(property);
+    }
+
+    @ParameterizedTest(name = "toString")
+    @MethodSource("toStringData")
+    public void testToString(Property property, String expectedValue) {
+        PropertyTest.assertToString(property, expectedValue);
+    }
+
+    private static XProperty newTestProperty(String value) {
         XProperty p = new XProperty("TEST");
-        p.setValue("value");
-        suite.addTest(new XPropertyTest(p, "value"));
-        suite.addTest(new XPropertyTest("testValidationException", p));
-        suite.addTest(new XPropertyTest("testRelaxedValidation", p));
-        
-        p = new XProperty("X-TEST");
-        suite.addTest(new XPropertyTest("testValidation", p));
+        p.setValue(value);
+        return p;
+    }
 
-        p = new XProperty("TEST");
-        p.setValue("geo:37.331684,-122.030758");
-        suite.addTest(new XPropertyTest(p, "geo:37.331684,-122.030758"));
-        suite.addTest(new PropertyTest("testToString", p, "TEST:geo:37.331684\\,-122.030758\r\n"));
+    private static XProperty newXTestProperty() {
+        return new XProperty("X-TEST");
+    }
 
-        XProperty pUrl = new XProperty("TEST", new ParameterList(Collections.singletonList(Value.URI)),
+    private static XProperty newTestUriProperty() {
+        return new XProperty("TEST", new ParameterList(Collections.singletonList(Value.URI)),
                 "geo:37.331684,-122.030758");
-        suite.addTest(new XPropertyTest(pUrl, "geo:37.331684,-122.030758"));
-        suite.addTest(new PropertyTest("testToString", pUrl, "TEST;VALUE=URI:geo:37.331684,-122.030758\r\n"));
+    }
 
-        return suite;
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(newTestProperty("value"), "value"),
+                Arguments.of(newTestProperty("geo:37.331684,-122.030758"), "geo:37.331684,-122.030758"),
+                Arguments.of(newTestUriProperty(), "geo:37.331684,-122.030758")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(newXTestProperty())
+        );
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(
+                Arguments.of(newTestProperty("value"))
+        );
+    }
+
+    static Stream<Arguments> relaxedValidationData() {
+        return Stream.of(
+                Arguments.of(newTestProperty("value"))
+        );
+    }
+
+    static Stream<Arguments> toStringData() {
+        return Stream.of(
+                Arguments.of(newTestProperty("geo:37.331684,-122.030758"), "TEST:geo:37.331684\\,-122.030758\r\n"),
+                Arguments.of(newTestUriProperty(), "TEST;VALUE=URI:geo:37.331684,-122.030758\r\n")
+        );
     }
 }

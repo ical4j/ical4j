@@ -34,21 +34,15 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.*;
-import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableStatus.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -123,48 +117,6 @@ public class VToDo extends CalendarComponent implements Prototype<VToDo>, Compon
         LocationsAccessor, ResourcesAccessor, StatusAccessor {
 
     private static final long serialVersionUID = -269658210065896668L;
-
-    private static final Map<Method, Validator<VToDo>> methodValidators = new HashMap<>();
-    static {
-        methodValidators.put(ADD, new VToDoValidator(new ValidationRule<>(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RESOURCES, STATUS, URL),
-                new ValidationRule<>(None, RECURRENCE_ID, REQUEST_STATUS)));
-        methodValidators.put(CANCEL, new VToDoValidator(false, new ValidationRule<>(One, UID, DTSTAMP, ORGANIZER, SEQUENCE),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, PRIORITY, STATUS, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-        methodValidators.put(COUNTER, new VToDoValidator(new ValidationRule<>(OneOrMore, ATTENDEE),
-                new ValidationRule<>(One, DTSTAMP, ORGANIZER, PRIORITY, SUMMARY, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, RRULE, SEQUENCE, STATUS,
-                        URL)));
-        methodValidators.put(DECLINE_COUNTER, new VToDoValidator(false, new ValidationRule<>(OneOrMore, ATTENDEE),
-                new ValidationRule<>(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, LOCATION, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS,
-                        URL)));
-        methodValidators.put(PUBLISH, new VToDoValidator(new ValidationRule<>(One, DTSTAMP, SUMMARY, UID),
-                new ValidationRule<>(One, true, ORGANIZER, PRIORITY),
-                new ValidationRule<>(OneOrLess, DTSTART, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DUE, DURATION,
-                        GEO, LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, STATUS, URL),
-                new ValidationRule<>(None, ATTENDEE, REQUEST_STATUS)));
-        methodValidators.put(REFRESH, new VToDoValidator(false, new ValidationRule<>(One, ATTENDEE, DTSTAMP, UID),
-                new ValidationRule<>(OneOrLess, RECURRENCE_ID),
-                new ValidationRule<>(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTSTART, DUE,
-                        DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE, PRIORITY,
-                        RDATE, RELATED_TO, REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, URL)));
-        methodValidators.put(REPLY, new VToDoValidator(false, new ValidationRule<>(OneOrMore, ATTENDEE),
-                new ValidationRule<>(One, DTSTAMP, ORGANIZER, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, PRIORITY, RESOURCES, RECURRENCE_ID, SEQUENCE, STATUS,
-                        SUMMARY, URL)));
-        methodValidators.put(REQUEST, new VToDoValidator(new ValidationRule<>(OneOrMore, ATTENDEE),
-                new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, PRIORITY, SUMMARY, UID),
-                new ValidationRule<>(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DUE, DURATION, GEO,
-                        LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, STATUS, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-    }
 
     /**
      * Default constructor.
@@ -251,18 +203,10 @@ public class VToDo extends CalendarComponent implements Prototype<VToDo>, Compon
     @Override
     public ValidationResult validate(final boolean recurse) throws ValidationException {
         var result = ComponentValidator.VTODO.validate(this);
+        ComponentValidator.validateAlarms(this, true, result);
         // validate that getAlarms() only contains VAlarm components
         for (var component : getAlarms()) {
             component.validate(recurse);
-        }
-
-        final Optional<Status> status = getProperty(STATUS);
-        if (status.isPresent() && !VTODO_NEEDS_ACTION.equals(status.get())
-                && !VTODO_COMPLETED.equals(status.get())
-                && !VTODO_IN_PROCESS.equals(status.get())
-                && !VTODO_CANCELLED.equals(status.get())) {
-            throw new ValidationException("Status property ["
-                    + status + "] may not occur in VTODO");
         }
 
         if (recurse) {
@@ -278,13 +222,7 @@ public class VToDo extends CalendarComponent implements Prototype<VToDo>, Compon
      */
     @Override
     public ValidationResult validate(Method method) throws ValidationException {
-        final Validator<VToDo> validator = methodValidators.get(method);
-        if (validator != null) {
-            return validator.validate(this);
-        }
-        else {
-            return super.validate(method);
-        }
+        return ITIPRuleRegistry.validate(this, method);
     }
 
     /**

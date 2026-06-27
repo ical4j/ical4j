@@ -31,10 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -43,35 +47,41 @@ import net.fortuna.ical4j.model.PropertyTest;
  *
  * @author fortuna
  */
-public class ProdIdTest extends PropertyTest {
+public class ProdIdTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public ProdIdTest(ProdId prodId, String expectedValue) {
-        super(prodId, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public ProdIdTest(String testMethod, ProdId property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        ProdId id = new ProdId("");
-        suite.addTest(new ProdIdTest(id, ""));
-        suite.addTest(new ProdIdTest("testValidation", id));
-        suite.addTest(new ProdIdTest("testEquals", id));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new ProdId(""), "")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(new ProdId(""))
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(new ProdId(""))
+        );
+    }
 }

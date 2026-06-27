@@ -33,14 +33,11 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.TimeZones;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.Temporal;
@@ -81,17 +78,6 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
     private OffsetDateTime[] onsetsDates;
     //    private Map onsets = new TreeMap();
     private OffsetDateTime initialOnset = null;
-
-    /**
-     * Used for parsing times in a UTC date-time representation.
-     */
-    private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss";
-    private static final DateFormat UTC_FORMAT = new SimpleDateFormat(UTC_PATTERN);
-
-    static {
-        UTC_FORMAT.setTimeZone(TimeZones.getUtcTimeZone());
-        UTC_FORMAT.setLenient(false);
-    }
 
     /* If this is set we have rrules. If we get a date after this rebuild onsets */
     private OffsetDateTime onsetLimit;

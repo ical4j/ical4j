@@ -31,38 +31,26 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * $Id$
  * <p/>
  * Created on 8/02/2006
  * <p/>
- * Abstract base class for property unit tests.
+ * Abstract base class for property unit tests. Kept abstract so that the
+ * JUnit 5 engine does not attempt to instantiate it as a test class.
  *
  * @author Ben Fortuna
  */
-public abstract class AbstractPropertyTest extends TestCase {
+public abstract class AbstractPropertyTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractPropertyTest.class);
-
-    /**
-     *
-     */
-    public AbstractPropertyTest() {
-        super();
-    }
-
-    /**
-     * @param name
-     */
-    public AbstractPropertyTest(String name) {
-        super(name);
-    }
 
     /**
      * @param property

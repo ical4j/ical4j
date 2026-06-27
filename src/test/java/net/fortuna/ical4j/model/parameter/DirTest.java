@@ -31,11 +31,14 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import java.net.URISyntaxException;
-
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -45,25 +48,17 @@ import net.fortuna.ical4j.model.ParameterTest;
  * @author Ben
  *
  */
-public class DirTest extends ParameterTest {
+public class DirTest {
 
-    /**
-     * @param testMethod
-     * @param parameter
-     * @param expectedName
-     * @param expectedValue
-     */
-    public DirTest(String testMethod, Dir dir, String expectedValue) {
-        super(testMethod, dir, Parameter.DIR, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Parameter parameter, String expectedValue) {
+        ParameterTest.assertGetValue(parameter, expectedValue);
     }
 
-    /**
-     * @return
-     * @throws URISyntaxException 
-     */
-    public static TestSuite suite() throws URISyntaxException {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new DirTest("testGetValue", new Dir(""), ""));
-        return suite;
+    static Stream<Arguments> getValueData() throws URISyntaxException {
+        return Stream.of(
+                Arguments.of(new Dir(""), "")
+        );
     }
 }

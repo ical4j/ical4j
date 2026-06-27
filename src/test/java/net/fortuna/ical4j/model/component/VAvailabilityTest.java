@@ -31,16 +31,21 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.net.SocketException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -49,36 +54,46 @@ import java.time.ZonedDateTime;
  *
  * @author fortuna
  */
-public class VAvailabilityTest extends ComponentTest {
+public class VAvailabilityTest {
 
-    /**
-     * @param component
-     */
-    public VAvailabilityTest(String testMethod, VAvailability component) {
-        super(testMethod, component);
+    @AfterEach
+    void tearDown() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
-    /**
-     * @return
-     * @throws SocketException 
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+    @ParameterizedTest(name = "isCalendarComponent")
+    @MethodSource("isCalendarComponentData")
+    public void testIsCalendarComponent(VAvailability component) {
+        ComponentTest.assertIsCalendarComponent(component);
+    }
 
-        var a = new VAvailability();
-        suite.addTest(new VAvailabilityTest("testIsCalendarComponent", a));
-        suite.addTest(new VAvailabilityTest("testValidationException", a));
-        
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(VAvailability component) {
+        ComponentTest.assertValidationException(component);
+    }
+
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(VAvailability component) throws ValidationException {
+        ComponentTest.assertValidation(component);
+    }
+
+    static Stream<Arguments> isCalendarComponentData() {
+        return Stream.of(Arguments.of(new VAvailability()));
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(Arguments.of(new VAvailability()));
+    }
+
+    static Stream<Arguments> validationData() {
         UidGenerator g = new RandomUidGenerator();
         var a2 = (VAvailability) new VAvailability().withProperty(g.generateUid())
                 .withProperty(new DtStart<>(ZonedDateTime.now())
                         .withParameter(new TzId(ZoneId.systemDefault().getId()))
                         .getFluentTarget())
                 .getFluentTarget();
-
-        suite.addTest(new VAvailabilityTest("testValidation", a2));
-        
-        return suite;
+        return Stream.of(Arguments.of(a2));
     }
-
 }

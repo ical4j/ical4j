@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +42,14 @@ import org.slf4j.LoggerFactory;
  *
  * @author Ben
  */
-public class UtcOffsetTest extends TestCase {
+public class UtcOffsetTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(UtcOffsetTest.class);
 
     /**
      * Unit tests for offset parsing.
      */
+    @Test
     public void testOffsetParsing() {
         // valid
         new UtcOffset("+1000");

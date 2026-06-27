@@ -40,12 +40,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.chrono.Chronology;
 import java.time.temporal.*;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -620,55 +617,31 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     @Override
     public final String toString() {
-        final var b = new StringBuilder();
-        if (rscale != null) {
-            b.append(RSCALE).append('=').append(rscale).append(';');
-        }
-        b.append(FREQ).append('=').append(frequency);
-        if (weekStartDay != null) {
-            b.append(';').append(WKST).append('=').append(weekStartDay);
-        }
-        if (until != null) {
-            // Note: UNTIL should always be in UTC time.
-            b.append(';').append(UNTIL).append('=').append(until);
-        }
-        if (count != null) {
-            b.append(';').append(COUNT).append('=').append(count);
-        }
-        if (interval != null) {
-            b.append(';').append(INTERVAL).append('=').append(interval);
-        }
-        if (!monthList.isEmpty()) {
-            b.append(';').append(BYMONTH).append('=').append(monthList);
-        }
-        if (!weekNoList.isEmpty()) {
-            b.append(';').append(BYWEEKNO).append('=').append(NumberList.toString(weekNoList));
-        }
-        if (!yearDayList.isEmpty()) {
-            b.append(';').append(BYYEARDAY).append('=').append(NumberList.toString(yearDayList));
-        }
-        if (!monthDayList.isEmpty()) {
-            b.append(';').append(BYMONTHDAY).append('=').append(NumberList.toString(monthDayList));
-        }
-        if (!dayList.isEmpty()) {
-            b.append(';').append(BYDAY).append('=').append(WeekDayList.toString(dayList));
-        }
-        if (!hourList.isEmpty()) {
-            b.append(';').append(BYHOUR).append('=').append(NumberList.toString(hourList));
-        }
-        if (!minuteList.isEmpty()) {
-            b.append(';').append(BYMINUTE).append('=').append(NumberList.toString(minuteList));
-        }
-        if (!secondList.isEmpty()) {
-            b.append(';').append(BYSECOND).append('=').append(NumberList.toString(secondList));
-        }
-        if (!setPosList.isEmpty()) {
-            b.append(';').append(BYSETPOS).append('=').append(NumberList.toString(setPosList));
-        }
-        if (skip != null) {
-            b.append(';').append(SKIP).append('=').append(skip);
-        }
-        return b.toString();
+        return RecurFormatter.toString(this);
+    }
+
+    RScale getRScale() {
+        return rscale;
+    }
+
+    TemporalAdapter<T> getUntilAdapter() {
+        return until;
+    }
+
+    Integer getCountValue() {
+        return count;
+    }
+
+    Integer getIntervalValue() {
+        return interval;
+    }
+
+    TemporalUnit getCalIncField() {
+        return calIncField;
+    }
+
+    int getMaxIncrementCount() {
+        return maxIncrementCount;
     }
 
     /**
@@ -697,7 +670,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     /**
      * Returns a list of start dates in the specified period represented by this recur. This method includes a base date
-     * argument, which indicates the start of the fist occurrence of this recurrence. The base date is used to inject
+     * argument, which indicates the start of the first occurrence of this recurrence. The base date is used to inject
      * default values to return a set of dates in the correct format. For example, if the search start date (start) is
      * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM, the start dates returned should all be at
      * 9:00AM, and not 12:19PM.
@@ -713,7 +686,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     /**
      * Returns a list of start dates in the specified period represented by this recur. This method includes a base date
-     * argument, which indicates the start of the fist occurrence of this recurrence. The base date is used to inject
+     * argument, which indicates the start of the first occurrence of this recurrence. The base date is used to inject
      * default values to return a set of dates in the correct format. For example, if the search start date (start) is
      * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM, the start dates returned should all be at
      * 9:00AM, and not 12:19PM.
@@ -740,13 +713,13 @@ public class Recur<T extends Temporal> implements Serializable {
     public final Stream<T> getDatesAsStream(final T seed, final Temporal periodStart, final Temporal periodEnd,
                                             int maxCount) {
         initRules();
-        Spliterator<T> spliterator = new DateSpliterator(seed, periodStart, periodEnd, maxCount);
+        Spliterator<T> spliterator = new RecurDateSpliterator<>(this, seed, periodStart, periodEnd, maxCount);
         return StreamSupport.stream(spliterator, false);
     }
 
     /**
      * Returns the next date of this recurrence given a seed date
-     * and start date.  The seed date indicates the start of the fist
+     * and start date.  The seed date indicates the start of the first
      * occurrence of this recurrence. The start date is the
      * starting date to search for the next recurrence.  Return null
      * if there is no occurrence date after start date.
@@ -817,7 +790,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @param cal a {@link Temporal} value to increment
      */
-    private T increment(final T cal, int multiplier) {
+    T increment(final T cal, int multiplier) {
         // initialise interval..
         final int calInterval = Math.max(getInterval(), 1) * multiplier;
         //noinspection unchecked
@@ -830,7 +803,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param date  the seed date
      * @return a List of Temporal of the same type as the seed date
      */
-    private List<T> getCandidates(final T rootSeed, final T date) {
+    List<T> getCandidates(final T rootSeed, final T date) {
         List<T> dates = new ArrayList<>();
         dates.add(date);
         if (monthRule != null) {
@@ -942,7 +915,7 @@ public class Recur<T extends Temporal> implements Serializable {
             if (getWeekNoList().isEmpty()) {
                 calIncField = ChronoUnit.YEARS;
             } else {
-                calIncField = weekBasedYears(WeekDay.getDayOfWeek(getWeekStartDay()));
+                calIncField = WeekBasedYears.of(WeekDay.getDayOfWeek(getWeekStartDay()));
             }
         } else {
             throw new IllegalArgumentException("Invalid FREQ rule part '"
@@ -980,51 +953,6 @@ public class Recur<T extends Temporal> implements Serializable {
             setPosRule = new BySetPosRule<T>(setPosList);
         }
 
-    }
-
-    private static TemporalUnit weekBasedYears(DayOfWeek weekStartDay) {
-        WeekFields weekFields;
-        if (weekStartDay == null) {
-            weekFields = WeekFields.of(DayOfWeek.MONDAY, 4);
-        } else {
-            weekFields = WeekFields.of(weekStartDay, 4);
-        }
-        return new TemporalUnit() {
-            @Override
-            public long between(Temporal one, Temporal other) {
-                throw new UnsupportedOperationException();
-            }
-            @Override
-            public <R extends Temporal> R addTo(R one, long other) {
-                TemporalField field = weekFields.weekBasedYear();
-                long newValue = one.get(field) + other;
-                // 'one.with(field, newValue)' would be neater here, but 'with' does not work for
-                // ZonedDateTime as WeekFields' field.adjustInto returns a LocalDate,
-                // so we need to manually 'adjustInto' and use the result as TemporalAdjuster:
-                Temporal result = field.adjustInto(one, newValue);
-                if (TemporalAdjuster.class.isAssignableFrom(result.getClass())) {
-                    return (R) one.with((TemporalAdjuster) result);
-                } else {
-                    return one;
-                }
-            }
-            @Override
-            public boolean isTimeBased() {
-                return false;
-            }
-            @Override
-            public boolean isDateBased() {
-                return true;
-            }
-            @Override
-            public boolean isDurationEstimated() {
-                return true;
-            }
-            @Override
-            public Duration getDuration() {
-                return WeekFields.WEEK_BASED_YEARS.getDuration();
-            }
-        };
     }
 
     /**
@@ -1319,132 +1247,6 @@ public class Recur<T extends Temporal> implements Serializable {
             recur.weekStartDay = weekStartDay;
             recur.validateFrequency();
             return recur;
-        }
-    }
-
-    private class DateSpliterator extends Spliterators.AbstractSpliterator<T> {
-
-        final T seed;
-        final Temporal periodStart;
-        final Temporal periodEnd;
-        final int maxCount;
-
-        int generatedCount;
-
-        T candidateSeed;
-        int incrementMultiplier = 1;
-
-        T lastCandidate = null;
-
-        Iterator<T> candidates = null;
-
-        final HashSet<T> invalidCandidates = new HashSet<>();
-
-        int noCandidateIncrementCount = 0;
-
-        public DateSpliterator(T seed, Temporal periodStart, Temporal periodEnd, int maxCount) {
-            super(maxCount>0 ? maxCount : Long.MAX_VALUE, ORDERED | DISTINCT | NONNULL);
-            this.seed = seed;
-            this.periodStart = periodStart;
-            this.periodEnd = periodEnd;
-            this.maxCount = maxCount;
-
-            generatedCount = 0;
-
-            candidateSeed = seed;
-
-            // optimize the start time for selecting candidates
-            // (only applicable where a COUNT is not specified)
-            if (count == null) {
-                // Use and exponential approach to increment the candidate seed until it's after the period start.
-                T incremented = increment(seed, incrementMultiplier);
-                while (TemporalAdapter.isBefore(incremented, periodStart.minus(Math.max(getInterval(), 1), calIncField))) {
-                    candidateSeed = incremented;
-                    incrementMultiplier *= 2;
-                    if (candidateSeed == null) {
-                        break;
-                    }
-                    incremented = increment(seed, incrementMultiplier);
-                }
-                // Now let's make a binary search between the last candidate seed and the current one to find the optimal candidate seed to start with.
-                int low = Math.max(1, incrementMultiplier / 2); // last before
-                int high = incrementMultiplier; // first after
-                while (low < high) {
-                    int mid = (low + high) / 2;
-                    incremented = increment(seed, mid);
-                    if (TemporalAdapter.isBefore(incremented, periodStart.minus(Math.max(getInterval(), 1), calIncField))) {
-                        candidateSeed  = incremented;
-                        low = mid + 1;
-                    } else {
-                        high = mid;
-                    }
-                }
-                incrementMultiplier = low;
-            }
-        }
-
-        @Override
-        public boolean tryAdvance(Consumer<? super T> action) {
-            boolean advance = maxCount < 0 || generatedCount < maxCount;
-            if (advance) {
-                advance = isWithinEndBoundaries(lastCandidate);
-            }
-
-            if (advance) {
-                // generate new candidate list..
-                while (candidates == null || !candidates.hasNext()) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        throw new RuntimeException("Thread was interrupted during recurrence generation");
-                    }
-
-                    // rootSeed = date used for the seed for the RRule at the
-                    //            start of the first period.
-                    // candidateSeed = date used for the start of
-                    //                 the current period.
-                    candidates = getCandidates(seed, candidateSeed).iterator();
-
-                    if (!candidates.hasNext()) {
-                        noCandidateIncrementCount++;
-                        if (((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) || !isWithinEndBoundaries(candidateSeed)) {
-                            advance = false;
-                            break;
-                        }
-                    } else {
-                        noCandidateIncrementCount = 0;
-                    }
-                    candidateSeed = increment(seed, incrementMultiplier++);
-                }
-            }
-
-            if (advance) {
-                // iterate current candidate list..
-                lastCandidate = candidates.next();
-                // don't count candidates that occur before the seed date..
-                if (!TemporalAdapter.isBefore(lastCandidate, seed)) {
-                    // candidates exclusive of periodEnd..
-                    if (TemporalAdapter.isBefore(lastCandidate, periodStart) || TemporalAdapter.isAfter(lastCandidate, periodEnd)) {
-                        invalidCandidates.add(lastCandidate);
-                    } else if (!TemporalAdapter.isBefore(lastCandidate, periodStart) && !TemporalAdapter.isAfter(lastCandidate, periodEnd)
-                            && (getUntil() == null || !TemporalAdapter.isAfter(lastCandidate, getUntil()))) {
-
-                        generatedCount++;
-                        action.accept(lastCandidate);
-                    }
-                }
-            }
-            return advance;
-        }
-
-        private boolean isWithinEndBoundaries(T candidate) {
-            boolean advance = true;
-            if (getUntil() != null && candidate != null && TemporalAdapter.isAfter(candidate, getUntil())) {
-                advance = false;
-            } else if (periodEnd != null && candidate != null && TemporalAdapter.isAfter(candidate, periodEnd)) {
-                advance = false;
-            } else if (getCount() >= 1 && (generatedCount + invalidCandidates.size()) >= getCount()) {
-                advance = false;
-            }
-            return advance;
         }
     }
 }

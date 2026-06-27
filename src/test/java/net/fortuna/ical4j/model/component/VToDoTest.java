@@ -31,13 +31,19 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.URISyntaxException;
-import java.time.temporal.Temporal;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -46,38 +52,64 @@ import java.time.temporal.Temporal;
  *
  * @author fortuna
  */
-public class VToDoTest<T extends Temporal> extends CalendarComponentTest<T> {
+public class VToDoTest {
 
-    /**
-     * @param testMethod
-     * @param component
-     */
-    public VToDoTest(String testMethod, VToDo component) {
-        super(testMethod, component);
+    @AfterEach
+    void tearDown() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() throws URISyntaxException {
-        TestSuite suite = new TestSuite();
+    @ParameterizedTest(name = "isCalendarComponent")
+    @MethodSource("isCalendarComponentData")
+    public void testIsCalendarComponent(VToDo component) {
+        ComponentTest.assertIsCalendarComponent(component);
+    }
 
-        VToDo td = new VToDo();
-        suite.addTest(new VToDoTest<>("testIsCalendarComponent", td));
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(VToDo component) {
+        ComponentTest.assertValidationException(component);
+    }
 
-        // iCalendar validation
-        suite.addTest(new VToDoTest<>("testValidationException", td));
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(VToDo component) throws ValidationException {
+        ComponentTest.assertValidation(component);
+    }
+
+    @ParameterizedTest(name = "replyValidationException")
+    @MethodSource("replyValidationExceptionData")
+    public void testReplyValidationException(VToDo component) {
+        CalendarComponentTest.assertReplyValidationException(component);
+    }
+
+    @ParameterizedTest(name = "replyValidation")
+    @MethodSource("replyValidationData")
+    public void testReplyValidation(VToDo component) throws ValidationException {
+        CalendarComponentTest.assertReplyValidation(component);
+    }
+
+    static Stream<Arguments> isCalendarComponentData() {
+        return Stream.of(Arguments.of(new VToDo()));
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(Arguments.of(new VToDo()));
+    }
+
+    static Stream<Arguments> validationData() throws URISyntaxException {
         var validTd = (VToDo) new VToDo().withProperty(new Uid("12")).getFluentTarget();
-        suite.addTest(new VToDoTest<>("testValidation", validTd));
+        return Stream.of(Arguments.of(validTd));
+    }
 
-        // iTIP REPLY validation
-        suite.addTest(new VToDoTest<>("testReplyValidationException", new VToDo()));
+    static Stream<Arguments> replyValidationExceptionData() {
+        return Stream.of(Arguments.of(new VToDo()));
+    }
+
+    static Stream<Arguments> replyValidationData() throws URISyntaxException {
         var replyTd = (VToDo) new VToDo().withProperty(new Attendee("mailto:jane@example.com"))
                 .withProperty(new Organizer("mailto:joe@example.com"))
                 .withProperty(new Uid("12")).getFluentTarget();
-        suite.addTest(new VToDoTest<>("testReplyValidation", replyTd));
-
-        return suite;
+        return Stream.of(Arguments.of(replyTd));
     }
-
 }

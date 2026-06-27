@@ -31,8 +31,14 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -41,25 +47,30 @@ import net.fortuna.ical4j.model.ComponentTest;
  *
  * @author fortuna
  */
-public class StandardTest extends ComponentTest {
+public class StandardTest {
 
-    /**
-     * @param component
-     */
-    public StandardTest(String testMethod, Standard component) {
-        super(testMethod, component);
+    @AfterEach
+    void tearDown() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-
-        Standard s = new Standard();
-        suite.addTest(new StandardTest("testIsNotCalendarComponent", s));
-        suite.addTest(new StandardTest("testValidationException", s));
-        return suite;
+    @ParameterizedTest(name = "isNotCalendarComponent")
+    @MethodSource("isNotCalendarComponentData")
+    public void testIsNotCalendarComponent(Standard component) {
+        ComponentTest.assertIsNotCalendarComponent(component);
     }
 
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(Standard component) {
+        ComponentTest.assertValidationException(component);
+    }
+
+    static Stream<Arguments> isNotCalendarComponentData() {
+        return Stream.of(Arguments.of(new Standard()));
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(Arguments.of(new Standard()));
+    }
 }

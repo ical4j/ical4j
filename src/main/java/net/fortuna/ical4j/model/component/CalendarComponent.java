@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.EmptyValidator;
+import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.Validator;
@@ -82,12 +83,26 @@ public abstract class CalendarComponent extends Component {
     }
 
     /**
-     * Performs method-specific ITIP validation.
+     * Performs method-specific ITIP validation. The default implementation reports
+     * that the method is not applicable to this component type as an ERROR-severity
+     * {@link ValidationEntry} on the returned {@link ValidationResult}, rather than
+     * throwing. Subclasses (VEvent, VToDo, VJournal, VFreeBusy, VTimeZone) override
+     * to delegate to {@link net.fortuna.ical4j.validate.ITIPRuleRegistry}.
+     *
      * @param method the applicable method
-     * @throws ValidationException where the component does not comply with RFC2446
+     * @return a {@link ValidationResult} with a single "not applicable" entry by
+     *         default; the empty result if a subclass's rule set passes
+     * @throws ValidationException retained on the signature for binary compatibility;
+     *         the default implementation does not throw
      */
     public ValidationResult validate(Method method) throws ValidationException {
-        throw new ValidationException("Unsupported method: " + method);
+        ValidationResult result = new ValidationResult();
+        String methodValue = method != null ? method.getValue() : "<null>";
+        result.getEntries().add(new ValidationEntry(
+                String.format("Method %s not applicable to component %s", methodValue, getName()),
+                ValidationEntry.Severity.ERROR,
+                getName()));
+        return result;
     }
 
     /**

@@ -31,32 +31,35 @@
  */
 package net.fortuna.ical4j.util;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.Action;
+import org.junit.jupiter.api.Test;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableAction.AUDIO;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * Created: [15/12/2008]
  *
  * @author quillaud
  */
-public class ConstantsTest extends TestCase {
+public class ConstantsTest {
 
-    public void testForPropertyConstant() {
+    @Test
+    void testForPropertyConstant() {
         Property origProp = AUDIO;
         Property resProp = Constants.forProperty(origProp);
-        assertSame("forPropertyConstant", resProp, AUDIO);
+        assertSame(AUDIO, resProp, "forPropertyConstant");
 
         origProp = new Action(AUDIO.getValue());
         resProp = Constants.forProperty(origProp);
-        assertSame("forPropertyConstant", resProp, AUDIO);
+        assertSame(AUDIO, resProp, "forPropertyConstant");
     }
 
-    public void testForPropertyNotConstant() {
+    @Test
+    void testForPropertyNotConstant() {
         Property origProp = new Action("custom");
         Property resProp = Constants.forProperty(origProp);
-        assertSame("forPropertyNotConstant", resProp, origProp);
+        assertSame(origProp, resProp, "forPropertyNotConstant");
     }
 }

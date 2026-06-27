@@ -39,8 +39,14 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 class TemporalComparatorTest extends Specification {
+
+    static final Instant ANCHOR_INSTANT = Instant.parse("2024-06-01T12:00:00Z")
+    static final ZoneId SYDNEY = ZoneId.of("Australia/Sydney")
 
     def 'compare like temporals'() {
         given: 'a comparator instance'
@@ -59,6 +65,8 @@ class TemporalComparatorTest extends Specification {
         LocalDateTime.now() | LocalDateTime.now().minusMinutes(1)           | true
         OffsetDateTime.now() | OffsetDateTime.now() | false
         OffsetDateTime.now() | OffsetDateTime.now().minusMinutes(1) | true
+        ZonedDateTime.now() | ZonedDateTime.now() | false
+        ZonedDateTime.now() | ZonedDateTime.now().minusMinutes(1) | true
     }
 
     def 'compare unlike temporals'() {
@@ -76,5 +84,90 @@ class TemporalComparatorTest extends Specification {
         LocalDate.now()     | LocalDateTime.now().minusDays(1)  | true
         LocalDateTime.now() | Instant.now()           | false
         LocalDateTime.now() | Instant.now().minusSeconds(1)           | true
+    }
+
+    def 'same instant across types compares equal'() {
+        given:
+        TemporalComparator comparator = new TemporalComparator(ZoneOffset.UTC)
+        def instant = ANCHOR_INSTANT
+        def offsetDt = instant.atOffset(ZoneOffset.ofHours(10))
+        def zonedSydney = instant.atZone(SYDNEY)
+        def zonedUtc = instant.atZone(ZoneOffset.UTC)
+        def localDt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
+
+        expect:
+        comparator.compare(a, b) == 0
+        comparator.compare(b, a) == 0
+
+        where:
+        a              | b
+        ANCHOR_INSTANT | ANCHOR_INSTANT.atZone(SYDNEY)
+        ANCHOR_INSTANT | ANCHOR_INSTANT.atOffset(ZoneOffset.ofHours(10))
+        ANCHOR_INSTANT.atZone(SYDNEY) | ANCHOR_INSTANT.atZone(ZoneOffset.UTC)
+        ANCHOR_INSTANT.atOffset(ZoneOffset.ofHours(10)) | ANCHOR_INSTANT.atZone(SYDNEY)
+        LocalDateTime.ofInstant(ANCHOR_INSTANT, ZoneOffset.UTC) | ANCHOR_INSTANT.atZone(ZoneOffset.UTC)
+        LocalDateTime.ofInstant(ANCHOR_INSTANT, ZoneOffset.UTC) | ANCHOR_INSTANT
+    }
+
+    def 'previously broken type pairs no longer throw and return correct sign'() {
+        given:
+        TemporalComparator comparator = new TemporalComparator(ZoneOffset.UTC)
+        def earlier = ANCHOR_INSTANT
+        def laterZdt = ANCHOR_INSTANT.plusSeconds(3600).atZone(SYDNEY)
+        def laterLdt = LocalDateTime.ofInstant(ANCHOR_INSTANT.plusSeconds(3600), ZoneOffset.UTC)
+        def earlierZdt = ANCHOR_INSTANT.atZone(SYDNEY)
+
+        expect: 'Instant earlier than ZonedDateTime -> negative; reverse positive'
+        comparator.compare(earlier, laterZdt) < 0
+        comparator.compare(laterZdt, earlier) > 0
+
+        and: 'LocalDateTime earlier than ZonedDateTime (resolved in UTC) -> negative; reverse positive'
+        comparator.compare(LocalDateTime.ofInstant(earlier, ZoneOffset.UTC), laterZdt) < 0
+        comparator.compare(laterZdt, LocalDateTime.ofInstant(earlier, ZoneOffset.UTC)) > 0
+
+        and: 'OffsetDateTime vs ZonedDateTime ordering by instant'
+        comparator.compare(earlier.atOffset(ZoneOffset.UTC), laterZdt) < 0
+        comparator.compare(laterZdt, earlier.atOffset(ZoneOffset.UTC)) > 0
+
+        and: 'ZonedDateTime vs ZonedDateTime ordering by instant'
+        comparator.compare(earlierZdt, laterZdt) < 0
+        comparator.compare(laterZdt, earlierZdt) > 0
+    }
+
+    def 'compare is sign-antisymmetric for all supported temporal type pairs'() {
+        given:
+        TemporalComparator comparator = new TemporalComparator(ZoneOffset.UTC)
+
+        expect:
+        Integer.signum(comparator.compare(a, b)) == -Integer.signum(comparator.compare(b, a))
+
+        where:
+        [a, b] << pairwise()
+    }
+
+    static List<List<Object>> pairwise() {
+        def instantA = ANCHOR_INSTANT
+        def instantB = ANCHOR_INSTANT.plusSeconds(3600)
+        def offsetA = instantA.atOffset(ZoneOffset.ofHours(10))
+        def offsetB = instantB.atOffset(ZoneOffset.ofHours(-5))
+        def zonedA = instantA.atZone(SYDNEY)
+        def zonedB = instantB.atZone(ZoneOffset.UTC)
+        def localDtA = LocalDateTime.of(2024, 6, 1, 12, 0)
+        def localDtB = LocalDateTime.of(2024, 6, 1, 13, 0)
+        def localDateA = LocalDate.of(2024, 6, 1)
+        def localDateB = LocalDate.of(2024, 6, 2)
+
+        def values = [instantA, instantB, offsetA, offsetB, zonedA, zonedB,
+                      localDtA, localDtB, localDateA, localDateB]
+
+        def pairs = []
+        for (a in values) {
+            for (b in values) {
+                if (!a.is(b)) {
+                    pairs << [a, b]
+                }
+            }
+        }
+        pairs
     }
 }

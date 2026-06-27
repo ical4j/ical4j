@@ -31,8 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -40,57 +45,39 @@ import junit.framework.TestSuite;
  * Created on 16/11/2005
  *
  */
-public class TextListTest extends TestCase {
+public class TextListTest {
 
     private static final String VALUE_RESOURCE_LIST = "projector,laptop,pulpit";
-    
-    private final TextList resources;
-    
-    private int expectedSize;
-    
-    private String expectedToString;
-    
-    /**
-     * @param resources
-     */
-    public TextListTest(TextList resources, int expectedSize) {
-        super("testSize");
-        this.resources = resources;
-        this.expectedSize = expectedSize;
-    }
-    
-    /**
-     * @param resources
-     * @param expectedToString
-     */
-    public TextListTest(TextList resources, String expectedToString) {
-        super("testToString");
-        this.resources = resources;
-        this.expectedToString = expectedToString;
-    }
 
     /**
      * Assert three resourcees parsed from value.
      */
-    public void testSize() {
+    @ParameterizedTest(name = "size [{0}]")
+    @MethodSource("sizeData")
+    public void testSize(TextList resources, int expectedSize) {
         assertEquals(expectedSize, resources.getTexts().size());
     }
-    
+
+    static Stream<Arguments> sizeData() {
+        TextList resources = new TextList(VALUE_RESOURCE_LIST);
+        return Stream.of(
+                Arguments.of(resources, 3)
+        );
+    }
+
     /**
      * Assert toString() produces identical resource list string value.
      */
-    public void testToString() {
+    @ParameterizedTest(name = "toString [{0}]")
+    @MethodSource("toStringData")
+    public void testToString(TextList resources, String expectedToString) {
         assertEquals(expectedToString, resources.toString());
     }
-    
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+
+    static Stream<Arguments> toStringData() {
         TextList resources = new TextList(VALUE_RESOURCE_LIST);
-        suite.addTest(new TextListTest(resources, 3));
-        suite.addTest(new TextListTest(resources, VALUE_RESOURCE_LIST));
-        return suite;
+        return Stream.of(
+                Arguments.of(resources, VALUE_RESOURCE_LIST)
+        );
     }
 }

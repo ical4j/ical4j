@@ -31,92 +31,70 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * $Id$
  *
  * Created on 22/10/2006
  *
- * Unit tests for Property-specific functionality.
+ * Unit tests for Property-specific functionality. Also provides static helper
+ * assertions used by subclass tests (which no longer extend this class after
+ * the JUnit 5 migration).
  * @author Ben Fortuna
  */
-public class PropertyTest extends AbstractPropertyTest {
+public class PropertyTest {
 
-    private final Property property;
+    private static final Logger LOG = LoggerFactory.getLogger(PropertyTest.class);
 
-    private String expectedValue;
-
-    /**
-     * @param property
-     */
-    public PropertyTest(String testMethod, Property property) {
-        super(testMethod);
-        this.property = property;
-    }
-
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public PropertyTest(Property property, String expectedValue) {
-        super("testGetValue");
-        this.property = property;
-        this.expectedValue = expectedValue;
-    }
-
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public PropertyTest(String testMethod, Property property, String expectedValue) {
-        super(testMethod);
-        this.property = property;
-        this.expectedValue = expectedValue;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
     /**
-     * 
+     * Asserts that {@code property}'s {@link Property#getValue() value} matches
+     * {@code expectedValue}.
      */
-    public void testGetValue() {
+    public static void assertGetValue(Property property, String expectedValue) {
         assertEquals(expectedValue, property.getValue());
     }
 
     /**
-     *
+     * Asserts that {@code property}'s {@link Property#toString() toString}
+     * representation matches {@code expectedValue}.
      */
-    public void testToString() {
+    public static void assertToString(Property property, String expectedValue) {
         assertEquals(expectedValue, property.toString());
     }
 
     /**
-     * Test equality of properties.
+     * Asserts that {@code property} equals itself and not equal to a different mock property.
      */
-    public void testEquals() {
+    public static void assertPropertyEquals(Property property) {
         assertEquals(property, property);
 
         @SuppressWarnings("serial")
-		Property notEqual = new Property("notEqual", new ParameterList()) {
+        Property notEqual = new Property("notEqual", new ParameterList()) {
             @Override
             public String getValue() {
                 return "";
@@ -137,14 +115,15 @@ public class PropertyTest extends AbstractPropertyTest {
             }
         };
 
-        assertNotEquals("Properties are equal", property, notEqual);
-        assertNotEquals("Properties are equal", notEqual, property);
+        assertNotEquals(property, notEqual, "Properties are equal");
+        assertNotEquals(notEqual, property, "Properties are equal");
     }
 
     /**
-     * Test deep copy of properties.
+     * Asserts that a deep copy of {@code property} initially equals the original, and
+     * that subsequent mutation of the copy results in inequality.
      */
-    public void testCopy() throws IOException, URISyntaxException {
+    public static void assertCopy(Property property) throws IOException, URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
 
@@ -154,47 +133,48 @@ public class PropertyTest extends AbstractPropertyTest {
     }
 
     /**
-     * @throws ValidationException
+     * Asserts that {@code property} validates successfully.
      */
-    public final void testValidation() throws ValidationException {
+    public static void assertValidation(Property property) throws ValidationException {
         property.validate();
     }
 
     /**
-     * @throws ValidationException
+     * Asserts that {@code property} validates successfully when relaxed validation
+     * is enabled.
      */
-    public final void testRelaxedValidation() throws ValidationException {
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        property.validate();
+    public static void assertRelaxedValidation(Property property) throws ValidationException {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        try {
+            property.validate();
+        } finally {
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+        }
     }
 
     /**
-     * 
+     * Asserts that validating {@code property} either yields a result with errors,
+     * or throws a {@link ValidationException}.
      */
-    public final void testValidationException() {
+    public static void assertValidationException(Property property) {
         try {
             ValidationResult result = property.validate();
-//            fail("Should throw ValidationException");
             assertTrue(result.hasErrors());
-        }
-        catch (ValidationException e) {
-            e.printStackTrace();
+        } catch (ValidationException e) {
+            LOG.debug("Exception caught", e);
         }
     }
 
     /**
-     * @throws IOException
-     * @throws URISyntaxException
-     * @throws ParseException
+     * Asserts that {@code property} is immutable, i.e. mutation operations throw
+     * {@link UnsupportedOperationException}.
      */
     @SuppressWarnings("serial")
-	public void testImmutable() throws IOException, URISyntaxException {
+    public static void assertImmutable(Property property) throws IOException, URISyntaxException {
         try {
             property.setValue("");
             fail("UnsupportedOperationException should be thrown");
-        }
-        catch (UnsupportedOperationException uoe) {
+        } catch (UnsupportedOperationException uoe) {
         }
 
         try {
@@ -205,19 +185,37 @@ public class PropertyTest extends AbstractPropertyTest {
                 }
             });
             fail("UnsupportedOperationException should be thrown");
-        }
-        catch (UnsupportedOperationException uoe) {
+        } catch (UnsupportedOperationException uoe) {
         }
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() throws Exception {
-        TestSuite suite = new TestSuite();
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        assertPropertyEquals(property);
+    }
 
-        @SuppressWarnings("serial")
-		Property property = new Property("name", new ParameterList()) {
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        assertGetValue(property, expectedValue);
+    }
+
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        assertValidation(property);
+    }
+
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(Property property) {
+        assertValidationException(property);
+    }
+
+    @SuppressWarnings("serial")
+    private static Property mockProperty() {
+        return new Property("name", new ParameterList()) {
             @Override
             public String getValue() {
                 return "value";
@@ -237,9 +235,11 @@ public class PropertyTest extends AbstractPropertyTest {
                 return null;
             }
         };
+    }
 
-        @SuppressWarnings("serial")
-		Property invalidProperty = new Property("name", new ParameterList()) {
+    @SuppressWarnings("serial")
+    private static Property mockInvalidProperty() {
+        return new Property("name", new ParameterList()) {
             @Override
             public String getValue() {
                 return "value";
@@ -260,11 +260,29 @@ public class PropertyTest extends AbstractPropertyTest {
                 return null;
             }
         };
-        suite.addTest(new PropertyTest("testEquals", property));
-        suite.addTest(new PropertyTest(property, "value"));
-        suite.addTest(new PropertyTest("testValidation", property));
-        suite.addTest(new PropertyTest("testValidationException", invalidProperty));
+    }
 
-        return suite;
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(mockProperty())
+        );
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(mockProperty(), "value")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(mockProperty())
+        );
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(
+                Arguments.of(mockInvalidProperty())
+        );
     }
 }

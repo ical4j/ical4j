@@ -31,103 +31,68 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.temporal.Temporal;
-import java.util.Set;
-
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.PUBLISH;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REPLY;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
+ * Helper class providing static assertion methods for {@link CalendarComponent} iTIP method
+ * validation tests. After the JUnit 5 migration, calendar component test subclasses no longer
+ * extend this class — they delegate to these static helpers instead.
+ *
  * @author Ben
  */
-public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> {
+public class CalendarComponentTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(CalendarComponentTest.class);
 
-    private final CalendarComponent component;
-
-    /**
-     * @param testMethod
-     * @param component
-     */
-    public CalendarComponentTest(String testMethod, CalendarComponent component) {
-        super(testMethod, component);
-        this.component = component;
+    private CalendarComponentTest() {
+        // helper class — no instances
     }
 
-    /**
-     * @param testMethod
-     * @param component
-     * @param period
-     * @param expectedPeriods
-     */
-    public CalendarComponentTest(String testMethod, CalendarComponent component,
-                                 Period<T> period, Set<Period<T>> expectedPeriods) {
-        super(testMethod, component, period, expectedPeriods);
-        this.component = component;
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
-    }
-
-    /**
-     * Test component iTIP METHOD validation.
-     */
-    public final void testPublishValidation() throws ValidationException {
+    public static void assertPublishValidation(CalendarComponent component) throws ValidationException {
         component.validate(PUBLISH);
     }
 
-    /**
-     * Test component iTIP METHOD validation.
-     */
-    public final void testPublishRelaxedValidation() throws ValidationException {
+    public static void assertPublishRelaxedValidation(CalendarComponent component) throws ValidationException {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        component.validate(PUBLISH);
+        try {
+            component.validate(PUBLISH);
+        } finally {
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+        }
     }
 
-    /**
-     *
-     */
-    public final void testPublishValidationException() {
+    public static void assertPublishValidationException(CalendarComponent component) {
         try {
             ValidationResult result = component.validate(PUBLISH);
-//            fail("ValidationException should be thrown!");
             assertTrue(result.hasErrors());
         } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
     }
 
-    /**
-     * Test component iTIP METHOD validation.
-     */
-    public final void testRequestValidation() throws ValidationException {
+    public static void assertRequestValidation(CalendarComponent component) throws ValidationException {
         component.validate(PUBLISH);
     }
 
-    /**
-     * Test component iTIP METHOD validation.
-     */
-    public final void testRequestRelaxedValidation() throws ValidationException {
+    public static void assertRequestRelaxedValidation(CalendarComponent component) throws ValidationException {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        component.validate(PUBLISH);
+        try {
+            component.validate(PUBLISH);
+        } finally {
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+        }
     }
 
-    /**
-     *
-     */
-    public final void testRequestValidationException() {
+    public static void assertRequestValidationException(CalendarComponent component) {
         try {
             component.validate(PUBLISH);
             fail("ValidationException should be thrown!");
@@ -136,32 +101,25 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
         }
     }
 
-    /**
-     * Test component iTIP METHOD validation.
-     */
-    public final void testReplyValidation() throws ValidationException {
+    public static void assertReplyValidation(CalendarComponent component) throws ValidationException {
         component.validate(REPLY);
     }
 
-    /**
-     * Test component iTIP METHOD validation.
-     */
-    public final void testReplyRelaxedValidation() throws ValidationException {
+    public static void assertReplyRelaxedValidation(CalendarComponent component) throws ValidationException {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        component.validate(REPLY);
+        try {
+            component.validate(REPLY);
+        } finally {
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+        }
     }
 
-    /**
-     *
-     */
-    public final void testReplyValidationException() {
+    public static void assertReplyValidationException(CalendarComponent component) {
         try {
             ValidationResult result = component.validate(REPLY);
-//            fail("ValidationException should be thrown!");
             assertTrue(result.hasErrors());
         } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
     }
-
 }

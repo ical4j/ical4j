@@ -31,10 +31,14 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id: VTimeZoneTest.java [5/07/2004]
@@ -43,31 +47,30 @@ import org.slf4j.LoggerFactory;
  *
  * @author benfortuna
  */
-public class VTimeZoneTest extends ComponentTest {
+public class VTimeZoneTest {
 
-    private final Logger log = LoggerFactory.getLogger(VTimeZoneTest.class);
-
-    private final VTimeZone tz;
-
-    /**
-     * @param testMethod
-     * @param component
-     */
-    public VTimeZoneTest(String testMethod, VTimeZone component) {
-        super(testMethod, component);
-        this.tz = component;
+    @AfterEach
+    void tearDown() {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+    @ParameterizedTest(name = "isCalendarComponent")
+    @MethodSource("isCalendarComponentData")
+    public void testIsCalendarComponent(VTimeZone component) {
+        ComponentTest.assertIsCalendarComponent(component);
+    }
 
-        VTimeZone tz = new VTimeZone();
-        suite.addTest(new VTimeZoneTest("testIsCalendarComponent", tz));
-        suite.addTest(new VTimeZoneTest("testValidationException", tz));
+    @ParameterizedTest(name = "validationException")
+    @MethodSource("validationExceptionData")
+    public void testValidationException(VTimeZone component) {
+        ComponentTest.assertValidationException(component);
+    }
 
-        return suite;
+    static Stream<Arguments> isCalendarComponentData() {
+        return Stream.of(Arguments.of(new VTimeZone()));
+    }
+
+    static Stream<Arguments> validationExceptionData() {
+        return Stream.of(Arguments.of(new VTimeZone()));
     }
 }

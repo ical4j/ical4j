@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.math.BigDecimal;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.math.BigDecimal;
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -44,42 +49,48 @@ import net.fortuna.ical4j.model.PropertyTest;
  * Unit tests for GEO property implementation.
  * @author Ben Fortuna
  */
-public class GeoTest extends PropertyTest {
+public class GeoTest {
 
-    /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public GeoTest(Geo property, String expectedValue) {
-		super(property, expectedValue);
-	}
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public GeoTest(String testMethod, Geo property) {
-		super(testMethod, property);
-	}
-    
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-    	TestSuite suite = new TestSuite();
-    	// Ensure no loss of precision in lattitude/longitude..
-        Geo geo = new Geo("37.386013;-122.082932");
-        suite.addTest(new GeoTest(geo, "37.386013;-122.082932"));
-        
-        //testGeoBigDecimal..
-        BigDecimal latitude = BigDecimal.valueOf(65.35);
-        BigDecimal longitude = BigDecimal.valueOf(22.01);
-        geo = new Geo(latitude, longitude);
-        suite.addTest(new GeoTest(geo, "65.35;22.01"));
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
 
-        suite.addTest(new GeoTest("testValidation", geo));
-        suite.addTest(new GeoTest("testEquals", geo));
-        
-    	return suite;
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    private static Geo bigDecimalGeo() {
+        return new Geo(BigDecimal.valueOf(65.35), BigDecimal.valueOf(22.01));
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                // Ensure no loss of precision in lattitude/longitude..
+                Arguments.of(new Geo("37.386013;-122.082932"), "37.386013;-122.082932"),
+                // testGeoBigDecimal..
+                Arguments.of(bigDecimalGeo(), "65.35;22.01")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(bigDecimalGeo())
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(bigDecimalGeo())
+        );
     }
 }

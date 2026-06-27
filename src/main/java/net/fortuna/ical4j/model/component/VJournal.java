@@ -39,14 +39,10 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.Temporal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
-import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
-import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -113,21 +109,6 @@ public class VJournal extends CalendarComponent implements Prototype<VJournal>, 
 
     private static final long serialVersionUID = -7635140949183238830L;
 
-    private static final Map<Method, Validator<VJournal>> methodValidators = new HashMap<>();
-    static {
-        methodValidators.put(ADD, new ComponentValidator<>(VJOURNAL, new ValidationRule<>(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
-                new ValidationRule<>(None, ATTENDEE, RECURRENCE_ID)));
-        methodValidators.put(CANCEL, new ComponentValidator<>(VJOURNAL, new ValidationRule<>(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, LAST_MODIFIED,
-                        RECURRENCE_ID, STATUS, SUMMARY, URL),
-                new ValidationRule<>(None, REQUEST_STATUS)));
-        methodValidators.put(PUBLISH, new ComponentValidator<>(VJOURNAL, new ValidationRule<>(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
-                new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, RECURRENCE_ID, SEQUENCE, STATUS,
-                        SUMMARY, URL),
-                new ValidationRule<>(None, ATTENDEE)));
-    }
-
     /**
      * Default constructor.
      */
@@ -180,13 +161,7 @@ public class VJournal extends CalendarComponent implements Prototype<VJournal>, 
      */
     @Override
     public ValidationResult validate(Method method) throws ValidationException {
-        final Validator<VJournal> validator = methodValidators.get(method);
-        if (validator != null) {
-            return validator.validate(this);
-        }
-        else {
-            return super.validate(method);
-        }
+        return ITIPRuleRegistry.validate(this, method);
     }
 
     /**

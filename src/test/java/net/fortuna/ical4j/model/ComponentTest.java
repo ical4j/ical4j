@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -42,6 +40,10 @@ import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,109 +52,97 @@ import java.time.LocalDate;
 import java.time.temporal.Temporal;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * $Id$
  *
  * Created on 12/11/2005
  *
- * Unit tests for <code>Component</code> base class.
+ * Unit tests for <code>Component</code> base class. Also provides static helper
+ * assertions used by subclass tests (which no longer extend this class after the
+ * JUnit 5 migration).
  * @author Ben Fortuna
  */
-public class ComponentTest<T extends Temporal> extends TestCase {
+public class ComponentTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComponentTest.class);
 
-    protected Component component;
-    
-    private Period<T> period;
-    
-    private Set<Period<T>> expectedPeriods;
-    
-    /**
-     * @param component
-     */
-    public ComponentTest(String testMethod, Component component) {
-        super(testMethod);
-    	this.component = component;
-    }
-    
-    /**
-     * @param testMethod
-     * @param component
-     * @param period
-     * @param expectedPeriods
-     */
-    public ComponentTest(String testMethod, Component component, Period<T> period, Set<Period<T>> expectedPeriods) {
-        this(testMethod, component);
-        this.period = period;
-        this.expectedPeriods = expectedPeriods;
-    }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
-    
+
     /**
-     * Test whether the component is a calendar component.
+     * Asserts the given component is a {@link CalendarComponent}.
      */
-    public final void testIsCalendarComponent() {
-        assertTrue("Component is not a calendar component", (component instanceof CalendarComponent));
+    public static void assertIsCalendarComponent(Component component) {
+        assertTrue(component instanceof CalendarComponent, "Component is not a calendar component");
     }
-    
+
     /**
-     * Test whether the component is a calendar component.
+     * Asserts the given component is NOT a {@link CalendarComponent}.
      */
-    public final void testIsNotCalendarComponent() {
-        assertFalse("Component is a calendar component", (component instanceof CalendarComponent));
+    public static void assertIsNotCalendarComponent(Component component) {
+        assertFalse(component instanceof CalendarComponent, "Component is a calendar component");
     }
-    
+
     /**
-     * Test component validation.
+     * Asserts the given component validates successfully.
      */
-    public final void testValidation() throws ValidationException {
+    public static void assertValidation(Component component) throws ValidationException {
         component.validate();
     }
-    
+
     /**
-     * Test component validation.
+     * Asserts the given component validates successfully when relaxed validation is enabled.
      */
-    public final void testRelaxedValidation() throws ValidationException {
+    public static void assertRelaxedValidation(Component component) throws ValidationException {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        component.validate();
+        try {
+            component.validate();
+        } finally {
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+        }
     }
-    
+
     /**
-     * 
+     * Asserts that validating the given component either yields a result containing errors,
+     * or throws a {@link ValidationException}.
      */
-    public final void testValidationException() {
+    public static void assertValidationException(Component component) {
         try {
             ValidationResult result = component.validate();
             assertTrue(result.hasErrors());
-//            fail("ValidationException should be thrown!");
-        }
-        catch (ValidationException ve) {
+        } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
     }
-    
-    public void testCalculateRecurrenceSet() {
+
+    /**
+     * Asserts that {@link Component#calculateRecurrenceSet(Period)} returns the expected periods.
+     */
+    public static <T extends Temporal> void assertCalculateRecurrenceSet(
+            Component component, Period<T> period, Set<Period<T>> expectedPeriods) {
         Set<Period<T>> periods = component.calculateRecurrenceSet(period);
-        assertEquals("Wrong number of periods", expectedPeriods.size(), periods.size());
+        assertEquals(expectedPeriods.size(), periods.size(), "Wrong number of periods");
         assertEquals(expectedPeriods, periods);
     }
-    
-    /**
-     * @return
-     */
-    @SuppressWarnings("serial")
-	public static TestSuite suite() throws Exception {
-        TestSuite suite = new TestSuite();
-        
+
+    @ParameterizedTest(name = "calculateRecurrenceSet")
+    @MethodSource("calculateRecurrenceSetData")
+    public <T extends Temporal> void testCalculateRecurrenceSet(Component component, Period<T> period,
+                                                                Set<Period<T>> expectedPeriods) {
+        assertCalculateRecurrenceSet(component, period, expectedPeriods);
+    }
+
+    static Stream<Arguments> calculateRecurrenceSetData() {
+        Stream.Builder<Arguments> rows = Stream.builder();
+
         Component component = new Component("test") {
             @Override
             public ValidationResult validate(boolean recurse) throws ValidationException {
@@ -164,9 +154,9 @@ public class ComponentTest<T extends Temporal> extends TestCase {
                 return null;
             }
         };
-        suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period<>(LocalDate.now(),
+        rows.add(Arguments.of(component, new Period<>(LocalDate.now(),
                 java.time.Period.ofDays(1)), new TreeSet<>()));
-        
+
         component = new Component("test") {
             @Override
             public ValidationResult validate(boolean recurse) throws ValidationException {
@@ -191,7 +181,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         expectedPeriods.add(Period.parse("20080605T100000Z/PT2H"));
         expectedPeriods.add(Period.parse("20080606T100000Z/PT2H"));
         expectedPeriods.add(Period.parse("20080607T100000Z/PT2H"));
-        suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period(TemporalAdapter.parse("20080601T000000Z").getTemporal(),
+        rows.add(Arguments.of(component, new Period(TemporalAdapter.parse("20080601T000000Z").getTemporal(),
                 java.time.Period.ofDays(7)), expectedPeriods));
 
         component = new Component("test") {
@@ -216,8 +206,9 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         expectedPeriods2.add(Period.parse("20080615/P1D"));
         expectedPeriods2.add(Period.parse("20080622/P1D"));
         expectedPeriods2.add(Period.parse("20080629/P1D"));
-        suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period<>((LocalDate) TemporalAdapter.parse("20080601").getTemporal(),
+        rows.add(Arguments.of(component, new Period<>((LocalDate) TemporalAdapter.parse("20080601").getTemporal(),
                 java.time.Period.ofWeeks(6)), expectedPeriods2));
-        return suite;
+
+        return rows.build();
     }
 }

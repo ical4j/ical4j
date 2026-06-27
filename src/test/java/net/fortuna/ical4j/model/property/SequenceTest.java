@@ -31,10 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 /**
  * $Id$
@@ -43,35 +47,41 @@ import net.fortuna.ical4j.model.PropertyTest;
  *
  * @author fortuna
  */
-public class SequenceTest extends PropertyTest {
+public class SequenceTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public SequenceTest(Sequence sequence, String expectedValue) {
-        super(sequence, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public SequenceTest(String testMethod, Sequence property) {
-		super(testMethod, property);
-	}
-
-	/**
-     * @return
-     * @throws ParseException
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        Sequence sequence = new Sequence(5);
-        suite.addTest(new SequenceTest(sequence, "5"));
-        suite.addTest(new SequenceTest("testValidation", sequence));
-        suite.addTest(new SequenceTest("testEquals", sequence));
-        return suite;
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
     }
 
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
+    }
+
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new Sequence(5), "5")
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(new Sequence(5))
+        );
+    }
+
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(new Sequence(5))
+        );
+    }
 }

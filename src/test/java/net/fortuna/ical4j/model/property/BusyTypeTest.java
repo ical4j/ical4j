@@ -31,10 +31,20 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.stream.Stream;
+
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.BUSY;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.BUSY_TENTATIVE;
+import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.BUSY_UNAVAILABLE;
 
 /**
  * $Id$
@@ -43,54 +53,62 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableBusyType.*;
  *
  * @author Ben
  */
-public class BusyTypeTest extends PropertyTest {
+public class BusyTypeTest {
 
-    /**
-     * @param property
-     * @param expectedValue
-     */
-    public BusyTypeTest(BusyType busyType, String expectedValue) {
-        super(busyType, expectedValue);
+    @ParameterizedTest(name = "getValue")
+    @MethodSource("getValueData")
+    public void testGetValue(Property property, String expectedValue) {
+        PropertyTest.assertGetValue(property, expectedValue);
     }
 
-    /**
-     * @param testMethod
-     * @param property
-     */
-    public BusyTypeTest(String testMethod, BusyType property) {
-        super(testMethod, property);
+    @ParameterizedTest(name = "equals")
+    @MethodSource("equalsData")
+    public void testEquals(Property property) {
+        PropertyTest.assertPropertyEquals(property);
     }
 
-    /**
-     * @return
-     */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new BusyTypeTest(new BusyType("value"), "value"));
-        suite.addTest(new BusyTypeTest(BUSY, "BUSY"));
-        suite.addTest(new BusyTypeTest(BUSY_TENTATIVE,
-                "BUSY-TENTATIVE"));
-        suite.addTest(new BusyTypeTest(BUSY_UNAVAILABLE,
-                "BUSY-UNAVAILABLE"));
+    @ParameterizedTest(name = "validation")
+    @MethodSource("validationData")
+    public void testValidation(Property property) throws ValidationException {
+        PropertyTest.assertValidation(property);
+    }
 
-        suite.addTest(new BusyTypeTest("testEquals", BUSY));
-        suite.addTest(new BusyTypeTest("testEquals", BUSY_TENTATIVE));
-        suite
-                .addTest(new BusyTypeTest("testEquals",
-                        BUSY_UNAVAILABLE));
+    @ParameterizedTest(name = "immutable")
+    @MethodSource("immutableData")
+    public void testImmutable(Property property) throws IOException, URISyntaxException {
+        PropertyTest.assertImmutable(property);
+    }
 
-        suite.addTest(new BusyTypeTest("testValidation", BUSY));
-        suite.addTest(new BusyTypeTest("testValidation",
-                BUSY_TENTATIVE));
-        suite.addTest(new BusyTypeTest("testValidation",
-                BUSY_UNAVAILABLE));
+    static Stream<Arguments> getValueData() {
+        return Stream.of(
+                Arguments.of(new BusyType("value"), "value"),
+                Arguments.of(BUSY, "BUSY"),
+                Arguments.of(BUSY_TENTATIVE, "BUSY-TENTATIVE"),
+                Arguments.of(BUSY_UNAVAILABLE, "BUSY-UNAVAILABLE")
+        );
+    }
 
-        suite.addTest(new BusyTypeTest("testImmutable", BUSY));
-        suite
-                .addTest(new BusyTypeTest("testImmutable",
-                        BUSY_TENTATIVE));
-        suite.addTest(new BusyTypeTest("testImmutable",
-                BUSY_UNAVAILABLE));
-        return suite;
+    static Stream<Arguments> equalsData() {
+        return Stream.of(
+                Arguments.of(BUSY),
+                Arguments.of(BUSY_TENTATIVE),
+                Arguments.of(BUSY_UNAVAILABLE)
+        );
+    }
+
+    static Stream<Arguments> validationData() {
+        return Stream.of(
+                Arguments.of(BUSY),
+                Arguments.of(BUSY_TENTATIVE),
+                Arguments.of(BUSY_UNAVAILABLE)
+        );
+    }
+
+    static Stream<Arguments> immutableData() {
+        return Stream.of(
+                Arguments.of(BUSY),
+                Arguments.of(BUSY_TENTATIVE),
+                Arguments.of(BUSY_UNAVAILABLE)
+        );
     }
 }
