@@ -64,8 +64,14 @@ make listApiChanges
 ./gradlew -q currentVersion
 make currentVersion
 
-# Mark next version (for maintainers)
+# Mark next version (for maintainers - optional as will auto-increment)
 make markNextVersion <version>
+
+# Tag and push release
+make release
+
+# Publish release to Maven Central
+make publish
 ```
 
 ## Project Structure

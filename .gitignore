@@ -13,3 +13,7 @@ out/
 **/zoneinfo/**/index.html
 **/zoneinfo-global/**/index.html
 **/.DS_Store
+.claude
+.github/prompts
+.github/skills
+
