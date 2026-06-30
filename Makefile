@@ -55,4 +55,4 @@ release: verify
 	./gradlew release
 
 publish:
-	./gradlew publish
+	./gradlew publishToMavenCentral
