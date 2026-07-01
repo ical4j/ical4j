@@ -16,7 +16,7 @@ buildscript {
 plugins {
     id 'java-library'
     id 'groovy'
-    id 'maven-publish'
+    id 'com.vanniktech.maven.publish' version '0.34.0'
     id 'jacoco'
     id 'signing'
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
@@ -34,9 +34,6 @@ repositories {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-
-    withJavadocJar()
-    withSourcesJar()
 
     registerFeature('caffeineTimezoneCache') {
         usingSourceSet(sourceSets.main)
@@ -242,53 +239,37 @@ ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
 }
 
-publishing {
-    publications {
-        ical4j(MavenPublication) {
-            from components.java
-            pom.withXml {
-                asNode().appendNode('name', project.name)
-                asNode().appendNode('description', project.description)
-                asNode().appendNode('url', 'http://ical4j.github.io')
+// Publishing to the Sonatype Central Portal is configured via the vanniktech plugin.
+// Host, auto-release and signing toggles live in gradle.properties
+// (SONATYPE_HOST, SONATYPE_AUTOMATIC_RELEASE, RELEASE_SIGNING_ENABLED).
+// Credentials and the signing key are supplied via ORG_GRADLE_PROJECT_* env vars in CI.
+mavenPublishing {
+    coordinates(group.toString(), project.name, version.toString())
 
-                def scmNode = asNode().appendNode('scm')
-                scmNode.appendNode('url', 'https://github.com/ical4j/ical4j')
-                scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j.git')
-                scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j.git')
+    pom {
+        name = project.name
+        description = project.description
+        url = 'http://ical4j.github.io'
 
-                def licenseNode = asNode().appendNode('licenses').appendNode('license')
-                licenseNode.appendNode('name', 'BSD-3-Clause')
-                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt')
-                licenseNode.appendNode('distribution', 'repo')
-
-                def developerNode = asNode().appendNode('developers').appendNode('developer')
-                developerNode.appendNode('id', 'fortuna')
-                developerNode.appendNode('name', 'Ben Fortuna')
+        licenses {
+            license {
+                name = 'iCal4j - License'
+                url = 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt'
+                distribution = 'repo'
             }
         }
-    }
 
-    repositories {
-        maven {
-            name = "MavenCentral"
-            url = !isReleaseVersion ? "https://central.sonatype.com/repository/maven-snapshots/" : "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+        developers {
+            developer {
+                id = 'fortuna'
+                name = 'Ben Fortuna'
             }
         }
-//        maven {
-//            name = "GitHubPackages"
-//            url = uri("https://maven.pkg.github.com/ical4j/ical4j")
-//            credentials {
-//                username = System.getenv("GPR_USERNAME")
-//                password = System.getenv("GPR_TOKEN")
-//            }
-//        }
-    }
-}
 
-signing {
-    required { isReleaseVersion }
-    sign publishing.publications.ical4j
+        scm {
+            url = 'https://github.com/ical4j/ical4j'
+            connection = 'scm:git@github.com:ical4j/ical4j.git'
+            developerConnection = 'scm:git@github.com:ical4j/ical4j.git'
+        }
+    }
 }
