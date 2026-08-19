@@ -12,9 +12,11 @@ Volume is not the real cost; **drift** is. Because the copies are independent, t
 | `ical4j-serializer` | 1.13.6 | – | 7.1.0 | 8.4 |
 | `ical4j-template` | 1.20.1 | – | 6.1.0 | 9.2.1 |
 | `ical4j-zoneinfo-outlook` | 1.20.1 | – | 7.1.0 | 9.1.0 |
-| `ical4j-connector` | 1.20.1 | 1.7.0 | 7.1.0 | 8.4 |
-| `ical4j-command` | 1.15.1 | – | 7.1.0 | 9.2.1 |
+| `ical4j-connector` | 1.20.1 | – | 7.1.0 | 8.4 |
+| `ical4j-command` | 1.13.6 | – | 7.1.0 | 9.2.1 |
 | `ical4j-integration` | 1.15.1 | – | 7.1.0 | 8.5 |
+
+> **Survey basis (corrected 2026-07-22).** These figures are committed `HEAD` state. An earlier revision reported `ical4j-command` at axion 1.15.1 and `ical4j-connector` with revapi 1.7.0; both came from uncommitted working-tree changes rather than committed configuration. The drift conclusion is unaffected — if anything the committed spread is wider, since `ical4j-command` sits on axion 1.13.6.
 
 Four Gradle wrapper versions, three bnd versions, an eight-minor-version spread on axion-release. The nine version catalogs have drifted the same way (Groovy 3.0.22/3.0.25, Spock 2.4-M4/2.4-M7, Log4j 2.23.1 through 2.26.0), and CI runs JDK 11, 17 and 21 across repos with no stated rationale. The demonstrated consequence is `standardise-build-publishing`: a security fix and a publishing migration each reached a subset of repos and stalled there.
 

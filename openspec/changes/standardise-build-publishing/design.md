@@ -1,12 +1,12 @@
 ## Context
 
-Nine Gradle repos, surveyed 2026-07-21:
+Nine Gradle repos. Surveyed 2026-07-21 against working trees; **re-derived 2026-07-22 against committed `HEAD`** after the first survey was found to have captured uncommitted work in progress as if it were committed state. The table below is committed state.
 
 | Repo | Publishing mechanism | `SONATYPE_HOST` | Effective release target |
 |---|---|---|---|
 | `ical4j` | vanniktech 0.34.0 | `CENTRAL_PORTAL` | Central Portal ✅ |
 | `ical4j-integration` | vanniktech 0.34.0 | `CENTRAL_PORTAL` | Central Portal ✅ |
-| `ical4j-command` | vanniktech applied **+** legacy `publishing {}` at `:81`, URL at `:110` | *unset* | Ambiguous ⚠️ |
+| `ical4j-command` | `maven-publish` (axion 1.13.6) | – | OSSRH bridge — *vanniktech migration uncommitted in working tree* |
 | `ical4j-vcard` | `maven-publish` | – | OSSRH bridge |
 | `ical4j-serializer` | `maven-publish` | – | OSSRH bridge |
 | `ical4j-template` | `maven-publish` | – | OSSRH bridge |
@@ -67,7 +67,15 @@ This is why the change deliberately does not also converge licence URLs: doing s
 
 ### D5. `ical4j-connector` is per-subproject and is migrated last
 
-Connector applies `maven-publish` inside a `subprojects {}` block across four modules (`api`, `dav`, `google`, `msgraph`), so it is four POM diffs, not one. It is also the only affected repo currently on a feature branch (`feat/complete-msgraph-connector`), so migrating it early risks a painful merge. It goes last.
+Connector applies `maven-publish` inside a `subprojects {}` block across four modules (`api`, `dav`, `google`, `msgraph`), so it is four POM diffs, not one. It is on a feature branch (`feat/complete-msgraph-connector`) with `build.gradle`, `gradle.properties`, `settings.gradle` and `libs.versions.toml` all uncommitted, plus an unreferenced new `ical4j-connector-jpa` module. Migrating it early guarantees a conflict. It goes last, after that work lands.
+
+### D6. Repos with in-flight build-file edits are deferred, not forced
+
+`ical4j-command` and `ical4j-connector` both have uncommitted `build.gradle` changes. `ical4j-command`'s are a vanniktech migration already in progress — the same destination this change specifies, arrived at independently.
+
+Editing those files now would either conflict with that work or silently absorb it into this change, making the POM-diff gate (D4) meaningless: the "before" POM would already contain half the migration.
+
+Therefore: this change does not touch either repo's build files until their in-flight work is committed. For `ical4j-command`, the migration task becomes *review and complete the existing work* rather than *perform the migration*. This is why task 1.4 is a reconciliation step, not an archaeology step.
 
 ## Risks / Trade-offs
 
@@ -82,6 +90,31 @@ Connector applies `maven-publish` inside a `subprojects {}` block across four mo
 
 ## Open Questions
 
-- Does the current axion-release release ship patched BouncyCastle (≥1.84)? Determines whether D2's force blocks are written at all. **Blocks task 1.1 only.**
-- Is `ical4j-command`'s release path actually exercised, or has it not been released since the vanniktech plugin was added? Changes whether its migration is a fix or a cleanup.
+- ~~Does the current axion-release release ship patched BouncyCastle (≥1.84)?~~ **Resolved 2026-07-22 (task 1.1): No.** The latest release, axion-release 1.21.2, still resolves `bcprov-jdk18on:1.82`, `bcpg/bcpkix/bcutil-jdk18on:1.81` on the buildscript classpath — all below the 1.84 that fixes the four advisories. Verified in an isolated scratch build applying only the plugin marker. Consequence: the force blocks in Phase 1 (tasks 2.1–2.8) are required; the "upgrade instead of force" alternative (task 2.9) is **not viable** and is struck. `ical4j` itself is on 1.21.1 and its `-> 1.84` overrides confirm the same native versions.
+- **How do `ical4j-extensions` and `ical4j-serializer` get a patched BouncyCastle?** Discovered during implementation (task 2.11): both run axion-release **1.13.6**, which depends on JGit 5.12 and pulls the legacy `-jdk15on` BouncyCastle family at 1.65 — a different artifact coordinate from the `-jdk18on` family the force targets. The force is inert there. Three options, none free:
+  - **(a) Upgrade axion to ≥1.20.1 in those two repos**, moving them onto `-jdk18on` so the force applies. Correct, but imports version convergence into a change whose Non-goals explicitly defer it to `extract-build-conventions`.
+  - **(b) Additionally force `*-jdk15on`.** The jdk15on line is end-of-life at 1.70 and 1.70 does not clear the advisories this change targets, so this buys little.
+  - **(c) Document and defer** to `extract-build-conventions`, accepting that two repos keep BC 1.65 in the meantime.
+- ~~Is `ical4j-command`'s release path actually exercised?~~ **Resolved 2026-07-22: the premise was a survey error.** At `HEAD` it is a plain `maven-publish` repo on axion 1.13.6; the vanniktech configuration is uncommitted WIP. Note this means `ical4j-command` is a third repo on axion 1.13.6 and so will hit the same `-jdk15on` problem when it is un-deferred.
 - `ical4j-template` and `ical4j-serializer` publish under `org.ical4j` rather than `org.mnode.ical4j`. Out of scope here, but the convention plugin in the follow-up change will need to parameterise group rather than hardcode it.
+
+## Resulting uniform configuration (task 4.5 — input to `extract-build-conventions`)
+
+As of 2026-08-19, seven of nine repos (`ical4j`, `ical4j-integration`, `ical4j-zoneinfo-outlook`, `ical4j-vcard`, `ical4j-extensions`, `ical4j-serializer`, `ical4j-template`) carry this identical configuration; `ical4j-command` and `ical4j-connector` are still deferred on their in-flight work.
+
+**`build.gradle`** — every repo has, verbatim apart from the repo-specific values called out below:
+
+1. The BouncyCastle force block at the top of `buildscript {}` (stays per-repo forever — D2).
+2. `id 'com.vanniktech.maven.publish' version '0.34.0'` in `plugins {}`; no `maven-publish`, no `signing` plugin, no `withJavadocJar()/withSourcesJar()` (vanniktech supplies both jars), no `ext.isReleaseVersion`.
+3. `pl.allegro.tech.build.axion-release` at 1.20.1+ (1.21.1 in `ical4j`).
+4. One `mavenPublishing { coordinates(...); pom { ... } }` block: `name`/`description` from project, `url = 'http://ical4j.github.io'`, licence name `iCal4j - License` + `distribution = 'repo'`, developer `fortuna`/`Ben Fortuna`, scm pointing at the repo's own GitHub coordinates.
+
+**Repo-specific values the convention plugin must parameterise:** group (`org.mnode.ical4j` vs `org.ical4j`), licence URL (`ical4j/master/LICENSE` in ical4j/vcard/serializer/template; own-repo `LICENSE.txt` in extensions/zoneinfo-outlook — deliberately not converged, D4), scm URLs, description, javadoc links, jar manifest title.
+
+**`gradle.properties`** — identical four-line block everywhere: comment naming the `ORG_GRADLE_PROJECT_*` env vars, then `SONATYPE_HOST=CENTRAL_PORTAL`, `SONATYPE_AUTOMATIC_RELEASE=true`, `RELEASE_SIGNING_ENABLED=true`.
+
+**`publish-snapshots.yml`** — identical publish job: checkout with `fetch-depth: 0` (axion needs full history + tags), `./gradlew publishToMavenCentral --no-configuration-cache`, env mapping `ORG_GRADLE_PROJECT_mavenCentralUsername/Password` ← `CENTRAL_PORTAL_USERNAME/PASSWORD` and `ORG_GRADLE_PROJECT_signingInMemoryKey(Password)` ← `GPG_SIGNING_KEY`/`GPG_SIGNING_PASSWORD`.
+
+**Wrapper baseline:** Gradle ≥ 8.5 (vanniktech 0.34.0 hard-requires it; vcard/extensions/serializer were bumped 8.4 → 8.5 for exactly this).
+
+**Operational gap:** the four CI secrets exist only on `ical4j-integration`. Every other repo needs them provisioned (repo-level, or promoted to org level) before its snapshot publish can run.

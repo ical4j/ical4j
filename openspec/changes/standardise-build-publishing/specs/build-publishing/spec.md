@@ -61,6 +61,30 @@ This requirement is satisfied either by forcing the patched version or by applyi
 - **WHEN** `./gradlew buildEnvironment` is run in any ecosystem repo
 - **THEN** every resolved `org.bouncycastle:*-jdk18on` module MUST be at version 1.84 or later
 
+#### Scenario: The check cannot pass vacuously
+
+A repo on axion-release 1.13.6 resolves the legacy `-jdk15on` BouncyCastle family instead, against which a `-jdk18on` force has no effect. The preceding scenario would then pass while the repo carries vulnerable 1.65. This scenario closes that hole.
+
+- **WHEN** `./gradlew buildEnvironment` is run in any ecosystem repo
+- **THEN** at least one `org.bouncycastle:*-jdk18on` module MUST appear on the buildscript classpath
+- **AND** no `org.bouncycastle:*-jdk15on` module may appear on the buildscript classpath
+
+Note: the artifact family is determined by the axion-release version, but no single minimum applies — 1.15.1 already resolves `-jdk18on`, while 1.13.6 does not. The requirement is on the resolved family, not on a version number.
+
+#### Scenario: The axion-release version is compatible with the repo's Gradle version
+
+A separate constraint, discovered alongside the above: axion-release below 1.20.1 calls `Provider.forUseAtConfigurationTime()`, removed in Gradle 9. A repo pairing them fails at configuration time before any task runs.
+
+- **WHEN** a repo's Gradle wrapper is version 9 or later
+- **THEN** the applied axion-release version MUST be 1.20.1 or later
+- **AND** `./gradlew currentVersion` MUST succeed
+
+#### Scenario: Version computation is unaffected by an axion upgrade
+
+- **WHEN** a repo's axion-release version is raised to satisfy the scenario above
+- **THEN** `./gradlew currentVersion` MUST report the same version as before the upgrade
+- **AND** the repo MUST still compile
+
 #### Scenario: Forcing is documented where used
 
 - **WHEN** a repo satisfies this requirement by forcing rather than upgrading

@@ -4,7 +4,9 @@ The nine Gradle repos in the iCal4j ecosystem (`ical4j`, `ical4j-vcard`, `ical4j
 
 **1. A security fix reached exactly one of nine repos.** `ical4j/build.gradle:1-15` forces `org.bouncycastle:*-jdk18on:1.84` onto the buildscript classpath to displace the 1.81/1.82 pulled in by the axion-release plugin, which is affected by GHSA-p93r-85wp-75v3, GHSA-cj8j-37rh-8475, GHSA-c3fc-8qff-9hwx and GHSA-wg6q-6289-32hp. Every other repo also applies axion-release — versions 1.13.6 through 1.21.1 — and none of them carry the force. This is build-time exposure only (the vulnerable classes never enter a published artifact), but it is unmanaged exposure in eight repos.
 
-**2. Publishing has diverged into three incompatible states.** Only `ical4j` and `ical4j-integration` are fully migrated to the Sonatype Central Portal via `com.vanniktech.maven.publish` with `SONATYPE_HOST=CENTRAL_PORTAL` in `gradle.properties`. `ical4j-command` applies the vanniktech plugin *and* retains a legacy `publishing {}` block with a hardcoded OSSRH staging URL and no `SONATYPE_HOST` — a half-migrated state whose effective release target is ambiguous. The remaining six use raw `maven-publish` with POM metadata appended node-by-node as XML. Of those, `ical4j-extensions/build.gradle:146` names `https://central.sonatype.com` as its release repository URL; that is the web portal, not a Maven repository endpoint, so that repo's release publish path is broken.
+**2. Publishing has diverged into two incompatible states.** Only `ical4j` and `ical4j-integration` are migrated to the Sonatype Central Portal via `com.vanniktech.maven.publish` with `SONATYPE_HOST=CENTRAL_PORTAL` in `gradle.properties`. The remaining seven use raw `maven-publish` with POM metadata appended node-by-node as XML. Of those, `ical4j-extensions/build.gradle:146` names `https://central.sonatype.com` as its release repository URL; that is the web portal, not a Maven repository endpoint, so that repo's release publish path is broken.
+
+> **Survey correction (2026-07-22).** An earlier revision of this proposal described `ical4j-command` as "half-migrated, with an ambiguous release target". That was wrong: the survey read working trees, and `ical4j-command`'s vanniktech configuration is **uncommitted work in progress**, not committed state. At `HEAD` it is a plain `maven-publish` repo on axion 1.13.6. The same error affected `ical4j-connector`, whose revapi configuration is likewise uncommitted. All figures in this proposal now reflect committed `HEAD`. See "Interaction with work in progress" below.
 
 Note a correction to an earlier characterisation of this problem: the other five `maven-publish` repos target `https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/`, which is Sonatype's OSSRH compatibility bridge. That bridge is a migration aid, not a dead endpoint — those repos can still publish today. The argument for migrating them is convergence and the eventual retirement of the bridge, not immediate breakage. Only `ical4j-extensions` is broken right now.
 
@@ -15,8 +17,8 @@ This change fixes the two live problems and converges all nine repos on a single
 - Add the BouncyCastle `resolutionStrategy.force` block to the `buildscript` block of the eight repos that lack it, matching `ical4j/build.gradle:1-15` including the explanatory comment.
 - Re-verify whether the current axion-release release ships patched BouncyCastle; if it does, upgrade instead of forcing, and record that outcome.
 - Fix `ical4j-extensions` release URL — the immediate breakage — as an isolated first commit so it can ship ahead of the rest.
-- Migrate the six `maven-publish` repos to `com.vanniktech.maven.publish` 0.34.0, replacing hand-built POM XML nodes with the plugin's `mavenPublishing { pom { … } }` DSL.
-- Resolve `ical4j-command`'s hybrid state by deleting its legacy `publishing {}` block and adding the missing `gradle.properties` keys.
+- Migrate the seven `maven-publish` repos to `com.vanniktech.maven.publish` 0.34.0, replacing hand-built POM XML nodes with the plugin's `mavenPublishing { pom { … } }` DSL.
+- For `ical4j-command`, adopt and finish the migration already in progress in its working tree rather than starting over.
 - Standardise `SONATYPE_HOST=CENTRAL_PORTAL`, `SONATYPE_AUTOMATIC_RELEASE=true` and `RELEASE_SIGNING_ENABLED=true` in every repo's `gradle.properties`.
 - Verify each migrated repo can produce a signed snapshot to the Central Portal before its legacy configuration is deleted.
 
@@ -32,6 +34,26 @@ This change fixes the two live problems and converges all nine repos on a single
 OpenSpec is per-repository, but eight of the nine repos affected here are outside this one. This change is hosted in `ical4j` because it is the ecosystem root and already acts as the coordination point — `ical4j-vcard/.github/workflows/publish-snapshots.yml:15` consumes `ical4j/ical4j/.github/workflows/test.yml@develop`, so cross-repo ownership from here is established practice.
 
 Work in sibling repos SHALL be tracked as tasks here and delivered as one PR per repo. Sibling repos are not required to carry their own copy of this proposal.
+
+## Interaction with work in progress
+
+Eight of the nine repos have uncommitted changes as of 2026-07-22, and two of them are mid-edit in exactly the files this change targets:
+
+| Repo | Uncommitted work | Collides with this change? |
+|---|---|---|
+| `ical4j-command` | `build.gradle` — a vanniktech migration already underway | **Yes** — same file, same goal |
+| `ical4j-connector` | `build.gradle`, `gradle.properties`, `settings.gradle`, `libs.versions.toml`, plus a new `ical4j-connector-jpa` module | **Yes** — build files mid-refactor |
+| `ical4j-extensions` | 19 source files (new strategy classes) | No — `build.gradle` is clean |
+| `ical4j-serializer` | new `activitystream`/`rdf` packages | No |
+| `ical4j-template` | new `.jte` templates | No |
+| `ical4j-vcard`, `ical4j-integration` | `.gitignore` only | No |
+| `ical4j-zoneinfo-outlook` | none — clean | No |
+
+Consequences for execution:
+
+- `ical4j-command` and `ical4j-connector` MUST NOT have their build files edited by this change while that work is outstanding. They are deferred until their in-flight work lands, and `ical4j-command`'s existing migration is adopted rather than duplicated.
+- In the remaining repos, edits are confined to `build.gradle`, which is clean in all of them, so this change's work stays separable from unrelated WIP.
+- Because most repos carry unrelated uncommitted work, edits made by this change SHOULD be left uncommitted for the maintainer to fold into their own commits, rather than committed onto a branch that would strand that WIP.
 
 ## Capabilities
 
