@@ -117,4 +117,4 @@ As of 2026-08-19, seven of nine repos (`ical4j`, `ical4j-integration`, `ical4j-z
 
 **Wrapper baseline:** Gradle ≥ 8.5 (vanniktech 0.34.0 hard-requires it; vcard/extensions/serializer were bumped 8.4 → 8.5 for exactly this).
 
-**Operational gap:** the four CI secrets exist only on `ical4j-integration`. Every other repo needs them provisioned (repo-level, or promoted to org level) before its snapshot publish can run.
+**Operational gap (closed 2026-08-19):** the four CI secrets are now org-level with visibility to all repos; `ical4j-integration` additionally keeps its original repo-level copies, which shadow them.
