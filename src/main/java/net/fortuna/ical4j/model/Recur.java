@@ -841,8 +841,12 @@ public class Recur<T extends Temporal> implements Serializable {
                     && weekNoList.isEmpty() && dayList.isEmpty())) {
 
             List<Integer> implicitMonthDayList = new NumberList(ChronoField.DAY_OF_MONTH.range(), false);
-            // where seed doesn't provide timezone rules derive using system default timezone..
-            implicitMonthDayList.add(new TemporalAdapter<>(rootSeed).toLocalTime().getDayOfMonth());
+            // Prefer exact day from seed; fallback to system default timezone if date fields are unsupported (ex. Instant).
+            if (rootSeed.isSupported(ChronoField.DAY_OF_MONTH)) {
+                implicitMonthDayList.add(rootSeed.get(ChronoField.DAY_OF_MONTH));
+            } else {
+                implicitMonthDayList.add(new TemporalAdapter<>(rootSeed).toLocalTime().getDayOfMonth());
+            }
             ByMonthDayRule<T> implicitRule = new ByMonthDayRule<>(implicitMonthDayList, frequency, skip);
             dates = implicitRule.apply(dates);
         }
