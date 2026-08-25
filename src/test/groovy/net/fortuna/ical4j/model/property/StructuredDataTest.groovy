@@ -142,4 +142,18 @@ END:VCARD\r\n'''
         then: 'result matches expected'
         sd as String == 'STRUCTURED-DATA;VALUE=URI:https://example.com/vcardref.vcf\r\n'
     }
+
+    def 'create structured data for plain text'() {
+        given: 'a raw string of JSON data'
+        def text = '{"flightNumber": "AA123"}'
+
+        when: 'structured data is created using the string constructor'
+        def sd = new StructuredData(text)
+
+        then: 'result matches expected string format with VALUE=TEXT explicitly included'
+        sd as String == 'STRUCTURED-DATA;VALUE=TEXT:{"flightNumber": "AA123"}\r\n'
+
+        and: 'internal value was successfully stored'
+        sd.value == text
+    }
 }
