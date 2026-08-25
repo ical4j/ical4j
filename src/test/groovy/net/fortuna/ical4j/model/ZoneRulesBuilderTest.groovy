@@ -224,4 +224,125 @@ END:VCALENDAR'''
         then:
         noExceptionThrown()
     }
+
+    @Unroll
+    def 'BYDAY ordinal transition rule matches the JDK tzdb: #tzId #month #year'() {
+        given: 'zone rules derived from the bundled VTIMEZONE'
+        def zonerules = new ZoneRulesBuilder()
+                .vTimeZone(timeZoneRegistry.getTimeZone(tzId).getVTimeZone()).build()
+
+        and: 'the transition the JDK tzdb reports for the same zone, month and year'
+        def zoneId = ZoneId.of(tzId)
+        def searchFrom = LocalDate.of(year, month, 1).atStartOfDay(zoneId).toInstant()
+        def expected = zoneId.rules.nextTransition(searchFrom).dateTimeBefore.toLocalDate()
+
+        expect: 'a rule exists for that month'
+        def rule = zonerules.transitionRules.find { it.month == month }
+        rule != null
+
+        and: 'projecting it onto the year yields the same date as the JDK'
+        rule.createTransition(year).dateTimeBefore.toLocalDate() == expected
+
+        where:
+        tzId                  | month              | year
+        // BYDAY=2SU - a positive ordinal greater than one. See issue #902: the ordinal was
+        // passed to ZoneOffsetTransitionRule as a day-of-month, so "second Sunday" was read as
+        // "first Sunday on or after the 2nd" and DST started up to a week early. The result was
+        // only correct in years where 1 March happens to be a Sunday, such as 2026.
+        'America/New_York'    | java.time.Month.MARCH        | 2025
+        'America/New_York'    | java.time.Month.MARCH        | 2026
+        'America/New_York'    | java.time.Month.MARCH        | 2027
+        'America/Chicago'     | java.time.Month.MARCH        | 2025
+        'America/Chicago'     | java.time.Month.MARCH        | 2027
+        'America/Los_Angeles' | java.time.Month.MARCH        | 2028
+        // BYDAY=1SU - a positive ordinal of one, which mapped correctly before the fix too
+        'America/New_York'    | java.time.Month.NOVEMBER     | 2025
+        'America/New_York'    | java.time.Month.NOVEMBER     | 2026
+        // BYDAY=-1SU - a negative ordinal, counted back from the end of the month
+        'Europe/Paris'        | java.time.Month.MARCH        | 2025
+        'Europe/Paris'        | java.time.Month.MARCH        | 2026
+        'Europe/Paris'        | java.time.Month.OCTOBER      | 2025
+        'Europe/Paris'        | java.time.Month.OCTOBER      | 2027
+        'Europe/London'       | java.time.Month.OCTOBER      | 2026
+    }
+
+    @Unroll
+    def 'BYDAY ordinal #byDay maps to day-of-month indicator #expectedIndicator'() {
+        given: 'a VTIMEZONE whose DAYLIGHT observance uses the given BYDAY ordinal'
+        def cal = """BEGIN:VCALENDAR
+BEGIN:VTIMEZONE
+TZID:Test/Ordinal
+BEGIN:DAYLIGHT
+DTSTART:20000312T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=$byDay
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:20001105T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+END:STANDARD
+END:VTIMEZONE
+END:VCALENDAR"""
+
+        when: 'zone rules are built'
+        def calendar = new CalendarBuilder().build(new StringReader(cal))
+        def zonerules = new ZoneRulesBuilder().vTimeZone(calendar.getComponent('VTIMEZONE').get()).build()
+        def march = zonerules.transitionRules.find { it.month == java.time.Month.MARCH }
+
+        then: 'the RFC5545 ordinal is translated to the java.time indicator, keeping the weekday'
+        march.dayOfMonthIndicator == expectedIndicator
+        march.dayOfWeek == DayOfWeek.SUNDAY
+
+        where:
+        byDay   | expectedIndicator
+        '1SU'   | 1
+        '2SU'   | 8
+        '3SU'   | 15
+        '4SU'   | 22
+        '-1SU'  | -1
+        '-2SU'  | -8
+        '-3SU'  | -15
+        '-4SU'  | -22
+        // beyond the fourth week from the end the indicator would leave the -28..31 range that
+        // ZoneOffsetTransitionRule accepts, so it is clamped instead of throwing
+        '-5SU'  | -28
+    }
+
+    def 'BYDAY without an ordinal falls back to BYMONTHDAY or DTSTART'() {
+        given: 'a VTIMEZONE using a plain weekday (no ordinal) in BYDAY'
+        def cal = """BEGIN:VCALENDAR
+BEGIN:VTIMEZONE
+TZID:Test/NoOrdinal
+BEGIN:DAYLIGHT
+DTSTART:20000312T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=SU$byMonthDay
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:20001105T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+END:STANDARD
+END:VTIMEZONE
+END:VCALENDAR"""
+
+        when: 'zone rules are built'
+        def calendar = new CalendarBuilder().build(new StringReader(cal))
+        def zonerules = new ZoneRulesBuilder().vTimeZone(calendar.getComponent('VTIMEZONE').get()).build()
+        def march = zonerules.transitionRules.find { it.month == java.time.Month.MARCH }
+
+        then: 'the ordinal-free weekday is not run through the ordinal mapping'
+        march.dayOfMonthIndicator == expectedIndicator
+        march.dayOfWeek == DayOfWeek.SUNDAY
+
+        where:
+        byMonthDay          | expectedIndicator
+        ''                  | 12      // no BYMONTHDAY - falls back to the DTSTART day
+        ';BYMONTHDAY=8,9,10,11,12,13,14' | 8
+    }
 }
