@@ -888,8 +888,16 @@ public class Recur<T extends Temporal> implements Serializable {
             }
         }
 
+        // Overlapping selectors must not shift BYSETPOS positions or consume COUNT twice.
+        if (dates.size() > 1) {
+            dates = dates.stream().distinct().collect(Collectors.toList());
+        }
         if (setPosRule != null) {
+            // Different positions can select the same occurrence, such as 1 and -1 in a singleton set.
             dates = setPosRule.apply(dates);
+            if (dates.size() > 1) {
+                dates = dates.stream().distinct().collect(Collectors.toList());
+            }
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after SETPOS processing: " + dates);
