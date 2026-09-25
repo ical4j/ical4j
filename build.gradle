@@ -9,6 +9,10 @@ buildscript {
                     'org.bouncycastle:bcpg-jdk18on:1.85',
                     'org.bouncycastle:bcpkix-jdk18on:1.85',
                     'org.bouncycastle:bcutil-jdk18on:1.85'
+            // The revapi plugin (at its latest, 2.3.0) declares FreeMarker 2.3.34, affected by
+            // GHSA-27j2-h3m2-8237. Force the patched version until the plugin ships it.
+            // Build-time only; not part of the published ical4j artifact.
+            force 'org.freemarker:freemarker:2.3.35'
         }
     }
 }
@@ -21,7 +25,7 @@ plugins {
     id 'signing'
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
     id "pl.allegro.tech.build.axion-release" version "1.21.1" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
-    id "com.palantir.revapi" version "2.0.0"
+    id "com.palantir.revapi" version "2.3.0"
 //    id "net.ltgt.errorprone" version "2.0.2" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
 }
