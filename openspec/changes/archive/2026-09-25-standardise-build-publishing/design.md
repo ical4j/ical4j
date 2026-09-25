@@ -100,7 +100,7 @@ Therefore: this change does not touch either repo's build files until their in-f
 
 ## Resulting uniform configuration (task 4.5 — input to `extract-build-conventions`)
 
-As of 2026-08-19, seven of nine repos (`ical4j`, `ical4j-integration`, `ical4j-zoneinfo-outlook`, `ical4j-vcard`, `ical4j-extensions`, `ical4j-serializer`, `ical4j-template`) carry this identical configuration; `ical4j-command` and `ical4j-connector` are still deferred on their in-flight work.
+As of 2026-09-25, all nine repos carry this identical configuration (`ical4j-command` joined 2026-08-20; `ical4j-connector` 2026-09-25). Multi-module repos (`ical4j-command`, `ical4j-connector`, `ical4j-integration`) apply vanniktech `apply false` at the root and inside `configure(subprojects)`, with the `mavenPublishing` block per subproject.
 
 **`build.gradle`** — every repo has, verbatim apart from the repo-specific values called out below:
 
