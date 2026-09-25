@@ -1,5 +1,5 @@
 buildscript {
-    // The axion-release plugin (at its latest, 1.21.1) pulls Bouncy Castle 1.81/1.82 onto the
+    // The axion-release plugin (at its latest, 1.21.2) pulls Bouncy Castle 1.81/1.82 onto the
     // plugin classpath, below the 1.84 that fixes GHSA-p93r-85wp-75v3, -cj8j-37rh-8475,
     // -c3fc-8qff-9hwx and -wg6q-6289-32hp. Force the patched version until axion-release ships it.
     // Build-time only; not part of the published ical4j artifact.
