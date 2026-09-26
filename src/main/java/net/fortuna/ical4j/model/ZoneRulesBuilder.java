@@ -194,10 +194,12 @@ public class ZoneRulesBuilder {
                 int dayOfMonth;
                 java.time.DayOfWeek dayOfWeek;
                 if (!recur.getDayList().isEmpty()) {
-                    dayOfMonth = recur.getDayList().get(0).getOffset();
-                    if (dayOfMonth == 0) {
+                    int ordinal = recur.getDayList().get(0).getOffset();
+                    if (ordinal == 0) {
                         dayOfMonth = recur.getMonthDayList().isEmpty()
                                 ? startDate.getDate().getDayOfMonth() : recur.getMonthDayList().get(0);
+                    } else {
+                        dayOfMonth = dayOfMonthIndicator(ordinal);
                     }
                     dayOfWeek = WeekDay.getDayOfWeek(recur.getDayList().get(0));
                 } else if (!recur.getMonthDayList().isEmpty()) {
@@ -218,6 +220,37 @@ public class ZoneRulesBuilder {
         //  Note the order of the list is significant!
         transitionRules.sort(Comparator.comparing(ZoneOffsetTransitionRule::getMonth));
         return transitionRules;
+    }
+
+    /**
+     * Translates an RFC5545 BYDAY ordinal (the {@code 2} in {@code 2SU}) to the day-of-month
+     * indicator expected by {@link ZoneOffsetTransitionRule#of}.
+     * <p>
+     * When that factory is given a non-null day-of-week the indicator is not an ordinal. A positive
+     * value selects the first matching weekday on or after that day-of-month; a negative value is
+     * counted back from the end of the month, where {@code -1} is the last day, and selects the last
+     * matching weekday on or before it. Passing the ordinal through unchanged therefore reads
+     * {@code 2SU} as "the first Sunday on or after the 2nd", which can be a week early.
+     * <p>
+     * The nth weekday from the start of a month always falls within {@code [(n-1)*7+1, (n-1)*7+7]},
+     * so anchoring at {@code (n-1)*7+1} selects exactly the nth. By symmetry the nth weekday from the
+     * end always falls within the seven days ending at {@code -((n-1)*7+1)}, so anchoring there
+     * selects exactly the nth from the end. {@code -1} maps to itself, which is why zones using
+     * {@code -1SU} were unaffected.
+     * <p>
+     * Ordinals past the fourth week ({@code 5SU}, {@code -5SU}) are clamped to {@code 28} and
+     * {@code -28}. Those anchors pick the last or first matching weekday that still exists in every
+     * month, including a 28-day February, so {@link ZoneOffsetTransitionRule#createTransition} never
+     * throws. Where a month has no fifth weekday this approximates it rather than failing.
+     *
+     * @param ordinal a non-zero BYDAY ordinal
+     * @return the equivalent day-of-month indicator
+     */
+    private static int dayOfMonthIndicator(int ordinal) {
+        int indicator = ordinal > 0 ? (ordinal - 1) * 7 + 1 : (ordinal + 1) * 7 - 1;
+        // past the fourth week (5SU, -5SU) clamp to +-28: -28 is the lowest indicator
+        // ZoneOffsetTransitionRule accepts, and 29 would not exist in a 28-day February
+        return Math.max(-28, Math.min(28, indicator));
     }
 
     public ZoneRules build() throws ConstraintViolationException {
