@@ -8,7 +8,7 @@
 
 - [x] 2.1 `ZoneRulesBuilderTest`: indicator rows for `1SU..4SU` and `-1SU..-4SU`. **In #904.**
 - [x] 2.2 US/Canada March `2SU` transitions match tzdb, including a year where March 1 is not a Sunday. **In #904: New York 2025/2026/2027, Chicago 2025/2027, Los Angeles 2028.**
-- [ ] 2.3 Add `BYMONTH=2;BYDAY=5SU` and `-5SU`, and assert `ZoneRules` build and yield transitions for a non-leap year without throwing. **`5SU` done in #904 (2026 → 1 March, 2021 → 28 Feb). Outstanding: a `-5SU` February build test (only the `-5SU → -28` indicator row exists).**
+- [x] 2.3 Add `BYMONTH=2;BYDAY=5SU` and `-5SU`, and assert `ZoneRules` build and yield transitions for a non-leap year without throwing. **`5SU` done in #904 (2026 → 1 March, 2021 → 28 Feb). `-5SU` added in #909: 2027 → 31 Jan (previous month), 2026 → 1 Feb (fourth-from-last), 2032 → 1 Feb (exact); also `5SU` 2032 → 29 Feb (exact). All three `-5SU` rows fail with the lower clamp loosened to -29.**
 - [x] 2.4 Add a positive-ordinal February case, e.g. `BYMONTH=2;BYDAY=2SU`. **In #904 (`2SU` 2024/2025, `4SU` 2026).**
 - [x] 2.5 Confirm the plain-`BYDAY` + `BYMONTHDAY` fallback case is still covered. **`BYDAY without an ordinal falls back to BYMONTHDAY or DTSTART`.**
 

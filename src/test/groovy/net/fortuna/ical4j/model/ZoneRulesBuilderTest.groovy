@@ -352,6 +352,14 @@ END:VCALENDAR"""
         // Sunday on or after the 28th
         '5SU' | 2026 | LocalDate.of(2026, 3, 1)
         '5SU' | 2021 | LocalDate.of(2021, 2, 28)
+        // leap-year February 2032 has five Sundays, so the clamp selects the fifth exactly
+        '5SU' | 2032 | LocalDate.of(2032, 2, 29)
+        // in a 28-day February -28 anchors on the 1st; with no fifth-from-last Sunday it takes the
+        // last Sunday on or before the 1st, which is in January when the 1st is not a Sunday
+        '-5SU' | 2027 | LocalDate.of(2027, 1, 31)
+        '-5SU' | 2026 | LocalDate.of(2026, 2, 1)
+        // in 2032 the fifth-from-last Sunday exists and is selected exactly
+        '-5SU' | 2032 | LocalDate.of(2032, 2, 1)
     }
 
     def 'BYDAY without an ordinal falls back to BYMONTHDAY or DTSTART'() {
