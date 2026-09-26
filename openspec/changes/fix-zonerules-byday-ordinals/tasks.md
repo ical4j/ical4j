@@ -16,4 +16,4 @@
 
 - [x] 3.1 CI runs on #904 (needs maintainer approval for a first-time contributor) and passes. **Runs approved; build/CodeQL green; merged 2026-09-26.**
 - [x] 3.2 `./gradlew test --tests '*ZoneRules*' --tests '*VTimeZone*' --tests '*TimeZone*'` passes. **Passes on develop + this PR's javadoc fix (2026-09-26).**
-- [ ] 3.3 `openspec validate fix-zonerules-byday-ordinals --strict`.
+- [x] 3.3 `openspec validate fix-zonerules-byday-ordinals --strict`. **Valid (2026-09-27).**
