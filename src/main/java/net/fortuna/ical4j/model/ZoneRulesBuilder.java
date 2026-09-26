@@ -239,9 +239,11 @@ public class ZoneRulesBuilder {
      * {@code -1SU} were unaffected.
      * <p>
      * Ordinals past the fourth week ({@code 5SU}, {@code -5SU}) are clamped to {@code 28} and
-     * {@code -28}. Those anchors pick the last or first matching weekday that still exists in every
-     * month, including a 28-day February, so {@link ZoneOffsetTransitionRule#createTransition} never
-     * throws. Where a month has no fifth weekday this approximates it rather than failing.
+     * {@code -28}, days that exist in every month, including a 28-day February, so
+     * {@link ZoneOffsetTransitionRule#createTransition} never throws. When the month has a fifth such
+     * weekday these anchors select it exactly. When it does not, the result is an approximation: it
+     * falls on the fourth weekday or in the adjacent month (for example {@code 5SU} in February 2026
+     * resolves to 1 March).
      *
      * @param ordinal a non-zero BYDAY ordinal
      * @return the equivalent day-of-month indicator
