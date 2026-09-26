@@ -84,7 +84,7 @@ public class StructuredData extends Property implements Encodable {
      * @param aValue a value string for this component
      */
     public StructuredData(final String aValue) {
-        super(STRUCTURED_DATA, new ParameterList());
+        super(STRUCTURED_DATA, new ParameterList(Collections.singletonList(Value.TEXT)));
         setValue(aValue);
     }
 

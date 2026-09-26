@@ -56,6 +56,37 @@ class RecurSpec extends Specification {
     }
 
     @Unroll
+    def 'duplicate candidates do not consume count positions: #repeated'() {
+        given:
+        def seed = OffsetDateTime.parse('2008-01-15T09:00:00Z')
+        def end = seed.plusYears(20)
+        def expected = new Recur<OffsetDateTime>("${canonical};COUNT=12").getDates(seed, end)
+        def recur = new Recur<OffsetDateTime>("${repeated};COUNT=12")
+
+        expect:
+        expected.size() == 12
+        recur.getDates(seed, end) == expected
+        recur.getNextDate(seed, expected[-2]) == expected.last()
+        recur.getNextDate(seed, expected.last()) == null
+
+        where:
+        canonical                                      | repeated
+        'FREQ=WEEKLY;BYDAY=TU,TH'                       | 'FREQ=WEEKLY;BYDAY=TU,TH,TU'
+        'FREQ=MONTHLY;BYDAY=TU'                         | 'FREQ=MONTHLY;BYDAY=TU,1TU'
+        'FREQ=MONTHLY;BYMONTHDAY=1,15'                   | 'FREQ=MONTHLY;BYMONTHDAY=1,1,15'
+        'FREQ=YEARLY;BYMONTH=1,2'                       | 'FREQ=YEARLY;BYMONTH=1,1,2'
+        'FREQ=YEARLY;BYWEEKNO=3;BYDAY=TU'               | 'FREQ=YEARLY;BYWEEKNO=3,3;BYDAY=TU'
+        'FREQ=YEARLY;BYYEARDAY=15,16'                   | 'FREQ=YEARLY;BYYEARDAY=15,15,16'
+        'FREQ=DAILY;BYHOUR=9,10'                        | 'FREQ=DAILY;BYHOUR=9,9,10'
+        'FREQ=HOURLY;BYMINUTE=0,15'                     | 'FREQ=HOURLY;BYMINUTE=0,0,15'
+        'FREQ=MINUTELY;BYSECOND=0,15'                   | 'FREQ=MINUTELY;BYSECOND=0,0,15'
+        'FREQ=WEEKLY;BYDAY=TU,TH;BYSETPOS=2'            | 'FREQ=WEEKLY;BYDAY=TU,TH,TU;BYSETPOS=2'
+        'FREQ=WEEKLY;BYDAY=TU,TH;BYSETPOS=-2'           | 'FREQ=WEEKLY;BYDAY=TU,TH,TH;BYSETPOS=-2'
+        'FREQ=WEEKLY;BYDAY=TU,TH;BYSETPOS=1,2'          | 'FREQ=WEEKLY;BYDAY=TU,TH;BYSETPOS=1,1,2'
+        'FREQ=WEEKLY;BYDAY=TU,TH;BYSETPOS=1'            | 'FREQ=WEEKLY;BYDAY=TU,TH;BYSETPOS=1,-2'
+    }
+
+    @Unroll
     def 'verify recurrence rule: #rule'() {
         setup: 'parse recurrence rule'
         def recur = new Recur(rule)
@@ -634,5 +665,29 @@ class RecurSpec extends Specification {
                 "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5",
                 "freq=YEARLY;BYWEEKNO=20;BYDAY=MO"
         ]
+    }
+
+    @Unroll
+    def 'verify yearly recurrence with UTC start date in system timezone: #systemTimezone'() {
+        setup: 'override platform default timezone'
+        def originalTimezone = java.util.TimeZone.getDefault()
+        java.util.TimeZone.setDefault(TimeZone.getTimeZone(systemTimezone))
+
+        and: 'parse recurrence rule and UTC start date'
+        def recur = new Recur("FREQ=YEARLY;INTERVAL=1")
+        def startDate = TemporalAdapter.parse("20250302T000000Z").temporal
+        def rangeStart = TemporalAdapter.parse("20250101T000000Z").temporal
+        def rangeEnd = TemporalAdapter.parse("20251231T000000Z").temporal
+
+        expect:
+        def dates = recur.getDates(startDate, rangeStart, rangeEnd)
+        dates.size() == 1
+        dates[0] == startDate
+
+        cleanup:
+        java.util.TimeZone.setDefault(originalTimezone)
+
+        where:
+        systemTimezone << ['UTC', 'America/New_York', 'America/Los_Angeles', 'Asia/Kolkata']
     }
 }

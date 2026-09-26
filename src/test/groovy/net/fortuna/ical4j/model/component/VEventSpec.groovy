@@ -46,6 +46,29 @@ class VEventSpec extends Specification {
 	
 	ContentBuilder builder = new ContentBuilder()
 
+	def 'repeated weekdays preserve the full event recurrence set'() {
+		given:
+		def text = [
+				'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Recurrence test//EN',
+				'BEGIN:VEVENT', 'UID:repeated-weekdays', 'DTSTAMP:20080101T000000Z',
+				'DTSTART:20080115T090000Z', 'RRULE:FREQ=WEEKLY;COUNT=12;BYDAY=TU,TH,TU',
+				'END:VEVENT', 'END:VCALENDAR', ''
+		].join('\r\n')
+		VEvent event = new CalendarBuilder().build(new StringReader(text)).components[0]
+		def period = new Period(OffsetDateTime.parse('2008-01-01T00:00:00Z'),
+				OffsetDateTime.parse('2009-01-01T00:00:00Z'))
+
+		when:
+		def starts = event.calculateRecurrenceSet(period).collect { it.start }.sort()
+
+		then:
+		starts == ['2008-01-15', '2008-01-17', '2008-01-22', '2008-01-24',
+				'2008-01-29', '2008-01-31', '2008-02-05', '2008-02-07',
+				'2008-02-12', '2008-02-14', '2008-02-19', '2008-02-21'].collect {
+			OffsetDateTime.parse("${it}T09:00:00Z")
+		}
+	}
+
 	def 'build event with location'() {
 		setup:
 		def calendar = builder.calendar {
