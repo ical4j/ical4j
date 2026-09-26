@@ -309,6 +309,49 @@ END:VCALENDAR"""
         // beyond the fourth week from the end the indicator would leave the -28..31 range that
         // ZoneOffsetTransitionRule accepts, so it is clamped instead of throwing
         '-5SU'  | -28
+        // 29 would not exist in a 28-day February, so the positive side is clamped too
+        '5SU'   | 28
+    }
+
+    @Unroll
+    def 'BYDAY ordinal #byDay in February builds a rule that works in #year'() {
+        given: 'a VTIMEZONE whose DAYLIGHT observance falls in February'
+        def cal = """BEGIN:VCALENDAR
+BEGIN:VTIMEZONE
+TZID:Test/February
+BEGIN:DAYLIGHT
+DTSTART:20000213T020000
+RRULE:FREQ=YEARLY;BYMONTH=2;BYDAY=$byDay
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:20001105T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+END:STANDARD
+END:VTIMEZONE
+END:VCALENDAR"""
+
+        when: 'zone rules are built and the February rule is projected onto the year'
+        def calendar = new CalendarBuilder().build(new StringReader(cal))
+        def zonerules = new ZoneRulesBuilder().vTimeZone(calendar.getComponent('VTIMEZONE').get()).build()
+        def february = zonerules.transitionRules.find { it.month == java.time.Month.FEBRUARY }
+        def date = february.createTransition(year).dateTimeBefore.toLocalDate()
+
+        then: 'the transition lands on the expected Sunday instead of throwing'
+        date == expected
+
+        where:
+        byDay | year | expected
+        '2SU' | 2025 | LocalDate.of(2025, 2, 9)
+        '2SU' | 2024 | LocalDate.of(2024, 2, 11)
+        '4SU' | 2026 | LocalDate.of(2026, 2, 22)
+        // 2026 has no fifth Sunday in February and no 29th; the clamp picks the first
+        // Sunday on or after the 28th
+        '5SU' | 2026 | LocalDate.of(2026, 3, 1)
+        '5SU' | 2021 | LocalDate.of(2021, 2, 28)
     }
 
     def 'BYDAY without an ordinal falls back to BYMONTHDAY or DTSTART'() {
