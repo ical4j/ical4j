@@ -38,4 +38,4 @@
 
 - [x] 7.1 `./gradlew check` passes (tests + revapi). The new accessors should be non-breaking; record any RevAPI finding. **Passed; RevAPI flagged nothing.**
 - [x] 7.2 `openspec validate unresolvable-tzid-value-access --strict`.
-- [ ] 7.3 After merge, comment on #889 (and re-check #452's scenario) and close them, noting the strict-mode behaviour change for `getValue()`/`toString()`.
+- [x] 7.3 After merge, comment on #889 (and re-check #452's scenario) and close them, noting the strict-mode behaviour change for `getValue()`/`toString()`. **Done 2026-09-27: #917 merged (`becb0d840`); #889 and #452 commented and closed as completed. #452 re-checked on develop: `Central Europe Standard Time` resolves via the Windows alias table (→ Europe/Budapest), typed and textual access both work.**
