@@ -57,6 +57,20 @@ import java.util.regex.Pattern;
  * <p/>
  * The default implementation of a <code>TimeZoneRegistry</code>. This implementation will search the classpath for
  * applicable VTimeZone definitions used to back the provided TimeZone instances.
+ * <p>
+ * Each registered definition normally gets {@link java.time.zone.ZoneRules} built from its own observances and
+ * a synthetic zone id resolved by {@link ZoneRulesProviderImpl}, so date-times follow that definition exactly.
+ * <p>
+ * <b>Fallback mode.</b> Some platforms do not allow a custom {@link java.time.zone.ZoneRulesProvider} to be
+ * installed. Android, for example, blocks its constructor and
+ * {@link java.time.zone.ZoneRulesProvider#registerProvider} as hidden APIs. There
+ * ({@link ZoneRulesProviderImpl#isAvailable()} is false) definitions are still registered and returned by
+ * {@link #getTimeZone(String)}, but no zone rules are built from them. Instead a TZID resolves as if no definition
+ * were registered, via {@link TimeZoneRegistry#getGlobalZoneId(String)}: an Olson id directly, or a name mapped by
+ * the timezone alias tables, including Microsoft/Windows zone names. <em>A definition's own rules are therefore
+ * not applied in fallback mode</em>; a VTIMEZONE whose rules differ from the platform zone of the same name uses the
+ * platform's rules. A TZID with no platform equivalent is handled like any unresolvable TZID: an exception, or
+ * the TZID is ignored under relaxed validation.
  *
  * @author Ben Fortuna
  */
@@ -110,6 +124,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private final boolean lenientTzResolution;
 
+    private final boolean zoneRulesProviderAvailable;
+
     /**
      * Default constructor.
      */
@@ -127,11 +143,21 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     }
 
     public TimeZoneRegistryImpl(final String resourcePrefix, boolean lenientTzResolution) {
+        this(resourcePrefix, lenientTzResolution, ZoneRulesProviderImpl.isAvailable());
+    }
+
+    /**
+     * @param zoneRulesProviderAvailable false to run in fallback mode, as on a platform where the custom
+     *                                   {@link java.time.zone.ZoneRulesProvider} cannot be installed
+     */
+    TimeZoneRegistryImpl(final String resourcePrefix, boolean lenientTzResolution,
+                         boolean zoneRulesProviderAvailable) {
         this.timeZoneLoader = TimeZoneLoader.getInstance(resourcePrefix);
         timezones = new ConcurrentHashMap<>();
         zoneRules = new ConcurrentHashMap<>();
         zoneIds = new HashMap<>();
         this.lenientTzResolution = lenientTzResolution;
+        this.zoneRulesProviderAvailable = zoneRulesProviderAvailable;
     }
 
     /**
@@ -160,10 +186,16 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             timezones.put(timezone.getID(), timezone);
         }
 
+        if (!zoneRulesProviderAvailable) {
+            // fallback mode: no provider can resolve a synthetic zone id, so keep the definition only and
+            // let TZIDs resolve to platform zones via TimeZoneRegistry.getGlobalZoneId
+            return;
+        }
+
         // use latest timezone definition to build zone rules..
         var newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
                 .build();
-        var globalId = ZoneRulesProviderImpl.INSTANCE.getZoneIdPool().allocate(this);
+        var globalId = ZoneRulesProviderImpl.getInstance().orElseThrow().getZoneIdPool().allocate(this);
         zoneIds.put(globalId, timezone.getID());
         zoneRules.put(globalId, newZoneRules);
     }
@@ -231,6 +263,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     @Override
     public ZoneId getZoneId(String tzId) {
+        if (!zoneRulesProviderAvailable) {
+            return TimeZoneRegistry.getGlobalZoneId(tzId);
+        }
         return ZoneId.of(zoneIds.entrySet().stream().filter(entry -> entry.getValue().equals(tzId))
                 .findFirst().orElseThrow(() -> new DateTimeException(String.format("Unknown timezone identifier [%s]", tzId))).getKey(),
                 TimeZoneRegistry.ZONE_ALIASES);
