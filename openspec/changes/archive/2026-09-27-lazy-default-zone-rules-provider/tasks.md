@@ -48,4 +48,4 @@
 - [x] 7.1 `./gradlew check` passes (tests + RevAPI). Removing the `provides` clause and services file isn't a Java API change; record any RevAPI finding. **Passed against both the configured baseline (4.1.1) and 4.3.0; no findings.**
 - [x] 7.2 Manual: `java -XX:FlightRecorderOptions=repository=<dir> -cp build/libs/ical4j-*.jar -version` starts normally.
 - [x] 7.3 `openspec validate lazy-default-zone-rules-provider --strict`.
-- [ ] 7.4 After merge: comment on #808 with the fix and the snapshot version, mention the `jcmd JFR.configure` workaround for older versions, then close it.
+- [x] 7.4 After merge: comment on #808 with the fix and the snapshot version, mention the `jcmd JFR.configure` workaround for older versions, then close it. **Done 2026-09-27: #921 merged (`ea5c2a8cc`). GitHub auto-closed #808 on merge; the comment (fix, published-snapshot verification under the JFR option, `jcmd JFR.configure` workaround) was posted afterwards.**
