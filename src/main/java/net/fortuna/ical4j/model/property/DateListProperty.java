@@ -34,9 +34,14 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationEntry;
+import net.fortuna.ical4j.validate.ValidationResult;
 
+import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -119,9 +124,20 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     public final List<T> getDates() {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
+            ZoneId zoneId;
+            try {
+                zoneId = tzId.get().toZoneId(timeZoneRegistry);
+            } catch (DateTimeException e) {
+                // TZID resolved to no known zone. Under relaxed validation the values have been parsed as floating
+                // date-times (see TemporalAdapter#getTemporal); return them and ignore the TZID.
+                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+                    return dates.getDates();
+                }
+                throw e;
+            }
             //xxx: type T should always be ZonedDateTime where TZID parameter is specified..
-            return dates.getDates().stream().map(date -> (T) TemporalAdapter.toLocalTime(
-                    date, tzId.get().toZoneId(timeZoneRegistry))).collect(Collectors.toList());
+            return dates.getDates().stream().map(date -> (T) TemporalAdapter.toLocalTime(date, zoneId))
+                    .collect(Collectors.toList());
         } else {
             return dates.getDates();
         }
@@ -149,10 +165,46 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     public String getValue() {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
-            return dates.toString(tzId.get().toZoneId(timeZoneRegistry));
+            ZoneId zoneId;
+            try {
+                zoneId = tzId.get().toZoneId(timeZoneRegistry);
+            } catch (DateTimeException e) {
+                // TZID resolved to no known zone: emit the values as parsed rather than fail, in every mode, so a
+                // calendar that parsed can always be written back. Typed access (getDates) and validate() still
+                // report the problem.
+                return dates.toValueString();
+            }
+            return dates.toString(zoneId);
         } else {
             return dates.toString();
         }
+    }
+
+    /**
+     * Adds an ERROR entry to the result when this property carries a TZID that resolves to no known zone, mirroring
+     * {@link DateProperty#validate()}. Value access tolerates such a TZID, but the calendar is still invalid.
+     * VALUE=DATE and all-UTC values are skipped, as no timezone applies to them; the check never resolves the values
+     * themselves, so it cannot throw because of the unresolvable zone.
+     *
+     * @param result the result to add to
+     * @return the same result
+     */
+    ValidationResult validateTzId(ValidationResult result) {
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
+        if (tzId.isEmpty() || Optional.of(Value.DATE).equals(getParameter(Parameter.VALUE))) {
+            return result;
+        }
+        String valueText = dates != null ? dates.toValueString() : "";
+        boolean allUtc = !valueText.isEmpty() && Arrays.stream(valueText.split(",")).allMatch(v -> v.endsWith("Z"));
+        if (!allUtc) {
+            try {
+                tzId.get().toZoneId(timeZoneRegistry);
+            } catch (DateTimeException e) {
+                result.getEntries().add(new ValidationEntry("Unresolvable TZID [" + tzId.get().getValue() + "]",
+                        ValidationEntry.Severity.ERROR, getName()));
+            }
+        }
+        return result;
     }
 
     public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
