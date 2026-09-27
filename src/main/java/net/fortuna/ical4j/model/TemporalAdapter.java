@@ -160,6 +160,17 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         return toString(getTemporal(), zoneId);
     }
 
+    /**
+     * Returns the value text this adapter was created with, without resolving any zone. For an adapter created by
+     * parsing this is the parsed text; for one created from a temporal it is that temporal formatted in its own
+     * zone. Unlike {@link #toString()}, this never fails because a TZID resolves to no known zone.
+     *
+     * @return the stored value text
+     */
+    public String getValueString() {
+        return valueString;
+    }
+
     private String toString(T temporal) {
         if (getTemporal() instanceof ChronoZonedDateTime) {
             return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT,

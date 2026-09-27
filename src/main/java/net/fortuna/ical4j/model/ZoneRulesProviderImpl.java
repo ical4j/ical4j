@@ -20,12 +20,48 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
-    public static final ZoneRulesProviderImpl INSTANCE = new ZoneRulesProviderImpl();
+    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(ZoneRulesProviderImpl.class);
+
+    /**
+     * The installed provider, or {@code null} where the platform does not allow a custom
+     * {@link ZoneRulesProvider} to be constructed or registered. Android, for example, blocks both
+     * the {@code ZoneRulesProvider} constructor and {@link ZoneRulesProvider#registerProvider} as
+     * hidden APIs.
+     *
+     * @deprecated this field is {@code null} when the provider is unavailable; use
+     * {@link #getInstance()} or {@link #isAvailable()} instead.
+     */
+    @Deprecated
+    public static final ZoneRulesProviderImpl INSTANCE;
     static {
-        ZoneRulesProvider.registerProvider(INSTANCE);
+        ZoneRulesProviderImpl instance;
+        try {
+            instance = new ZoneRulesProviderImpl();
+            ZoneRulesProvider.registerProvider(instance);
+        } catch (LinkageError | SecurityException e) {
+            // an unregistered provider is of no use, so treat a failed registration like a failed construction
+            instance = null;
+            LOG.info("Custom zone rules provider unavailable ({}: {}); VTIMEZONE definitions will resolve to"
+                    + " platform time zones and their own rules will not be applied", e.getClass().getName(),
+                    e.getMessage());
+        }
+        INSTANCE = instance;
     }
 
-    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(ZoneRulesProviderImpl.class);
+    /**
+     * @return true if the custom provider was constructed and registered, so that zone IDs allocated from
+     * {@link #getZoneIdPool()} resolve through {@link java.time.ZoneId#of(String)}
+     */
+    public static boolean isAvailable() {
+        return INSTANCE != null;
+    }
+
+    /**
+     * @return the installed provider, or an empty optional where the platform does not allow one
+     */
+    public static Optional<ZoneRulesProviderImpl> getInstance() {
+        return Optional.ofNullable(INSTANCE);
+    }
 
     private final Set<String> registeredZoneIds;
 

@@ -142,6 +142,19 @@ public class DateList<T extends Temporal> implements Serializable {
         return dates.stream().map(TemporalAdapter::toString).collect(Collectors.joining(","));
     }
 
+    /**
+     * Returns each date's stored value text, comma-separated, without resolving any zone.
+     *
+     * @return the stored value text of this list
+     * @see TemporalAdapter#getValueString()
+     */
+    public String toValueString() {
+        if (dates.isEmpty()) {
+            return "";
+        }
+        return dates.stream().map(TemporalAdapter::getValueString).collect(Collectors.joining(","));
+    }
+
     public String toString(ZoneId zoneId) {
         if (dates.isEmpty()) {
             return "";

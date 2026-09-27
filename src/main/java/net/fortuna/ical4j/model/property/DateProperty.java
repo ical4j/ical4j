@@ -260,18 +260,22 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @Override
     public String getValue() {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
-        if (tzId.isPresent() && shouldApplyTimezone()) {
+        ZoneId zoneId = null;
+        if (tzId.isPresent()) {
             try {
-                return date.toString(tzId.get().toZoneId(timeZoneRegistry));
-            } catch (DateTimeException e) {
-                // TZID resolved to no known zone. If relaxed validation is enabled the value has already been
-                // parsed as a floating date-time (see TemporalAdapter#getTemporal), so emit its floating form
-                // and ignore the TZID; otherwise propagate the failure.
-                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-                    return Strings.valueOf(date);
+                // shouldApplyTimezone() inspects the parsed value, which itself resolves the TZID
+                if (shouldApplyTimezone()) {
+                    zoneId = tzId.get().toZoneId(timeZoneRegistry);
                 }
-                throw e;
+            } catch (DateTimeException e) {
+                // TZID resolved to no known zone: emit the value as parsed rather than fail, in every mode, so a
+                // calendar that parsed can always be written back. Typed access (getDate) and validate() still
+                // report the problem.
+                return date.getValueString();
             }
+        }
+        if (zoneId != null) {
+            return date.toString(zoneId);
         } else if (this instanceof UtcProperty) {
             return date.toString(ZoneOffset.UTC);
         } else {
