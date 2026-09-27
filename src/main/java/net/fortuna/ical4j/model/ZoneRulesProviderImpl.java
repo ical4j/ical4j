@@ -72,9 +72,12 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
     private final AtomicBoolean refresh = new AtomicBoolean(false);
 
     public ZoneRulesProviderImpl() {
+        // zone ids are registered JVM-wide, so give each provider instance its own prefix: otherwise a second copy of
+        // iCal4j (another webapp, or a redeploy while the old provider is still registered) can't register at all
+        String token = UUID.randomUUID().toString().substring(0, 8);
         Set<String> globalZoneIds = new HashSet<>();
         for (int i = 0; i < Configurator.getIntProperty("net.fortuna.ical4j.timezone.id.pool.size").orElse(1500); i++) {
-            globalZoneIds.add("ical4j-local-" + i);
+            globalZoneIds.add("ical4j-local-" + token + "-" + i);
         }
         this.registeredZoneIds = Collections.unmodifiableSet(globalZoneIds);
         this.allocatedZoneIds = new ConcurrentHashMap<>(512, 0.75f, 2);

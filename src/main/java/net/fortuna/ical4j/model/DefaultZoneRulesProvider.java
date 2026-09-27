@@ -16,16 +16,23 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * NOTE: Globally unique zone identifiers are transient and will be regenerated for each instance of this class. They
  * are only used to support registration and use of alternative definitions in the scope of this library.
+ * <p>
+ * iCal4j registers an instance itself, lazily and once, the first time global zone resolution is used (see
+ * {@link TimeZoneRegistry#getGlobalZoneId(String)}). It is deliberately not registered through
+ * {@code META-INF/services}, which would load it while {@code java.time} initialises (issue #808).
  */
 public class DefaultZoneRulesProvider extends ZoneRulesProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultZoneRulesProvider.class);
 
-    private static final String DEFAULT_RESOURCE_PREFIX = "zoneinfo/";
+    static final String DEFAULT_RESOURCE_PREFIX = "zoneinfo/";
 
     private final TimeZoneLoader zoneLoader;
 
     private final Map<String, ZoneRules> zoneRulesMap;
+
+    /** Maps this provider's {@code ical4j~} zone ids to the bundled definition ids they stand for. */
+    private final Map<String, String> zoneIdMap;
 
     public DefaultZoneRulesProvider() {
         this(new TimeZoneLoader(DEFAULT_RESOURCE_PREFIX), TimeZoneRegistry.ZONE_IDS);
@@ -33,6 +40,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
 
     public DefaultZoneRulesProvider(TimeZoneLoader timeZoneLoader, Map<String, String> zoneIdMap) {
         this.zoneLoader = timeZoneLoader;
+        this.zoneIdMap = zoneIdMap;
         for (var id : zoneLoader.getAvailableIDs()) {
             zoneIdMap.put("ical4j~" + UUID.randomUUID(), id);
         }
@@ -41,7 +49,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
 
     @Override
     protected Set<String> provideZoneIds() {
-        return TimeZoneRegistry.ZONE_IDS.keySet();
+        return zoneIdMap.keySet();
     }
 
     @Override
@@ -51,7 +59,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
             retVal = zoneRulesMap.get(zoneId);
         } else {
             try {
-                var localZoneId = TimeZoneRegistry.ZONE_IDS.get(zoneId);
+                var localZoneId = zoneIdMap.get(zoneId);
                 var vTimeZone = zoneLoader.loadVTimeZone(localZoneId);
                 retVal = new ZoneRulesBuilder().vTimeZone(vTimeZone).build();
                 zoneRulesMap.put(zoneId, retVal);
