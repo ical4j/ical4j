@@ -81,7 +81,10 @@ public class TimeZoneLoader {
     public VTimeZone loadVTimeZone(String id) throws IOException, ParserException {
         Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
         return cache.getTimezone(id, () -> {
-            final var resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
+            // the id is untrusted (it typically originates from a parsed TZID) and is used to build a
+            // classpath resource path, so reject any value that could traverse outside resourcePrefix..
+            final var resource = isResolvableId(id)
+                    ? ResourceLoader.getResource(resourcePrefix + id + ".ics") : null;
             if (resource != null) {
                 try (var in = resource.openStream()) {
                     final var builder = new CalendarBuilder();
@@ -95,6 +98,24 @@ public class TimeZoneLoader {
                 return generateTimezoneForId(id);
             }
         });
+    }
+
+    /**
+     * A timezone id is concatenated with resourcePrefix to locate a bundled definition on the
+     * classpath, so a crafted id such as {@code ../../secret} would otherwise resolve a resource
+     * outside the intended zoneinfo location. Valid IANA identifiers never contain parent-directory
+     * segments, backslashes or a leading separator, so reject those to keep resolution contained.
+     */
+    private static boolean isResolvableId(String id) {
+        if (id.indexOf('\\') >= 0 || id.startsWith("/")) {
+            return false;
+        }
+        for (String segment : id.split("/")) {
+            if (segment.equals("..") || segment.equals(".")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static VTimeZone generateTimezoneForId(String timezoneId) {
