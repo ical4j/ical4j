@@ -200,7 +200,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return RecurrencePropertyValidators.RDATE.validate(this);
+        return validateTzId(RecurrencePropertyValidators.RDATE.validate(this));
     }
 
     /**

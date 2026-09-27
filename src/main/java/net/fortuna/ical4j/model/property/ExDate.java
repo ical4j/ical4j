@@ -96,7 +96,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      */
     @Override
     public ValidationResult validate() throws ValidationException {
-        return RecurrencePropertyValidators.EXDATE.validate(this);
+        return validateTzId(RecurrencePropertyValidators.EXDATE.validate(this));
     }
 
     @Override
