@@ -35,6 +35,7 @@ package net.fortuna.ical4j.transform.itip;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -51,7 +52,7 @@ import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.REQUES
  */
 public class RequestTransformer extends AbstractMethodTransformer {
 
-    private final Organizer organizer;
+    private final @Nullable Organizer organizer;
 
     /**
      * Support delegating mode by not specifying an organizer.

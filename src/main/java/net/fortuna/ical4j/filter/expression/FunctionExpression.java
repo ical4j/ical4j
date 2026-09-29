@@ -32,6 +32,8 @@
  */
 package net.fortuna.ical4j.filter.expression;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.temporal.Temporal;
 import java.util.Objects;
 import java.util.function.Function;
@@ -54,7 +56,7 @@ public class FunctionExpression implements LiteralExpression<Function<String, Te
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (FunctionExpression) o;

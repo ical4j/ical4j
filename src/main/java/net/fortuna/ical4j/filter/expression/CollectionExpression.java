@@ -32,6 +32,8 @@
  */
 package net.fortuna.ical4j.filter.expression;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -53,7 +55,7 @@ public class CollectionExpression implements LiteralExpression<Collection<?>> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (CollectionExpression) o;
