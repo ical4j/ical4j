@@ -32,8 +32,10 @@
  */
 
 /**
- * Types in this package are non-null by default; nullable types are annotated with
- * {@link org.jspecify.annotations.Nullable}.
+ * Contains user agent implementations that produce iTIP (RFC5546) messages from calendar components.
+ *
+ * <p>Types in this package are non-null by default; nullable types are annotated with
+ * {@link org.jspecify.annotations.Nullable}.</p>
  */
 @NullMarked
 package net.fortuna.ical4j.agent;
