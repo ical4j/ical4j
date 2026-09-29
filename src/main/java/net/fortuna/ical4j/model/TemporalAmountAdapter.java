@@ -85,7 +85,7 @@ public class TemporalAmountAdapter implements Serializable {
      * @return a string representation of the duration that is compliant with the RFC5545 specification.
      */
     private String durationToString(Duration duration, Temporal seed) {
-        String retVal = null;
+        String retVal;
         var absDuration = duration.abs();
         var adjustedSeed = seed.plus(absDuration);
         long days = 0;
@@ -94,34 +94,29 @@ public class TemporalAmountAdapter implements Serializable {
         }
 
         if (days != 0) {
-            var durationMinusDays = absDuration.minusDays(days);
-            if (durationMinusDays.getSeconds() != 0) {
-                adjustedSeed = seed.plus(durationMinusDays);
-                long hours = seed.until(adjustedSeed, ChronoUnit.HOURS);
+            // measure the remainder from the seed plus whole calendar days, as a calendar day is not always
+            // 24 hours (e.g. across a daylight saving transition)..
+            var remainder = Duration.between(seed.plus(days, ChronoUnit.DAYS), adjustedSeed);
+            long hours = remainder.toHours();
+            long minutes = remainder.toMinutesPart();
+            long seconds = remainder.toSecondsPart();
 
-                adjustedSeed = seed.plus(durationMinusDays.minusHours(hours));
-                long minutes = seed.until(adjustedSeed, ChronoUnit.MINUTES);
-
-                adjustedSeed = seed.plus(durationMinusDays.minusHours(hours).minusMinutes(minutes));
-                long seconds = seed.until(adjustedSeed, ChronoUnit.SECONDS);
-
-                if (hours > 0) {
-                    if (seconds > 0) {
-                        retVal = String.format(Locale.US, "P%dDT%dH%dM%dS", days, hours, minutes, seconds);
-                    } else if (minutes > 0) {
-                        retVal = String.format(Locale.US, "P%dDT%dH%dM", days, hours, minutes);
-                    } else {
-                        retVal = String.format(Locale.US, "P%dDT%dH", days, hours);
-                    }
+            if (hours > 0) {
+                if (seconds > 0) {
+                    retVal = String.format(Locale.US, "P%dDT%dH%dM%dS", days, hours, minutes, seconds);
                 } else if (minutes > 0) {
-                    if (seconds > 0) {
-                        retVal = String.format(Locale.US, "P%dDT%dM%dS", days, minutes, seconds);
-                    } else {
-                        retVal = String.format(Locale.US, "P%dDT%dM", days, minutes);
-                    }
-                } else if (seconds > 0) {
-                    retVal = String.format(Locale.US, "P%dDT%dS", days, seconds);
+                    retVal = String.format(Locale.US, "P%dDT%dH%dM", days, hours, minutes);
+                } else {
+                    retVal = String.format(Locale.US, "P%dDT%dH", days, hours);
                 }
+            } else if (minutes > 0) {
+                if (seconds > 0) {
+                    retVal = String.format(Locale.US, "P%dDT%dM%dS", days, minutes, seconds);
+                } else {
+                    retVal = String.format(Locale.US, "P%dDT%dM", days, minutes);
+                }
+            } else if (seconds > 0) {
+                retVal = String.format(Locale.US, "P%dDT%dS", days, seconds);
             } else {
                 retVal = String.format(Locale.US, "P%dD", days);
             }

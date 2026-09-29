@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model
 
 
+import net.fortuna.ical4j.util.Calendars
 import net.fortuna.ical4j.util.RandomUidGenerator
 import spock.lang.Shared
 import spock.lang.Specification
@@ -52,6 +53,34 @@ class CalendarSpec extends Specification {
 
         then: 'a combined calendar is the result'
         merged.getComponents().size() == 2
+    }
+
+    def 'test calendar split with a TZID that has no VTIMEZONE'() {
+        given: 'a calendar with events referencing a timezone that is not defined in the calendar'
+        def calendar = builder.calendar {
+            prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+            version '2.0'
+            vevent {
+                uid 'one'
+                dtstamp()
+                dtstart '20240101T140000', parameters: parameters { tzid_ 'Australia/Melbourne' }
+            }
+            vevent {
+                uid 'two'
+                dtstamp()
+                dtstart '20240102T140000', parameters: parameters { tzid_ 'Australia/Melbourne' }
+            }
+        }
+
+        when: 'the calendar is split'
+        def split = splitter(calendar)
+
+        then: 'each split calendar contains only its event'
+        split.length == 2
+        split.every { it.components.size() == 1 && it.components[0]?.name == 'VEVENT' }
+
+        where:
+        splitter << [{ Calendar c -> c.split() }, { Calendar c -> Calendars.split(c) }]
     }
 
     def 'test calendar split'() {
