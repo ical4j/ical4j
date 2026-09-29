@@ -53,6 +53,7 @@ public class RRule<T extends Temporal> extends Property {
 
     private static final long serialVersionUID = -9188265089143001164L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private Recur<T> recur;
 
     /**

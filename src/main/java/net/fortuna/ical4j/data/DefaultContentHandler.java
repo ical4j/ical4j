@@ -35,8 +35,10 @@ public class DefaultContentHandler implements ContentHandler {
      */
     protected final LinkedList<ComponentBuilder<Component>> components = new LinkedList<>();
 
+    @SuppressWarnings("NullAway.Init") // initialised by startCalendar()
     protected List<Property> calendarProperties;
 
+    @SuppressWarnings("NullAway.Init") // initialised by startCalendar()
     protected List<CalendarComponent> calendarComponents;
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
@@ -109,10 +111,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void endComponent(String name) {
-        assertComponent(getComponentBuilder());
-
-        final ComponentBuilder<Component> componentBuilder =
-                getComponentBuilder();
+        final ComponentBuilder<Component> componentBuilder = assertComponent(getComponentBuilder());
 
         DefaultContentHandler.this.endComponent();
 
@@ -152,10 +151,10 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void endProperty(String name) {
         if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
-            assertProperty(propertyBuilder);
+            final PropertyBuilder builder = assertProperty(propertyBuilder);
             Property property;
             try {
-                property = propertyBuilder.build();
+                property = builder.build();
             } catch (RuntimeException e) {
                 if (context.isSuppressInvalidProperties()) {
                     LoggerFactory.getLogger(DefaultContentHandler.class).warn("Suppressing invalid property", e);
@@ -193,15 +192,17 @@ public class DefaultContentHandler implements ContentHandler {
         }
     }
 
-    private void assertComponent(@Nullable ComponentBuilder<?> component) {
+    private <T extends Component> ComponentBuilder<T> assertComponent(@Nullable ComponentBuilder<T> component) {
         if (component == null) {
             throw new CalendarException("Expected component not initialised");
         }
+        return component;
     }
 
-    private void assertProperty(@Nullable PropertyBuilder property) {
+    private PropertyBuilder assertProperty(@Nullable PropertyBuilder property) {
         if (property == null) {
             throw new CalendarException("Expected property not initialised");
         }
+        return property;
     }
 }

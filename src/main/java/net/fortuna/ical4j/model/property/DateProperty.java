@@ -87,6 +87,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     private final Value defaultValueParam;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private TemporalAdapter<T> date;
 
     private transient @Nullable TimeZoneRegistry timeZoneRegistry;
@@ -154,7 +155,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      *
      * @return Returns the date.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullAway"}) // unset/cleared value, see package-info
     public T getDate() {
         if (date != null) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
@@ -184,6 +185,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      *
      * @param date The date to set.
      */
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public void setDate(@Nullable T date) {
         if (date != null) {
             this.date = new TemporalAdapter<>(date, timeZoneRegistry);
@@ -203,7 +205,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @param value a string representation of a DATE or DATE-TIME value
      */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullAway"}) // unset/cleared value, see package-info
     public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
@@ -284,7 +286,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         }
     }
 
-    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+    public void setTimeZoneRegistry(@Nullable TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
     }
 
@@ -324,7 +326,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * timezone the system default timezone will be used.
      * @param defaultTimeZone a timezone identifier
      */
-    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+    public void setDefaultTimeZone(@Nullable ZoneId defaultTimeZone) {
         this.defaultTimeZone = defaultTimeZone;
     }
 

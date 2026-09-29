@@ -63,6 +63,7 @@ public class Method extends Property {
     public static final String VALUE_COUNTER = "COUNTER";
     public static final String VALUE_DECLINECOUNTER = "DECLINECOUNTER";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

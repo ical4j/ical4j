@@ -16,6 +16,7 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private final List<ComponentFactory<?>> factories;
 
+    @SuppressWarnings("NullAway.Init") // must be set before build()
     private String name;
 
     private final List<Property> properties = new ArrayList<>();

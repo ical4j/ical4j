@@ -35,6 +35,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -51,12 +52,12 @@ public class TzUntil extends DateProperty<Instant> implements UtcProperty {
     }
 
     @Override
-    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+    public void setTimeZoneRegistry(@Nullable TimeZoneRegistry timeZoneRegistry) {
         UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
     }
 
     @Override
-    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+    public void setDefaultTimeZone(@Nullable ZoneId defaultTimeZone) {
         UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
     }
 

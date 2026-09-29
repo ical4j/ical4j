@@ -36,6 +36,7 @@ import org.jspecify.annotations.Nullable;
 import java.time.temporal.Temporal;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterators;
 import java.util.function.Consumer;
 
@@ -137,7 +138,7 @@ final class RecurDateSpliterator<T extends Temporal> extends Spliterators.Abstra
 
         if (advance) {
             // iterate current candidate list..
-            lastCandidate = candidates.next();
+            lastCandidate = Objects.requireNonNull(candidates).next();
             // don't count candidates that occur before the seed date..
             if (!TemporalAdapter.isBefore(lastCandidate, seed)) {
                 // candidates exclusive of periodEnd..
@@ -154,7 +155,7 @@ final class RecurDateSpliterator<T extends Temporal> extends Spliterators.Abstra
         return advance;
     }
 
-    private boolean isWithinEndBoundaries(T candidate) {
+    private boolean isWithinEndBoundaries(@Nullable T candidate) {
         boolean advance = true;
         if (recur.getUntil() != null && candidate != null && TemporalAdapter.isAfter(candidate, recur.getUntil())) {
             advance = false;

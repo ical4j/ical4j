@@ -215,18 +215,13 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public static <T extends Temporal> Period<T> parse(String value) {
         T start = parseStartDate(value);
-        T end = null;
-        TemporalAmountAdapter duration = null;
+        T end;
         try {
             end = parseEndDate(value, false);
         } catch (DateTimeParseException e) {
-            duration = parseDuration(value);
+            return new Period<>(start, parseDuration(value), CalendarDateFormat.from(start));
         }
-        if (end != null) {
-            return new Period<>(start, end, CalendarDateFormat.from(start));
-        } else {
-            return new Period<>(start, duration, CalendarDateFormat.from(start));
-        }
+        return new Period<>(start, end, CalendarDateFormat.from(start));
     }
 
     private static <T extends Temporal> T parseStartDate(String value) throws DateTimeParseException {

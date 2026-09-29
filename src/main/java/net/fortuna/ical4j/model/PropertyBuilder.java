@@ -6,6 +6,7 @@ import net.fortuna.ical4j.model.property.UtcProperty;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.codec.DecoderException;
+import org.jspecify.annotations.Nullable;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -21,17 +22,19 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private final List<PropertyFactory<?>> factories;
 
+    @SuppressWarnings("NullAway.Init") // must be set before build()
     private String name;
 
-    private String prefix;
+    private @Nullable String prefix;
 
+    @SuppressWarnings("NullAway.Init") // must be set before build()
     private String value;
 
     private final List<Parameter> parameters = new ArrayList<>();
 
-    private TimeZoneRegistry timeZoneRegistry;
+    private @Nullable TimeZoneRegistry timeZoneRegistry;
 
-    private ZoneId defaultTimeZone;
+    private @Nullable ZoneId defaultTimeZone;
 
     public PropertyBuilder() {
         this(new ArrayList<>());
@@ -80,12 +83,12 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return this;
     }
 
-    public PropertyBuilder timeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+    public PropertyBuilder timeZoneRegistry(@Nullable TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
         return this;
     }
 
-    public PropertyBuilder defaultTimeZone(ZoneId defaultTimeZone) {
+    public PropertyBuilder defaultTimeZone(@Nullable ZoneId defaultTimeZone) {
         this.defaultTimeZone = defaultTimeZone;
         return this;
     }

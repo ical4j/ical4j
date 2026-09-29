@@ -315,19 +315,20 @@ public class Recur<T extends Temporal> implements Serializable {
     // Temporal field we increment based on frequency.
     private TemporalUnit calIncField;
 
-    private transient ByMonthRule<T> monthRule;
-    private transient ByWeekNoRule<T> weekNoRule;
-    private transient ByYearDayRule<T> yearDayRule;
-    private transient ByMonthDayRule<T> monthDayRule;
-    private transient ByDayRule<T> dayRule;
-    private transient ByHourRule<T> hourRule;
-    private transient ByMinuteRule<T> minuteRule;
-    private transient BySecondRule<T> secondRule;
-    private transient BySetPosRule<T> setPosRule;
+    private transient @Nullable ByMonthRule<T> monthRule;
+    private transient @Nullable ByWeekNoRule<T> weekNoRule;
+    private transient @Nullable ByYearDayRule<T> yearDayRule;
+    private transient @Nullable ByMonthDayRule<T> monthDayRule;
+    private transient @Nullable ByDayRule<T> dayRule;
+    private transient @Nullable ByHourRule<T> hourRule;
+    private transient @Nullable ByMinuteRule<T> minuteRule;
+    private transient @Nullable BySecondRule<T> secondRule;
+    private transient @Nullable BySetPosRule<T> setPosRule;
 
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // frequency and calIncField are set by Builder.build()
     private Recur() {
     }
 
@@ -1223,6 +1224,9 @@ public class Recur<T extends Temporal> implements Serializable {
             var chronology = rscale != null ? Chronology.of(rscale.getChronology())
                     : Chronology.ofLocale(Locale.getDefault());
 
+            if (frequency == null) {
+                throw new IllegalArgumentException("A recurrence rule MUST contain a FREQ rule part.");
+            }
             Recur<T> recur = new Recur<>();
             recur.frequency = frequency;
             recur.rscale = rscale;

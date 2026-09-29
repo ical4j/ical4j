@@ -108,46 +108,51 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
         }
 
         public RecurrenceSet<T> build() {
+            final T startDate = Objects.requireNonNull(start, "start");
+            final Period<? extends Temporal> bounds = Objects.requireNonNull(period, "period");
             RecurrenceSet<T> recurrenceSet = new RecurrenceSet<>();
 
             // if no end or duration specified, end date equals start date..
             // unless the start date represents a date value, in which case
             // the effective duration is 1 day..
-            if (end == null && duration == null) {
-                if (start.isSupported(ChronoField.SECOND_OF_DAY)) {
-                    duration = Duration.ZERO;
+            final TemporalAmount effectiveDuration;
+            if (duration != null) {
+                effectiveDuration = duration;
+            } else if (end == null) {
+                if (startDate.isSupported(ChronoField.SECOND_OF_DAY)) {
+                    effectiveDuration = Duration.ZERO;
                 } else {
-                    duration = java.time.Period.ofDays(1);
+                    effectiveDuration = java.time.Period.ofDays(1);
                 }
             }
             // if an explicit event duration is not specified, derive a value for recurring
             // periods from the end date..
-            else if (duration == null) {
-                duration = TemporalAmountAdapter.between(start, end).getDuration();
+            else {
+                effectiveDuration = TemporalAmountAdapter.between(startDate, end).getDuration();
             }
 
             // add recurrence dates..
-            recurrenceSet.addAll(recurrenceDates.stream().filter(period::includes)
-                    .map(date -> new Period<T>(date, duration))
+            recurrenceSet.addAll(recurrenceDates.stream().filter(bounds::includes)
+                    .map(date -> new Period<T>(date, effectiveDuration))
                     .collect(Collectors.toList()));
 
             // add recurrence periods..
-            recurrenceSet.addAll(recurrencePeriods.stream().filter(period::intersects).collect(Collectors.toList()));
+            recurrenceSet.addAll(recurrencePeriods.stream().filter(bounds::intersects).collect(Collectors.toList()));
 
             // allow for recurrence rules that start prior to the specified period
             // but still intersect with it..
-            Temporal startMinusDuration = period.getStart().minus(duration);
+            Temporal startMinusDuration = bounds.getStart().minus(effectiveDuration);
 
             // add recurrence rules..
             if (!recurrenceRules.isEmpty()) {
                 recurrenceSet.addAll(recurrenceRules.stream().map(rrule ->
-                                rrule.getDates(start, startMinusDuration, period.getEnd()))
-                        .flatMap(List<T>::stream).map(date -> new Period<>(date, duration))
+                                rrule.getDates(startDate, startMinusDuration, bounds.getEnd()))
+                        .flatMap(List<T>::stream).map(date -> new Period<>(date, effectiveDuration))
                         .collect(Collectors.toList()));
             } else {
                 // add initial instance if intersection with the specified period..
-                Period<T> initialPeriod = new Period<>(start, duration);
-                if (period.intersects(initialPeriod)) {
+                Period<T> initialPeriod = new Period<>(startDate, effectiveDuration);
+                if (bounds.intersects(initialPeriod)) {
                     recurrenceSet.add(initialPeriod);
                 }
             }
@@ -157,8 +162,8 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
 
             // subtract exception rules..
             List<Period<T>> exceptionRuleDates = exceptionRules.stream().map(rrule ->
-                            rrule.getDates(start, startMinusDuration, period.getEnd()))
-                    .flatMap(List<T>::stream).map(date -> new Period<>(date, duration))
+                            rrule.getDates(startDate, startMinusDuration, bounds.getEnd()))
+                    .flatMap(List<T>::stream).map(date -> new Period<>(date, effectiveDuration))
                     .collect(Collectors.toList());
             recurrenceSet.removeIf(exceptionRuleDates::contains);
 

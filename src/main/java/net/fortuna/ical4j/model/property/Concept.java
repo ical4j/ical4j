@@ -74,6 +74,7 @@ public class Concept extends Property {
 
     public static final String PROPERTY_NAME = "CONCEPT";
     
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private URI uri;
 
     public Concept() {

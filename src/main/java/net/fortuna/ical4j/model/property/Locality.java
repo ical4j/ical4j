@@ -49,6 +49,7 @@ public class Locality extends Property implements Encodable {
 
     private static final long serialVersionUID = -2324296161017475527L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

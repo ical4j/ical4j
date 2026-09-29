@@ -152,13 +152,14 @@ public class TzHelper {
     public static @Nullable String getCorrectedTimeZoneIdFrom(String value) {
         if (value != null) {
             value = value.contains("\"") ? value.replaceAll("\"", "") : value;
-            if (TIMEZONE_REGISTRY.getTimeZone(value) != null) {
-                return TIMEZONE_REGISTRY.getTimeZone(value).getID();
+            var timeZone = TIMEZONE_REGISTRY.getTimeZone(value);
+            if (timeZone != null) {
+                return timeZone.getID();
             }
             var nameCandidate = MS_TIMEZONE_NAMES.get(value);
             if (nameCandidate != null) {
-                return TIMEZONE_REGISTRY.getTimeZone(nameCandidate) != null
-                        ? TIMEZONE_REGISTRY.getTimeZone(nameCandidate).getID() : nameCandidate;
+                var candidateTimeZone = TIMEZONE_REGISTRY.getTimeZone(nameCandidate);
+                return candidateTimeZone != null ? candidateTimeZone.getID() : nameCandidate;
             }
             return MS_TIMEZONE_IDS.get(value);
         }

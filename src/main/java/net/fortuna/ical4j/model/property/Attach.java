@@ -252,6 +252,7 @@ public class Attach extends Property {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public final String getValue() {
         if (getUri() != null) {
             return Uris.decode(Strings.valueOf(getUri()));

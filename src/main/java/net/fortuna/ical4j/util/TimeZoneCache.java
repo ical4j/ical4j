@@ -19,7 +19,7 @@ public interface TimeZoneCache {
 
     @Nullable VTimeZone getTimezone(String id);
 
-    VTimeZone getTimezone(String id, Supplier<VTimeZone> putIfAbsent);
+    @Nullable VTimeZone getTimezone(String id, Supplier<@Nullable VTimeZone> putIfAbsent);
 
     @Deprecated
     boolean putIfAbsent(String id, VTimeZone timeZone);

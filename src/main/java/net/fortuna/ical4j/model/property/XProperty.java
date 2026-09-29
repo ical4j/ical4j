@@ -52,6 +52,7 @@ public class XProperty extends Property implements Encodable {
 
     private static final long serialVersionUID = 2331763266954894541L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

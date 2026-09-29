@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -242,7 +244,7 @@ public class CalendarDateFormat implements Serializable {
 
     private final String pattern;
 
-    private transient volatile DateTimeFormatter formatter;
+    private transient volatile @Nullable DateTimeFormatter formatter;
 
     private final TemporalQuery<? extends TemporalAccessor>[] parsers;
 

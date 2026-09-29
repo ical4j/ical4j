@@ -34,16 +34,17 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+import org.jspecify.annotations.Nullable;
 
 import java.time.ZoneId;
 
 public interface UtcProperty {
 
-    default void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+    default void setTimeZoneRegistry(@Nullable TimeZoneRegistry timeZoneRegistry) {
         throw new UnsupportedOperationException("UTC properties don't support timezones");
     }
 
-    default void setDefaultTimeZone(ZoneId defaultTimeZone) {
+    default void setDefaultTimeZone(@Nullable ZoneId defaultTimeZone) {
         throw new UnsupportedOperationException("UTC properties don't support timezones");
     }
 }

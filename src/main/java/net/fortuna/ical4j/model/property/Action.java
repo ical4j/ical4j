@@ -58,6 +58,7 @@ public class Action extends Property {
     public static final String VALUE_EMAIL = "EMAIL";
     public static final String VALUE_PROCEDURE = "PROCEDURE";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

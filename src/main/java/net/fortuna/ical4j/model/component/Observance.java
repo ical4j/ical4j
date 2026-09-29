@@ -75,13 +75,13 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
     public static final String DAYLIGHT = "DAYLIGHT";
 
     // TODO: clear cache when observance definition changes (??)
-    private long[] onsetsMillisec;
-    private OffsetDateTime[] onsetsDates;
+    private long @Nullable [] onsetsMillisec;
+    private OffsetDateTime @Nullable [] onsetsDates;
     //    private Map onsets = new TreeMap();
     private @Nullable OffsetDateTime initialOnset = null;
 
     /* If this is set we have rrules. If we get a date after this rebuild onsets */
-    private OffsetDateTime onsetLimit;
+    private @Nullable OffsetDateTime onsetLimit;
 
     /**
      * Constructs a timezone observance with the specified name and no properties.
@@ -158,10 +158,12 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
             return null;
         }
 
-        if ((onsetsMillisec != null) &&
+        final long[] cachedOnsetsMillisec = onsetsMillisec;
+        final OffsetDateTime[] cachedOnsetsDates = onsetsDates;
+        if (cachedOnsetsMillisec != null && cachedOnsetsDates != null &&
                 (onsetLimit == null || TemporalAdapter.isBefore(offsetDate, onsetLimit))) {
 
-            return getCachedOnset(offsetDate);
+            return getCachedOnset(offsetDate, cachedOnsetsMillisec, cachedOnsetsDates);
         }
 
         var onset = initialOnset;
@@ -234,9 +236,12 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
      * Returns a cached onset for the specified date.
      *
      * @param date
+     * @param onsetsMillisec cached onsets in epoch milliseconds
+     * @param onsetsDates cached onsets corresponding to {@code onsetsMillisec}
      * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
-    private OffsetDateTime getCachedOnset(final Temporal date) {
+    private static OffsetDateTime getCachedOnset(final Temporal date, final long[] onsetsMillisec,
+                                                 final OffsetDateTime[] onsetsDates) {
         int index = Arrays.binarySearch(onsetsMillisec, Instant.from(date).toEpochMilli());
         if (index >= 0) {
             return onsetsDates[index];

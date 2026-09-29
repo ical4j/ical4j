@@ -134,6 +134,7 @@ public class Organizer extends Property {
 
     private static final long serialVersionUID = -5216965653165090725L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private URI calAddress;
 
     /**

@@ -56,6 +56,7 @@ public class CalScale extends Property {
 
     public static final String VALUE_GREGORIAN = "GREGORIAN";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

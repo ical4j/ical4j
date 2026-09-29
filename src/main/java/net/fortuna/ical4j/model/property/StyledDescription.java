@@ -56,6 +56,7 @@ public class StyledDescription extends Property implements Encodable {
 
     private static final long serialVersionUID = 7287564228220558361L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
     private @Nullable URI uriValue;
 

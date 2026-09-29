@@ -42,6 +42,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -298,7 +299,7 @@ public final class ITIPRuleRegistry {
             // Defensive: cardinality-based validators should not throw, but if a legacy
             // validator does we surface its message as an ERROR entry rather than propagating.
             ValidationResult result = new ValidationResult();
-            result.getEntries().add(new ValidationEntry(ve.getMessage(),
+            result.getEntries().add(new ValidationEntry(Objects.requireNonNullElse(ve.getMessage(), "Validation failed"),
                     ValidationEntry.Severity.ERROR, component.getName()));
             return result;
         }

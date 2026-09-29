@@ -52,6 +52,7 @@ import java.util.Optional;
  */
 public class Xml extends Property implements Encodable {
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     private byte @Nullable [] binary;

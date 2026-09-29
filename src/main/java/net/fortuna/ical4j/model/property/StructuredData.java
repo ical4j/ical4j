@@ -68,6 +68,7 @@ public class StructuredData extends Property implements Encodable {
 
     private static final long serialVersionUID = 7287564228220558361L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     private @Nullable URI uri;
@@ -150,6 +151,7 @@ public class StructuredData extends Property implements Encodable {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public final String getValue() {
         Optional<Value> valueParam = getParameter(Parameter.VALUE);
         if (valueParam.isPresent()) {

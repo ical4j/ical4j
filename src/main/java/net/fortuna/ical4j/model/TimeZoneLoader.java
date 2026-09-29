@@ -79,7 +79,7 @@ public class TimeZoneLoader {
     /**
      * Loads an existing VTimeZone from the classpath corresponding to the specified Java timezone.
      */
-    public VTimeZone loadVTimeZone(String id) throws IOException, ParserException {
+    public @Nullable VTimeZone loadVTimeZone(String id) throws IOException, ParserException {
         Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
         return cache.getTimezone(id, () -> {
             // the id is untrusted (it typically originates from a parsed TZID) and is used to build a
@@ -245,12 +245,8 @@ public class TimeZoneLoader {
         });
     }
 
-    public static @Nullable TimeZoneLoader getInstance(String resourcePrefix) {
-        var loader = LOADER_MAP.get(resourcePrefix);
-        if (loader == null) {
-            LOADER_MAP.put(resourcePrefix, new TimeZoneLoader(resourcePrefix));
-        }
-        return LOADER_MAP.get(resourcePrefix);
+    public static TimeZoneLoader getInstance(String resourcePrefix) {
+        return LOADER_MAP.computeIfAbsent(resourcePrefix, TimeZoneLoader::new);
     }
 
     private static class ZoneOffsetKey {
