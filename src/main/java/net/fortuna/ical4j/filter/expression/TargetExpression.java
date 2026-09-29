@@ -34,6 +34,7 @@ package net.fortuna.ical4j.filter.expression;
 
 import net.fortuna.ical4j.filter.FilterExpression;
 import net.fortuna.ical4j.filter.FilterTarget;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +60,7 @@ public class TargetExpression implements FilterExpression {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (TargetExpression) o;

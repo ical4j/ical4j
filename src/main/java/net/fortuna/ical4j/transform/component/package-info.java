@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2004-2021, Ben Fortuna
+ *  Copyright (c) 2026, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -30,46 +30,12 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package net.fortuna.ical4j.filter.expression;
-
-import net.fortuna.ical4j.model.DateTime;
-import org.jspecify.annotations.Nullable;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Objects;
 
 /**
- * Represents a date expression in a filter, encapsulating a date value.
- * This class implements the {@link LiteralExpression} interface and provides methods for equality checking and hashing.
+ * Types in this package are non-null by default; nullable types are annotated with
+ * {@link org.jspecify.annotations.Nullable}.
  */
-public class DateExpression implements LiteralExpression<Date> {
+@NullMarked
+package net.fortuna.ical4j.transform.component;
 
-    private final Date value;
-
-    public DateExpression(String value) throws ParseException {
-        this(new DateTime(value));
-    }
-
-    public DateExpression(Date value) {
-        this.value = value;
-    }
-
-    @Override
-    public Date getValue() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        var that = (DateExpression) o;
-        return value.equals(that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
-}
+import org.jspecify.annotations.NullMarked;

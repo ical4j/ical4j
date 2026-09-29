@@ -2,6 +2,7 @@ package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
+import org.jspecify.annotations.Nullable;
 
 import java.time.DayOfWeek;
 import java.time.Month;
@@ -32,7 +33,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         this(seed, frequency, null);
     }
 
-    public ByDayRule(T seed, Frequency frequency, DayOfWeek firstDayOfWeek) {
+    public ByDayRule(T seed, Frequency frequency, @Nullable DayOfWeek firstDayOfWeek) {
         super(frequency);
         this.dayList = new WeekDayList(WeekDay.getWeekDay(getDayOfWeek(seed)));
         if (firstDayOfWeek != null) {
@@ -46,7 +47,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         this(dayList, frequency, null);
     }
 
-    public ByDayRule(List<WeekDay> dayList, Frequency frequency, DayOfWeek firstDayOfWeek) {
+    public ByDayRule(List<WeekDay> dayList, Frequency frequency, @Nullable DayOfWeek firstDayOfWeek) {
         super(frequency);
         this.dayList = dayList;
         if (firstDayOfWeek != null) {

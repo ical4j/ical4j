@@ -33,6 +33,8 @@
 
 package net.fortuna.ical4j.validate;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -87,7 +89,7 @@ public class ValidationEntry implements Comparable<ValidationEntry> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (ValidationEntry) o;

@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.transform.recurrence;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
     public ByWeekNoRule(List<Integer> weekNoList, Frequency frequency) {
         this(weekNoList, frequency, null);
     }
-    public ByWeekNoRule(List<Integer> weekNoList, Frequency frequency, DayOfWeek firstDayOfWeek) {
+    public ByWeekNoRule(List<Integer> weekNoList, Frequency frequency, @Nullable DayOfWeek firstDayOfWeek) {
         super(frequency);
         this.weekNoList = weekNoList;
         if (firstDayOfWeek != null) {

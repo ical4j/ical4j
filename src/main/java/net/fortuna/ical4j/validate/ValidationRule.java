@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -43,7 +44,7 @@ public class ValidationRule<T> implements Serializable {
 
     private final ValidationType type;
 
-    private final String message;
+    private final @Nullable String message;
 
     private final Predicate<T> predicate;
 
@@ -86,7 +87,7 @@ public class ValidationRule<T> implements Serializable {
         this(None, predicate, message, relaxedModeSupported, instances);
     }
 
-    private ValidationRule(ValidationType type, Predicate<T> predicate, String message, boolean relaxedModeSupported,
+    private ValidationRule(ValidationType type, Predicate<T> predicate, @Nullable String message, boolean relaxedModeSupported,
                            String...instances) {
         this.type = type;
         this.predicate = predicate;
