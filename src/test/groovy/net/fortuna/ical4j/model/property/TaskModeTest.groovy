@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023, Ben Fortuna
+ *  Copyright (c) 2026, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -34,31 +34,29 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.parameter.XParameter
-import net.fortuna.ical4j.model.property.immutable.ImmutableProximity
 import spock.lang.Specification
 
-class ProximityTest extends Specification {
+class TaskModeTest extends Specification {
 
-    def 'test proximity creation'() {
-        expect: 'string result matches expected'
-        proximity as String == expectedValue
-
-        where:
-        proximity                   | expectedValue
-        ImmutableProximity.ARRIVE   | 'PROXIMITY:ARRIVE\r\n'
-    }
-
-    def 'test proximity copy'() {
-        given: 'a proximity property with a parameter'
-        def proximity = new Proximity(new ParameterList([new XParameter('X-TEST', 'test')]), 'DEPART')
+    def 'test task mode copy'() {
+        given: 'a task mode property with a parameter'
+        def taskMode = new TaskMode(new ParameterList([new XParameter('X-TEST', 'test')]))
+        taskMode.value = 'AUTOMATIC-COMPLETION'
 
         when: 'the property is copied'
-        def copy = proximity.copy()
+        def copy = taskMode.copy()
 
         then: 'the copy is an equal but distinct instance'
-        copy instanceof Proximity
-        copy == proximity
-        !copy.is(proximity)
+        copy instanceof TaskMode
+        copy == taskMode
+        !copy.is(taskMode)
+    }
+
+    def 'test task mode factory supports TASK-MODE'() {
+        expect: 'the factory is registered for the TASK-MODE property name'
+        new TaskMode.Factory().supports(Property.TASK_MODE)
+        !new TaskMode.Factory().supports(Property.SUMMARY)
     }
 }

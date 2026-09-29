@@ -33,6 +33,7 @@
 
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
@@ -86,6 +87,22 @@ public class Proximity extends Property {
 
     @Override
     protected PropertyFactory<?> newFactory() {
-        return null;
+        return new Factory();
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<Proximity> {
+        public Factory() {
+            super(PROXIMITY);
+        }
+
+        @Override
+        public Proximity createProperty() {
+            return new Proximity();
+        }
+
+        @Override
+        public Proximity createProperty(ParameterList parameters, String value) {
+            return new Proximity(parameters, value);
+        }
     }
 }
