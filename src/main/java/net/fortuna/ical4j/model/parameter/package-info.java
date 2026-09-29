@@ -32,8 +32,10 @@
  */
 
 /**
- * Types in this package are non-null by default; nullable types are annotated with
- * {@link org.jspecify.annotations.Nullable}.
+ * Contains types used to represent the iCalendar parameter model.
+ *
+ * <p>Types in this package are non-null by default; nullable types are annotated with
+ * {@link org.jspecify.annotations.Nullable}.</p>
  */
 @NullMarked
 package net.fortuna.ical4j.model.parameter;

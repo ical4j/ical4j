@@ -32,8 +32,10 @@
  */
 
 /**
- * Types in this package are non-null by default; nullable types are annotated with
- * {@link org.jspecify.annotations.Nullable}.
+ * Contains types used to represent the iCalendar property model.
+ *
+ * <p>Types in this package are non-null by default; nullable types are annotated with
+ * {@link org.jspecify.annotations.Nullable}.</p>
  *
  * <p>Property value accessors (such as {@code getValue()}, {@code getDate()} and {@code getUri()} where the URI is
  * the property's only representation) are declared non-null on the basis that a property always has a value once
