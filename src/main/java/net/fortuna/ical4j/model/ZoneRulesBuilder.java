@@ -9,6 +9,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ import static net.fortuna.ical4j.model.Property.TZOFFSETFROM;
  */
 public class ZoneRulesBuilder {
 
-    private VTimeZone vTimeZone;
+    private @Nullable VTimeZone vTimeZone;
 
     public ZoneRulesBuilder vTimeZone(VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
@@ -256,16 +257,18 @@ public class ZoneRulesBuilder {
     }
 
     public ZoneRules build() throws ConstraintViolationException {
+        final VTimeZone timeZone = Objects.requireNonNull(vTimeZone, "vTimeZone");
         var now = Instant.now();
         var currentStandard = VTimeZone.getApplicableObservance(now,
-                vTimeZone.getComponents(Observance.STANDARD));
+                timeZone.getComponents(Observance.STANDARD));
 
         var currentDaylight = VTimeZone.getApplicableObservance(now,
-                vTimeZone.getComponents(Observance.DAYLIGHT));
+                timeZone.getComponents(Observance.DAYLIGHT));
 
         // if no standard time use daylight time..
         if (currentStandard == null) {
-            currentStandard = currentDaylight;
+            currentStandard = Objects.requireNonNull(currentDaylight,
+                    "VTIMEZONE has no observance applicable to the current time");
         }
 
         TzOffsetFrom offsetFrom = currentStandard.getRequiredProperty(Property.TZOFFSETFROM);
@@ -274,18 +277,18 @@ public class ZoneRulesBuilder {
         var standardOffset = offsetTo.getOffset();
         var wallOffset = offsetTo.getOffset();
 
-        List<Standard> stdObservances = vTimeZone.getComponents(Observance.STANDARD);
+        List<Standard> stdObservances = timeZone.getComponents(Observance.STANDARD);
         List<ZoneOffsetTransition> standardOffsetTransitions = buildStandardOffsetTransitions(stdObservances);
         Collections.sort(standardOffsetTransitions);
 
-        List<ZoneOffsetTransition> offsetTransitions = buildDSTTransitions(vTimeZone.getObservances());
+        List<ZoneOffsetTransition> offsetTransitions = buildDSTTransitions(timeZone.getObservances());
         Collections.sort(offsetTransitions);
 
         // only create transition rules from the latest definitions..
         // NOTE: order of transition rules is significant.. if currently in DST next transition should be
         // to standard time..
         List<Observance> latestObservances = new ArrayList<>();
-        if (vTimeZone.getApplicableObservance(now).equals(currentDaylight)) {
+        if (Objects.equals(timeZone.getApplicableObservance(now), currentDaylight)) {
             latestObservances.add(currentStandard);
             latestObservances.add(currentDaylight);
         } else {

@@ -311,12 +311,12 @@ public class Trigger extends DateProperty<Instant> implements UtcProperty {
     }
 
     @Override
-    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+    public void setTimeZoneRegistry(@Nullable TimeZoneRegistry timeZoneRegistry) {
         UtcProperty.super.setTimeZoneRegistry(timeZoneRegistry);
     }
 
     @Override
-    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+    public void setDefaultTimeZone(@Nullable ZoneId defaultTimeZone) {
         UtcProperty.super.setDefaultTimeZone(defaultTimeZone);
     }
 

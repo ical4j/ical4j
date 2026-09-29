@@ -67,6 +67,7 @@ public class RefId extends Property {
 
     private static final String PROPERTY_NAME = "REFID";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     public RefId() {

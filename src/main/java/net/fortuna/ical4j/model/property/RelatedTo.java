@@ -160,6 +160,7 @@ public class RelatedTo extends Property implements Encodable {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public final String getValue() {
         if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
             return Uris.decode(Strings.valueOf(getUri()));

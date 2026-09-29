@@ -54,6 +54,7 @@ public class Tel extends Property implements Encodable {
 
     private static final long serialVersionUID = 3159826142152932485L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

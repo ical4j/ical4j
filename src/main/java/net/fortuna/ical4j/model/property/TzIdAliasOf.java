@@ -42,6 +42,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 
 public class TzIdAliasOf extends Property {
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     public TzIdAliasOf() {

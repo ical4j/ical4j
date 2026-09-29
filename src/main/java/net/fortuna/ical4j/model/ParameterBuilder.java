@@ -31,6 +31,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
 
     private final List<ParameterFactory<?>> factories;
 
+    @SuppressWarnings("NullAway.Init") // must be set before build()
     private String name;
 
     private @Nullable String value;
@@ -70,6 +71,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
     /**
      * @return a new parameter instance
      */
+    @SuppressWarnings("NullAway") // a null value is used by filters to test for a parameter's existence
     public Parameter build() {
         Parameter parameter = null;
         String decodedValue;

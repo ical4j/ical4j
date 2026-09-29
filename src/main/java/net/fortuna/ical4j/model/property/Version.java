@@ -62,6 +62,7 @@ public class Version extends Property {
 
     private @Nullable String minVersion;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String maxVersion;
 
     /**

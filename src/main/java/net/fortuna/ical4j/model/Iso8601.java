@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
+import org.jspecify.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -62,7 +63,7 @@ public abstract class Iso8601 extends Date {
 
     private final DateFormat format;
     
-    private DateFormat gmtFormat;
+    private @Nullable DateFormat gmtFormat;
     
     private final int precision;
 

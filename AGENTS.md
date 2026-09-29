@@ -239,7 +239,7 @@ net.fortuna.ical4j.timezone.update.enabled=true
 - Consider streaming for very large files
 
 ### Build Environment
-- Requires Java 11+ for building
+- Requires Java 17+ for building (Error Prone/NullAway); compiled bytecode targets Java 11
 - Gradle wrapper handles Gradle version
 - Docker available for timezone data updates
 

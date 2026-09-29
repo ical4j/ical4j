@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.zone.ZoneRules;
+import java.time.zone.ZoneRulesException;
 import java.time.zone.ZoneRulesProvider;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,7 +62,10 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
         } else {
             try {
                 var localZoneId = zoneIdMap.get(zoneId);
-                var vTimeZone = zoneLoader.loadVTimeZone(localZoneId);
+                var vTimeZone = localZoneId != null ? zoneLoader.loadVTimeZone(localZoneId) : null;
+                if (vTimeZone == null) {
+                    throw new ZoneRulesException("Unknown time-zone ID: " + zoneId);
+                }
                 retVal = new ZoneRulesBuilder().vTimeZone(vTimeZone).build();
                 zoneRulesMap.put(zoneId, retVal);
             } catch (IOException | ParserException e) {

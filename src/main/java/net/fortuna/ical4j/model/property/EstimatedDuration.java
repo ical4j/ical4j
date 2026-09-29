@@ -39,6 +39,7 @@ import java.time.temporal.TemporalAmount;
  */
 public class EstimatedDuration extends Property {
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private TemporalAmountAdapter duration;
 
     public EstimatedDuration() {

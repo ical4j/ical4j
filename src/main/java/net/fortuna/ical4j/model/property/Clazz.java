@@ -104,6 +104,7 @@ public class Clazz extends Property {
     public static final String VALUE_PRIVATE = "PRIVATE";
     public static final String VALUE_CONFIDENTIAL = "CONFIDENTIAL";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

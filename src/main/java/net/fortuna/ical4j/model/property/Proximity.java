@@ -50,6 +50,7 @@ public class Proximity extends Property {
     
     private static final String VALUE_DISCONNECT = "DISCONNECT";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     public Proximity() {

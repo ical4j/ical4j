@@ -16,6 +16,8 @@ hamcrest = "2.2"
 testcontainers = "1.20.4"
 junit = "5.14.1"
 junit4 = "4.13.2"
+errorprone = "2.36.0"
+nullaway = "0.12.6"
 
 
 [libraries]
@@ -40,6 +42,8 @@ junit-junit4 = { group = "junit", name="junit", version.ref = "junit4" }
 junit-vintage = { group = "org.junit.vintage", name="junit-vintage-engine", version.ref = "junit" }
 
 jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0"}
+errorprone-core = { group = "com.google.errorprone", name = "error_prone_core", version.ref = "errorprone"}
+nullaway = { group = "com.uber.nullaway", name = "nullaway", version.ref = "nullaway"}
 
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine"}
 jparsec = { group = "org.jparsec", name = "jparsec", version.ref = "jparsec"}

@@ -31,7 +31,7 @@ public class MapTimeZoneCache implements TimeZoneCache {
     }
 
     @Override
-    public VTimeZone getTimezone(String id, Supplier<VTimeZone> putIfAbsent) {
+    public @Nullable VTimeZone getTimezone(String id, Supplier<@Nullable VTimeZone> putIfAbsent) {
         return mapCache.computeIfAbsent(id, k -> putIfAbsent.get());
     }
 

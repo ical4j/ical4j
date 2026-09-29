@@ -76,6 +76,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
 
     private final Value defaultValueParam;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private DateList<T> dates;
 
     private transient @Nullable TimeZoneRegistry timeZoneRegistry;
@@ -208,7 +209,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
         return result;
     }
 
-    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+    public void setTimeZoneRegistry(@Nullable TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
     }
 
@@ -217,7 +218,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * timezone the system default timezone will be used.
      * @param defaultTimeZone a timezone identifier
      */
-    public void setDefaultTimeZone(ZoneId defaultTimeZone) {
+    public void setDefaultTimeZone(@Nullable ZoneId defaultTimeZone) {
         this.defaultTimeZone = defaultTimeZone;
     }
 }

@@ -125,11 +125,12 @@ public class Link extends Property {
      * @deprecated use {@link Link#getValue()}
      */
     @Deprecated
-    public String getText() {
+    public @Nullable String getText() {
         return value;
     }
 
     @Override
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public String getValue() {
         if (Value.XML_REFERENCE.equals(getRequiredParameter(Parameter.VALUE)) ||
                 Value.URI.equals(getRequiredParameter(Parameter.VALUE))) {
