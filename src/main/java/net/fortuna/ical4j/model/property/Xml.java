@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.codec.DecoderException;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
@@ -53,7 +54,7 @@ public class Xml extends Property implements Encodable {
 
     private String value;
 
-    private byte[] binary;
+    private byte @Nullable [] binary;
 
     /**
      * Default constructor.

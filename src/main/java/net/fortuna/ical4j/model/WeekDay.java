@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.Enums;
 import net.fortuna.ical4j.util.Numbers;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
@@ -232,7 +233,7 @@ public class WeekDay implements Serializable {
      * @return a string, or null if an invalid DAY_OF_WEEK property is
      * specified
      */
-    public static WeekDay getDay(final int calDay) {
+    public static @Nullable WeekDay getDay(final int calDay) {
         switch (calDay) {
             case Calendar.SUNDAY: return SU;
             case Calendar.MONDAY: return MO;
@@ -264,7 +265,7 @@ public class WeekDay implements Serializable {
         }
     }
 
-    public static DayOfWeek getDayOfWeek(WeekDay weekday) {
+    public static @Nullable DayOfWeek getDayOfWeek(@Nullable WeekDay weekday) {
         if (weekday == null) {
             return null;
         }

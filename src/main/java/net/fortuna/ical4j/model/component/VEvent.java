@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.*;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jspecify.annotations.Nullable;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
@@ -405,7 +406,7 @@ public class VEvent extends CalendarComponent implements Prototype<VEvent>, Comp
      * @deprecated use {@link RecurrenceSupport#getOccurrences(Period)}
      */
     @Deprecated
-    public final <T extends Temporal> VEvent getOccurrence(final T date) {
+    public final <T extends Temporal> @Nullable VEvent getOccurrence(final T date) {
 
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {

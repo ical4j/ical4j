@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationEntry;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.jspecify.annotations.Nullable;
 
 import java.time.DateTimeException;
 import java.time.ZoneId;
@@ -77,9 +78,9 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
 
     private DateList<T> dates;
 
-    private transient TimeZoneRegistry timeZoneRegistry;
+    private transient @Nullable TimeZoneRegistry timeZoneRegistry;
 
-    private ZoneId defaultTimeZone;
+    private @Nullable ZoneId defaultTimeZone;
 
     /**
      * @param name the property name

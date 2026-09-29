@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -82,7 +84,7 @@ public class IndexedPropertyList {
      * @return a property or null if no property is found containing a parameter
      * with the specified value
      */
-    public Property getProperty(final String paramValue) {
+    public @Nullable Property getProperty(final String paramValue) {
         final List<Property> properties = getProperties(paramValue);
         if (!properties.isEmpty()) {
             return properties.iterator().next();

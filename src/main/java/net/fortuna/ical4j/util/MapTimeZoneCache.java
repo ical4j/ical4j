@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.component.VTimeZone;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -25,7 +26,7 @@ public class MapTimeZoneCache implements TimeZoneCache {
     }
 
     @Override
-    public VTimeZone getTimezone(String id) {
+    public @Nullable VTimeZone getTimezone(String id) {
         return mapCache.get(id);
     }
 

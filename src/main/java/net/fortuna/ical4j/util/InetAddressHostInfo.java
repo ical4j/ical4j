@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -76,7 +78,7 @@ public class InetAddressHostInfo implements HostInfo {
      * @return a non loopback address
      * @throws SocketException if a socket error occurs
      */
-    private static InetAddress findNonLoopbackAddress() throws SocketException {
+    private static @Nullable InetAddress findNonLoopbackAddress() throws SocketException {
         final Enumeration<NetworkInterface> enumInterfaceAddress = NetworkInterface.getNetworkInterfaces();
         while (enumInterfaceAddress.hasMoreElements()) {
             final var netIf = enumInterfaceAddress.nextElement();

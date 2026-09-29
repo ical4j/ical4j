@@ -34,6 +34,7 @@ package net.fortuna.ical4j.util;
 import net.fortuna.ical4j.model.PropertyCodec;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.util.regex.Pattern;
@@ -193,7 +194,7 @@ public final class Strings {
      * @param object an object instance
      * @return a string representation of the object
      */
-    public static String valueOf(final Object object) {
+    public static String valueOf(final @Nullable Object object) {
         if (object == null) {
             return "";
         }

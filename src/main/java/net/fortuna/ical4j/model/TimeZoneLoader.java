@@ -10,6 +10,7 @@ import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.ResourceLoader;
 import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -118,7 +119,7 @@ public class TimeZoneLoader {
         return true;
     }
 
-    private static VTimeZone generateTimezoneForId(String timezoneId) {
+    private static @Nullable VTimeZone generateTimezoneForId(String timezoneId) {
         if (!TIMEZONE_DEFINITIONS.contains(timezoneId)) {
             return null;
         }
@@ -244,7 +245,7 @@ public class TimeZoneLoader {
         });
     }
 
-    public static TimeZoneLoader getInstance(String resourcePrefix) {
+    public static @Nullable TimeZoneLoader getInstance(String resourcePrefix) {
         var loader = LOADER_MAP.get(resourcePrefix);
         if (loader == null) {
             LOADER_MAP.put(resourcePrefix, new TimeZoneLoader(resourcePrefix));

@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.ParserException;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +54,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
     }
 
     @Override
-    protected ZoneRules provideRules(String zoneId, boolean forCaching) {
+    protected @Nullable ZoneRules provideRules(String zoneId, boolean forCaching) {
         ZoneRules retVal = null;
         if (zoneRulesMap.containsKey(zoneId)) {
             retVal = zoneRulesMap.get(zoneId);

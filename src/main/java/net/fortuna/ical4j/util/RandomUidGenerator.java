@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.property.Uid;
+import org.jspecify.annotations.Nullable;
 
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -40,8 +41,8 @@ public class RandomUidGenerator implements UidGenerator {
 
     private final boolean secure;
 
-    private final SecureRandom random;
-    private final Base64.Encoder encoder;
+    private final @Nullable SecureRandom random;
+    private final Base64.@Nullable Encoder encoder;
 
     public RandomUidGenerator() {
         this(false);

@@ -37,6 +37,7 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -56,7 +57,7 @@ public class StyledDescription extends Property implements Encodable {
     private static final long serialVersionUID = 7287564228220558361L;
 
     private String value;
-    private URI uriValue;
+    private @Nullable URI uriValue;
 
     /**
      * Default constructor.

@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.AlarmPropertyValidators;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
@@ -153,7 +154,7 @@ public class Trigger extends DateProperty<Instant> implements UtcProperty {
 
     private static final long serialVersionUID = 5049421499261722194L;
 
-    private TemporalAmountAdapter duration;
+    private @Nullable TemporalAmountAdapter duration;
 
     /**
      * Default constructor.
@@ -256,7 +257,7 @@ public class Trigger extends DateProperty<Instant> implements UtcProperty {
     /**
      * @return Returns the duration.
      */
-    public final TemporalAmount getDuration() {
+    public final @Nullable TemporalAmount getDuration() {
         if (duration != null) {
             return duration.getDuration();
         }
@@ -293,7 +294,7 @@ public class Trigger extends DateProperty<Instant> implements UtcProperty {
      * @param dateTime The dateTime to set.
      */
     @Override
-    public void setDate(final Instant dateTime) {
+    public void setDate(final @Nullable Instant dateTime) {
         super.setDate(dateTime);
         duration = null;
         replace(Value.DATE_TIME);

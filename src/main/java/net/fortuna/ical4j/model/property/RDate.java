@@ -37,6 +37,7 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.RecurrencePropertyValidators;
+import org.jspecify.annotations.Nullable;
 
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -133,7 +134,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
 
     private static final long serialVersionUID = -3320381650013860193L;
 
-    private PeriodList<T> periods;
+    private @Nullable PeriodList<T> periods;
 
     /**
      * Default constructor.

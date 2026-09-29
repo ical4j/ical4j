@@ -6,6 +6,7 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Constants;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     private final Consumer<Calendar> consumer;
 
-    protected PropertyBuilder propertyBuilder;
+    protected @Nullable PropertyBuilder propertyBuilder;
 
     /**
      * The current component builders.
@@ -69,7 +70,7 @@ public class DefaultContentHandler implements ContentHandler {
         this.context = context;
     }
 
-    public ComponentBuilder<Component> getComponentBuilder() {
+    public @Nullable ComponentBuilder<Component> getComponentBuilder() {
         if (components.isEmpty()) {
             return null;
         }
@@ -192,13 +193,13 @@ public class DefaultContentHandler implements ContentHandler {
         }
     }
 
-    private void assertComponent(ComponentBuilder<?> component) {
+    private void assertComponent(@Nullable ComponentBuilder<?> component) {
         if (component == null) {
             throw new CalendarException("Expected component not initialised");
         }
     }
 
-    private void assertProperty(PropertyBuilder property) {
+    private void assertProperty(@Nullable PropertyBuilder property) {
         if (property == null) {
             throw new CalendarException("Expected property not initialised");
         }

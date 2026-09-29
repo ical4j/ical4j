@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.*;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
@@ -48,14 +49,14 @@ public interface TimeZonePropertyAccessor extends PropertyContainer {
     /**
      * @return the mandatory timezone identifier property
      */
-    default TzId getTimeZoneId() {
+    default @Nullable TzId getTimeZoneId() {
         return (TzId) getProperty(TZID).orElse(null);
     }
 
     /**
      * @return the optional last-modified property
      */
-    default LastModified getLastModified() {
+    default @Nullable LastModified getLastModified() {
         return (LastModified) getProperty(LAST_MODIFIED).orElse(null);
     }
 
@@ -63,7 +64,7 @@ public interface TimeZonePropertyAccessor extends PropertyContainer {
      * @return the optional timezone url property
      * @throws ConstraintViolationException if the property is not present
      */
-    default TzUrl getTimeZoneUrl() {
+    default @Nullable TzUrl getTimeZoneUrl() {
         return (TzUrl) getProperty(TZURL).orElse(null);
     }
 
@@ -72,7 +73,7 @@ public interface TimeZonePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default TzOffsetFrom getTimeZoneOffsetFrom() {
+    default @Nullable TzOffsetFrom getTimeZoneOffsetFrom() {
         return (TzOffsetFrom) getProperty(TZOFFSETFROM).orElse(null);
     }
 
@@ -81,7 +82,7 @@ public interface TimeZonePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default TzOffsetTo getTimeZoneOffsetTo() {
+    default @Nullable TzOffsetTo getTimeZoneOffsetTo() {
         return (TzOffsetTo) getProperty(TZOFFSETTO).orElse(null);
     }
 
@@ -91,7 +92,7 @@ public interface TimeZonePropertyAccessor extends PropertyContainer {
      * @return the DTSTART property or null if not specified
      * @throws ConstraintViolationException if the property is not present
      */
-    default DtStart<LocalDateTime> getStartDate() {
+    default @Nullable DtStart<LocalDateTime> getStartDate() {
         return (DtStart<LocalDateTime>) getProperty(DTSTART).orElse(null);
     }
 }

@@ -7,7 +7,6 @@ import net.fortuna.ical4j.filter.expression.StringExpression;
 import net.fortuna.ical4j.filter.expression.TargetExpression;
 import net.fortuna.ical4j.model.TemporalAmountAdapter;
 import org.jparsec.*;
-
 import java.time.*;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjusters;

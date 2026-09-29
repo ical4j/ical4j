@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ITIPRuleRegistry;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jspecify.annotations.Nullable;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
@@ -202,7 +203,7 @@ public class VTimeZone extends CalendarComponent implements Prototype<VTimeZone>
      * @return the latest applicable timezone observance for the specified date or null if there are no applicable
      * observances
      */
-    public final Observance getApplicableObservance(final Temporal date) {
+    public final @Nullable Observance getApplicableObservance(final Temporal date) {
         return getApplicableObservance(date, getObservances());
     }
 
@@ -213,7 +214,7 @@ public class VTimeZone extends CalendarComponent implements Prototype<VTimeZone>
      * @return the latest applicable timezone observance for the specified date or null if there are no applicable
      * observances
      */
-    public static Observance getApplicableObservance(final Temporal date, List<Observance> observances) {
+    public static @Nullable Observance getApplicableObservance(final Temporal date, List<Observance> observances) {
         Observance latestObservance = null;
         OffsetDateTime latestOnset = null;
         for (final var observance : observances) {
