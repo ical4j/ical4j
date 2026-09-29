@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
 import org.apache.commons.codec.DecoderException;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
 
     private String name;
 
-    private String value;
+    private @Nullable String value;
 
     public ParameterBuilder() {
         this(new ArrayList<>());
@@ -61,7 +62,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
         return this;
     }
 
-    public ParameterBuilder value(String value) {
+    public ParameterBuilder value(@Nullable String value) {
         this.value = value;
         return this;
     }

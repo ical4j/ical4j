@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
 import java.util.Map;
@@ -112,11 +114,11 @@ public interface TimeZoneRegistry {
      * @return a timezone matching the specified identifier. If no timezone
      * is registered with the specified identifier null is returned.
      */
-    TimeZone getTimeZone(final String id);
+    @Nullable TimeZone getTimeZone(final String id);
 
     Map<String, ZoneRules> getZoneRules();
 
     ZoneId getZoneId(String tzId);
 
-    String getTzId(String zoneId);
+    @Nullable String getTzId(String zoneId);
 }

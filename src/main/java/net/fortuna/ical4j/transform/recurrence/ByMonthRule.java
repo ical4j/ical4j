@@ -2,6 +2,7 @@ package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Month;
 import net.fortuna.ical4j.model.Recur;
+import org.jspecify.annotations.Nullable;
 
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
@@ -22,13 +23,13 @@ public class ByMonthRule<T extends Temporal> extends AbstractDateExpansionRule<T
 
     private final List<Month> monthList;
 
-    private final Recur.Skip skip;
+    private final Recur.@Nullable Skip skip;
 
     public ByMonthRule(List<Month> monthList, Frequency frequency) {
         this(monthList, frequency, Recur.Skip.OMIT);
     }
 
-    public ByMonthRule(List<Month> monthList, Frequency frequency, Recur.Skip skip) {
+    public ByMonthRule(List<Month> monthList, Frequency frequency, Recur.@Nullable Skip skip) {
         super(frequency);
         this.monthList = monthList;
         this.skip = skip;

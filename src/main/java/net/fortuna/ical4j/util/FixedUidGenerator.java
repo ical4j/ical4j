@@ -33,6 +33,7 @@ package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.model.property.Uid;
+import org.jspecify.annotations.Nullable;
 
 import java.net.SocketException;
 import java.time.Instant;
@@ -50,7 +51,7 @@ public class FixedUidGenerator implements UidGenerator {
 
     private final String pid;
 
-    private final String hostName;
+    private final @Nullable String hostName;
 
     private static long lastMillis;
 

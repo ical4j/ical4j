@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.Duration;
 import java.time.temporal.ChronoField;
 import java.time.temporal.Temporal;
@@ -42,11 +44,11 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
 
     public static class Builder<T extends Temporal> {
 
-        private T start;
+        private @Nullable T start;
 
-        private T end;
+        private @Nullable T end;
 
-        private TemporalAmount duration;
+        private @Nullable TemporalAmount duration;
 
         private List<? extends T> recurrenceDates = new ArrayList<>();
 
@@ -58,19 +60,19 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
 
         private List<Recur<T>> exceptionRules = new ArrayList<>();
 
-        private Period<? extends Temporal> period;
+        private @Nullable Period<? extends Temporal> period;
 
-        public Builder<T> start(T start) {
+        public Builder<T> start(@Nullable T start) {
             this.start = start;
             return this;
         }
 
-        public  Builder<T> end(T end) {
+        public  Builder<T> end(@Nullable T end) {
             this.end = end;
             return this;
         }
 
-        public Builder<T> duration(TemporalAmount duration) {
+        public Builder<T> duration(@Nullable TemporalAmount duration) {
             this.duration = duration;
             return this;
         }

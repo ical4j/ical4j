@@ -41,6 +41,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DatePropertyValidator;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.time.DateTimeException;
@@ -88,12 +89,12 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     private TemporalAdapter<T> date;
 
-    private transient TimeZoneRegistry timeZoneRegistry;
+    private transient @Nullable TimeZoneRegistry timeZoneRegistry;
 
     /**
      *
      */
-    private ZoneId defaultTimeZone;
+    private @Nullable ZoneId defaultTimeZone;
 
     /**
      * @param name       the property name
@@ -183,7 +184,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      *
      * @param date The date to set.
      */
-    public void setDate(T date) {
+    public void setDate(@Nullable T date) {
         if (date != null) {
             this.date = new TemporalAdapter<>(date, timeZoneRegistry);
             refreshParameters();

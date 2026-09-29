@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.*;
+import org.jspecify.annotations.Nullable;
 
 import java.time.temporal.Temporal;
 
@@ -48,7 +49,7 @@ public interface DateTimePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Completed getDateTimeCompleted() {
+    default @Nullable Completed getDateTimeCompleted() {
         return (Completed) getProperty(Property.COMPLETED).orElse(null);
     }
 
@@ -58,7 +59,7 @@ public interface DateTimePropertyAccessor extends PropertyContainer {
      * @param <T>
      * @throws ConstraintViolationException if the property is not present
      */
-    default <T extends Temporal> DtEnd<T> getDateTimeEnd() {
+    default <T extends Temporal> @Nullable DtEnd<T> getDateTimeEnd() {
         return (DtEnd<T>) getProperty(Property.DTEND).orElse(null);
     }
 
@@ -68,7 +69,7 @@ public interface DateTimePropertyAccessor extends PropertyContainer {
      * @param <T>
      * @throws ConstraintViolationException if the property is not present
      */
-    default <T extends Temporal> Due<T> getDateTimeDue() {
+    default <T extends Temporal> @Nullable Due<T> getDateTimeDue() {
         return (Due<T>) getProperty(Property.DUE).orElse(null);
     }
 
@@ -78,7 +79,7 @@ public interface DateTimePropertyAccessor extends PropertyContainer {
      * @param <T>
      * @throws ConstraintViolationException if the property is not present
      */
-    default <T extends Temporal> DtStart<T> getDateTimeStart() {
+    default <T extends Temporal> @Nullable DtStart<T> getDateTimeStart() {
         return (DtStart<T>) getProperty(Property.DTSTART).orElse(null);
     }
 
@@ -87,7 +88,7 @@ public interface DateTimePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Duration getDuration() {
+    default @Nullable Duration getDuration() {
         return (Duration) getProperty(Property.DURATION).orElse(null);
     }
 
@@ -96,7 +97,7 @@ public interface DateTimePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default FreeBusy getFreeBusyTime() {
+    default @Nullable FreeBusy getFreeBusyTime() {
         return (FreeBusy) getProperty(Property.FREEBUSY).orElse(null);
     }
 
@@ -105,7 +106,7 @@ public interface DateTimePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Transp getTimeTransparency() {
+    default @Nullable Transp getTimeTransparency() {
         return (Transp) getProperty(Property.TRANSP).orElse(null);
     }
 }

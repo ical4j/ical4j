@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,7 +239,7 @@ public final class CalendarDateFormatFactory {
         }
 
         @Override
-        public Date parse(String source, ParsePosition pos) {
+        public @Nullable Date parse(String source, ParsePosition pos) {
             // if lenient ignore superfluous input..
             if (patternEndsWithZ) {
                 if (source.length() > DATETIME_UTC_PATTERN.length() && !isLenient()) {
@@ -309,7 +310,7 @@ public final class CalendarDateFormatFactory {
         }
 
         @Override
-        public Date parse(String source, ParsePosition pos) {
+        public @Nullable Date parse(String source, ParsePosition pos) {
             // if lenient ignore superfluous input..
             if (source.length() > DATE_PATTERN.length() && !isLenient()) {
                 pos.setErrorIndex(DATE_PATTERN.length());
@@ -370,7 +371,7 @@ public final class CalendarDateFormatFactory {
         }
 
         @Override
-        public Date parse(String source, ParsePosition pos) {
+        public @Nullable Date parse(String source, ParsePosition pos) {
             // if lenient ignore superfluous input..
             if (patternEndsWithZ) {
                 if (source.length() > TIME_UTC_PATTERN.length() && !isLenient()) {

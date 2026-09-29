@@ -35,6 +35,7 @@ import net.fortuna.ical4j.transform.recurrence.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Enums;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -279,15 +280,15 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private Frequency frequency;
 
-    private Skip skip;
+    private @Nullable Skip skip;
 
-    private TemporalAdapter<T> until;
+    private @Nullable TemporalAdapter<T> until;
 
-    private RScale rscale;
+    private @Nullable RScale rscale;
 
-    private Integer count;
+    private @Nullable Integer count;
 
-    private Integer interval;
+    private @Nullable Integer interval;
 
     private List<Integer> secondList = new NumberList(ChronoField.SECOND_OF_MINUTE.range(), false);
 
@@ -307,7 +308,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private List<Integer> setPosList = new NumberList(ChronoField.DAY_OF_YEAR.range(), true);
 
-    private WeekDay weekStartDay;
+    private @Nullable WeekDay weekStartDay;
 
     private final Map<String, String> experimentalValues = new HashMap<String, String>();
 
@@ -574,7 +575,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return leap month skip behaviour.
      */
-    public Skip getSkip() {
+    public @Nullable Skip getSkip() {
         return skip;
     }
 
@@ -588,14 +589,14 @@ public class Recur<T extends Temporal> implements Serializable {
     /**
      * @return Returns the until or null if there is none.
      */
-    public final T getUntil() {
+    public final @Nullable T getUntil() {
         return until != null ? until.getTemporal() : null;
     }
 
     /**
      * @return Returns the weekStartDay or null if there is none.
      */
-    public final WeekDay getWeekStartDay() {
+    public final @Nullable WeekDay getWeekStartDay() {
         return weekStartDay;
     }
 
@@ -604,7 +605,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @deprecated will be removed in a future version to support immutable pattern.
      */
     @Deprecated
-    public final void setWeekStartDay(final WeekDay weekStartDay) {
+    public final void setWeekStartDay(final @Nullable WeekDay weekStartDay) {
         this.weekStartDay = weekStartDay;
         if (frequency != null) {
             // May have to update calIncField
@@ -620,19 +621,19 @@ public class Recur<T extends Temporal> implements Serializable {
         return RecurFormatter.toString(this);
     }
 
-    RScale getRScale() {
+    @Nullable RScale getRScale() {
         return rscale;
     }
 
-    TemporalAdapter<T> getUntilAdapter() {
+    @Nullable TemporalAdapter<T> getUntilAdapter() {
         return until;
     }
 
-    Integer getCountValue() {
+    @Nullable Integer getCountValue() {
         return count;
     }
 
-    Integer getIntervalValue() {
+    @Nullable Integer getIntervalValue() {
         return interval;
     }
 
@@ -728,7 +729,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param startDate the date to start the search
      * @return the next date in the recurrence series after startDate
      */
-    public final T getNextDate(final T seed, final T startDate) {
+    public final @Nullable T getNextDate(final T seed, final T startDate) {
         initRules();
 
         T candidateSeed = seed;
@@ -1043,37 +1044,37 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     public static class Builder<T extends Temporal> {
 
-        private Frequency frequency;
+        private @Nullable Frequency frequency;
 
-        private Skip skip;
+        private @Nullable Skip skip;
 
-        private T until;
+        private @Nullable T until;
 
-        private RScale rscale;
+        private @Nullable RScale rscale;
 
-        private Integer count;
+        private @Nullable Integer count;
 
-        private Integer interval;
+        private @Nullable Integer interval;
 
-        private List<Integer> secondList;
+        private @Nullable List<Integer> secondList;
 
-        private List<Integer> minuteList;
+        private @Nullable List<Integer> minuteList;
 
-        private List<Integer> hourList;
+        private @Nullable List<Integer> hourList;
 
-        private List<WeekDay> dayList;
+        private @Nullable List<WeekDay> dayList;
 
-        private List<Integer> monthDayList;
+        private @Nullable List<Integer> monthDayList;
 
-        private List<Integer> yearDayList;
+        private @Nullable List<Integer> yearDayList;
 
-        private List<Integer> weekNoList;
+        private @Nullable List<Integer> weekNoList;
 
-        private List<Month> monthList;
+        private @Nullable List<Month> monthList;
 
-        private List<Integer> setPosList;
+        private @Nullable List<Integer> setPosList;
 
-        private WeekDay weekStartDay;
+        private @Nullable WeekDay weekStartDay;
 
         public Builder() {
         }
@@ -1107,27 +1108,27 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder<T> skip(Skip skip) {
+        public Builder<T> skip(@Nullable Skip skip) {
             this.skip = skip;
             return this;
         }
 
-        public Builder<T> until(T until) {
+        public Builder<T> until(@Nullable T until) {
             this.until = until;
             return this;
         }
 
-        public Builder<T> rscale(RScale rscale) {
+        public Builder<T> rscale(@Nullable RScale rscale) {
             this.rscale = rscale;
             return this;
         }
 
-        public Builder<T> count(Integer count) {
+        public Builder<T> count(@Nullable Integer count) {
             this.count = count;
             return this;
         }
 
-        public Builder<T> interval(Integer interval) {
+        public Builder<T> interval(@Nullable Integer interval) {
             this.interval = interval;
             return this;
         }
@@ -1213,7 +1214,7 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder<T> weekStartDay(WeekDay weekStartDay) {
+        public Builder<T> weekStartDay(@Nullable WeekDay weekStartDay) {
             this.weekStartDay = weekStartDay;
             return this;
         }

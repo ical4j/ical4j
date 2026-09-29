@@ -38,6 +38,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.Configurator;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,7 @@ public class TimeZoneUpdater {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimeZoneUpdater.class);
 
-    private Proxy proxy = null;
+    private @Nullable Proxy proxy = null;
 
     public TimeZoneUpdater() {
         // Proxy configuration..
@@ -141,9 +142,9 @@ public class TimeZoneUpdater {
 
         private final URI base;
 
-        private String scheme;
+        private @Nullable String scheme;
 
-        private String host;
+        private @Nullable String host;
 
         private int port;
 
@@ -151,12 +152,12 @@ public class TimeZoneUpdater {
             this.base = base;
         }
 
-        public UrlBuilder withScheme(String scheme) {
+        public UrlBuilder withScheme(@Nullable String scheme) {
             this.scheme = scheme;
             return this;
         }
 
-        public UrlBuilder withHost(String host) {
+        public UrlBuilder withHost(@Nullable String host) {
             this.host = host;
             return this;
         }

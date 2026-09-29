@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.property.Created;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Sequence;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An interface for accessing change management properties in a property container.
@@ -50,7 +51,7 @@ public interface ChangeManagementPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Created getCreated() {
+    default @Nullable Created getCreated() {
         return (Created) getProperty(Property.CREATED).orElse(null);
     }
 
@@ -59,7 +60,7 @@ public interface ChangeManagementPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default DtStamp getDateTimeStamp() {
+    default @Nullable DtStamp getDateTimeStamp() {
         return (DtStamp) getProperty(Property.DTSTAMP).orElse(null);
     }
 
@@ -68,7 +69,7 @@ public interface ChangeManagementPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default LastModified getLastModified() {
+    default @Nullable LastModified getLastModified() {
         return (LastModified) getProperty(Property.LAST_MODIFIED).orElse(null);
     }
 
@@ -77,7 +78,7 @@ public interface ChangeManagementPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Sequence getSequence() {
+    default @Nullable Sequence getSequence() {
         return (Sequence) getProperty(Property.SEQUENCE).orElse(null);
     }
 }

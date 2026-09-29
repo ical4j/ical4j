@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.*;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -64,7 +65,7 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Clazz getClassification() {
+    default @Nullable Clazz getClassification() {
         return (Clazz) getProperty(Property.CLASS).orElse(null);
     }
 
@@ -81,7 +82,7 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Description getDescription() {
+    default @Nullable Description getDescription() {
         return (Description) getProperty(Property.DESCRIPTION).orElse(null);
     }
 
@@ -90,7 +91,7 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Geo getGeographicPos() {
+    default @Nullable Geo getGeographicPos() {
         return (Geo) getProperty(Property.GEO).orElse(null);
     }
 
@@ -99,7 +100,7 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Location getLocation() {
+    default @Nullable Location getLocation() {
         return (Location) getProperty(Property.LOCATION).orElse(null);
     }
 
@@ -108,7 +109,7 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default PercentComplete getPercentComplete() {
+    default @Nullable PercentComplete getPercentComplete() {
         return (PercentComplete) getProperty(Property.PERCENT_COMPLETE).orElse(null);
     }
 
@@ -117,7 +118,7 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Priority getPriority() {
+    default @Nullable Priority getPriority() {
         return (Priority) getProperty(Property.PRIORITY).orElse(null);
     }
 
@@ -131,7 +132,7 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Status getStatus() {
+    default @Nullable Status getStatus() {
         return (Status) getProperty(Property.STATUS).orElse(null);
     }
 
@@ -140,11 +141,11 @@ public interface DescriptivePropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Summary getSummary() {
+    default @Nullable Summary getSummary() {
         return (Summary) getProperty(Property.SUMMARY).orElse(null);
     }
 
-    default Concept getConcept() {
+    default @Nullable Concept getConcept() {
         return (Concept) getProperty(Concept.PROPERTY_NAME).orElse(null);
     }
 }

@@ -75,6 +75,7 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -84,9 +85,9 @@ public class Link extends Property {
 
     public static final String PROPERTY_NAME = "LINK";
 
-    private URI uri;
+    private @Nullable URI uri;
 
-    private String value;
+    private @Nullable String value;
 
     public Link() {
         super(PROPERTY_NAME);
@@ -114,7 +115,7 @@ public class Link extends Property {
         setValue(value);
     }
 
-    public URI getUri() {
+    public @Nullable URI getUri() {
         return uri;
     }
 

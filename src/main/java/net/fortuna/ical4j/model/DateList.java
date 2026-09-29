@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.RegEx;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.ZoneId;
@@ -118,7 +119,7 @@ public class DateList<T extends Temporal> implements Serializable {
         return new DateList<>(dates);
     }
 
-    public static DateList<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+    public static DateList<ZonedDateTime> parse(String value, TzId tzId, @Nullable TimeZoneRegistry timeZoneRegistry) {
         if (value == null || value.isEmpty()) {
             return emptyList();
         }

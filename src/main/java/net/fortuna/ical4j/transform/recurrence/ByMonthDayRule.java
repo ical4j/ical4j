@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Recur;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,13 +33,13 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
 
     private final List<Integer> monthDayList;
 
-    private final Recur.Skip skip;
+    private final Recur.@Nullable Skip skip;
 
     public ByMonthDayRule(List<Integer> monthDayList, Frequency frequency) {
         this(monthDayList, frequency, Recur.Skip.OMIT);
     }
 
-    public ByMonthDayRule(List<Integer> monthDayList, Frequency frequency, Recur.Skip skip) {
+    public ByMonthDayRule(List<Integer> monthDayList, Frequency frequency, Recur.@Nullable Skip skip) {
         super(frequency);
         this.monthDayList = monthDayList;
         this.skip = skip;

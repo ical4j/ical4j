@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.schema.SchemaValidatorFactory;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
@@ -69,9 +70,9 @@ public class StructuredData extends Property implements Encodable {
 
     private String value;
 
-    private URI uri;
+    private @Nullable URI uri;
 
-    private byte[] binary;
+    private byte @Nullable [] binary;
 
     /**
      * Default constructor.
@@ -138,11 +139,11 @@ public class StructuredData extends Property implements Encodable {
         }
     }
 
-    public URI getUri() {
+    public @Nullable URI getUri() {
         return uri;
     }
 
-    public byte[] getBinary() {
+    public byte @Nullable [] getBinary() {
         return binary;
     }
 

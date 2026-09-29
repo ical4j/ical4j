@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.temporal.Temporal;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,9 +52,9 @@ final class RecurDateSpliterator<T extends Temporal> extends Spliterators.Abstra
     private T candidateSeed;
     private int incrementMultiplier = 1;
 
-    private T lastCandidate = null;
+    private @Nullable T lastCandidate = null;
 
-    private Iterator<T> candidates = null;
+    private @Nullable Iterator<T> candidates = null;
 
     private final HashSet<T> invalidCandidates = new HashSet<>();
 

@@ -35,6 +35,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.ResourceLoader;
 import org.apache.commons.lang3.Validate;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -114,7 +115,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     }
 
-    private final TimeZoneLoader timeZoneLoader;
+    private final @Nullable TimeZoneLoader timeZoneLoader;
 
     private final Map<String, TimeZone> timezones;
 
@@ -212,7 +213,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * {@inheritDoc}
      */
     @Override
-    public final TimeZone getTimeZone(final String id) {
+    public final @Nullable TimeZone getTimeZone(final String id) {
         var timezone = timezones.get(id);
         if (timezone == null) {
             /* A blank TZID is only invalid if it is not declared under the
@@ -272,7 +273,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     }
 
     @Override
-    public String getTzId(String zoneId) {
+    public @Nullable String getTzId(String zoneId) {
         return zoneIds.get(zoneId);
     }
 }

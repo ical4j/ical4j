@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -85,7 +87,7 @@ public class IndexedComponentList<T extends Component> {
      * @return a component or null if no component is found containing a property
      * with the specified value
      */
-    public T getComponent(final String propertyValue) {
+    public @Nullable T getComponent(final String propertyValue) {
         final List<T> components = getComponents(propertyValue);
         if (!components.isEmpty()) {
             return components.get(0);

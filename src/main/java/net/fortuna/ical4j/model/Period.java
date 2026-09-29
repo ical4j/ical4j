@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.TimeZones;
+import org.jspecify.annotations.Nullable;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
@@ -116,11 +117,11 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     private final T start;
 
-    private Component component;
+    private @Nullable Component component;
 
     private final T end;
 
-    private final TemporalAmountAdapter duration;
+    private final @Nullable TemporalAmountAdapter duration;
 
     private transient final CalendarDateFormat dateFormat;
 
@@ -547,7 +548,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         return Objects.hash(start, end, duration);
     }
 
-    public Component getComponent() {
+    public @Nullable Component getComponent() {
 		return component;
 	}
 

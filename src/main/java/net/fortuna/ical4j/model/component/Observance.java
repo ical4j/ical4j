@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.time.*;
@@ -77,7 +78,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
     private long[] onsetsMillisec;
     private OffsetDateTime[] onsetsDates;
     //    private Map onsets = new TreeMap();
-    private OffsetDateTime initialOnset = null;
+    private @Nullable OffsetDateTime initialOnset = null;
 
     /* If this is set we have rrules. If we get a date after this rebuild onsets */
     private OffsetDateTime onsetLimit;
@@ -120,7 +121,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
      * @return the latest applicable observance date or null if there is no applicable observance onset for the
      * specified date
      */
-    public final OffsetDateTime getLatestOnset(final Temporal date) {
+    public final @Nullable OffsetDateTime getLatestOnset(final Temporal date) {
         if (!TemporalAdapter.isDateTimePrecision(date)) {
             throw new UnsupportedOperationException("Unable to get timezone observance for date-only temporal.");
         }
