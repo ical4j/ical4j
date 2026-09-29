@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023, Ben Fortuna
+ *  Copyright (c) 2026, Ben Fortuna
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -31,34 +31,22 @@
  *
  */
 
-package net.fortuna.ical4j.model.property
+package net.fortuna.ical4j.util
 
-import net.fortuna.ical4j.model.ParameterList
-import net.fortuna.ical4j.model.parameter.XParameter
-import net.fortuna.ical4j.model.property.immutable.ImmutableProximity
 import spock.lang.Specification
 
-class ProximityTest extends Specification {
+class InetAddressHostInfoTest extends Specification {
 
-    def 'test proximity creation'() {
-        expect: 'string result matches expected'
-        proximity as String == expectedValue
+    def 'test loopback fallback when no non-loopback address is available'() {
+        expect: 'the loopback address is used'
+        InetAddressHostInfo.findNonLoopbackAddress(interfaces) == InetAddress.loopbackAddress
 
         where:
-        proximity                   | expectedValue
-        ImmutableProximity.ARRIVE   | 'PROXIMITY:ARRIVE\r\n'
+        interfaces << [null, Collections.emptyEnumeration()]
     }
 
-    def 'test proximity copy'() {
-        given: 'a proximity property with a parameter'
-        def proximity = new Proximity(new ParameterList([new XParameter('X-TEST', 'test')]), 'DEPART')
-
-        when: 'the property is copied'
-        def copy = proximity.copy()
-
-        then: 'the copy is an equal but distinct instance'
-        copy instanceof Proximity
-        copy == proximity
-        !copy.is(proximity)
+    def 'test default host name is resolved'() {
+        expect: 'a host name is always available'
+        new InetAddressHostInfo().hostName != null
     }
 }

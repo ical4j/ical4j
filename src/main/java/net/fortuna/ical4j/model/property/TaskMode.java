@@ -67,13 +67,13 @@ public class TaskMode extends Property {
 
     @Override
     protected PropertyFactory<?> newFactory() {
-        return null;
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TaskMode> {
 
         public Factory() {
-            super(SUMMARY);
+            super(TASK_MODE);
         }
 
         @Override

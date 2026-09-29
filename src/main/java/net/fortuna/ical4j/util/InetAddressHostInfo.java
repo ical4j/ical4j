@@ -75,24 +75,33 @@ public class InetAddressHostInfo implements HostInfo {
 
     /**
      * Find a non loopback address for this machine on which to start the server.
-     * @return a non loopback address
+     * @return a non loopback address, or the loopback address if no other address is available
      * @throws SocketException if a socket error occurs
      */
-    private static @Nullable InetAddress findNonLoopbackAddress() throws SocketException {
-        final Enumeration<NetworkInterface> enumInterfaceAddress = NetworkInterface.getNetworkInterfaces();
-        while (enumInterfaceAddress.hasMoreElements()) {
-            final var netIf = enumInterfaceAddress.nextElement();
+    private static InetAddress findNonLoopbackAddress() throws SocketException {
+        return findNonLoopbackAddress(NetworkInterface.getNetworkInterfaces());
+    }
 
-            // Iterate over inet address
-            final Enumeration<InetAddress> enumInetAdress = netIf.getInetAddresses();
-            while (enumInetAdress.hasMoreElements()) {
-                final var address = enumInetAdress.nextElement();
-                if (!address.isLoopbackAddress()) {
-                    return address;
+    /**
+     * @param networkInterfaces the network interfaces to search, or null if there are none
+     * @return the first non loopback address, or the loopback address if no other address is available
+     */
+    static InetAddress findNonLoopbackAddress(@Nullable Enumeration<NetworkInterface> networkInterfaces) {
+        if (networkInterfaces != null) {
+            while (networkInterfaces.hasMoreElements()) {
+                final var netIf = networkInterfaces.nextElement();
+
+                // Iterate over inet address
+                final Enumeration<InetAddress> enumInetAdress = netIf.getInetAddresses();
+                while (enumInetAdress.hasMoreElements()) {
+                    final var address = enumInetAdress.nextElement();
+                    if (!address.isLoopbackAddress()) {
+                        return address;
+                    }
                 }
             }
         }
-        return null;
+        return InetAddress.getLoopbackAddress();
     }
 
 }
