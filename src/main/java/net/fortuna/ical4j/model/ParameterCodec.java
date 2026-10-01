@@ -24,8 +24,9 @@ public class ParameterCodec implements StringEncoder, StringDecoder {
     // matches an unencoded caret character..
     private static final Pattern CARET_EX = Pattern.compile("\\^");
 
-    // matches an unencoded newline character..
-    private static final Pattern NEWLINE_EX = Pattern.compile("\n");
+    // matches an unencoded line break in any form (CRLF, bare CR or bare LF), as a bare CR
+    // cannot be represented in a parameter value and would otherwise terminate the content line..
+    private static final Pattern NEWLINE_EX = Pattern.compile("\r\n|\r|\n");
 
     // matches an unencoded quote character..
     private static final Pattern QUOTE_EX = Pattern.compile("\"");
