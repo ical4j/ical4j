@@ -33,4 +33,4 @@
 
 - [x] 6.1 `./gradlew check` passes (tests + revapi). If RevAPI flags `ZoneRulesProviderImpl`, record the justification in `.palantir/revapi.yml`. **Passed; RevAPI flagged nothing.**
 - [x] 6.2 `openspec validate android-zone-rules-fallback --strict`.
-- [ ] 6.3 After merge, comment on #900 asking the reporter to verify the published `develop` snapshot on Android. Close the issue only after that confirmation, or with a note if none arrives.
+- [x] 6.3 After merge, comment on #900 asking the reporter to verify the published `develop` snapshot on Android. Close the issue only after that confirmation, or with a note if none arrives. **Reporter confirmed working on #900 (2026-10-01).**
