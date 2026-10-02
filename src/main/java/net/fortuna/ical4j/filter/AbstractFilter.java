@@ -40,6 +40,7 @@ import net.fortuna.ical4j.filter.expression.LiteralExpression;
 import net.fortuna.ical4j.filter.expression.TargetExpression;
 import net.fortuna.ical4j.filter.expression.UnaryExpression;
 import net.fortuna.ical4j.model.*;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -153,7 +154,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @param value
      * @return
      */
-    protected Property property(FilterTarget operand, String value) {
+    protected Property property(FilterTarget operand, @Nullable String value) {
         var spec = new PropertyBuilder(propertyFactorySupplier.get()).name(operand.getName());
         if (value != null) {
             spec.value(value);
@@ -210,7 +211,7 @@ public abstract class AbstractFilter<T> implements PredicateFactory<T> {
      * @param value
      * @return a parameter instance
      */
-    protected Parameter parameter(String name, String value) {
+    protected Parameter parameter(String name, @Nullable String value) {
         return new ParameterBuilder(parameterFactorySupplier.get()).name(name).value(value).build();
     }
 }

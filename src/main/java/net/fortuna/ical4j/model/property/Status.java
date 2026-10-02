@@ -138,6 +138,7 @@ public class Status extends Property {
 
     // Status values for "VJOURNAL"
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

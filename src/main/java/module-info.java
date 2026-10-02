@@ -1,5 +1,4 @@
 import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.DefaultZoneRulesProvider;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.component.*;
@@ -8,7 +7,6 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.transform.compliance.*;
 import net.fortuna.ical4j.validate.CalendarValidatorFactory;
 
-import java.time.zone.ZoneRulesProvider;
 
 module ical4j.core {
     requires java.xml;
@@ -46,7 +44,6 @@ module ical4j.core {
     exports net.fortuna.ical4j.transform.recurrence;
     exports net.fortuna.ical4j.transform.compliance;
 
-    provides ZoneRulesProvider with DefaultZoneRulesProvider;
 
     provides ComponentFactory with Daylight.Factory, Standard.Factory, VAlarm.Factory, VEvent.Factory,
             VFreeBusy.Factory, VJournal.Factory, VTimeZone.Factory, VToDo.Factory, VVenue.Factory,

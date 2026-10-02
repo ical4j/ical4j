@@ -387,7 +387,7 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
                     final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
-                        if (!uidCal.getComponents().contains(timezone)) {
+                        if (timezone != null && !uidCal.getComponents().contains(timezone)) {
                             uidCal.add(timezone);
                         }
                     }

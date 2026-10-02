@@ -1,14 +1,18 @@
 buildscript {
-    // The axion-release plugin (at its latest, 1.21.1) pulls Bouncy Castle 1.81/1.82 onto the
+    // The axion-release plugin (at its latest, 1.21.2) pulls Bouncy Castle 1.81/1.82 onto the
     // plugin classpath, below the 1.84 that fixes GHSA-p93r-85wp-75v3, -cj8j-37rh-8475,
     // -c3fc-8qff-9hwx and -wg6q-6289-32hp. Force the patched version until axion-release ships it.
     // Build-time only; not part of the published ical4j artifact.
     configurations.classpath {
         resolutionStrategy {
-            force 'org.bouncycastle:bcprov-jdk18on:1.84',
-                    'org.bouncycastle:bcpg-jdk18on:1.84',
-                    'org.bouncycastle:bcpkix-jdk18on:1.84',
-                    'org.bouncycastle:bcutil-jdk18on:1.84'
+            force 'org.bouncycastle:bcprov-jdk18on:1.85',
+                    'org.bouncycastle:bcpg-jdk18on:1.85',
+                    'org.bouncycastle:bcpkix-jdk18on:1.85',
+                    'org.bouncycastle:bcutil-jdk18on:1.85'
+            // The revapi plugin (at its latest, 2.3.0) declares FreeMarker 2.3.34, affected by
+            // GHSA-27j2-h3m2-8237. Force the patched version until the plugin ships it.
+            // Build-time only; not part of the published ical4j artifact.
+            force 'org.freemarker:freemarker:2.3.35'
         }
     }
 }
@@ -16,13 +20,13 @@ buildscript {
 plugins {
     id 'java-library'
     id 'groovy'
-    id 'maven-publish'
+    id 'com.vanniktech.maven.publish' version '0.34.0'
     id 'jacoco'
     id 'signing'
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
     id "pl.allegro.tech.build.axion-release" version "1.21.1" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
-    id "com.palantir.revapi" version "2.0.0"
-//    id "net.ltgt.errorprone" version "2.0.2" apply false
+    id "com.palantir.revapi" version "2.3.0"
+    id "net.ltgt.errorprone" version "4.1.0"
     id "biz.aQute.bnd.builder" version "$bndVersion"
 }
 
@@ -34,9 +38,6 @@ repositories {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-
-    withJavadocJar()
-    withSourcesJar()
 
     registerFeature('caffeineTimezoneCache') {
         usingSourceSet(sourceSets.main)
@@ -56,8 +57,8 @@ java {
 }
 
 dependencies {
-//    errorprone "com.google.errorprone:error_prone_core:2.3.3"
-//    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+    // static analysis: NullAway checks the JSpecify nullness annotations (see compileJava below)
+    errorprone libs.errorprone.core, libs.nullaway
 
     // testcontainers (test-only) pulls commons-compress 1.24.0, below the 1.26.0 that fixes
     // GHSA-4g9r-vxhx-9pgx and GHSA-4265-ccf5-phj5. Constrain to the patched version. Test scope
@@ -103,6 +104,20 @@ dependencies {
     // been migrated to JUnit Jupiter and no longer require vintage. The
     // junit4 dependency itself is provided transitively via groovy-test.
     testRuntimeOnly libs.junit.vintage
+}
+
+// Enforce the JSpecify @NullMarked/@Nullable contracts on main sources with NullAway. All other Error Prone
+// checks are disabled. Error Prone requires JDK 17+ to run the compiler; bytecode still targets Java 11.
+tasks.named('compileJava', JavaCompile) {
+    options.errorprone {
+        disableAllChecks = true
+        check('NullAway', net.ltgt.gradle.errorprone.CheckSeverity.ERROR)
+        option('NullAway:OnlyNullMarked', 'true')
+    }
+}
+
+tasks.named('compileTestJava', JavaCompile) {
+    options.errorprone.enabled = false
 }
 
 test {
@@ -242,53 +257,37 @@ ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
 }
 
-publishing {
-    publications {
-        ical4j(MavenPublication) {
-            from components.java
-            pom.withXml {
-                asNode().appendNode('name', project.name)
-                asNode().appendNode('description', project.description)
-                asNode().appendNode('url', 'http://ical4j.github.io')
+// Publishing to the Sonatype Central Portal is configured via the vanniktech plugin.
+// Host, auto-release and signing toggles live in gradle.properties
+// (SONATYPE_HOST, SONATYPE_AUTOMATIC_RELEASE, RELEASE_SIGNING_ENABLED).
+// Credentials and the signing key are supplied via ORG_GRADLE_PROJECT_* env vars in CI.
+mavenPublishing {
+    coordinates(group.toString(), project.name, version.toString())
 
-                def scmNode = asNode().appendNode('scm')
-                scmNode.appendNode('url', 'https://github.com/ical4j/ical4j')
-                scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j.git')
-                scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j.git')
+    pom {
+        name = project.name
+        description = project.description
+        url = 'http://ical4j.github.io'
 
-                def licenseNode = asNode().appendNode('licenses').appendNode('license')
-                licenseNode.appendNode('name', 'BSD-3-Clause')
-                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt')
-                licenseNode.appendNode('distribution', 'repo')
-
-                def developerNode = asNode().appendNode('developers').appendNode('developer')
-                developerNode.appendNode('id', 'fortuna')
-                developerNode.appendNode('name', 'Ben Fortuna')
+        licenses {
+            license {
+                name = 'iCal4j - License'
+                url = 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt'
+                distribution = 'repo'
             }
         }
-    }
 
-    repositories {
-        maven {
-            name = "MavenCentral"
-            url = !isReleaseVersion ? "https://central.sonatype.com/repository/maven-snapshots/" : "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+        developers {
+            developer {
+                id = 'fortuna'
+                name = 'Ben Fortuna'
             }
         }
-//        maven {
-//            name = "GitHubPackages"
-//            url = uri("https://maven.pkg.github.com/ical4j/ical4j")
-//            credentials {
-//                username = System.getenv("GPR_USERNAME")
-//                password = System.getenv("GPR_TOKEN")
-//            }
-//        }
-    }
-}
 
-signing {
-    required { isReleaseVersion }
-    sign publishing.publications.ical4j
+        scm {
+            url = 'https://github.com/ical4j/ical4j'
+            connection = 'scm:git@github.com:ical4j/ical4j.git'
+            developerConnection = 'scm:git@github.com:ical4j/ical4j.git'
+        }
+    }
 }

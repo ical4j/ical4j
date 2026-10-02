@@ -67,6 +67,7 @@ public class CalendarBuilder {
     /**
      * The calendar instance created by the builder.
      */
+    @SuppressWarnings("NullAway.Init") // set by the content handler once a calendar is parsed
     private Calendar calendar;
 
     /**

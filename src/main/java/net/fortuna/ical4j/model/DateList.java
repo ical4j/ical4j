@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.RegEx;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.ZoneId;
@@ -118,7 +119,7 @@ public class DateList<T extends Temporal> implements Serializable {
         return new DateList<>(dates);
     }
 
-    public static DateList<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+    public static DateList<ZonedDateTime> parse(String value, TzId tzId, @Nullable TimeZoneRegistry timeZoneRegistry) {
         if (value == null || value.isEmpty()) {
             return emptyList();
         }
@@ -140,6 +141,19 @@ public class DateList<T extends Temporal> implements Serializable {
             return "";
         }
         return dates.stream().map(TemporalAdapter::toString).collect(Collectors.joining(","));
+    }
+
+    /**
+     * Returns each date's stored value text, comma-separated, without resolving any zone.
+     *
+     * @return the stored value text of this list
+     * @see TemporalAdapter#getValueString()
+     */
+    public String toValueString() {
+        if (dates.isEmpty()) {
+            return "";
+        }
+        return dates.stream().map(TemporalAdapter::getValueString).collect(Collectors.joining(","));
     }
 
     public String toString(ZoneId zoneId) {

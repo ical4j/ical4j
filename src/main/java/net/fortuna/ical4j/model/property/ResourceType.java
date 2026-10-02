@@ -95,11 +95,13 @@ public class ResourceType extends Property implements Encodable {
             "REMOTE-CONFERENCE-VIDEO";
     /*  Video remote conferencing facilities. */
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public ResourceType() {
         this(null);
     }

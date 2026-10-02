@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateProperty;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,14 +119,14 @@ public class TzHelper {
         }
     }
 
-    private static void correctTzParameter(Property property, String newTimezoneId) {
+    private static void correctTzParameter(Property property, @Nullable String newTimezoneId) {
         property.removeAll(Parameter.TZID);
         if (newTimezoneId != null) {
             property.add(new TzId(newTimezoneId));
         }
     }
 
-    private static String getCorrectedTimezoneFromTzParameter(Property property) {
+    private static @Nullable String getCorrectedTimezoneFromTzParameter(Property property) {
         Optional<TzId> tzId = property.getParameter(Parameter.TZID);
         var tzIdValue = tzId.get().getValue();
         return getCorrectedTimeZoneIdFrom(tzIdValue);
@@ -148,16 +149,17 @@ public class TzHelper {
      * @return a valid timezoneId for the specified timezoneValue or <code>null</code> in case the specified time zone
      *         value does not match anything known
      */
-    public static String getCorrectedTimeZoneIdFrom(String value) {
+    public static @Nullable String getCorrectedTimeZoneIdFrom(String value) {
         if (value != null) {
             value = value.contains("\"") ? value.replaceAll("\"", "") : value;
-            if (TIMEZONE_REGISTRY.getTimeZone(value) != null) {
-                return TIMEZONE_REGISTRY.getTimeZone(value).getID();
+            var timeZone = TIMEZONE_REGISTRY.getTimeZone(value);
+            if (timeZone != null) {
+                return timeZone.getID();
             }
             var nameCandidate = MS_TIMEZONE_NAMES.get(value);
             if (nameCandidate != null) {
-                return TIMEZONE_REGISTRY.getTimeZone(nameCandidate) != null
-                        ? TIMEZONE_REGISTRY.getTimeZone(nameCandidate).getID() : nameCandidate;
+                var candidateTimeZone = TIMEZONE_REGISTRY.getTimeZone(nameCandidate);
+                return candidateTimeZone != null ? candidateTimeZone.getID() : nameCandidate;
             }
             return MS_TIMEZONE_IDS.get(value);
         }

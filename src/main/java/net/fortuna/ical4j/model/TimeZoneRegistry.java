@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,10 +55,20 @@ public interface TimeZoneRegistry {
 
     Map<String, String> ZONE_ALIASES = new ConcurrentHashMap<>();
 
+    /**
+     * Resolves a TZID that has no registry-local definition. The id (or its alias) is mapped to iCal4j's bundled
+     * definition, returned as an {@code ical4j~} zone. The first call registers the bundled definitions as a
+     * {@link java.time.zone.ZoneRulesProvider}; where the platform does not allow that (e.g. Android), the platform
+     * zone is returned instead.
+     *
+     * @param tzId a timezone identifier or alias
+     * @return the resolved zone
+     * @throws java.time.DateTimeException if the id resolves to no known zone
+     */
     static ZoneId getGlobalZoneId(String tzId) {
         Objects.requireNonNull(tzId, "tzId");
-        // Ensure zone rules are loaded..
-        Set<String> ids = ZoneId.getAvailableZoneIds();
+        // Register the bundled definitions on first use (lazily, never via ServiceLoader - see GlobalZoneRules)..
+        GlobalZoneRules.isRegistered();
         try {
             Class.forName(TimeZoneRegistryImpl.class.getCanonicalName());
         } catch (ClassNotFoundException e) {
@@ -103,11 +114,11 @@ public interface TimeZoneRegistry {
      * @return a timezone matching the specified identifier. If no timezone
      * is registered with the specified identifier null is returned.
      */
-    TimeZone getTimeZone(final String id);
+    @Nullable TimeZone getTimeZone(final String id);
 
     Map<String, ZoneRules> getZoneRules();
 
     ZoneId getZoneId(String tzId);
 
-    String getTzId(String zoneId);
+    @Nullable String getTzId(String zoneId);
 }

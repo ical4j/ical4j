@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.data;
 
+import org.jspecify.annotations.Nullable;
+
 import java.text.MessageFormat;
 
 /**
@@ -61,7 +63,7 @@ public class ParserException extends Exception {
      * @param message a descriptive message for the exception
      * @param lineNo line number where parsing error ocurred
      */
-    public ParserException(final String message, final int lineNo) {
+    public ParserException(final @Nullable String message, final int lineNo) {
         super(MessageFormat.format(ERROR_MESSAGE_PATTERN, lineNo) + message);
         this.lineNo = lineNo;
     }
@@ -72,7 +74,7 @@ public class ParserException extends Exception {
      * @param lineNo line number where parsing error ocurred
      * @param cause a throwable that is the cause of this exception
      */
-    public ParserException(final String message, final int lineNo,
+    public ParserException(final @Nullable String message, final int lineNo,
             final Throwable cause) {
 
         super(MessageFormat.format(ERROR_MESSAGE_PATTERN, lineNo) + message, cause);

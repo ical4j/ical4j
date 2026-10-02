@@ -49,6 +49,7 @@ public class ExtendedAddress extends Property implements Encodable {
 
     private static final long serialVersionUID = 6506776332370144983L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

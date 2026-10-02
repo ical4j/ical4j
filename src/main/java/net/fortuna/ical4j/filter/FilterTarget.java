@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.filter;
 
 import net.fortuna.ical4j.util.RegEx;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +78,7 @@ public class FilterTarget {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (FilterTarget) o;
@@ -102,13 +103,13 @@ public class FilterTarget {
 
         private final String name;
 
-        private String value;
+        private @Nullable String value;
 
         public Attribute(String name) {
             this.name = name;
         }
 
-        public Attribute(String name, String value) {
+        public Attribute(String name, @Nullable String value) {
             this.name = name;
             this.value = value;
         }
@@ -117,12 +118,12 @@ public class FilterTarget {
             return name;
         }
 
-        public String getValue() {
+        public @Nullable String getValue() {
             return value;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             var attribute = (Attribute) o;

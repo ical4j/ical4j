@@ -40,6 +40,7 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -408,7 +409,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     /**
      * Support for a content line prefix used to group related properties. This is only used with vCard properties.
      */
-    private String prefix;
+    private @Nullable String prefix;
 
     private ParameterList parameters;
 
@@ -507,11 +508,11 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * Returns the property prefix for applicable property types.
      * @return a string prefix, or null if not applicable
      */
-    public String getPrefix() {
+    public @Nullable String getPrefix() {
         return prefix;
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(@Nullable String prefix) {
         this.prefix = prefix;
     }
 

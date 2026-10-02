@@ -55,6 +55,7 @@ public class ParticipantType extends Property implements Encodable {
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public ParticipantType() {
         this(null);
     }

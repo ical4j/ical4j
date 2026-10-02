@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
 import org.apache.commons.codec.DecoderException;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,10 @@ public class ParameterBuilder extends AbstractContentBuilder {
 
     private final List<ParameterFactory<?>> factories;
 
+    @SuppressWarnings("NullAway.Init") // must be set before build()
     private String name;
 
-    private String value;
+    private @Nullable String value;
 
     public ParameterBuilder() {
         this(new ArrayList<>());
@@ -61,7 +63,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
         return this;
     }
 
-    public ParameterBuilder value(String value) {
+    public ParameterBuilder value(@Nullable String value) {
         this.value = value;
         return this;
     }
@@ -69,6 +71,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
     /**
      * @return a new parameter instance
      */
+    @SuppressWarnings("NullAway") // a null value is used by filters to test for a parameter's existence
     public Parameter build() {
         Parameter parameter = null;
         String decodedValue;

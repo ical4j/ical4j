@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.temporal.Temporal;
@@ -44,7 +46,7 @@ final class WeekBasedYears {
     private WeekBasedYears() {
     }
 
-    static TemporalUnit of(DayOfWeek weekStartDay) {
+    static TemporalUnit of(@Nullable DayOfWeek weekStartDay) {
         final WeekFields weekFields = weekStartDay == null
                 ? WeekFields.of(DayOfWeek.MONDAY, 4)
                 : WeekFields.of(weekStartDay, 4);

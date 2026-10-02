@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Configurator;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.lang.ref.WeakReference;
@@ -20,12 +21,48 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ZoneRulesProviderImpl extends ZoneRulesProvider {
 
-    public static final ZoneRulesProviderImpl INSTANCE = new ZoneRulesProviderImpl();
+    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(ZoneRulesProviderImpl.class);
+
+    /**
+     * The installed provider, or {@code null} where the platform does not allow a custom
+     * {@link ZoneRulesProvider} to be constructed or registered. Android, for example, blocks both
+     * the {@code ZoneRulesProvider} constructor and {@link ZoneRulesProvider#registerProvider} as
+     * hidden APIs.
+     *
+     * @deprecated this field is {@code null} when the provider is unavailable; use
+     * {@link #getInstance()} or {@link #isAvailable()} instead.
+     */
+    @Deprecated
+    public static final @Nullable ZoneRulesProviderImpl INSTANCE;
     static {
-        ZoneRulesProvider.registerProvider(INSTANCE);
+        ZoneRulesProviderImpl instance;
+        try {
+            instance = new ZoneRulesProviderImpl();
+            ZoneRulesProvider.registerProvider(instance);
+        } catch (LinkageError | SecurityException e) {
+            // an unregistered provider is of no use, so treat a failed registration like a failed construction
+            instance = null;
+            LOG.info("Custom zone rules provider unavailable ({}: {}); VTIMEZONE definitions will resolve to"
+                    + " platform time zones and their own rules will not be applied", e.getClass().getName(),
+                    e.getMessage());
+        }
+        INSTANCE = instance;
     }
 
-    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(ZoneRulesProviderImpl.class);
+    /**
+     * @return true if the custom provider was constructed and registered, so that zone IDs allocated from
+     * {@link #getZoneIdPool()} resolve through {@link java.time.ZoneId#of(String)}
+     */
+    public static boolean isAvailable() {
+        return INSTANCE != null;
+    }
+
+    /**
+     * @return the installed provider, or an empty optional where the platform does not allow one
+     */
+    public static Optional<ZoneRulesProviderImpl> getInstance() {
+        return Optional.ofNullable(INSTANCE);
+    }
 
     private final Set<String> registeredZoneIds;
 
@@ -36,9 +73,12 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
     private final AtomicBoolean refresh = new AtomicBoolean(false);
 
     public ZoneRulesProviderImpl() {
+        // zone ids are registered JVM-wide, so give each provider instance its own prefix: otherwise a second copy of
+        // iCal4j (another webapp, or a redeploy while the old provider is still registered) can't register at all
+        String token = UUID.randomUUID().toString().substring(0, 8);
         Set<String> globalZoneIds = new HashSet<>();
         for (int i = 0; i < Configurator.getIntProperty("net.fortuna.ical4j.timezone.id.pool.size").orElse(1500); i++) {
-            globalZoneIds.add("ical4j-local-" + i);
+            globalZoneIds.add("ical4j-local-" + token + "-" + i);
         }
         this.registeredZoneIds = Collections.unmodifiableSet(globalZoneIds);
         this.allocatedZoneIds = new ConcurrentHashMap<>(512, 0.75f, 2);
@@ -55,7 +95,7 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
     }
 
     @Override
-    protected ZoneRules provideRules(String zoneId, boolean forCaching) {
+    protected @Nullable ZoneRules provideRules(String zoneId, boolean forCaching) {
         ZoneRules retVal = null;
         // don't allow caching of rules due to potential for dynamically loaded definitions..
         if (!forCaching) {

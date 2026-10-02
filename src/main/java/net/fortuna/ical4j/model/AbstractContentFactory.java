@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import org.apache.commons.lang3.Validate;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -81,7 +82,7 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
      * standard factories
      * @throws IllegalArgumentException if the specified key is blank
      */
-    protected final T getFactory(String key) {
+    protected final @Nullable T getFactory(String key) {
         Validate.notBlank(key, "Invalid factory key: [%s]", key);
         T factory = null;
         for (T candidate : (ServiceLoader<T>) factoryLoader) {

@@ -38,9 +38,11 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.model.property.immutable.ImmutableMethod.*;
@@ -65,11 +67,11 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  */
 public final class ITIPRuleRegistry {
 
-    private static final Map<String, Map<Method, Validator<? extends CalendarComponent>>> RULES = new HashMap<>();
+    private static final Map<String, Map<@Nullable Method, Validator<? extends CalendarComponent>>> RULES = new HashMap<>();
 
     static {
         // ----- VEVENT -----
-        Map<Method, Validator<? extends CalendarComponent>> vevent = new HashMap<>();
+        Map<@Nullable Method, Validator<? extends CalendarComponent>> vevent = new HashMap<>();
         vevent.put(ADD, withAlarms(new ComponentValidator<>(Component.VEVENT,
                 new ValidationRule<>(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, SUMMARY, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
@@ -125,7 +127,7 @@ public final class ITIPRuleRegistry {
         RULES.put(Component.VEVENT, vevent);
 
         // ----- VTODO -----
-        Map<Method, Validator<? extends CalendarComponent>> vtodo = new HashMap<>();
+        Map<@Nullable Method, Validator<? extends CalendarComponent>> vtodo = new HashMap<>();
         vtodo.put(ADD, withAlarms(new ComponentValidator<>(Component.VTODO,
                 new ValidationRule<>(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
@@ -175,7 +177,7 @@ public final class ITIPRuleRegistry {
         RULES.put(Component.VTODO, vtodo);
 
         // ----- VJOURNAL -----
-        Map<Method, Validator<? extends CalendarComponent>> vjournal = new HashMap<>();
+        Map<@Nullable Method, Validator<? extends CalendarComponent>> vjournal = new HashMap<>();
         vjournal.put(ADD, new ComponentValidator<>(Component.VJOURNAL,
                 new ValidationRule<>(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule<>(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
@@ -193,7 +195,7 @@ public final class ITIPRuleRegistry {
         RULES.put(Component.VJOURNAL, vjournal);
 
         // ----- VFREEBUSY -----
-        Map<Method, Validator<? extends CalendarComponent>> vfreebusy = new HashMap<>();
+        Map<@Nullable Method, Validator<? extends CalendarComponent>> vfreebusy = new HashMap<>();
         vfreebusy.put(PUBLISH, new ComponentValidator<>(Component.VFREEBUSY,
                 new ValidationRule<>(OneOrMore, FREEBUSY),
                 new ValidationRule<>(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
@@ -219,7 +221,7 @@ public final class ITIPRuleRegistry {
         // VTIMEZONE's iTIP validation is method-agnostic: the same validator runs for any METHOD.
         // The convention: a null-keyed entry in the per-component map serves as the
         // "any method" fallback, consulted when no method-specific entry exists.
-        Map<Method, Validator<? extends CalendarComponent>> vtimezone = new HashMap<>();
+        Map<@Nullable Method, Validator<? extends CalendarComponent>> vtimezone = new HashMap<>();
         vtimezone.put(null, withObservances(ComponentValidator.VTIMEZONE));
         RULES.put(Component.VTIMEZONE, vtimezone);
     }
@@ -276,7 +278,7 @@ public final class ITIPRuleRegistry {
      * a single ERROR entry indicating that the method is not applicable to the component
      */
     public static ValidationResult validate(CalendarComponent component, Method method) {
-        Map<Method, Validator<? extends CalendarComponent>> byMethod = RULES.get(component.getName());
+        Map<@Nullable Method, Validator<? extends CalendarComponent>> byMethod = RULES.get(component.getName());
         if (byMethod == null) {
             return notApplicable(component, method);
         }
@@ -297,13 +299,13 @@ public final class ITIPRuleRegistry {
             // Defensive: cardinality-based validators should not throw, but if a legacy
             // validator does we surface its message as an ERROR entry rather than propagating.
             ValidationResult result = new ValidationResult();
-            result.getEntries().add(new ValidationEntry(ve.getMessage(),
+            result.getEntries().add(new ValidationEntry(Objects.requireNonNullElse(ve.getMessage(), "Validation failed"),
                     ValidationEntry.Severity.ERROR, component.getName()));
             return result;
         }
     }
 
-    private static ValidationResult notApplicable(CalendarComponent component, Method method) {
+    private static ValidationResult notApplicable(CalendarComponent component, @Nullable Method method) {
         ValidationResult result = new ValidationResult();
         String methodValue = method != null ? method.getValue() : "<null>";
         result.getEntries().add(new ValidationEntry(

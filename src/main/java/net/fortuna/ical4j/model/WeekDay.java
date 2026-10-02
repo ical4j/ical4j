@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.Enums;
 import net.fortuna.ical4j.util.Numbers;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
@@ -165,7 +166,7 @@ public class WeekDay implements Serializable {
             case TH: return TH;
             case FR: return FR;
             case SA: return SA;
-            default: return null;
+            default: throw new IllegalArgumentException("Unknown day: " + day);
         }
     }
 
@@ -175,7 +176,7 @@ public class WeekDay implements Serializable {
      * @return a weekday instance representing the specified calendar
      */
     public static WeekDay getWeekDay(final Calendar cal) {
-        return getDay(cal.get(Calendar.DAY_OF_WEEK));
+        return Objects.requireNonNull(getDay(cal.get(Calendar.DAY_OF_WEEK)));
     }
 
     /**
@@ -192,7 +193,7 @@ public class WeekDay implements Serializable {
             case THURSDAY: return TH;
             case FRIDAY: return FR;
             case SATURDAY: return SA;
-            default: return null;
+            default: throw new IllegalArgumentException("Unknown day of week: " + dayOfWeek);
         }
     }
 
@@ -202,7 +203,7 @@ public class WeekDay implements Serializable {
      * @return a weekday instance representing the specified calendar
      */
     public static WeekDay getMonthlyOffset(final Calendar cal) {
-        return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), cal.get(Calendar.DAY_OF_WEEK_IN_MONTH));
+        return new WeekDay(Objects.requireNonNull(getDay(cal.get(Calendar.DAY_OF_WEEK))), cal.get(Calendar.DAY_OF_WEEK_IN_MONTH));
     }
     
     /**
@@ -222,7 +223,7 @@ public class WeekDay implements Serializable {
 			}
 		} while(delta>-5);
 		
-		return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), delta);
+		return new WeekDay(Objects.requireNonNull(getDay(cal.get(Calendar.DAY_OF_WEEK))), delta);
     }
     
     /**
@@ -232,7 +233,7 @@ public class WeekDay implements Serializable {
      * @return a string, or null if an invalid DAY_OF_WEEK property is
      * specified
      */
-    public static WeekDay getDay(final int calDay) {
+    public static @Nullable WeekDay getDay(final int calDay) {
         switch (calDay) {
             case Calendar.SUNDAY: return SU;
             case Calendar.MONDAY: return MO;
@@ -264,7 +265,7 @@ public class WeekDay implements Serializable {
         }
     }
 
-    public static DayOfWeek getDayOfWeek(WeekDay weekday) {
+    public static @Nullable DayOfWeek getDayOfWeek(@Nullable WeekDay weekday) {
         if (weekday == null) {
             return null;
         }

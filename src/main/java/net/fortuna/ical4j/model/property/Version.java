@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.CalendarPropertyValidators;
+import org.jspecify.annotations.Nullable;
 
 import static net.fortuna.ical4j.model.property.immutable.ImmutableVersion.VERSION_2_0;
 
@@ -59,8 +60,9 @@ public class Version extends Property {
 
     public static final String VALUE_2_0 = "2.0";
 
-    private String minVersion;
+    private @Nullable String minVersion;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String maxVersion;
 
     /**
@@ -116,7 +118,7 @@ public class Version extends Property {
     /**
      * @return Returns the minVersion.
      */
-    public final String getMinVersion() {
+    public final @Nullable String getMinVersion() {
         return minVersion;
     }
 

@@ -15,6 +15,7 @@ public class RefreshInterval extends Property {
 
     public static final String PROPERTY_NAME = "REFRESH-INTERVAL";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private TemporalAmountAdapter duration;
 
     public RefreshInterval() {

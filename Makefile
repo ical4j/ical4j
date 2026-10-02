@@ -55,4 +55,9 @@ release: verify
 	./gradlew release
 
 publish:
-	./gradlew publish
+	./gradlew publishToMavenCentral
+
+# Targets such as markNextVersion and approveApiChanges take extra words as arguments (see NEXT_VERSION and
+# CHANGE_JUSTIFICATION above). Treat those words as no-op targets so make does not fail with "No rule to make target".
+%:
+	@:

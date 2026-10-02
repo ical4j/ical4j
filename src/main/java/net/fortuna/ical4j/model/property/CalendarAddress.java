@@ -56,6 +56,7 @@ public class CalendarAddress extends Property {
 
     private static final long serialVersionUID = 8430929418723298803L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private URI calAddress;
 
     /**

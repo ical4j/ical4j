@@ -95,6 +95,7 @@ public class Summary extends Property implements Encodable {
 
     private static final long serialVersionUID = 7709437653910363024L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

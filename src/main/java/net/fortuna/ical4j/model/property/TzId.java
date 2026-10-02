@@ -108,6 +108,7 @@ public class TzId extends Property implements Encodable {
      */
     public static final String PREFIX = "/";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

@@ -92,6 +92,7 @@ public class Url extends Property {
 
     private static final long serialVersionUID = 1092576402256525737L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private URI uri;
 
     /**

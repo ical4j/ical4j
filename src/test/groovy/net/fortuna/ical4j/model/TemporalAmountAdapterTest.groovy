@@ -7,6 +7,7 @@ import spock.lang.Unroll
 
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 class TemporalAmountAdapterTest extends Specification {
@@ -38,6 +39,21 @@ class TemporalAmountAdapterTest extends Specification {
         java.time.Period.ofMonths(6) | "P26W"
         java.time.Period.ofMonths(-6) | "-P26W"
         Duration.ofDays(15).plusHours(5).plusSeconds(20)    | 'P15DT5H0M20S'
+    }
+
+    def "verify string representation across daylight saving transitions"() {
+        expect: 'the time remaining after whole calendar days is measured from the seed plus those days'
+        new TemporalAmountAdapter(duration).toString(ZonedDateTime.parse(seed)) == expectedValue
+
+        where:
+        duration                        | seed                                              | expectedValue
+        // spring forward: 47 exact hours spans two calendar days (one of them 23 hours long)
+        Duration.ofHours(47)            | '2024-03-09T12:00:00-05:00[America/New_York]'     | 'P2D'
+        Duration.ofHours(48)            | '2024-03-09T12:00:00-05:00[America/New_York]'     | 'P2DT1H'
+        Duration.ofHours(-47)           | '2024-03-09T12:00:00-05:00[America/New_York]'     | '-P2D'
+        // fall back: 48 exact hours is one calendar day plus 23 hours
+        Duration.ofHours(48)            | '2024-11-02T12:00:00-04:00[America/New_York]'     | 'P1DT23H'
+        Duration.ofHours(49)            | '2024-11-02T12:00:00-04:00[America/New_York]'     | 'P2D'
     }
 
     def "verify relaxed string parsing"() {
