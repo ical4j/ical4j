@@ -35,6 +35,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.ResourceLoader;
 import org.apache.commons.lang3.Validate;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -174,17 +175,20 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      */
     @Override
     public final void register(final TimeZone timezone, boolean update) {
+        var registered = timezone;
         if (update) {
             try {
                 // load any available updates for the timezone..
-                timezones.put(timezone.getID(), new TimeZone(timeZoneLoader.loadVTimeZone(timezone.getID())));
+                final var updated = timeZoneLoader.loadVTimeZone(timezone.getID());
+                if (updated != null) {
+                    registered = new TimeZone(updated);
+                }
             } catch (IOException | ParserException e) {
                 var log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                 log.warn("Error occurred loading VTimeZone", e);
             }
-        } else {
-            timezones.put(timezone.getID(), timezone);
         }
+        timezones.put(timezone.getID(), registered);
 
         if (!zoneRulesProviderAvailable) {
             // fallback mode: no provider can resolve a synthetic zone id, so keep the definition only and
@@ -193,7 +197,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         }
 
         // use latest timezone definition to build zone rules..
-        var newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
+        var newZoneRules = new ZoneRulesBuilder().vTimeZone(registered.getVTimeZone())
                 .build();
         var globalId = ZoneRulesProviderImpl.getInstance().orElseThrow().getZoneIdPool().allocate(this);
         zoneIds.put(globalId, timezone.getID());
@@ -212,7 +216,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * {@inheritDoc}
      */
     @Override
-    public final TimeZone getTimeZone(final String id) {
+    public final @Nullable TimeZone getTimeZone(final String id) {
         var timezone = timezones.get(id);
         if (timezone == null) {
             /* A blank TZID is only invalid if it is not declared under the
@@ -272,7 +276,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     }
 
     @Override
-    public String getTzId(String zoneId) {
+    public @Nullable String getTzId(String zoneId) {
         return zoneIds.get(zoneId);
     }
 }

@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.BiFunction;
@@ -87,7 +88,7 @@ public interface PropertyContainer extends PropertyListAccessor {
      * @return
      * @param <T>
      */
-    default <T extends PropertyContainer, P> T with(BiFunction<T, P, T> f, P p) {
+    default <T extends PropertyContainer, P> T with(BiFunction<T, P, T> f, @Nullable P p) {
         return f.apply((T) this, p);
     }
 }

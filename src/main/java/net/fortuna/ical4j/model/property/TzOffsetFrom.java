@@ -51,6 +51,7 @@ public class TzOffsetFrom extends Property {
 
     private static final long serialVersionUID = 450274263165493502L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private ZoneOffsetAdapter offset;
 
     /**

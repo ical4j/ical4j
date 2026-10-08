@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An interface for accessing calendar properties in a calendar model.
@@ -50,7 +51,7 @@ public interface CalendarPropertyAccessor extends PropertyContainer {
      * @return the PRODID property, or null if property doesn't exist
      * @throws ConstraintViolationException if the property is not present
      */
-    default ProdId getProductId() {
+    default @Nullable ProdId getProductId() {
         return (ProdId) getProperty(Property.PRODID).orElse(null);
     }
 
@@ -59,7 +60,7 @@ public interface CalendarPropertyAccessor extends PropertyContainer {
      * @return the VERSION property, or null if property doesn't exist
      * @throws ConstraintViolationException if the property is not present
      */
-    default Version getVersion() {
+    default @Nullable Version getVersion() {
         return (Version) getProperty(Property.VERSION).orElse(null);
     }
 
@@ -68,7 +69,7 @@ public interface CalendarPropertyAccessor extends PropertyContainer {
      * @return the CALSCALE property, or null if property doesn't exist
      * @throws ConstraintViolationException if the property is not present
      */
-    default CalScale getCalendarScale() {
+    default @Nullable CalScale getCalendarScale() {
         return (CalScale) getProperty(Property.CALSCALE).orElse(null);
     }
 
@@ -77,7 +78,7 @@ public interface CalendarPropertyAccessor extends PropertyContainer {
      * @return the METHOD property, or null if property doesn't exist
      * @throws ConstraintViolationException if the property is not present
      */
-    default Method getMethod() {
+    default @Nullable Method getMethod() {
         return (Method) getProperty(Property.METHOD).orElse(null);
     }
 }

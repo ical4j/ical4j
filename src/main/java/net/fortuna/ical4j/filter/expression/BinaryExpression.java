@@ -33,6 +33,7 @@
 package net.fortuna.ical4j.filter.expression;
 
 import net.fortuna.ical4j.filter.FilterExpression;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -55,7 +56,7 @@ public class BinaryExpression implements FilterExpression {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (BinaryExpression) o;

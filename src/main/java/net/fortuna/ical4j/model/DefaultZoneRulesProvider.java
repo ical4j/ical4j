@@ -1,11 +1,13 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.ParserException;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.zone.ZoneRules;
+import java.time.zone.ZoneRulesException;
 import java.time.zone.ZoneRulesProvider;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,14 +55,17 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
     }
 
     @Override
-    protected ZoneRules provideRules(String zoneId, boolean forCaching) {
+    protected @Nullable ZoneRules provideRules(String zoneId, boolean forCaching) {
         ZoneRules retVal = null;
         if (zoneRulesMap.containsKey(zoneId)) {
             retVal = zoneRulesMap.get(zoneId);
         } else {
             try {
                 var localZoneId = zoneIdMap.get(zoneId);
-                var vTimeZone = zoneLoader.loadVTimeZone(localZoneId);
+                var vTimeZone = localZoneId != null ? zoneLoader.loadVTimeZone(localZoneId) : null;
+                if (vTimeZone == null) {
+                    throw new ZoneRulesException("Unknown time-zone ID: " + zoneId);
+                }
                 retVal = new ZoneRulesBuilder().vTimeZone(vTimeZone).build();
                 zoneRulesMap.put(zoneId, retVal);
             } catch (IOException | ParserException e) {

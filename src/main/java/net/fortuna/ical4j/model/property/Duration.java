@@ -109,6 +109,7 @@ public class Duration extends Property {
 
     private static final long serialVersionUID = 9144969653829796798L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private TemporalAmountAdapter duration;
 
     /**

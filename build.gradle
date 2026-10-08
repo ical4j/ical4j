@@ -26,7 +26,7 @@ plugins {
 //    id 'org.hidetake.ssh' version '2.11.2' // errors when using Gradle 8.* with JDK 8
     id "pl.allegro.tech.build.axion-release" version "1.21.1" // errors when using Gradle 8.* with JDK 8 (https://github.com/allegro/axion-release-plugin/issues?q=is%3Aissue+is%3Aopen+%22Gradle+8%22+in%3Atitle)
     id "com.palantir.revapi" version "2.3.0"
-//    id "net.ltgt.errorprone" version "2.0.2" apply false
+    id "net.ltgt.errorprone" version "4.1.0"
     id "biz.aQute.bnd.builder" version "$bndVersion"
 }
 
@@ -57,8 +57,8 @@ java {
 }
 
 dependencies {
-//    errorprone "com.google.errorprone:error_prone_core:2.3.3"
-//    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+    // static analysis: NullAway checks the JSpecify nullness annotations (see compileJava below)
+    errorprone libs.errorprone.core, libs.nullaway
 
     // testcontainers (test-only) pulls commons-compress 1.24.0, below the 1.26.0 that fixes
     // GHSA-4g9r-vxhx-9pgx and GHSA-4265-ccf5-phj5. Constrain to the patched version. Test scope
@@ -104,6 +104,20 @@ dependencies {
     // been migrated to JUnit Jupiter and no longer require vintage. The
     // junit4 dependency itself is provided transitively via groovy-test.
     testRuntimeOnly libs.junit.vintage
+}
+
+// Enforce the JSpecify @NullMarked/@Nullable contracts on main sources with NullAway. All other Error Prone
+// checks are disabled. Error Prone requires JDK 17+ to run the compiler; bytecode still targets Java 11.
+tasks.named('compileJava', JavaCompile) {
+    options.errorprone {
+        disableAllChecks = true
+        check('NullAway', net.ltgt.gradle.errorprone.CheckSeverity.ERROR)
+        option('NullAway:OnlyNullMarked', 'true')
+    }
+}
+
+tasks.named('compileTestJava', JavaCompile) {
+    options.errorprone.enabled = false
 }
 
 test {

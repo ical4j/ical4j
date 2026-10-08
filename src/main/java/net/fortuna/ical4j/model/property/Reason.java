@@ -45,6 +45,7 @@ import java.net.URISyntaxException;
  */
 public class Reason extends Property {
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private URI uri;
 
     public Reason() {

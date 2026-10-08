@@ -70,6 +70,7 @@ public class BusyType extends Property {
     public static final String VALUE_BUSY_UNAVAILABLE = "BUSY-UNAVAILABLE";
     public static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

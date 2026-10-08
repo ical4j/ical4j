@@ -33,6 +33,8 @@
 
 package net.fortuna.ical4j.filter.expression;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -57,7 +59,7 @@ public class BooleanExpression implements LiteralExpression<Boolean> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (BooleanExpression) o;

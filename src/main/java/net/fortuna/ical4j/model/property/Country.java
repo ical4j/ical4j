@@ -54,6 +54,7 @@ public class Country extends Property implements Encodable {
 
     private static final long serialVersionUID = -8091183292558005452L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

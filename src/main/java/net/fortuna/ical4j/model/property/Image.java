@@ -16,6 +16,7 @@ public class Image extends Property {
 
     public static final String PROPERTY_NAME = "IMAGE";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     public Image() {

@@ -33,6 +33,8 @@
 
 package net.fortuna.ical4j.model.property
 
+import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.parameter.XParameter
 import net.fortuna.ical4j.model.property.immutable.ImmutableProximity
 import spock.lang.Specification
 
@@ -45,5 +47,18 @@ class ProximityTest extends Specification {
         where:
         proximity                   | expectedValue
         ImmutableProximity.ARRIVE   | 'PROXIMITY:ARRIVE\r\n'
+    }
+
+    def 'test proximity copy'() {
+        given: 'a proximity property with a parameter'
+        def proximity = new Proximity(new ParameterList([new XParameter('X-TEST', 'test')]), 'DEPART')
+
+        when: 'the property is copied'
+        def copy = proximity.copy()
+
+        then: 'the copy is an equal but distinct instance'
+        copy instanceof Proximity
+        copy == proximity
+        !copy.is(proximity)
     }
 }

@@ -33,6 +33,7 @@
 package net.fortuna.ical4j.filter.expression;
 
 import net.fortuna.ical4j.model.DateTime;
+import org.jspecify.annotations.Nullable;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -60,7 +61,7 @@ public class DateExpression implements LiteralExpression<Date> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (DateExpression) o;

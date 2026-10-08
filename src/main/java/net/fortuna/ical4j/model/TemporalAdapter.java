@@ -3,6 +3,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.*;
@@ -45,14 +46,14 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * a {@link TimeZoneRegistry} instance. If no registry is provided it is assumed this represents a global
      * timezone identifier.
      */
-    private final TzId tzId;
+    private final @Nullable TzId tzId;
 
     /**
      * Provides localized timezone definitions for an iCalendar object.
      */
-    private transient final TimeZoneRegistry timeZoneRegistry;
+    private transient final @Nullable TimeZoneRegistry timeZoneRegistry;
 
-    private transient volatile T temporal;
+    private transient volatile @Nullable T temporal;
 
     public TemporalAdapter(TemporalAdapter<T> adapter) {
         this.temporal = adapter.temporal;
@@ -65,7 +66,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         this(temporal, null);
     }
 
-    public TemporalAdapter(T temporal, TimeZoneRegistry timeZoneRegistry) {
+    public TemporalAdapter(T temporal, @Nullable TimeZoneRegistry timeZoneRegistry) {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
         this.valueString = toString(temporal);
@@ -91,7 +92,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @param value a string representation of a floating date/time value
      * @param tzId a zone id to apply to the parsed value
      */
-    private TemporalAdapter(String value, TzId tzId) {
+    private TemporalAdapter(String value, @Nullable TzId tzId) {
         this(value, tzId, null);
     }
 
@@ -101,7 +102,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @param tzId a zone id to apply to the parsed value
      * @param timeZoneRegistry timezone definitions
      */
-    private TemporalAdapter(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+    private TemporalAdapter(String value, @Nullable TzId tzId, @Nullable TimeZoneRegistry timeZoneRegistry) {
         this.valueString = value;
         this.tzId = tzId;
         this.timeZoneRegistry = timeZoneRegistry;
@@ -291,7 +292,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @param timeZoneRegistry timezone definitions
      * @return
      */
-    public static TemporalAdapter<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+    public static TemporalAdapter<ZonedDateTime> parse(String value, TzId tzId, @Nullable TimeZoneRegistry timeZoneRegistry) {
         return new TemporalAdapter<>(value, tzId, timeZoneRegistry);
     }
 

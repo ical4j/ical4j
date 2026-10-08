@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
+import org.jspecify.annotations.Nullable;
 
 /**
  * $Id$
@@ -72,11 +73,12 @@ public class RequestStatus extends Property {
      */
     public static final String SCHEDULING_ERROR = "4";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String statusCode;
 
-    private String description;
+    private @Nullable String description;
 
-    private String exData;
+    private @Nullable String exData;
 
     /**
      * Default constructor.
@@ -124,14 +126,14 @@ public class RequestStatus extends Property {
     /**
      * @return Returns the description.
      */
-    public final String getDescription() {
+    public final @Nullable String getDescription() {
         return description;
     }
 
     /**
      * @return Returns the exData.
      */
-    public final String getExData() {
+    public final @Nullable String getExData() {
         return exData;
     }
 

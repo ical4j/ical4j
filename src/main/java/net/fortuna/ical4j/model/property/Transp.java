@@ -104,6 +104,7 @@ public class Transp extends Property {
     public static final String VALUE_OPAQUE = "OPAQUE";
     public static final String VALUE_TRANSPARENT = "TRANSPARENT";
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

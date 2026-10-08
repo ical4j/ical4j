@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.*;
+import org.jspecify.annotations.Nullable;
 
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -59,7 +60,7 @@ public interface RelationshipPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Contact getContact() {
+    default @Nullable Contact getContact() {
         return (Contact) getProperty(Property.CONTACT).orElse(null);
     }
 
@@ -68,7 +69,7 @@ public interface RelationshipPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Organizer getOrganizer() {
+    default @Nullable Organizer getOrganizer() {
         return (Organizer) getProperty(Property.ORGANIZER).orElse(null);
     }
 
@@ -78,7 +79,7 @@ public interface RelationshipPropertyAccessor extends PropertyContainer {
      * @param <T>
      * @throws ConstraintViolationException if the property is not present
      */
-    default <T extends Temporal> RecurrenceId<T> getRecurrenceId() {
+    default <T extends Temporal> @Nullable RecurrenceId<T> getRecurrenceId() {
         return (RecurrenceId<T>) getProperty(Property.RECURRENCE_ID).orElse(null);
     }
 
@@ -87,7 +88,7 @@ public interface RelationshipPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default RelatedTo getRelatedTo() {
+    default @Nullable RelatedTo getRelatedTo() {
         return (RelatedTo) getProperty(Property.RELATED_TO).orElse(null);
     }
 
@@ -96,7 +97,7 @@ public interface RelationshipPropertyAccessor extends PropertyContainer {
      * @return
      * @throws ConstraintViolationException if the property is not present
      */
-    default Url getUrl() {
+    default @Nullable Url getUrl() {
         return (Url) getProperty(Property.URL).orElse(null);
     }
 

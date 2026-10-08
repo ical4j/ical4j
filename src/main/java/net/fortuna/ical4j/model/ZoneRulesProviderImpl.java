@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Configurator;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.lang.ref.WeakReference;
@@ -32,7 +33,7 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
      * {@link #getInstance()} or {@link #isAvailable()} instead.
      */
     @Deprecated
-    public static final ZoneRulesProviderImpl INSTANCE;
+    public static final @Nullable ZoneRulesProviderImpl INSTANCE;
     static {
         ZoneRulesProviderImpl instance;
         try {
@@ -94,7 +95,7 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
     }
 
     @Override
-    protected ZoneRules provideRules(String zoneId, boolean forCaching) {
+    protected @Nullable ZoneRules provideRules(String zoneId, boolean forCaching) {
         ZoneRules retVal = null;
         // don't allow caching of rules due to potential for dynamically loaded definitions..
         if (!forCaching) {

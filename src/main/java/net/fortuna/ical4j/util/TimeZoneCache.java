@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.component.VTimeZone;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -16,9 +17,9 @@ import java.util.function.Supplier;
  */
 public interface TimeZoneCache {
 
-    VTimeZone getTimezone(String id);
+    @Nullable VTimeZone getTimezone(String id);
 
-    VTimeZone getTimezone(String id, Supplier<VTimeZone> putIfAbsent);
+    @Nullable VTimeZone getTimezone(String id, Supplier<@Nullable VTimeZone> putIfAbsent);
 
     @Deprecated
     boolean putIfAbsent(String id, VTimeZone timeZone);

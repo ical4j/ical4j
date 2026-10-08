@@ -59,6 +59,7 @@ public class Region extends Property implements Encodable {
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public Region() {
         this(null);
     }

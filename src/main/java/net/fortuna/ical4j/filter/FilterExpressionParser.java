@@ -7,7 +7,6 @@ import net.fortuna.ical4j.filter.expression.StringExpression;
 import net.fortuna.ical4j.filter.expression.TargetExpression;
 import net.fortuna.ical4j.model.TemporalAmountAdapter;
 import org.jparsec.*;
-
 import java.time.*;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjusters;
@@ -152,6 +151,7 @@ public class FilterExpressionParser {
         });
     }
 
+    @SuppressWarnings("NullAway") // split() always yields a part and each branch assigns or throws
     public FilterExpression parse(String filterExpression) {
         FilterExpression expression = null;
         for (var part : filterExpression.split("\\s*and\\s*")) {

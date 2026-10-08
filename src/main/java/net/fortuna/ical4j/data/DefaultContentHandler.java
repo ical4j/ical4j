@@ -6,6 +6,7 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Constants;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -27,15 +28,17 @@ public class DefaultContentHandler implements ContentHandler {
 
     private final Consumer<Calendar> consumer;
 
-    protected PropertyBuilder propertyBuilder;
+    protected @Nullable PropertyBuilder propertyBuilder;
 
     /**
      * The current component builders.
      */
     protected final LinkedList<ComponentBuilder<Component>> components = new LinkedList<>();
 
+    @SuppressWarnings("NullAway.Init") // initialised by startCalendar()
     protected List<Property> calendarProperties;
 
+    @SuppressWarnings("NullAway.Init") // initialised by startCalendar()
     protected List<CalendarComponent> calendarComponents;
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
@@ -69,7 +72,7 @@ public class DefaultContentHandler implements ContentHandler {
         this.context = context;
     }
 
-    public ComponentBuilder<Component> getComponentBuilder() {
+    public @Nullable ComponentBuilder<Component> getComponentBuilder() {
         if (components.isEmpty()) {
             return null;
         }
@@ -108,10 +111,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void endComponent(String name) {
-        assertComponent(getComponentBuilder());
-
-        final ComponentBuilder<Component> componentBuilder =
-                getComponentBuilder();
+        final ComponentBuilder<Component> componentBuilder = assertComponent(getComponentBuilder());
 
         DefaultContentHandler.this.endComponent();
 
@@ -151,10 +151,10 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void endProperty(String name) {
         if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
-            assertProperty(propertyBuilder);
+            final PropertyBuilder builder = assertProperty(propertyBuilder);
             Property property;
             try {
-                property = propertyBuilder.build();
+                property = builder.build();
             } catch (RuntimeException e) {
                 if (context.isSuppressInvalidProperties()) {
                     LoggerFactory.getLogger(DefaultContentHandler.class).warn("Suppressing invalid property", e);
@@ -192,15 +192,17 @@ public class DefaultContentHandler implements ContentHandler {
         }
     }
 
-    private void assertComponent(ComponentBuilder<?> component) {
+    private <T extends Component> ComponentBuilder<T> assertComponent(@Nullable ComponentBuilder<T> component) {
         if (component == null) {
             throw new CalendarException("Expected component not initialised");
         }
+        return component;
     }
 
-    private void assertProperty(PropertyBuilder property) {
+    private PropertyBuilder assertProperty(@Nullable PropertyBuilder property) {
         if (property == null) {
             throw new CalendarException("Expected property not initialised");
         }
+        return property;
     }
 }

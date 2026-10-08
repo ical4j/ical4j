@@ -92,6 +92,7 @@ public class TzUrl extends Property {
 
     private static final long serialVersionUID = 9106100107954797406L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private URI uri;
 
     /**

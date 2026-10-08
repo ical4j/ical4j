@@ -40,6 +40,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
  */
 public class TaskMode extends Property {
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     public TaskMode() {
@@ -67,13 +68,13 @@ public class TaskMode extends Property {
 
     @Override
     protected PropertyFactory<?> newFactory() {
-        return null;
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TaskMode> {
 
         public Factory() {
-            super(SUMMARY);
+            super(TASK_MODE);
         }
 
         @Override

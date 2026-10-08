@@ -348,6 +348,7 @@ public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>
      * returned. If no valid busy periods are identified in the component an empty FREEBUSY property is returned (i.e.
      * empty period list).
      */
+    @SuppressWarnings("NullAway.Init") // all fields are set before build()
     private static class BusyTimeBuilder {
 
         private Instant start;
@@ -388,6 +389,7 @@ public class VFreeBusy extends CalendarComponent implements Prototype<VFreeBusy>
      * bounds of the start and end dates, null is returned. If no valid busy periods are identified in the component an
      * empty FREEBUSY property is returned (i.e. empty period list).
      */
+    @SuppressWarnings("NullAway.Init") // all fields are set before build()
     private static class FreeTimeBuilder {
 
         private Instant start;

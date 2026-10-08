@@ -161,7 +161,7 @@ public final class Calendars {
                     final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final var timezone = timezones.getComponent(tzid.get().getValue());
-                        if (!uidCal.getComponents().contains(timezone)) {
+                        if (timezone != null && !uidCal.getComponents().contains(timezone)) {
                             uidCal.add(timezone);
                         }
                     }

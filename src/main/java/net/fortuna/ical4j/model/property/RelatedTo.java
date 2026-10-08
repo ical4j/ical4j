@@ -38,6 +38,7 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.RelationshipPropertyValidators;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -90,9 +91,9 @@ public class RelatedTo extends Property implements Encodable {
 
     private static final long serialVersionUID = -109375299147319752L;
 
-    private URI uri;
+    private @Nullable URI uri;
 
-    private String value;
+    private @Nullable String value;
 
     /**
      * Default constructor.
@@ -151,7 +152,7 @@ public class RelatedTo extends Property implements Encodable {
         }
     }
 
-    public URI getUri() {
+    public @Nullable URI getUri() {
         return uri;
     }
 
@@ -159,6 +160,7 @@ public class RelatedTo extends Property implements Encodable {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public final String getValue() {
         if (Optional.of(Value.URI).equals(getParameter(Parameter.VALUE))) {
             return Uris.decode(Strings.valueOf(getUri()));

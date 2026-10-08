@@ -35,6 +35,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.jspecify.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -229,7 +230,7 @@ public class DateTime extends Date {
 
 	private Time time;
 
-	private TimeZone timezone;
+	private @Nullable TimeZone timezone;
 
 	/**
 	 * Default constructor.
@@ -313,7 +314,7 @@ public class DateTime extends Date {
 	 * @throws ParseException
 	 *             where the specified string is not a valid date-time
 	 */
-	public DateTime(final String value, final TimeZone timezone)
+	public DateTime(final String value, final @Nullable TimeZone timezone)
 			throws ParseException {
 		// setting the time to 0 since we are going to reset it anyway
 		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone : TimeZones.getDefault());
@@ -413,7 +414,7 @@ public class DateTime extends Date {
 	 * @throws ParseException
 	 */
 	private void setTime(final String value, final DateFormat format,
-			final java.util.TimeZone tz) throws ParseException {
+			final java.util.@Nullable TimeZone tz) throws ParseException {
 
 		if (tz != null) {
 			format.setTimeZone(tz);
@@ -469,7 +470,7 @@ public class DateTime extends Date {
 	 * @param timezone
 	 *            a timezone to apply to the instance
 	 */
-	public final void setTimeZone(final TimeZone timezone) {
+	public final void setTimeZone(final @Nullable TimeZone timezone) {
 		this.timezone = timezone;
 		if (timezone != null) {
 			getFormat().setTimeZone(timezone);
@@ -494,7 +495,7 @@ public class DateTime extends Date {
 	 * 
 	 * @return a Java timezone
 	 */
-	public final TimeZone getTimeZone() {
+	public final @Nullable TimeZone getTimeZone() {
 		return timezone;
 	}
 

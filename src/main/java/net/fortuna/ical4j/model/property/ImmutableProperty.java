@@ -38,21 +38,25 @@ import net.fortuna.ical4j.model.Property;
 
 public interface ImmutableProperty {
 
+    @SuppressWarnings("NullAway") // unreachable, throwException() always throws
     default <T extends Property> T add(Parameter parameter) {
         throwException();
         return null;
     }
 
+    @SuppressWarnings("NullAway") // unreachable, throwException() always throws
     default <T extends Property> T remove(Parameter parameter) {
         throwException();
         return null;
     }
 
+    @SuppressWarnings("NullAway") // unreachable, throwException() always throws
     default <T extends Property> T removeAll(String... parameterName) {
         throwException();
         return null;
     }
 
+    @SuppressWarnings("NullAway") // unreachable, throwException() always throws
     default <T extends Property> T replace(Parameter parameter) {
         throwException();
         return null;

@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
+import org.jspecify.annotations.Nullable;
 
 import java.time.ZoneId;
 import java.time.DateTimeException;
@@ -79,7 +80,7 @@ public class TzId extends Parameter implements Encodable {
      * @param timeZoneRegistry
      * @return
      */
-    public ZoneId toZoneId(TimeZoneRegistry timeZoneRegistry) {
+    public ZoneId toZoneId(@Nullable TimeZoneRegistry timeZoneRegistry) {
         if (timeZoneRegistry != null && !timeZoneRegistry.getZoneRules().isEmpty()) {
             try {
                 return timeZoneRegistry.getZoneId(getValue());

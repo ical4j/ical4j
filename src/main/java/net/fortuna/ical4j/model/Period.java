@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.TimeZones;
+import org.jspecify.annotations.Nullable;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
@@ -116,11 +117,11 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     private final T start;
 
-    private Component component;
+    private @Nullable Component component;
 
     private final T end;
 
-    private final TemporalAmountAdapter duration;
+    private final @Nullable TemporalAmountAdapter duration;
 
     private transient final CalendarDateFormat dateFormat;
 
@@ -214,18 +215,13 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public static <T extends Temporal> Period<T> parse(String value) {
         T start = parseStartDate(value);
-        T end = null;
-        TemporalAmountAdapter duration = null;
+        T end;
         try {
             end = parseEndDate(value, false);
         } catch (DateTimeParseException e) {
-            duration = parseDuration(value);
+            return new Period<>(start, parseDuration(value), CalendarDateFormat.from(start));
         }
-        if (end != null) {
-            return new Period<>(start, end, CalendarDateFormat.from(start));
-        } else {
-            return new Period<>(start, duration, CalendarDateFormat.from(start));
-        }
+        return new Period<>(start, end, CalendarDateFormat.from(start));
     }
 
     private static <T extends Temporal> T parseStartDate(String value) throws DateTimeParseException {
@@ -547,7 +543,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         return Objects.hash(start, end, duration);
     }
 
-    public Component getComponent() {
+    public @Nullable Component getComponent() {
 		return component;
 	}
 

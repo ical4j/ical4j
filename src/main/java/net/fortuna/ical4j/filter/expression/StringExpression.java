@@ -33,6 +33,7 @@
 package net.fortuna.ical4j.filter.expression;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -54,7 +55,7 @@ public class StringExpression implements LiteralExpression<String> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (StringExpression) o;

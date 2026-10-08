@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
 import net.fortuna.ical4j.validate.property.DescriptivePropertyValidators;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,9 +96,9 @@ public class Attach extends Property {
 
     private static final Logger LOG = LoggerFactory.getLogger(Attach.class);
 
-    private URI uri;
+    private @Nullable URI uri;
 
-    private transient ByteBuffer binary;
+    private transient @Nullable ByteBuffer binary;
 
     /**
      * Default constructor.
@@ -165,7 +166,7 @@ public class Attach extends Property {
     /**
      * @return Returns the binary.
      */
-    public final ByteBuffer getBinary() {
+    public final @Nullable ByteBuffer getBinary() {
         return binary;
     }
 
@@ -176,7 +177,7 @@ public class Attach extends Property {
      *
      * @return byte array containing the binary data, or null if no binary data is set
      */
-    public byte[] getBinaryData() {
+    public byte @Nullable [] getBinaryData() {
         if (binary != null) {
             if (binary.hasArray()) {
                 return binary.array();
@@ -193,7 +194,7 @@ public class Attach extends Property {
     /**
      * @return Returns the uri.
      */
-    public final URI getUri() {
+    public final @Nullable URI getUri() {
         return uri;
     }
 
@@ -251,6 +252,7 @@ public class Attach extends Property {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("NullAway") // unset/cleared value, see package-info
     public final String getValue() {
         if (getUri() != null) {
             return Uris.decode(Strings.valueOf(getUri()));

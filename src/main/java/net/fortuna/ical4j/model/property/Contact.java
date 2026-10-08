@@ -50,6 +50,7 @@ public class Contact extends Property implements Encodable {
 
     private static final long serialVersionUID = -4776654229643771385L;
 
+    @SuppressWarnings("NullAway.Init") // unset only via the no-arg constructor, see package-info
     private String value;
 
     /**

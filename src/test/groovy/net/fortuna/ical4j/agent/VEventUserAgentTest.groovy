@@ -2,6 +2,7 @@ package net.fortuna.ical4j.agent
 
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.property.Method
 import net.fortuna.ical4j.model.property.Organizer
 import net.fortuna.ical4j.model.property.ProdId
 import net.fortuna.ical4j.util.RandomUidGenerator
@@ -229,5 +230,21 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = DECLINECOUNTER'
         calendar.getRequiredProperty(Property.METHOD) == DECLINE_COUNTER
+    }
+
+    def "Transform with an unsupported method"() {
+        given: 'a calendar and a method with no registered transformer'
+        def calendar = builder.calendar {
+            prodid '-//Ben Fortuna//iCal4j 2.0//EN'
+            version '2.0'
+        }
+        def method = new Method('X-CUSTOM')
+
+        when: 'the calendar is transformed'
+        userAgent.transform(method, calendar)
+
+        then: 'an exception identifies the unsupported method'
+        def e = thrown(IllegalArgumentException)
+        e.message.contains('X-CUSTOM')
     }
 }

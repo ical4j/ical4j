@@ -3,6 +3,7 @@ package net.fortuna.ical4j.util;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -19,12 +20,12 @@ public class CaffeineTimeZoneCache implements TimeZoneCache {
     }
 
     @Override
-    public VTimeZone getTimezone(String id) {
+    public @Nullable VTimeZone getTimezone(String id) {
         return cache.getIfPresent(id);
     }
 
     @Override
-    public VTimeZone getTimezone(String id, Supplier<VTimeZone> putIfAbsent) {
+    public @Nullable VTimeZone getTimezone(String id, Supplier<@Nullable VTimeZone> putIfAbsent) {
         return cache.get(id, key -> putIfAbsent.get());
     }
 
