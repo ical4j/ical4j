@@ -27,4 +27,4 @@
 ## 4. Land
 
 - [x] 4.1 Open a PR against `develop` referencing #510 (and #472 for the preserved guard); include the before/after period lists from the #510 reproduction in the description. **PR #931.**
-- [ ] 4.2 After merge, comment on #510 with the `develop` snapshot coordinates and ask roubert/vkrupach to confirm; close on confirmation or at the next release.
+- [x] 4.2 After merge, comment on #510 with the `develop` snapshot coordinates and ask roubert/vkrupach to confirm; close on confirmation or at the next release. **Commented 2026-10-09 asking for confirmation; issue left open pending reply or next release.**
