@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.util;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
@@ -154,10 +155,21 @@ public class CalendarsTest {
     static Stream<Arguments> getContentTypeData() throws IOException, ParserException {
         Calendar aus = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
         Calendar oz = Calendars.load(Objects.requireNonNull(CalendarsTest.class.getResource("/samples/invalid/OZMovies.ics")));
+        Calendar injectedMethod = new CalendarBuilder().build(new StringReader("BEGIN:VCALENDAR\r\n"
+                + "PRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\n"
+                + "VERSION:2.0\r\n"
+                + "METHOD:PUBLISH; charset=utf-7\r\n"
+                + "BEGIN:VEVENT\r\n"
+                + "UID:auid\r\n"
+                + "DTSTAMP:20090810T000000Z\r\n"
+                + "DTSTART;VALUE=DATE:20090810\r\n"
+                + "END:VEVENT\r\n"
+                + "END:VCALENDAR\r\n"));
         return Stream.of(
                 Arguments.of(aus, null, "text/calendar; method=PUBLISH"),
                 Arguments.of(oz, null, "text/calendar; method=PUBLISH"),
-                Arguments.of(oz, StandardCharsets.US_ASCII, "text/calendar; method=PUBLISH; charset=US-ASCII")
+                Arguments.of(oz, StandardCharsets.US_ASCII, "text/calendar; method=PUBLISH; charset=US-ASCII"),
+                Arguments.of(injectedMethod, StandardCharsets.UTF_8, "text/calendar; charset=UTF-8")
         );
     }
 
