@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model
 
 
+import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.util.Calendars
 import net.fortuna.ical4j.util.RandomUidGenerator
 import spock.lang.Shared
@@ -154,5 +155,27 @@ class CalendarSpec extends Specification {
 
         expect: 'content type is retrieved as expected'
         calendar.getContentType(Charset.forName('utf-8')) == 'text/calendar; method=PUBLISH; charset=UTF-8'
+    }
+
+    def 'test bare carriage return in a text value does not inject a content line'() {
+        given: 'a calendar with a summary containing a bare carriage return followed by a property line'
+        def calendar = builder.calendar {
+            prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+            version '2.0'
+            vevent {
+                uid 'auid'
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                summary 'Team sync\rATTENDEE:mailto:mallory@example.com'
+            }
+        }
+
+        when: 'the calendar is serialised and parsed again'
+        def parsed = new CalendarBuilder().build(new StringReader(calendar as String))
+        def event = parsed.getComponents().first()
+
+        then: 'the injected line is part of the summary rather than a new property'
+        event.getProperties(Property.ATTENDEE).empty
+        event.getProperty(Property.SUMMARY).get().value == 'Team sync\nATTENDEE:mailto:mallory@example.com'
     }
 }

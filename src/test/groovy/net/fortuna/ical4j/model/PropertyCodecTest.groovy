@@ -46,7 +46,9 @@ class PropertyCodecTest extends Specification {
         ''                                              | ''
         '\n'                                            | '\\n'
         '\r\n'                                          | '\\n'
-        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\r test R\r end'
+        '\r'                                            | '\\n'
+        'test N\n test RN\r\n test NR\n\r test R\r end' | 'test N\\n test RN\\n test NR\\n\\n test R\\n end'
+        'summary\rATTENDEE:mailto:mallory@example.com'   | 'summary\\nATTENDEE:mailto:mallory@example.com'
     }
 
     def 'verify Dquote escaping'() {
