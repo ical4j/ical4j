@@ -91,6 +91,14 @@ public class TimeZoneUpdater {
     }
 
     public URLConnection openConnection(URL url) throws IOException {
+        // the url derives from a TZURL taken verbatim from parsed calendar data, so restrict the fetch
+        // to http/https and refuse schemes such as file:, jar: or ftp: that would read local resources or
+        // reach unintended services (SSRF). Bundled definitions use https, so valid updates are unaffected.
+        final String scheme = url.getProtocol();
+        if (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme)) {
+            throw new IOException("Unsupported timezone update scheme: " + scheme);
+        }
+
         final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(10_000);
         final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(10_000);
 
