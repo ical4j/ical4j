@@ -20,4 +20,4 @@
 
 ## 4. Land
 
-- [ ] 4.1 Commit and open a PR against `develop` with "Fixes #175, #617, #125, #458" and a note that the ServiceLoader aspect of #29/#115 is covered; include release-note wording.
+- [x] 4.1 Commit and open a PR against `develop` with "Fixes #175, #617, #125, #458" and a note that the ServiceLoader aspect of #29/#115 is covered; include release-note wording. **PR #935.**
