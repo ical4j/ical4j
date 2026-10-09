@@ -461,7 +461,20 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public boolean intersects(Period<?> other) {
         Objects.requireNonNull(other, "other");
-        return other.equals(this) || TemporalComparator.INSTANCE.compare(this.start, other.end) < 0
+        if (other.equals(this)) {
+            return true;
+        }
+        // a zero-length period has no extent, so it intersects another period only when its instant
+        // lies within that period's half-open range [start, end) (#82)..
+        if (TemporalComparator.INSTANCE.compare(other.start, other.end) == 0) {
+            return TemporalComparator.INSTANCE.compare(this.start, other.start) <= 0
+                    && TemporalComparator.INSTANCE.compare(other.start, this.end) < 0;
+        }
+        if (TemporalComparator.INSTANCE.compare(this.start, this.end) == 0) {
+            return TemporalComparator.INSTANCE.compare(other.start, this.start) <= 0
+                    && TemporalComparator.INSTANCE.compare(this.start, other.end) < 0;
+        }
+        return TemporalComparator.INSTANCE.compare(this.start, other.end) < 0
                 && TemporalComparator.INSTANCE.compare(other.start, this.end) < 0;
     }
 

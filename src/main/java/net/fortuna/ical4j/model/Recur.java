@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.time.chrono.Chronology;
 import java.time.temporal.*;
 import java.util.*;
@@ -802,6 +803,11 @@ public class Recur<T extends Temporal> implements Serializable {
     /**
      * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
      *
+     * <p>For a {@link ZonedDateTime} seed, a candidate whose local date-time falls in a daylight-saving overlap
+     * (the hour that occurs twice when clocks go back) is resolved to the earlier offset, i.e. the offset in force
+     * before the transition, as required by RFC 5545 §3.3.5. This is applied here, once, because every candidate
+     * produced by the frequency increment and the BY* rules passes through this method.</p>
+     *
      * @param date  the seed date
      * @return a List of Temporal of the same type as the seed date
      */
@@ -900,8 +906,25 @@ public class Recur<T extends Temporal> implements Serializable {
                 log.debug("Dates after SETPOS processing: " + dates);
             }
         }
+        if (rootSeed instanceof ZonedDateTime) {
+            dates = dates.stream().map(Recur::withEarlierOffsetAtOverlap).collect(Collectors.toList());
+        }
         dates.sort(CANDIDATE_SORTER);
         return dates;
+    }
+
+    /**
+     * RFC 5545 §3.3.5: a local time that occurs twice at a DST transition denotes the first occurrence. java.time
+     * arithmetic on a {@link ZonedDateTime} ({@code plus}, {@code with}) prefers the offset of the value being
+     * adjusted, so a candidate derived from a seed carrying the post-transition offset would otherwise resolve to
+     * the later occurrence (issue #716).
+     */
+    @SuppressWarnings("unchecked")
+    private static <T extends Temporal> T withEarlierOffsetAtOverlap(final T candidate) {
+        if (candidate instanceof ZonedDateTime) {
+            return (T) ((ZonedDateTime) candidate).withEarlierOffsetAtOverlap();
+        }
+        return candidate;
     }
 
     private List<T> distinctCandidates(List<T> dates) {
