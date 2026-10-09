@@ -24,4 +24,4 @@
 
 ## 4. Land
 
-- [ ] 4.1 Push `fix/validation-recurrence-small-fixes`; open PR against `develop` with "Fixes #363, fixes #736, fixes #691, fixes #692, fixes #709, fixes #82" and release-note wording.
+- [x] 4.1 Push `fix/validation-recurrence-small-fixes`; open PR against `develop` with "Fixes #363, fixes #736, fixes #691, fixes #692, fixes #709, fixes #82" and release-note wording. **PR #934.**
