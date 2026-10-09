@@ -36,12 +36,23 @@ package net.fortuna.ical4j.transform.compliance
 import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 class TzHelperTest extends Specification {
 
     def 'test retrieval of msTimezone alias'() {
         expect:
         TzHelper.getCorrectedTimeZoneIdFrom('W. Europe Standard Time') == 'Europe/Vienna'
+    }
+
+    def 'test Central America timezone mapping (#709)'() {
+        expect: 'Central America maps to a zone without daylight saving (CLDR territory-001 mapping)'
+        TzHelper.getCorrectedTimeZoneIdFrom('Central America Standard Time') == 'America/Guatemala'
+
+        and: 'a summer date-time in that zone is UTC-6, not the US/Central UTC-5'
+        ZonedDateTime.of(2024, 7, 1, 12, 0, 0, 0, ZoneId.of('America/Guatemala')).offset == ZoneOffset.ofHours(-6)
     }
 
     def 'test Hawaiian timezone mapping'() {

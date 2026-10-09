@@ -429,7 +429,8 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-            final var name = tokeniser.sval;
+            // trailing whitespace is a word character to the tokeniser, so strip it from the name (#175)..
+            final var name = tokeniser.sval.stripTrailing();
 
             handler.startComponent(name);
 
@@ -523,7 +524,9 @@ public class CalendarParserImpl implements CalendarParser {
             sval = getSvalIgnoringBom(tokeniser, in, token);
         } else {
             ntok = assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
-            sval = tokeniser.sval;
+            // trailing whitespace on a BEGIN/END line (or a folded whitespace-only line after it) is a word
+            // character to the tokeniser, so strip it before comparing (#175)..
+            sval = tokeniser.sval != null ? tokeniser.sval.stripTrailing() : null;
         }
 
         if (ignoreCase) {
