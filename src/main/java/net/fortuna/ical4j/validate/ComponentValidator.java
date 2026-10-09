@@ -106,8 +106,8 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
     public static final ComponentValidator<VAvailability> VAVAILABILITY = new ComponentValidator<>(Component.VAVAILABILITY,
             new ValidationRule<>(One, true, UID, DTSTAMP),
             new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART,
-                    DTSTAMP, LAST_MODIFIED, ORGANIZER, RECURRENCE_ID, SEQUENCE,
-                    STATUS, SUMMARY, UID, URL),
+                    LAST_MODIFIED, ORGANIZER, RECURRENCE_ID, SEQUENCE,
+                    STATUS, SUMMARY, URL),
             new ValidationRule<>((Predicate<VAvailability> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
                     .anyMatch(p -> p.getParameters().contains(Value.DATE)),
                     "VAVAILABILITY components and AVAILABLE sub-components MUST be DATE-TIME values",
@@ -116,12 +116,12 @@ public class ComponentValidator<T extends Component> extends AbstractValidator<T
     public static final ComponentValidator<VEvent> VEVENT = new ComponentValidator<>(Component.VEVENT,
             new ValidationRule<>(One, true, UID, DTSTAMP),
             new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART, GEO, LAST_MODIFIED, LOCATION,
-                    ORGANIZER, PRIORITY, DTSTAMP, SEQUENCE, STATUS, SUMMARY, TRANSP, UID, URL, RECURRENCE_ID),
+                    ORGANIZER, PRIORITY, SEQUENCE, STATUS, SUMMARY, TRANSP, URL, RECURRENCE_ID),
             new ValidationRule<>(OneExclusive, DTEND, DURATION));
 
     public static final ComponentValidator<VFreeBusy> VFREEBUSY = new ComponentValidator<>(Component.VFREEBUSY,
             new ValidationRule<>(One, true, UID, DTSTAMP),
-            new ValidationRule<>(OneOrLess, CONTACT, DTSTART, DTEND, DURATION, DTSTAMP, ORGANIZER, UID, URL),
+            new ValidationRule<>(OneOrLess, CONTACT, DTSTART, DTEND, DURATION, ORGANIZER, URL),
             new ValidationRule<>(None, RRULE, EXRULE, RDATE, EXDATE),
             new ValidationRule<>((Predicate<VFreeBusy> & Serializable) a -> a.getProperties(DTSTART, DTEND).stream()
                     .anyMatch(p -> !((DateProperty<?>) p).isUtc()),
