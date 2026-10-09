@@ -22,4 +22,4 @@
 ## 4. Land
 
 - [x] 4.1 Open a PR against `develop` referencing #531, #847 and #750, with the before/after behaviour table and the strict/relaxed decision in the description.
-- [ ] 4.2 After merge, comment on the three issues with the `develop` snapshot coordinates; close on confirmation or at the next release.
+- [x] 4.2 After merge, comment on the three issues with the `develop` snapshot coordinates; close on confirmation or at the next release. **PR #933 merged 2026-10-09; #531, #847 and #750 closed automatically via `Fixes #`.**

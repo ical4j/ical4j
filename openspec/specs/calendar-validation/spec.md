@@ -3,9 +3,7 @@
 ## Purpose
 
 Defines how ical4j validates `Calendar`, `Component`, and `Property` instances against RFC 5545 (iCalendar) and RFC 5546 (iTIP). Covers calendar-level invariants (PRODID/VERSION presence, METHOD-aware dispatch), per-component iTIP rule sets, and the unsupported-method fallback behaviour.
-
 ## Requirements
-
 ### Requirement: VCALENDAR objects SHALL require PRODID and VERSION
 
 `CalendarValidatorImpl.validate(Calendar)` SHALL produce an ERROR-severity `ValidationEntry` when the input calendar omits the PRODID property, the VERSION property, or both. This check SHALL apply unconditionally, independent of any `ValidationRule` instances passed to the constructor.
@@ -64,24 +62,24 @@ The iTIP rule registry SHALL include an entry for `(VFREEBUSY, COUNTER)` definin
 
 ### Requirement: Unsupported (component, method) pairs SHALL return a ValidationResult, not throw
 
-When a component's `validate(Method)` is invoked with a method that has no registered rule set for that component, the call SHALL return a `ValidationResult` containing one `ValidationEntry` with severity `ERROR` and a message stating that the method is not applicable to the component. The call SHALL NOT throw `ValidationException`.
+When a component's `validate(Method)` is invoked with a method that has no registered rule set for that component, the call SHALL return a `ValidationResult` containing one `ValidationEntry` with severity `ERROR` and a message stating that the method is not applicable to the component. The call SHALL NOT throw `ValidationException`. These entries surface at calendar level through the recursive `Calendar.validate()` path, not through `CalendarValidatorImpl` alone.
 
 #### Scenario: VJOURNAL with METHOD:REQUEST returns a ValidationEntry
 
-- **WHEN** `CalendarValidatorImpl.validate` is invoked with a `Calendar` containing `METHOD:REQUEST` and a `VJOURNAL` component
+- **WHEN** `Calendar.validate()` is invoked on a `Calendar` containing `METHOD:REQUEST` and a `VJOURNAL` component
 - **AND** RFC 5546 does not define a `(VJOURNAL, REQUEST)` rule set (only ADD, CANCEL, PUBLISH)
-- **THEN** the calendar-level `ValidationResult` contains at least one `ValidationEntry` whose message indicates that REQUEST is not applicable to VJOURNAL
+- **THEN** the returned `ValidationResult` contains at least one `ValidationEntry` whose message indicates that REQUEST is not applicable to VJOURNAL
 - **AND** no `ValidationException` propagates out of `Calendar.validate()`
 
 #### Scenario: Unknown extension method does not throw
 
-- **WHEN** `CalendarValidatorImpl.validate` is invoked with a `Calendar` containing a custom `METHOD` value (e.g., `X-COMPANY-METHOD`) and a `VEVENT`
+- **WHEN** `Calendar.validate()` is invoked on a `Calendar` containing a custom `METHOD` value (e.g., `X-COMPANY-METHOD`) and a `VEVENT`
 - **THEN** no `ValidationException` propagates
-- **AND** the calendar-level `ValidationResult` contains a `ValidationEntry` indicating the method is not applicable
+- **AND** the returned `ValidationResult` contains a `ValidationEntry` indicating the method is not applicable
 
 ### Requirement: Calendar-level validation SHALL merge per-component iTIP results
 
-`CalendarValidatorImpl.validate(Calendar)` SHALL merge the `ValidationResult` returned by each `component.validate(method)` call into the calendar-level result, such that any per-method rule violation surfaces in the final `ValidationResult`.
+`Calendar.validate(true)` SHALL merge the `ValidationResult` returned by each `component.validate(method)` call into the calendar-level result, such that any per-method rule violation surfaces in the final `ValidationResult` exactly once.
 
 #### Scenario: A VEVENT failing its PUBLISH rule surfaces at calendar level
 
@@ -179,3 +177,55 @@ The deprecated component validator subclasses under `net.fortuna.ical4j.validate
 
 - **WHEN** `grep -rn "VEventValidator\|VToDoValidator\|VAvailabilityValidator\|VFreeBusyValidator\|VTimeZoneValidator\|AvailableValidator" src/main src/test --include="*.java"` is run
 - **THEN** the only remaining matches (if any) are within Spock test files under `src/test/groovy/` or in archived OpenSpec change documents, neither of which is changed by this work
+
+### Requirement: CalendarValidatorImpl SHALL validate only the calendar level
+
+`CalendarValidatorImpl.validate(Calendar)` SHALL evaluate calendar-level rules only (calendar property rules, PRODID/VERSION presence, the VERSION value, at-least-one-component, calendar property types, and the `ITIPValidator` rules when METHOD is present). It SHALL NOT invoke `component.validate(...)` on the calendar's components. Component-level validation, including per-method iTIP validation, SHALL be performed by `Calendar.validate(true)` (and therefore `Calendar.validate()`), and SHALL NOT be performed by `Calendar.validate(false)`.
+
+#### Scenario: Non-recursive validation ignores component iTIP violations
+
+- **WHEN** a `Calendar` has `METHOD:REQUEST` and contains a `VEVENT` that lacks the ORGANIZER required by RFC 5546
+- **AND** `Calendar.validate(false)` is invoked
+- **THEN** the returned `ValidationResult` has no errors
+
+#### Scenario: The calendar validator alone does not descend into components
+
+- **WHEN** `new CalendarValidatorImpl().validate(calendar)` is invoked on the same calendar
+- **THEN** the returned `ValidationResult` has no errors
+
+#### Scenario: Recursive validation reports each component violation exactly once
+
+- **WHEN** `Calendar.validate(true)` is invoked on the same calendar
+- **THEN** the returned `ValidationResult` has errors
+- **AND** exactly one `ValidationEntry` mentions ORGANIZER
+
+### Requirement: A duplicated required property SHALL be reported once
+
+For VEVENT, VFREEBUSY and VAVAILABILITY the `ComponentValidator` rule sets SHALL list UID and DTSTAMP only under the `One` rule, so that a component carrying two of either property yields a single `ValidationEntry` for that property.
+
+#### Scenario: VEVENT with two DTSTAMP properties
+
+- **WHEN** a `VEVENT` carries two DTSTAMP properties and `validate()` is invoked
+- **THEN** the `ValidationResult` has errors
+- **AND** exactly one `ValidationEntry` mentions DTSTAMP
+
+#### Scenario: Two UID properties on VEVENT, VFREEBUSY and VAVAILABILITY
+
+- **WHEN** a `VEVENT`, `VFREEBUSY` or `VAVAILABILITY` carries two UID properties and `validate()` is invoked
+- **THEN** exactly one `ValidationEntry` mentions UID
+
+### Requirement: Validator factory lookup SHALL fall back to the default implementation
+
+`AbstractCalendarValidatorFactory.getInstance()` SHALL return the `CalendarValidatorFactory` registered via `ServiceLoader` when one is visible to `DefaultCalendarValidatorFactory`'s class loader. When no registration is visible (for example because `META-INF/services` was stripped by ProGuard/R8 or a packaging tool), it SHALL return a `DefaultCalendarValidatorFactory` instance. Class initialisation SHALL NOT fail because a registration is absent.
+
+#### Scenario: No service registration visible
+
+- **WHEN** `AbstractCalendarValidatorFactory` is initialised in a class loader that returns no resources for `META-INF/services/net.fortuna.ical4j.validate.CalendarValidatorFactory`
+- **THEN** no `ExceptionInInitializerError` or `NoSuchElementException` is thrown
+- **AND** `getInstance()` returns a `DefaultCalendarValidatorFactory`
+
+#### Scenario: Service registration present
+
+- **WHEN** the bundled service registration is on the classpath
+- **THEN** `getInstance()` returns the registered factory (`DefaultCalendarValidatorFactory` by default)
+

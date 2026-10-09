@@ -17,4 +17,4 @@
 
 ## 4. Land
 
-- [ ] 4.1 PR against `develop` referencing #603 with a "Behaviour change" release note.
+- [x] 4.1 PR against `develop` referencing #603 with a "Behaviour change" release note. **PR #936, merged 2026-10-09.**
