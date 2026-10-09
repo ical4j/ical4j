@@ -47,7 +47,8 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
     }
 
     public boolean hasName(String name) {
-        return name.equals(this.name);
+        // component names are case-insensitive (RFC 5545 §3.1); this.name is stored upper-cased
+        return name.equalsIgnoreCase(this.name);
     }
 
     public ComponentBuilder<?> property(Property property) {
