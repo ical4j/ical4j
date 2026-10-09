@@ -4,6 +4,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
@@ -141,7 +142,13 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
 
             // allow for recurrence rules that start prior to the specified period
             // but still intersect with it..
-            Temporal startMinusDuration = bounds.getStart().minus(effectiveDuration);
+            final Temporal startMinusDuration;
+            if (effectiveDuration instanceof Duration && !bounds.getStart().isSupported(ChronoUnit.SECONDS)) {
+                // a date-only period cannot subtract a time-based amount; widen by whole days instead (#736)..
+                startMinusDuration = bounds.getStart().minus(((Duration) effectiveDuration).toDays() + 1, ChronoUnit.DAYS);
+            } else {
+                startMinusDuration = bounds.getStart().minus(effectiveDuration);
+            }
 
             // add recurrence rules..
             if (!recurrenceRules.isEmpty()) {
