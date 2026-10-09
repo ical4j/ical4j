@@ -5,6 +5,7 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Constants;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
@@ -177,8 +178,19 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void parameter(String name, String value) {
         if (propertyBuilder != null) {
-            var parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
-                    .name(name).value(value).build();
+            Parameter parameter;
+            try {
+                parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
+                        .name(name).value(value).build();
+            } catch (IllegalArgumentException e) {
+                if (propertyBuilder.hasExperimentalName()) {
+                    // the value isn't valid for the standard parameter, but on an experimental (X-) property
+                    // its meaning is defined by the producer, so retain it as-is (e.g. X-LOTUS-RECURID;RANGE=ALL)..
+                    parameter = new XParameter(name, value);
+                } else {
+                    throw e;
+                }
+            }
 
             if (parameter instanceof TzId) {
                 if (getComponentBuilder() != null && (getComponentBuilder().hasName(Observance.STANDARD)
