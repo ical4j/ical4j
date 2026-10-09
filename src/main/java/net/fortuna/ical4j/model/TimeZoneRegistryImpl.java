@@ -72,6 +72,14 @@ import java.util.regex.Pattern;
  * not applied in fallback mode</em>; a VTIMEZONE whose rules differ from the platform zone of the same name uses the
  * platform's rules. A TZID with no platform equivalent is handled like any unresolvable TZID: an exception, or
  * the TZID is ignored under relaxed validation.
+ * <p>
+ * <b>Degenerate definitions.</b> A registered VTIMEZONE with no STANDARD or DAYLIGHT observance is retained in the
+ * same way: the definition is available from {@link #getTimeZone(String)} but no zone rules are built, and its TZID
+ * resolves via {@link TimeZoneRegistry#getGlobalZoneId(String)}. A definition whose observances cannot be turned into
+ * zone rules (for example an observance without DTSTART) is treated the same way when
+ * {@link CompatibilityHints#KEY_RELAXED_PARSING} or {@link CompatibilityHints#KEY_RELAXED_VALIDATION} is enabled;
+ * otherwise registration fails with an {@link IllegalArgumentException} naming the TZID. Structural problems with
+ * a definition are reported by {@link net.fortuna.ical4j.model.component.VTimeZone#validate()} in either case.
  *
  * @author Ben Fortuna
  */
@@ -196,9 +204,34 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             return;
         }
 
+        // RFC 5545 §3.6.5 requires at least one observance, but a definition without any has nothing to build
+        // zone rules from. It is kept so getTimeZone(id) and calendar output still see it, and TZIDs referencing
+        // it resolve through TimeZoneRegistry.getGlobalZoneId instead (see TzId.toZoneId) - issue #531..
+        var vTimeZone = registered.getVTimeZone();
+        if (vTimeZone.getObservances().isEmpty()) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                    "VTIMEZONE [{}] has no STANDARD or DAYLIGHT observance; definition retained without zone rules",
+                    timezone.getID());
+            return;
+        }
+
         // use latest timezone definition to build zone rules..
-        var newZoneRules = new ZoneRulesBuilder().vTimeZone(registered.getVTimeZone())
-                .build();
+        ZoneRules newZoneRules;
+        try {
+            newZoneRules = new ZoneRulesBuilder().vTimeZone(vTimeZone).build();
+        } catch (RuntimeException e) {
+            // e.g. an observance without DTSTART (issues #847, #750). Under relaxed parsing or validation keep the
+            // definition without zone rules, as above; otherwise fail fast but name the offending definition..
+            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
+                    || CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+                LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                        "Unable to build zone rules for VTIMEZONE [{}]: {}; definition retained without zone rules",
+                        timezone.getID(), e.getMessage());
+                return;
+            }
+            throw new IllegalArgumentException(String.format("Unable to build zone rules for VTIMEZONE [%s]: %s",
+                    timezone.getID(), e.getMessage()), e);
+        }
         var globalId = ZoneRulesProviderImpl.getInstance().orElseThrow().getZoneIdPool().allocate(this);
         zoneIds.put(globalId, timezone.getID());
         zoneRules.put(globalId, newZoneRules);
