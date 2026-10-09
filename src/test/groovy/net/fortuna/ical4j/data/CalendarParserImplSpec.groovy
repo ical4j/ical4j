@@ -156,4 +156,27 @@ END:VEVENT
 ''']
 		compatibilityHints << [[KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]]
 	}
+
+	def 'verify parsing trailing whitespace'() {
+		setup: 'a calendar whose BEGIN/END lines carry trailing spaces or are followed by whitespace-only lines (#175)'
+		String input = "BEGIN:VCALENDAR\r\nPRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\nVERSION:2.0\r\n" +
+				"BEGIN:VEVENT$componentTrailer\r\nUID:1\r\nDTSTAMP:20240101T000000Z\r\nDTSTART:20240101T100000Z\r\n" +
+				"END:VEVENT$componentTrailer\r\nEND:VCALENDAR$calendarTrailer"
+
+		when: 'the calendar is parsed in strict mode'
+		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
+
+		then: 'the calendar and its event are parsed with their proper names'
+		calendar.getComponents().size() == 1
+		calendar.getComponents()[0].name == 'VEVENT'
+		calendar.getComponents()[0].properties.size() == 3
+
+		where:
+		componentTrailer	| calendarTrailer
+		''					| '   '
+		''					| '   \r\n'
+		''					| '\r\n   \r\n'
+		''					| '\r\n\t\r\n\r\n'
+		'  '				| '  \r\n'
+	}
 }

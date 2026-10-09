@@ -181,7 +181,7 @@ public class TimeZoneLoader {
 
             weekdayIndexInMonth = weekdayIndexInMonth >= 3 ? weekdayIndexInMonth - allDaysOfWeek.size() : weekdayIndexInMonth;
 
-            var rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
+            var rruleText = transitionRuleText(transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek);
 
             var offsetFrom = new TzOffsetFrom(transitionRule.getOffsetBefore());
             var offsetTo = new TzOffsetTo(transitionRule.getOffsetAfter());
@@ -198,6 +198,14 @@ public class TimeZoneLoader {
 
             result.add(observance);
         }
+    }
+
+    /**
+     * Builds the RRULE text for a yearly transition rule. Always formatted with ASCII digits regardless of
+     * the default locale, as native-digit locales (e.g. fa, ar) would otherwise leak into generated content (#458).
+     */
+    static String transitionRuleText(int month, int weekdayIndexInMonth, DayOfWeek dayOfWeek) {
+        return String.format(Locale.US, RRULE_TPL, month, weekdayIndexInMonth, dayOfWeek.name().substring(0, 2));
     }
 
     private static void addTransitions(ZoneId zoneId, VTimeZone result, int rawTimeZoneOffsetInSeconds) {
