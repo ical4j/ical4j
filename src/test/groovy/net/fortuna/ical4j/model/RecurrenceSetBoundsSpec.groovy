@@ -55,6 +55,20 @@ END:VEVENT\r
 END:VCALENDAR\r
 '''
 
+    /** daily event with no DTEND: a zero-length occurrence (issue #82) */
+    static final String DAILY_ZERO_LENGTH = '''BEGIN:VCALENDAR\r
+VERSION:2.0\r
+PRODID:-//ical4j//test//EN\r
+BEGIN:VEVENT\r
+UID:bounds-4\r
+DTSTAMP:20240101T000000Z\r
+DTSTART:20240101T000000Z\r
+RRULE:FREQ=DAILY\r
+SUMMARY:zero length daily\r
+END:VEVENT\r
+END:VCALENDAR\r
+'''
+
     static VEvent event(String ics) {
         new CalendarBuilder().build(new StringReader(ics)).getComponent('VEVENT').get() as VEvent
     }
@@ -117,6 +131,24 @@ END:VCALENDAR\r
 
         then:
         starts(periods) == [Instant.parse('2024-01-02T00:00:00Z')]
+    }
+
+    def 'zero-length occurrence is included when its instant lies in the half-open window'() {
+        when:
+        def periods = event(DAILY_ZERO_LENGTH).calculateRecurrenceSet(
+                new Period<>(Instant.parse(from), Instant.parse(to)))
+
+        then:
+        starts(periods) == expected.collect { Instant.parse(it) }
+
+        where:
+        from                   | to                     | expected
+        // at exactly bounds.start -> included; at exactly bounds.end -> excluded
+        '2024-01-02T00:00:00Z' | '2024-01-03T00:00:00Z' | ['2024-01-02T00:00:00Z']
+        // strictly inside -> included
+        '2024-01-01T12:00:00Z' | '2024-01-02T12:00:00Z' | ['2024-01-02T00:00:00Z']
+        // window ends exactly at the occurrence -> excluded
+        '2024-01-01T12:00:00Z' | '2024-01-02T00:00:00Z' | []
     }
 
     def 'zero-length period is a point query matching an instance at that instant'() {

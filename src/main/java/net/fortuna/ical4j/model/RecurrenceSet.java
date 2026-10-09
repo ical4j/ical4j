@@ -189,6 +189,11 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
          * query period, which is a point-in-time query and matches an occurrence that starts at, or is in
          * progress at, that instant (relied on by {@code VEvent.getOccurrence}).</p>
          *
+         * <p>A zero-length occurrence (no {@code DTEND}/{@code DURATION} on a date-time value, or
+         * {@code DTEND} equal to {@code DTSTART}) has no extent to overlap with, so it is included when its
+         * instant lies in {@code [bounds.getStart(), bounds.getEnd())}, consistent with
+         * {@link Period#intersects(Period)} (issue #82).</p>
+         *
          * <p>Comparisons use {@link TemporalComparator} so the period and the occurrence may be of different
          * temporal types.</p>
          */
@@ -198,6 +203,11 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
                 // point query..
                 int startCmp = cmp.compare(occurrence.getStart(), bounds.getStart());
                 return startCmp == 0 || (startCmp < 0 && cmp.compare(bounds.getStart(), occurrence.getEnd()) < 0);
+            }
+            if (cmp.compare(occurrence.getStart(), occurrence.getEnd()) == 0) {
+                // zero-length occurrence: included when its instant is within the half-open window..
+                return cmp.compare(bounds.getStart(), occurrence.getStart()) <= 0
+                        && cmp.compare(occurrence.getStart(), bounds.getEnd()) < 0;
             }
             return cmp.compare(bounds.getStart(), occurrence.getEnd()) < 0
                     && cmp.compare(occurrence.getStart(), bounds.getEnd()) < 0;

@@ -26,7 +26,6 @@ Issue #603 is the `RRULE` row. Fixing it in `RecurDateSpliterator` was tried fir
 
 **Non-Goals:**
 - Changing `Period.includes` (closed) or `Period.intersects` (half-open); those are public and used by the filter package.
-- Zero-length *occurrences* at the period boundary (issue #82, handled separately in `Period.intersects`).
 
 ## Decisions
 
@@ -55,6 +54,10 @@ When `period.getStart()` equals `period.getEnd()`, an occurrence that starts exa
 ### D3. Correct, don't preserve, the two `ComponentGroupTest` expectations
 
 `'rescheduled override with a bare RECURRENCE-ID replaces the master instance'` and `'override moved outside the query period removes the master instance and adds nothing'` assert `[2021-07-14T00:00Z, 2021-07-16T00:00Z]` for a query ending at `2021-07-16T00:00Z`. The 16 July instance is the #603 defect; the expectations become `[2021-07-14T00:00Z]`. The `component-group-recurrence-set` spec scenarios do not mention the 16 July instance, so no spec delta is needed.
+
+### D3. Zero-length occurrences use the same half-open rule as `Period.intersects`
+
+The general overlap test (`bounds.start < occurrence.end`) is `0 < 0` for an occurrence with no extent whose start equals `bounds.start`, which would wrongly exclude it. PR #934 (issue #82) changed `Period.intersects` so a zero-length period intersects when its instant lies in `[start, end)`; `withinBounds` now applies the same rule before the general test, so `build()` stays consistent with `Period.intersects` even though it no longer calls it. A point query against a zero-length occurrence at the same instant is already handled by D2.
 
 ## Risks / Trade-offs
 

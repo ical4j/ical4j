@@ -41,6 +41,25 @@ An occurrence whose start equals `period.getStart()` SHALL be returned. An occur
 - **WHEN** the same event is queried for `2024-01-02T00:30Z/2024-01-03T00:00Z`
 - **THEN** the result contains exactly one period, starting at `2024-01-02T00:00Z`
 
+### Requirement: A zero-length occurrence is included when its instant lies in the window
+
+An occurrence with no extent (date-time `DTSTART` without `DTEND`/`DURATION`, or `DTEND` equal to `DTSTART`) SHALL be returned when its start is at or after `period.getStart()` and strictly before `period.getEnd()`, consistent with `Period.intersects` for zero-length periods.
+
+#### Scenario: Zero-length occurrence at exactly the period start
+
+- **WHEN** a `VEVENT` with `DTSTART:20240101T000000Z`, no `DTEND`, and `RRULE:FREQ=DAILY` is queried for `2024-01-02T00:00Z/2024-01-03T00:00Z`
+- **THEN** the result contains exactly one period, starting at `2024-01-02T00:00Z`
+
+#### Scenario: Zero-length occurrence strictly inside the window
+
+- **WHEN** the same event is queried for `2024-01-01T12:00Z/2024-01-02T12:00Z`
+- **THEN** the result contains exactly one period, starting at `2024-01-02T00:00Z`
+
+#### Scenario: Zero-length occurrence at exactly the period end
+
+- **WHEN** the same event is queried for `2024-01-01T12:00Z/2024-01-02T00:00Z`
+- **THEN** the result is empty
+
 ### Requirement: A zero-length query period is a point query
 
 When `period.getStart()` equals `period.getEnd()`, the system SHALL return the occurrences (if any) that start exactly at that instant or are in progress at that instant.
