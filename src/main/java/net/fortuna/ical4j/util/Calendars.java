@@ -38,7 +38,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Uid;
 
 import java.io.IOException;
@@ -47,8 +46,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-
-import static net.fortuna.ical4j.model.Property.METHOD;
 
 /**
  * $Id$
@@ -205,18 +202,6 @@ public final class Calendars {
      */
     @Deprecated
     public static String getContentType(Calendar calendar, Charset charset) {
-        final var b = new StringBuilder("text/calendar");
-        
-        final Optional<Method> method = calendar.getProperty(METHOD);
-        if (method.isPresent()) {
-            b.append("; method=");
-            b.append(method.get().getValue());
-        }
-        
-        if (charset != null) {
-            b.append("; charset=");
-            b.append(charset);
-        }
-        return b.toString();
+        return calendar.getContentType(charset);
     }
 }

@@ -157,6 +157,26 @@ class CalendarSpec extends Specification {
         calendar.getContentType(Charset.forName('utf-8')) == 'text/calendar; method=PUBLISH; charset=UTF-8'
     }
 
+    def 'test a parsed method value cannot add media type parameters to the content type'() {
+        given: 'a calendar whose METHOD value carries an additional media type parameter'
+        def calendar = new CalendarBuilder().build(new StringReader('BEGIN:VCALENDAR\r\n' +
+                'PRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\n' +
+                'VERSION:2.0\r\n' +
+                'METHOD:PUBLISH; charset=utf-7\r\n' +
+                'BEGIN:VEVENT\r\n' +
+                'UID:auid\r\n' +
+                'DTSTAMP:20090810T000000Z\r\n' +
+                'DTSTART;VALUE=DATE:20090810\r\n' +
+                'END:VEVENT\r\n' +
+                'END:VCALENDAR\r\n'))
+
+        expect: 'the method value is retained'
+        calendar.getProperty(Property.METHOD).get().value == 'PUBLISH; charset=utf-7'
+
+        and: 'the content type omits it rather than emitting a second charset parameter'
+        calendar.getContentType(Charset.forName('utf-8')) == 'text/calendar; charset=UTF-8'
+    }
+
     def 'test bare carriage return in a text value does not inject a content line'() {
         given: 'a calendar with a summary containing a bare carriage return followed by a property line'
         def calendar = builder.calendar {
