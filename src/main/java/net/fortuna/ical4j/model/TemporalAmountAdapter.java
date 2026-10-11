@@ -48,26 +48,23 @@ public class TemporalAmountAdapter implements Serializable {
     }
 
     /**
-     * As the {@link Period} implementation doesn't support string representation in weeks, but does support
-     * years and months, we need to generate a string that converts years, months and days to weeks.
+     * RFC 5545 §3.3.6 expresses a nominal duration either in weeks ({@code PnW}) or in days ({@code PnD}), and
+     * has no designators for years or months. A {@link Period} of years or months has no fixed length, so it is
+     * anchored to the seed: the number of calendar days between the seed and {@code seed.plus(period)} is rendered
+     * as weeks when it is an exact multiple of seven, and as days otherwise. Truncating to whole weeks would lose
+     * up to six days (issue #419).
      *
      * @param period a period instance
+     * @param seed the temporal the period is applied to
      * @return a string representation of the period that is compliant with the RFC5545 specification.
      */
     private String periodToString(Period period, Temporal seed) {
         String retVal;
         var adjustedSeed = seed.plus(period);
-        if (period.getYears() != 0) {
-            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
-            retVal = String.format(Locale.US, "P%dW", weeks);
-        } else if (period.getMonths() != 0) {
-            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
-            retVal = String.format(Locale.US, "P%dW", weeks);
-        } else if (period.getDays() % 7 == 0) {
-            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
-            retVal = String.format(Locale.US, "P%dW", weeks);
+        long days = Math.abs(seed.until(adjustedSeed, ChronoUnit.DAYS));
+        if (days % 7 == 0) {
+            retVal = String.format(Locale.US, "P%dW", days / 7);
         } else {
-            long days = Math.abs(seed.until(adjustedSeed, ChronoUnit.DAYS));
             retVal = String.format(Locale.US, "P%dD", days);
         }
         if (period.isNegative() && !retVal.startsWith("-")) {

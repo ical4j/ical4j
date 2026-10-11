@@ -26,7 +26,11 @@ public abstract class AbstractCalendarValidatorFactory {
 
     private static final CalendarValidatorFactory instance;
     static {
-        instance = ServiceLoader.load(CalendarValidatorFactory.class, DefaultCalendarValidatorFactory.class.getClassLoader()).iterator().next();
+        // fall back to the default implementation when no service registration is visible, e.g. when
+        // META-INF/services has been stripped by ProGuard/R8 or a packaging tool (#125)..
+        var factories = ServiceLoader.load(CalendarValidatorFactory.class,
+                DefaultCalendarValidatorFactory.class.getClassLoader()).iterator();
+        instance = factories.hasNext() ? factories.next() : new DefaultCalendarValidatorFactory();
     }
 
     public static CalendarValidatorFactory getInstance() {

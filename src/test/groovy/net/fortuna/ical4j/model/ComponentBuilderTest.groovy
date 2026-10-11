@@ -37,4 +37,16 @@ class ComponentBuilderTest extends Specification {
         then: 'component vtodo is unrecognised'
         c instanceof XComponent
     }
+
+    def 'hasName is case-insensitive (#691)'() {
+        given: 'a builder initialised with a lower-case name'
+        ComponentBuilder builder = []
+        builder.name('standard')
+
+        expect: 'the name matches regardless of case'
+        builder.hasName('STANDARD')
+        builder.hasName('standard')
+        builder.hasName('Standard')
+        !builder.hasName('DAYLIGHT')
+    }
 }

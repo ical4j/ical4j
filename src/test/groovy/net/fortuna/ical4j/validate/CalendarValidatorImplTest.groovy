@@ -75,4 +75,33 @@ class CalendarValidatorImplTest extends Specification {
         then: 'result is as expected'
         notThrown(ValidationException)
     }
+
+    def 'component iTIP validation honours the recurse flag (#363)'() {
+        given: 'a METHOD:REQUEST calendar whose VEVENT lacks the ORGANIZER required by RFC 5546'
+        def calendar = builder.calendar() {
+            prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+            version '2.0'
+            method 'REQUEST'
+            vevent {
+                uid '1'
+                dtstamp()
+                dtstart '20240101T100000Z'
+                summary 'No organizer'
+                attendee 'mailto:attendee@example.com'
+            }
+        }
+
+        expect: 'non-recursive validation reports no errors, since components are not validated'
+        !calendar.validate(false).hasErrors()
+
+        and: 'the calendar-level validator alone does not descend into components'
+        !new CalendarValidatorImpl().validate(calendar).hasErrors()
+
+        when: 'recursive validation is applied'
+        def result = calendar.validate(true)
+
+        then: 'the missing ORGANIZER is reported exactly once, not duplicated'
+        result.hasErrors()
+        result.entries.count { it.message.contains('ORGANIZER') } == 1
+    }
 }

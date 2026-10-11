@@ -168,7 +168,7 @@ END:VEVENT\r
         override.component.getProperty('RECURRENCE-ID').isPresent()
 
         and: 'the remaining master instances are untouched'
-        instants(periods) == [Instant.parse('2021-07-14T00:00:00Z'), Instant.parse('2021-07-16T00:00:00Z')]
+        instants(periods) == [Instant.parse('2021-07-14T00:00:00Z')]
 
         where:
         recurrenceId << ['RECURRENCE-ID:20210715T000000Z', 'RECURRENCE-ID;TZID=UTC:20210715T000000']
@@ -210,7 +210,7 @@ END:VEVENT\r
         def periods = recurrences(cal, '2021-07-14T00:00:00Z', '2021-07-16T00:00:00Z')
 
         then:
-        instants(periods) == [Instant.parse('2021-07-14T00:00:00Z'), Instant.parse('2021-07-16T00:00:00Z')]
+        instants(periods) == [Instant.parse('2021-07-14T00:00:00Z')]
     }
 
     def 'recurrence properties on an override do not generate extra occurrences'() {

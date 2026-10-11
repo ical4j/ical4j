@@ -102,15 +102,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
             }
         }
 
-        // validate method..
-        final Optional<Method> method = target.getProperty(METHOD);
-        if (method.isPresent()) {
+        // validate method (calendar-level iTIP rules only)..
+        // NOTE: per-component iTIP validation (component.validate(method)) is deliberately NOT
+        // performed here. Calendar.validate(recurse) delegates to this validator for the calendar
+        // level and only descends into components when recurse is true (#363).
+        if (target.getProperty(METHOD).isPresent()) {
             result = result.merge(new ITIPValidator().validate(target));
-
-            // perform ITIP validation on components..
-            for (var component : target.getComponents()) {
-                result = result.merge(component.validate(method.get()));
-            }
         }
         return result;
     }

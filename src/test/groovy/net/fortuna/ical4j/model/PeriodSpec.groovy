@@ -135,6 +135,14 @@ class PeriodSpec extends Specification {
             winter	| monthMarch | true
             monthMarch	| winter | true
             new Period<>(LocalDate.parse("2025-10-17"), LocalDate.parse("2025-11-05")) | new Period<>(ZonedDateTime.parse("2025-10-17T00:00:00Z"), ZonedDateTime.parse("2025-11-05T00:00:00Z")) | true
+            // zero-length periods intersect when their instant lies in [start, end) (#82)
+            new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T21:00:00Z")) | new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | true
+            new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T21:00:00Z")) | true
+            new Period<>(ZonedDateTime.parse("2016-05-20T19:00:00Z"), ZonedDateTime.parse("2016-05-20T21:00:00Z")) | new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | true
+            new Period<>(ZonedDateTime.parse("2016-05-20T19:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | false
+            new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | new Period<>(ZonedDateTime.parse("2016-05-20T19:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | false
+            new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | true
+            new Period<>(ZonedDateTime.parse("2016-05-20T20:00:00Z"), ZonedDateTime.parse("2016-05-20T20:00:00Z")) | new Period<>(ZonedDateTime.parse("2016-05-20T21:00:00Z"), ZonedDateTime.parse("2016-05-20T21:00:00Z")) | false
     }
 
 	def 'test contains'() {

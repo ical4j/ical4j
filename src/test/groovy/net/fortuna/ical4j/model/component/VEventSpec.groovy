@@ -39,6 +39,7 @@ import spock.lang.Specification
 
 import java.time.*
 import java.time.temporal.ChronoUnit
+import java.time.temporal.UnsupportedTemporalTypeException
 
 import static net.fortuna.ical4j.model.CalendarDateFormat.UTC_DATE_TIME_FORMAT
 
@@ -177,5 +178,53 @@ END:VCALENDAR\r\n'''
                 UTC_DATE_TIME_FORMAT.parse("20240101T110000Z"),
                 UTC_DATE_TIME_FORMAT.parse("20240101T120000Z")
         )).empty
+    }
+
+    def 'recurrence set of a date-time event over a date-only period (#736)'() {
+        given: 'a recurring date-time event'
+        def event = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20140629T100000Z'
+            dtend '20140629T110000Z'
+            rrule 'FREQ=MONTHLY;COUNT=3'
+            summary 'Monthly'
+        }
+
+        when: 'the recurrence set is calculated over a period with DATE bounds'
+        def periods = event.calculateRecurrenceSet(new Period<>(LocalDate.parse('2014-06-29'), LocalDate.parse('2015-06-30')))
+
+        then: 'no exception is thrown and every instance is returned'
+        notThrown(UnsupportedTemporalTypeException)
+        periods.collect { Instant.from(it.start) }.sort() == [
+                Instant.parse('2014-06-29T10:00:00Z'),
+                Instant.parse('2014-07-29T10:00:00Z'),
+                Instant.parse('2014-08-29T10:00:00Z')]
+    }
+
+    def 'zero-duration event is included when the period starts at its start (#82)'() {
+        given: 'an event with no duration'
+        def event = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20160520T200000Z'
+            dtend '20160520T200000Z'
+            summary 'Instant'
+        }
+
+        expect: 'the event is found when the query period starts exactly at its start'
+        event.calculateRecurrenceSet(new Period(
+                UTC_DATE_TIME_FORMAT.parse('20160520T200000Z'),
+                UTC_DATE_TIME_FORMAT.parse('20160520T210000Z'))).size() == 1
+
+        and: 'when the query period strictly contains it'
+        event.calculateRecurrenceSet(new Period(
+                UTC_DATE_TIME_FORMAT.parse('20160520T190000Z'),
+                UTC_DATE_TIME_FORMAT.parse('20160520T210000Z'))).size() == 1
+
+        and: 'but not when the query period ends exactly at its start (half-open range)'
+        event.calculateRecurrenceSet(new Period(
+                UTC_DATE_TIME_FORMAT.parse('20160520T190000Z'),
+                UTC_DATE_TIME_FORMAT.parse('20160520T200000Z'))).empty
     }
 }
