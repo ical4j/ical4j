@@ -5,6 +5,7 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.StringDecoder;
 import org.apache.commons.codec.StringEncoder;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -29,23 +30,15 @@ public class PropertyCodec implements StringEncoder, StringDecoder {
     // matches an unencoded special character..
     private static final Pattern SPECIALCHAR_EX = Pattern.compile("([,;])");
 
-    // matches an encoded backslash character..
-    private static final Pattern ENCODED_BACKSLASH_EX = Pattern.compile(ENCODED_BACKSLASH);
-
-    // matches an encoded newline character..
-    private static final Pattern ENCODED_NEWLINE_EX = Pattern.compile("(?<!\\\\)" + ENCODED_NEWLINE);
-
-    // matches an encoded special character..
-    private static final Pattern ENCODED_SPECIALCHAR_EX = Pattern.compile("\\\\([,;\"])");
+    // matches an encoded backslash, newline or special character. Decoding all of them in a single
+    // pass ensures an encoded backslash is never treated as the start of another escape sequence..
+    private static final Pattern ENCODED_EX = Pattern.compile("\\\\([\\\\n,;\"])");
 
     @Override
     public String decode(String source) throws DecoderException {
         if (source != null) {
-            return ENCODED_BACKSLASH_EX.matcher(
-                    ENCODED_NEWLINE_EX.matcher(
-                            ENCODED_SPECIALCHAR_EX.matcher(source).replaceAll("$1")
-                    ).replaceAll("\n")
-            ).replaceAll("\\\\");
+            return ENCODED_EX.matcher(source).replaceAll(m -> "n".equals(m.group(1))
+                    ? "\n" : Matcher.quoteReplacement(m.group(1)));
         } else {
             throw new DecoderException("Input cannot be null");
         }
