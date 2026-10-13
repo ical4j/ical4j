@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.parameter.XParameter;
 import org.apache.commons.codec.DecoderException;
 import org.jspecify.annotations.Nullable;
@@ -59,7 +60,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
 
     public ParameterBuilder name(String name) {
         // parameter names are case-insensitive, but convert to upper case to simplify further processing
-        this.name = name.toUpperCase();
+        this.name = name.toUpperCase(Locale.ROOT);
         return this;
     }
 

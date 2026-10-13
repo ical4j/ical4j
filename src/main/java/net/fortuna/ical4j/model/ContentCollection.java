@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,11 +41,11 @@ public interface ContentCollection<T extends Content, E extends ContentCollectio
     @SuppressWarnings("unchecked")
     default <R extends T> List<R> get(String... names) {
         if (names.length > 0) {
-            List<String> filter = Arrays.stream(names).map(String::toUpperCase).collect(Collectors.toList());
+            List<String> filter = Arrays.stream(names).map(n -> n.toUpperCase(Locale.ROOT)).collect(Collectors.toList());
             // sort according to the order of names specified in the filter
             return getAll().stream().filter(c -> filter.contains(c.getName())).map(c -> (R) c).sorted((a, b) -> {
-                int idxA = filter.indexOf(a.getName().toUpperCase());
-                int idxB = filter.indexOf(b.getName().toUpperCase());
+                int idxA = filter.indexOf(a.getName().toUpperCase(Locale.ROOT));
+                int idxB = filter.indexOf(b.getName().toUpperCase(Locale.ROOT));
                 return Integer.compare(idxA, idxB);
             }).collect(Collectors.toList());
         } else {
