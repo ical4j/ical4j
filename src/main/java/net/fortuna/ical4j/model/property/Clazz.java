@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -163,7 +164,7 @@ public class Clazz extends Property {
         public Clazz createProperty(final ParameterList parameters, final String value) {
 
             if (parameters.getAll().isEmpty()) {
-                switch (value.toUpperCase()) {
+                switch (value.toUpperCase(Locale.ROOT)) {
                     case VALUE_PUBLIC: return PUBLIC;
                     case VALUE_PRIVATE: return PRIVATE;
                     case VALUE_CONFIDENTIAL: return CONFIDENTIAL;

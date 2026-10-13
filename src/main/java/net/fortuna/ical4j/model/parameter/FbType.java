@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
@@ -105,7 +106,7 @@ public class FbType extends Parameter implements Encodable {
 
         @Override
         public FbType createParameter(final String value) {
-            switch (value.toUpperCase()) {
+            switch (value.toUpperCase(Locale.ROOT)) {
                 case VALUE_BUSY: return BUSY;
                 case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;
                 case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;

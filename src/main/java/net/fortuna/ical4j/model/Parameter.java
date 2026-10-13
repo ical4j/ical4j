@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import net.fortuna.ical4j.util.Strings;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -280,7 +281,7 @@ public abstract class Parameter extends Content implements Comparable<Parameter>
     @Override
     public final int hashCode() {
         // as parameter name is case-insensitive generate hash for uppercase..
-        return new HashCodeBuilder().append(getName().toUpperCase()).append(
+        return new HashCodeBuilder().append(getName().toUpperCase(Locale.ROOT)).append(
                 getValue()).toHashCode();
     }
 

@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
@@ -644,7 +645,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     @Override
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
-        return new HashCodeBuilder().append(getName().toUpperCase()).append(
+        return new HashCodeBuilder().append(getName().toUpperCase(Locale.ROOT)).append(
                 getValue()).append(parameters).append(getPrefix()).toHashCode();
     }
 
@@ -660,7 +661,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @return the copy of the property
      */
     public final Property copy() {
-        if (getName().toUpperCase().startsWith("X-")) {
+        if (getName().toUpperCase(Locale.ROOT).startsWith("X-")) {
             return new XProperty(getName(), new ParameterList(getParameters()), getValue());
         }
         return newFactory().createProperty(parameters, getValue());
