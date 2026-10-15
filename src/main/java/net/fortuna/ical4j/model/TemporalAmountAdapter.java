@@ -13,11 +13,21 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Support adapter for {@link java.time.temporal.TemporalAmount} representation in iCalendar format.
  */
 public class TemporalAmountAdapter implements Serializable {
+
+    // The relaxed patterns below are applied to untrusted property values. Possessive quantifiers and the
+    // lookbehind keep matching linear in the value length, where the plain forms backtrack quadratically or
+    // recurse once per repetition (StackOverflowError on long values).
+    private static final Pattern LENIENT_TIME_ONLY = Pattern.compile("P(?:[+-]?[0-9]*+[MHS])++");
+
+    private static final Pattern RELAXED_WEEKS_AND_DAYS = Pattern.compile("([+-])?P.[^W]*+W.[^D]*+D.*");
+
+    private static final Pattern RELAXED_DAYS_SUFFIX = Pattern.compile("(?<!\\d)\\d+D");
 
     private final TemporalAmount duration;
 
@@ -149,11 +159,11 @@ public class TemporalAmountAdapter implements Serializable {
         }
         else if (value.matches("([+-])?P.*(W|D)")) {
             retVal = java.time.Period.parse(value);
-        } else if (lenient && value.matches("P([+-]?[0-9]*[MHS])+")) {
+        } else if (lenient && LENIENT_TIME_ONLY.matcher(value).matches()) {
             retVal = java.time.Duration.parse("PT" + value.substring(1));
         } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING) &&
-            value.matches("([+-])?P.+W.+D.*")) {
-            var split = value.split("\\d+D");
+            RELAXED_WEEKS_AND_DAYS.matcher(value).matches()) {
+            var split = RELAXED_DAYS_SUFFIX.split(value);
             retVal = java.time.Period.parse(split[0]);
         } else {
             retVal = java.time.Duration.parse(value);
