@@ -3,11 +3,13 @@ package net.fortuna.ical4j.model
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Ignore
 import spock.lang.Specification
+import spock.lang.Timeout
 import spock.lang.Unroll
 
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
+import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 
 class TemporalAmountAdapterTest extends Specification {
@@ -68,6 +70,24 @@ class TemporalAmountAdapterTest extends Specification {
         "P"             | java.time.Period.ZERO
         "PT"            | java.time.Period.ZERO
         "P90M"          | Duration.of(90, ChronoUnit.MINUTES)
+    }
+
+    @Timeout(5)
+    def "verify relaxed parsing rejects oversized values in linear time: #description"() {
+        setup: 'enable relaxed parsing'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+
+        when:
+        TemporalAmountAdapter.parse(stringValue)
+
+        then:
+        thrown(DateTimeParseException)
+
+        where:
+        description         | stringValue
+        'weeks without days' | 'P' + 'W' * 100_000 + 'X'
+        'unterminated days' | 'PxWxD' + '1' * 100_000 + 'X'
+        'repeated minutes'  | 'P' + '1M' * 100_000 + 'X'
     }
 
     def 'verify temporalamount creation'() {
