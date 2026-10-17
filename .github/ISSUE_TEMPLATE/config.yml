@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and usage help
+    url: https://github.com/orgs/ical4j/discussions
+    about: Ask how to use iCal4j, or share ideas, in GitHub Discussions.
+  - name: Report a security vulnerability
+    url: https://github.com/ical4j/ical4j/security/advisories/new
+    about: Report vulnerabilities privately. Please don't open a public issue.
+  - name: Documentation and examples
+    url: https://www.ical4j.org/
+    about: User guide, examples and API documentation.
