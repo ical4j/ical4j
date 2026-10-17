@@ -58,7 +58,7 @@
 4. [References][References]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
-7. [Development - Guide for contributing to the iCalj project][Development]
+7. [Development - Guide for contributing to the iCal4j project][Development]
     - [Building with Gradle]
     - [Redistribution]
     - [Contributing to iCal4j][Contributing]
@@ -308,19 +308,19 @@ Microsoft Outlook also appears to provide quoted TZID parameter values, as follo
 
 ### Building with Gradle
 
-iCal4j includes the Gradle wrapper for a simpler and more consistent build.
+iCal4j includes the Gradle wrapper for a simpler and more consistent build. Building requires **Java 17 or newer**;
+the published library targets Java 11.
 
-**Run unit tests**
+**Run the tests and all checks** (the same checks CI runs on pull requests)
 
-    ./gradlew clean test
+    ./gradlew check
 
-**Build a new release**
+**Install a snapshot into your local Maven repository**
 
-    ./gradlew clean test release -Prelease.forceVersion=2.0.0
+    ./gradlew publishToMavenLocal
 
-**Upload release binaries and packages**
-
-    RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
+The `Makefile` wraps these and the maintainer release tasks, for example `make check`, `make install` and
+`make release`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development setup.
 
 ### Redistribution
 
@@ -339,6 +339,9 @@ follow these very simple guidelines:
 
 Open source software is made stronger by the community that supports it. Through participation you not only contribute to the quality of the software, but also gain a deeper insight into the inner workings.
 
-Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask. If you have an answer, write it down.
+Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask in [Discussions](https://github.com/orgs/ical4j/discussions). If you have an answer, write it down.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up a development build and get a pull request merged, and
+[SECURITY.md](SECURITY.md) for reporting vulnerabilities privately.
 
 And if you are somehow constrained from participation, through corporate policy or otherwise, consider financial support. After all, if you are profiting from open source it's only fair to give something back to the community that make it all possible.

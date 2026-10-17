@@ -33,8 +33,8 @@ Security fixes are made on the current release line.
 
 | Version | Supported |
 |---------|-----------|
-| 4.3.x (latest) | ✅ |
-| 4.0 – 4.2 | ❌ Upgrade to the latest 4.x |
+| 4.4.x (latest) | ✅ |
+| 4.0 – 4.3 | ❌ Upgrade to the latest 4.x |
 | 3.x and earlier | ❌ No longer maintained |
 
 Snapshots (`*-SNAPSHOT`) are pre-release builds and aren't covered, but reports against `develop` are welcome.
