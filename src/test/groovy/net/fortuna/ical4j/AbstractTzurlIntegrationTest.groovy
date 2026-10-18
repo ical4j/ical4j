@@ -1,8 +1,10 @@
 package net.fortuna.ical4j
 
 
+import org.testcontainers.DockerClientFactory
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.spock.Testcontainers
+import spock.lang.Requires
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -12,7 +14,11 @@ import spock.lang.Specification
  * Podman compatibility (DOCKER_HOST resolution and Ryuk disablement) is configured
  * via env vars set by the Gradle {@code test} task; Testcontainers reads those
  * settings as env vars only, so they cannot be set from inside the test JVM.
+ *
+ * Subclasses are skipped when no Docker-compatible container runtime is available, so a
+ * local {@code ./gradlew check} passes without Docker. CI provides a runtime and runs them.
  */
+@Requires(value = { DockerClientFactory.instance().isDockerAvailable() }, inherited = true)
 @Testcontainers
 abstract class AbstractTzurlIntegrationTest extends Specification {
 
