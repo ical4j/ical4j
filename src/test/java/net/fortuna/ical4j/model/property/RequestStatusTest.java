@@ -31,14 +31,18 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * $Id$
@@ -68,13 +72,36 @@ public class RequestStatusTest {
         PropertyTest.assertPropertyEquals(property);
     }
 
+    /**
+     * Example from RFC 5545 section 3.8.8.3: the description and extension data are TEXT values.
+     */
+    @Test
+    public void testSetValueUnescapesComponents() {
+        RequestStatus status = new RequestStatus(new ParameterList(),
+                "2.8;Success\\, repeating event ignored. Scheduled as a single event.;RRULE:FREQ=WEEKLY\\;INTERVAL=2");
+        assertEquals("2.8", status.getStatusCode());
+        assertEquals("Success, repeating event ignored. Scheduled as a single event.", status.getDescription());
+        assertEquals("RRULE:FREQ=WEEKLY;INTERVAL=2", status.getExData());
+    }
+
+    @Test
+    public void testToStringEscapesLineBreaks() {
+        RequestStatus status = new RequestStatus("3.1", "Invalid property value",
+                "SUMMARY:x\r\nATTENDEE:mailto:mallory@example.com");
+        assertEquals("REQUEST-STATUS:3.1;Invalid property value;SUMMARY:x\\nATTENDEE:mailto:mallory@example.com\r\n",
+                status.toString());
+    }
+
     private static RequestStatus newStatus() {
         return new RequestStatus(RequestStatus.SUCCESS, null, null);
     }
 
     static Stream<Arguments> getValueData() {
         return Stream.of(
-                Arguments.of(newStatus(), RequestStatus.SUCCESS)
+                Arguments.of(newStatus(), RequestStatus.SUCCESS),
+                Arguments.of(new RequestStatus("2.8", "Success, repeating event ignored. Scheduled as a single event.",
+                        "RRULE:FREQ=WEEKLY;INTERVAL=2"),
+                        "2.8;Success\\, repeating event ignored. Scheduled as a single event.;RRULE:FREQ=WEEKLY\\;INTERVAL=2")
         );
     }
 
