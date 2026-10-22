@@ -76,6 +76,9 @@ dependencies {
 //    }
 
     compileOnly libs.jspecify
+    // test sources also use the JSpecify annotations; declare them rather than relying on them arriving
+    // transitively (currently via log4j-api), which isn't guaranteed..
+    testCompileOnly libs.jspecify
 
     // optional timezone caching..
     caffeineTimezoneCacheImplementation libs.caffeine
@@ -118,6 +121,19 @@ tasks.named('compileJava', JavaCompile) {
 
 tasks.named('compileTestJava', JavaCompile) {
     options.errorprone.enabled = false
+}
+
+// Sources are UTF-8 and some contain non-ASCII text. Without an explicit encoding, javac reads sources in the
+// platform charset, which on Windows with JDK 17 is Windows-1252, so non-ASCII string literals compile wrongly.
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+tasks.withType(GroovyCompile).configureEach {
+    options.encoding = 'UTF-8'
+    groovyOptions.encoding = 'UTF-8'
+}
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
 }
 
 test {
