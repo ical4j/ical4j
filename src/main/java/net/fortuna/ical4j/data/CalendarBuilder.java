@@ -40,6 +40,9 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -159,6 +162,27 @@ public class CalendarBuilder {
         this.parser = parser;
         this.tzRegistry = tzRegistry;
         this.contentHandler = new DefaultContentHandler(calendar -> {this.calendar = calendar;}, tzRegistry, contentHandlerContext);
+    }
+
+    /**
+     * Constructs a new instance that uses a custom content handler. The handler is created by the specified
+     * factory, which receives the consumer that captures the parsed calendar for {@link #build(UnfoldingReader)}
+     * and the timezone registry.
+     *
+     * @param parser                a calendar parser used to construct the calendar
+     * @param tzRegistry            a timezone registry used to retrieve {@link TimeZone}s and
+     *                              register additional timezone information found
+     *                              in the calendar
+     * @param contentHandlerFactory a factory that creates the content handler from a calendar consumer and
+     *                              a timezone registry
+     */
+    public CalendarBuilder(CalendarParser parser, TimeZoneRegistry tzRegistry,
+                           BiFunction<Consumer<Calendar>, TimeZoneRegistry, ContentHandler> contentHandlerFactory) {
+
+        this.parser = parser;
+        this.tzRegistry = tzRegistry;
+        this.contentHandler = Objects.requireNonNull(
+                contentHandlerFactory.apply(calendar -> {this.calendar = calendar;}, tzRegistry), "contentHandler");
     }
 
     /**
