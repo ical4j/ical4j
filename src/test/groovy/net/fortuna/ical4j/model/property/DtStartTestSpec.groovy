@@ -75,6 +75,11 @@ class DtStartTestSpec extends Specification {
                 ZoneId.of("America/Los_Angeles"))           | 'DTSTART;TZID=America/Los_Angeles:20231214T170000\r\n'
         ZonedDateTime.of(2023, 12, 14, 17, 0, 0, 0,
                 ZoneId.of("America/Toronto"))           | 'DTSTART;TZID=America/Toronto:20231214T170000\r\n'
+        // zones that abolished DST must not be written an hour ahead (#903)..
+        Instant.parse('2026-10-25T12:00:00Z')
+                .atZone(ZoneId.of('Europe/Moscow'))         | 'DTSTART;TZID=Europe/Moscow:20261025T150000\r\n'
+        Instant.parse('2026-07-01T18:00:00Z')
+                .atZone(ZoneId.of('America/Costa_Rica'))    | 'DTSTART;TZID=America/Costa_Rica:20260701T120000\r\n'
     }
 
     def 'test factory creation'() {

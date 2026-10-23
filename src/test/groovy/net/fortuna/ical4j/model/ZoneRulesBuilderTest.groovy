@@ -81,6 +81,36 @@ class ZoneRulesBuilderTest extends Specification {
         'America/Los_Angeles'   | LocalDateTime.of(2023, 12, 14, 17, 0, 0, 0)   | ZoneOffset.ofHours(-8)
     }
 
+    /**
+     * Zones that abolished DST, where the expired DAYLIGHT RRULE sits beside an observance with no RRULE
+     * (only an RDATE, or a single DTSTART). Such an observance has nothing to expire and must not stop the
+     * expired-rule guard from applying (issue #903). Expected offsets are fixed facts, not the JDK's tzdb.
+     */
+    @Unroll
+    def 'zone that abolished DST keeps its standard offset: #tzId #instant'() {
+        given: 'zone rules built from the bundled definition'
+        def zonerules = new ZoneRulesBuilder()
+                .vTimeZone(timeZoneRegistry.getTimeZone(tzId).getVTimeZone()).build()
+
+        expect: 'the offset is the standard offset all year'
+        zonerules.getOffset(Instant.parse(instant)) == ZoneOffset.of(expectedOffset)
+
+        where:
+        tzId                    | instant                   | expectedOffset
+        'Europe/Moscow'         | '2026-01-15T12:00:00Z'    | '+03:00'  // DST abolished 2011, permanent +03 since 2014
+        'Europe/Moscow'         | '2026-07-01T12:00:00Z'    | '+03:00'
+        'America/Costa_Rica'    | '2026-01-15T12:00:00Z'    | '-06:00'  // DST last observed 1991-92
+        'America/Costa_Rica'    | '2026-07-01T12:00:00Z'    | '-06:00'
+        'America/Santo_Domingo' | '2026-01-15T12:00:00Z'    | '-04:00'  // no DST since 2000
+        'America/Santo_Domingo' | '2026-12-15T12:00:00Z'    | '-04:00'
+        'Australia/Darwin'      | '2026-01-15T12:00:00Z'    | '+09:30'  // no DST since 1944
+        'Australia/Darwin'      | '2026-07-01T12:00:00Z'    | '+09:30'
+        'America/Sao_Paulo'     | '2026-01-15T12:00:00Z'    | '-03:00'  // DST abolished 2019
+        'America/Sao_Paulo'     | '2026-07-01T12:00:00Z'    | '-03:00'
+        'Europe/Istanbul'       | '2026-01-15T12:00:00Z'    | '+03:00'  // permanent +03 since 2016
+        'Europe/Istanbul'       | '2026-07-01T12:00:00Z'    | '+03:00'
+    }
+
     def 'build DST transitions from non-recurring (single date-time) observances'() {
         given: 'a VTIMEZONE whose DAYLIGHT/STANDARD observances are one-off transitions (no RRULE)'
         // This is the form emitted by some clients (e.g. Apple/iCloud) - see issue #793.
