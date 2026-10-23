@@ -52,4 +52,85 @@ class CalendarDateFormatTest extends Specification {
         dateString      | expectedValue
         '1975-07-17'    | LocalDate.of(1975, 7, 17)
     }
+
+    def 'equivalent temporal queries work as map keys'() {
+        given:
+        def first = queryType.getDeclaredConstructor().newInstance()
+        def second = queryType.getDeclaredConstructor().newInstance()
+        def values = [(first): 'value']
+
+        expect:
+        first == second
+        values[second] == 'value'
+
+        where:
+        queryType << [CalendarDateFormat.LocalDateTemporalQuery,
+                      CalendarDateFormat.LocalDateTimeTemporalQuery,
+                      CalendarDateFormat.OffsetDateTimeTemporalQuery,
+                      CalendarDateFormat.InstantTemporalQuery]
+    }
+
+    def 'equivalent date formats work as map keys'() {
+        given:
+        def first = new CalendarDateFormat('yyyyMMdd', queryType.getDeclaredConstructor().newInstance())
+        def second = new CalendarDateFormat('yyyyMMdd', queryType.getDeclaredConstructor().newInstance())
+        def values = [(first): 'value']
+
+        expect:
+        first == second
+        values[second] == 'value'
+
+        where:
+        queryType << [CalendarDateFormat.LocalDateTemporalQuery,
+                      CalendarDateFormat.LocalDateTimeTemporalQuery,
+                      CalendarDateFormat.OffsetDateTimeTemporalQuery,
+                      CalendarDateFormat.InstantTemporalQuery]
+    }
+
+    def 'serialized date formats remain usable as map keys'() {
+        given:
+        def bytes = new ByteArrayOutputStream()
+        bytes.withObjectOutputStream { it.writeObject(original) }
+        def restored = new ByteArrayInputStream(bytes.toByteArray()).withObjectInputStream {
+            it.readObject()
+        }
+        def values = [(original): 'value']
+
+        expect:
+        restored == original
+        values[restored] == 'value'
+
+        where:
+        original << [CalendarDateFormat.DATE_FORMAT,
+                     CalendarDateFormat.FLOATING_DATE_TIME_FORMAT,
+                     CalendarDateFormat.UTC_DATE_TIME_FORMAT,
+                     CalendarDateFormat.RELAXED_DATE_TIME_FORMAT,
+                     CalendarDateFormat.DEFAULT_PARSE_FORMAT]
+    }
+
+    def 'formats without queries retain their equality and hash behavior'() {
+        given:
+        def first = new CalendarDateFormat('yyyyMMdd')
+        def equivalent = new CalendarDateFormat('yyyyMMdd')
+        def different = new CalendarDateFormat('yyyy-MM-dd')
+        def values = [(first): 'value']
+
+        expect:
+        first == equivalent
+        first != different
+        values[equivalent] == 'value'
+        values[different] == null
+    }
+
+    def 'temporal queries preserve their existing serialization identifiers'() {
+        expect:
+        ObjectStreamClass.lookup(queryType).serialVersionUID == serialVersionUID
+
+        where:
+        queryType                                      | serialVersionUID
+        CalendarDateFormat.LocalDateTemporalQuery       | 7339970039696488632L
+        CalendarDateFormat.LocalDateTimeTemporalQuery   | 408655839257738041L
+        CalendarDateFormat.OffsetDateTimeTemporalQuery  | -2140574181387153175L
+        CalendarDateFormat.InstantTemporalQuery         | -5217778645190648482L
+    }
 }
