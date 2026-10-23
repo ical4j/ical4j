@@ -40,6 +40,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -180,7 +181,8 @@ public class CalendarBuilder {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = contentHandlerFactory.apply(calendar -> {this.calendar = calendar;}, tzRegistry);
+        this.contentHandler = Objects.requireNonNull(
+                contentHandlerFactory.apply(calendar -> {this.calendar = calendar;}, tzRegistry), "contentHandler");
     }
 
     /**

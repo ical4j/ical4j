@@ -146,6 +146,16 @@ END:VCALENDAR\r\n'''
         calendar as String == input
     }
 
+    def 'test content handler factory returning null'() {
+        when: 'the factory returns no handler'
+        new CalendarBuilder(CalendarParserFactory.getInstance().get(),
+                TimeZoneRegistryFactory.getInstance().createRegistry(), { consumer, tzRegistry -> null })
+
+        then: 'construction fails'
+        NullPointerException e = thrown()
+        e.message == 'contentHandler'
+    }
+
     static class CountingContentHandler extends DefaultContentHandler {
 
         int componentCount
