@@ -59,4 +59,17 @@ class PropertyCodecTest extends Specification {
         value            | encodedValue
         'Test \"quote\"' | 'Test \"quote\"'
     }
+
+    def 'verify an encoded backslash before an encoded newline is decoded'() {
+        expect:
+        PropertyCodec.INSTANCE.decode(encodedValue) == value
+        PropertyCodec.INSTANCE.decode(PropertyCodec.INSTANCE.encode(value)) == value
+
+        where:
+        encodedValue              | value
+        'C:\\\\temp\\\\\\nnext'   | 'C:\\temp\\\nnext'
+        '\\\\\\n'                 | '\\\n'
+        '\\\\n'                   | '\\n'
+        '\\,\\;\\\\'              | ',;\\'
+    }
 }
