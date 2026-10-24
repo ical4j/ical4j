@@ -21,4 +21,4 @@
 
 - [x] 4.1 Reopen #903 with an explanation of the mistaken auto-close.
 - [x] 4.2 PR against `develop` referencing #903, with a "Fixed" release note listing the affected zones. **PR #955.**
-- [ ] 4.3 Follow-up issue for `buildStandardOffsetTransitions` ignoring `RDATE`s (wrong `getStandardOffset` / `isDaylightSavings` for `Europe/Moscow` and `Europe/Istanbul`).
+- [x] 4.3 Follow-up issue for `buildStandardOffsetTransitions` ignoring `RDATE`s (wrong `getStandardOffset` / `isDaylightSavings` for `Europe/Moscow` and `Europe/Istanbul`). **Filed as #956.**
