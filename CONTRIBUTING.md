@@ -43,11 +43,11 @@ Other useful commands:
 | `./gradlew publishToMavenLocal` | Install a snapshot into your local Maven repository |
 | `make listApiChanges` | Show public API changes detected by RevAPI |
 
-### Tests that need Docker
+### Network access
 
-A few integration tests start a local timezone-update server with
-[Testcontainers](https://testcontainers.com/). They are skipped automatically when no Docker (or Podman) daemon is
-available, so a local `check` still passes without Docker. CI runs them.
+The test suite doesn't need network access or Docker. Tests that exercise timezone definition updates extend
+`AbstractTzurlIntegrationTest`, which serves the bundled definitions from a local HTTP server inside the test JVM.
+New tests that fetch timezone definitions should do the same rather than contact tzurl.org.
 
 ## Making a change
 
