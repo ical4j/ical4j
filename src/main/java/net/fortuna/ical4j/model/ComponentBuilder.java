@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.component.XComponent;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     public ComponentBuilder<?> name(String name) {
         // component names are case-insensitive, but convert to upper case to simplify further processing
-        this.name = name.toUpperCase();
+        this.name = name.toUpperCase(Locale.ROOT);
         return this;
     }
 

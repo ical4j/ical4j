@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.data;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.Observance;
@@ -134,7 +135,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startProperty(String name) {
-        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase(Locale.ROOT))) {
             propertyBuilder = new PropertyBuilder(context.getPropertyFactorySupplier().get()).name(name)
                     .timeZoneRegistry(tzRegistry);
         } else {
@@ -151,7 +152,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void endProperty(String name) {
-        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase(Locale.ROOT))) {
             final PropertyBuilder builder = assertProperty(propertyBuilder);
             Property property;
             try {
