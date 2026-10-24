@@ -38,7 +38,6 @@ import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.property.Attendee
 import net.fortuna.ical4j.model.property.Categories
 import net.fortuna.ical4j.model.property.Organizer
-import org.jetbrains.annotations.NotNull
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -87,7 +86,7 @@ class PropertyEqualToRuleTest extends Specification {
         and: 'a custom comparator for the property rule'
         def categoriesWork = new Categories() {
             @Override
-            int compareTo(@NotNull Property o) {
+            int compareTo(Property o) {
                 if (o instanceof Categories && o.getCategories().getTexts().contains('work')) {
                     return 0 // Match if 'work' is in the categories
                 }
