@@ -400,6 +400,35 @@ class RecurSpec extends Specification {
         'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102', '20110116', '20110130']
     }
 
+    @Unroll
+    def 'verify default WKST is MO regardless of locale: #locale'() {
+        setup: 'override platform default locale'
+        def originalLocale = Locale.default
+        Locale.default = locale
+
+        and: 'parse recurrence rule'
+        def recur = new Recur(rule)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
+        def expectedDates = []
+        expected.each {
+            expectedDates << TemporalAdapter.parse(it).temporal
+        }
+
+        expect:
+        recur.getDates(startDate, endDate) == expectedDates
+
+        cleanup:
+        Locale.default = originalLocale
+
+        where:
+        locale							| rule										| start				| end				| expected
+        // Example from RFC5545 section 3.8.5.3, with the default WKST=MO
+        Locale.US						| 'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU'	| '19970805T090000'	| '19971231T090000'	| ['19970805T090000', '19970810T090000', '19970819T090000', '19970824T090000']
+        Locale.forLanguageTag('ar-EG')	| 'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU'	| '19970805T090000'	| '19971231T090000'	| ['19970805T090000', '19970810T090000', '19970819T090000', '19970824T090000']
+        Locale.US						| 'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO'		| '20110307'		| '20110331'		| ['20110307', '20110313', '20110321', '20110327']
+    }
+
     def 'verify no-args constructor has no side-effects'() {
         expect:
         new Recur(frequency: Frequency.WEEKLY) as String == 'FREQ=WEEKLY'
