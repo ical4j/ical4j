@@ -4964,3 +4964,7 @@ acceptedBreaks:
     - code: "java.class.removed"
       old: "class net.fortuna.ical4j.validate.component.VToDoValidator"
       justification: "consolidate_deprecated_validators: deprecated subclass removed; use ComponentValidator factory or canonical VToDo.validate()"
+    - code: "java.field.constantValueChanged"
+      old: "field net.fortuna.ical4j.util.RegEx.COMMA_DELIMITED"
+      new: "field net.fortuna.ical4j.util.RegEx.COMMA_DELIMITED"
+      justification: "linear_comma_delimited_split: splits exactly as before; a match no longer starts inside a whitespace run, which made split quadratic"
