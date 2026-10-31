@@ -75,4 +75,15 @@ public class PropertyCodec implements StringEncoder, StringDecoder {
             throw new EncoderException("Input cannot be null");
         }
     }
+
+    /**
+     * Encodes line breaks only, for values that are not otherwise escaped. A line break would terminate
+     * the content line whatever the value type.
+     *
+     * @param source a property value
+     * @return the value with line breaks encoded and all other characters unchanged
+     */
+    String encodeLineBreaks(String source) {
+        return NEWLINE_EX.matcher(source).replaceAll(ENCODED_NEWLINE);
+    }
 }
