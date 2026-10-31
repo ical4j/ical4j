@@ -476,7 +476,9 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
         if (this instanceof XProperty && getParameter(Parameter.VALUE).isPresent()
                 && !Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
-            value = getValue();
+            // escaping applies to TEXT values only, however PropertyBuilder decodes all experimental
+            // property values so an escaped line break must not be written as a real one..
+            value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
         } else if (this instanceof Encodable) {
             try {
                 value = PropertyCodec.INSTANCE.encode(getValue());
