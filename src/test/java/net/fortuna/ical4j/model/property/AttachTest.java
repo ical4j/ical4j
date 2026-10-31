@@ -46,13 +46,20 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Unit tests for Attach property.
@@ -134,5 +141,30 @@ public class AttachTest {
         Attach deserialized = (Attach) in.readObject();
 
         assertEquals("https://domain.example/file.txt", deserialized.getValue());
+    }
+
+    @Test
+    void inline_binary_is_buffered_in_an_owner_only_temp_file() throws IOException {
+        assumeTrue(FileSystems.getDefault().supportedFileAttributeViews().contains("posix"));
+
+        var before = attachTempFiles();
+        var inline = new Attach(new ParameterList(List.of(Encoding.BASE64, Value.BINARY)), "aUNhbDRqIGF0dGFjaG1lbnQ=");
+        var created = attachTempFiles();
+        created.removeAll(before);
+
+        assertNotNull(inline.getBinary());
+        assertFalse(created.isEmpty());
+        for (var file : created) {
+            assertEquals(PosixFilePermissions.fromString("rw-------"), Files.getPosixFilePermissions(file));
+        }
+    }
+
+    private static Set<Path> attachTempFiles() throws IOException {
+        var files = new HashSet<Path>();
+        var tmpDir = Paths.get(System.getProperty("java.io.tmpdir"));
+        try (var stream = Files.newDirectoryStream(tmpDir, "ical4j-attach*.tmp")) {
+            stream.forEach(files::add);
+        }
+        return files;
     }
 }
