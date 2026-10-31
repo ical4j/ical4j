@@ -138,9 +138,11 @@ public class Geo extends Property {
 
     private static final long serialVersionUID = -902100715801867636L;
 
-    private static final Pattern VALUE_PATTERN = Pattern.compile("([+-]?[0-9]+\\.?[0-9]*);([+-]?[0-9]+\\.?[0-9]*)");
+    // Possessive quantifiers keep matching linear in the value length. With plain quantifiers a long digit run
+    // that doesn't match is re-split between the integer and fraction parts, which is quadratic.
+    private static final Pattern VALUE_PATTERN = Pattern.compile("([+-]?[0-9]++\\.?[0-9]*+);([+-]?[0-9]++\\.?[0-9]*+)");
 
-    private static final Pattern RELAXED_VALUE_PATTERN = Pattern.compile("([+-]?[0-9]+\\.?[0-9]*)\\\\?;([+-]?[0-9]+\\.?[0-9]*)");
+    private static final Pattern RELAXED_VALUE_PATTERN = Pattern.compile("([+-]?[0-9]++\\.?[0-9]*+)\\\\?;([+-]?[0-9]++\\.?[0-9]*+)");
 
     private BigDecimal latitude;
 
