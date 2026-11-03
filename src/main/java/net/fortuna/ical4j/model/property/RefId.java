@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
@@ -63,7 +64,7 @@ import net.fortuna.ical4j.validate.ValidationResult;
  * </pre>
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9253.html#name-refid">rfc9253</a>
  */
-public class RefId extends Property {
+public class RefId extends Property implements Encodable {
 
     private static final String PROPERTY_NAME = "REFID";
 

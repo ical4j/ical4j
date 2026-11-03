@@ -35,10 +35,14 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -149,16 +153,34 @@ public class RequestStatus extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        var values = aValue.split(";");
-        if (values.length > 0) {
-            statusCode = values[0];
+        var values = split(aValue);
+        statusCode = values.get(0);
+        if (values.size() > 1) {
+            description = Strings.unescape(values.get(1));
         }
-        if (values.length > 1) {
-            description = values[1];
+        if (values.size() > 2) {
+            exData = Strings.unescape(values.get(2));
         }
-        if (values.length > 2) {
-            exData = values[2];
+    }
+
+    /**
+     * Splits a value into status code, description and extension data on unescaped semicolons. The description
+     * and extension data are TEXT values (RFC 5545 section 3.8.8.3), so may contain escaped semicolons.
+     */
+    private static List<String> split(final String aValue) {
+        final List<String> values = new ArrayList<>();
+        var start = 0;
+        for (var i = 0; i < aValue.length() && values.size() < 2; i++) {
+            final var c = aValue.charAt(i);
+            if (c == '\\') {
+                i++;
+            } else if (c == ';') {
+                values.add(aValue.substring(start, i));
+                start = i + 1;
+            }
         }
+        values.add(aValue.substring(start));
+        return values;
     }
 
     /**
@@ -172,12 +194,14 @@ public class RequestStatus extends Property {
             b.append(getStatusCode());
         }
 
-        if ((getDescription() != null)) {
-            b.append(';').append(getDescription());
+        final var desc = getDescription();
+        if (desc != null) {
+            b.append(';').append(Strings.escape(desc));
         }
 
-        if ((getExData() != null)) {
-            b.append(';').append(getExData());
+        final var data = getExData();
+        if (data != null) {
+            b.append(';').append(Strings.escape(data));
         }
 
         return b.toString();
