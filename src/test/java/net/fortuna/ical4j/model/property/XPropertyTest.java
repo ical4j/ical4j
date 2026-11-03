@@ -94,8 +94,11 @@ public class XPropertyTest {
     }
 
     private static XProperty newTestUriProperty() {
-        return new XProperty("TEST", new ParameterList(Collections.singletonList(Value.URI)),
-                "geo:37.331684,-122.030758");
+        return newTestUriProperty("geo:37.331684,-122.030758");
+    }
+
+    private static XProperty newTestUriProperty(String value) {
+        return new XProperty("TEST", new ParameterList(Collections.singletonList(Value.URI)), value);
     }
 
     static Stream<Arguments> getValueData() {
@@ -127,7 +130,14 @@ public class XPropertyTest {
     static Stream<Arguments> toStringData() {
         return Stream.of(
                 Arguments.of(newTestProperty("geo:37.331684,-122.030758"), "TEST:geo:37.331684\\,-122.030758\r\n"),
-                Arguments.of(newTestUriProperty(), "TEST;VALUE=URI:geo:37.331684,-122.030758\r\n")
+                Arguments.of(newTestUriProperty(), "TEST;VALUE=URI:geo:37.331684,-122.030758\r\n"),
+                Arguments.of(newTestUriProperty("a\nATTENDEE:mailto:mallory@example.com"),
+                        "TEST;VALUE=URI:a\\nATTENDEE:mailto:mallory@example.com\r\n"),
+                Arguments.of(newTestUriProperty("a\rATTENDEE:mailto:mallory@example.com"),
+                        "TEST;VALUE=URI:a\\nATTENDEE:mailto:mallory@example.com\r\n"),
+                Arguments.of(newTestUriProperty("a\r\nATTENDEE:mailto:mallory@example.com"),
+                        "TEST;VALUE=URI:a\\nATTENDEE:mailto:mallory@example.com\r\n"),
+                Arguments.of(newTestUriProperty(null), "TEST;VALUE=URI:\r\n")
         );
     }
 }

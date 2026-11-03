@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
@@ -106,7 +107,7 @@ public class Rsvp extends Parameter implements Encodable {
 
         @Override
         public Rsvp createParameter(final String value) {
-            switch (value.toUpperCase()) {
+            switch (value.toUpperCase(Locale.ROOT)) {
                 case VALUE_FALSE: return FALSE;
                 case VALUE_TRUE: return TRUE;
             }

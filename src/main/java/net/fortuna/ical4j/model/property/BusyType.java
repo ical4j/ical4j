@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -134,7 +135,7 @@ public class BusyType extends Property {
         public BusyType createProperty(final ParameterList parameters, final String value) {
 
             if (parameters.getAll().isEmpty()) {
-                switch (value.toUpperCase()) {
+                switch (value.toUpperCase(Locale.ROOT)) {
                     case VALUE_BUSY: return BUSY;
                     case VALUE_BUSY_UNAVAILABLE: return BUSY_UNAVAILABLE;
                     case VALUE_BUSY_TENTATIVE: return BUSY_TENTATIVE;

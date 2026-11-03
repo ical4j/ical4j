@@ -169,7 +169,7 @@ VEvent event = builder.vevent {
 ### Dependencies
 - **Core**: SLF4J, Commons Lang3, Commons Collections4, ThreeTen-Extra
 - **Optional**: Caffeine (caching), JParsec (expressions), Groovy (DSL)
-- **Test**: Spock, JUnit 5, Hamcrest, Testcontainers
+- **Test**: Spock, JUnit 5, Hamcrest
 
 ### Configuration Files
 - `gradle.properties` - Build configuration

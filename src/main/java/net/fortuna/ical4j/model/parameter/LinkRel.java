@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.LinkRelationType;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
@@ -59,7 +60,7 @@ import java.net.URI;
  * </pre>
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9253.html#name-link-relation">rfc9253</a>
  */
-public class LinkRel extends Parameter {
+public class LinkRel extends Parameter implements Encodable {
 
     private static final String PARAM_NAME = "LINKREL";
 

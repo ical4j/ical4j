@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
+
 /**
  * Abstract base class for content builders in the iCal4j library.
  * This class provides common functionality for handling content names and experimental features.
@@ -29,7 +31,7 @@ public abstract class AbstractContentBuilder {
      * @return
      */
     protected boolean isExperimentalName(final String name) {
-        return name.toUpperCase().startsWith(Component.EXPERIMENTAL_PREFIX)
+        return name.toUpperCase(Locale.ROOT).startsWith(Component.EXPERIMENTAL_PREFIX)
                 && name.length() > Component.EXPERIMENTAL_PREFIX.length();
     }
 

@@ -51,6 +51,20 @@ class PropertyCodecTest extends Specification {
         'summary\rATTENDEE:mailto:mallory@example.com'   | 'summary\\nATTENDEE:mailto:mallory@example.com'
     }
 
+    def 'verify line break encoding leaves other characters unchanged'() {
+        expect:
+        PropertyCodec.INSTANCE.encodeLineBreaks(value) == encodedValue
+
+        where:
+        value                       | encodedValue
+        ''                          | ''
+        'geo:37.331684,-122.030758' | 'geo:37.331684,-122.030758'
+        'a\\b;c'                    | 'a\\b;c'
+        'a\nb'                      | 'a\\nb'
+        'a\r\nb'                    | 'a\\nb'
+        'a\rb'                      | 'a\\nb'
+    }
+
     def 'verify Dquote escaping'() {
         expect:
         PropertyCodec.INSTANCE.encode(value) == encodedValue
@@ -58,5 +72,18 @@ class PropertyCodecTest extends Specification {
         where:
         value            | encodedValue
         'Test \"quote\"' | 'Test \"quote\"'
+    }
+
+    def 'verify an encoded backslash before an encoded newline is decoded'() {
+        expect:
+        PropertyCodec.INSTANCE.decode(encodedValue) == value
+        PropertyCodec.INSTANCE.decode(PropertyCodec.INSTANCE.encode(value)) == value
+
+        where:
+        encodedValue              | value
+        'C:\\\\temp\\\\\\nnext'   | 'C:\\temp\\\nnext'
+        '\\\\\\n'                 | '\\\n'
+        '\\\\n'                   | '\\n'
+        '\\,\\;\\\\'              | ',;\\'
     }
 }

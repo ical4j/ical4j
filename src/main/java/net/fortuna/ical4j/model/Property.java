@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
@@ -475,7 +476,9 @@ public abstract class Property extends Content implements Comparable<Property>, 
 
         if (this instanceof XProperty && getParameter(Parameter.VALUE).isPresent()
                 && !Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
-            value = getValue();
+            // escaping applies to TEXT values only, however PropertyBuilder decodes all experimental
+            // property values so an escaped line break must not be written as a real one..
+            value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
         } else if (this instanceof Encodable) {
             try {
                 value = PropertyCodec.INSTANCE.encode(getValue());
@@ -644,7 +647,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     @Override
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
-        return new HashCodeBuilder().append(getName().toUpperCase()).append(
+        return new HashCodeBuilder().append(getName().toUpperCase(Locale.ROOT)).append(
                 getValue()).append(parameters).append(getPrefix()).toHashCode();
     }
 
@@ -660,7 +663,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @return the copy of the property
      */
     public final Property copy() {
-        if (getName().toUpperCase().startsWith("X-")) {
+        if (getName().toUpperCase(Locale.ROOT).startsWith("X-")) {
             return new XProperty(getName(), new ParameterList(getParameters()), getValue());
         }
         return newFactory().createProperty(parameters, getValue());

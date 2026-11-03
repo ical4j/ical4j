@@ -198,4 +198,32 @@ class CalendarSpec extends Specification {
         event.getProperties(Property.ATTENDEE).empty
         event.getProperty(Property.SUMMARY).get().value == 'Team sync\nATTENDEE:mailto:mallory@example.com'
     }
+
+    def 'test escaped line break in a non-TEXT experimental property does not inject a content line'() {
+        given: 'a calendar parsed from a non-TEXT experimental property'
+        def parsed = new CalendarBuilder().build(new StringReader(
+                'BEGIN:VCALENDAR\r\nPRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\nVERSION:2.0\r\n' +
+                'BEGIN:VEVENT\r\nUID:auid\r\nDTSTAMP:20090810T000000Z\r\nDTSTART;VALUE=DATE:20090810\r\n' +
+                "$line\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"))
+
+        when: 'the calendar is serialised and parsed again'
+        def serialised = parsed as String
+        def reparsed = new CalendarBuilder().build(new StringReader(serialised))
+
+        then: 'the property is written as it was read'
+        serialised.contains("$line\r\n")
+
+        and: 'nothing is added to the calendar'
+        reparsed.getComponents().size() == 1
+        reparsed.getComponents().first().getProperties().size() == parsed.getComponents().first().getProperties().size()
+
+        where:
+        line << [
+                'X-FOO;VALUE=URI:x\\nATTENDEE:mailto:mallory@example.com',
+                'X-FOO;VALUE=X-OTHER:x\\nATTENDEE:mailto:mallory@example.com',
+                'X-FOO;VALUE=URI:x\\nEND:VEVENT\\nBEGIN:VEVENT\\nUID:injected\\nX-BAR:y',
+                'X-FOO;VALUE=URI:file:C:\\new\\dir',
+                'X-FOO;VALUE=URI:geo:37.331684,-122.030758'
+        ]
+    }
 }

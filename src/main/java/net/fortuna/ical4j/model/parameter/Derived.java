@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
@@ -87,7 +88,7 @@ public class Derived extends Parameter {
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getDerived().toString().toUpperCase();
+        return getDerived().toString().toUpperCase(Locale.ROOT);
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory<Derived> {
@@ -98,7 +99,7 @@ public class Derived extends Parameter {
         }
     
         public Derived createParameter(final String value) {
-            switch (value.toUpperCase()) {
+            switch (value.toUpperCase(Locale.ROOT)) {
                 case VALUE_TRUE: return TRUE;
                 case VALUE_FALSE: return FALSE;
             }

@@ -4976,3 +4976,7 @@ acceptedBreaks:
     - code: "java.field.serialVersionUIDChanged"
       new: "field net.fortuna.ical4j.model.CalendarDateFormat.InstantTemporalQuery.serialVersionUID"
       justification: "Explicitly preserves the 4.1.1 implicit UID -5217778645190648482, verified with serialver and deserialization; no serialized fields change."
+    - code: "java.field.constantValueChanged"
+      old: "field net.fortuna.ical4j.util.RegEx.COMMA_DELIMITED"
+      new: "field net.fortuna.ical4j.util.RegEx.COMMA_DELIMITED"
+      justification: "linear_comma_delimited_split: splits exactly as before; a match no longer starts inside a whitespace run, which made split quadratic"

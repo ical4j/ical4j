@@ -53,6 +53,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -218,7 +219,8 @@ public class Attach extends Property {
                 final var decoder = DecoderFactory.getInstance().createBinaryDecoder(encoding.get());
                 byte[] decodedBytes = decoder.decode(aValue.getBytes());
                 try {
-                    File binaryData = File.createTempFile("ical4j-attach", ".tmp");
+                    // created owner-only, unlike File.createTempFile which honours the umask
+                    File binaryData = Files.createTempFile("ical4j-attach", ".tmp").toFile();
                     binaryData.deleteOnExit();
 
                     try (RandomAccessFile raf = new RandomAccessFile(binaryData, "rw")) {

@@ -68,4 +68,15 @@ END:VCALENDAR
         LinkRel linkRel = calendar?.components[0].properties[1].getRequiredParameter('LINKREL')
         linkRel.value == 'https://example.com/linkrel/derivedFrom'
     }
+
+    def 'assert uri values are quoted when serialized'() {
+        given: 'a linkrel with a uri value containing reserved characters'
+        LinkRel linkrel = [URI.create('https://example.com/linkrel/derivedFrom;x=y')]
+
+        when: 'the parameter is serialized'
+        String serialized = linkrel as String
+
+        then: 'the value is quoted so reserved characters are not reinterpreted'
+        serialized == 'LINKREL="https://example.com/linkrel/derivedFrom;x=y"'
+    }
 }

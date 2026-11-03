@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.data;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import org.apache.commons.lang3.StringUtils;
@@ -370,7 +371,7 @@ public class HCalendarParser implements CalendarParser {
             LOG.debug("Building property " + propName);
 
         var className = className(propName);
-        var elementName = element.getLocalName().toLowerCase();
+        var elementName = element.getLocalName().toLowerCase(Locale.ROOT);
 
         String value;
         if (elementName.equals("abbr")) {
@@ -463,7 +464,7 @@ public class HCalendarParser implements CalendarParser {
      */
 
     private static String className(String propName) {
-        return propName.toLowerCase();
+        return propName.toLowerCase(Locale.ROOT);
     }
 
     private static boolean isHeaderElement(String name) {

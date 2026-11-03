@@ -13,7 +13,6 @@ tagsoup = "1.2.1"
 # hamcrest-core 1.3, so explicitly load hamcrest-core 2.2
 # to make versions match
 hamcrest = "2.2"
-testcontainers = "1.20.4"
 junit = "5.14.1"
 junit4 = "4.13.2"
 errorprone = "2.36.0"
@@ -51,5 +50,3 @@ tagsoup = { group = "org.ccil.cowan.tagsoup", name = "tagsoup", version.ref = "t
 
 hamcrest = {group = "org.hamcrest", name = "hamcrest-core", version.ref = "hamcrest"}
 
-testcontainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers"}
-testcontainers-spock = { group = "org.testcontainers", name = "spock", version.ref = "testcontainers"}

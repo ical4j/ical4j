@@ -40,8 +40,12 @@ public interface RegEx {
 
     /**
      * Used to split comma-delimited strings, allowing for whitespace.
+     *
+     * <p>Splits exactly like {@code \s*,\s*}, but a match may only start where the previous match ended or where
+     * a whitespace run begins. Otherwise a long run of whitespace with no comma after it is rescanned from every
+     * position in the run, which is quadratic in the length of the value.</p>
      */
-    String COMMA_DELIMITED = "\\s*,\\s*";
+    String COMMA_DELIMITED = "(?:\\G|(?<!\\s))\\s*,\\s*";
 
     String COLON_DELIMITED = ":";
 }
