@@ -175,7 +175,8 @@ public class RecurrenceSet<T extends Temporal> extends TreeSet<Period<T>> {
             }
 
             // subtract exception dates..
-            recurrenceSet.removeIf(r -> exceptionDates.contains(r.getStart()));
+            recurrenceSet.removeIf(r -> exceptionDates.stream()
+                    .anyMatch(date -> TemporalComparator.INSTANCE.compare(r.getStart(), date) == 0));
 
             // subtract exception rules..
             List<Period<T>> exceptionRuleDates = exceptionRules.stream().map(rrule ->

@@ -359,6 +359,22 @@ public class VEventTest {
         assertTrue(periods.isEmpty());
     }
 
+    @Test
+    public void testCalculateRecurrenceSetWithUtcExDate() {
+        ZonedDateTime start = ZonedDateTime.parse("2024-01-01T09:00:00+01:00[Europe/Paris]");
+        Duration duration = Duration.ofHours(1);
+        VEvent event = new VEvent(start, duration, "Daily");
+        event.add(new Uid("example"));
+        event.add(new RRule<Temporal>("FREQ=DAILY;COUNT=3"));
+        event.add(new ExDate<Temporal>("20240102T080000Z"));
+
+        Period<Instant> query = new Period<>(Instant.parse("2024-01-01T00:00:00Z"),
+                Instant.parse("2024-01-04T00:00:00Z"));
+
+        assertEquals(Set.of(new Period<>(start, duration), new Period<>(start.plusDays(2), duration)),
+                event.calculateRecurrenceSet(query));
+    }
+
     /**
      * Test equality of events with different alarm sub-components.
      */
