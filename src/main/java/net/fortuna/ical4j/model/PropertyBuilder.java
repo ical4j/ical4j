@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.UtcProperty;
@@ -146,7 +147,10 @@ public class PropertyBuilder extends AbstractContentBuilder {
             }
         }
 
-        if (property instanceof Encodable) {
+        boolean nonTextXProperty = property instanceof XProperty
+                && property.getParameter(Parameter.VALUE).isPresent()
+                && !Value.TEXT.equals(property.getRequiredParameter(Parameter.VALUE));
+        if (property instanceof Encodable && !nonTextXProperty) {
             property.setValue(decodedValue);
         }
 
