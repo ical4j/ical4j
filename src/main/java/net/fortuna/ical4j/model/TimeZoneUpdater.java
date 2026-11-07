@@ -86,8 +86,13 @@ public class TimeZoneUpdater {
         }
     }
 
+    /**
+     * Updates are disabled by default and are only enabled when the property is set to "true" (ignoring case).
+     *
+     * @return true if timezone definition updates are enabled, otherwise false
+     */
     public boolean isEnabled() {
-        return !"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"));
+        return Configurator.getProperty(UPDATE_ENABLED).map(String::trim).map(Boolean::parseBoolean).orElse(false);
     }
 
     public URLConnection openConnection(URL url) throws IOException {

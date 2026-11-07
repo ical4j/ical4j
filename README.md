@@ -167,6 +167,7 @@ You may also find the [Java Legacy Date-Time Code] web page useful.
 
     net.fortuna.ical4j.timezone.registry=net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory
 
+    # Disabled by default. Set to true to fetch updated definitions from each timezone's TZURL.
     net.fortuna.ical4j.timezone.update.enabled={true|false}
 
     net.fortuna.ical4j.factory.decoder=net.fortuna.ical4j.util.DefaultDecoderFactory
