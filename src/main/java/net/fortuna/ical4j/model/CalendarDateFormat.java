@@ -172,6 +172,8 @@ import java.util.Objects;
 public class CalendarDateFormat implements Serializable {
 
     public static class LocalDateTemporalQuery implements TemporalQuery<LocalDate>, Serializable {
+        private static final long serialVersionUID = 7339970039696488632L;
+
         @Override
         public LocalDate queryFrom(TemporalAccessor temporal) {
             return LocalDate.from(temporal);
@@ -182,9 +184,16 @@ public class CalendarDateFormat implements Serializable {
             if (this == obj) return true;
             return obj != null && getClass() == obj.getClass();
         }
+
+        @Override
+        public int hashCode() {
+            return getClass().hashCode();
+        }
     }
 
     public static class LocalDateTimeTemporalQuery implements TemporalQuery<LocalDateTime>, Serializable {
+        private static final long serialVersionUID = 408655839257738041L;
+
         @Override
         public LocalDateTime queryFrom(TemporalAccessor temporal) {
             return LocalDateTime.from(temporal);
@@ -195,9 +204,16 @@ public class CalendarDateFormat implements Serializable {
             if (this == obj) return true;
             return obj != null && getClass() == obj.getClass();
         }
+
+        @Override
+        public int hashCode() {
+            return getClass().hashCode();
+        }
     }
 
     public static class OffsetDateTimeTemporalQuery implements TemporalQuery<OffsetDateTime>, Serializable {
+        private static final long serialVersionUID = -2140574181387153175L;
+
         @Override
         public OffsetDateTime queryFrom(TemporalAccessor temporal) {
             return OffsetDateTime.from(temporal);
@@ -208,9 +224,16 @@ public class CalendarDateFormat implements Serializable {
             if (this == obj) return true;
             return obj != null && getClass() == obj.getClass();
         }
+
+        @Override
+        public int hashCode() {
+            return getClass().hashCode();
+        }
     }
 
     public static class InstantTemporalQuery implements TemporalQuery<Instant>, Serializable {
+        private static final long serialVersionUID = -5217778645190648482L;
+
         @Override
         public Instant queryFrom(TemporalAccessor temporal) {
             return Instant.from(temporal);
@@ -220,6 +243,11 @@ public class CalendarDateFormat implements Serializable {
         public boolean equals(Object obj) {
             if (this == obj) return true;
             return obj != null && getClass() == obj.getClass();
+        }
+
+        @Override
+        public int hashCode() {
+            return getClass().hashCode();
         }
     }
 
