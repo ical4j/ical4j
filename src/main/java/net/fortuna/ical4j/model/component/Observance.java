@@ -74,6 +74,16 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
      */
     public static final String DAYLIGHT = "DAYLIGHT";
 
+    /**
+     * Upper bound on the number of onsets expanded from a single observance RRULE. A real timezone
+     * observance recurs yearly, so even a definition spanning the whole representable range stays far
+     * below this; the cap only bites on a crafted observance with a sub-yearly frequency (e.g.
+     * {@code FREQ=HOURLY}) and an early DTSTART, which would otherwise expand to millions of onsets
+     * from a few hundred bytes of parsed calendar data. The value matches the default
+     * {@code net.fortuna.ical4j.recur.maxincrementcount} recurrence safety limit.
+     */
+    private static final int MAX_RECURRENCE_ONSETS = 1000;
+
     // TODO: clear cache when observance definition changes (??)
     private long @Nullable [] onsetsMillisec;
     private OffsetDateTime @Nullable [] onsetsDates;
@@ -203,7 +213,8 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
         for (RRule<OffsetDateTime> rrule : rrules) {
             // include future onsets to determine onset period..
             onsetLimit = offsetDate.plusYears(10);
-            final List<OffsetDateTime> recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit);
+            final List<OffsetDateTime> recurrenceDates = rrule.getRecur().getDates(initialOnset, initialOnset,
+                    onsetLimit, MAX_RECURRENCE_ONSETS);
             for (final Temporal recurDate : recurrenceDates) {
                 final var rruleOnset = OffsetDateTime.from(recurDate).plusSeconds(offsetFrom.getOffset().getTotalSeconds());
                 if (!rruleOnset.isAfter(offsetDate) && rruleOnset.isAfter(onset)) {

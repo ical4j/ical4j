@@ -32,6 +32,13 @@ import static net.fortuna.ical4j.model.Property.TZOFFSETFROM;
  */
 public class ZoneRulesBuilder {
 
+    /**
+     * Upper bound on the number of onsets expanded from a single observance RRULE when building
+     * historical transitions. See {@code buildDSTTransitions} for the rationale; the value matches the
+     * default {@code net.fortuna.ical4j.recur.maxincrementcount} recurrence safety limit.
+     */
+    private static final int MAX_RECURRENCE_ONSETS = 1000;
+
     private @Nullable VTimeZone vTimeZone;
 
     public ZoneRulesBuilder vTimeZone(VTimeZone vTimeZone) {
@@ -125,7 +132,12 @@ public class ZoneRulesBuilder {
                 final OffsetDateTime limit = periodEnd.atOffset(offset);
                 final List<RRule<OffsetDateTime>> rrules = observance.getProperties(Property.RRULE);
                 for (RRule<OffsetDateTime> rrule : rrules) {
-                    rrule.getRecur().getDates(seed, seed, limit)
+                    // Bound the expansion: a real observance recurs yearly, so the window [DTSTART, now]
+                    // yields at most a few hundred onsets, while a crafted sub-yearly frequency (e.g.
+                    // FREQ=HOURLY) with an early DTSTART would otherwise expand to millions from a few
+                    // hundred bytes of parsed calendar data. MAX_RECURRENCE_ONSETS matches the default
+                    // net.fortuna.ical4j.recur.maxincrementcount recurrence safety limit.
+                    rrule.getRecur().getDates(seed, seed, limit, MAX_RECURRENCE_ONSETS)
                             .forEach(d -> onsets.add(d.toLocalDateTime()));
                 }
                 final List<RDate<LocalDateTime>> rdates = observance.getProperties(Property.RDATE);
