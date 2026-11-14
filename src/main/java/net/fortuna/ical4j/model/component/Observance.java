@@ -37,6 +37,7 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationResult;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.*;
@@ -75,14 +76,22 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
     public static final String DAYLIGHT = "DAYLIGHT";
 
     /**
-     * Upper bound on the number of onsets expanded from a single observance RRULE. A real timezone
-     * observance recurs yearly, so even a definition spanning the whole representable range stays far
-     * below this; the cap only bites on a crafted observance with a sub-yearly frequency (e.g.
-     * {@code FREQ=HOURLY}) and an early DTSTART, which would otherwise expand to millions of onsets
-     * from a few hundred bytes of parsed calendar data. The value matches the default
-     * {@code net.fortuna.ical4j.recur.maxincrementcount} recurrence safety limit.
+     * Fixed upper bound on the number of onsets expanded from a single observance RRULE, shared by
+     * every site that expands an observance over an internally chosen window (this class and
+     * {@link net.fortuna.ical4j.model.ZoneRulesBuilder}). A real timezone observance recurs yearly,
+     * so even a definition spanning the whole representable range stays far below this; the cap only
+     * bites on a crafted observance with a sub-yearly frequency (e.g. {@code FREQ=HOURLY}) and an
+     * early DTSTART, which would otherwise expand to millions of onsets from a few hundred bytes of
+     * parsed calendar data.
+     * <p>
+     * This is a hard cap on the number of generated onsets. It is distinct from the configurable
+     * {@code net.fortuna.ical4j.recur.maxincrementcount} recurrence setting, which bounds the number
+     * of consecutive increment steps that yield no candidate rather than the number of instances
+     * produced; the two happen to share the same default value.
      */
-    private static final int MAX_RECURRENCE_ONSETS = 1000;
+    public static final int MAX_RECURRENCE_ONSETS = 1000;
+
+    private static final Logger LOG = LoggerFactory.getLogger(Observance.class);
 
     // TODO: clear cache when observance definition changes (??)
     private long @Nullable [] onsetsMillisec;
@@ -156,8 +165,7 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
                     initialOnset = LocalDate.from(dtStart.getDate()).atStartOfDay().atOffset(offsetFrom.getOffset());
                 }
             } catch (ConstraintViolationException e) {
-                var log = LoggerFactory.getLogger(Observance.class);
-                log.warn("Unexpected error calculating initial onset - applying default", e);
+                LOG.warn("Unexpected error calculating initial onset - applying default", e);
                 initialOnset = LocalDateTime.ofEpochSecond(0,0,
                         offsetFrom.getOffset()).atOffset(offsetFrom.getOffset());
             }
@@ -213,8 +221,24 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
         for (RRule<OffsetDateTime> rrule : rrules) {
             // include future onsets to determine onset period..
             onsetLimit = offsetDate.plusYears(10);
-            final List<OffsetDateTime> recurrenceDates = rrule.getRecur().getDates(initialOnset, initialOnset,
+            final var recur = rrule.getRecur();
+            // A single period's BY* cross-product is materialised in full inside the recurrence
+            // engine before the onset cap below can apply, so a rule whose per-period expansion is
+            // itself unbounded (e.g. BYYEARDAY x BYHOUR x BYMINUTE x BYSECOND) would exhaust memory
+            // regardless of the cap. A real observance has a per-period product of one, so skipping
+            // such a rule and keeping only the initial onset affects crafted input only.
+            final long perPeriod = recur.getMaxCandidatesPerPeriod();
+            if (perPeriod > MAX_RECURRENCE_ONSETS) {
+                LOG.warn("Ignoring observance RRULE with an excessive per-period expansion ({} candidates); "
+                        + "using the initial onset only", perPeriod);
+                continue;
+            }
+            final List<OffsetDateTime> recurrenceDates = recur.getDates(initialOnset, initialOnset,
                     onsetLimit, MAX_RECURRENCE_ONSETS);
+            if (recurrenceDates.size() >= MAX_RECURRENCE_ONSETS) {
+                LOG.warn("Observance RRULE reached the onset expansion cap of {}; latest-onset lookups beyond "
+                        + "the cap may be inaccurate", MAX_RECURRENCE_ONSETS);
+            }
             for (final Temporal recurDate : recurrenceDates) {
                 final var rruleOnset = OffsetDateTime.from(recurDate).plusSeconds(offsetFrom.getOffset().getTotalSeconds());
                 if (!rruleOnset.isAfter(offsetDate) && rruleOnset.isAfter(onset)) {
