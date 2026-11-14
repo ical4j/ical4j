@@ -10,6 +10,8 @@ import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -31,6 +33,8 @@ import static net.fortuna.ical4j.model.Property.TZOFFSETFROM;
  * Construct a {@link java.time.zone.ZoneRules} instance from a {@link net.fortuna.ical4j.model.component.VTimeZone}.
  */
 public class ZoneRulesBuilder {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ZoneRulesBuilder.class);
 
     private @Nullable VTimeZone vTimeZone;
 
@@ -125,8 +129,31 @@ public class ZoneRulesBuilder {
                 final OffsetDateTime limit = periodEnd.atOffset(offset);
                 final List<RRule<OffsetDateTime>> rrules = observance.getProperties(Property.RRULE);
                 for (RRule<OffsetDateTime> rrule : rrules) {
-                    rrule.getRecur().getDates(seed, seed, limit)
-                            .forEach(d -> onsets.add(d.toLocalDateTime()));
+                    final var recur = rrule.getRecur();
+                    // A single period's BY* cross-product is materialised in full by the recurrence
+                    // engine before the onset cap below can apply, so a rule whose per-period expansion
+                    // is itself unbounded (e.g. BYYEARDAY x BYHOUR x BYMINUTE x BYSECOND) would exhaust
+                    // memory regardless of the cap. A real observance has a per-period product of one,
+                    // so skipping such a rule affects crafted input only (the DTSTART onset is retained).
+                    final long perPeriod = recur.getMaxCandidatesPerPeriod();
+                    if (perPeriod > Observance.MAX_RECURRENCE_ONSETS) {
+                        LOG.warn("Ignoring observance RRULE with an excessive per-period expansion ({} "
+                                + "candidates) when building zone rules", perPeriod);
+                        continue;
+                    }
+                    // Bound the expansion: a real observance recurs yearly, so the window [DTSTART, now]
+                    // yields at most a few hundred onsets, while a crafted sub-yearly frequency (e.g.
+                    // FREQ=HOURLY) with an early DTSTART would otherwise expand to millions from a few
+                    // hundred bytes of parsed calendar data. Observance.MAX_RECURRENCE_ONSETS caps the
+                    // number of onsets generated.
+                    final List<OffsetDateTime> expanded = recur.getDates(seed, seed, limit,
+                            Observance.MAX_RECURRENCE_ONSETS);
+                    if (expanded.size() >= Observance.MAX_RECURRENCE_ONSETS) {
+                        LOG.warn("Observance RRULE reached the onset expansion cap of {} when building zone "
+                                + "rules; historical transitions beyond the cap are omitted",
+                                Observance.MAX_RECURRENCE_ONSETS);
+                    }
+                    expanded.forEach(d -> onsets.add(d.toLocalDateTime()));
                 }
                 final List<RDate<LocalDateTime>> rdates = observance.getProperties(Property.RDATE);
                 for (RDate<LocalDateTime> rdate : rdates) {
