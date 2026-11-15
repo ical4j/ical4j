@@ -145,10 +145,10 @@ public class HCalendarParser implements CalendarParser {
     private static final XPathExpression XPATH_ORGANIZER;
     private static final XPathExpression XPATH_SEQUENCE;
     private static final XPathExpression XPATH_ATTACH;
+    // SimpleDateFormat is not thread-safe, so a new instance is created for each value rather than
+    // sharing one between concurrent parses..
     private static final String HCAL_DATE_PATTERN = "yyyy-MM-dd";
-    private static final SimpleDateFormat HCAL_DATE_FORMAT = new SimpleDateFormat(HCAL_DATE_PATTERN);
     private static final String HCAL_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssz";
-    private static final SimpleDateFormat HCAL_DATE_TIME_FORMAT = new SimpleDateFormat(HCAL_DATE_TIME_PATTERN);
 
     static {
         BUILDER_FACTORY.setNamespaceAware(true);
@@ -504,7 +504,7 @@ public class HCalendarParser implements CalendarParser {
             } catch (ParseException e) {
                 LOG.warn("Caught exception", e);
             }
-            return new Date(HCAL_DATE_FORMAT.parse(original));
+            return new Date(new SimpleDateFormat(HCAL_DATE_PATTERN).parse(original));
         }
 
         try {
@@ -535,7 +535,7 @@ public class HCalendarParser implements CalendarParser {
             normalized = original;
         }
 
-        var dt = new DateTime(HCAL_DATE_TIME_FORMAT.parse(normalized));
+        var dt = new DateTime(new SimpleDateFormat(HCAL_DATE_TIME_PATTERN).parse(normalized));
 
         // hCalendar does not specify a representation for timezone ids
         // or any other sort of timezone information. the best it does is
