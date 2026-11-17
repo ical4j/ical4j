@@ -51,7 +51,7 @@ final class RecurDateSpliterator<T extends Temporal> extends Spliterators.Abstra
     private int generatedCount;
 
     private T candidateSeed;
-    private int incrementMultiplier = 1;
+    private long incrementMultiplier = 1;
 
     private @Nullable T lastCandidate = null;
 
@@ -87,10 +87,10 @@ final class RecurDateSpliterator<T extends Temporal> extends Spliterators.Abstra
                 incremented = recur.increment(seed, incrementMultiplier);
             }
             // Now let's make a binary search between the last candidate seed and the current one to find the optimal candidate seed to start with.
-            int low = Math.max(1, incrementMultiplier / 2); // last before
-            int high = incrementMultiplier; // first after
+            long low = Math.max(1, incrementMultiplier / 2); // last before
+            long high = incrementMultiplier; // first after
             while (low < high) {
-                int mid = (low + high) / 2;
+                long mid = (low + high) / 2;
                 incremented = recur.increment(seed, mid);
                 if (TemporalAdapter.isBefore(incremented, periodStart.minus(Math.max(recur.getInterval(), 1), recur.getCalIncField()))) {
                     candidateSeed = incremented;

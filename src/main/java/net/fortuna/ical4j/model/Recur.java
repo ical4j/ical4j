@@ -735,7 +735,7 @@ public class Recur<T extends Temporal> implements Serializable {
         initRules();
 
         T candidateSeed = seed;
-        int incrementMultiplier = 1;
+        long incrementMultiplier = 1;
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
@@ -793,9 +793,9 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @param cal a {@link Temporal} value to increment
      */
-    T increment(final T cal, int multiplier) {
+    T increment(final T cal, long multiplier) {
         // initialise interval..
-        final int calInterval = Math.max(getInterval(), 1) * multiplier;
+        final long calInterval = Math.max(getInterval(), 1) * multiplier;
         //noinspection unchecked
         return (T) cal.plus(calInterval, calIncField);
     }
