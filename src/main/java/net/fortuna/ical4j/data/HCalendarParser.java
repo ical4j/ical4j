@@ -277,12 +277,23 @@ public class HCalendarParser implements CalendarParser {
         try {
             String content = element.getFirstChild().getNodeValue();
             if (content != null) {
-                return content.trim().replaceAll("\\s+", " ");
+                return normalizeWhitespace(content);
             }
             return null;
         } catch (DOMException e) {
             throw new ParserException("Unable to get text content for element " + element.getNodeName(), -1, e);
         }
+    }
+
+    private static String getAttributeValue(Element element, String name) {
+        // character references such as &#13;&#10; survive XML attribute-value normalization, so line breaks
+        // are collapsed here as for text content. Otherwise they are written raw by properties that are not
+        // escaped on output (e.g. STATUS, CLASS, METHOD) and start a new content line..
+        return normalizeWhitespace(element.getAttribute(name));
+    }
+
+    private static String normalizeWhitespace(String value) {
+        return value.trim().replaceAll("\\s+", " ");
     }
 
     private void buildCalendar(Document d, ContentHandler handler) throws ParserException, IOException {
@@ -379,14 +390,14 @@ public class HCalendarParser implements CalendarParser {
             // attribute of the <abbr> element is the value of the property,
             // instead of the contents of the element, which instead provide a
             // human presentable version of the value."
-            value = element.getAttribute("title");
+            value = getAttributeValue(element, "title");
             if (StringUtils.isBlank(value))
                 throw new ParserException("Abbr element '" + className + "' requires a non-empty title", -1);
             if (LOG.isDebugEnabled())
                 LOG.debug("Setting value '" + value + "' from title attribute");
         } else if (isHeaderElement(elementName)) {
             // try title first. if that's not set, fall back to text content.
-            value = element.getAttribute("title");
+            value = getAttributeValue(element, "title");
             if (!StringUtils.isBlank(value)) {
                 if (LOG.isDebugEnabled())
                     LOG.debug("Setting value '" + value + "' from title attribute");
@@ -396,20 +407,20 @@ public class HCalendarParser implements CalendarParser {
                     LOG.debug("Setting value '" + value + "' from text content");
             }
         } else if (elementName.equals("a") && isUrlProperty(propName)) {
-            value = element.getAttribute("href");
+            value = getAttributeValue(element, "href");
             if (StringUtils.isBlank(value))
                 throw new ParserException("A element '" + className + "' requires a non-empty href", -1);
             if (LOG.isDebugEnabled())
                 LOG.debug("Setting value '" + value + "' from href attribute");
         } else if (elementName.equals("img")) {
             if (isUrlProperty(propName)) {
-                value = element.getAttribute("src");
+                value = getAttributeValue(element, "src");
                 if (StringUtils.isBlank(value))
                     throw new ParserException("Img element '" + className + "' requires a non-empty src", -1);
                 if (LOG.isDebugEnabled())
                     LOG.debug("Setting value '" + value + "' from src attribute");
             } else {
-                value = element.getAttribute("alt");
+                value = getAttributeValue(element, "alt");
                 if (StringUtils.isBlank(value))
                     throw new ParserException("Img element '" + className + "' requires a non-empty alt", -1);
                 if (LOG.isDebugEnabled())
