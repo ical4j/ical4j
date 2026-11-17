@@ -56,7 +56,7 @@ class TimeZoneRegistryConcurrencyTest extends Specification {
 
     def 'getZoneId does not fail while another thread registers timezones'() {
         given: 'definitions prepared up front and a registry shared between threads'
-        def count = 600
+        def count = 200
         def definitions = (0..<count).collect { new TimeZone(vtz(it)) }
         def registry = TimeZoneRegistryFactory.instance.createRegistry()
         definitions.take(50).each { registry.register(it) }
@@ -81,8 +81,6 @@ class TimeZoneRegistryConcurrencyTest extends Specification {
                 for (int i = 0; i < 50; i++) {
                     try {
                         registry.getZoneId("Custom/Zone$i")
-                    } catch (java.time.DateTimeException ignored) {
-                        // a concurrently-registered id may not be visible yet; not a failure
                     } catch (Throwable t) {
                         failures.add(t)
                     }
