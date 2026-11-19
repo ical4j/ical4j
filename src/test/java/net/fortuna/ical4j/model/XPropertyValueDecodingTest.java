@@ -133,9 +133,20 @@ class XPropertyValueDecodingTest {
     }
 
     @Test
-    void nonTextLineBreakOutputGuardIsPreserved() {
-        XProperty property = new XProperty("X-FOO", new ParameterList(List.of(Value.URI)), "before\nAFTER:value");
-        assertEquals("X-FOO;VALUE=URI:before\\nAFTER:value\r\n", property.toString());
+    void nonTextLineBreaksReparseAsLiteralBackslashN() throws Exception {
+        var parameters = new ParameterList(List.of(Value.URI));
+        String literal = "before\\nAFTER:value";
+        String contentLine = "X-FOO;VALUE=URI:" + literal;
+        for (String lineBreak : List.of("\n", "\r", "\r\n")) {
+            var property = new XProperty("X-FOO", parameters, "before" + lineBreak + "AFTER:value");
+            assertEquals(contentLine + "\r\n", property.toString());
+            var reparsed = parse(property.toString().stripTrailing()).getRequiredProperty("X-FOO");
+            assertEquals(literal, reparsed.getValue());
+        }
+
+        var property = new XProperty("X-FOO", parameters, literal);
+        assertEquals(contentLine + "\r\n", property.toString());
+        assertEquals(literal, parse(contentLine).getRequiredProperty("X-FOO").getValue());
     }
 
     private static List<String> nonTextValues() {

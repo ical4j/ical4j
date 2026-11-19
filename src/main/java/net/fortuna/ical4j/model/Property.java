@@ -481,6 +481,8 @@ public abstract class Property extends Content implements Comparable<Property>, 
                 value = getValue();
             }
         } else if (this instanceof Encodable) {
+            // A raw line break would end the content line. The guard writes it as \n,
+            // which is read back literally and is indistinguishable from an original \n.
             value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
         } else {
             value = getValue();
