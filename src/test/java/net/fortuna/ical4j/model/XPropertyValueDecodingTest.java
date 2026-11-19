@@ -32,14 +32,21 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.filter.ComponentFilter;
+import net.fortuna.ical4j.filter.FilterExpression;
+import net.fortuna.ical4j.filter.FilterTarget;
+import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.validate.ValidationResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * TEXT decoding must not alter X-properties with an explicit non-TEXT value type.
@@ -82,6 +89,32 @@ class XPropertyValueDecodingTest {
     }
 
     @Test
+    void registeredEncodablePropertyUsesItsValueType() {
+        var builder = new PropertyBuilder(List.of(new CustomProperty.Factory())).name("X-CUSTOM");
+        var raw = builder.parameter(Value.URI).value("a\\nb\\,c").build();
+        assertEquals(CustomProperty.class, raw.getClass());
+        assertEquals("a\\nb\\,c", raw.getValue());
+        assertEquals("X-CUSTOM;VALUE=URI:a\\nb\\,c\r\n", raw.toString());
+
+        var text = new PropertyBuilder(List.of(new CustomProperty.Factory())).name("X-CUSTOM")
+                .parameter(Value.TEXT).value("a\\nb\\,c").build();
+        assertEquals("a\nb,c", text.getValue());
+        assertEquals("X-CUSTOM;VALUE=TEXT:a\\nb\\,c\r\n", text.toString());
+    }
+
+    @Test
+    void nonTextFilterOperandsPreserveLiteralBackslashes() {
+        var filter = new ComponentFilter<VEvent>();
+        var type = List.of(new FilterTarget.Attribute("VALUE", "URI"));
+        var property = new XProperty("X-FOO", new ParameterList(List.of(Value.URI)), "a\\,b");
+        var event = new VEvent();
+        event.add(property);
+
+        assertTrue(filter.predicate(FilterExpression.equalTo("X-FOO", type, "a\\,b")).test(event));
+        assertFalse(filter.predicate(FilterExpression.equalTo("X-FOO", type, "a,b")).test(event));
+    }
+
+    @Test
     void explicitTextStillDecodes() throws Exception {
         assertEquals("a\nb,c;d\\e", parse("X-FOO;VALUE=TEXT:" + "a\\nb\\,c\\;d\\\\e")
                 .getRequiredProperty("X-FOO").getValue());
@@ -113,4 +146,53 @@ class XPropertyValueDecodingTest {
         return new CalendarBuilder().build(new StringReader("BEGIN:VCALENDAR\r\nVERSION:2.0\r\n"
                 + "PRODID:-//X-Property decoding test//EN" + "\r\n" + property + "\r\nEND:VCALENDAR\r\n"));
     }
+
+    private static final class CustomProperty extends Property implements Encodable {
+
+        private String value;
+
+        private CustomProperty(ParameterList parameters, String value) {
+            super("X-CUSTOM", parameters);
+            this.value = value;
+        }
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public ValidationResult validate() {
+            return ValidationResult.EMPTY;
+        }
+
+        @Override
+        protected PropertyFactory<?> newFactory() {
+            return new Factory();
+        }
+
+        private static final class Factory implements PropertyFactory<CustomProperty> {
+
+            @Override
+            public CustomProperty createProperty() {
+                return createProperty(new ParameterList(), "");
+            }
+
+            @Override
+            public CustomProperty createProperty(ParameterList parameters, String value) {
+                return new CustomProperty(parameters, value);
+            }
+
+            @Override
+            public boolean supports(String name) {
+                return "X-CUSTOM".equals(name);
+            }
+        }
+    }
+
 }

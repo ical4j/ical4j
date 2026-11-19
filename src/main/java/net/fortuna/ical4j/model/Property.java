@@ -474,17 +474,14 @@ public abstract class Property extends Content implements Comparable<Property>, 
         buffer.append(':');
         String value;
 
-        if (this instanceof XProperty && getParameter(Parameter.VALUE).isPresent()
-                && !Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
-            // Escaping applies to TEXT values only. Keep the line-break guard for non-TEXT
-            // values supplied programmatically without changing their literal backslashes.
-            value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
-        } else if (this instanceof Encodable) {
+        if (usesTextEscaping()) {
             try {
                 value = PropertyCodec.INSTANCE.encode(getValue());
             } catch (EncoderException e) {
                 value = getValue();
             }
+        } else if (this instanceof Encodable) {
+            value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
         } else {
             value = getValue();
         }
@@ -492,6 +489,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
+    }
+
+    final boolean usesTextEscaping() {
+        return this instanceof Encodable && getParameter(Parameter.VALUE).map(Value.TEXT::equals).orElse(true);
     }
 
     @Override
