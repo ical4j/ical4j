@@ -474,17 +474,16 @@ public abstract class Property extends Content implements Comparable<Property>, 
         buffer.append(':');
         String value;
 
-        if (this instanceof XProperty && getParameter(Parameter.VALUE).isPresent()
-                && !Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
-            // escaping applies to TEXT values only, however PropertyBuilder decodes all experimental
-            // property values so an escaped line break must not be written as a real one..
-            value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
-        } else if (this instanceof Encodable) {
+        if (usesTextEscaping()) {
             try {
                 value = PropertyCodec.INSTANCE.encode(getValue());
             } catch (EncoderException e) {
                 value = getValue();
             }
+        } else if (this instanceof Encodable) {
+            // A raw line break would end the content line. The guard writes it as \n,
+            // which is read back literally and is indistinguishable from an original \n.
+            value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
         } else {
             value = getValue();
         }
@@ -492,6 +491,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
+    }
+
+    final boolean usesTextEscaping() {
+        return this instanceof Encodable && getParameter(Parameter.VALUE).map(Value.TEXT::equals).orElse(true);
     }
 
     @Override

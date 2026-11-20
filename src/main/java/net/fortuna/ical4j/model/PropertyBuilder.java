@@ -108,12 +108,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
         }
 
         Property property = null;
-        String decodedValue;
-        try {
-            decodedValue = PropertyCodec.INSTANCE.decode(value);
-        } catch (DecoderException e) {
-            decodedValue = value;
-        }
 
         for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {
@@ -146,7 +140,13 @@ public class PropertyBuilder extends AbstractContentBuilder {
             }
         }
 
-        if (property instanceof Encodable) {
+        if (property.usesTextEscaping()) {
+            String decodedValue;
+            try {
+                decodedValue = PropertyCodec.INSTANCE.decode(value);
+            } catch (DecoderException e) {
+                decodedValue = value;
+            }
             property.setValue(decodedValue);
         }
 
