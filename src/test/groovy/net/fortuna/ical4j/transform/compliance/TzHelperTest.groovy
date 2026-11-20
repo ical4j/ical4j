@@ -55,6 +55,11 @@ class TzHelperTest extends Specification {
         ZonedDateTime.of(2024, 7, 1, 12, 0, 0, 0, ZoneId.of('America/Guatemala')).offset == ZoneOffset.ofHours(-6)
     }
 
+    def 'test Pacific Standard Time maps to Los Angeles, not Vancouver'() {
+        expect: 'CLDR territory-001 default; Vancouver diverges from US rules since 2026-11-01'
+        TzHelper.getCorrectedTimeZoneIdFrom('Pacific Standard Time') == 'America/Los_Angeles'
+    }
+
     def 'test Hawaiian timezone mapping'() {
         expect:
         // US/Hawaii is normalized to Pacific/Honolulu by the TimeZoneRegistry
