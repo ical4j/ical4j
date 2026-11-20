@@ -45,7 +45,6 @@ import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -164,7 +163,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         this.timeZoneLoader = TimeZoneLoader.getInstance(resourcePrefix);
         timezones = new ConcurrentHashMap<>();
         zoneRules = new ConcurrentHashMap<>();
-        zoneIds = new HashMap<>();
+        zoneIds = new ConcurrentHashMap<>();
         this.lenientTzResolution = lenientTzResolution;
         this.zoneRulesProviderAvailable = zoneRulesProviderAvailable;
     }
