@@ -39,6 +39,8 @@ import spock.lang.Unroll
 
 import java.time.*
 import java.time.temporal.ChronoField
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
 import static java.lang.String.format
@@ -579,6 +581,27 @@ class RecurSpec extends Specification {
 
         then: 'result matches expected'
         count == 86400 * 31 // number of seconds in January 2026
+    }
+
+    def 'test getdates with seed more than Integer.MAX_VALUE increments before the period: #rule'() {
+        given: 'a recurrence rule'
+        Recur<LocalDateTime> recur = new Recur<>(rule)
+
+        when: 'dates are generated for a period'
+        // run on a pool thread, as a regression doesn't respond to interrupts and would hang the build
+        def count = CompletableFuture.supplyAsync {
+            recur.getDatesAsStream((LocalDateTime) TemporalAdapter.parse(seed).temporal,
+                    (LocalDateTime) TemporalAdapter.parse('20260101T000000').temporal,
+                    (LocalDateTime) TemporalAdapter.parse('20260101T000059').temporal, -1).count()
+        }.get(5, TimeUnit.SECONDS)
+
+        then: 'result matches expected'
+        count == expectedCount
+
+        where:
+        rule                           | seed              | expectedCount
+        'FREQ=SECONDLY'                | '19500101T000000' | 60
+        'FREQ=SECONDLY;INTERVAL=60'    | '16010101T000000' | 1
     }
 
     @Timeout(5)
