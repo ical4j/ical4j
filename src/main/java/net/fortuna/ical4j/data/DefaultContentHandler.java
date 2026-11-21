@@ -135,7 +135,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startProperty(String name) {
-        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase(Locale.ROOT))) {
+        if (!isIgnoredProperty(name)) {
             propertyBuilder = new PropertyBuilder(context.getPropertyFactorySupplier().get()).name(name)
                     .timeZoneRegistry(tzRegistry);
         } else {
@@ -152,7 +152,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void endProperty(String name) {
-        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase(Locale.ROOT))) {
+        if (!isIgnoredProperty(name)) {
             final PropertyBuilder builder = assertProperty(propertyBuilder);
             Property property;
             try {
@@ -210,6 +210,17 @@ public class DefaultContentHandler implements ContentHandler {
             throw new CalendarException("Expected component not initialised");
         }
         return component;
+    }
+
+    /**
+     * PropertyBuilder treats anything before the last '.' in a name as a group prefix, so a name such as
+     * GRP.ATTACH builds an ATTACH property. Check the name without the prefix as well, otherwise a prefix is
+     * enough to bypass the ignored property names.
+     */
+    private boolean isIgnoredProperty(String name) {
+        var ignored = context.getIgnoredPropertyNames();
+        return ignored.contains(name.toUpperCase(Locale.ROOT))
+                || ignored.contains(name.substring(name.lastIndexOf('.') + 1).toUpperCase(Locale.ROOT));
     }
 
     private PropertyBuilder assertProperty(@Nullable PropertyBuilder property) {
