@@ -179,4 +179,43 @@ END:VEVENT
 		''					| '\r\n\t\r\n\r\n'
 		'  '				| '  \r\n'
 	}
+
+	def 'verify a quoted string is not parsed as a property name'() {
+		setup: 'a content line whose name is a quoted string, which the tokeniser unescapes (\\r\\n -> CR LF)'
+		String input = "BEGIN:VCALENDAR\r\nPRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\nVERSION:2.0\r\n" +
+				"BEGIN:VEVENT\r\nUID:1\r\nDTSTAMP:20240101T000000Z\r\nDTSTART:20240101T100000Z\r\n" +
+				"$contentLine\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+
+		when: 'the calendar is parsed in strict mode'
+		new CalendarBuilder().build(new StringReader(input))
+
+		then: 'the line is rejected like any other line that does not start with a name'
+		ParserException e = thrown()
+		e.message.endsWith('Invalid property name')
+
+		where:
+		contentLine << [
+				'"X-A:1\\r\\nATTENDEE:mailto:mallory@example.com\\r\\nX-B":2',
+				'"ATTENDEE;CN=Mallory":mailto:mallory@example.com'
+		]
+	}
+
+	def 'verify a quoted property name is not written out as a different property in relaxed mode'() {
+		setup:
+		CompatibilityHints.setHintEnabled(KEY_RELAXED_PARSING, true)
+		String input = "BEGIN:VCALENDAR\r\nPRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\nVERSION:2.0\r\n" +
+				"BEGIN:VEVENT\r\nUID:1\r\nDTSTAMP:20240101T000000Z\r\nDTSTART:20240101T100000Z\r\n" +
+				"\"ATTENDEE;CN=Mallory\":mailto:mallory@example.com\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+
+		when: 'the calendar is parsed and its output parsed again'
+		Calendar calendar = new CalendarBuilder().build(new StringReader(input))
+		Calendar reparsed = new CalendarBuilder().build(new StringReader(calendar.toString()))
+
+		then: 'no ATTENDEE appears in the output that was not in the parsed calendar'
+		calendar.getComponents()[0].getProperties('ATTENDEE').isEmpty()
+		reparsed.getComponents()[0].getProperties('ATTENDEE').isEmpty()
+
+		cleanup:
+		CompatibilityHints.clearHintEnabled(KEY_RELAXED_PARSING)
+	}
 }
