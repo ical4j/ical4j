@@ -4,6 +4,7 @@ import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Timeout
 import spock.lang.Unroll
 
 import java.time.*
@@ -425,5 +426,34 @@ END:VCALENDAR"""
         byMonthDay          | expectedIndicator
         ''                  | 12      // no BYMONTHDAY - falls back to the DTSTART day
         ';BYMONTHDAY=8,9,10,11,12,13,14' | 8
+    }
+
+    @Unroll
+    @Timeout(20)
+    def 'observance recurrence expansion is bounded for a sub-yearly frequency: #freq'() {
+        given: 'a VTIMEZONE whose observance recurs far more often than yearly, from an early DTSTART'
+        def cal = """BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ical4j//test//EN
+BEGIN:VTIMEZONE
+TZID:Test/Bomb
+BEGIN:STANDARD
+DTSTART:19700101T000000
+RRULE:FREQ=$freq
+TZOFFSETFROM:+0000
+TZOFFSETTO:+0100
+END:STANDARD
+END:VTIMEZONE
+END:VCALENDAR"""
+
+        when: 'the calendar is parsed and zone rules are built'
+        def calendar = new CalendarBuilder().build(new StringReader(cal))
+        def zonerules = new ZoneRulesBuilder().vTimeZone(calendar.getComponent('VTIMEZONE').get()).build()
+
+        then: 'the historical transitions are capped instead of one per interval across decades'
+        zonerules.transitions.size() <= 1000
+
+        where:
+        freq << ['HOURLY', 'MINUTELY', 'SECONDLY']
     }
 }
