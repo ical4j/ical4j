@@ -553,11 +553,18 @@ public class Recur<T extends Temporal> implements Serializable {
     }
 
     /**
-     * Returns an upper bound on the number of candidate instances this rule can generate within a
-     * single increment period (the span between two successive seed increments), before any BYSETPOS
-     * filtering is applied. It is the product of the sizes of the expanding BY* parts - BYMONTH,
-     * BYWEEKNO, BYYEARDAY, BYMONTHDAY, BYDAY, BYHOUR, BYMINUTE and BYSECOND - where an absent or
-     * single-valued part contributes a factor of one. BYSETPOS only reduces the set, so it is excluded.
+     * Returns a conservative upper bound on the number of candidate instances this rule can generate
+     * within a single increment period (the span between two successive seed increments), before any
+     * BYSETPOS filtering is applied. It is the product of the sizes of BYMONTH, BYWEEKNO, BYYEARDAY,
+     * BYMONTHDAY, BYDAY, BYHOUR, BYMINUTE and BYSECOND, where an absent or single-valued part
+     * contributes a factor of one. BYSETPOS only reduces the set, so it is excluded.
+     * <p>
+     * Every one of those eight parts is counted as a multiplier regardless of the rule's FREQ, even
+     * though for a given FREQ some of them limit rather than expand the candidate set (BYMONTH with
+     * FREQ=DAILY, or BYHOUR with FREQ=SECONDLY, for example). Counting a limiting part as a
+     * multiplier can only overstate the result, so the value remains a valid upper bound; it is not
+     * an estimate of the candidate count, and for most rules it will be larger than the number of
+     * candidates actually generated.
      * <p>
      * {@link #getCandidates} materialises a whole period's candidate list before the per-instance
      * count limit of {@code getDates} is applied, so a caller that expands an untrusted rule over a
