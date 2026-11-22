@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.validate;
 
+import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
@@ -28,9 +29,27 @@ public abstract class AbstractCalendarValidatorFactory {
     static {
         // fall back to the default implementation when no service registration is visible, e.g. when
         // META-INF/services has been stripped by ProGuard/R8 or a packaging tool (#125)..
-        var factories = ServiceLoader.load(CalendarValidatorFactory.class,
-                DefaultCalendarValidatorFactory.class.getClassLoader()).iterator();
-        instance = factories.hasNext() ? factories.next() : new DefaultCalendarValidatorFactory();
+        instance = select(ServiceLoader.load(CalendarValidatorFactory.class,
+                DefaultCalendarValidatorFactory.class.getClassLoader()).iterator());
+    }
+
+    /**
+     * Selects the factory to use from those registered. Any factory other than
+     * {@link DefaultCalendarValidatorFactory} is preferred over it, so the result does not depend on
+     * classpath order. The default is used only when nothing else is registered.
+     */
+    static CalendarValidatorFactory select(Iterator<? extends CalendarValidatorFactory> factories) {
+        CalendarValidatorFactory fallback = null;
+        while (factories.hasNext()) {
+            CalendarValidatorFactory factory = factories.next();
+            if (!(factory instanceof DefaultCalendarValidatorFactory)) {
+                return factory;
+            }
+            if (fallback == null) {
+                fallback = factory;
+            }
+        }
+        return fallback != null ? fallback : new DefaultCalendarValidatorFactory();
     }
 
     public static CalendarValidatorFactory getInstance() {

@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,5 +128,24 @@ public class AbstractCalendarValidatorFactoryTest {
     @Test
     public void testServiceRegistrationIsHonoured() {
         assertEquals(DefaultCalendarValidatorFactory.class, AbstractCalendarValidatorFactory.getInstance().getClass());
+    }
+
+    private static final CalendarValidatorFactory CUSTOM = () -> null;
+
+    @Test
+    public void testNonDefaultFactoryPreferredRegardlessOfOrder() {
+        CalendarValidatorFactory defaultFactory = new DefaultCalendarValidatorFactory();
+
+        assertSame(CUSTOM, AbstractCalendarValidatorFactory.select(List.of(defaultFactory, CUSTOM).iterator()));
+        assertSame(CUSTOM, AbstractCalendarValidatorFactory.select(List.of(CUSTOM, defaultFactory).iterator()));
+    }
+
+    @Test
+    public void testDefaultFactoryUsedWhenNothingElseRegistered() {
+        CalendarValidatorFactory defaultFactory = new DefaultCalendarValidatorFactory();
+
+        assertSame(defaultFactory, AbstractCalendarValidatorFactory.select(List.of(defaultFactory).iterator()));
+        assertEquals(DefaultCalendarValidatorFactory.class,
+                AbstractCalendarValidatorFactory.select(Collections.emptyIterator()).getClass());
     }
 }
