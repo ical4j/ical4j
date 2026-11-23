@@ -604,6 +604,53 @@ class RecurSpec extends Specification {
         'FREQ=SECONDLY;INTERVAL=60'    | '16010101T000000' | 1
     }
 
+    def 'test getdates with a non-positive COUNT skips ahead to the period: #rule'() {
+        given: 'a recurrence rule'
+        Recur<ZonedDateTime> recur = new Recur<>(rule)
+
+        when: 'dates are generated for a period years after the seed'
+        // run on a pool thread, as a regression walks every interval from the seed and doesn't respond to interrupts
+        def dates = CompletableFuture.supplyAsync {
+            recur.getDates(ZonedDateTime.parse('2016-01-01T00:00Z'),
+                    ZonedDateTime.parse('2026-11-22T00:00Z'), ZonedDateTime.parse('2026-11-22T00:00:59Z'))
+        }.get(5, TimeUnit.SECONDS)
+
+        then: 'a COUNT of zero or less is treated as no COUNT'
+        dates.size() == expectedCount
+
+        where:
+        rule                                  | expectedCount
+        'FREQ=SECONDLY;COUNT=-1'              | 60
+        'FREQ=SECONDLY;COUNT=0'               | 60
+        'FREQ=SECONDLY;BYSECOND=8,27;COUNT=-1'| 2
+        'FREQ=SECONDLY'                       | 60
+    }
+
+    def 'test getdates with a positive COUNT still limits the recurrence set'() {
+        given: 'a recurrence rule with a COUNT'
+        Recur<ZonedDateTime> recur = new Recur<>('FREQ=DAILY;COUNT=3')
+
+        expect: 'only the counted instances are returned, and none after the COUNT is reached'
+        recur.getDates(ZonedDateTime.parse('2026-01-01T00:00Z'),
+                ZonedDateTime.parse('2026-01-01T00:00Z'), ZonedDateTime.parse('2026-01-31T00:00Z')).size() == 3
+        recur.getDates(ZonedDateTime.parse('2026-01-01T00:00Z'),
+                ZonedDateTime.parse('2026-01-10T00:00Z'), ZonedDateTime.parse('2026-01-31T00:00Z')).isEmpty()
+    }
+
+    def 'test getnextdate with a non-positive COUNT matches no COUNT: #rule'() {
+        given: 'a recurrence rule'
+        Recur<ZonedDateTime> recur = new Recur<>(rule)
+        def seed = ZonedDateTime.parse('2026-01-01T00:00Z')
+        def start = ZonedDateTime.parse('2026-11-22T00:00:30Z')
+
+        expect: 'the next date is the same as for the rule without a COUNT'
+        CompletableFuture.supplyAsync { recur.getNextDate(seed, start) }.get(5, TimeUnit.SECONDS) ==
+                new Recur<ZonedDateTime>('FREQ=MINUTELY').getNextDate(seed, start)
+
+        where:
+        rule << ['FREQ=MINUTELY;COUNT=-1', 'FREQ=MINUTELY;COUNT=0']
+    }
+
     @Timeout(5)
     def 'test secondly with multiple filtering rules'() {
         given: 'a recurrence rule'
