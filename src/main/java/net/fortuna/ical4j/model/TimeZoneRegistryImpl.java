@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.ResourceLoader;
 import org.apache.commons.lang3.Validate;
 import org.jspecify.annotations.Nullable;
@@ -79,10 +80,28 @@ import java.util.regex.Pattern;
  * {@link CompatibilityHints#KEY_RELAXED_PARSING} or {@link CompatibilityHints#KEY_RELAXED_VALIDATION} is enabled;
  * otherwise registration fails with an {@link IllegalArgumentException} naming the TZID. Structural problems with
  * a definition are reported by {@link net.fortuna.ical4j.model.component.VTimeZone#validate()} in either case.
+ * <p>
+ * <b>Zone id limits.</b> The synthetic zone ids come from a pool shared by every registry in the JVM (see
+ * {@link ZoneRulesProviderImpl}). Registering a TZID that this registry already holds replaces its rules under the
+ * zone id it already has, rather than taking another one. A registry takes at most
+ * {@value #KEY_MAX_ZONE_IDS} zone ids (default {@value #DEFAULT_MAX_ZONE_IDS}). A definition registered once that
+ * limit is reached, or once the shared pool is empty, is retained without zone rules as described above, so that
+ * a single calendar cannot use up the pool for every other registry in the JVM.
  *
  * @author Ben Fortuna
  */
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
+
+    /**
+     * Configuration key for the maximum number of synthetic zone ids a single registry may take from the pool
+     * shared by every registry in the JVM.
+     */
+    public static final String KEY_MAX_ZONE_IDS = "net.fortuna.ical4j.timezone.id.registry.max";
+
+    /**
+     * The default for {@link #KEY_MAX_ZONE_IDS}.
+     */
+    public static final int DEFAULT_MAX_ZONE_IDS = 100;
 
     private static final String DEFAULT_RESOURCE_PREFIX = "zoneinfo/";
 
@@ -133,6 +152,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private final boolean lenientTzResolution;
 
     private final boolean zoneRulesProviderAvailable;
+
+    private final int maxZoneIds = Configurator.getIntProperty(KEY_MAX_ZONE_IDS).orElse(DEFAULT_MAX_ZONE_IDS);
 
     /**
      * Default constructor.
@@ -231,9 +252,46 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             throw new IllegalArgumentException(String.format("Unable to build zone rules for VTIMEZONE [%s]: %s",
                     timezone.getID(), e.getMessage()), e);
         }
-        var globalId = ZoneRulesProviderImpl.getInstance().orElseThrow().getZoneIdPool().allocate(this);
-        zoneIds.put(globalId, timezone.getID());
-        zoneRules.put(globalId, newZoneRules);
+        synchronized (zoneIds) {
+            // re-registering a TZID replaces its rules under the zone id it already has..
+            var globalId = findGlobalId(timezone.getID());
+            if (globalId == null) {
+                globalId = allocateGlobalId(timezone.getID());
+                if (globalId == null) {
+                    return;
+                }
+            }
+            // rules first, so that a concurrent getZoneId never returns an id without rules..
+            zoneRules.put(globalId, newZoneRules);
+            zoneIds.put(globalId, timezone.getID());
+        }
+    }
+
+    private @Nullable String findGlobalId(String tzId) {
+        return zoneIds.entrySet().stream().filter(entry -> entry.getValue().equals(tzId))
+                .map(Map.Entry::getKey).findFirst().orElse(null);
+    }
+
+    /**
+     * Takes a zone id for a new TZID from the pool shared by every registry in the JVM, unless this registry has
+     * reached its limit or the pool is empty. In either case the definition is retained without zone rules, like
+     * a definition without observances, so one calendar cannot use up the zone ids of every other registry..
+     */
+    private @Nullable String allocateGlobalId(String tzId) {
+        if (zoneIds.size() >= maxZoneIds) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                    "Registry limit of {} zone ids ({}) reached; VTIMEZONE [{}] retained without zone rules",
+                    maxZoneIds, KEY_MAX_ZONE_IDS, tzId);
+            return null;
+        }
+        try {
+            return ZoneRulesProviderImpl.getInstance().orElseThrow().getZoneIdPool().allocate(this);
+        } catch (RuntimeException e) {
+            // ZoneIdPool.allocate throws when the shared pool is empty..
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                    "No zone ids available ({}); VTIMEZONE [{}] retained without zone rules", e.getMessage(), tzId);
+            return null;
+        }
     }
 
     /**
