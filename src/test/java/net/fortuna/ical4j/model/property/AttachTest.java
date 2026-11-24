@@ -46,20 +46,19 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.nio.file.FileSystems;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for Attach property.
@@ -143,20 +142,30 @@ public class AttachTest {
         assertEquals("https://domain.example/file.txt", deserialized.getValue());
     }
 
+    /**
+     * Inline binary data must not be buffered in temporary files: they were only deleted on JVM exit, so every
+     * parsed or copied attachment stayed on disk (and in DeleteOnExitHook) for the life of the JVM, and in earlier
+     * versions could be read by other local users.
+     */
     @Test
-    void inline_binary_is_buffered_in_an_owner_only_temp_file() throws IOException {
-        assumeTrue(FileSystems.getDefault().supportedFileAttributeViews().contains("posix"));
+    void inline_binary_leaves_no_temp_file_once_parsed_copied_and_written() throws Exception {
+        var ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//test//EN\r\nBEGIN:VEVENT\r\n"
+                + "UID:attach@test\r\nDTSTAMP:20240101T000000Z\r\nDTSTART:20240102T100000Z\r\n"
+                + "ATTACH;ENCODING=BASE64;VALUE=BINARY:aUNhbDRqIGF0dGFjaG1lbnQ=\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
 
         var before = attachTempFiles();
-        var inline = new Attach(new ParameterList(List.of(Encoding.BASE64, Value.BINARY)), "aUNhbDRqIGF0dGFjaG1lbnQ=");
+        Calendar copy = null;
+        for (int i = 0; i < 10; i++) {
+            var calendar = new CalendarBuilder().build(new StringReader(ics));
+            copy = calendar.copy();
+            assertTrue(copy.toString().contains("ATTACH;ENCODING=BASE64;VALUE=BINARY:aUNhbDRqIGF0dGFjaG1lbnQ="));
+        }
         var created = attachTempFiles();
         created.removeAll(before);
 
-        assertNotNull(inline.getBinary());
-        assertFalse(created.isEmpty());
-        for (var file : created) {
-            assertEquals(PosixFilePermissions.fromString("rw-------"), Files.getPosixFilePermissions(file));
-        }
+        assertEquals(Set.of(), created);
+        Attach attach = copy.<VEvent>getComponent(Component.VEVENT).orElseThrow().getRequiredProperty(Property.ATTACH);
+        assertArrayEquals("iCal4j attachment".getBytes(StandardCharsets.US_ASCII), attach.getBinaryData());
     }
 
     private static Set<Path> attachTempFiles() throws IOException {

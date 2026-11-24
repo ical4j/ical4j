@@ -51,9 +51,6 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -218,22 +215,10 @@ public class Attach extends Property {
             try {
                 final var decoder = DecoderFactory.getInstance().createBinaryDecoder(encoding.get());
                 byte[] decodedBytes = decoder.decode(aValue.getBytes());
-                try {
-                    // created owner-only, unlike File.createTempFile which honours the umask
-                    File binaryData = Files.createTempFile("ical4j-attach", ".tmp").toFile();
-                    binaryData.deleteOnExit();
-
-                    try (RandomAccessFile raf = new RandomAccessFile(binaryData, "rw")) {
-                        FileChannel fileChannel = raf.getChannel();
-                        MappedByteBuffer binary = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, decodedBytes.length);
-                        binary.put(decodedBytes);
-                        binary.rewind();
-                        this.binary = binary;
-                    }
-                } catch (IOException e) {
-                    LOG.error("Error creating temporary file", e);
-                    binary = ByteBuffer.wrap(decodedBytes);
-                }
+                // the encoded value and the decoded bytes are already held in memory, so the decoded bytes are
+                // kept as they are. Buffering them in a temporary file saved no memory, and the file was only
+                // deleted when the JVM exited, so every parsed or copied attachment stayed on disk until then..
+                binary = ByteBuffer.wrap(decodedBytes);
             } catch (UnsupportedEncodingException uee) {
                 LOG.error("Error encoding binary data", uee);
             } catch (DecoderException de) {
