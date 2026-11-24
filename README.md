@@ -175,6 +175,10 @@ You may also find the [Java Legacy Date-Time Code] web page useful.
     net.fortuna.ical4j.factory.encoder=net.fortuna.ical4j.util.DefaultEncoderFactory
 
     net.fortuna.ical4j.recur.maxincrementcount=1000
+
+    # Size in bytes from which decoded inline ATTACH data is held in a memory-mapped temporary file (deleted once
+    # mapped) instead of on the heap. A negative value keeps all inline data on the heap.
+    net.fortuna.ical4j.attach.mapped.threshold=1048576
     
     net.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache
 
