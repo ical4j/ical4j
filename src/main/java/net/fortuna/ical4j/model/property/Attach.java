@@ -53,6 +53,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
@@ -217,7 +218,7 @@ public class Attach extends Property {
             // binary = Base64.decode(aValue);
             try {
                 final var decoder = DecoderFactory.getInstance().createBinaryDecoder(encoding.get());
-                byte[] decodedBytes = decoder.decode(aValue.getBytes());
+                byte[] decodedBytes = decoder.decode(aValue.getBytes(StandardCharsets.UTF_8));
                 try {
                     // created owner-only, unlike File.createTempFile which honours the umask
                     File binaryData = Files.createTempFile("ical4j-attach", ".tmp").toFile();
@@ -263,7 +264,7 @@ public class Attach extends Property {
             try {
                 Encoding encoding = getRequiredParameter(Parameter.ENCODING);
                 final var encoder = EncoderFactory.getInstance().createBinaryEncoder(encoding);
-                return new String(encoder.encode(getBinaryData()));
+                return new String(encoder.encode(getBinaryData()), StandardCharsets.UTF_8);
             } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
