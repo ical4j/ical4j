@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
 /**
@@ -53,6 +55,12 @@ import java.text.MessageFormat;
  * @author Ben Fortuna
  */
 public class CalendarParserImpl implements CalendarParser {
+
+    /**
+     * The default charset for an iCalendar object is UTF-8 - RFC5545 section 3.1.4.
+     */
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
 	private static final int IGNORE_BEGINNING_NON_WORD_COUNT = 10;
 	
     private static final int WORD_CHAR_START = 32;
@@ -95,7 +103,7 @@ public class CalendarParserImpl implements CalendarParser {
     @Override
     public final void parse(final InputStream in, final ContentHandler handler)
             throws IOException, ParserException {
-        parse(new InputStreamReader(in), handler);
+        parse(new InputStreamReader(in, DEFAULT_CHARSET), handler);
     }
 
     /**

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -96,7 +97,7 @@ public class Xml extends Property implements Encodable {
             try {
                 final var decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(getRequiredParameter(Parameter.ENCODING));
-                binary = decoder.decode(aValue.getBytes());
+                binary = decoder.decode(aValue.getBytes(StandardCharsets.UTF_8));
             } catch (UnsupportedEncodingException uee) {
                 var log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
