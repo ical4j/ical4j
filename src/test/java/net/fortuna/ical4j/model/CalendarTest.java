@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -47,6 +48,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created on 16/03/2005
@@ -73,6 +75,15 @@ public class CalendarTest {
     public void testValid() throws ValidationException {
         
         calendar.validate();
+    }
+
+    @Test
+    public void testWithComponentFromFluentTarget() {
+        CalendarComponent event = new VEvent().withProperty(new Uid("2")).getFluentTarget();
+
+        Calendar result = new Calendar().withComponent(event).getFluentTarget();
+
+        assertTrue(result.getComponent(Component.VEVENT).isPresent());
     }
 
     @Test

@@ -1,10 +1,13 @@
 package net.fortuna.ical4j.data
 
 import net.fortuna.ical4j.model.Calendar
+import net.fortuna.ical4j.model.TimeZoneRegistry
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
 import java.nio.charset.Charset
+import java.util.function.Consumer
 
 /**
  * Created by fortuna on 4/07/2016.
@@ -114,5 +117,57 @@ END:VCALENDAR\r\n'''
         then: 'output string matches input'
         def output = calendar as String
         output as String == input
+    }
+
+    def 'test custom content handler'() {
+        given: 'a calendar object string'
+        def input = '''BEGIN:VCALENDAR\r
+BEGIN:VEVENT\r
+DTSTAMP:20210618T114917Z\r
+BEGIN:VALARM\r
+TRIGGER:-P2D\r
+END:VALARM\r
+END:VEVENT\r
+END:VCALENDAR\r\n'''
+
+        and: 'a builder that creates its content handler from a factory'
+        CountingContentHandler handler = null
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry()
+        CalendarBuilder builder = new CalendarBuilder(CalendarParserFactory.getInstance().get(), registry,
+                { consumer, tzRegistry -> handler = new CountingContentHandler(consumer, tzRegistry) })
+
+        when: 'string is parsed'
+        Calendar calendar = builder.build(new StringReader(input))
+
+        then: 'the custom handler was used'
+        handler.componentCount == 2
+
+        and: 'the builder returns the parsed calendar'
+        calendar as String == input
+    }
+
+    def 'test content handler factory returning null'() {
+        when: 'the factory returns no handler'
+        new CalendarBuilder(CalendarParserFactory.getInstance().get(),
+                TimeZoneRegistryFactory.getInstance().createRegistry(), { consumer, tzRegistry -> null })
+
+        then: 'construction fails'
+        NullPointerException e = thrown()
+        e.message == 'contentHandler'
+    }
+
+    static class CountingContentHandler extends DefaultContentHandler {
+
+        int componentCount
+
+        CountingContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
+            super(consumer, tzRegistry)
+        }
+
+        @Override
+        void startComponent(String name) {
+            componentCount++
+            super.startComponent(name)
+        }
     }
 }

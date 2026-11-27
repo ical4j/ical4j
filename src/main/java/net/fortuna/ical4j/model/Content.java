@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -71,7 +72,7 @@ public abstract class Content implements Serializable {
         }
 
         public final boolean supports(String name) {
-            return supportedNames.contains(name.toUpperCase());
+            return supportedNames.contains(name.toUpperCase(Locale.ROOT));
         }
     }
 }

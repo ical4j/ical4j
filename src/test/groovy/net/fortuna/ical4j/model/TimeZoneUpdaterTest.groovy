@@ -33,21 +33,34 @@
 
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.AbstractTzurlIntegrationTest
 import net.fortuna.ical4j.model.component.VTimeZone
 import net.fortuna.ical4j.util.Calendars
-import spock.lang.Specification
 
-class TimeZoneUpdaterTest extends Specification {
+/**
+ * Updates every bundled definition from a local tzurl server rather than the live tzurl.org service, so the
+ * test doesn't depend on hundreds of network requests succeeding. {@code updateDefinition} returns the original
+ * definition unchanged when an update fails, so the checks below also confirm the update really happened.
+ */
+class TimeZoneUpdaterTest extends AbstractTzurlIntegrationTest {
 
     def 'test update all tz definitions'() {
         given: 'a timezone updater'
         TimeZoneUpdater updater = []
 
-        when: 'a timezone is updated'
+        and: 'a bundled timezone definition'
         VTimeZone tz = Calendars.load(files).getComponent('VTIMEZONE').get()
+        int requestsBefore = tzurlRequests.get()
 
-        then: 'result is different from input'
-        updater.updateDefinition(tz) !== tz
+        when: 'the definition is updated'
+        VTimeZone updated = updater.updateDefinition(tz)
+
+        then: 'the definition was fetched from the server'
+        tzurlRequests.get() == requestsBefore + 1
+
+        and: 'a new definition for the same zone was returned'
+        updated !== tz
+        updated.timeZoneId.value == tz.timeZoneId.value
 
         where:
         files << getInputFiles(new File('src/main/resources/zoneinfo'))

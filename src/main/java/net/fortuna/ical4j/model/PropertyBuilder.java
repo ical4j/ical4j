@@ -72,6 +72,13 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return name.equalsIgnoreCase(this.name);
     }
 
+    /**
+     * @return true if the property name set on this builder is an experimental (X-) name, otherwise false
+     */
+    public boolean hasExperimentalName() {
+        return name != null && isExperimentalName(name);
+    }
+
     public PropertyBuilder value(String value) {
         // remove any trailing whitespace
         this.value = value.trim();
@@ -101,12 +108,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
         }
 
         Property property = null;
-        String decodedValue;
-        try {
-            decodedValue = PropertyCodec.INSTANCE.decode(value);
-        } catch (DecoderException e) {
-            decodedValue = value;
-        }
 
         for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {
@@ -139,7 +140,13 @@ public class PropertyBuilder extends AbstractContentBuilder {
             }
         }
 
-        if (property instanceof Encodable) {
+        if (property.usesTextEscaping()) {
+            String decodedValue;
+            try {
+                decodedValue = PropertyCodec.INSTANCE.decode(value);
+            } catch (DecoderException e) {
+                decodedValue = value;
+            }
             property.setValue(decodedValue);
         }
 

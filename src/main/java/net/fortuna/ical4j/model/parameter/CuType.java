@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
@@ -110,7 +111,7 @@ public class CuType extends Parameter implements Encodable {
 
         @Override
         public CuType createParameter(final String value) {
-            switch (value.toUpperCase()) {
+            switch (value.toUpperCase(Locale.ROOT)) {
                 case VALUE_INDIVIDUAL: return INDIVIDUAL;
                 case VALUE_GROUP: return GROUP;
                 case VALUE_RESOURCE: return RESOURCE;

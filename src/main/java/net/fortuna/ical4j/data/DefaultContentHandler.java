@@ -1,10 +1,12 @@
 package net.fortuna.ical4j.data;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Constants;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.LoggerFactory;
@@ -133,7 +135,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startProperty(String name) {
-        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+        if (!isIgnoredProperty(name)) {
             propertyBuilder = new PropertyBuilder(context.getPropertyFactorySupplier().get()).name(name)
                     .timeZoneRegistry(tzRegistry);
         } else {
@@ -150,7 +152,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void endProperty(String name) {
-        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+        if (!isIgnoredProperty(name)) {
             final PropertyBuilder builder = assertProperty(propertyBuilder);
             Property property;
             try {
@@ -177,8 +179,19 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void parameter(String name, String value) {
         if (propertyBuilder != null) {
-            var parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
-                    .name(name).value(value).build();
+            Parameter parameter;
+            try {
+                parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
+                        .name(name).value(value).build();
+            } catch (IllegalArgumentException e) {
+                if (propertyBuilder.hasExperimentalName()) {
+                    // the value isn't valid for the standard parameter, but on an experimental (X-) property
+                    // its meaning is defined by the producer, so retain it as-is (e.g. X-LOTUS-RECURID;RANGE=ALL)..
+                    parameter = new XParameter(name, value);
+                } else {
+                    throw e;
+                }
+            }
 
             if (parameter instanceof TzId) {
                 if (getComponentBuilder() != null && (getComponentBuilder().hasName(Observance.STANDARD)
@@ -197,6 +210,17 @@ public class DefaultContentHandler implements ContentHandler {
             throw new CalendarException("Expected component not initialised");
         }
         return component;
+    }
+
+    /**
+     * PropertyBuilder treats anything before the last '.' in a name as a group prefix, so a name such as
+     * GRP.ATTACH builds an ATTACH property. Check the name without the prefix as well, otherwise a prefix is
+     * enough to bypass the ignored property names.
+     */
+    private boolean isIgnoredProperty(String name) {
+        var ignored = context.getIgnoredPropertyNames();
+        return ignored.contains(name.toUpperCase(Locale.ROOT))
+                || ignored.contains(name.substring(name.lastIndexOf('.') + 1).toUpperCase(Locale.ROOT));
     }
 
     private PropertyBuilder assertProperty(@Nullable PropertyBuilder property) {

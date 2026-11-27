@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
@@ -473,15 +474,16 @@ public abstract class Property extends Content implements Comparable<Property>, 
         buffer.append(':');
         String value;
 
-        if (this instanceof XProperty && getParameter(Parameter.VALUE).isPresent()
-                && !Value.TEXT.equals(getRequiredParameter(Parameter.VALUE))) {
-            value = getValue();
-        } else if (this instanceof Encodable) {
+        if (usesTextEscaping()) {
             try {
                 value = PropertyCodec.INSTANCE.encode(getValue());
             } catch (EncoderException e) {
                 value = getValue();
             }
+        } else if (this instanceof Encodable) {
+            // A raw line break would end the content line. The guard writes it as \n,
+            // which is read back literally and is indistinguishable from an original \n.
+            value = PropertyCodec.INSTANCE.encodeLineBreaks(Strings.valueOf(getValue()));
         } else {
             value = getValue();
         }
@@ -489,6 +491,10 @@ public abstract class Property extends Content implements Comparable<Property>, 
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
+    }
+
+    final boolean usesTextEscaping() {
+        return this instanceof Encodable && getParameter(Parameter.VALUE).map(Value.TEXT::equals).orElse(true);
     }
 
     @Override
@@ -644,7 +650,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
     @Override
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
-        return new HashCodeBuilder().append(getName().toUpperCase()).append(
+        return new HashCodeBuilder().append(getName().toUpperCase(Locale.ROOT)).append(
                 getValue()).append(parameters).append(getPrefix()).toHashCode();
     }
 
@@ -660,7 +666,7 @@ public abstract class Property extends Content implements Comparable<Property>, 
      * @return the copy of the property
      */
     public final Property copy() {
-        if (getName().toUpperCase().startsWith("X-")) {
+        if (getName().toUpperCase(Locale.ROOT).startsWith("X-")) {
             return new XProperty(getName(), new ParameterList(getParameters()), getValue());
         }
         return newFactory().createProperty(parameters, getValue());

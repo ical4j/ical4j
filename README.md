@@ -58,7 +58,7 @@
 4. [References][References]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
-7. [Development - Guide for contributing to the iCalj project][Development]
+7. [Development - Guide for contributing to the iCal4j project][Development]
     - [Building with Gradle]
     - [Redistribution]
     - [Contributing to iCal4j][Contributing]
@@ -167,6 +167,7 @@ You may also find the [Java Legacy Date-Time Code] web page useful.
 
     net.fortuna.ical4j.timezone.registry=net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory
 
+    # Disabled by default. Set to true to fetch updated definitions from each timezone's TZURL.
     net.fortuna.ical4j.timezone.update.enabled={true|false}
 
     net.fortuna.ical4j.factory.decoder=net.fortuna.ical4j.util.DefaultDecoderFactory
@@ -174,12 +175,28 @@ You may also find the [Java Legacy Date-Time Code] web page useful.
     net.fortuna.ical4j.factory.encoder=net.fortuna.ical4j.util.DefaultEncoderFactory
 
     net.fortuna.ical4j.recur.maxincrementcount=1000
+
+    # Size in bytes from which decoded inline ATTACH data is held in a memory-mapped temporary file (deleted once
+    # mapped) instead of on the heap. A negative value keeps all inline data on the heap.
+    net.fortuna.ical4j.attach.mapped.threshold=1048576
     
     net.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache
 
 
 ### Compatibility Hints
  
+#### Explicit non-TEXT property values
+
+Properties that support TEXT escaping preserve literal backslashes when they declare an
+explicit non-TEXT `VALUE` type. For example, `\,` is read as a backslash and comma rather
+than just a comma. Relaxed parsing and the compatibility hints do not restore the previous
+unescaping behavior. Filter operands with an explicit non-TEXT `VALUE` also compare those
+characters literally.
+
+When writing these properties, raw CR, LF, and CRLF are emitted as `\n` to keep them on
+one content line. Reading the result yields a literal backslash followed by `n`. An
+original line break and an original literal `\n` therefore have the same serialized form.
+
 #### Relaxed Parsing
     
     ical4j.parsing.relaxed={true|false}
@@ -308,19 +325,19 @@ Microsoft Outlook also appears to provide quoted TZID parameter values, as follo
 
 ### Building with Gradle
 
-iCal4j includes the Gradle wrapper for a simpler and more consistent build.
+iCal4j includes the Gradle wrapper for a simpler and more consistent build. Building requires **Java 17 or newer**;
+the published library targets Java 11.
 
-**Run unit tests**
+**Run the tests and all checks** (the same checks CI runs on pull requests)
 
-    ./gradlew clean test
+    ./gradlew check
 
-**Build a new release**
+**Install a snapshot into your local Maven repository**
 
-    ./gradlew clean test release -Prelease.forceVersion=2.0.0
+    ./gradlew publishToMavenLocal
 
-**Upload release binaries and packages**
-
-    RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
+The `Makefile` wraps these and the maintainer release tasks, for example `make check`, `make install` and
+`make release`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development setup.
 
 ### Redistribution
 
@@ -339,6 +356,9 @@ follow these very simple guidelines:
 
 Open source software is made stronger by the community that supports it. Through participation you not only contribute to the quality of the software, but also gain a deeper insight into the inner workings.
 
-Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask. If you have an answer, write it down.
+Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask in [Discussions](https://github.com/orgs/ical4j/discussions). If you have an answer, write it down.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up a development build and get a pull request merged, and
+[SECURITY.md](SECURITY.md) for reporting vulnerabilities privately.
 
 And if you are somehow constrained from participation, through corporate policy or otherwise, consider financial support. After all, if you are profiting from open source it's only fair to give something back to the community that make it all possible.

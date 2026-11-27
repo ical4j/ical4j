@@ -307,6 +307,10 @@ public abstract class Component extends Content implements Serializable,
      * timezone), when calculating a recurrence set we must explicitly provide an applicable timezone
      * for calculations.
      *
+     * <p>The period start is inclusive and the period end is exclusive: an occurrence that starts before the
+     * period but overlaps it is included, an occurrence starting exactly at {@code period.getEnd()} is not.
+     * A zero-length period is a point-in-time query.</p>
+     *
      * @param period a range that defines the boundary for calculations
      * @return a set of periods representing component occurrences within the specified boundary
      */

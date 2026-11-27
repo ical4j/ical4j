@@ -1,0 +1,90 @@
+name: Bug report
+description: Report a problem with iCal4j 4.x
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        - **Security vulnerabilities** must not be reported here. Use [private vulnerability reporting](https://github.com/ical4j/ical4j/security/advisories/new) instead.
+        - **Questions and usage help** belong in [Discussions](https://github.com/orgs/ical4j/discussions).
+        - iCal4j **3.x and earlier** are no longer maintained. Please check whether the problem still occurs on the latest 4.x release.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the problem, including any exception and stack trace.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: |
+        The smallest `.ics` input and code that show the problem. Redact personal data such as names and email
+        addresses; the structure of the data is what matters.
+      placeholder: |
+        BEGIN:VCALENDAR
+        ...
+        END:VCALENDAR
+
+        Calendar calendar = new CalendarBuilder().build(new StringReader(ics));
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What you expected to happen instead. Cite the RFC 5545 section if relevant.
+    validations:
+      required: true
+
+  - type: input
+    id: ical4j-version
+    attributes:
+      label: iCal4j version
+      placeholder: e.g. 4.4.0
+    validations:
+      required: true
+
+  - type: input
+    id: java-version
+    attributes:
+      label: Java version
+      placeholder: e.g. 17.0.12 (Temurin)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - JVM (Linux)
+        - JVM (macOS)
+        - JVM (Windows)
+        - Android
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration
+      description: |
+        Any `ical4j.properties` settings or system properties you use, such as
+        `ical4j.parsing.relaxed`, `ical4j.validation.relaxed` or compatibility hints.
+      render: properties
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Which application produced the calendar data, anything you've already tried, and so on.

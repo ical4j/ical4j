@@ -17,6 +17,8 @@ class ParameterCodecTest extends Specification {
         '^'                                         | '^^'
         '^^'                                        | '^^^^'
         '\n'                                        | '^n'
+        '\r\n'                                      | '^n'
+        '\r'                                        | '^n'
         '"'                                         | "^'"
         'This is ^a \n"test"'                       | "This is ^^a ^n^'test^'"
         'test: 1'                                   | '"test: 1"'

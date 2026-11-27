@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.data;
 
+import java.util.Locale;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import org.apache.commons.lang3.StringUtils;
@@ -144,10 +145,10 @@ public class HCalendarParser implements CalendarParser {
     private static final XPathExpression XPATH_ORGANIZER;
     private static final XPathExpression XPATH_SEQUENCE;
     private static final XPathExpression XPATH_ATTACH;
+    // SimpleDateFormat is not thread-safe, so a new instance is created for each value rather than
+    // sharing one between concurrent parses..
     private static final String HCAL_DATE_PATTERN = "yyyy-MM-dd";
-    private static final SimpleDateFormat HCAL_DATE_FORMAT = new SimpleDateFormat(HCAL_DATE_PATTERN);
     private static final String HCAL_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssz";
-    private static final SimpleDateFormat HCAL_DATE_TIME_FORMAT = new SimpleDateFormat(HCAL_DATE_TIME_PATTERN);
 
     static {
         BUILDER_FACTORY.setNamespaceAware(true);
@@ -276,12 +277,23 @@ public class HCalendarParser implements CalendarParser {
         try {
             String content = element.getFirstChild().getNodeValue();
             if (content != null) {
-                return content.trim().replaceAll("\\s+", " ");
+                return normalizeWhitespace(content);
             }
             return null;
         } catch (DOMException e) {
             throw new ParserException("Unable to get text content for element " + element.getNodeName(), -1, e);
         }
+    }
+
+    private static String getAttributeValue(Element element, String name) {
+        // character references such as &#13;&#10; survive XML attribute-value normalization, so line breaks
+        // are collapsed here as for text content. Otherwise they are written raw by properties that are not
+        // escaped on output (e.g. STATUS, CLASS, METHOD) and start a new content line..
+        return normalizeWhitespace(element.getAttribute(name));
+    }
+
+    private static String normalizeWhitespace(String value) {
+        return value.trim().replaceAll("\\s+", " ");
     }
 
     private void buildCalendar(Document d, ContentHandler handler) throws ParserException, IOException {
@@ -370,7 +382,7 @@ public class HCalendarParser implements CalendarParser {
             LOG.debug("Building property " + propName);
 
         var className = className(propName);
-        var elementName = element.getLocalName().toLowerCase();
+        var elementName = element.getLocalName().toLowerCase(Locale.ROOT);
 
         String value;
         if (elementName.equals("abbr")) {
@@ -378,14 +390,14 @@ public class HCalendarParser implements CalendarParser {
             // attribute of the <abbr> element is the value of the property,
             // instead of the contents of the element, which instead provide a
             // human presentable version of the value."
-            value = element.getAttribute("title");
+            value = getAttributeValue(element, "title");
             if (StringUtils.isBlank(value))
                 throw new ParserException("Abbr element '" + className + "' requires a non-empty title", -1);
             if (LOG.isDebugEnabled())
                 LOG.debug("Setting value '" + value + "' from title attribute");
         } else if (isHeaderElement(elementName)) {
             // try title first. if that's not set, fall back to text content.
-            value = element.getAttribute("title");
+            value = getAttributeValue(element, "title");
             if (!StringUtils.isBlank(value)) {
                 if (LOG.isDebugEnabled())
                     LOG.debug("Setting value '" + value + "' from title attribute");
@@ -395,20 +407,20 @@ public class HCalendarParser implements CalendarParser {
                     LOG.debug("Setting value '" + value + "' from text content");
             }
         } else if (elementName.equals("a") && isUrlProperty(propName)) {
-            value = element.getAttribute("href");
+            value = getAttributeValue(element, "href");
             if (StringUtils.isBlank(value))
                 throw new ParserException("A element '" + className + "' requires a non-empty href", -1);
             if (LOG.isDebugEnabled())
                 LOG.debug("Setting value '" + value + "' from href attribute");
         } else if (elementName.equals("img")) {
             if (isUrlProperty(propName)) {
-                value = element.getAttribute("src");
+                value = getAttributeValue(element, "src");
                 if (StringUtils.isBlank(value))
                     throw new ParserException("Img element '" + className + "' requires a non-empty src", -1);
                 if (LOG.isDebugEnabled())
                     LOG.debug("Setting value '" + value + "' from src attribute");
             } else {
-                value = element.getAttribute("alt");
+                value = getAttributeValue(element, "alt");
                 if (StringUtils.isBlank(value))
                     throw new ParserException("Img element '" + className + "' requires a non-empty alt", -1);
                 if (LOG.isDebugEnabled())
@@ -463,7 +475,7 @@ public class HCalendarParser implements CalendarParser {
      */
 
     private static String className(String propName) {
-        return propName.toLowerCase();
+        return propName.toLowerCase(Locale.ROOT);
     }
 
     private static boolean isHeaderElement(String name) {
@@ -503,7 +515,7 @@ public class HCalendarParser implements CalendarParser {
             } catch (ParseException e) {
                 LOG.warn("Caught exception", e);
             }
-            return new Date(HCAL_DATE_FORMAT.parse(original));
+            return new Date(new SimpleDateFormat(HCAL_DATE_PATTERN).parse(original));
         }
 
         try {
@@ -534,7 +546,7 @@ public class HCalendarParser implements CalendarParser {
             normalized = original;
         }
 
-        var dt = new DateTime(HCAL_DATE_TIME_FORMAT.parse(normalized));
+        var dt = new DateTime(new SimpleDateFormat(HCAL_DATE_TIME_PATTERN).parse(normalized));
 
         // hCalendar does not specify a representation for timezone ids
         // or any other sort of timezone information. the best it does is

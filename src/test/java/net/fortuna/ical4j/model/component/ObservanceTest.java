@@ -38,11 +38,19 @@ import net.fortuna.ical4j.model.property.TzOffsetTo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import static net.fortuna.ical4j.model.component.Observance.MAX_RECURRENCE_ONSETS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * $Id$
@@ -78,5 +86,51 @@ public class ObservanceTest {
                     ZonedDateTime.now().withYear(2000 + 1).withMonth(i).withDayOfMonth(i));
             assertNotNull(onset);
         }
+    }
+
+    /**
+     * A sub-yearly frequency with an early DTSTART would otherwise expand to every interval since the
+     * epoch; getLatestOnset must bound the expansion and still return an onset.
+     */
+    @Test
+    public void getLatestOnsetBoundsSubYearlyFrequency() {
+        Observance crafted = (Observance) new Standard().withProperty(new DtStart<>("19700101T000000"))
+                .withProperty(new TzOffsetFrom("+0000"))
+                .withProperty(new TzOffsetTo("+0100"))
+                .withProperty(new RRule<>("FREQ=MINUTELY"))
+                .getFluentTarget();
+
+        OffsetDateTime onset = assertTimeoutPreemptively(Duration.ofSeconds(10),
+                () -> crafted.getLatestOnset(Instant.now()));
+        assertNotNull(onset);
+    }
+
+    /**
+     * A rule whose single-period BY* cross-product is itself unbounded cannot be capped by the onset
+     * limit alone, because the recurrence engine materialises a whole period before that limit applies.
+     * getLatestOnset must skip such a rule and fall back to the initial (DTSTART) onset.
+     */
+    @Test
+    public void getLatestOnsetSkipsExcessivePerPeriodExpansion() {
+        String rrule = "FREQ=YEARLY;BYYEARDAY=" + range(1, 366) + ";BYHOUR=" + range(0, 23)
+                + ";BYMINUTE=" + range(0, 59) + ";BYSECOND=" + range(0, 59);
+        RRule<OffsetDateTime> recurrence = new RRule<>(rrule);
+        // a single year would yield 366 * 24 * 60 * 60 candidates before any onset cap could apply
+        assertEquals(31_622_400L, recurrence.getRecur().getMaxCandidatesPerPeriod());
+        assertTrue(recurrence.getRecur().getMaxCandidatesPerPeriod() > MAX_RECURRENCE_ONSETS);
+
+        Observance crafted = (Observance) new Standard().withProperty(new DtStart<>("19700101T000000"))
+                .withProperty(new TzOffsetFrom("+0000"))
+                .withProperty(new TzOffsetTo("+0100"))
+                .withProperty(recurrence)
+                .getFluentTarget();
+
+        OffsetDateTime onset = assertTimeoutPreemptively(Duration.ofSeconds(10),
+                () -> crafted.getLatestOnset(Instant.parse("2000-01-01T00:00:00Z")));
+        assertEquals(OffsetDateTime.parse("1970-01-01T00:00+00:00"), onset);
+    }
+
+    private static String range(int from, int to) {
+        return IntStream.rangeClosed(from, to).mapToObj(Integer::toString).collect(Collectors.joining(","));
     }
 }

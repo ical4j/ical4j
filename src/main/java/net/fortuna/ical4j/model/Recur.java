@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.time.chrono.Chronology;
 import java.time.temporal.*;
 import java.util.*;
@@ -552,6 +553,44 @@ public class Recur<T extends Temporal> implements Serializable {
     }
 
     /**
+     * Returns a conservative upper bound on the number of candidate instances this rule can generate
+     * within a single increment period (the span between two successive seed increments), before any
+     * BYSETPOS filtering is applied. It is the product of the sizes of BYMONTH, BYWEEKNO, BYYEARDAY,
+     * BYMONTHDAY, BYDAY, BYHOUR, BYMINUTE and BYSECOND, where an absent or single-valued part
+     * contributes a factor of one. BYSETPOS only reduces the set, so it is excluded.
+     * <p>
+     * Every one of those eight parts is counted as a multiplier regardless of the rule's FREQ, even
+     * though for a given FREQ some of them limit rather than expand the candidate set (BYMONTH with
+     * FREQ=DAILY, or BYHOUR with FREQ=SECONDLY, for example). Counting a limiting part as a
+     * multiplier can only overstate the result, so the value remains a valid upper bound; it is not
+     * an estimate of the candidate count, and for most rules it will be larger than the number of
+     * candidates actually generated.
+     * <p>
+     * {@link #getCandidates} materialises a whole period's candidate list before the per-instance
+     * count limit of {@code getDates} is applied, so a caller that expands an untrusted rule over a
+     * fixed window can use this to reject a rule whose single-period cross-product would be
+     * unreasonably large (e.g.
+     * {@code FREQ=YEARLY;BYYEARDAY=1,...,366;BYHOUR=0,...,23;BYMINUTE=0,...,59;BYSECOND=0,...,59}),
+     * independently of how many instances the window would ultimately yield.
+     *
+     * @return the per-period candidate upper bound, saturating at {@link Long#MAX_VALUE}
+     */
+    public final long getMaxCandidatesPerPeriod() {
+        long product = 1;
+        final int[] sizes = {monthList.size(), weekNoList.size(), yearDayList.size(), monthDayList.size(),
+                dayList.size(), hourList.size(), minuteList.size(), secondList.size()};
+        for (final int size : sizes) {
+            if (size > 1) {
+                if (product > Long.MAX_VALUE / size) {
+                    return Long.MAX_VALUE;
+                }
+                product *= size;
+            }
+        }
+        return product;
+    }
+
+    /**
      * @return Returns the count or -1 if the rule does not have a count.
      */
     public final int getCount() {
@@ -632,6 +671,18 @@ public class Recur<T extends Temporal> implements Serializable {
 
     @Nullable Integer getCountValue() {
         return count;
+    }
+
+    /**
+     * A COUNT only limits the recurrence set when it is positive. A COUNT of zero or less (which the grammar in
+     * RFC 5545 section 3.3.10 does not allow, but which is accepted when parsing) is treated as no COUNT, both when
+     * deciding whether to skip ahead to the period start and when deciding where the recurrence set ends. Using
+     * different conditions for the two would walk every interval from the seed one at a time..
+     *
+     * @return true if this rule has a COUNT that limits the number of instances
+     */
+    boolean hasCount() {
+        return count != null && count > 0;
     }
 
     @Nullable Integer getIntervalValue() {
@@ -734,11 +785,11 @@ public class Recur<T extends Temporal> implements Serializable {
         initRules();
 
         T candidateSeed = seed;
-        int incrementMultiplier = 1;
+        long incrementMultiplier = 1;
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
-        if (count == null) {
+        if (!hasCount()) {
             while (TemporalAdapter.isBefore(candidateSeed, startDate.minus(Math.max(getInterval(), 1), calIncField))) {
                 candidateSeed = increment(seed, incrementMultiplier++);
             }
@@ -753,7 +804,7 @@ public class Recur<T extends Temporal> implements Serializable {
                 break;
             }
 
-            if (getCount() > 0 && invalidCandidateCount >= getCount()) {
+            if (hasCount() && invalidCandidateCount >= getCount()) {
                 break;
             }
 
@@ -769,7 +820,7 @@ public class Recur<T extends Temporal> implements Serializable {
                         // we want the NEXT occurrence
                         if (!TemporalAdapter.isAfter(candidate, startDate)) {
                             invalidCandidateCount++;
-                        } else if (getCount() > 0 && invalidCandidateCount >= getCount()) {
+                        } else if (hasCount() && invalidCandidateCount >= getCount()) {
                             break;
                         } else if (!(getUntil() != null && TemporalAdapter.isAfter(candidate, getUntil()))) {
                             return candidate;
@@ -792,15 +843,20 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @param cal a {@link Temporal} value to increment
      */
-    T increment(final T cal, int multiplier) {
+    T increment(final T cal, long multiplier) {
         // initialise interval..
-        final int calInterval = Math.max(getInterval(), 1) * multiplier;
+        final long calInterval = Math.max(getInterval(), 1) * multiplier;
         //noinspection unchecked
         return (T) cal.plus(calInterval, calIncField);
     }
 
     /**
      * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
+     *
+     * <p>For a {@link ZonedDateTime} seed, a candidate whose local date-time falls in a daylight-saving overlap
+     * (the hour that occurs twice when clocks go back) is resolved to the earlier offset, i.e. the offset in force
+     * before the transition, as required by RFC 5545 §3.3.5. This is applied here, once, because every candidate
+     * produced by the frequency increment and the BY* rules passes through this method.</p>
      *
      * @param date  the seed date
      * @return a List of Temporal of the same type as the seed date
@@ -900,8 +956,25 @@ public class Recur<T extends Temporal> implements Serializable {
                 log.debug("Dates after SETPOS processing: " + dates);
             }
         }
+        if (rootSeed instanceof ZonedDateTime) {
+            dates = dates.stream().map(Recur::withEarlierOffsetAtOverlap).collect(Collectors.toList());
+        }
         dates.sort(CANDIDATE_SORTER);
         return dates;
+    }
+
+    /**
+     * RFC 5545 §3.3.5: a local time that occurs twice at a DST transition denotes the first occurrence. java.time
+     * arithmetic on a {@link ZonedDateTime} ({@code plus}, {@code with}) prefers the offset of the value being
+     * adjusted, so a candidate derived from a seed carrying the post-transition offset would otherwise resolve to
+     * the later occurrence (issue #716).
+     */
+    @SuppressWarnings("unchecked")
+    private static <T extends Temporal> T withEarlierOffsetAtOverlap(final T candidate) {
+        if (candidate instanceof ZonedDateTime) {
+            return (T) ((ZonedDateTime) candidate).withEarlierOffsetAtOverlap();
+        }
+        return candidate;
     }
 
     private List<T> distinctCandidates(List<T> dates) {

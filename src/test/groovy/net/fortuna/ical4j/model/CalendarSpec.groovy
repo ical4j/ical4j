@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model
 
 
+import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.util.Calendars
 import net.fortuna.ical4j.util.RandomUidGenerator
 import spock.lang.Shared
@@ -154,5 +155,75 @@ class CalendarSpec extends Specification {
 
         expect: 'content type is retrieved as expected'
         calendar.getContentType(Charset.forName('utf-8')) == 'text/calendar; method=PUBLISH; charset=UTF-8'
+    }
+
+    def 'test a parsed method value cannot add media type parameters to the content type'() {
+        given: 'a calendar whose METHOD value carries an additional media type parameter'
+        def calendar = new CalendarBuilder().build(new StringReader('BEGIN:VCALENDAR\r\n' +
+                'PRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\n' +
+                'VERSION:2.0\r\n' +
+                'METHOD:PUBLISH; charset=utf-7\r\n' +
+                'BEGIN:VEVENT\r\n' +
+                'UID:auid\r\n' +
+                'DTSTAMP:20090810T000000Z\r\n' +
+                'DTSTART;VALUE=DATE:20090810\r\n' +
+                'END:VEVENT\r\n' +
+                'END:VCALENDAR\r\n'))
+
+        expect: 'the method value is retained'
+        calendar.getProperty(Property.METHOD).get().value == 'PUBLISH; charset=utf-7'
+
+        and: 'the content type omits it rather than emitting a second charset parameter'
+        calendar.getContentType(Charset.forName('utf-8')) == 'text/calendar; charset=UTF-8'
+    }
+
+    def 'test bare carriage return in a text value does not inject a content line'() {
+        given: 'a calendar with a summary containing a bare carriage return followed by a property line'
+        def calendar = builder.calendar {
+            prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+            version '2.0'
+            vevent {
+                uid 'auid'
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                summary 'Team sync\rATTENDEE:mailto:mallory@example.com'
+            }
+        }
+
+        when: 'the calendar is serialised and parsed again'
+        def parsed = new CalendarBuilder().build(new StringReader(calendar as String))
+        def event = parsed.getComponents().first()
+
+        then: 'the injected line is part of the summary rather than a new property'
+        event.getProperties(Property.ATTENDEE).empty
+        event.getProperty(Property.SUMMARY).get().value == 'Team sync\nATTENDEE:mailto:mallory@example.com'
+    }
+
+    def 'test escaped line break in a non-TEXT experimental property does not inject a content line'() {
+        given: 'a calendar parsed from a non-TEXT experimental property'
+        def parsed = new CalendarBuilder().build(new StringReader(
+                'BEGIN:VCALENDAR\r\nPRODID:-//Ben Fortuna//iCal4j 1.0//EN\r\nVERSION:2.0\r\n' +
+                'BEGIN:VEVENT\r\nUID:auid\r\nDTSTAMP:20090810T000000Z\r\nDTSTART;VALUE=DATE:20090810\r\n' +
+                "$line\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"))
+
+        when: 'the calendar is serialised and parsed again'
+        def serialised = parsed as String
+        def reparsed = new CalendarBuilder().build(new StringReader(serialised))
+
+        then: 'the property is written as it was read'
+        serialised.contains("$line\r\n")
+
+        and: 'nothing is added to the calendar'
+        reparsed.getComponents().size() == 1
+        reparsed.getComponents().first().getProperties().size() == parsed.getComponents().first().getProperties().size()
+
+        where:
+        line << [
+                'X-FOO;VALUE=URI:x\\nATTENDEE:mailto:mallory@example.com',
+                'X-FOO;VALUE=X-OTHER:x\\nATTENDEE:mailto:mallory@example.com',
+                'X-FOO;VALUE=URI:x\\nEND:VEVENT\\nBEGIN:VEVENT\\nUID:injected\\nX-BAR:y',
+                'X-FOO;VALUE=URI:file:C:\\new\\dir',
+                'X-FOO;VALUE=URI:geo:37.331684,-122.030758'
+        ]
     }
 }

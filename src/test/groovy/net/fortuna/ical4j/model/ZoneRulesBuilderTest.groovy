@@ -4,6 +4,7 @@ import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Timeout
 import spock.lang.Unroll
 
 import java.time.*
@@ -79,6 +80,36 @@ class ZoneRulesBuilderTest extends Specification {
         where:
         tzId                    | localDate                                     | expectedOffset
         'America/Los_Angeles'   | LocalDateTime.of(2023, 12, 14, 17, 0, 0, 0)   | ZoneOffset.ofHours(-8)
+    }
+
+    /**
+     * Zones that abolished DST, where the expired DAYLIGHT RRULE sits beside an observance with no RRULE
+     * (only an RDATE, or a single DTSTART). Such an observance has nothing to expire and must not stop the
+     * expired-rule guard from applying (issue #903). Expected offsets are fixed facts, not the JDK's tzdb.
+     */
+    @Unroll
+    def 'zone that abolished DST keeps its standard offset: #tzId #instant'() {
+        given: 'zone rules built from the bundled definition'
+        def zonerules = new ZoneRulesBuilder()
+                .vTimeZone(timeZoneRegistry.getTimeZone(tzId).getVTimeZone()).build()
+
+        expect: 'the offset is the standard offset all year'
+        zonerules.getOffset(Instant.parse(instant)) == ZoneOffset.of(expectedOffset)
+
+        where:
+        tzId                    | instant                   | expectedOffset
+        'Europe/Moscow'         | '2026-01-15T12:00:00Z'    | '+03:00'  // DST abolished 2011, permanent +03 since 2014
+        'Europe/Moscow'         | '2026-07-01T12:00:00Z'    | '+03:00'
+        'America/Costa_Rica'    | '2026-01-15T12:00:00Z'    | '-06:00'  // DST last observed 1991-92
+        'America/Costa_Rica'    | '2026-07-01T12:00:00Z'    | '-06:00'
+        'America/Santo_Domingo' | '2026-01-15T12:00:00Z'    | '-04:00'  // no DST since 2000
+        'America/Santo_Domingo' | '2026-12-15T12:00:00Z'    | '-04:00'
+        'Australia/Darwin'      | '2026-01-15T12:00:00Z'    | '+09:30'  // no DST since 1944
+        'Australia/Darwin'      | '2026-07-01T12:00:00Z'    | '+09:30'
+        'America/Sao_Paulo'     | '2026-01-15T12:00:00Z'    | '-03:00'  // DST abolished 2019
+        'America/Sao_Paulo'     | '2026-07-01T12:00:00Z'    | '-03:00'
+        'Europe/Istanbul'       | '2026-01-15T12:00:00Z'    | '+03:00'  // permanent +03 since 2016
+        'Europe/Istanbul'       | '2026-07-01T12:00:00Z'    | '+03:00'
     }
 
     def 'build DST transitions from non-recurring (single date-time) observances'() {
@@ -395,5 +426,34 @@ END:VCALENDAR"""
         byMonthDay          | expectedIndicator
         ''                  | 12      // no BYMONTHDAY - falls back to the DTSTART day
         ';BYMONTHDAY=8,9,10,11,12,13,14' | 8
+    }
+
+    @Unroll
+    @Timeout(20)
+    def 'observance recurrence expansion is bounded for a sub-yearly frequency: #freq'() {
+        given: 'a VTIMEZONE whose observance recurs far more often than yearly, from an early DTSTART'
+        def cal = """BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ical4j//test//EN
+BEGIN:VTIMEZONE
+TZID:Test/Bomb
+BEGIN:STANDARD
+DTSTART:19700101T000000
+RRULE:FREQ=$freq
+TZOFFSETFROM:+0000
+TZOFFSETTO:+0100
+END:STANDARD
+END:VTIMEZONE
+END:VCALENDAR"""
+
+        when: 'the calendar is parsed and zone rules are built'
+        def calendar = new CalendarBuilder().build(new StringReader(cal))
+        def zonerules = new ZoneRulesBuilder().vTimeZone(calendar.getComponent('VTIMEZONE').get()).build()
+
+        then: 'the historical transitions are capped instead of one per interval across decades'
+        zonerules.transitions.size() <= 1000
+
+        where:
+        freq << ['HOURLY', 'MINUTELY', 'SECONDLY']
     }
 }

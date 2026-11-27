@@ -36,6 +36,7 @@ package net.fortuna.ical4j.model.property
 import net.fortuna.ical4j.model.ParameterList
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
+import spock.lang.Timeout
 
 class GeoSpec extends Specification {
 
@@ -60,5 +61,20 @@ class GeoSpec extends Specification {
 
         then: 'the expected instance is created'
         geo.value == '123.456;-987.654'
+    }
+
+    @Timeout(5)
+    def 'verify oversized values are rejected in linear time: relaxed=#relaxed'() {
+        setup: 'set relaxed parsing'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, relaxed)
+
+        when: 'a long digit run that is not a GEO value is parsed'
+        new Geo.Factory().createProperty([] as ParameterList, '1' * 50_000 + 'x')
+
+        then: 'an exception is thrown'
+        thrown(IllegalArgumentException)
+
+        where:
+        relaxed << [false, true]
     }
 }

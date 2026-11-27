@@ -15,6 +15,8 @@ import org.jspecify.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Period;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -71,9 +73,12 @@ public class TimeZoneLoader {
     }
 
     public String[] getAvailableIDs() {
-        return new BufferedReader(new InputStreamReader(
-                ResourceLoader.getResourceAsStream(resourcePrefix + "tz.availableIds")))
-                .lines().toArray(String[]::new);
+        try (var reader = new BufferedReader(new InputStreamReader(
+                ResourceLoader.getResourceAsStream(resourcePrefix + "tz.availableIds"), StandardCharsets.UTF_8))) {
+            return reader.lines().toArray(String[]::new);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**
@@ -181,7 +186,7 @@ public class TimeZoneLoader {
 
             weekdayIndexInMonth = weekdayIndexInMonth >= 3 ? weekdayIndexInMonth - allDaysOfWeek.size() : weekdayIndexInMonth;
 
-            var rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
+            var rruleText = transitionRuleText(transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek);
 
             var offsetFrom = new TzOffsetFrom(transitionRule.getOffsetBefore());
             var offsetTo = new TzOffsetTo(transitionRule.getOffsetAfter());
@@ -198,6 +203,14 @@ public class TimeZoneLoader {
 
             result.add(observance);
         }
+    }
+
+    /**
+     * Builds the RRULE text for a yearly transition rule. Always formatted with ASCII digits regardless of
+     * the default locale, as native-digit locales (e.g. fa, ar) would otherwise leak into generated content (#458).
+     */
+    static String transitionRuleText(int month, int weekdayIndexInMonth, DayOfWeek dayOfWeek) {
+        return String.format(Locale.US, RRULE_TPL, month, weekdayIndexInMonth, dayOfWeek.name().substring(0, 2));
     }
 
     private static void addTransitions(ZoneId zoneId, VTimeZone result, int rawTimeZoneOffsetInSeconds) {

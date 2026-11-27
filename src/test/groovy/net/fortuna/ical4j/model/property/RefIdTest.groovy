@@ -57,4 +57,26 @@ END:VCALENDAR
         RefId refId = calendar?.components[0].properties[1]
         refId.value == 'itinerary-2014-11-17'
     }
+
+    def 'assert text value is escaped on output and unescaped on parse'() {
+        given: 'a refid value containing a line break and text separators'
+        RefId refId = new RefId('itinerary\r\nATTENDEE:mailto:mallory@example.com;x,y')
+
+        expect: 'the value is written as a single escaped content line'
+        refId as String == 'REFID:itinerary\\nATTENDEE:mailto:mallory@example.com\\;x\\,y\r\n'
+
+        when: 'the escaped content line is parsed'
+        String calendarString = """BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ABC Corporation//NONSGML My Product//EN
+BEGIN:VTODO
+${refId}END:VTODO
+END:VCALENDAR
+"""
+        Calendar calendar = builder.build(new StringReader(calendarString))
+
+        then: 'the original value is restored and no property is injected'
+        calendar.components[0].properties.size() == 1
+        calendar.components[0].properties[0].value == 'itinerary\nATTENDEE:mailto:mallory@example.com;x,y'
+    }
 }

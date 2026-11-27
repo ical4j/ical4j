@@ -3,11 +3,13 @@ package net.fortuna.ical4j.model
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Ignore
 import spock.lang.Specification
+import spock.lang.Timeout
 import spock.lang.Unroll
 
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
+import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 
 class TemporalAmountAdapterTest extends Specification {
@@ -35,8 +37,8 @@ class TemporalAmountAdapterTest extends Specification {
         java.time.Period.ofWeeks(7) | "P7W"
         java.time.Period.ofDays(365) | "P365D"
         java.time.Period.ofDays(364) | "P52W"
-        java.time.Period.ofYears(1) | "P52W"
-        java.time.Period.ofMonths(6) | "P26W"
+        java.time.Period.ofYears(1) | "P365D"
+        java.time.Period.ofMonths(6) | "P183D"
         java.time.Period.ofMonths(-6) | "-P26W"
         Duration.ofDays(15).plusHours(5).plusSeconds(20)    | 'P15DT5H0M20S'
     }
@@ -68,6 +70,24 @@ class TemporalAmountAdapterTest extends Specification {
         "P"             | java.time.Period.ZERO
         "PT"            | java.time.Period.ZERO
         "P90M"          | Duration.of(90, ChronoUnit.MINUTES)
+    }
+
+    @Timeout(5)
+    def "verify relaxed parsing rejects oversized values in linear time: #description"() {
+        setup: 'enable relaxed parsing'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+
+        when:
+        TemporalAmountAdapter.parse(stringValue)
+
+        then:
+        thrown(DateTimeParseException)
+
+        where:
+        description         | stringValue
+        'weeks without days' | 'P' + 'W' * 100_000 + 'X'
+        'unterminated days' | 'PxWxD' + '1' * 100_000 + 'X'
+        'repeated minutes'  | 'P' + '1M' * 100_000 + 'X'
     }
 
     def 'verify temporalamount creation'() {
@@ -236,17 +256,29 @@ class TemporalAmountAdapterTest extends Specification {
         expect: "P1DT1H4M" == TemporalAmountAdapter.parse("P1DT1H4M") as String
     }
 
-    @Ignore
     def 'testTemporalAmountAdapter_Months'() {
         // https://github.com/ical4j/ical4j/issues/419
         // A month usually doesn't have 4 weeks = 4*7 days = 28 days (except February in non-leap years).
-        expect: "P4W" != new TemporalAmountAdapter(java.time.Period.ofMonths(1)) as String
+        expect:
+        new TemporalAmountAdapter(java.time.Period.ofMonths(1)).toString(LocalDateTime.parse(seed)) == expected
+
+        where:
+        seed                  | expected
+        '2020-06-01T00:00:00' | 'P30D'
+        '2020-07-01T00:00:00' | 'P31D'
+        '2021-02-01T00:00:00' | 'P4W'
+        '2020-02-01T00:00:00' | 'P29D'
     }
 
-    @Ignore
     def 'testTemporalAmountAdapter_Year'() {
         // https://github.com/ical4j/ical4j/issues/419
         // A year has 365 or 366 days, but never 52 weeks = 52*7 days = 364 days.
-        expect: "P52W" != new TemporalAmountAdapter(java.time.Period.ofYears(1)) as String
+        expect:
+        new TemporalAmountAdapter(java.time.Period.ofYears(1)).toString(LocalDateTime.parse(seed)) == expected
+
+        where:
+        seed                  | expected
+        '2021-04-01T00:00:00' | 'P365D'
+        '2020-01-01T00:00:00' | 'P366D'
     }
 }

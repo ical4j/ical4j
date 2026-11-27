@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -124,6 +125,9 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
     FluentCalendar, CalendarPropertyAccessor {
 
     private static final long serialVersionUID = -1654118204678581940L;
+
+    // a method value permitted by RFC 5545 (iana-token / x-name)..
+    private static final Pattern METHOD_TOKEN = Pattern.compile("[a-zA-Z0-9-]+");
 
     /**
      * Smart merging of properties that identifies whether to add or replace existing properties.
@@ -421,17 +425,20 @@ public class Calendar implements Prototype<Calendar>, Serializable, PropertyCont
     }
 
     /**
-     * Returns an appropriate MIME Content-Type for the calendar object instance.
+     * Returns an appropriate MIME Content-Type for the calendar object instance. A METHOD value that
+     * isn't an iana-token or x-name is left out, as it cannot be a media type parameter.
      * @param charset an optional encoding
      * @return a content type string
      */
     public String getContentType(Charset charset) {
         final var b = new StringBuilder("text/calendar");
 
-        final Optional<Method> method = getProperty(Property.METHOD);
-        if (method.isPresent()) {
+        // a parsed method value may hold anything a content line allows, and appending that verbatim
+        // would let it add parameters to the media type rather than appear as one..
+        final String method = getProperty(Property.METHOD).map(Property::getValue).orElse("");
+        if (METHOD_TOKEN.matcher(method).matches()) {
             b.append("; method=");
-            b.append(method.get().getValue());
+            b.append(method);
         }
 
         if (charset != null) {

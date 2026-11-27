@@ -46,13 +46,25 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Unit tests for Attach property.
@@ -134,5 +146,109 @@ public class AttachTest {
         Attach deserialized = (Attach) in.readObject();
 
         assertEquals("https://domain.example/file.txt", deserialized.getValue());
+    }
+
+    /**
+     * Inline binary data must not be buffered in temporary files: they were only deleted on JVM exit, so every
+     * parsed or copied attachment stayed on disk (and in DeleteOnExitHook) for the life of the JVM, and in earlier
+     * versions could be read by other local users.
+     */
+    @Test
+    void inline_binary_leaves_no_temp_file_once_parsed_copied_and_written() throws Exception {
+        var ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//test//EN\r\nBEGIN:VEVENT\r\n"
+                + "UID:attach@test\r\nDTSTAMP:20240101T000000Z\r\nDTSTART:20240102T100000Z\r\n"
+                + "ATTACH;ENCODING=BASE64;VALUE=BINARY:aUNhbDRqIGF0dGFjaG1lbnQ=\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
+
+        var before = attachTempFiles();
+        Calendar copy = null;
+        for (int i = 0; i < 10; i++) {
+            var calendar = new CalendarBuilder().build(new StringReader(ics));
+            copy = calendar.copy();
+            assertTrue(copy.toString().contains("ATTACH;ENCODING=BASE64;VALUE=BINARY:aUNhbDRqIGF0dGFjaG1lbnQ="));
+        }
+        var created = attachTempFiles();
+        created.removeAll(before);
+
+        assertEquals(Set.of(), created);
+        Attach attach = copy.<VEvent>getComponent(Component.VEVENT).orElseThrow().getRequiredProperty(Property.ATTACH);
+        assertArrayEquals("iCal4j attachment".getBytes(StandardCharsets.US_ASCII), attach.getBinaryData());
+    }
+
+    /**
+     * Data above the threshold is held in a memory-mapped file, which is deleted as soon as it is mapped, so no file
+     * is left behind while the mapping is in use. Windows can't delete a mapped file, so it isn't checked there.
+     */
+    @Test
+    void inline_binary_above_threshold_is_mapped_and_leaves_no_temp_file() throws Exception {
+        assumeFalse(System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("windows"));
+        var data = new byte[4096];
+        new Random(1).nextBytes(data);
+        var ics = calendarWithAttachment(data);
+
+        System.setProperty(Attach.KEY_MAPPED_THRESHOLD, "1024");
+        try {
+            var before = attachTempFiles();
+            var attachments = new ArrayList<Attach>();
+            for (int i = 0; i < 10; i++) {
+                var calendar = new CalendarBuilder().build(new StringReader(ics));
+                var copy = calendar.copy();
+                attachments.add(calendar.<VEvent>getComponent(Component.VEVENT).orElseThrow()
+                        .getRequiredProperty(Property.ATTACH));
+                attachments.add(copy.<VEvent>getComponent(Component.VEVENT).orElseThrow()
+                        .getRequiredProperty(Property.ATTACH));
+                assertEquals(calendar.toString(), copy.toString());
+            }
+            var created = attachTempFiles();
+            created.removeAll(before);
+
+            // the attachments are still reachable, so their mappings are still in use..
+            assertEquals(Set.of(), created);
+            for (var attach : attachments) {
+                assertTrue(attach.getBinary() instanceof MappedByteBuffer);
+                assertArrayEquals(data, attach.getBinaryData());
+            }
+        } finally {
+            System.clearProperty(Attach.KEY_MAPPED_THRESHOLD);
+        }
+    }
+
+    @Test
+    void inline_binary_below_threshold_or_with_mapping_disabled_is_kept_on_the_heap() throws Exception {
+        var data = new byte[4096];
+        new Random(1).nextBytes(data);
+        var ics = calendarWithAttachment(data);
+
+        Attach small = new CalendarBuilder().build(new StringReader(ics)).<VEvent>getComponent(Component.VEVENT)
+                .orElseThrow().getRequiredProperty(Property.ATTACH);
+        assertFalse(small.getBinary().isDirect());
+
+        System.setProperty(Attach.KEY_MAPPED_THRESHOLD, "-1");
+        try {
+            Attach disabled = new CalendarBuilder().build(new StringReader(ics)).<VEvent>getComponent(Component.VEVENT)
+                    .orElseThrow().getRequiredProperty(Property.ATTACH);
+            assertFalse(disabled.getBinary().isDirect());
+            assertArrayEquals(data, disabled.getBinaryData());
+        } finally {
+            System.clearProperty(Attach.KEY_MAPPED_THRESHOLD);
+        }
+    }
+
+    private static String calendarWithAttachment(byte[] data) {
+        return new Calendar().withDefaults().withProdId("-//test//EN")
+                .withComponent(new VEvent().withProperty(new Uid("attach@test"))
+                        .withProperty(new DtStart<>("20240102T100000Z"))
+                        .withProperty(new Attach(new ParameterList(List.of(Encoding.BASE64, Value.BINARY)),
+                                ByteBuffer.wrap(data)))
+                        .getFluentTarget())
+                .getFluentTarget().toString();
+    }
+
+    private static Set<Path> attachTempFiles() throws IOException {
+        var files = new HashSet<Path>();
+        var tmpDir = Paths.get(System.getProperty("java.io.tmpdir"));
+        try (var stream = Files.newDirectoryStream(tmpDir, "ical4j-attach*.tmp")) {
+            stream.forEach(files::add);
+        }
+        return files;
     }
 }

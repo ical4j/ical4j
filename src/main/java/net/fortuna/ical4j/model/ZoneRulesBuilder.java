@@ -10,6 +10,8 @@ import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -31,6 +33,8 @@ import static net.fortuna.ical4j.model.Property.TZOFFSETFROM;
  * Construct a {@link java.time.zone.ZoneRules} instance from a {@link net.fortuna.ical4j.model.component.VTimeZone}.
  */
 public class ZoneRulesBuilder {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ZoneRulesBuilder.class);
 
     private @Nullable VTimeZone vTimeZone;
 
@@ -125,8 +129,31 @@ public class ZoneRulesBuilder {
                 final OffsetDateTime limit = periodEnd.atOffset(offset);
                 final List<RRule<OffsetDateTime>> rrules = observance.getProperties(Property.RRULE);
                 for (RRule<OffsetDateTime> rrule : rrules) {
-                    rrule.getRecur().getDates(seed, seed, limit)
-                            .forEach(d -> onsets.add(d.toLocalDateTime()));
+                    final var recur = rrule.getRecur();
+                    // A single period's BY* cross-product is materialised in full by the recurrence
+                    // engine before the onset cap below can apply, so a rule whose per-period expansion
+                    // is itself unbounded (e.g. BYYEARDAY x BYHOUR x BYMINUTE x BYSECOND) would exhaust
+                    // memory regardless of the cap. A real observance has a per-period product of one,
+                    // so skipping such a rule affects crafted input only (the DTSTART onset is retained).
+                    final long perPeriod = recur.getMaxCandidatesPerPeriod();
+                    if (perPeriod > Observance.MAX_RECURRENCE_ONSETS) {
+                        LOG.warn("Ignoring observance RRULE with an excessive per-period expansion ({} "
+                                + "candidates) when building zone rules", perPeriod);
+                        continue;
+                    }
+                    // Bound the expansion: a real observance recurs yearly, so the window [DTSTART, now]
+                    // yields at most a few hundred onsets, while a crafted sub-yearly frequency (e.g.
+                    // FREQ=HOURLY) with an early DTSTART would otherwise expand to millions from a few
+                    // hundred bytes of parsed calendar data. Observance.MAX_RECURRENCE_ONSETS caps the
+                    // number of onsets generated.
+                    final List<OffsetDateTime> expanded = recur.getDates(seed, seed, limit,
+                            Observance.MAX_RECURRENCE_ONSETS);
+                    if (expanded.size() >= Observance.MAX_RECURRENCE_ONSETS) {
+                        LOG.warn("Observance RRULE reached the onset expansion cap of {} when building zone "
+                                + "rules; historical transitions beyond the cap are omitted",
+                                Observance.MAX_RECURRENCE_ONSETS);
+                    }
+                    expanded.forEach(d -> onsets.add(d.toLocalDateTime()));
                 }
                 final List<RDate<LocalDateTime>> rdates = observance.getProperties(Property.RDATE);
                 for (RDate<LocalDateTime> rdate : rdates) {
@@ -156,22 +183,22 @@ public class ZoneRulesBuilder {
     private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
         List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
 
-        // If every applicable observance carries an RRULE whose UNTIL is already in the past, the
-        // zone has truly abolished recurring DST (e.g. Asia/Tokyo 1948-1951, Asia/Shanghai
-        // 1986-1991). Skip building any future transition rules so we don't resurrect historical
-        // DST as a forever-yearly rule. Zones whose pristine VTIMEZONE only has an RRULE on one
-        // of STANDARD/DAYLIGHT (e.g. Australia/Darwin, America/Sao_Paulo) fall through unchanged,
-        // since the pristine code relies on the single-sided phantom rule to compensate for a
-        // separate UNTIL-comparison limitation in buildDSTTransitions.
+        // If every observance that would produce a transition rule below carries an RRULE whose UNTIL is
+        // already in the past, the zone has abolished recurring DST (e.g. Asia/Tokyo 1948-1951,
+        // Europe/Moscow 2011, America/Costa_Rica 1992). Skip building any future transition rules so
+        // historical DST isn't projected forever as a yearly rule.
+        //
+        // Observances that don't produce a rule (no RRULE, as with a single RDATE or DTSTART; an RRULE
+        // without BYMONTH; or no change in offset) have nothing to expire, so they're left out of the
+        // check. Counting them as "not expired" kept the expired rule alive whenever one sat beside an
+        // RRULE-less observance, which left those zones an hour ahead all or part of every year (#903).
         Instant now = Instant.now();
-        boolean allExpired = !observances.isEmpty() && observances.stream().allMatch(obs -> {
-            Optional<RRule<?>> r = obs.getProperty(Property.RRULE);
-            if (r.isEmpty() || r.get().getRecur().getMonthList().isEmpty()) {
-                return false;
-            }
-            Temporal until = r.get().getRecur().getUntil();
-            return until != null && TemporalComparator.INSTANCE.compare(now, until) > 0;
-        });
+        boolean allExpired = observances.stream().filter(ZoneRulesBuilder::producesTransitionRule)
+                .allMatch(obs -> {
+                    RRule<?> rrule = obs.getRequiredProperty(Property.RRULE);
+                    Temporal until = rrule.getRecur().getUntil();
+                    return until != null && TemporalComparator.INSTANCE.compare(now, until) > 0;
+                });
         if (allExpired) {
             return transitionRules;
         }
@@ -183,8 +210,7 @@ public class ZoneRulesBuilder {
             DtStart<LocalDateTime> startDate = observance.getRequiredProperty(Property.DTSTART);
 
             // ignore invalid rules and no-effect transitions (mirrors buildDSTTransitions)
-            if (rrule.isPresent() && !rrule.get().getRecur().getMonthList().isEmpty()
-                    && !offsetFrom.getOffset().equals(offsetTo.getOffset())) {
+            if (rrule.isPresent() && producesTransitionRule(observance)) {
                 var recur = rrule.get().getRecur();
                 var recurMonth = java.time.Month.of(recur.getMonthList().get(0).getMonthOfYear());
 
@@ -221,6 +247,24 @@ public class ZoneRulesBuilder {
         //  Note the order of the list is significant!
         transitionRules.sort(Comparator.comparing(ZoneOffsetTransitionRule::getMonth));
         return transitionRules;
+    }
+
+    /**
+     * Decides whether an observance yields a yearly {@link ZoneOffsetTransitionRule} in
+     * {@link #buildTransitionRules}: it needs an RRULE with a BYMONTH, and an actual change of offset.
+     * Missing offset properties are treated as "no rule" rather than raising an error here; the rule
+     * builder still reports them when it reads the observance.
+     *
+     * @param observance a STANDARD or DAYLIGHT observance
+     * @return true if the observance contributes a transition rule, otherwise false
+     */
+    private static boolean producesTransitionRule(Observance observance) {
+        Optional<RRule<?>> rrule = observance.getProperty(Property.RRULE);
+        Optional<TzOffsetFrom> offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+        Optional<TzOffsetTo> offsetTo = observance.getProperty(Property.TZOFFSETTO);
+        return rrule.isPresent() && !rrule.get().getRecur().getMonthList().isEmpty()
+                && offsetFrom.isPresent() && offsetTo.isPresent()
+                && !offsetFrom.get().getOffset().equals(offsetTo.get().getOffset());
     }
 
     /**

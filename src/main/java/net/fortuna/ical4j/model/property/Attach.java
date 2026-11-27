@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.DecoderFactory;
 import net.fortuna.ical4j.util.EncoderFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -53,6 +54,9 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -95,6 +99,17 @@ public class Attach extends Property {
     private static final long serialVersionUID = 4439949507756383452L;
 
     private static final Logger LOG = LoggerFactory.getLogger(Attach.class);
+
+    /**
+     * Configuration key for the size in bytes from which decoded inline binary data is held in a memory-mapped
+     * temporary file rather than on the heap. A negative value keeps all inline data on the heap.
+     */
+    public static final String KEY_MAPPED_THRESHOLD = "net.fortuna.ical4j.attach.mapped.threshold";
+
+    /**
+     * The default for {@link #KEY_MAPPED_THRESHOLD}: 1 MiB.
+     */
+    public static final int DEFAULT_MAPPED_THRESHOLD = 1024 * 1024;
 
     private @Nullable URI uri;
 
@@ -206,6 +221,51 @@ public class Attach extends Property {
      *
      * @param aValue a string encoded binary or URI value
      */
+    /**
+     * Holds decoded inline binary data. Data below {@link #KEY_MAPPED_THRESHOLD} is kept on the heap. Larger data is
+     * copied to a memory-mapped temporary file, so it doesn't stay on the heap for as long as the property is
+     * reachable, and the file is deleted as soon as it is mapped: the mapping stays valid, and the disk space is
+     * freed when the buffer is garbage collected. A file system that can't delete a mapped file (e.g. on Windows)
+     * falls back to deleting it on JVM exit. Decoding still needs the whole value on the heap, so the threshold
+     * doesn't raise the largest attachment that can be parsed, only what is retained afterwards..
+     */
+    private static ByteBuffer buffer(final byte[] decodedBytes) {
+        final int threshold = Configurator.getIntProperty(KEY_MAPPED_THRESHOLD).orElse(DEFAULT_MAPPED_THRESHOLD);
+        if (threshold < 0 || decodedBytes.length < threshold) {
+            return ByteBuffer.wrap(decodedBytes);
+        }
+
+        Path file = null;
+        try {
+            // created owner-only, unlike File.createTempFile which honours the umask
+            file = Files.createTempFile("ical4j-attach", ".tmp");
+            final MappedByteBuffer mapped;
+            try (var channel = FileChannel.open(file, StandardOpenOption.READ, StandardOpenOption.WRITE)) {
+                mapped = channel.map(FileChannel.MapMode.READ_WRITE, 0, decodedBytes.length);
+            }
+            mapped.put(decodedBytes);
+            mapped.rewind();
+            deleteMapped(file);
+            return mapped;
+        } catch (IOException e) {
+            LOG.warn("Unable to buffer binary data in a temporary file, keeping it in memory", e);
+            if (file != null) {
+                deleteMapped(file);
+            }
+            return ByteBuffer.wrap(decodedBytes);
+        }
+    }
+
+    private static void deleteMapped(final Path file) {
+        try {
+            Files.deleteIfExists(file);
+        } catch (IOException e) {
+            // a mapped file can't be deleted on some platforms (e.g. Windows), so remove it on exit instead..
+            LOG.debug("Unable to delete mapped temporary file {}, deleting on exit", file, e);
+            file.toFile().deleteOnExit();
+        }
+    }
+
     @Override
     public final void setValue(final String aValue) {
 
@@ -217,21 +277,7 @@ public class Attach extends Property {
             try {
                 final var decoder = DecoderFactory.getInstance().createBinaryDecoder(encoding.get());
                 byte[] decodedBytes = decoder.decode(aValue.getBytes());
-                try {
-                    File binaryData = File.createTempFile("ical4j-attach", ".tmp");
-                    binaryData.deleteOnExit();
-
-                    try (RandomAccessFile raf = new RandomAccessFile(binaryData, "rw")) {
-                        FileChannel fileChannel = raf.getChannel();
-                        MappedByteBuffer binary = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, decodedBytes.length);
-                        binary.put(decodedBytes);
-                        binary.rewind();
-                        this.binary = binary;
-                    }
-                } catch (IOException e) {
-                    LOG.error("Error creating temporary file", e);
-                    binary = ByteBuffer.wrap(decodedBytes);
-                }
+                binary = buffer(decodedBytes);
             } catch (UnsupportedEncodingException uee) {
                 LOG.error("Error encoding binary data", uee);
             } catch (DecoderException de) {

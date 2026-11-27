@@ -3,7 +3,10 @@
 
 name: Java CI with Gradle
 
-on: [push]
+on:
+  push:
+    # merge queue candidates are covered by run-check.yml via merge_group
+    branches-ignore: [ 'gh-readonly-queue/**' ]
 
 permissions: read-all
 
