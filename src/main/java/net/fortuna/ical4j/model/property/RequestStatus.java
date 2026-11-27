@@ -108,7 +108,7 @@ public class RequestStatus extends Property {
     public RequestStatus(final String aStatusCode, final String aDescription,
                          final String data) {
         super(REQUEST_STATUS);
-        statusCode = aStatusCode;
+        statusCode = checkStatusCode(aStatusCode);
         description = aDescription;
         exData = data;
     }
@@ -122,7 +122,7 @@ public class RequestStatus extends Property {
     public RequestStatus(final ParameterList aList, final String aStatusCode,
                          final String aDescription, final String data) {
         super(REQUEST_STATUS, aList);
-        statusCode = aStatusCode;
+        statusCode = checkStatusCode(aStatusCode);
         description = aDescription;
         exData = data;
     }
@@ -154,7 +154,7 @@ public class RequestStatus extends Property {
     @Override
     public final void setValue(final String aValue) {
         var values = split(aValue);
-        statusCode = values.get(0);
+        statusCode = checkStatusCode(values.get(0));
         if (values.size() > 1) {
             description = Strings.unescape(values.get(1));
         }
@@ -225,7 +225,19 @@ public class RequestStatus extends Property {
      * @param statusCode The statusCode to set.
      */
     public final void setStatusCode(final String statusCode) {
-        this.statusCode = statusCode;
+        this.statusCode = checkStatusCode(statusCode);
+    }
+
+    /**
+     * The status code is written without escaping, as it is not a TEXT value, so a line break in it would end the
+     * content line and the rest of the code would be read as further properties or components. A parsed value
+     * can't contain a line break, so this only rejects values set through the API..
+     */
+    private static String checkStatusCode(final String statusCode) {
+        if (statusCode != null && (statusCode.indexOf('\r') >= 0 || statusCode.indexOf('\n') >= 0)) {
+            throw new IllegalArgumentException("Status code must not contain a line break");
+        }
+        return statusCode;
     }
 
     @Override
