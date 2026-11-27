@@ -673,6 +673,18 @@ public class Recur<T extends Temporal> implements Serializable {
         return count;
     }
 
+    /**
+     * A COUNT only limits the recurrence set when it is positive. A COUNT of zero or less (which the grammar in
+     * RFC 5545 section 3.3.10 does not allow, but which is accepted when parsing) is treated as no COUNT, both when
+     * deciding whether to skip ahead to the period start and when deciding where the recurrence set ends. Using
+     * different conditions for the two would walk every interval from the seed one at a time..
+     *
+     * @return true if this rule has a COUNT that limits the number of instances
+     */
+    boolean hasCount() {
+        return count != null && count > 0;
+    }
+
     @Nullable Integer getIntervalValue() {
         return interval;
     }
@@ -777,7 +789,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
-        if (count == null) {
+        if (!hasCount()) {
             while (TemporalAdapter.isBefore(candidateSeed, startDate.minus(Math.max(getInterval(), 1), calIncField))) {
                 candidateSeed = increment(seed, incrementMultiplier++);
             }
@@ -792,7 +804,7 @@ public class Recur<T extends Temporal> implements Serializable {
                 break;
             }
 
-            if (getCount() > 0 && invalidCandidateCount >= getCount()) {
+            if (hasCount() && invalidCandidateCount >= getCount()) {
                 break;
             }
 
@@ -808,7 +820,7 @@ public class Recur<T extends Temporal> implements Serializable {
                         // we want the NEXT occurrence
                         if (!TemporalAdapter.isAfter(candidate, startDate)) {
                             invalidCandidateCount++;
-                        } else if (getCount() > 0 && invalidCandidateCount >= getCount()) {
+                        } else if (hasCount() && invalidCandidateCount >= getCount()) {
                             break;
                         } else if (!(getUntil() != null && TemporalAdapter.isAfter(candidate, getUntil()))) {
                             return candidate;
