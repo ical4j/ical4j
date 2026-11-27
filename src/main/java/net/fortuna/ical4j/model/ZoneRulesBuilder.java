@@ -237,10 +237,17 @@ public class ZoneRulesBuilder {
                     dayOfWeek = null;
                 }
 
+                Integer indicator = transitionDayIndicator(recurMonth, dayOfMonth, dayOfWeek);
+                if (indicator == null) {
+                    LOG.warn("Observance RRULE [{}] names a day that does not occur in {} every year; no future "
+                            + "transition rule is built for it", recur, recurMonth);
+                    continue;
+                }
+
                 var time = LocalTime.from(startDate.getDate());
                 boolean endOfDay = false;
                 var timeDefinition = TimeDefinition.WALL;
-                transitionRules.add(ZoneOffsetTransitionRule.of(recurMonth, dayOfMonth, dayOfWeek, time, endOfDay,
+                transitionRules.add(ZoneOffsetTransitionRule.of(recurMonth, indicator, dayOfWeek, time, endOfDay,
                         timeDefinition, standardOffset, offsetFrom.getOffset(), offsetTo.getOffset()));
             }
         }
@@ -293,6 +300,47 @@ public class ZoneRulesBuilder {
      * @param ordinal a non-zero BYDAY ordinal
      * @return the equivalent day-of-month indicator
      */
+    /**
+     * Translates a day of the month (from BYMONTHDAY or the DTSTART day) to a day-of-month indicator
+     * that {@link ZoneOffsetTransitionRule} can resolve in every year. The rule creates each year's
+     * transition with {@code LocalDate.of}, so a positive indicator past the shortest length of the
+     * month (February 30, June 31, or February 29 in a common year) throws {@code DateTimeException}
+     * for every instant after the last explicit transition, and {@code of} rejects an indicator below
+     * {@code -28}.
+     * <p>
+     * With a day-of-week the day is an anchor, so one past the shortest length of the month is counted
+     * back from the end instead, and one below {@code -28} is counted from the start. A fixed date
+     * (no day-of-week) that does not occur in the month every year means the RRULE does not fire in
+     * those years (RFC 5545 ignores invalid dates), which a yearly rule cannot express.
+     *
+     * @param month the month of the transition
+     * @param dayOfMonth a day of the month, counted back from the end of the month if negative
+     * @param dayOfWeek the day-of-week of the transition, or null for a fixed date
+     * @return an indicator for {@link ZoneOffsetTransitionRule#of}, or null if a fixed date does not
+     * occur in the month every year
+     */
+    static @Nullable Integer transitionDayIndicator(java.time.Month month, int dayOfMonth,
+                                                    java.time.@Nullable DayOfWeek dayOfWeek) {
+        int minLength = month.minLength();
+        int maxLength = month.maxLength();
+        if (dayOfMonth == 0) {
+            return null;
+        }
+        if (dayOfWeek != null) {
+            if (dayOfMonth > minLength) {
+                return Math.min(-1, Math.max(-28, dayOfMonth - maxLength - 1));
+            } else if (dayOfMonth < -28) {
+                return Math.max(1, minLength + 1 + dayOfMonth);
+            }
+            return dayOfMonth;
+        }
+        if (Math.abs(dayOfMonth) > minLength) {
+            return null;
+        }
+        // a fixed-length month counts a day below -28 (e.g. -30 in a 31-day month) from the start
+        return dayOfMonth < -28 ? maxLength + 1 + dayOfMonth : dayOfMonth;
+    }
+
     private static int dayOfMonthIndicator(int ordinal) {
         int indicator = ordinal > 0 ? (ordinal - 1) * 7 + 1 : (ordinal + 1) * 7 - 1;
         // past the fourth week (5SU, -5SU) clamp to +-28: -28 is the lowest indicator
