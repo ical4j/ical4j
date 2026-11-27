@@ -185,6 +185,18 @@ You may also find the [Java Legacy Date-Time Code] web page useful.
 
 ### Compatibility Hints
  
+#### Explicit non-TEXT property values
+
+Properties that support TEXT escaping preserve literal backslashes when they declare an
+explicit non-TEXT `VALUE` type. For example, `\,` is read as a backslash and comma rather
+than just a comma. Relaxed parsing and the compatibility hints do not restore the previous
+unescaping behavior. Filter operands with an explicit non-TEXT `VALUE` also compare those
+characters literally.
+
+When writing these properties, raw CR, LF, and CRLF are emitted as `\n` to keep them on
+one content line. Reading the result yields a literal backslash followed by `n`. An
+original line break and an original literal `\n` therefore have the same serialized form.
+
 #### Relaxed Parsing
     
     ical4j.parsing.relaxed={true|false}
