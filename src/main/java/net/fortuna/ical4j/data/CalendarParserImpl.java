@@ -215,7 +215,9 @@ public class CalendarParserImpl implements CalendarParser {
                 // check for timezones observances or vevent/vtodo alarms..
                 if (Component.BEGIN.equals(tokeniser.sval)) {
                     componentParser.parse(tokeniser, in, handler);
-                } else if (tokeniser.sval != null) {
+                } else if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
+                    // a quoted string also sets sval, but is never a valid property name and its
+                    // backslash escapes are decoded by the tokeniser (e.g. \r\n)..
                     propertyParser.parse(tokeniser, in, handler);
                 } else if (absorbWhitespaceEnabled) {
                     absorbWhitespace(tokeniser, in);
