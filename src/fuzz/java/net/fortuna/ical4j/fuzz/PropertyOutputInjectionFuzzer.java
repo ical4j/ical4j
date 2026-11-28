@@ -284,6 +284,16 @@ public class PropertyOutputInjectionFuzzer {
                     .getTexts().stream().map(PropertyOutputInjectionFuzzer::normalise).filter(s -> !s.isEmpty())
                     .collect(java.util.stream.Collectors.toList())));
             List<String> actual = new ArrayList<>(((Categories) p).getCategories().getTexts());
+            if (!actual.equals(expected) && builtValue != null && actual.equals(new ArrayList<>(
+                    new TextList(trimmed(normalise(builtValue))).getTexts()))) {
+                // PropertyBuilder#value trims the whole value: the trimming finding below, reported once per run
+                if (!trimReported || Ical.DEBUG) {
+                    trimReported = true;
+                    throw new WhitespaceTrimmed(propertyKind + ": the value [" + Ical.abbreviate(builtValue, 300)
+                            + "] re-parses trimmed (PropertyBuilder#value)");
+                }
+                return;
+            }
             if (!actual.equals(expected)) {
                 throw new AssertionError(propertyKind + "/" + parameterKind + ": items " + expected
                         + " re-parse as " + actual + ":\n" + Ical.abbreviate(out, 1500));
