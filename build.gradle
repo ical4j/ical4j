@@ -162,6 +162,8 @@ tasks.register('timezoneIndependenceTest', Test) {
 }
 check.dependsOn 'timezoneIndependenceTest'
 
+apply from: "gradle/fuzz.gradle"
+
 jacocoTestCoverageVerification {
     dependsOn test
     violationRules {

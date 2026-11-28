@@ -1,0 +1,166 @@
+// Jazzer fuzz harnesses (src/fuzz), built for OSS-Fuzz and for local runs. They are not part of the published
+// artifact: the fuzz source set only compiles against the main one, and `check` compiles it so it doesn't rot.
+//
+//   ./gradlew fuzzPackage    writes build/fuzz: lib/ (the runtime classpath, as jars), and for each harness
+//                            <Name>.dict, <Name>.options and <Name>_seed_corpus.zip, plus fuzzers.tsv
+//                            (harness class and JVM options), which the OSS-Fuzz build.sh turns into launchers.
+//
+// See src/fuzz/README.md.
+
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+
+sourceSets {
+    fuzz {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    fuzzImplementation.extendsFrom implementation
+    fuzzRuntimeOnly.extendsFrom runtimeOnly
+}
+
+dependencies {
+    // provided by the Jazzer agent at run time (OSS-Fuzz's jazzer_agent_deploy.jar, or the standalone jazzer jar)
+    fuzzCompileOnly libs.jazzer.api
+}
+
+tasks.named('compileFuzzJava', JavaCompile) {
+    options.errorprone.enabled = false
+}
+
+check.dependsOn 'fuzzClasses'
+
+tasks.register('fuzzJar', Jar) {
+    description = 'Assembles the fuzz harness classes.'
+    group = 'fuzzing'
+    archiveFileName = 'ical4j-fuzz.jar'
+    from sourceSets.fuzz.output
+}
+
+// Common JVM options of every harness: a map timezone cache and no TZURL updates (no network, no shared state
+// across inputs), and full stack traces, so that the same defect is reported with the same signature.
+def fuzzJvmArgs = ['-XX:-OmitStackTraceInFastThrow',
+                   '-Dnet.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache',
+                   '-Dnet.fortuna.ical4j.timezone.update.enabled=false',
+                   '-Dslf4j.internal.verbosity=ERROR']
+
+// The sample files that seed the harnesses taking a whole calendar, in src/test/resources and the bundled zoneinfo.
+def samples = ['samples/valid/*.ics', 'samples/invalid/*.ics', 'net/fortuna/ical4j/data/*.ics',
+               'net/fortuna/ical4j/transform/*.txt']
+
+// name: the harness class; dicts: concatenated into <name>.dict; maxLen: libFuzzer -max_len; heap: -Xmx;
+// prefixes: the selector bytes each seed is written with (hex; '' for none), seeds: globs under src/test/resources
+// (or src/main/resources for zoneinfo/); jvm: extra JVM options.
+def fuzzers = [
+        [name: 'CalendarBuilderParseFuzzer', dicts: ['ics'], maxLen: 32768, heap: '512m', prefixes: ['00', '01', '03'],
+         seeds: samples + ['zoneinfo/Europe/Paris.ics', 'zoneinfo/Australia/Lord_Howe.ics']],
+        [name: 'VTimeZoneZoneRulesFuzzer', maxLen: 2048, heap: '512m'],
+        [name: 'RecurrenceSetExpansionFuzzer', maxLen: 2048, heap: '512m'],
+        [name: 'RecurDateGenerationFuzzer', maxLen: 1024, heap: '512m'],
+        [name: 'CalendarOutputRoundTripFuzzer', dicts: ['ics', 'CalendarOutputRoundTripFuzzer-extra'], maxLen: 32768,
+         heap: '1g', prefixes: ['00', '01', '03'], seeds: samples],
+        [name: 'PropertyOutputInjectionFuzzer', maxLen: 1024, heap: '512m'],
+        [name: 'TimeZoneRegistryStateFuzzer', maxLen: 1024, heap: '1g'],
+        [name: 'TextCodecsFuzzer', maxLen: 2048, heap: '1g'],
+        [name: 'LazyValueAccessorsFuzzer', dicts: ['ics', 'LazyValueAccessorsFuzzer-extra'], maxLen: 32768, heap: '1g',
+         prefixes: ['00', '01', '03'], seeds: samples],
+        // reads java.io.DeleteOnExitHook to check that ATTACH values leave no temporary files behind
+        [name: 'AttachTempFilesFuzzer', maxLen: 4096, heap: '1g', jvm: ['--add-opens=java.base/java.io=ALL-UNNAMED']],
+        // two selector bytes: the hint set / builder, then the iTIP operation (see the harness)
+        [name: 'ItipUserAgentFuzzer', dicts: ['ics', 'ItipUserAgentFuzzer-extra'], maxLen: 32768, heap: '1g',
+         prefixes: ['3031', '3132', '3134', '3035', '3036'],
+         seeds: ['samples/valid/*.ics', 'net/fortuna/ical4j/transform/*.txt']],
+        [name: 'CalendarValidationFuzzer', dicts: ['ics', 'CalendarValidationFuzzer-extra'], maxLen: 32768, heap: '1g',
+         prefixes: ['00', '01', '03'], seeds: samples],
+        [name: 'CalendarCopySplitFuzzer', dicts: ['ics'], maxLen: 32768, heap: '1g', prefixes: ['00', '01', '03'],
+         seeds: samples],
+        [name: 'RecurRuleRoundTripFuzzer', maxLen: 1024, heap: '512m'],
+        [name: 'TzidResolutionFuzzer', maxLen: 1024, heap: '1g'],
+        [name: 'DurationPeriodOffsetFuzzer', maxLen: 1024, heap: '512m'],
+        [name: 'UnfoldingFoldingFuzzer', maxLen: 4096, heap: '512m'],
+        // the hints are always relaxed here; the selector only picks the suppress-invalid builder
+        [name: 'ComplianceTransformerFuzzer', dicts: ['ics', 'ComplianceTransformerFuzzer-extra'], maxLen: 32768,
+         heap: '1g', prefixes: ['00', '02'],
+         seeds: ['net/fortuna/ical4j/transform/*.txt', 'net/fortuna/ical4j/transform/dtstamp/*.txt',
+                 'net/fortuna/ical4j/transform/outlook/*.txt', 'net/fortuna/ical4j/transform/timezones/*.txt',
+                 'samples/valid/*.ics', 'samples/invalid/*.ics']],
+]
+
+tasks.register('fuzzPackage') {
+    description = 'Packages the fuzz harnesses, dictionaries and seed corpora into build/fuzz (for OSS-Fuzz).'
+    group = 'fuzzing'
+    dependsOn 'jar', 'fuzzJar'
+
+    def outDir = layout.buildDirectory.dir('fuzz')
+    def dictDir = file('src/fuzz/dictionaries')
+    def corpusDir = file('src/fuzz/corpus')
+    def resourceDirs = [file('src/test/resources'), file('src/main/resources')]
+    def runtime = configurations.fuzzRuntimeClasspath
+    def mainJar = tasks.named('jar', Jar).flatMap { it.archiveFile }
+    def harnessJar = tasks.named('fuzzJar', Jar).flatMap { it.archiveFile }
+    def maxSeed = 32768
+
+    inputs.files(runtime, mainJar, harnessJar)
+    inputs.dir(dictDir)
+    inputs.dir(corpusDir)
+    outputs.dir(outDir)
+
+    doLast {
+        def out = outDir.get().asFile
+        project.delete(out)
+        def lib = new File(out, 'lib')
+        lib.mkdirs()
+        project.copy {
+            from runtime.filter { it.name.endsWith('.jar') }, mainJar, harnessJar
+            into lib
+        }
+
+        def tsv = new StringBuilder()
+        fuzzers.each { f ->
+            def name = f.name as String
+            def dicts = (f.dicts ?: [name]) as List<String>
+            new File(out, "${name}.dict").text = dicts.collect { new File(dictDir, "${it}.dict").text }.join('\n')
+            new File(out, "${name}.options").text = "[libfuzzer]\nmax_len = ${f.maxLen}\n"
+
+            def seeds = []
+            (f.seeds ?: []).each { String glob ->
+                resourceDirs.each { dir ->
+                    seeds.addAll(project.fileTree(dir) { include glob }.files.findAll { it.length() <= maxSeed })
+                }
+            }
+            def own = new File(corpusDir, name)
+            def prefixes = (f.prefixes ?: ['']) as List<String>
+            def entries = 0
+            new ZipOutputStream(new File(out, "${name}_seed_corpus.zip").newOutputStream()).withCloseable { zip ->
+                seeds.sort().eachWithIndex { File seed, int i ->
+                    prefixes.each { String p ->
+                        zip.putNextEntry(new ZipEntry("seed-${i}-${p ?: 'raw'}"))
+                        zip.write(p.decodeHex())
+                        zip.write(seed.bytes)
+                        zip.closeEntry()
+                        entries++
+                    }
+                }
+                // inputs kept as they are, selector bytes included
+                (own.isDirectory() ? own.listFiles().sort() : []).each { File seed ->
+                    zip.putNextEntry(new ZipEntry(seed.name))
+                    zip.write(seed.bytes)
+                    zip.closeEntry()
+                    entries++
+                }
+                if (entries == 0) {
+                    // a harness drawing its input from a FuzzedDataProvider: one empty seed, so the zip isn't empty
+                    zip.putNextEntry(new ZipEntry('empty'))
+                    zip.closeEntry()
+                }
+            }
+
+            def jvm = ["-Xmx${f.heap}"] + fuzzJvmArgs + (f.jvm ?: [])
+            tsv << "net.fortuna.ical4j.fuzz.${name}\t${jvm.join(' ')}\n"
+        }
+        new File(out, 'fuzzers.tsv').text = tsv.toString()
+    }
+}
