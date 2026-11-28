@@ -262,6 +262,10 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      */
     @Override
     public String getValue() {
+        if (date == null) {
+            // an unset value (e.g. an empty DTSTAMP: in a parsed calendar) is written back empty
+            return "";
+        }
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         ZoneId zoneId = null;
         if (tzId.isPresent()) {
