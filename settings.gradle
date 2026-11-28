@@ -1,1 +1,11 @@
+pluginManagement {
+    repositories {
+        // Maven Central first: the Gradle Plugin Portal serves Central-hosted plugins by redirecting there,
+        // and a failed request to it fails the build rather than falling through to the next repository.
+        // Plugins not published to Central (revapi, errorprone) are not found there and resolve from the portal.
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'ical4j'
