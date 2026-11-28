@@ -277,6 +277,19 @@ public class PropertyOutputInjectionFuzzer {
                         .orElse("nothing") + ":\n" + Ical.abbreviate(out, 1500));
             }
         }
+        if (built instanceof Categories && p instanceof Categories) {
+            // TextList is a set of non-empty items: duplicates and empty items are dropped by design, so compare
+            // the items, not the joined value
+            List<String> expected = new ArrayList<>(new java.util.LinkedHashSet<>(((Categories) built).getCategories()
+                    .getTexts().stream().map(PropertyOutputInjectionFuzzer::normalise).filter(s -> !s.isEmpty())
+                    .collect(java.util.stream.Collectors.toList())));
+            List<String> actual = new ArrayList<>(((Categories) p).getCategories().getTexts());
+            if (!actual.equals(expected)) {
+                throw new AssertionError(propertyKind + "/" + parameterKind + ": items " + expected
+                        + " re-parse as " + actual + ":\n" + Ical.abbreviate(out, 1500));
+            }
+            return;
+        }
         String value = p.getValue();
         // a CR or CRLF is written as \n by design (37f79783): expected back as LF
         if (builtValue != null) {

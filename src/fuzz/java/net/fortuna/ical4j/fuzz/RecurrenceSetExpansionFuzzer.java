@@ -47,6 +47,8 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.ExRule;
 import net.fortuna.ical4j.model.property.RDate;
@@ -221,8 +223,12 @@ public class RecurrenceSetExpansionFuzzer {
             return;
         }
 
+        // a negative DURATION or a DTEND before DTSTART has no defined occurrence set (RFC 5545 3.8.2.2, 3.8.2.5):
+        // it is still expanded above, so exceptions are caught, but the set oracles do not apply
+        boolean inverted = inverted(masterEvent);
+
         // window additivity
-        if (split > 0 && windowType != 0) {
+        if (split > 0 && windowType != 0 && !inverted) {
             LocalDateTime b = a.plusHours(split);
             Temporal tb = Rules.of(b, windowType, ZoneId.of(zone));
             Set<String> left = starts(expand(masterEvent, new Period<>(window.getStart(), tb)));
@@ -238,7 +244,7 @@ public class RecurrenceSetExpansionFuzzer {
         }
 
         // the reference
-        if (whole.size() < 5000) {
+        if (!inverted && whole.size() < 5000) {
             reference(masterEvent, window, whole);
         }
 
@@ -321,14 +327,31 @@ public class RecurrenceSetExpansionFuzzer {
     }
 
     /** RFC 5545 §3.8.5.1 as the scenario reads it: by instant, by local date when either value is a DATE. */
+    private static boolean inverted(VEvent event) {
+        Optional<Duration> duration = event.getProperty(Property.DURATION);
+        if (duration.isPresent() && duration.get().getValue().startsWith("-")) {
+            return true;
+        }
+        Optional<DtStart<Temporal>> start = event.getProperty(Property.DTSTART);
+        Optional<DtEnd<Temporal>> end = event.getProperty(Property.DTEND);
+        return start.isPresent() && end.isPresent() && start.get().getDate() != null && end.get().getDate() != null
+                && CMP.compare(end.get().getDate(), start.get().getDate()) < 0;
+    }
+
     private static boolean excludedBy(Temporal occurrence, Temporal exdate) {
-        if (exdate instanceof LocalDate || occurrence instanceof LocalDate) {
+        // a DATE EXDATE excludes every occurrence of that day
+        if (exdate instanceof LocalDate) {
             return localDate(occurrence).equals(localDate(exdate));
         }
         boolean oi = occurrence.isSupported(ChronoField.INSTANT_SECONDS);
         boolean ei = exdate.isSupported(ChronoField.INSTANT_SECONDS);
         if (oi && ei) {
             return Instant.from(occurrence).equals(Instant.from(exdate));
+        }
+        // a DATE occurrence and a DATE-TIME EXDATE, or a floating value and an absolute one: RFC 5545 does not
+        // define the match, so use ical4j's documented rule (TemporalComparator, as RecurrenceSet does)
+        if (occurrence instanceof LocalDate || oi != ei) {
+            return CMP.compare(occurrence, exdate) == 0;
         }
         return LocalDateTime.from(occurrence).equals(LocalDateTime.from(exdate));
     }

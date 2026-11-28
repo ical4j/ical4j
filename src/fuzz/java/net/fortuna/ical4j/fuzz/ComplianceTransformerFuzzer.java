@@ -147,8 +147,9 @@ public class ComplianceTransformerFuzzer {
         if (calendar == null) {
             return;
         }
+        String original;
         try {
-            calendar.toString();
+            original = calendar.toString();
         } catch (DateTimeException e) {
             return; // scenario 01's finding
         }
@@ -203,6 +204,13 @@ public class ComplianceTransformerFuzzer {
                     + Ical.abbreviate(twice, 1500));
         }
 
+        // a calendar whose output does not re-parse before apply() is scenario 05's finding (the parser keeping a
+        // line it cannot write back), not a defect of the transformer
+        try {
+            Ical.parse(original, suppress);
+        } catch (ParserException | IOException e) {
+            return;
+        }
         Calendar reparsed;
         try {
             reparsed = Ical.parse(once, suppress);

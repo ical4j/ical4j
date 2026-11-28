@@ -119,8 +119,10 @@ public class RecurDateGenerationFuzzer {
         boolean bounded = (recur.getCount() > 0 && recur.getCount() <= 5000) || (maxCount > 0 && maxCount <= 5000);
         {
             long periods = Math.max(1, 20000 / expansion(recur));
-            long span = periods * unitSeconds(recur) * Math.max(recur.getInterval(), 1);
-            LocalDateTime cap = startTime.plusSeconds(Math.min(span, 3_000_000_000L));
+            // saturating: periods * unit * INTERVAL can overflow a long for YEARLY rules with a large INTERVAL
+            long span = (long) Math.min(3_000_000_000d,
+                    (double) periods * unitSeconds(recur) * Math.max(recur.getInterval(), 1));
+            LocalDateTime cap = startTime.plusSeconds(span);
             if (endTime.isAfter(cap)) {
                 endTime = cap;
                 periodEnd = Rules.of(endTime, windowType, zone);

@@ -67,7 +67,7 @@ public class DurationPeriodOffsetFuzzer {
 
     private static final String[] DESIGNATORS = {"P", "T", "W", "D", "H", "M", "S", "Y", "-", "+", ".5", ",", "/",
             "Z", "60", "0000", "9999", "10000"};
-    private static final String[] SAMPLES = {"P1W", "P1W2D", "PT36H", "P15DT5H0M20S", "-PT15M", "PT", "P", "+P1D",
+    private static final String[] SAMPLES = {"20240101T090000Z/PT1H", "P1W", "P1W2D", "PT36H", "P15DT5H0M20S", "-PT15M", "PT", "P", "+P1D",
             "P0D", "PT0S", "P2Y", "P1M", "PT1H30S", "PT0.5S", "-P-1D", "P9223372036854775807D", "PT99999999999H"};
 
     /** Seeds on, around and away from DST transitions (Paris, Sao Paulo, Lord Howe's 30 minutes, Apia's lost day). */
@@ -232,6 +232,15 @@ public class DurationPeriodOffsetFuzzer {
         if (back.getPeriods().size() != list.getPeriods().size()) {
             throw new AssertionError("period list [" + v + "] is written [" + out + "], which re-parses into "
                     + back.getPeriods().size() + " periods instead of " + list.getPeriods().size());
+        }
+        // the same periods, not only as many: both are sorted sets, so compare them in order
+        java.util.Iterator<Period<Temporal>> written = back.getPeriods().iterator();
+        for (Period<Temporal> p : list.getPeriods()) {
+            Period<Temporal> q = written.next();
+            if (!sameInstant(p.getStart(), q.getStart()) || !sameInstant(p.getEnd(), q.getEnd())) {
+                throw new AssertionError("period list [" + v + "] is written [" + out + "], which re-parses as ["
+                        + back + "]: " + p + " became " + q);
+            }
         }
     }
 

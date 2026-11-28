@@ -353,41 +353,26 @@ public class VTimeZoneZoneRulesFuzzer {
         // a defect of its own on every historical zone, reported once per run, then those instants are skipped
         Instant firstTransition = rules.getTransitions().isEmpty() ? null
                 : rules.getTransitions().get(0).getInstant();
+        // two passes, so that an input reproduces the defect it was found for: first the primary checks over every
+        // probe (the JDK and observance differentials outside the initial range, and getOffset itself), then, only
+        // when they all pass, the secondary ones (the initial range and the legacy clamp), each reported once per run
         for (Instant instant : probes) {
-            if (firstTransition != null && instant.isBefore(firstTransition) && initialReported && !Ical.DEBUG) {
+            boolean initial = firstTransition != null && instant.isBefore(firstTransition);
+            ZoneOffset actual = rules.getOffset(instant);
+            if (initial) {
                 continue;
             }
-            ZoneOffset actual = rules.getOffset(instant);
-            boolean initial = firstTransition != null && instant.isBefore(firstTransition);
             if (jdk != null && !actual.equals(jdk.getOffset(instant))) {
-                if (initial) {
-                    initialReported = true;
-                    throw new AssertionError("before the first transition (" + firstTransition + ") the ZoneRules of"
-                            + " the bundled " + original + " give " + actual + " at " + instant + ", the JDK "
-                            + jdk.getOffset(instant));
-                }
                 throw new AssertionError("ZoneRules of the bundled " + original + " give " + actual + " at " + instant
                         + ", the JDK " + jdk.getOffset(instant));
             }
-            Observance inForce;
-            try {
-                inForce = vTimeZone.getApplicableObservance(instant);
-            } catch (DateTimeException e) {
-                throw Ical.withoutJdkFrames("VTimeZone#getApplicableObservance fails at " + instant, e);
-            }
+            Observance inForce = observanceInForce(vTimeZone, instant);
             if (inForce == null) {
                 continue; // before the first onset: no reference
             }
             ZoneOffset expected = ((TzOffsetTo) inForce.getRequiredProperty(Property.TZOFFSETTO)).getOffset();
             if (!actual.equals(expected)) {
-                String message = "ZoneRules give " + actual + " at " + instant + " but the observance in force ("
-                        + inForce.getName() + ", " + inForce.getProperty(Property.DTSTART).map(p -> ((Property) p)
-                        .getValue()).orElse("?") + ") gives " + expected + (original != null ? " (" + original
-                        + (mode == 3 ? ", mutated)" : ")") : "");
-                if (initial) {
-                    initialReported = true;
-                    throw new AssertionError("before the first transition (" + firstTransition + "): " + message);
-                }
+                String message = differs(actual, instant, inForce, expected, original, mode);
                 if (instant.isAfter(NOW)) {
                     if (everyRuleHasMonth) {
                         throw new AssertionError("future offset differs: " + message);
@@ -395,6 +380,28 @@ public class VTimeZoneZoneRulesFuzzer {
                     throw new AssertionError("future offset differs (an RRULE without BYMONTH): " + message);
                 }
                 throw new AssertionError("past offset differs: " + message);
+            }
+        }
+        for (Instant instant : probes) {
+            boolean initial = firstTransition != null && instant.isBefore(firstTransition);
+            ZoneOffset actual = rules.getOffset(instant);
+            if (initial && (!initialReported || Ical.DEBUG)) {
+                if (jdk != null && !actual.equals(jdk.getOffset(instant))) {
+                    initialReported = true;
+                    throw new AssertionError("before the first transition (" + firstTransition + ") the ZoneRules of"
+                            + " the bundled " + original + " give " + actual + " at " + instant + ", the JDK "
+                            + jdk.getOffset(instant));
+                }
+            }
+            Observance inForce = observanceInForce(vTimeZone, instant);
+            if (inForce == null) {
+                continue;
+            }
+            ZoneOffset expected = ((TzOffsetTo) inForce.getRequiredProperty(Property.TZOFFSETTO)).getOffset();
+            if (initial && (!initialReported || Ical.DEBUG) && !actual.equals(expected)) {
+                initialReported = true;
+                throw new AssertionError("before the first transition (" + firstTransition + "): "
+                        + differs(actual, instant, inForce, expected, original, mode));
             }
             int legacyOffset = legacy.getOffset(instant.toEpochMilli());
             if (legacyOffset != expected.getTotalSeconds() * 1000 && (!clampReported || Ical.DEBUG)) {
@@ -404,6 +411,22 @@ public class VTimeZoneZoneRulesFuzzer {
                         + " (clamped to the raw offset " + legacy.getRawOffset() / 1000 + " s)");
             }
         }
+    }
+
+    private static Observance observanceInForce(VTimeZone vTimeZone, Instant instant) {
+        try {
+            return vTimeZone.getApplicableObservance(instant);
+        } catch (DateTimeException e) {
+            throw Ical.withoutJdkFrames("VTimeZone#getApplicableObservance fails at " + instant, e);
+        }
+    }
+
+    private static String differs(ZoneOffset actual, Instant instant, Observance inForce, ZoneOffset expected,
+                                  String original, int mode) {
+        return "ZoneRules give " + actual + " at " + instant + " but the observance in force ("
+                + inForce.getName() + ", " + inForce.getProperty(Property.DTSTART).map(p -> ((Property) p)
+                .getValue()).orElse("?") + ") gives " + expected + (original != null ? " (" + original
+                + (mode == 3 ? ", mutated)" : ")") : "");
     }
 
     /** The parse failed in the registration of the VTIMEZONE (not in a property factory). */

@@ -87,6 +87,21 @@ public class UnfoldingFoldingFuzzer {
         }
     }
 
+    private static void mismatch(boolean offsetUsed, String message) {
+        if (offsetUsed) {
+            mismatchWithOffset(message);
+        }
+        mismatchAtOffsetZero(message);
+    }
+
+    private static void mismatchWithOffset(String message) {
+        throw new AssertionError(message);
+    }
+
+    private static void mismatchAtOffsetZero(String message) {
+        throw new AssertionError(message);
+    }
+
     private static void unfolding(FuzzedDataProvider d, boolean relaxed) throws IOException {
         boolean buffered = d.consumeBoolean();
         int ops = d.consumeInt(1, 16);
@@ -105,6 +120,9 @@ public class UnfoldingFoldingFuzzer {
         Reader in = buffered ? new BufferedReader(unfolding, SIZE) : unfolding;
         StringBuilder out = new StringBuilder();
         char[] buf = new char[SIZE + 32];
+        // whether a read(cbuf, off, len) with off > 0 was made: such failures get their own signature (a separate
+        // defect, the Reader contract on off), so they are not deduplicated into the offset-zero ones
+        boolean offsetUsed = false;
         int guard = 4 * text.length() + 64;
         for (int i = 0; ; i++) {
             if (i > guard) {
@@ -120,12 +138,13 @@ public class UnfoldingFoldingFuzzer {
                 }
                 out.append((char) c);
             } else {
+                offsetUsed |= offsets[op] > 0;
                 n = in.read(buf, offsets[op], lengths[op]);
                 if (n < 0) {
                     break;
                 }
                 if (n == 0) {
-                    throw new AssertionError("read(cbuf, " + offsets[op] + ", " + lengths[op]
+                    mismatch(offsetUsed, "read(cbuf, " + offsets[op] + ", " + lengths[op]
                             + ") returned 0 before the end of the stream, after [" + Ical.abbreviate(out.toString(), 300)
                             + "] of [" + Ical.abbreviate(text, 300) + "]");
                 }
@@ -137,7 +156,7 @@ public class UnfoldingFoldingFuzzer {
             for (int i = 0; i < ops; i++) {
                 schedule.append(lengths[i] == 0 ? "read()" : "read(" + offsets[i] + "," + lengths[i] + ")").append(' ');
             }
-            throw new AssertionError("unfolded text differs from RFC 5545 §3.1 (" + (relaxed ? "relaxed" : "strict")
+            mismatch(offsetUsed, "unfolded text differs from RFC 5545 §3.1 (" + (relaxed ? "relaxed" : "strict")
                     + ", " + (buffered ? "BufferedReader, " : "") + schedule + "): input [" + Ical.abbreviate(text, 300)
                     + "] expected [" + Ical.abbreviate(expected, 300) + "] read [" + Ical.abbreviate(out.toString(), 300)
                     + "]");

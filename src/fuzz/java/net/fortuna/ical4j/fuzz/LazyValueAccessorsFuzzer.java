@@ -135,7 +135,8 @@ public class LazyValueAccessorsFuzzer {
             call(() -> event.getEndDate(false));
             call(() -> {
                 Optional<DtStart<Temporal>> start = event.getStartDate();
-                return start.map(s -> event.getOccurrence(s.getDate())).orElse(null);
+                // an empty DTSTART has no date: getOccurrence(null) would be a misuse by the caller
+                return start.map(DtStart::getDate).map(event::getOccurrence).orElse(null);
             });
         }
         if (c instanceof DateTimePropertyAccessor) {

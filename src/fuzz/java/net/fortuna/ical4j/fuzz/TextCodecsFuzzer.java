@@ -45,8 +45,11 @@ import org.apache.commons.codec.EncoderException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 08 — the escaping codecs and list values. A selector, then one string biased toward the escape characters:
@@ -61,8 +64,6 @@ public class TextCodecsFuzzer {
             " ", "\u0085", "\u0000"};
 
     private static long executions;
-
-    private static boolean textListOverflowed;
 
     public static void fuzzerInitialize() {
         Ical.hints(false);
@@ -102,14 +103,21 @@ public class TextCodecsFuzzer {
                 break;
             case 2: {
                 String s = text(d, 24);
-                // decoding arbitrary (received) text never throws
-                PropertyCodec.INSTANCE.decode(s);
+                // decoding arbitrary (received) text never throws, and follows RFC 5545 3.3.11
+                String decoded = PropertyCodec.INSTANCE.decode(s);
+                if (!decoded.equals(rfcDecode(s))) {
+                    fail("PropertyCodec.decode differs from RFC 5545 §3.3.11", s,
+                            "[" + decoded + "] instead of [" + rfcDecode(s) + "]");
+                }
                 ParameterCodec.INSTANCE.decode(s);
                 Strings.unescape(s);
                 if (!Strings.unquote(Strings.quote(s)).equals(s)) {
                     fail("unquote(quote(s)) != s", s, Strings.unquote(Strings.quote(s)));
                 }
-                new TextList(s).toString();
+                List<String> items = new ArrayList<>(new TextList(s).getTexts());
+                if (!items.equals(rfcItems(s))) {
+                    fail("TextList items differ from RFC 5545 §3.3.11", s, items + " instead of " + rfcItems(s));
+                }
                 break;
             }
             case 3:
@@ -233,42 +241,98 @@ public class TextCodecsFuzzer {
         }
     }
 
+    /** RFC 5545 3.3.11, decoded left to right: \\, \n or \N, \, and \; (and \" as PropertyCodec documents). */
+    static String rfcDecode(String s) {
+        StringBuilder b = new StringBuilder(s.length());
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\' && i + 1 < s.length()) {
+                char n = s.charAt(i + 1);
+                if (n == '\\' || n == ',' || n == ';' || n == '"') {
+                    b.append(n);
+                    i++;
+                    continue;
+                } else if (n == 'n' || n == 'N') {
+                    b.append('\n');
+                    i++;
+                    continue;
+                }
+            }
+            b.append(c);
+        }
+        return b.toString();
+    }
+
+    /** The items of a TEXT list: split on unescaped commas, decoded, without empty or repeated items. */
+    static List<String> rfcItems(String s) {
+        Set<String> items = new LinkedHashSet<>();
+        int from = 0;
+        for (int i = 0; i <= s.length(); i++) {
+            if (i == s.length() || s.charAt(i) == ',') {
+                String item = rfcDecode(s.substring(from, i));
+                if (!item.isEmpty()) {
+                    items.add(item);
+                }
+                from = i + 1;
+            } else if (s.charAt(i) == '\\' && i + 1 < s.length()) {
+                i++; // the escaped character, never a delimiter (a trailing backslash is kept as is)
+            }
+        }
+        return new ArrayList<>(items);
+    }
+
+    private interface Codec {
+        void run(String value) throws Exception;
+    }
+
+    private static long time(Codec codec, String value) throws Exception {
+        long start = System.nanoTime();
+        codec.run(value);
+        return (System.nanoTime() - start) / 1_000_000;
+    }
+
     private static void linear(FuzzedDataProvider d) throws Exception {
         String unit = text(d, 6);
         if (unit.isEmpty()) {
             return;
         }
-        // 256 KB in under 1 s, i.e. the 1 MB in under 1 s of SCENARI.md with a margin for linear growth
         StringBuilder b = new StringBuilder(1 << 18);
         while (b.length() < (1 << 18)) {
             b.append(unit);
         }
         String big = b.toString();
-        long start = System.nanoTime();
-        String enc = PropertyCodec.INSTANCE.encode(big);
-        PropertyCodec.INSTANCE.decode(enc);
-        PropertyCodec.INSTANCE.decode(big);
-        String penc = ParameterCodec.INSTANCE.encode(big);
-        ParameterCodec.INSTANCE.decode(penc);
-        ParameterCodec.INSTANCE.decode(big);
-        try {
-            new AddressList(big, true);
-        } catch (URISyntaxException e) {
-            // documented
-        }
-        // last: its regular expression recurses once per escape or item and overflows the stack on long values (a
-        // finding of its own); once found, it is not repeated in this run (it is when reproducing)
-        if (!textListOverflowed || Ical.DEBUG) {
+        String small = big.substring(0, 1 << 16);
+        Map<String, Codec> codecs = new LinkedHashMap<>();
+        codecs.put("PropertyCodec", v -> PropertyCodec.INSTANCE.decode(PropertyCodec.INSTANCE.encode(v)));
+        codecs.put("PropertyCodec.decode", PropertyCodec.INSTANCE::decode);
+        codecs.put("ParameterCodec", v -> ParameterCodec.INSTANCE.decode(ParameterCodec.INSTANCE.encode(v)));
+        codecs.put("ParameterCodec.decode", ParameterCodec.INSTANCE::decode);
+        codecs.put("AddressList", v -> {
             try {
-                new TextList(big).toString();
-            } catch (StackOverflowError e) {
-                textListOverflowed = true;
-                throw e;
+                new AddressList(v, true);
+            } catch (URISyntaxException e) {
+                // documented
             }
-        }
-        long ms = (System.nanoTime() - start) / 1_000_000;
-        if (ms > 1000) {
-            fail("superlinear codec: 256 KB took " + ms + " ms", unit, "the unit repeated to 256 KB");
+        });
+        codecs.put("TextList", v -> {
+            try {
+                new TextList(v).toString();
+            } catch (StackOverflowError e) {
+                // the JVM cuts the trace before any ical4j frame: name the constructor
+                throw new AssertionError("net.fortuna.ical4j.model.TextList.<init> overflows the stack on a "
+                        + v.length() / 1024 + " KB value", e);
+            }
+        });
+        // a growth measure, not an absolute budget (a cold JIT and Jazzer's regex hooks make that unreliable):
+        // linear code takes about 4 times longer on 4 times the input, quadratic code 16 times
+        for (Map.Entry<String, Codec> codec : codecs.entrySet()) {
+            codec.getValue().run(small);
+            long tSmall = time(codec.getValue(), small);
+            long tBig = time(codec.getValue(), big);
+            if (tBig > 8 * tSmall + 50) {
+                fail("superlinear codec " + codec.getKey() + ": 256 KB took " + tBig + " ms, 64 KB " + tSmall + " ms",
+                        unit, "the unit repeated to 64 KB and 256 KB");
+            }
         }
     }
 }

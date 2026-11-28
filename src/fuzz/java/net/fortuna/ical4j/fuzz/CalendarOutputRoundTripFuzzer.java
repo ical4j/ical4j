@@ -60,6 +60,30 @@ public class CalendarOutputRoundTripFuzzer {
         Ical.hints(false);
     }
 
+    private static final java.util.regex.Pattern NAME = java.util.regex.Pattern.compile("[A-Za-z0-9-]+");
+
+    private static void checkNames(net.fortuna.ical4j.model.Component component) {
+        checkNames(component.getProperties(), component.getName());
+        if (component instanceof net.fortuna.ical4j.model.ComponentContainer) {
+            ((net.fortuna.ical4j.model.ComponentContainer<?>) component).getComponents()
+                    .forEach(c -> checkNames((net.fortuna.ical4j.model.Component) c));
+        }
+    }
+
+    private static void checkNames(java.util.List<net.fortuna.ical4j.model.Property> properties, String component) {
+        for (net.fortuna.ical4j.model.Property p : properties) {
+            if (!NAME.matcher(p.getName()).matches()) {
+                throw new AssertionError("illegal property name [" + p.getName() + "] in " + component);
+            }
+            for (net.fortuna.ical4j.model.Parameter q : p.getParameterList().getAll()) {
+                if (!NAME.matcher(q.getName()).matches()) {
+                    throw new AssertionError("illegal parameter name [" + q.getName() + "] in " + component + "/"
+                            + p.getName());
+                }
+            }
+        }
+    }
+
     public static void fuzzerTestOneInput(byte[] input) throws IOException {
         if (input.length < 1) {
             return;
@@ -77,6 +101,11 @@ public class CalendarOutputRoundTripFuzzer {
         if (first == null) {
             return;
         }
+        // a corruption of the first parse that is stable on re-parse is invisible to the round trip: check that
+        // every name follows RFC 5545 3.1 (iana-token / x-name: ALPHA, DIGIT and "-")
+        checkNames(first.getProperties(), "VCALENDAR");
+        first.getComponents().forEach(CalendarOutputRoundTripFuzzer::checkNames);
+
         String out;
         try {
             out = Ical.write(first);
