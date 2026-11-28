@@ -124,7 +124,13 @@ public class DefaultContentHandler implements ContentHandler {
             var subComponent = componentBuilder.build();
             parent.subComponent(subComponent);
         } else {
-            CalendarComponent component = (CalendarComponent) componentBuilder.build();
+            var built = componentBuilder.build();
+            if (!(built instanceof CalendarComponent)) {
+                // e.g. a VALARM or STANDARD outside the component it belongs to (RFC 5545 section 3.6)
+                throw new IllegalArgumentException("Component " + built.getName()
+                        + " is not allowed at the calendar level");
+            }
+            var component = (CalendarComponent) built;
             calendarComponents.add(component);
             if (component instanceof VTimeZone && tzRegistry != null) {
                 // register the timezone for use with iCalendar objects..
