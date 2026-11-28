@@ -35,7 +35,6 @@ import net.fortuna.ical4j.model.AddressList;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.util.Strings;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,7 +61,7 @@ public class Member extends Parameter {
     public Member(final String aValue) {
         super(MEMBER);
         try {
-            groups = new AddressList(Strings.unquote(aValue)).getAddresses();
+            groups = new AddressList(aValue).getAddresses();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
