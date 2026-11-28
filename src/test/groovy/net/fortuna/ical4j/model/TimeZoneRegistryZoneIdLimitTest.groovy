@@ -81,7 +81,7 @@ class TimeZoneRegistryZoneIdLimitTest extends Specification {
 
     def 'a repeated TZID reuses its zone id instead of taking another from the shared pool'() {
         given: 'more copies of one VTIMEZONE than the shared pool has zone ids'
-        def available = pool().availableZoneIds()
+        def available = settledAvailableZoneIds()
         def ics = calendar((0..available).collect { vtimezone('X-Fuzz/1') })
         def builder = new CalendarBuilder()
 
