@@ -75,4 +75,5 @@ To replay a single input, pass the file instead of the corpus directory.
 
 ## Credits
 
-The harnesses were contributed from an external fuzzing audit of the iCal4j parsing surface (`twake-fuzz`).
+The harnesses were contributed by Benoit Tellier ([@chibenwa](https://github.com/chibenwa)), from the `twake-fuzz`
+audit of the iCal4j parsing surface.
