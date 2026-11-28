@@ -202,8 +202,12 @@ public abstract class Observance extends Component implements TimeZonePropertyAc
                     cacheableOnsets.add(rdateOnset);
                 }
             } else {
-                for (final var rdateDate : rdate.getDates()) {
-                    final var rdateOnset = rdateDate.atOffset(offsetFrom.getOffset());
+                for (final Temporal rdateDate : ((RDate<?>) rdate).getDates()) {
+                    // RDATE values are DATE-TIME (RFC 5545 section 3.6.5); a DATE is taken as the start of that day,
+                    // as for DTSTART above
+                    final var rdateOnset = (rdateDate.isSupported(ChronoField.HOUR_OF_DAY)
+                            ? LocalDateTime.from(rdateDate) : LocalDate.from(rdateDate).atStartOfDay())
+                            .atOffset(offsetFrom.getOffset());
                     if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
                         onset = rdateOnset;
                     }
