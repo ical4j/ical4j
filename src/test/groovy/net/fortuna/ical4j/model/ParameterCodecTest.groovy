@@ -41,5 +41,22 @@ class ParameterCodecTest extends Specification {
         "This is ^^a ^n^'test^'"                    | 'This is ^a \n"test"'
         '"test: 1"'                                 | 'test: 1'
         '"test@example.com","test2@example.com"'    | '"test@example.com","test2@example.com"'
+        "Smiley ^^'"                                | "Smiley ^'"
+        '^^n'                                       | '^n'
+        "^^^'"                                      | '^"'
+        "^'abc^'"                                   | '"abc"'
+        '"^\'abc^\'"'                               | '"abc"'
+        '^x'                                        | '^x'
+    }
+
+    def 'a value [#value] survives encoding and decoding'() {
+        given: 'a codec instance'
+        ParameterCodec codec = []
+
+        expect:
+        codec.decode(codec.encode(value)) == value
+
+        where:
+        value << ["^'", '^n', 'a^^b', "^^'", '^^n', 'x^"y', '^\n', '"quoted"', 'O^^\'Neil: x']
     }
 }

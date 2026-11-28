@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 
 import java.lang.ref.WeakReference;
 import java.time.zone.ZoneRules;
+import java.time.zone.ZoneRulesException;
 import java.time.zone.ZoneRulesProvider;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -94,18 +95,25 @@ public class ZoneRulesProviderImpl extends ZoneRulesProvider {
         return registeredZoneIds;
     }
 
+    /**
+     * Returns the rules registered for a zone id, including when {@code forCaching} is true. A
+     * {@link java.time.ZoneId} then keeps the rules it was created with, so a date-time parsed from a
+     * calendar keeps working after the registry that defined its zone is collected and the zone id is
+     * released, or allocated to another registry. A {@code ZoneId} created later resolves the rules
+     * registered at that time.
+     *
+     * @throws ZoneRulesException if no registry holds rules for the zone id
+     */
     @Override
-    protected @Nullable ZoneRules provideRules(String zoneId, boolean forCaching) {
-        ZoneRules retVal = null;
-        // don't allow caching of rules due to potential for dynamically loaded definitions..
-        if (!forCaching) {
-            WeakReference<TimeZoneRegistry> registryRef = allocatedZoneIds.get(zoneId);
-            if (registryRef != null) {
-                TimeZoneRegistry registry = Objects.requireNonNull(registryRef.get());
-                retVal = registry.getZoneRules().get(zoneId);
-            }
+    protected ZoneRules provideRules(String zoneId, boolean forCaching) {
+        WeakReference<TimeZoneRegistry> registryRef = allocatedZoneIds.get(zoneId);
+        TimeZoneRegistry registry = registryRef != null ? registryRef.get() : null;
+        ZoneRules rules = registry != null ? registry.getZoneRules().get(zoneId) : null;
+        if (rules == null) {
+            throw new ZoneRulesException("No zone rules registered for zone id: " + zoneId
+                    + " (its time zone registry may have been released)");
         }
-        return retVal;
+        return rules;
     }
 
     @Override

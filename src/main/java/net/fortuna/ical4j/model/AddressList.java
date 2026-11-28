@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.RegEx;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
@@ -97,7 +96,7 @@ public class AddressList implements Serializable {
 
     public AddressList(final String aValue, boolean allowInvalidAddress) throws URISyntaxException {
         List<URI> values = new ArrayList<>();
-        for (String a : aValue.split(RegEx.COMMA_DELIMITED)) {
+        for (String a : split(aValue)) {
             try {
                 values.add(new URI(Uris.encode(Strings.unquote(a))));
             } catch (URISyntaxException use) {
@@ -108,6 +107,37 @@ public class AddressList implements Serializable {
             }
         }
         addresses = Collections.unmodifiableList(values);
+    }
+
+    /**
+     * Splits a list of addresses on the commas outside quotes, so that a list of quoted addresses
+     * ("mailto:a@example.com","mailto:b@example.com") gives each address with its quotes.
+     */
+    private static List<String> split(final String aValue) {
+        final List<String> items = new ArrayList<>();
+        final var item = new StringBuilder();
+        boolean quoted = false;
+        for (int i = 0; i < aValue.length(); i++) {
+            final char c = aValue.charAt(i);
+            if (c == '"') {
+                quoted = !quoted;
+            }
+            if (c == ',' && !quoted) {
+                addItem(items, item);
+            } else {
+                item.append(c);
+            }
+        }
+        addItem(items, item);
+        return items;
+    }
+
+    private static void addItem(List<String> items, StringBuilder item) {
+        final String trimmed = item.toString().trim();
+        if (!trimmed.isEmpty()) {
+            items.add(trimmed);
+        }
+        item.setLength(0);
     }
 
     public AddressList(List<URI> addresses) {

@@ -78,12 +78,7 @@ public class Version extends Property {
      */
     public Version(final ParameterList aList, final String aValue) {
         super(VERSION, aList);
-        if (aValue.indexOf(';') >= 0) {
-            this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
-            this.maxVersion = aValue.substring(aValue.indexOf(';'));
-        } else {
-            this.maxVersion = aValue;
-        }
+        parse(aValue);
     }
 
     /**
@@ -127,10 +122,19 @@ public class Version extends Property {
      */
     @Override
     public void setValue(final String aValue) {
-        if (aValue.indexOf(';') >= 0) {
-            this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
-            this.maxVersion = aValue.substring(aValue.indexOf(';'));
+        parse(aValue);
+    }
+
+    /**
+     * Splits a value of the form {@code maxver} or {@code minver ";" maxver} (RFC 5545 section 3.7.4).
+     */
+    private void parse(final String aValue) {
+        final int separator = aValue.indexOf(';');
+        if (separator >= 0) {
+            this.minVersion = aValue.substring(0, separator);
+            this.maxVersion = aValue.substring(separator + 1);
         } else {
+            this.minVersion = null;
             this.maxVersion = aValue;
         }
     }

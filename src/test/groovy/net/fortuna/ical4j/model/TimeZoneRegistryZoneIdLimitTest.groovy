@@ -64,6 +64,16 @@ class TimeZoneRegistryZoneIdLimitTest extends Specification {
         ZoneRulesProviderImpl.getInstance().orElseThrow().getZoneIdPool()
     }
 
+    /**
+     * The zone ids available once registries other tests left unreachable are collected and their ids
+     * released. Otherwise the cleanup that allocate() runs first could return those ids mid-test.
+     */
+    private static int settledAvailableZoneIds() {
+        System.gc()
+        pool().cleanup()
+        pool().availableZoneIds()
+    }
+
     /** Return a registry's zone ids to the shared pool, so other tests in this JVM are not affected. */
     private static void release(TimeZoneRegistry registry) {
         new ArrayList<>(registry.getZoneRules().keySet()).each { pool().release(it) }
@@ -71,7 +81,7 @@ class TimeZoneRegistryZoneIdLimitTest extends Specification {
 
     def 'a repeated TZID reuses its zone id instead of taking another from the shared pool'() {
         given: 'more copies of one VTIMEZONE than the shared pool has zone ids'
-        def available = pool().availableZoneIds()
+        def available = settledAvailableZoneIds()
         def ics = calendar((0..available).collect { vtimezone('X-Fuzz/1') })
         def builder = new CalendarBuilder()
 
@@ -113,7 +123,7 @@ class TimeZoneRegistryZoneIdLimitTest extends Specification {
     def 'a registry takes no more zone ids than its limit'() {
         given: 'a calendar with more distinct TZIDs than the per-registry limit'
         def limit = TimeZoneRegistryImpl.DEFAULT_MAX_ZONE_IDS
-        def available = pool().availableZoneIds()
+        def available = settledAvailableZoneIds()
         def ics = calendar((0..<(limit + 20)).collect { vtimezone("X-Fuzz/$it") })
         def builder = new CalendarBuilder()
 

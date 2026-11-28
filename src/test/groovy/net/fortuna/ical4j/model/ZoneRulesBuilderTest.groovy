@@ -456,4 +456,63 @@ END:VCALENDAR"""
         where:
         freq << ['HOURLY', 'MINUTELY', 'SECONDLY']
     }
+
+    def 'day #dayOfMonth in #month with day-of-week #dayOfWeek resolves to indicator #expected'() {
+        expect:
+        ZoneRulesBuilder.transitionDayIndicator(month, dayOfMonth, dayOfWeek) == expected
+
+        where:
+        month                    | dayOfMonth | dayOfWeek        | expected
+        java.time.Month.MARCH    | 12         | null             | 12
+        java.time.Month.FEBRUARY | 28         | null             | 28
+        java.time.Month.FEBRUARY | 29         | null             | null    // only in leap years
+        java.time.Month.FEBRUARY | 30         | null             | null
+        java.time.Month.JUNE     | 31         | null             | null
+        java.time.Month.JUNE     | 30         | null             | 30
+        java.time.Month.MARCH    | -1         | null             | -1
+        java.time.Month.MARCH    | -30        | null             | 2
+        java.time.Month.JUNE     | -31        | null             | null
+        java.time.Month.FEBRUARY | -29        | null             | null
+        java.time.Month.FEBRUARY | 0          | null             | null
+        java.time.Month.FEBRUARY | 30         | DayOfWeek.SUNDAY | -1
+        java.time.Month.JUNE     | 31         | DayOfWeek.SUNDAY | -1
+        java.time.Month.MARCH    | 30         | DayOfWeek.SUNDAY | 30    // exists every year: the first Sunday on or after it
+        java.time.Month.MARCH    | 12         | DayOfWeek.SUNDAY | 12
+        java.time.Month.MARCH    | -30        | DayOfWeek.SUNDAY | 2
+        java.time.Month.FEBRUARY | -29        | DayOfWeek.SUNDAY | 1
+    }
+
+    def 'an observance RRULE on a day its month lacks builds rules that answer future instants: #rrule'() {
+        given:
+        def cal = """BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ical4j//test//EN
+BEGIN:VTIMEZONE
+TZID:X-Fuzz/2
+BEGIN:STANDARD
+DTSTART:$dtstart
+TZOFFSETFROM:+0000
+TZOFFSETTO:+0100
+RRULE:$rrule
+END:STANDARD
+END:VTIMEZONE
+END:VCALENDAR"""
+
+        when:
+        def calendar = new CalendarBuilder().build(new StringReader(cal))
+        def zonerules = new ZoneRulesBuilder().vTimeZone(calendar.getComponent('VTIMEZONE').get()).build()
+
+        then: 'every future year resolves, and the offset after any transition is TZOFFSETTO'
+        (2027..2040).every { year ->
+            zonerules.getOffset(Instant.parse("${year}-12-01T00:00:00Z")) == ZoneOffset.ofHours(1)
+        }
+
+        where:
+        dtstart           | rrule
+        '20250101T020000' | 'FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=30'
+        '20250101T020000' | 'FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=29'
+        '20250131T020000' | 'FREQ=YEARLY;BYMONTH=6'
+        '19960331T020000' | 'FREQ=YEARLY;BYMONTH=6;BYDAY=0SU'
+        '20250101T020000' | 'FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=30;BYDAY=SU'
+    }
 }

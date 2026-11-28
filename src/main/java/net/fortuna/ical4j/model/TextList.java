@@ -35,7 +35,6 @@ import net.fortuna.ical4j.util.Strings;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -47,8 +46,6 @@ import java.util.stream.Collectors;
 public class TextList implements Serializable {
 
 	private static final long serialVersionUID = -417427815871330636L;
-
-    private static final Pattern PATTERN = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
 
 	private final Set<String> texts;
 
@@ -64,12 +61,30 @@ public class TextList implements Serializable {
      * @param aValue a string representation of a list of categories
      */
     public TextList(final String aValue) {
+        // split on unescaped commas with a plain scan rather than a regular expression, as a repeated
+        // group recurses once per escape sequence and overflows the stack on long values. Each item is
+        // then unescaped exactly once..
         List<String> values = new ArrayList<>();
-        final var matcher = PATTERN.matcher(aValue);
-        while (matcher.find()){
-            values.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
+        final var item = new StringBuilder();
+        for (int i = 0; i < aValue.length(); i++) {
+            final char c = aValue.charAt(i);
+            if (c == '\\' && i + 1 < aValue.length()) {
+                item.append(c).append(aValue.charAt(++i));
+            } else if (c == ',') {
+                addItem(values, item);
+            } else {
+                item.append(c);
+            }
         }
+        addItem(values, item);
         texts = new LinkedHashSet<>(values);
+    }
+
+    private static void addItem(List<String> values, StringBuilder item) {
+        if (item.length() > 0) {
+            values.add(Strings.unescape(item.toString()));
+            item.setLength(0);
+        }
     }
 
     public TextList(List<String> texts) {

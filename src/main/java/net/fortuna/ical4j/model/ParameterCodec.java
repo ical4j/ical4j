@@ -5,6 +5,7 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.StringDecoder;
 import org.apache.commons.codec.StringEncoder;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -31,17 +32,8 @@ public class ParameterCodec implements StringEncoder, StringDecoder {
     // matches an unencoded quote character..
     private static final Pattern QUOTE_EX = Pattern.compile("\"");
 
-    // matches an encoded caret character..
-    private static final Pattern ENCODED_CARET_EX = Pattern.compile(
-            ENCODED_CARET.replaceAll("\\^", "\\\\^"));
-
-    // matches an encoded newline character..
-    private static final Pattern ENCODED_NEWLINE_EX = Pattern.compile(
-            ENCODED_NEWLINE.replaceAll("\\^", "\\\\^"));
-
-    // matches an encoded quote character..
-    private static final Pattern ENCODED_QUOTE_EX = Pattern.compile(
-            ENCODED_QUOTE.replaceAll("\\^", "\\\\^"));
+    // matches an encoded caret, newline or quote character..
+    private static final Pattern ENCODED_EX = Pattern.compile("\\^([\\^n'])");
 
     // matches one or more characters that require a quoted value..
     public static final Pattern QUOTABLE_VALUE_EX = Pattern.compile("[:;,]|[^\\p{ASCII}]");
@@ -53,18 +45,22 @@ public class ParameterCodec implements StringEncoder, StringDecoder {
     @Override
     public String decode(String source) throws DecoderException {
         if (source != null) {
-            var decoded = ENCODED_CARET_EX.matcher(
-                    ENCODED_NEWLINE_EX.matcher(
-                            ENCODED_QUOTE_EX.matcher(source).replaceAll("\"")
-                    ).replaceAll("\n")
-            ).replaceAll("^");
+            // remove the enclosing quotes of a quoted value before decoding, so that encoded quotes (^')
+            // at either end of the value are not mistaken for them..
+            var value = QUOTED_EX.matcher(source).matches() ? source.substring(1, source.length() - 1) : source;
 
-            // remove extraneous quotes..
-            if (QUOTED_EX.matcher(decoded).matches()) {
-                return decoded.substring(1, decoded.length() - 1);
-            } else {
-                return decoded;
-            }
+            // decode in a single left-to-right pass, so that the caret of an encoded caret (^^) is never
+            // the start of another escape sequence (RFC 6868 section 3)..
+            return ENCODED_EX.matcher(value).replaceAll(m -> {
+                switch (m.group(1)) {
+                    case "n":
+                        return "\n";
+                    case "'":
+                        return "\"";
+                    default:
+                        return Matcher.quoteReplacement("^");
+                }
+            });
         } else {
             throw new DecoderException("Input cannot be null");
         }

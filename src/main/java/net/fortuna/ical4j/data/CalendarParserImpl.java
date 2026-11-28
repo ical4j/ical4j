@@ -343,36 +343,75 @@ public class CalendarParserImpl implements CalendarParser {
 
             final var paramValue = new StringBuilder();
 
-            // preserve quote chars..
-            if (nextToken(tokeniser, in) == '"') {
-                paramValue.append('"');
-                paramValue.append(tokeniser.sval);
-                paramValue.append('"');
-            } else if (tokeniser.sval != null) {
-                paramValue.append(tokeniser.sval);
-                // check for additional words to account for equals (=) in param-value
-                int nextToken = nextToken(tokeniser, in);
-
-                while (nextToken != ';' && nextToken != ':' && nextToken != ','
-                        || isEscapedSemicolon(nextToken, paramValue)) {
-
-                    if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
-                        paramValue.append(tokeniser.sval);
-                    } else {
-                        paramValue.append((char) tokeniser.ttype);
-                    }
-
-                    nextToken = nextToken(tokeniser, in);
+            // a quoted value is read token by token rather than with the tokeniser's quote handling, which
+            // decodes C-style escapes: a backslash is a literal character of a quoted-string (RFC 5545
+            // section 3.1), so CN="C:\" must not escape its closing quote and swallow the next content line.
+            // A comma separates the values of a multi-valued parameter (MEMBER, DELEGATED-TO), so it is read
+            // as a token of its own..
+            tokeniser.ordinaryChar('"');
+            tokeniser.ordinaryChar(',');
+            try {
+                // param = param-name "=" param-value *("," param-value)
+                parseValue(tokeniser, in, paramValue);
+                while (nextToken(tokeniser, in) == ',') {
+                    paramValue.append(',');
+                    parseValue(tokeniser, in, paramValue);
                 }
                 tokeniser.pushBack();
-            } else { //if (tokeniser.sval == null) {
-                tokeniser.pushBack();
+            } finally {
+                tokeniser.wordChars(',', ',');
+                tokeniser.quoteChar('"');
             }
 
             try {
                 handler.parameter(paramName, paramValue.toString());
             } catch (ClassCastException cce) {
                 throw new ParserException("Error parsing parameter", getLineNumber(tokeniser, in), cce);
+            }
+        }
+
+        /**
+         * Appends one param-value, quoted (with its quotes) or not, to the parameter value.
+         */
+        private void parseValue(final StreamTokenizer tokeniser, Reader in, final StringBuilder paramValue)
+                throws IOException, ParserException {
+
+            int nextToken = nextToken(tokeniser, in);
+            if (nextToken == '"') {
+                paramValue.append('"');
+                nextToken = nextToken(tokeniser, in);
+                while (nextToken != '"' && nextToken != StreamTokenizer.TT_EOL) {
+                    appendToken(tokeniser, paramValue);
+                    nextToken = nextToken(tokeniser, in);
+                }
+                if (nextToken == StreamTokenizer.TT_EOL) {
+                    // an unterminated quoted-string ends at the end of the line, as it did with the
+                    // tokeniser's quote handling..
+                    tokeniser.pushBack();
+                }
+                paramValue.append('"');
+            } else if (nextToken == StreamTokenizer.TT_WORD) {
+                appendToken(tokeniser, paramValue);
+                // check for additional words to account for equals (=) in param-value
+                nextToken = nextToken(tokeniser, in);
+
+                while (nextToken != ';' && nextToken != ':' && nextToken != ','
+                        || isEscapedSemicolon(nextToken, paramValue)) {
+
+                    appendToken(tokeniser, paramValue);
+                    nextToken = nextToken(tokeniser, in);
+                }
+                tokeniser.pushBack();
+            } else {
+                tokeniser.pushBack();
+            }
+        }
+
+        private void appendToken(final StreamTokenizer tokeniser, final StringBuilder paramValue) {
+            if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
+                paramValue.append(tokeniser.sval);
+            } else {
+                paramValue.append((char) tokeniser.ttype);
             }
         }
 
