@@ -96,6 +96,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      */
     public DateListProperty(final String name, final ParameterList parameters, Value defaultValueParam) {
         super(name, parameters);
+        // a PERIOD-valued RDATE sets only its periods, so start with no dates rather than null
+        this.dates = new DateList<>();
         this.defaultValueParam = defaultValueParam;
     }
 
