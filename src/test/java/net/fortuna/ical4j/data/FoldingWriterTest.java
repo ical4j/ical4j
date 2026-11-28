@@ -117,11 +117,18 @@ class FoldingWriterTest {
 
             writer.write(longText.toString());
 
-            assertEquals("🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+            // each emoji is 4 UTF-8 octets: 5 fit in 20 octets, 4 after the folding space
+            assertEquals("🙂🙂🙂🙂🙂"
                     + Strings.LINE_SEPARATOR
-                    + " 🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+                    + " 🙂🙂🙂🙂"
                     + Strings.LINE_SEPARATOR
-                    + " 🙂🙂🙂🙂🙂🙂",
+                    + " 🙂🙂🙂🙂"
+                    + Strings.LINE_SEPARATOR
+                    + " 🙂🙂🙂🙂"
+                    + Strings.LINE_SEPARATOR
+                    + " 🙂🙂🙂🙂"
+                    + Strings.LINE_SEPARATOR
+                    + " 🙂🙂🙂🙂",
                     sw.getBuffer().toString());
         }
     }

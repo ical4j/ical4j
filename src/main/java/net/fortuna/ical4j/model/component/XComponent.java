@@ -88,6 +88,33 @@ public class XComponent extends CalendarComponent {
 
     @Override
     protected ComponentFactory<XComponent> newFactory() {
-        throw new UnsupportedOperationException("Cannot provide factory for non-standard components");
+        return new Factory(getName());
+    }
+
+    /**
+     * A factory for experimental (and unrecognised IANA) components of one name, so that {@link #copy()} works.
+     */
+    private static final class Factory implements ComponentFactory<XComponent> {
+
+        private final String name;
+
+        Factory(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public XComponent createComponent() {
+            return new XComponent(name);
+        }
+
+        @Override
+        public XComponent createComponent(PropertyList properties) {
+            return new XComponent(name, properties);
+        }
+
+        @Override
+        public boolean supports(String name) {
+            return this.name.equalsIgnoreCase(name);
+        }
     }
 }

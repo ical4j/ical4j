@@ -119,6 +119,35 @@ public class XProperty extends Property implements Encodable {
 
     @Override
     protected PropertyFactory<XProperty> newFactory() {
-        throw new UnsupportedOperationException("Factory not supported for custom properties");
+        return new Factory(getName());
+    }
+
+    /**
+     * A factory for experimental (and unrecognised IANA) properties of one name, so that {@link #copy()} works.
+     */
+    private static final class Factory implements PropertyFactory<XProperty> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String name;
+
+        Factory(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public XProperty createProperty() {
+            return new XProperty(name);
+        }
+
+        @Override
+        public XProperty createProperty(ParameterList parameters, String value) {
+            return new XProperty(name, parameters, value);
+        }
+
+        @Override
+        public boolean supports(String name) {
+            return this.name.equalsIgnoreCase(name);
+        }
     }
 }

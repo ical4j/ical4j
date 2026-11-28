@@ -422,10 +422,10 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     String toString(CalendarDateFormat dateFormat) {
         final var b = new StringBuilder();
-        b.append(dateFormat.format(getStart()));
+        b.append(format(dateFormat, null, getStart()));
         b.append('/');
         if (duration == null) {
-            b.append(dateFormat.format(getEnd()));
+            b.append(format(dateFormat, null, getEnd()));
         } else {
             b.append(duration);
         }
@@ -443,14 +443,32 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     String toString(CalendarDateFormat dateFormat, ZoneId zoneId) {
         final var b = new StringBuilder();
-        b.append(dateFormat.format(getStart(), zoneId));
+        b.append(format(dateFormat, zoneId, getStart()));
         b.append('/');
         if (duration == null) {
-            b.append(dateFormat.format(getEnd(), zoneId));
+            b.append(format(dateFormat, zoneId, getEnd()));
         } else {
             b.append(duration);
         }
         return b.toString();
+    }
+
+    /**
+     * Formats one date of the period in its own form: a DATE, a UTC or numeric-offset DATE-TIME (written in UTC) and
+     * a floating DATE-TIME are written as such whatever the preferred format, which applies to zoned values only. The
+     * start and end of a period may differ in type, and a list's preferred format is not that of every period.
+     */
+    private static String format(CalendarDateFormat dateFormat, @Nullable ZoneId zoneId, Temporal temporal) {
+        if (!TemporalAdapter.isDateTimePrecision(temporal)) {
+            return CalendarDateFormat.DATE_FORMAT.format(temporal);
+        } else if (TemporalAdapter.isUtc(temporal) || temporal instanceof OffsetDateTime) {
+            return CalendarDateFormat.UTC_DATE_TIME_FORMAT.format(temporal);
+        } else if (temporal instanceof LocalDateTime) {
+            return CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.format(temporal);
+        } else if (zoneId != null) {
+            return dateFormat.format(temporal, zoneId);
+        }
+        return dateFormat.format(temporal);
     }
 
     /**

@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * <pre>
@@ -175,30 +176,22 @@ public class UnfoldingReader extends PushbackReader {
      */
     @Override
     public int read(final char[] cbuf, final int off, final int len) throws IOException {
-        final int read = super.read(cbuf, off, len);
-        boolean doUnfold = false;
-        for (var pattern : patterns) {
-            if (read > 0 && cbuf[0] == pattern[0]) {
-                doUnfold = true;
+        // read through read() so that a fold is removed wherever it falls in the chunk (including after a partial
+        // fold pattern such as CR CR LF SPACE), giving the same text as reading char by char
+        Objects.checkFromIndexSize(off, len, cbuf.length);
+        if (len == 0) {
+            return 0;
+        }
+        int count = 0;
+        // after the first char, stop rather than block once no more input is ready
+        while (count < len && (count == 0 || ready())) {
+            final int c = read();
+            if (c < 0) {
                 break;
-            } else {
-                for (int j = 0; j < read; j++) {
-                    if (cbuf[j] == pattern[0]) {
-                        unread(cbuf, j, read - j);
-                        return j;
-                    }
-                }
             }
+            cbuf[off + count++] = (char) c;
         }
-        if (!doUnfold) {
-            return read;
-        } else {
-            unread(cbuf, off, read);
-        }
-
-        unfold();
-
-        return super.read(cbuf, off, maxPatternLength);
+        return count == 0 ? -1 : count;
     }
 
     private void unfold() throws IOException {

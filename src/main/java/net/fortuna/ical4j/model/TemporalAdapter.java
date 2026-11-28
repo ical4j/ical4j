@@ -176,6 +176,10 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         if (getTemporal() instanceof ChronoZonedDateTime) {
             return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT,
                     ((ChronoZonedDateTime<?>)temporal).getZone(), temporal);
+        } else if (getTemporal() instanceof OffsetDateTime) {
+            // RFC 5545 has no numeric-offset DATE-TIME form: keep the instant by writing it in UTC (form #2) rather
+            // than as a floating time in the default zone
+            return toInstantString(temporal);
         }
         return toString(getTemporal(), TimeZones.getDefault().toZoneId());
     }

@@ -30,14 +30,14 @@ public class PropertyCodec implements StringEncoder, StringDecoder {
     // matches an unencoded special character..
     private static final Pattern SPECIALCHAR_EX = Pattern.compile("([,;])");
 
-    // matches an encoded backslash, newline or special character. Decoding all of them in a single
-    // pass ensures an encoded backslash is never treated as the start of another escape sequence..
-    private static final Pattern ENCODED_EX = Pattern.compile("\\\\([\\\\n,;\"])");
+    // matches an encoded backslash, newline (\n or \N, RFC 5545 3.3.11) or special character. Decoding all of them
+    // in a single pass ensures an encoded backslash is never treated as the start of another escape sequence..
+    private static final Pattern ENCODED_EX = Pattern.compile("\\\\([\\\\nN,;\"])");
 
     @Override
     public String decode(String source) throws DecoderException {
         if (source != null) {
-            return ENCODED_EX.matcher(source).replaceAll(m -> "n".equals(m.group(1))
+            return ENCODED_EX.matcher(source).replaceAll(m -> "n".equalsIgnoreCase(m.group(1))
                     ? "\n" : Matcher.quoteReplacement(m.group(1)));
         } else {
             throw new DecoderException("Input cannot be null");
