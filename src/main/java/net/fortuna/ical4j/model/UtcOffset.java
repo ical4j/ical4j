@@ -36,6 +36,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -67,6 +69,9 @@ public class UtcOffset implements Serializable {
 
     private static final int SECOND_END_INDEX = 7;
 
+    private static final Pattern FORMAT =
+            Pattern.compile("[+-]\\d{2}(?::(\\d{2})|(\\d{2})(\\d{2})?)");
+
     private static final NumberFormat HOUR_FORMAT = new DecimalFormat("00");
 
     private static final NumberFormat MINUTE_FORMAT = new DecimalFormat("00");
@@ -80,7 +85,10 @@ public class UtcOffset implements Serializable {
      */
     public UtcOffset(final String value) {
 
-        if (value.length() < MINUTE_END_INDEX) {
+        // (+/-)HHMM[SS], or (+/-)HH:MM as vCard 3 writes it, with minutes and seconds below 60
+        final Matcher m = FORMAT.matcher(value);
+        if (!m.matches() || Integer.parseInt(m.group(1) != null ? m.group(1) : m.group(2)) > 59
+                || (m.group(3) != null && Integer.parseInt(m.group(3)) > 59)) {
             throw new IllegalArgumentException("Invalid UTC offset [" + value
                     + "] - must be of the form: (+/-)HHMM[SS]");
         }
