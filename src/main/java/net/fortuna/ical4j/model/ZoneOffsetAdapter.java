@@ -24,16 +24,15 @@ public class ZoneOffsetAdapter implements Serializable {
     @Override
     public String toString() {
         var retVal = "";
+        // the sign belongs to the whole offset: an offset under one hour has zero hours (-0034)
+        char sign = offset.getTotalSeconds() < 0 ? '-' : '+';
         int hours = Math.abs(offset.getTotalSeconds()) / (60 * 60);
-        if (offset.getTotalSeconds() < 0) {
-            hours = -hours;
-        }
         int minutes = Math.abs(offset.getTotalSeconds()) % (60 * 60) / 60;
         int seconds = Math.abs(offset.getTotalSeconds()) % (60 * 60) % 60;
         if (seconds > 0) {
-            retVal = String.format(Locale.US, "%+03d%02d%02d", hours, minutes, seconds);
+            retVal = String.format(Locale.US, "%c%02d%02d%02d", sign, hours, minutes, seconds);
         } else {
-            retVal = String.format(Locale.US, "%+03d%02d", hours, minutes);
+            retVal = String.format(Locale.US, "%c%02d%02d", sign, hours, minutes);
         }
         return retVal;
     }

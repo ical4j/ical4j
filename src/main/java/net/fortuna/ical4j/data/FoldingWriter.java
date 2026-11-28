@@ -65,11 +65,17 @@ public class FoldingWriter extends FilterWriter {
 
     private int lineLength;
 
+    /** Whether the current physical line holds a char after its start or its fold. */
+    private boolean lineHasContent;
+
+    /** Whether the last char written is the high half of a surrogate pair. */
+    private boolean previousHighSurrogate;
+
     private final int foldLength;
 
     /**
      * @param writer     a writer to write output to
-     * @param foldLength the maximum line length
+     * @param foldLength the maximum line length, in UTF-8 octets
      */
     public FoldingWriter(final Writer writer, final int foldLength) {
         super(writer);
@@ -104,38 +110,58 @@ public class FoldingWriter extends FilterWriter {
             final int length) throws IOException {
         final int maxIndex = offset + length - 1;
         for (int i = offset; i <= maxIndex; i++) {
+            final char c = buffer[i];
 
             // debugging..
             if (log.isTraceEnabled()) {
-                log.trace("char [" + buffer[i] + "], line length ["
-                        + lineLength + "]");
+                log.trace("char [" + c + "], line length [" + lineLength + "]");
             }
 
-            // Detect surrogate pairs (such as emojis) to avoid splitting them.
-            boolean isHighSurrogate = Character.isHighSurrogate(buffer[i]);
-            boolean hasLowSurrogate = i < maxIndex && Character.isLowSurrogate(buffer[i + 1]);
-
             // Don't fold before line endings - RFC 5545 says "excluding the line break"
-            // so a line of exactly foldLength chars + CRLF is valid.
-            boolean isLineEnding = buffer[i] == '\r' || buffer[i] == '\n';
+            // so a line of exactly foldLength octets + CRLF is valid.
+            if (c == '\r' || c == '\n') {
+                super.write(c);
+                lineLength = 0;
+                lineHasContent = false;
+                previousHighSurrogate = false;
+                continue;
+            }
 
-            // If we are at the fold limit and have a surrogate pair, fold before writing
-            // the complete pair.
-            // OR Normal folding when the limit is reached
-            // BUT skip folding if we're about to write a line ending
-            if (!isLineEnding && (lineLength >= foldLength - 1 && isHighSurrogate && hasLowSurrogate || lineLength >= foldLength)) {
+            // The low half of a surrogate pair (such as an emoji) is never separated from its high half, even when
+            // the two are written in separate calls; its octets were counted with the high half.
+            if (previousHighSurrogate && Character.isLowSurrogate(c)) {
+                super.write(c);
+                previousHighSurrogate = false;
+                continue;
+            }
+
+            // RFC 5545 3.1 limits lines to 75 octets: count the UTF-8 length of each code point, not the chars
+            final int octets = utf8Length(c);
+            if (lineHasContent && lineLength + octets > foldLength) {
                 super.write(FOLD_PATTERN, 0, FOLD_PATTERN.length);
                 lineLength = 1;
             }
 
-            super.write(buffer[i]);
-
-            if (buffer[i] == '\r' || buffer[i] == '\n') {
-                lineLength = 0;
-            } else {
-                lineLength += 1;
-            }
+            super.write(c);
+            lineLength += octets;
+            lineHasContent = true;
+            previousHighSurrogate = Character.isHighSurrogate(c);
         }
+    }
+
+    /**
+     * @return the number of UTF-8 octets of the code point starting with the specified char (a high surrogate counts
+     * for the whole pair)
+     */
+    private static int utf8Length(final char c) {
+        if (c < 0x80) {
+            return 1;
+        } else if (c < 0x800) {
+            return 2;
+        } else if (Character.isHighSurrogate(c)) {
+            return 4;
+        }
+        return 3;
     }
 
     /**
