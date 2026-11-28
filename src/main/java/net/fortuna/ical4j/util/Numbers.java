@@ -54,7 +54,7 @@ public final class Numbers {
      * @return a parsed integer value
      */
     public static int parseInt(final String value) {
-        if (value != null && value.charAt(0) == '+') {
+        if (value != null && !value.isEmpty() && value.charAt(0) == '+') {
             return Integer.parseInt(value.substring(1));
         }
         return Integer.parseInt(value);

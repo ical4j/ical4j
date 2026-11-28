@@ -468,7 +468,8 @@ public class VEvent extends CalendarComponent implements Prototype<VEvent>, Comp
         // No DTEND? No problem, we'll use the DURATION.
         if (dtEnd.isEmpty() && deriveFromDuration) {
             Optional<DtStart<T>> dtStart = getProperty(DTSTART);
-            if (dtStart.isPresent()) {
+            if (dtStart.isPresent() && dtStart.get().getDate() != null) {
+                // an empty DTSTART value (DTSTART:) has no date to derive an end from
                 final Duration vEventDuration;
                 Optional<Duration> duration = getProperty(DURATION);
                 if (duration.isPresent()) {

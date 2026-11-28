@@ -221,10 +221,17 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         } catch (DateTimeParseException e) {
             return new Period<>(start, parseDuration(value), CalendarDateFormat.from(start));
         }
+        if (TemporalAdapter.isDateTimePrecision(start) != TemporalAdapter.isDateTimePrecision(end)) {
+            // no duration between a DATE and a DATE-TIME (RFC 5545 section 3.3.9 periods are DATE-TIME)
+            throw new DateTimeParseException("Period start and end must both be DATE or both DATE-TIME", value, 0);
+        }
         return new Period<>(start, end, CalendarDateFormat.from(start));
     }
 
     private static <T extends Temporal> T parseStartDate(String value) throws DateTimeParseException {
+        if (value.indexOf('/') < 0) {
+            throw new DateTimeParseException("Period must be of the form start/end or start/duration", value, 0);
+        }
         TemporalAdapter<T> parsedValue = TemporalAdapter.parse(value.substring(0, value.indexOf('/')));
         return parsedValue.getTemporal();
     }

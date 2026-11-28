@@ -152,7 +152,7 @@ public final class Strings {
      * @return an un-quoted string
      */
     public static String unquote(final String aValue) {
-        if (aValue != null && aValue.startsWith("\"") && aValue.endsWith("\"")) {
+        if (aValue != null && aValue.length() > 1 && aValue.startsWith("\"") && aValue.endsWith("\"")) {
             return aValue.substring(0, aValue.length() - 1).substring(1);
         }
         return aValue;

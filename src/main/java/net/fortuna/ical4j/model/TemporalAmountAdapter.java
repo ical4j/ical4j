@@ -172,7 +172,7 @@ public class TemporalAmountAdapter implements Serializable {
     }
 
     public static TemporalAmountAdapter from(Temporal start, Temporal end) {
-        if (start instanceof LocalDate) {
+        if (start instanceof LocalDate && end instanceof LocalDate) {
             return from((LocalDate) start, (LocalDate) end);
         }
         return new TemporalAmountAdapter(Duration.between(start, end));

@@ -100,6 +100,9 @@ public class WeekDay implements Serializable {
      * @param value a string representation of a week day
      */
     public WeekDay(final String value) {
+        if (value.length() < 2) {
+            throw new IllegalArgumentException("Invalid BYDAY value: [" + value + "]");
+        }
         if (value.length() > 2) {
             offset = Numbers.parseInt(value.substring(0, value.length() - 2));
         } else {
