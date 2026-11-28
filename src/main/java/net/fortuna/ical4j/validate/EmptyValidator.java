@@ -8,7 +8,7 @@ package net.fortuna.ical4j.validate;
  * validation is not required or when a placeholder validator is needed.
  * <p>
  * Usage:
- * <pre>
+ * <pre>{@code
  * Validator<MyType> validator = new EmptyValidator<>();
  * ValidationResult result = validator.validate(myObject);
  * if (result.isValid()) {
@@ -16,7 +16,7 @@ package net.fortuna.ical4j.validate;
  * } else {
  *     // Handle validation errors
  * }
- * </pre>
+ * }</pre>
  *
  * Created by fortuna on 12/09/15.
  */
