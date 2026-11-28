@@ -152,6 +152,9 @@ public class TzHelper {
     public static @Nullable String getCorrectedTimeZoneIdFrom(String value) {
         if (value != null) {
             value = value.contains("\"") ? value.replaceAll("\"", "") : value;
+            if (value.isBlank()) {
+                return null;
+            }
             var timeZone = TIMEZONE_REGISTRY.getTimeZone(value);
             if (timeZone != null) {
                 return timeZone.getID();
