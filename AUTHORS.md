@@ -9,7 +9,8 @@ Please refer to [GitHub](https://github.com/ical4j/ical4j/graphs/contributors) f
   - Heladito, Darkwave, twinkle, Outmyth, Ralph Schaer, Chris Borrill,
   Meher Tendjoukian, John Casey, Harrie Hazewinkel, Markus Rahlff,
   Marcus Hauer, Dustin (calibre), Tobias Lidskog, Bruce Atherton,
-  Mike Douglass, Fredrik Bertilsson ...
+  Mike Douglass, Fredrik Bertilsson,
+  Benoit Tellier (fuzz harnesses) ...
  
  
  Thanks also to the developers of the following tools/libraries:

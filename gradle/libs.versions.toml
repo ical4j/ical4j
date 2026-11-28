@@ -17,6 +17,7 @@ junit = "5.14.1"
 junit4 = "4.13.2"
 errorprone = "2.36.0"
 nullaway = "0.12.6"
+jazzer = "0.30.0"
 
 
 [libraries]
@@ -43,6 +44,7 @@ junit-vintage = { group = "org.junit.vintage", name="junit-vintage-engine", vers
 jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0"}
 errorprone-core = { group = "com.google.errorprone", name = "error_prone_core", version.ref = "errorprone"}
 nullaway = { group = "com.uber.nullaway", name = "nullaway", version.ref = "nullaway"}
+jazzer-api = { group = "com.code-intelligence", name = "jazzer-api", version.ref = "jazzer"}
 
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine"}
 jparsec = { group = "org.jparsec", name = "jparsec", version.ref = "jparsec"}
